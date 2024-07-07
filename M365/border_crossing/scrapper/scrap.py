@@ -85,9 +85,16 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
+options.add_argument("--lang=en")
+
 # Use webdriver-manager to handle Chromedriver
 service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome(
+    service=service,
+    options=options
+)
 
 # Your test script
 driver.get("http://www.example.com")
