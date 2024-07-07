@@ -6,11 +6,8 @@ import time
 
 # set default language to english
 options = webdriver.ChromeOptions()
-options.c
-# options.add_argument("--lang=en")
-# location is USA
-
-
+options.add_argument("--headless")
+options.add_argument("--lang=en")
 
 # Set up the WebDriver (assuming you have ChromeDriver installed and in your PATH)
 driver = webdriver.Chrome()
