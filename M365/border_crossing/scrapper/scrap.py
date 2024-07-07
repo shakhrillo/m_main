@@ -188,42 +188,26 @@ all_buttons = driver.find_elements(By.XPATH, "//button")
 print(len(all_buttons))
 # target_button = None
 count = 0
-# for button in all_buttons:
-#     if button is not None and 'expandReview' in button.get_attribute('jsaction'):
-#         count += 1
-#         print('clicking see more')
-#         print(count)
-#         # target_button = button
-#         driver.execute_script("arguments[0].click();", button)
-#         time.sleep(2)
-
-
-
-
-# print(target_button)
-
-# if target_button:
-#     # Ensure the button is clickable and then click it
-#     wait = WebDriverWait(driver, 10)
-#     target_button = wait.until(EC.element_to_be_clickable(target_button))
-#     target_button.click()
-# else:
-#     print("Target button not found")
 if len(all_buttons) != 0:
-    for i in all_buttons:
-        # see more
-        # print(i.get_attribute('jsaction'))
-        # print('\n')
-        # includes text expandReview
-        if i.get_attribute('jsaction') is not None and 'expandReview' in i.get_attribute('jsaction'):
-        # if 'expandReview' in i.get_attribute('jsaction'):
+    for button in all_buttons:
+        # if button is not None and 'expandReview' in button.get_attribute('jsaction'):
+        attr = button.get_attribute('jsaction')
+        if attr is not None and 'expandReview' in attr:
+            count += 1
             print('clicking see more')
+            print(count)
+            # target_button = button
+            driver.execute_script("arguments[0].click();", button)
             time.sleep(2)
+        
+        if attr is not None and 'showReviewInOriginal' in attr:
+            count += 1
             print('clicking see more')
-            i.click()
-            # time.sleep(2)
+            print(count)
+            # target_button = button
+            driver.execute_script("arguments[0].click();", button)
             time.sleep(2)
-        # print(i.text)
+
 
 print('--' * 20)
 # print(see_more_buttons)
