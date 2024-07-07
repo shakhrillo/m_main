@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uzbekistan to Kazakhstan Border Crossings</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 600px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([41.3275, 69.2813], 6); // Centered around Tashkent, Uzbekistan
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var borderCrossings = [
+            { "name": "Gisht-Kuprik (Chernyayevka)", "coords": [41.4681286,69.3550982] },
+            { "name": "Daut-ata (Tajen)", "coords": [44.8943406,55.9972577] }
+        ];
+
+        borderCrossings.forEach(function(crossing) {
+            L.marker(crossing.coords).addTo(map)
+                .bindPopup(crossing.name);
+        });
+    </script>
+</body>
+</html>

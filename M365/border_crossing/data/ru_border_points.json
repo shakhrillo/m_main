@@ -1,0 +1,100 @@
+{
+    "land_border_crossings": [
+        {
+            "name": "Zabaykalsk",
+            "country": "China",
+            "lat": 49.6358,
+            "lng": 117.3203
+        },
+        {
+            "name": "Torfyanovka",
+            "country": "Finland",
+            "lat": 60.5556,
+            "lng": 28.2972
+        },
+        {
+            "name": "Ivangorod",
+            "country": "Estonia",
+            "lat": 59.3722,
+            "lng": 28.2239
+        },
+        {
+            "name": "Saalisalmi",
+            "country": "Finland",
+            "lat": 61.1039,
+            "lng": 29.8867
+        },
+        {
+            "name": "Brusnichnoye",
+            "country": "Finland",
+            "lat": 61.5261,
+            "lng": 29.9765
+        },
+        {
+            "name": "Verkhny Lars",
+            "country": "Georgia",
+            "lat": 42.7465,
+            "lng": 44.6244
+        },
+        {
+            "name": "Borispol",
+            "country": "Ukraine",
+            "lat": 50.345,
+            "lng": 30.9472
+        },
+        {
+            "name": "Krasna Talivka",
+            "country": "Ukraine",
+            "lat": 49.925,
+            "lng": 39.3833
+        },
+        {
+            "name": "Upper Lars",
+            "country": "Georgia",
+            "lat": 42.7504,
+            "lng": 44.6508
+        },
+        {
+            "name": "Grense Jakobselv",
+            "country": "Norway",
+            "lat": 69.7826,
+            "lng": 30.8184
+        },
+        {
+            "name": "Mamonovo",
+            "country": "Poland",
+            "lat": 54.4641,
+            "lng": 19.9244
+        },
+        {
+            "name": "Ubezhenskaya",
+            "country": "Azerbaijan",
+            "lat": 41.9111,
+            "lng": 47.6544
+        },
+        {
+            "name": "Terehovo",
+            "country": "Latvia",
+            "lat": 56.3722,
+            "lng": 28.1247
+        },
+        {
+            "name": "Burachki",
+            "country": "Latvia",
+            "lat": 56.2444,
+            "lng": 28.0644
+        },
+        {
+            "name": "Sudzha",
+            "country": "Ukraine",
+            "lat": 51.1883,
+            "lng": 35.27
+        },
+        {
+            "name": "Suzemka",
+            "country": "Ukraine",
+            "lat": 53.8078,
+            "lng": 34.5206
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "country": "Georgia",
+    "border_crossings": [
+        {
+            "name": "Sarpi Border Crossing",
+            "location": {
+                "latitude": 41.5395,
+                "longitude": 41.5423
+            }
+        },
+        {
+            "name": "Red Bridge Border Crossing",
+            "location": {
+                "latitude": 41.6803,
+                "longitude": 45.0289
+            }
+        },
+        {
+            "name": "Sadakhlo Border Crossing",
+            "location": {
+                "latitude": 41.5765,
+                "longitude": 44.9088
+            }
+        }
+    ]
+}

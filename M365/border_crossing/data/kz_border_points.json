@@ -1,0 +1,94 @@
+{
+    "KazakhstanLandBorderCrossingPoints": [
+        {
+            "Name": "Khorgos",
+            "Country": "China",
+            "Latitude": 44.2025,
+            "Longitude": 80.4125
+        },
+        {
+            "Name": "Dostyk-Alashankou",
+            "Country": "China",
+            "Latitude": 45.2972,
+            "Longitude": 82.4853
+        },
+        {
+            "Name": "Bakhty",
+            "Country": "China",
+            "Latitude": 47.085,
+            "Longitude": 84.7964
+        },
+        {
+            "Name": "Kordai",
+            "Country": "Kyrgyzstan",
+            "Latitude": 43.0976,
+            "Longitude": 74.2386
+        },
+        {
+            "Name": "Chaldybar",
+            "Country": "Kyrgyzstan",
+            "Latitude": 42.8966,
+            "Longitude": 74.5847
+        },
+        {
+            "Name": "Zhibek Zholy",
+            "Country": "Uzbekistan",
+            "Latitude": 42.1913,
+            "Longitude": 69.5988
+        },
+        {
+            "Name": "Saryagash",
+            "Country": "Uzbekistan",
+            "Latitude": 41.8355,
+            "Longitude": 69.1655
+        },
+        {
+            "Name": "Kaplanbek",
+            "Country": "Uzbekistan",
+            "Latitude": 41.1988,
+            "Longitude": 68.2533
+        },
+        {
+            "Name": "Tazhen",
+            "Country": "Russia",
+            "Latitude": 47.8533,
+            "Longitude": 60.0022
+        },
+        {
+            "Name": "Karauzek",
+            "Country": "Russia",
+            "Latitude": 46.8443,
+            "Longitude": 48.2305
+        },
+        {
+            "Name": "Astrakhan",
+            "Country": "Russia",
+            "Latitude": 46.3497,
+            "Longitude": 48.0552
+        },
+        {
+            "Name": "Oral",
+            "Country": "Russia",
+            "Latitude": 51.2278,
+            "Longitude": 51.3857
+        },
+        {
+            "Name": "Petropavl",
+            "Country": "Russia",
+            "Latitude": 54.866,
+            "Longitude": 69.1505
+        },
+        {
+            "Name": "Aul",
+            "Country": "Turkmenistan",
+            "Latitude": 41.1,
+            "Longitude": 57.35
+        },
+        {
+            "Name": "Temirbaba",
+            "Country": "Turkmenistan",
+            "Latitude": 41.5,
+            "Longitude": 59.6
+        }
+    ]
+}

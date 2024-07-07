@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 600px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', {
+            center: [40.5711, 72.7595],
+            zoom: 16,
+            opacity: 0.2,
+        });
+        // }).setView([41.3275, 69.2813], 6); // Centered around Tashkent, Uzbekistan
+        const jsonLocal = './data/uzbekistan/uzbekistan_kyrgyzstan.json';
+        fetch(jsonLocal)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(crossing) {
+                    console.log('crossing', crossing);
+                    L.marker([
+                        crossing.coordinates[0]['lat'],
+                        crossing.coordinates[0]['lon']
+                    ]).addTo(map)
+                        .bindPopup(crossing.name);
+                });
+
+                // add circle to the map
+                data.forEach(function(crossing) {
+                    L.circle([
+                        crossing.coordinates[0]['lat'],
+                        crossing.coordinates[0]['lon']
+                    ], {
+                        color: '#eee',
+                        fillColor: '#f03',
+                        fillOpacity: 0.2,
+                        radius: 200
+                    }).addTo(map);
+                });
+
+                // Draw lines between border crossing points
+                data.forEach(function(crossing, index) {
+                    if (index < data.length - 1) {
+                        const nextCrossing = data[index + 1];
+                        L.polyline([
+                            crossing.coordinates,
+                            nextCrossing.coordinates
+                        ], {
+                            color: 'red',
+                            weight: 20,
+                            opacity: 0.7,
+                            lineJoin: 'round',
+                            lineCap: 'round',
+                        }).addTo(map);
+                    }
+                });
+            });
+        console.log('jsonLocal', jsonLocal);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    </script>
+</body>
+</html>
