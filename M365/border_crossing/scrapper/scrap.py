@@ -209,20 +209,21 @@ count = 0
 #     target_button.click()
 # else:
 #     print("Target button not found")
-
-# for i in all_buttons:
-#     # see more
-#     # print(i.get_attribute('jsaction'))
-#     # print('\n')
-#     # includes text expandReview
-#     if 'expandReview' in i.get_attribute('jsaction'):
-#         print('clicking see more')
-#         time.sleep(2)
-#         print('clicking see more')
-#         i.click()
-#         # time.sleep(2)
-#         time.sleep(2)
-#     # print(i.text)
+if len(all_buttons) != 0:
+    for i in all_buttons:
+        # see more
+        # print(i.get_attribute('jsaction'))
+        # print('\n')
+        # includes text expandReview
+        if i.get_attribute('jsaction') is not None and 'expandReview' in i.get_attribute('jsaction'):
+        # if 'expandReview' in i.get_attribute('jsaction'):
+            print('clicking see more')
+            time.sleep(2)
+            print('clicking see more')
+            i.click()
+            # time.sleep(2)
+            time.sleep(2)
+        # print(i.text)
 
 print('--' * 20)
 # print(see_more_buttons)
