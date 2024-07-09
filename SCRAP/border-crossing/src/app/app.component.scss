@@ -1,15 +1,26 @@
 header {
-    border: 1px solid #ccc;
     padding: 10px;
     height: 56px;
+    // background-color: rgb(249, 246, 255);
+    // border-bottom: 1px solid rgb(204, 204, 204);
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 100%;
 }
 
 aside {
     width: 250px;
-    border: 1px solid #ccc;
-    padding: 10px;
+    border-right: 1px solid #ccc;
     height: 100%;
     position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 56px;
+    z-index: 9998;
+    background: #fff;
 }
 
 .card {

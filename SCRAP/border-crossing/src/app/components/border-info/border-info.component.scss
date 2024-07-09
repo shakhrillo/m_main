@@ -1,0 +1,39 @@
+:host {
+    display: inline-block;
+    padding: 16px;
+    width: 100%;
+}
+
+h5 {
+    align-items: center;
+    display: flex;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: sans-serif;
+}
+
+p {
+    padding: 0 16px 16px;
+    min-height: 2.4em;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+small {
+    font-size: 14px;
+    font-family: sans-serif;
+    padding: 16px;
+}
+
+ul {
+    list-style: none;
+    padding: 16px;
+    margin-top: 10px;
+}
+
+li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: sans-serif;
+}
