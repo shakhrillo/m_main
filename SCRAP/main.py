@@ -8,19 +8,30 @@ from telegram.send_message import send_telegram_message
 from open_ai.send_message import send_ai_message
 import mysql.connector
 
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="12345678",
-    database="borders"
-)
+# conn = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="12345678",
+#     database="borders"
+# )
 
-cursor = conn.cursor()
+# cursor = conn.cursor()
+
+# openairesponse = send_ai_message(
+#     model='gpt-3.5-turbo',
+#     response_format={ "type": "json_object" },
+#     sys_message='Uzbekistan and Kazakhstan',
+#     user_messages=[
+#         "Uzbekistan Kazakhstan",
+#     ]
+# )
+
+# print(openairesponse)
 
 loop = asyncio.get_event_loop()
-review_data = loop.run_until_complete(google_map_search("Ciudad Hidalgo, Chiapas"))
+review_data = loop.run_until_complete(google_map_search('Uzbekistan'))
 
-print(len(review_data))
+# print(len(review_data))
 
 # save as csv
 with open('google_reviews.csv', 'w') as f:
