@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 import time
 
 options = webdriver.ChromeOptions()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("--lang=en")
 
 service = Service(ChromeDriverManager().install())
@@ -45,8 +45,8 @@ async def google_map_search(text):
                 review_link = await google_map_review_link(driver, url)
                 result_links.append(review_link)
 
-    await google_map_reviews_data(driver, result_links)
+    results = await google_map_reviews_data(driver, result_links)
 
     driver.quit()
 
-    return result_links
+    return results

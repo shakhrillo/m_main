@@ -18,17 +18,14 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 loop = asyncio.get_event_loop()
-google_search_review_links_data = loop.run_until_complete(google_map_search("Ciudad Hidalgo, Chiapas"))
+review_data = loop.run_until_complete(google_map_search("Ciudad Hidalgo, Chiapas"))
 
-print(len(google_search_review_links_data))
-
-# loop = asyncio.get_event_loop()
-# reviews_data = loop.run_until_complete(google_map_reviews_data(google_search_review_links))
+print(len(review_data))
 
 # save as csv
-# with open('google_reviews.csv', 'w') as f:
-#     for review in google_search_review_links:
-#         f.write(review + '\n')
+with open('google_reviews.csv', 'w') as f:
+    for review in review_data:
+        f.write(review + '\n')
 
 # print("Links: ")
 # print(google_search)
