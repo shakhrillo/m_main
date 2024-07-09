@@ -1,3 +1,4 @@
+import asyncio
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -6,22 +7,25 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
 
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")
-options.add_argument("--lang=en")
+# options = webdriver.ChromeOptions()
+# options.add_argument("--headless")
+# options.add_argument("--lang=en")
 
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(
-    service=service,
-    options=options
-)
+# service = Service(ChromeDriverManager().install())
+# driver = webdriver.Chrome(
+#     service=service,
+#     options=options
+# )
 
-def google_map_reviews(url):
+async def google_map_reviews(driver, url):
 
     if url is None:
         errorMsg = "Please provide a valid URL"
         return errorMsg
 
+    # open new tab
+    driver.execute_script("window.open('');")
+    driver.switch_to.window(driver.window_handles[1])
     driver.get(url)
     time.sleep(2)
 
@@ -65,8 +69,11 @@ def google_map_reviews(url):
     for i in MyEned:
         messages.append(i.text)
 
-    time.sleep(2)
+    # time.sleep(2)
 
-    driver.quit()
+    # driver.quit()
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
+    await asyncio.sleep(2)
 
     return messages

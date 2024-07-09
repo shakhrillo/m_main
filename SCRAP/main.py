@@ -1,4 +1,5 @@
 import asyncio
+from selenium_scrap.google_map_reviews_data import google_map_reviews_data
 from selenium_scrap.helper.change_language_in_url import change_language_in_url
 from selenium_scrap.google_map_review_link import google_map_review_link
 from selenium_scrap.google_map_search import google_map_search
@@ -17,10 +18,20 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 loop = asyncio.get_event_loop()
-google_search = loop.run_until_complete(google_map_search("Ciudad Hidalgo, Chiapas"))
+google_search_review_links_data = loop.run_until_complete(google_map_search("Ciudad Hidalgo, Chiapas"))
 
-print("Links: ")
-print(google_search)
+print(len(google_search_review_links_data))
+
+# loop = asyncio.get_event_loop()
+# reviews_data = loop.run_until_complete(google_map_reviews_data(google_search_review_links))
+
+# save as csv
+# with open('google_reviews.csv', 'w') as f:
+#     for review in google_search_review_links:
+#         f.write(review + '\n')
+
+# print("Links: ")
+# print(google_search)
 
 # time.sleep(2)
 
@@ -28,7 +39,6 @@ print(google_search)
 
 # for async
 # for url in google_search:
-
 
 # for url in google_search:
 #     print(url)

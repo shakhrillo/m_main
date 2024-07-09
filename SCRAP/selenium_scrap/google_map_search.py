@@ -1,4 +1,5 @@
 import asyncio
+from selenium_scrap.google_map_reviews_data import google_map_reviews_data
 from selenium_scrap.google_map_review_link import google_map_review_link
 from selenium_scrap.helper.change_language_in_url import change_language_in_url
 from selenium import webdriver
@@ -10,7 +11,7 @@ from selenium.webdriver.common.by import By
 import time
 
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")
+# options.add_argument("--headless")
 options.add_argument("--lang=en")
 
 service = Service(ChromeDriverManager().install())
@@ -44,6 +45,7 @@ async def google_map_search(text):
                 review_link = await google_map_review_link(driver, url)
                 result_links.append(review_link)
 
+    await google_map_reviews_data(driver, result_links)
 
     driver.quit()
 
