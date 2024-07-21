@@ -29,7 +29,7 @@ import mysql.connector
 # print(openairesponse)
 
 loop = asyncio.get_event_loop()
-review_data = loop.run_until_complete(google_map_search('Uzbekistan'))
+review_data = loop.run_until_complete(google_map_search('Spain and France'))
 
 # print(len(review_data))
 

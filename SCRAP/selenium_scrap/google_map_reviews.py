@@ -19,27 +19,45 @@ import time
 
 async def google_map_reviews(driver, url):
 
-    if url is None:
-        errorMsg = "Please provide a valid URL"
-        return errorMsg
+    # if url == '' or url is None or 'maps' not in url:
+    #     return []
 
     # open new tab
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
-    driver.get(url)
-    time.sleep(2)
+    
+    print('*'*50)
+    print(url)
+    print('*'*50)
+    # driver.get(url)
+    # time.sleep(2)
+    try:
+        driver.get(url)
+        WebDriverWait(driver, 10).until(
+            lambda d: d.execute_script('return document.readyState') == 'complete'
+        )
+    except Exception as e:
+        print(e)
+        driver.quit()
+        return []
 
     vyucnb = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='vyucnb']")))
+
+    if vyucnb is None:
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+
+        return []
 
     parentElmOfvyucnb = vyucnb.find_element(By.XPATH, "..")
     # scroll height
     scrollHeight = parentElmOfvyucnb.get_attribute("scrollHeight")
     driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", parentElmOfvyucnb)
-    time.sleep(2)
+    # time.sleep(2)
 
     while True:
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", parentElmOfvyucnb)
-        time.sleep(2)
+        # time.sleep(2)
         newScrollHeight = parentElmOfvyucnb.get_attribute("scrollHeight")
 
         if newScrollHeight == scrollHeight:
@@ -57,12 +75,12 @@ async def google_map_reviews(driver, url):
             if attr is not None and 'expandReview' in attr:
                 count += 1
                 driver.execute_script("arguments[0].click();", button)
-                time.sleep(2)
+                # time.sleep(2)
             
             if attr is not None and 'showReviewInOriginal' in attr:
                 count += 1
                 driver.execute_script("arguments[0].click();", button)
-                time.sleep(2)
+                # time.sleep(2)
 
     messages = []
 
@@ -71,9 +89,8 @@ async def google_map_reviews(driver, url):
 
     # time.sleep(2)
 
-    # driver.quit()
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
-    await asyncio.sleep(2)
+    # await asyncio.sleep(2)
 
     return messages
