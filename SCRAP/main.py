@@ -2,7 +2,7 @@ import asyncio
 from selenium_scrap.google_map_reviews_data import google_map_reviews_data
 from selenium_scrap.helper.change_language_in_url import change_language_in_url
 from selenium_scrap.google_map_review_link import google_map_review_link
-from selenium_scrap.google_map_search import google_map_search
+# from selenium_scrap.google_map_search import google_map_search
 from selenium_scrap.google_map_reviews import google_map_reviews
 from telegram.send_message import send_telegram_message
 from open_ai.send_message import send_ai_message
@@ -17,26 +17,31 @@ import mysql.connector
 
 # cursor = conn.cursor()
 
-# openairesponse = send_ai_message(
-#     model='gpt-3.5-turbo',
-#     response_format={ "type": "json_object" },
-#     sys_message='Uzbekistan and Kazakhstan',
-#     user_messages=[
-#         "Uzbekistan Kazakhstan",
-#     ]
-# )
+openairesponse = send_ai_message(
+    model='gpt-3.5-turbo',
+    response_format={ "type": "json_object" },
+    sys_message='Border crossing points',
+    user_messages=[
+        "all land border points Russia Kazakhstan as json",
+    ]
+)
 
-# print(openairesponse)
+print(openairesponse)
+# Save as csv
+with open('border_crossing_points.csv', 'w') as f:
+  f.write(openairesponse)
+    # for point in openairesponse:
+        # f.write(point + '\n')
 
-loop = asyncio.get_event_loop()
-review_data = loop.run_until_complete(google_map_search('Spain and France'))
+# loop = asyncio.get_event_loop()
+# review_data = loop.run_until_complete(google_map_search('Spain and France'))
 
 # print(len(review_data))
 
 # save as csv
-with open('google_reviews.csv', 'w') as f:
-    for review in review_data:
-        f.write(review + '\n')
+# with open('google_reviews.csv', 'w') as f:
+#     for review in review_data:
+#         f.write(review + '\n')
 
 # print("Links: ")
 # print(google_search)

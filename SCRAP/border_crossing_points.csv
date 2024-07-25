@@ -1,0 +1,34 @@
+{
+  "border_crossings": [
+    {
+      "border_point": "Zhana-Tash",
+      "border_length": "8.5 km",
+      "border_type": "Car and pedestrian",
+      "operating_hours": "24 hours"
+    },
+    {
+      "border_point": "Dostyk",
+      "border_length": "2 km",
+      "border_type": "Car and pedestrian",
+      "operating_hours": "24 hours"
+    },
+    {
+      "border_point": "Magnitogorsk-Zhana Altai",
+      "border_length": "18 km",
+      "border_type": "Car and pedestrian",
+      "operating_hours": "24 hours"
+    },
+    {
+      "border_point": "Khorgos",
+      "border_length": "50 km",
+      "border_type": "Car and pedestrian",
+      "operating_hours": "24 hours"
+    },
+    {
+      "border_point": "Semey",
+      "border_length": "3 km",
+      "border_type": "Car and pedestrian",
+      "operating_hours": "24 hours"
+    }
+  ]
+}
