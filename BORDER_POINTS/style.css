@@ -20,6 +20,10 @@
   height: 100vh;
   width: calc(100% - 350px);
 }
+
+.leaflet-routing-container {
+  display: none;
+}
  
 .custom-marker {
   background-color: #000;

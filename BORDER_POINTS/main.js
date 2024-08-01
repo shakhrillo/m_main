@@ -46,9 +46,21 @@ fetch(`${API_URL}/border/gr/tr`)
       }
     }).addTo(map);
 
-    lMarker(
-      data["tr"],
-    map, 'TR');
+    data["bg"].forEach((point) => {
+      lMarker(point, map, 'BG');
+    });
+    data["tr"].forEach((point) => {
+      lMarker(point, map, 'TR');
+    });
+    data["gr"].forEach((point) => {
+      lMarker(point, map, 'GR');
+    });
+    data["al"].forEach((point) => {
+      lMarker(point, map, 'AL');
+    });
+    data["mkd"].forEach((point) => {
+      lMarker(point, map, 'MKD');
+    });
 
     // data["road"].forEach((point) => {
     //   L.polyline(point, {
