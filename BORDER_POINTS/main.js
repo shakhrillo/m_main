@@ -4,9 +4,12 @@ const map = L.map('map')
 fetch(`${API_URL}/border/gr/tr`)
   .then(response => response.json())
   .then(data => {
-    map.setView(
-      data["view"],
-      10);
+    // map.setView(
+    //   [
+    //     (41.0052041 + 41.9099533) / 2,
+    //     (28.847374 + 12.3711926) / 2
+    //   ],
+    //   10);
 
     // remove zoom control
     map.zoomControl.remove();
@@ -25,6 +28,7 @@ fetch(`${API_URL}/border/gr/tr`)
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
+
     // data["gr"].forEach((point) => {
     //   lMarker(point, map, 'GR');
     // });
@@ -34,33 +38,66 @@ fetch(`${API_URL}/border/gr/tr`)
     // });
 
     // Driving route
-    L.Routing.control({
-      waypoints: [
-        L.latLng(41.9099533,12.3711926),
-        L.latLng(41.0052041,28.847374)
-      ],
-      routeWhileDragging: true,
-      show: false,
-      lineOptions: {
-        styles: [{ color: 'red', opacity: 1, weight: 5 }]
-      }
-    }).addTo(map);
+    // Define the waypoints
+var waypoint1 = L.latLng(41.9099533, 12.3711926);
+var waypoint2 = L.latLng(41.0052041, 28.847374);
 
-    data["bg"].forEach((point) => {
-      lMarker(point, map, 'BG');
+// Define the midpoint or split point (this can be adjusted based on your needs)
+var midpoint = L.latLng((waypoint1.lat + waypoint2.lat) / 2, (waypoint1.lng + waypoint2.lng) / 2);
+
+// Create the two routes
+L.Routing.control({
+  waypoints: [waypoint1, midpoint],
+  routeWhileDragging: false,
+  show: false,
+  lineOptions: {
+    styles: [{
+      color: 'red',
+      opacity: 1,
+      weight: 6,
+    }]
+  }
+}).addTo(map);
+
+L.Routing.control({
+  waypoints: [midpoint, waypoint2],
+  routeWhileDragging: false,
+  show: false,
+  lineOptions: {
+    styles: [{
+      color: 'yellow',
+      opacity: 1,
+      weight: 6,
+    }]
+  }
+}).addTo(map);
+
+    data.forEach((point) => {
+      lMarker(
+        [
+          point["lat"],
+          point["lng"]
+        ],
+        map,
+        point["country"]
+      );
     });
-    data["tr"].forEach((point) => {
-      lMarker(point, map, 'TR');
-    });
-    data["gr"].forEach((point) => {
-      lMarker(point, map, 'GR');
-    });
-    data["al"].forEach((point) => {
-      lMarker(point, map, 'AL');
-    });
-    data["mkd"].forEach((point) => {
-      lMarker(point, map, 'MKD');
-    });
+
+    // data["bg"].forEach((point) => {
+    //   lMarker(point, map, 'BG');
+    // });
+    // data["tr"].forEach((point) => {
+    //   lMarker(point, map, 'TR');
+    // });
+    // data["gr"].forEach((point) => {
+    //   lMarker(point, map, 'GR');
+    // });
+    // data["al"].forEach((point) => {
+    //   lMarker(point, map, 'AL');
+    // });
+    // data["mkd"].forEach((point) => {
+    //   lMarker(point, map, 'MKD');
+    // });
 
     // data["road"].forEach((point) => {
     //   L.polyline(point, {
@@ -84,5 +121,5 @@ fetch(`${API_URL}/border/gr/tr`)
     //   dashArray: '20,15',
     // }).addTo(map);
 
-    console.log(data);
+    // console.log(data);
   });

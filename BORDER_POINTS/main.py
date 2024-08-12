@@ -4,6 +4,13 @@ from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 import re
 
+# Import bg.json
+import json
+
+# Open bg.json
+with open('data/bg.json') as f:
+  bulgrai_json = json.load(f)
+
 app = FastAPI()
 
 def extract_lat_lng(url):
@@ -45,9 +52,7 @@ def read_root():
 @app.get("/border/gr/tr")
 def read_border():
 
-    latitude, longitude = extract_lat_lng('https://www.google.com/maps/place/Kap%C4%B1kule+S%C4%B1n%C4%B1r+Kap%C4%B1s%C4%B1+Gi%C5%9Feleri/@41.7147567,26.3481164,14.36z/data=!4m15!1m8!3m7!1s0x14caa7040068086b:0xe1ccfe98bc01b0d0!2zxLBzdGFuYnVsLCBUw7xya2l5ZQ!3b1!8m2!3d41.0082376!4d28.9783589!16zL20vMDk5NDlt!3m5!1s0x14b2d7617aaafb21:0x2d58cc7839a2021e!8m2!3d41.7147801!4d26.3626777!16s%2Fg%2F1yg6c_7hj?entry=ttu')
-
-    return {
+    a = {
         "bg": [
             # Turkish side
             [41.7170165, 26.3510865],
@@ -336,6 +341,8 @@ def read_border():
             ]
         ]
     }
+
+    return bulgrai_json
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
