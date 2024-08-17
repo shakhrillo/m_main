@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg border-bottom mb-4">
   <div class="container">
     <a class="navbar-brand" href="#">Border App</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -9,7 +9,7 @@
 </nav>
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-2">
       <h2 class="mt-4">France and Turkey Map</h2>
       <h6 class="text-muted">This is a simple map showing France and Turkey.</h6>
       <hr />
@@ -115,8 +115,14 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div id="map" class="map"></div>
+    <div class="col-md-10">
+      <div id="map" class="map">
+        <div class="map-coordinates">
+          <span>
+            {{ coordinates }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
