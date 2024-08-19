@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 import json
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
+from geopy.distance import geodesic
 
 app = FastAPI()
 
@@ -40,6 +41,19 @@ def get_entries():
     global data_store
     return data_store
 
+@app.get("/entries2", response_model=List[Dict[str, Any]])
+def get_entries():
+    NEW_DATA_FILE = Path("new_data.geojson")
+    new_data = []
+    if NEW_DATA_FILE.exists():
+        with open(NEW_DATA_FILE, "r") as f:
+            new_data = json.load(f).get("features", [])
+    else:
+        new_data = []
+
+    return new_data
+
+
 @app.delete("/entries/{full_id}", response_model=Dict[str, Any])
 def delete_entry(full_id: str):
     global data_store
@@ -52,5 +66,34 @@ def delete_entry(full_id: str):
             return deleted_item
     # Raise a 404 error if the item is not found
     raise HTTPException(status_code=404, detail="Entry not found")
+
+points = {
+    "type": "FeatureCollection",
+    "features": []
+}
+
+# load and push data to the geojson and save it new_data.geojson
+@app.post("/entries", response_model=Dict[str, Any])
+def add_entry(entry: Dict[str, Any]):
+    feature = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "coordinates": [
+                entry["lng"],
+                entry["lat"]
+            ],
+            "type": "Point"
+        }
+    }
+
+    points["features"].append(feature)
+
+    with open("new_data.geojson", "w") as f:
+        json.dump(points, f, indent=4)
+
+    return entry
+
+
 
 # Run with: uvicorn main:app --reload
