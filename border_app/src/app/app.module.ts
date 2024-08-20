@@ -5,9 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { SafeUrlPipe } from './pipes/safe';
 
 @NgModule({
   declarations: [
+    SafeUrlPipe,
     AppComponent
   ],
   imports: [

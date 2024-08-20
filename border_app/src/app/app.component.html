@@ -115,14 +115,15 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12 p-0">
-      <div id="map" class="map">
+    <div class="col-md-12 p-0" *ngIf="iframeBlob">
+      <iframe [src]="iframeBlob | safeUrl" width="800" height="600"></iframe>
+      <!-- <div id="map" class="map">
         <div class="map-coordinates">
           <span>
             {{ coordinates }}
           </span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

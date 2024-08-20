@@ -19,8 +19,20 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
+  iframeBlob: any;
   ngOnInit(): void {
-    this.initMap();
+    // this.initMap();
+    const api_url = 'http://127.0.0.1:5000';
+
+    this.http.get(`${api_url}/components`, {
+      responseType: 'blob'
+    }).subscribe((data: any) => {
+      console.log("data");
+      console.log(data);
+
+      const url = URL.createObjectURL(data);
+      this.iframeBlob = url;
+    });
   }
 
   private initMap(): void {
