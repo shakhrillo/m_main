@@ -79,51 +79,51 @@ export class AppComponent implements OnInit {
     });
 
     // Draw france to istanbul bt road
-    const france = [47.0, 2.0] as L.LatLngExpression;
-    const istanbul = [41.0, 29.0] as L.LatLngExpression;
-    this.routingControl = (L.Routing).control({
-      waypoints: [
-        L.latLng(france),
-        L.latLng(istanbul)
-      ],
-      routeWhileDragging: false,
-      routeDragInterval: 0,
-      showAlternatives: false,
-      lineOptions: {
-        styles: [{ color: '#ff0000', opacity: 1, weight:3 }],
-        extendToWaypoints: true,
-        missingRouteTolerance: 100
-      },
-      ["createMarker" as any]: function(i:any, wp:any, nWps:any) {
-        return L.marker(wp.latLng, {
-          draggable: true,
-          icon: L.icon({
-            iconUrl: 'assets/icons/walk.png',
-            iconSize: [36, 36]
-          })
-        });
-      },
-      show: false,
-      addWaypoints: false,
-      fitSelectedRoutes: !false
-    }).addTo(this.map);
+    // const france = [47.0, 2.0] as L.LatLngExpression;
+    // const istanbul = [41.0, 29.0] as L.LatLngExpression;
+    // this.routingControl = (L.Routing).control({
+    //   waypoints: [
+    //     L.latLng(france),
+    //     L.latLng(istanbul)
+    //   ],
+    //   routeWhileDragging: false,
+    //   routeDragInterval: 0,
+    //   showAlternatives: false,
+    //   lineOptions: {
+    //     styles: [{ color: '#ff0000', opacity: 1, weight:3 }],
+    //     extendToWaypoints: true,
+    //     missingRouteTolerance: 100
+    //   },
+    //   ["createMarker" as any]: function(i:any, wp:any, nWps:any) {
+    //     return L.marker(wp.latLng, {
+    //       draggable: true,
+    //       icon: L.icon({
+    //         iconUrl: 'assets/icons/walk.png',
+    //         iconSize: [36, 36]
+    //       })
+    //     });
+    //   },
+    //   show: false,
+    //   addWaypoints: false,
+    //   fitSelectedRoutes: !false
+    // }).addTo(this.map);
 
     // check routing crosses the border
-    this.routingControl.on('routesfound', (e: any) => {
-      const routes = e.routes;
-      console.log(routes);
-      // routes.forEach((route: any) => {
-      //   const coordinates = route.coordinates;
-      //   console.log(coordinates);
-      //   this.http.get(`http://127.0.0.1:8000/entries2`).subscribe((data: any) => {
-      //     console.log(data);
-      //     const borderPoints = [[26.352487, 41.7176]];
-      //     // console.log(borderPoints);
-      //     const isCrossing = this.isRouteCrossingBorder(coordinates, borderPoints);
-      //     console.log(isCrossing);
-      //   })
-      // });
-    });
+    // this.routingControl.on('routesfound', (e: any) => {
+    //   const routes = e.routes;
+    //   console.log(routes);
+    //   // routes.forEach((route: any) => {
+    //   //   const coordinates = route.coordinates;
+    //   //   console.log(coordinates);
+    //   //   this.http.get(`http://127.0.0.1:8000/entries2`).subscribe((data: any) => {
+    //   //     console.log(data);
+    //   //     const borderPoints = [[26.352487, 41.7176]];
+    //   //     // console.log(borderPoints);
+    //   //     const isCrossing = this.isRouteCrossingBorder(coordinates, borderPoints);
+    //   //     console.log(isCrossing);
+    //   //   })
+    //   // });
+    // });
   }
 
   isRouteCrossingBorder(routeCoordinates: any, borderPoints: any): boolean {
@@ -174,38 +174,55 @@ export class AppComponent implements OnInit {
     // BORDER_POINTS/helper/data.geojson
     const geoJsonUrl = 'http://127.0.0.1:8000/entries2';
     // 'assets/gibraltar7.geojson'
-    this.http.get(geoJsonUrl).subscribe((data: any) => {
-      if (this.map) {
-        // Create a marker cluster group
-        const markers = L.markerClusterGroup();
+    this.http.get(geoJsonUrl, {
+      responseType: 'blob'
+    }).subscribe((blob: any) => {
+      console.log(blob);
 
-        // Define the custom icon
-        const customIcon = L.icon({
-          iconUrl: 'assets/icons/border.png', // Path to your custom marker image
-          iconSize: [32, 32], // Size of the icon
-          iconAnchor: [16, 32], // Anchor point of the icon
-          popupAnchor: [0, -32] // Popup position relative to the icon
-        });
+      // Create a link element
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'map_with_route.html';
 
-        // Create GeoJSON layer with clustering
-        L.geoJSON(data, {
-          pointToLayer: (feature, latlng) => {
-            // Return a marker with the custom icon
-            return L.marker(latlng, { icon: customIcon });
-          }
-        }).eachLayer((layer) => {
-          markers.addLayer(layer);
-        });
+      // Append link to the body
+      document.body.appendChild(link);
 
-        // Add the cluster group to the map
-        this.map.addLayer(markers);
+      // Trigger click to start download
+      link.click();
 
-        // Click on a marker
-        markers.on('click', (e) => {
-          const full_id = e.layer.feature.properties.full_id;
-          this.deleteMarker(full_id);
-        });
-      }
+      // Remove link from the body
+      document.body.removeChild(link);
+      // if (this.map) {
+      //   // Create a marker cluster group
+      //   const markers = L.markerClusterGroup();
+
+      //   // Define the custom icon
+      //   const customIcon = L.icon({
+      //     iconUrl: 'assets/icons/border.png', // Path to your custom marker image
+      //     iconSize: [32, 32], // Size of the icon
+      //     iconAnchor: [16, 32], // Anchor point of the icon
+      //     popupAnchor: [0, -32] // Popup position relative to the icon
+      //   });
+
+      //   // Create GeoJSON layer with clustering
+      //   L.geoJSON(data, {
+      //     pointToLayer: (feature, latlng) => {
+      //       // Return a marker with the custom icon
+      //       return L.marker(latlng, { icon: customIcon });
+      //     }
+      //   }).eachLayer((layer) => {
+      //     markers.addLayer(layer);
+      //   });
+
+      //   // Add the cluster group to the map
+      //   this.map.addLayer(markers);
+
+      //   // Click on a marker
+      //   markers.on('click', (e) => {
+      //     const full_id = e.layer.feature.properties.full_id;
+      //     this.deleteMarker(full_id);
+      //   });
+      // }
     });
   }
 

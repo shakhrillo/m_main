@@ -6,6 +6,8 @@ from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 from geopy.distance import geodesic
 
+from BORDER_POINTS.helper.app import routing_map
+
 app = FastAPI()
 
 # Add CORS middleware
@@ -43,15 +45,17 @@ def get_entries():
 
 @app.get("/entries2", response_model=List[Dict[str, Any]])
 def get_entries():
-    NEW_DATA_FILE = Path("new_data.geojson")
-    new_data = []
-    if NEW_DATA_FILE.exists():
-        with open(NEW_DATA_FILE, "r") as f:
-            new_data = json.load(f).get("features", [])
-    else:
-        new_data = []
+    return routing_map()
+    # return []
+    # NEW_DATA_FILE = Path("new_data.geojson")
+    # new_data = []
+    # if NEW_DATA_FILE.exists():
+    #     with open(NEW_DATA_FILE, "r") as f:
+    #         new_data = json.load(f).get("features", [])
+    # else:
+    #     new_data = []
 
-    return new_data
+    # return new_data
 
 
 @app.delete("/entries/{full_id}", response_model=Dict[str, Any])
