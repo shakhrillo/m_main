@@ -8,6 +8,10 @@ from shapely.geometry import box
 import geopandas as gpd
 from shapely.geometry import Polygon
 
+from map.main import initMap
+from map.render import renderMap
+from map.directions import directionsMap
+
 # with open("data/countries.json") as f:
 #     countries = json.load(f)
 
@@ -24,19 +28,15 @@ def after_request(response):
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
     return response
 
-@app.route("/")
-def fullscreen():
-    """Simple example of a fullscreen map."""
-    m = folium.Map()
-    return m.get_root().render()
-
-# def is_within_bounding_box(lat, lon, bbox):
-#     polygon = box(*bbox)  # Create a bounding box polygon
-#     point = Point(lon, lat)  # Create a point with (lon, lat) coordinates
-#     return point.within(polygon)
-
 @app.route("/components")
 def components():
+    map = initMap()
+    directionsMap(gmaps, map)
+    return renderMap(map)
+
+
+@app.route("/componentss")
+def componentss():
     m = folium.Map(
         # width=800,
         # height=600,
