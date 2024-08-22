@@ -1,4 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+// Import Bootstrap functions and variables first
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
+$theme-colors: (
+  "primary": #f1c40f,
+  "secondary": #2c3e50,
+  "success": #2ecc71,
+  "info": #3498db,
+  "warning": #f39c12,
+  "danger": #e74c3c,
+  "light": #ecf0f1,
+  "dark": #34495e
+);
+
+// Import the rest of Bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";
+
+
 .leaflet-control-container {
   display: none !important;
 }

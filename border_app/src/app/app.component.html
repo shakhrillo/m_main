@@ -1,15 +1,58 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container">
-    <a class="navbar-brand" href="#">Border App</a>
+    <a class="navbar-brand" href="#">
+      Border Crossing App
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
 </nav>
-<div class="container-fluid">
+<div class="container">
   <div class="row">
-    <div class="col-md-2 d-none">
+    <div class="col-md-6">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">
+            <img src="assets/icons/drive.png" alt="src/assets/icons/walk.png">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img src="assets/icons/motorcycle.png" alt="src/assets/icons/motorcycle.png">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img src="assets/icons/walk.png" alt="src/assets/icons/walk.png">
+          </a>
+        </li>
+      </ul>
+      
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Russia
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Verkhny Lars (A-158)
+                  <div class="badge bg-success">Open</div>
+                  <div class="badge bg-info">24/7</div>
+                  <div class="badge bg-success">No checks</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 d-none">
       <h2 class="mt-4">France and Turkey Map</h2>
       <h6 class="text-muted">This is a simple map showing France and Turkey.</h6>
       <hr />
@@ -115,15 +158,12 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12 p-0" *ngIf="iframeBlob">
-      <iframe [src]="iframeBlob | safeUrl" width="800" height="600"></iframe>
-      <!-- <div id="map" class="map">
-        <div class="map-coordinates">
-          <span>
-            {{ coordinates }}
-          </span>
-        </div>
-      </div> -->
+    <div class="col-md-6" *ngIf="iframeBlob">
+      <iframe 
+        [src]="iframeBlob | safeUrl" 
+        class="iframe-map"
+        [ngStyle]="{ 'height': iframeMapHeight + 'px' }"
+      ></iframe>
     </div>
   </div>
 </div>

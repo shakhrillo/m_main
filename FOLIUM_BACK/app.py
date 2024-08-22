@@ -38,8 +38,8 @@ def fullscreen():
 @app.route("/components")
 def components():
     m = folium.Map(
-        width=800,
-        height=600,
+        # width=800,
+        # height=600,
     )
 
     moscow = [55.7558, 37.6176]
@@ -52,6 +52,10 @@ def components():
     directions_result = gmaps.directions(
         origin=paris,
         destination=cape_town,
+        mode="driving",
+        waypoints=[
+            "42.74694557147825,44.62293974596122"
+        ]
     )
 
     if directions_result:
@@ -65,47 +69,11 @@ def components():
 
         folium.PolyLine(
             locations=points,
-            color="blue",
+            color="#f1c40f",
             weight=5,
             opacity=0.8,
         ).add_to(m)
 
-        print(len(points))
-        # print(points)
-        # radius = 100
-
-        polygon = Polygon(points)
-
-        path_ = "/Users/shakhrillo/Desktop/m_main/FOLIUM_BACK/data/110m_cultural/ne_110m_admin_0_countries.shp"
-        world = gpd.read_file(path_)
-
-        # print(world.columns)
-
-        # world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
-
-        polygon_gdf = gpd.GeoDataFrame({'geometry': [polygon]}, crs="EPSG:4326")
-
-        intersections = world[world.intersects(polygon_gdf.unary_union)]
-
-        # Inspect the results
-        print(intersections)
-        # print(intersections.columns) 
-
-        # save points json
-        # with open("data/points.json", "w") as f:
-        #     json.dump(points, f)
-        
-        # for point in points:
-        #     latitude_to_check, longitude_to_check = point
-            
-        #     for country in countries:
-        #         coordinates = country["coordinates"]
-                
-        #         if is_within_bounding_box(latitude_to_check, longitude_to_check, coordinates):
-        #             if country["name"] not in crossed_countries:
-        #                 crossed_countries.append(country["name"])
-        #                 break
-                
     else:
         print("No routes found")
 
@@ -113,6 +81,15 @@ def components():
     print(len(crossed_countries))
     # extend the bounds of the map
     m.fit_bounds([paris, cape_town])
+
+    folium.Marker(
+        location=[
+            42.74694557147825,
+            44.62293974596122
+        ],
+        popup="This is a test",
+        icon=folium.Icon(color="red"),
+    ).add_to(m)
 
     m.get_root().render()
     header = m.get_root().header.render()

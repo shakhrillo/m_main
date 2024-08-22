@@ -22,3 +22,47 @@
 .map-coordinates {
   display: none !important
 }
+
+.navbar {
+  border-bottom: 1px solid #000;
+}
+
+.nav {
+  padding: 10px 0;
+}
+
+.nav-link {
+  width: 50px;
+  height: 50px;
+  color: #000;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+    // gray color
+    filter: grayscale(100%);
+  }
+
+  &.active {
+    border-color: #000;
+
+    img {
+      filter: grayscale(0%);
+    }
+  }
+}
+
+.iframe-map {
+  width: 100%;
+  height: 100%;
+  padding: 12px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}

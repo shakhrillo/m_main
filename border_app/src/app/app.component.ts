@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { HttpClient } from '@angular/common/http';
@@ -9,10 +9,12 @@ import 'leaflet-routing-machine';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   data = [] as any;
   coordinates: string = '0 | 0';
   geoJsonUrl = 'http://127.0.0.1:8000/entries';
+
+  @ViewChild('iframeMap') iframeMap: ElementRef | undefined;
 
   private map: L.Map | undefined;
   private routingControl: any;
@@ -20,6 +22,8 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   iframeBlob: any;
+  iframeMapHeight: number = 0;
+  
   ngOnInit(): void {
     // this.initMap();
     const api_url = 'http://127.0.0.1:5000';
@@ -32,6 +36,8 @@ export class AppComponent implements OnInit {
 
       const url = URL.createObjectURL(data);
       this.iframeBlob = url;
+
+      this.iframeMapHeight = window.innerHeight - 64;
     });
   }
 
@@ -295,5 +301,8 @@ export class AppComponent implements OnInit {
       });
 
     });
+  }
+
+  ngAfterViewInit(): void {
   }
 }
