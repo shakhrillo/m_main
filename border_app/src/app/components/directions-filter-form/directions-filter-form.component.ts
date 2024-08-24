@@ -52,6 +52,30 @@ export class DirectionsFilterFormComponent implements OnInit {
             return country['geometry']['coordinates'][0] === point[0] && country['geometry']['coordinates'][1] === point[1];
           });
         });
+
+        this.throughPoints.forEach((point: any) => {
+          through.splice(through.findIndex((p: any) => {
+            return p[0] === point['geometry']['coordinates'][0] && p[1] === point['geometry']['coordinates'][1];
+          }), 1);
+        });
+
+        this.throughPoints = [
+          ...this.throughPoints,
+          ...through.map((point: any) => {
+            return {
+              'geometry': {
+                'coordinates': point
+              },
+              'properties': {
+                'country': 'Through point',
+                'city': 'Unknown',
+                'tld': 'Unknown',
+                'iso3': 'Unknown',
+                'iso2': 'Unknown'
+              }
+            }
+          })
+        ]
       }
 
     });

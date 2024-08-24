@@ -57,6 +57,8 @@ def main_map():
             for point in through:
                 throughs.append([point[1], point[0]])
 
+        print(throughs)
+
         directionsMap(gmaps, map, start, end, throughs)
 
         points = [
@@ -79,7 +81,7 @@ def main_map():
 
     for geojson_data in geojson_borders:
         addMapDot(map, geojson_data)
-    
+
     return renderMap(map)
 
 @app.route("/countries", methods=["GET"])

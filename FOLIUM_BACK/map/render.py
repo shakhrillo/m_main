@@ -6,6 +6,10 @@ def renderMap(map):
   body_html = map.get_root().html.render()
   script = map.get_root().script.render()
 
+  # make map global inside the js
+  script = script.replace("var map_", "window.map_")
+  # print(script)
+
   return render_template_string(
     """
       <!DOCTYPE html>

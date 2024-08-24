@@ -21,3 +21,8 @@ $theme-colors: (
 .leaflet-control-container {
   display: none !important;
 }
+
+.leaflet-interactive {
+  cursor: pointer;
+  fill: #f1c40f !important
+}
