@@ -6,16 +6,18 @@ import { AppComponent } from './app.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { SafeUrlPipe } from './pipes/safe';
+import { DirectionsFilterFormComponent } from './components/directions-filter-form/directions-filter-form.component';
 
 @NgModule({
   declarations: [
     SafeUrlPipe,
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     LeafletModule,
+    DirectionsFilterFormComponent
   ],
   providers: [
     provideHttpClient(),

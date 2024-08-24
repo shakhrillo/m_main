@@ -66,22 +66,3 @@
   border-radius: 12px;
   overflow: hidden;
 }
-
-.directions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border: 1px solid #000;
-  border-radius: 12px;
-  padding: 16px;
-  box-sizing: border-box;
-  margin: 10px 0;
-  background-color: #fafafa;
-
-  &-via {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-}
