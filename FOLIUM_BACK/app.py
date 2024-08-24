@@ -33,6 +33,7 @@ def after_request(response):
 finland = gpd.read_file("data/border/finland.geojson")
 estonia = gpd.read_file("data/border/estonia.geojson")
 latvia = gpd.read_file("data/border/latvia.geojson")
+lithuania = gpd.read_file("data/border/lithuania.geojson")
 
 @app.route("/components")
 def components():
@@ -52,17 +53,15 @@ def components():
     addMapPoints(map, [start, end])
     addMapCrossPoint(map, [verkhny_lars, sarp])
 
-    # findland border points and add custom icon
-    for index, row in finland.iterrows():
-        addMapDot(map, row.geometry.centroid.coords[0])
+    geojson_borders = [
+        finland,
+        estonia,
+        latvia,
+        lithuania,
+    ]
 
-    # estonia border points and add custom icon
-    for index, row in estonia.iterrows():
-        addMapDot(map, row.geometry.centroid.coords[0], "orange")
-
-    # latvia border points and add custom icon
-    for index, row in latvia.iterrows():
-        addMapDot(map, row.geometry.centroid.coords[0], "green")
+    for geojson_data in geojson_borders:
+        addMapDot(map, geojson_data)
 
     map.fit_bounds([start, end])
     return renderMap(map)

@@ -1,0 +1,146 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.699669351972034,
+          54.544290209945785
+        ]
+      },
+      "properties": {
+        "name": "Medininkai - Kamienny Loh",
+        "description": "Border crossing between Medininkai - Kamienny Loh",
+        "status": "open"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.745343149196742,
+          54.71874967618095
+        ]
+      },
+      "properties": {
+        "name": "Lavoriškės - Kotlovka",
+        "description": "Border crossing between Lavoriškės - Kotlovka",
+        "status": "closed"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.376322008641807,
+          54.27283582118122
+        ]
+      },
+      "properties": {
+        "name": "Šalčininkai - Byenyakoni",
+        "description": "Border crossing between Šalčininkai - Byenyakoni",
+        "status": "open"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.757521006643714,
+          54.59160424975593
+        ]
+      },
+      "properties": {
+        "name": "Šumskas - Losha",
+        "description": "Border crossing between Šumskas - Losha",
+        "status": "closed"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.970545123523408,
+          53.94164316342787
+        ]
+      },
+      "properties": {
+        "name": "Raigardas - Privalka",
+        "description": "Border crossing between Raigardas - Privalka",
+        "status": "closed"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.634927954927093,
+          55.32355575882784
+        ]
+      },
+      "properties": {
+        "name": "Tverečius - Vidzy",
+        "description": "Border crossing between Tverečius - Vidzy",
+        "status": "closed"
+      }
+    },{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.74394312265784,
+          54.6417363422309
+        ]
+      },
+      "properties": {
+        "name": "Kybartai - Chernyshevskoye",
+        "description": "Border crossing between Kybartai - Chernyshevskoye",
+        "status": "open"
+      }
+    },{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.591920900667162,
+          55.059654987865486
+        ]
+      },
+      "properties": {
+        "name": "Pasienio - DAPP",
+        "description": "Border crossing between Pasienio - DAPP",
+        "status": "open"
+      }
+    },{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          21.906354110154666,
+          55.08407942044602
+        ]
+      },
+      "properties": {
+        "name": "Panemunė - Sovetsk",
+        "description": "Border crossing between Panemunė - Sovetsk",
+        "status": "open"
+      }
+    },{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.963868934676896,
+          55.27976091602255
+        ]
+      },
+      "properties": {
+        "name": "Morskoye - Klaipėda",
+        "description": "Border crossing between Morskoye - Klaipėda",
+        "status": "open"
+      }
+    }
+  ]
+}

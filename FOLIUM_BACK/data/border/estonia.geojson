@@ -12,7 +12,8 @@
       },
       "properties": {
         "name": "Luhamaa Border Crossing",
-        "description": "Main border crossing near Luhamaa."
+        "description": "Main border crossing near Luhamaa.",
+        "status": "open"
       }
     },
     {
@@ -26,7 +27,8 @@
       },
       "properties": {
         "name": "Värska Border Crossing",
-        "description": "Border crossing near Värska."
+        "description": "Border crossing near Värska.",
+        "status": "warning"
       }
     },
     {
@@ -40,7 +42,8 @@
       },
       "properties": {
         "name": "Narva-Ivangorod Border Crossing",
-        "description": "Significant border crossing between Narva and Ivangorod."
+        "description": "Significant border crossing between Narva and Ivangorod.",
+        "status": "warning"
       }
     },
     {
@@ -54,7 +57,8 @@
       },
       "properties": {
         "name": "Koidula Border Crossing",
-        "description": "Modernized border crossing near Koidula."
+        "description": "Modernized border crossing near Koidula.",
+        "status": "open"
       }
     }
   ]
