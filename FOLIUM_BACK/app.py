@@ -42,14 +42,32 @@ def main_map():
 
     start = request.args.get("start")
     end = request.args.get("end")
+    through = request.args.get("through")
 
     if start is not None and end is not None:
         start = json.loads(start)
         end = json.loads(end)
         start = (start[1], start[0])
         end = (end[1], end[0])
-        directionsMap(gmaps, map, start, end)
-        addMapPoints(map, [start, end])
+
+        throughs = []
+        if through is not None:
+            through = json.loads(through)
+            
+            for point in through:
+                throughs.append([point[1], point[0]])
+
+        directionsMap(gmaps, map, start, end, throughs)
+
+        points = [
+            start,
+            end
+        ]
+        if throughs:
+            for point in throughs:
+                points.append(point)
+        addMapPoints(map, points)
+        
         map.fit_bounds([start, end])
     
     geojson_borders = [

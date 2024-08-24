@@ -14,14 +14,24 @@
   </div>
   <div class="directions-via">
     <div class="input-group"> 
-      <input type="text" class="form-control" placeholder="Through" disabled />
-      <button class="btn btn-outline-secondary">Add</button>
+      <input type="text" class="form-control" placeholder="Through" [(ngModel)]="throughPoint" (ngModelChange)="onThroughPointChange($event)" />
+      <!-- <button class="btn btn-outline-secondary">Add</button> -->
+      <div class="input-group-suggestions">
+        <ul class="list-group">
+          <ng-container *ngFor="let country of countries | slice:0:5">
+            <li 
+              class="list-group-item"
+              (click)="throughPointChange(country)"
+            >{{ country['properties']['country'] }}</li>
+          </ng-container>
+        </ul>
+      </div>
     </div>
-    <div class="input-group">
+    <div class="input-group" *ngFor="let point of throughPoints; let i = index">
       <button class="btn btn-outline-secondary">Arrow up</button>
       <button class="btn btn-outline-secondary">Arrow down</button>
-      <input type="text" class="form-control" placeholder="Through" disabled />
-      <button class="btn btn-outline-danger">Remove</button>
+      <input type="text" class="form-control" placeholder="Through" value="{{ point['properties']['country'] }}" />
+      <button class="btn btn-outline-danger" (click)="removeThroughPoint(point)">Remove</button>
     </div>
     <p class="text-muted m-0">
       Maximum 2 points. For more points, please upgrade to <a href="">Premium</a>

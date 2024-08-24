@@ -14,6 +14,10 @@ import { MapService } from 'src/app/services/map.service';
 export class DirectionsFilterFormComponent implements OnInit {
   startingPoint: string = 'Moscow';
   endingPoint: string = 'Istanbul';
+  throughPoint: string = '';
+
+  throughPoints = [] as any;
+
   public countries: [] = [] as any;
   private _countries: [] = [] as any;
   
@@ -39,6 +43,15 @@ export class DirectionsFilterFormComponent implements OnInit {
         this.endingPoint = data['features'].find((country: any) => {
           return country['geometry']['coordinates'][0] === end[0] && country['geometry']['coordinates'][1] === end[1];
         })['properties']['country'];
+      }
+
+      if (queryParams['through']) {
+        const through = JSON.parse(queryParams['through']);
+        this.throughPoints = data['features'].filter((country: any) => {
+          return through.some((point: any) => {
+            return country['geometry']['coordinates'][0] === point[0] && country['geometry']['coordinates'][1] === point[1];
+          });
+        });
       }
 
     });
@@ -90,6 +103,29 @@ export class DirectionsFilterFormComponent implements OnInit {
     }) as any;
   }
 
+  onThroughPointChange(value: string = '') {
+    this.countries = this._countries.filter((country: any) => {
+      let countryName = country['properties']['country'].toLowerCase();
+      let cityName = country['properties']['city'] || '';
+      let tld = country['properties']['tld'] || '';
+      let iso3 = country['properties']['iso3'] || '';
+      let iso2 = country['properties']['iso2'] || '';
+      if (cityName) {
+        cityName = cityName.toLowerCase();
+      }
+      if (tld) {
+        tld = tld.toLowerCase();
+      }
+      if (iso3) {
+        iso3 = iso3.toLowerCase();
+      }
+      if (iso2) {
+        iso2 = iso2.toLowerCase();
+      }
+      return countryName.includes(value.toLowerCase()) || cityName.includes(value.toLowerCase());
+    }) as any;
+  }
+
   startingPointChange(country: any) {
     this.startingPoint = country['properties']['country'];
     // change URL query params
@@ -111,5 +147,33 @@ export class DirectionsFilterFormComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
-  
+
+  throughPointChange(country: any) {
+    this.throughPoints.push(country);
+    const coordinates = this.throughPoints.map((country: any) => country['geometry']['coordinates'])
+
+    // change URL query params
+    this.router.navigate([], {
+      queryParams: {
+        through: JSON.stringify(coordinates)
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  removeThroughPoint(country: any) {
+    this.throughPoints = this.throughPoints.filter((point: any) => {
+      return point['properties']['country'] !== country['properties']['country'];
+    });
+
+    const coordinates = this.throughPoints.map((country: any) => country['geometry']['coordinates'])
+
+    // change URL query params
+    this.router.navigate([], {
+      queryParams: {
+        through: JSON.stringify(coordinates)
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
 }

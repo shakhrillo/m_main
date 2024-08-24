@@ -2,8 +2,6 @@ import folium
 import googlemaps
 
 def directionsMap(gmaps, map, origin, destination, waypoints=[]):
-  print("Origin: ", origin)
-  print("Destination: ", destination)
   directions_result = gmaps.directions(
     origin=origin,
     destination=destination,

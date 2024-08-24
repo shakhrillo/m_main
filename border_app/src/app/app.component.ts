@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
         const query = new URLSearchParams({
           start: params['start'] || '[55.7558, 37.6176]',
           end: params['end'] || '[41.0082, 28.9784]',
+          through: params['through'] || '',
         }).toString();
 
         this.mapService.getMap(
