@@ -9,7 +9,15 @@ export class MapService {
 
   constructor(private http: HttpClient) { }
 
-  getMap(): Observable<Blob> {
-    return this.http.get<Blob>(`${environment.apiUrl}/map`, { responseType: 'blob' as 'json' });
+  getMap(query: string): Observable<Blob> {
+    return this.http.get<Blob>(`${environment.apiUrl}/map?${query}`, { responseType: 'blob' as 'json' });
+  }
+
+  getCountries(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/countries`);
+  }
+
+  getDirections(start: string, end: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/directions?start=${start}&end=${end}`);
   }
 }

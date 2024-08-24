@@ -1,9 +1,19 @@
 <div class="directions">
   <div class="input-group">
-    <input type="text" class="form-control" placeholder="Starting point" />
+    <input type="text" class="form-control" placeholder="Starting point" [(ngModel)]="startingPoint" (ngModelChange)="onStartingPointChange($event)" />
+    <div class="input-group-suggestions">
+      <ul class="list-group">
+        <ng-container *ngFor="let country of countries | slice:0:5">
+          <li 
+            class="list-group-item"
+            (click)="startingPointChange(country)"
+          >{{ country['properties']['country'] }}</li>
+        </ng-container>
+      </ul>
+    </div>
   </div>
   <div class="directions-via">
-    <div class="input-group">
+    <div class="input-group"> 
       <input type="text" class="form-control" placeholder="Through" disabled />
       <button class="btn btn-outline-secondary">Add</button>
     </div>
@@ -18,6 +28,15 @@
     </p>
   </div>
   <div class="input-group">
-    <input type="text" class="form-control" placeholder="Ending point" />
+    <input type="text" class="form-control" placeholder="Ending point" [(ngModel)]="endingPoint" (ngModelChange)="onEndingPointChange($event)" />
+    <div class="input-group-suggestions">
+      <ul class="list-group">
+        <ng-container *ngFor="let country of countries | slice:0:5">
+          <li 
+            class="list-group-item"
+            (click)="endingPointChange(country)"
+          >{{ country['properties']['country'] }}</li>
+        </ng-container>
+      </ul>
   </div>
 </div>
