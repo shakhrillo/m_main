@@ -11,6 +11,7 @@ from shapely.geometry import Polygon
 from map.main import initMap
 from map.render import renderMap
 from map.directions import directionsMap
+from map.points import addMapPoints, addMapCrossPoint, addMapDot
 
 # with open("data/countries.json") as f:
 #     countries = json.load(f)
@@ -28,90 +29,41 @@ def after_request(response):
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
     return response
 
+# import findland json
+finland = gpd.read_file("data/border/finland.geojson")
+estonia = gpd.read_file("data/border/estonia.geojson")
+latvia = gpd.read_file("data/border/latvia.geojson")
+
 @app.route("/components")
 def components():
+    moscow = [55.7558, 37.6176]
+    istanbul = [41.0082, 28.9784]
+    verkhny_lars = [42.7022, 44.6277]
+    sarp = [41.7167, 42.0000]
+    # estonia = [58.5953, 25.0136]
+
+    latvia_kpp = [56.87081803558701, 27.832182563513896]
+
+    start = moscow
+    end = istanbul
+    
     map = initMap()
-    directionsMap(gmaps, map)
+    directionsMap(gmaps, map, start, end, [latvia_kpp])
+    addMapPoints(map, [start, end])
+    addMapCrossPoint(map, [verkhny_lars, sarp])
+
+    # findland border points and add custom icon
+    for index, row in finland.iterrows():
+        addMapDot(map, row.geometry.centroid.coords[0])
+
+    # estonia border points and add custom icon
+    for index, row in estonia.iterrows():
+        addMapDot(map, row.geometry.centroid.coords[0], "orange")
+
+    # latvia border points and add custom icon
+    for index, row in latvia.iterrows():
+        addMapDot(map, row.geometry.centroid.coords[0], "green")
+
+    map.fit_bounds([start, end])
     return renderMap(map)
 
-
-@app.route("/componentss")
-def componentss():
-    m = folium.Map(
-        # width=800,
-        # height=600,
-    )
-
-    moscow = [55.7558, 37.6176]
-    paris = moscow
-    cape_town = [-33.9249, 18.4241]
-
-    crossed_countries = []
-
-    # Request directions
-    directions_result = gmaps.directions(
-        origin=paris,
-        destination=cape_town,
-        mode="driving",
-        waypoints=[
-            "42.74694557147825,44.62293974596122"
-        ]
-    )
-
-    if directions_result:
-        route_polyline = directions_result[0]["overview_polyline"]["points"]
-        decoded_route = googlemaps.convert.decode_polyline(route_polyline)
-        points = []
-        for coord in decoded_route:
-            points.append(
-                (coord['lat'], coord['lng'])
-            )
-
-        folium.PolyLine(
-            locations=points,
-            color="#f1c40f",
-            weight=5,
-            opacity=0.8,
-        ).add_to(m)
-
-    else:
-        print("No routes found")
-
-    print(f"Crossed countries: {crossed_countries}")
-    print(len(crossed_countries))
-    # extend the bounds of the map
-    m.fit_bounds([paris, cape_town])
-
-    folium.Marker(
-        location=[
-            42.74694557147825,
-            44.62293974596122
-        ],
-        popup="This is a test",
-        icon=folium.Icon(color="red"),
-    ).add_to(m)
-
-    m.get_root().render()
-    header = m.get_root().header.render()
-    body_html = m.get_root().html.render()
-    script = m.get_root().script.render()
-
-    return render_template_string(
-        """
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    {{ header|safe }}
-                </head>
-                <body>
-                    {{ body_html|safe }}
-                    <script>
-                        {{ script|safe }}
-                    </script>
-                </body>
-            </html>
-        """,
-        header=header,
-        body_html=body_html,
-        script=script,
-    )

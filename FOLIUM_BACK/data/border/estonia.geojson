@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.380297168489733,
+          57.64328714906611
+        ]
+      },
+      "properties": {
+        "name": "Luhamaa Border Crossing",
+        "description": "Main border crossing near Luhamaa."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.816823623626192,
+          57.895369849104725
+        ]
+      },
+      "properties": {
+        "name": "Värska Border Crossing",
+        "description": "Border crossing near Värska."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.20423798737764,
+          59.376657414411625
+        ]
+      },
+      "properties": {
+        "name": "Narva-Ivangorod Border Crossing",
+        "description": "Significant border crossing between Narva and Ivangorod."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.59680857359382,
+          57.83378911741721
+        ]
+      },
+      "properties": {
+        "name": "Koidula Border Crossing",
+        "description": "Modernized border crossing near Koidula."
+      }
+    }
+  ]
+}

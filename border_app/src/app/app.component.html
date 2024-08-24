@@ -12,7 +12,20 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <ul class="nav">
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Starting point" />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Ending point" />
+          </div>
+        </div>
+      </div>
+
+      <ul class="nav my-2">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">
             <img src="assets/icons/drive.png" alt="src/assets/icons/walk.png">
@@ -41,10 +54,31 @@
             <div class="accordion-body">
               <ul class="list-group">
                 <li class="list-group-item">
-                  Verkhny Lars (A-158)
-                  <div class="badge bg-success">Open</div>
-                  <div class="badge bg-info">24/7</div>
-                  <div class="badge bg-success">No checks</div>
+                  <strong>Verkhny Lars (A-158)</strong>
+                  <br>
+                  <div class="badge mr-1 bg-success">Open</div>
+                  <div class="badge mx-1 bg-info">24/7</div>
+
+                  <div class="row mt-2">
+                    <ng-container *ngFor="let img of [
+                      'https://arminfo.info/mcgallery/20180110112144%D0%91%D0%B5%D0%B7-%D0%B8%D0%BC%D0%B5%D0%BD%D0%B8-1.jpg',
+                      'https://media.alphanews.am/wp-content/uploads/2024/06/06130249/lars.jpg'
+                    ]">
+                      <div class="col-md-3">
+                        <div
+                          [ngStyle]="{ 'background-image': 'url(' + img + ')' }"
+                          style="background-size: cover; background-position: center; height: 100px;border-radius: 5px;"
+                        ></div>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <br />
+                  <h6>Documents</h6>
+
+                </li>
+                <li class="list-group-item">
+                  <strong>Sarpi (A-147)</strong>
                 </li>
               </ul>
             </div>

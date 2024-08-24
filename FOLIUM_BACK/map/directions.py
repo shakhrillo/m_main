@@ -1,18 +1,11 @@
 import folium
 import googlemaps
 
-def directionsMap(gmaps, map):
-  moscow = [55.7558, 37.6176]
-  paris = moscow
-  cape_town = [-33.9249, 18.4241]
-
+def directionsMap(gmaps, map, origin, destination, waypoints=[]):
   directions_result = gmaps.directions(
-    origin=paris,
-    destination=cape_town,
-    mode="driving",
-    waypoints=[
-      "42.74694557147825,44.62293974596122"
-    ]
+    origin=origin,
+    destination=destination,
+    waypoints=waypoints
   )
 
   if directions_result:
