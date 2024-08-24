@@ -28,9 +28,9 @@
       </div>
     </div>
     <div class="input-group" *ngFor="let point of throughPoints; let i = index">
-      <button class="btn btn-outline-secondary">Arrow up</button>
-      <button class="btn btn-outline-secondary">Arrow down</button>
-      <input type="text" class="form-control" placeholder="Through" value="{{ point['properties']['country'] }}" />
+      <button class="btn btn-outline-secondary" (click)="moveThroughPointUp(i)" [disabled]="i === 0">Arrow up</button>
+      <button class="btn btn-outline-secondary" (click)="moveThroughPointDown(i)" [disabled]="i === throughPoints.length - 1">Arrow down</button>
+      <input type="text" class="form-control" placeholder="Through" value="{{ point['properties']['country'] }}" disabled />
       <button class="btn btn-outline-danger" (click)="removeThroughPoint(point)">Remove</button>
     </div>
     <p class="text-muted m-0">

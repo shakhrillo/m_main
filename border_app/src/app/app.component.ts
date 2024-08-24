@@ -18,22 +18,7 @@ export class AppComponent implements OnInit {
   iframeMapHeight: number = 0;
   
   ngOnInit(): void {
-    const query = new URLSearchParams({
-      start: '[55.7558, 37.6176]',
-      end: '[41.0082, 28.9784]',
-    }).toString();
-
-    // this.mapService.getMap(
-    //   query
-    // ).subscribe((data: any) => {
-    //   const url = URL.createObjectURL(data);
-    //   this.iframeBlob = url;
-
-    //   this.iframeMapHeight = window.innerHeight - 64;
-    // });
-
     this.activatedRoute.queryParams.subscribe((params) => {
-      console.log(params);
       if (params['start'] || params['end']) {
         const query = new URLSearchParams({
           start: params['start'] || '[55.7558, 37.6176]',

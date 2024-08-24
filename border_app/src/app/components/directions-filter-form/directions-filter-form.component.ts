@@ -176,4 +176,40 @@ export class DirectionsFilterFormComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  moveThroughPointUp(index: number) {
+    if (index > 0) {
+      const temp = this.throughPoints[index];
+      this.throughPoints[index] = this.throughPoints[index - 1];
+      this.throughPoints[index - 1] = temp;
+
+      const coordinates = this.throughPoints.map((country: any) => country['geometry']['coordinates'])
+
+      // change URL query params
+      this.router.navigate([], {
+        queryParams: {
+          through: JSON.stringify(coordinates)
+        },
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+
+  moveThroughPointDown(index: number) {
+    if (index < this.throughPoints.length - 1) {
+      const temp = this.throughPoints[index];
+      this.throughPoints[index] = this.throughPoints[index + 1];
+      this.throughPoints[index + 1] = temp;
+
+      const coordinates = this.throughPoints.map((country: any) => country['geometry']['coordinates'])
+
+      // change URL query params
+      this.router.navigate([], {
+        queryParams: {
+          through: JSON.stringify(coordinates)
+        },
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
 }
