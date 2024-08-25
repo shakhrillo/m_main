@@ -60,13 +60,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.clickSubject.pipe(debounceTime(100)).subscribe(e => {
       const throughs = JSON.parse(this.activatedRoute.snapshot.queryParams['through'] || '[]');
-      throughs.push([e.latlng.lng, e.latlng.lat]);
-      this.router.navigate([], {
-        queryParams: {
-          through: JSON.stringify(throughs)
-        },
-        queryParamsHandling: 'merge'
-      });
+      console.log([e.latlng.lng, e.latlng.lat])
+      // throughs.push([e.latlng.lng, e.latlng.lat]);
+      // this.router.navigate([], {
+      //   queryParams: {
+      //     through: JSON.stringify(throughs)
+      //   },
+      //   queryParamsHandling: 'merge'
+      // });
     });
   }
 
