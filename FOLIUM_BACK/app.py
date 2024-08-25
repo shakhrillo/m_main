@@ -1,4 +1,5 @@
-from flask import Flask, json, render_template_string, request
+import os
+from flask import Flask, json, jsonify, render_template_string, request
 import folium
 import googlemaps
 from geopy.distance import geodesic
@@ -34,6 +35,8 @@ estonia = gpd.read_file("data/border/estonia.geojson")
 latvia = gpd.read_file("data/border/latvia.geojson")
 lithuania = gpd.read_file("data/border/lithuania.geojson")
 belarus = gpd.read_file("data/border/belarus.geojson")
+world = gpd.read_file("data/border/world.geojson")
+world_main = gpd.read_file("data/border/world_main.geojson")
 
 world_capitals = gpd.read_file("data/world/capitals.geojson")
 
@@ -42,11 +45,12 @@ def main_map():
     map = initMap()
 
     geojson_borders = [
-        finland,
-        estonia,
-        latvia,
-        lithuania,
-        belarus
+        world
+        # finland,
+        # estonia,
+        # latvia,
+        # lithuania,
+        # belarus
     ]
 
     start = request.args.get("start")
@@ -68,7 +72,8 @@ def main_map():
 
         print(throughs)
 
-        cross_points = directionsMap(geojson_borders, gmaps, map, start, end, throughs)
+        cross_points = directionsMap(gmaps, map, start, end, throughs)
+        cross_points = []
 
         points = [
             start,
@@ -81,8 +86,10 @@ def main_map():
         
         map.fit_bounds([start, end])
     
-    for geojson_data in geojson_borders:
-        addMapDot(map, geojson_data)
+    # for geojson_data in geojson_borders:
+    #     addMapDot(map, geojson_data)
+    
+    addMapDot(map, world_main, "orange")
 
     return renderMap(map, cross_points)
 
@@ -90,6 +97,54 @@ def main_map():
 def countries():
     capitals = world_capitals.to_json()
     return capitals
+
+def load_existing_data(file_path):
+    """Load existing GeoJSON data from file."""
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    return {"type": "FeatureCollection", "features": []}
+
+@app.route('/save-geojson', methods=['POST'])
+def save_geojson():
+    # Ensure the request content type is JSON
+    if not request.is_json:
+        return jsonify({"error": "Request must be in JSON format"}), 400
+
+    # Get the JSON data from the request
+    data = request.get_json()
+
+    # Check if the required fields are present
+    if 'latitude' not in data or 'longitude' not in data:
+        return jsonify({"error": "Request must contain 'latitude' and 'longitude'"}), 400
+
+    latitude = data['latitude']
+    longitude = data['longitude']
+
+    # Load existing GeoJSON data
+    geojson_file = 'data/border/world_main.geojson'
+    existing_data = load_existing_data(geojson_file)
+
+    # Create a new feature
+    new_feature = {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [longitude, latitude]
+        },
+        "properties": {}
+    }
+
+    # Append the new feature to existing features
+    existing_data["features"].append(new_feature)
+
+    # Save the updated GeoJSON data to a file
+    try:
+        with open(geojson_file, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+        return jsonify({"message": "GeoJSON data saved successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # give hhtp example above with js
 # http.get("http://localhost:5000/directions?start=moscow&end=istanbul")

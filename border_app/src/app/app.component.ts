@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, Subject } from 'rxjs';
 
 declare var map: any;
+declare var L: any;
 
 @Component({
   selector: 'app-root',
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         const foliumMapId = foliumMap[0]['id'];
         (window as any).map = iframeMap.contentWindow.window[foliumMapId];
         (window as any).map_cross_points = iframeMap.contentWindow.window.map_cross_points;
+        (window as any).L = iframeMap.contentWindow.window.L;
 
         this.mapService.mapCrossPoints$.next((window as any).map_cross_points);
 
@@ -94,6 +96,45 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
           }
         }
+
+        map.on("boxzoomend", (e: any) => {
+
+
+          const mapBounds = e.boxZoomBounds;
+          const allMarkers = Object.values(map._layers);
+          const markers = allMarkers.filter((layer: any) => {
+            return layer.getLatLng && layer.options &&
+                   layer.options.pane === 'overlayPane' &&
+                   mapBounds.contains(layer.getLatLng());
+          });
+
+          // middle of the celected points and draw circle
+          const latLngs = markers.map((marker: any) => marker.getLatLng());
+          const latLngsLength = latLngs.length;
+          const latSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lat, 0);
+          const lngSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lng, 0);
+          const lat = latSum / latLngsLength;
+          const lng = lngSum / latLngsLength;
+          const center = [lat, lng] as any;
+          const radius = 0.1;
+          const circle = L.circle(center, {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: radius * 1000,
+          }).addTo(map);
+
+
+          // this.mapService.saveGeoJSON({
+          //   latitude: lat,
+          //   longitude: lng,
+          // }).subscribe((data) => {
+          //   console.log(data);
+          // });
+        
+          console.log(markers);
+        });
+        
       }
     };
   }

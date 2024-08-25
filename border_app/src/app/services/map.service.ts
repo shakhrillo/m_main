@@ -22,4 +22,8 @@ export class MapService {
   getDirections(start: string, end: string): Observable<any> {
     return this.http.get(`${environment.apiUrl}/directions?start=${start}&end=${end}`);
   }
+
+  saveGeoJSON(data: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/save-geojson`, data);
+  }
 }

@@ -19,29 +19,29 @@ def addMapCrossPoint(map, points):
       icon=folium.Icon(color="red"),
     ).add_to(map)
 
-def addMapDot(map, geojson_data):
+def addMapDot(map, geojson_data, color="green"):
   for index, row in geojson_data.iterrows():
     lat = row.geometry.centroid.coords[0][1]
     lng = row.geometry.centroid.coords[0][0]
-    description = row["name"]
+    # description = row["name:en"]
 
-    status = row["status"]
-    color = "green"
-    if status == "closed":
-      color = "red"
-    elif status == "warning":
-      color = "orange"
+    # status = row["status"]
+    # color = "green"
+    # if status == "closed":
+    #   color = "red"
+    # elif status == "warning":
+    #   color = "orange"
 
-    popup_text = f"Lat: {lat}, Lng: {lng}<br>Status: {status}"
+    # popup_text = f"Lat: {lat}, Lng: {lng}<br>Status: {status}"
     
     circleMarker = folium.CircleMarker(
       location=[lat, lng],
-      radius=5,
+      radius=2,
       color=color,
       fill=True,
       fill_color=color,
       fill_opacity=0.6,
-      tooltip=description
+      # tooltip=description
     )
 
     circleMarker.add_to(map)

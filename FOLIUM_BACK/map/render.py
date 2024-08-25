@@ -14,6 +14,11 @@ def renderMap(map, cross_points):
       window.map_cross_points = %s;
     """ % cross_points
 
+  # add L as a global variable
+  script += """
+    window.L = L;
+  """
+
   return render_template_string(
     """
       <!DOCTYPE html>
