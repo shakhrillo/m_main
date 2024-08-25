@@ -9,9 +9,9 @@ def crossed_check_point(map, decoded_route, geojson_borders):
         lat = row.geometry.centroid.coords[0][1]
         lng = row.geometry.centroid.coords[0][0]
         
-        distance = haversine((lat, lng), coord, unit=Unit.METERS)
+        distance = haversine((lat, lng), coord, unit=Unit.KILOMETERS)
 
-        if distance < 1000:
+        if distance < 30:
           closest_point = {
             "lat": lat,
             "lng": lng,

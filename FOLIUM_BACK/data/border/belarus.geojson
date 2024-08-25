@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [23.664, 52.097]
+      },
+      "properties": {
+        "name": "Brest - Brest",
+        "description": "Major crossing point near Brest, Belarus and Brest, Russia.",
+        "status": "open",
+        "country": "belarus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.984634887251076,
+          54.6907757537561
+        ]
+      },
+      "properties": {
+        "name": "Minsk - Smolensk",
+        "description": "Crossing point near Minsk, Belarus and Smolensk, Russia.",
+        "status": "open",
+        "country": "belarus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.60970376065501,
+          52.442463560543985
+        ]
+      },
+      "properties": {
+        "name": "Gomel - Bryansk",
+        "description": "Crossing point near Gomel, Belarus and Bryansk, Russia.",
+        "status": "open",
+        "country": "belarus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.963600922570606,
+          55.85747165237066
+        ]
+      },
+      "properties": {
+        "name": "Vitebsk - Pskov",
+        "description": "Crossing point near Vitebsk, Belarus and Pskov, Russia.",
+        "status": "open",
+        "country": "belarus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.953710461262034,
+          54.988563381855585
+        ]
+      },
+      "properties": {
+        "name": "Orsha - Vitebsk",
+        "description": "Crossing point near Orsha, Belarus and Vitebsk, Belarus.",
+        "status": "open",
+        "country": "belarus"
+      }
+    }
+  ]
+}

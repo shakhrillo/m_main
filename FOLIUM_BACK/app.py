@@ -33,6 +33,7 @@ finland = gpd.read_file("data/border/finland.geojson")
 estonia = gpd.read_file("data/border/estonia.geojson")
 latvia = gpd.read_file("data/border/latvia.geojson")
 lithuania = gpd.read_file("data/border/lithuania.geojson")
+belarus = gpd.read_file("data/border/belarus.geojson")
 
 world_capitals = gpd.read_file("data/world/capitals.geojson")
 
@@ -45,6 +46,7 @@ def main_map():
         estonia,
         latvia,
         lithuania,
+        belarus
     ]
 
     start = request.args.get("start")
