@@ -13,7 +13,8 @@
       "properties": {
         "name": "Medininkai - Kamienny Loh",
         "description": "Border crossing between Medininkai - Kamienny Loh",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     }, {
       "type": "Feature",
@@ -27,7 +28,8 @@
       "properties": {
         "name": "Lavoriškės - Kotlovka",
         "description": "Border crossing between Lavoriškės - Kotlovka",
-        "status": "closed"
+        "status": "closed",
+        "country": "lithuana"
       }
     }, {
       "type": "Feature",
@@ -41,7 +43,8 @@
       "properties": {
         "name": "Šalčininkai - Byenyakoni",
         "description": "Border crossing between Šalčininkai - Byenyakoni",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     }, {
       "type": "Feature",
@@ -55,7 +58,8 @@
       "properties": {
         "name": "Šumskas - Losha",
         "description": "Border crossing between Šumskas - Losha",
-        "status": "closed"
+        "status": "closed",
+        "country": "lithuana"
       }
     }, {
       "type": "Feature",
@@ -69,7 +73,8 @@
       "properties": {
         "name": "Raigardas - Privalka",
         "description": "Border crossing between Raigardas - Privalka",
-        "status": "closed"
+        "status": "closed",
+        "country": "lithuana"
       }
     }, {
       "type": "Feature",
@@ -83,7 +88,8 @@
       "properties": {
         "name": "Tverečius - Vidzy",
         "description": "Border crossing between Tverečius - Vidzy",
-        "status": "closed"
+        "status": "closed",
+        "country": "lithuana"
       }
     },{
       "type": "Feature",
@@ -97,7 +103,8 @@
       "properties": {
         "name": "Kybartai - Chernyshevskoye",
         "description": "Border crossing between Kybartai - Chernyshevskoye",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     },{
       "type": "Feature",
@@ -111,7 +118,8 @@
       "properties": {
         "name": "Pasienio - DAPP",
         "description": "Border crossing between Pasienio - DAPP",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     },{
       "type": "Feature",
@@ -125,7 +133,8 @@
       "properties": {
         "name": "Panemunė - Sovetsk",
         "description": "Border crossing between Panemunė - Sovetsk",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     },{
       "type": "Feature",
@@ -139,7 +148,8 @@
       "properties": {
         "name": "Morskoye - Klaipėda",
         "description": "Border crossing between Morskoye - Klaipėda",
-        "status": "open"
+        "status": "open",
+        "country": "lithuana"
       }
     }
   ]

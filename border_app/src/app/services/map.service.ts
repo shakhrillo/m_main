@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
+
+  mapCrossPoints$ = new Subject<any>();
 
   constructor(private http: HttpClient) { }
 

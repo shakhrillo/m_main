@@ -13,13 +13,20 @@ declare var map: any;
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('iframeMap') iframeMap: ElementRef | undefined;
 
+  public crossPoints: any[] = [];
+
   private clickSubject = new Subject<any>();
 
   constructor(
     private mapService: MapService,
     public activatedRoute: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.mapService.mapCrossPoints$.subscribe((crossPoints) => {
+      console.log(crossPoints);
+      this.crossPoints = crossPoints;
+    });
+  }
 
   iframeBlob = {
     url: '',
@@ -71,6 +78,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log('ready');
         const foliumMapId = foliumMap[0]['id'];
         (window as any).map = iframeMap.contentWindow.window[foliumMapId];
+        (window as any).map_cross_points = iframeMap.contentWindow.window.map_cross_points;
+
+        this.mapService.mapCrossPoints$.next((window as any).map_cross_points);
 
         const allLayers = map._layers;
         for (let layer in allLayers) {

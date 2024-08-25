@@ -13,7 +13,8 @@
       "properties": {
         "name": "Luhamaa Border Crossing",
         "description": "Main border crossing near Luhamaa.",
-        "status": "open"
+        "status": "open",
+        "country": "estonia"
       }
     },
     {
@@ -28,7 +29,8 @@
       "properties": {
         "name": "Värska Border Crossing",
         "description": "Border crossing near Värska.",
-        "status": "warning"
+        "status": "warning",
+        "country": "estonia"
       }
     },
     {
@@ -43,7 +45,8 @@
       "properties": {
         "name": "Narva-Ivangorod Border Crossing",
         "description": "Significant border crossing between Narva and Ivangorod.",
-        "status": "warning"
+        "status": "warning",
+        "country": "estonia"
       }
     },
     {
@@ -58,7 +61,8 @@
       "properties": {
         "name": "Koidula Border Crossing",
         "description": "Modernized border crossing near Koidula.",
-        "status": "open"
+        "status": "open",
+        "country": "estonia"
       }
     }
   ]

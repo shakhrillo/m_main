@@ -1,6 +1,6 @@
 from flask import render_template_string
 
-def renderMap(map):
+def renderMap(map, cross_points):
   map.get_root().render()
   header = map.get_root().header.render()
   body_html = map.get_root().html.render()
@@ -8,7 +8,11 @@ def renderMap(map):
 
   # make map global inside the js
   script = script.replace("var map_", "window.map_")
-  # print(script)
+  
+  if cross_points:
+    script += """
+      window.map_cross_points = %s;
+    """ % cross_points
 
   return render_template_string(
     """

@@ -40,6 +40,13 @@ world_capitals = gpd.read_file("data/world/capitals.geojson")
 def main_map():
     map = initMap()
 
+    geojson_borders = [
+        finland,
+        estonia,
+        latvia,
+        lithuania,
+    ]
+
     start = request.args.get("start")
     end = request.args.get("end")
     through = request.args.get("through")
@@ -59,7 +66,7 @@ def main_map():
 
         print(throughs)
 
-        directionsMap(gmaps, map, start, end, throughs)
+        cross_points = directionsMap(geojson_borders, gmaps, map, start, end, throughs)
 
         points = [
             start,
@@ -72,17 +79,10 @@ def main_map():
         
         map.fit_bounds([start, end])
     
-    geojson_borders = [
-        finland,
-        estonia,
-        latvia,
-        lithuania,
-    ]
-
     for geojson_data in geojson_borders:
         addMapDot(map, geojson_data)
 
-    return renderMap(map)
+    return renderMap(map, cross_points)
 
 @app.route("/countries", methods=["GET"])
 def countries():
