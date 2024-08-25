@@ -7,7 +7,7 @@ import polyline
 
 from map.crossed_check_point import crossed_check_point
 
-def directionsMap(gmaps, map, origin, destination, waypoints=[]):
+def directionsMap(geojson_borders, gmaps, map, origin, destination, waypoints=[]):
   directions_result = gmaps.directions(
     origin=origin,
     destination=destination,
@@ -24,7 +24,7 @@ def directionsMap(gmaps, map, origin, destination, waypoints=[]):
     for coord in decoded_route:
       points.append(coord)
     
-    # cross_points = crossed_check_point(map, decoded_route, geojson_borders)
+    cross_points = crossed_check_point(map, decoded_route, geojson_borders)
 
     folium.PolyLine(
       locations=points,
@@ -33,10 +33,10 @@ def directionsMap(gmaps, map, origin, destination, waypoints=[]):
       opacity=0.8,
     ).add_to(map)
 
-    # print("Cross points:", cross_points)
+    print("Cross points:", cross_points)
 
-    # return cross_points
-    return []
+    return cross_points
+    # return []
 
   else:
     print("No routes found")

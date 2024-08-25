@@ -36,12 +36,12 @@ def addMapDot(map, geojson_data, color="green"):
     
     circleMarker = folium.CircleMarker(
       location=[lat, lng],
-      radius=2,
+      radius=3,
       color=color,
-      fill=True,
+      fill=False,
       fill_color=color,
       fill_opacity=0.6,
-      # tooltip=description
+      tooltip=[lat, lng]
     )
 
     circleMarker.add_to(map)

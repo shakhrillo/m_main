@@ -72,7 +72,7 @@ def main_map():
 
         print(throughs)
 
-        cross_points = directionsMap(gmaps, map, start, end, throughs)
+        cross_points = directionsMap([world_main], gmaps, map, start, end, throughs)
         cross_points = []
 
         points = [
@@ -89,7 +89,7 @@ def main_map():
     # for geojson_data in geojson_borders:
     #     addMapDot(map, geojson_data)
     
-    addMapDot(map, world_main, "orange")
+    addMapDot(map, world_main, "black")
 
     return renderMap(map, cross_points)
 

@@ -10,17 +10,23 @@ def crossed_check_point(map, decoded_route, geojson_borders):
         lng = row.geometry.centroid.coords[0][0]
         
         distance = haversine((lat, lng), coord, unit=Unit.KILOMETERS)
+        # print("Coord:", coord)
+        # print("Geojson:", (lat, lng))
+        # print("Distance:", distance)
 
-        if distance < 30:
+        # if lat == 57.833310177777776:
+        #   print("Distance:", distance)
+
+        if distance < 5:
           closest_point = {
             "lat": lat,
             "lng": lng,
             "distance": distance,
-            "country": row["country"],
-            "name": row["name"],
+            # "country": row["country"],
+            # "name": row["name"],
           }
           
-          if closest_point["name"] not in [point["name"] for point in cross_points]:
-            cross_points.append(closest_point)
+          # if closest_point["name"] not in [point["name"] for point in cross_points]:
+          cross_points.append(closest_point)
 
   return cross_points
