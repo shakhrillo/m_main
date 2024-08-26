@@ -134,7 +134,21 @@ export class AppComponent implements OnInit, AfterViewInit {
         
           console.log(markers);
         });
-        
+
+        const allPins = Object.values(map._layers).filter((layer: any) => {
+          return layer.options && layer.options.id === 'point';
+        }) as any;
+
+        console.log(allPins);
+
+        for (let pin of allPins) {
+          pin.on('click', (e: any) => {
+            console.log(e);
+            const countryName = e.target.options.title;
+          });
+        }
+
+
       }
     };
   }

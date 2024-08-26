@@ -89,7 +89,7 @@ def main_map():
     # for geojson_data in geojson_borders:
     #     addMapDot(map, geojson_data)
     
-    addMapDot(map, world_main, "black")
+    # addMapDot(map, world_main, "black")
 
     return renderMap(map, cross_points)
 
