@@ -110,19 +110,84 @@ export class AppComponent implements OnInit, AfterViewInit {
 
           // middle of the celected points and draw circle
           const latLngs = markers.map((marker: any) => marker.getLatLng());
-          const latLngsLength = latLngs.length;
-          const latSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lat, 0);
-          const lngSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lng, 0);
-          const lat = latSum / latLngsLength;
-          const lng = lngSum / latLngsLength;
-          const center = [lat, lng] as any;
-          const radius = 0.1;
-          const circle = L.circle(center, {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: radius * 1000,
-          }).addTo(map);
+          function createBoundingBoxFromPoints(points: { lat: number, lng: number }[]) {
+            // Get latitude and longitude arrays
+            const lats = points.map(point => point.lat);
+            const lngs = points.map(point => point.lng);
+            
+            // Find the min and max latitudes and longitudes
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            const minLng = Math.min(...lngs);
+            const maxLng = Math.max(...lngs);
+            
+            // Calculate original bounding box width and height
+            const originalHeight = maxLat - minLat;
+            const originalWidth = maxLng - minLng;
+            
+            // Approximate conversion factor from kilometers to degrees latitude
+            const kmToLatDegrees = 1 / 111; // Roughly 1 degree latitude ~ 111 km
+            
+            // Radius in kilometers
+            const radiusKm = 1;
+            
+            // Calculate the radius in degrees
+            const radiusLatDegrees = radiusKm * kmToLatDegrees;
+            
+            // To calculate the longitude degree offset, adjust for latitude
+            // Average latitude in radians
+            const avgLatRadians = ((minLat + maxLat) / 2) * (Math.PI / 180);
+            // Distance per degree of longitude in meters
+            const metersPerDegreeLongitude = 111000 * Math.cos(avgLatRadians);
+            // Convert 5km to degrees of longitude
+            const radiusLngDegrees = radiusKm / metersPerDegreeLongitude;
+            
+            // Determine the larger dimension to ensure a square bounding box
+            const maxDimensionDegrees = Math.max(originalWidth, originalHeight);
+            
+            // Calculate the additional buffer needed to make the bounding box square
+            const additionalBufferDegrees = maxDimensionDegrees / 2 + radiusLatDegrees;
+            
+            // Expand the bounding box to ensure it is square
+            const expandedMinLat = minLat - additionalBufferDegrees;
+            const expandedMaxLat = maxLat + additionalBufferDegrees;
+            const expandedMinLng = minLng - additionalBufferDegrees;
+            const expandedMaxLng = maxLng + additionalBufferDegrees;
+        
+            return [
+                [expandedMinLat, expandedMinLng],
+                [expandedMaxLat, expandedMinLng],
+                [expandedMaxLat, expandedMaxLng],
+                [expandedMinLat, expandedMaxLng],
+            ];
+          }
+        
+          const boundingBox = createBoundingBoxFromPoints(latLngs);
+          // draw bounding box
+          const polygon = L.polygon(boundingBox, {color: 'red'}).addTo(map);
+
+          this.mapService.saveGeoJSONBBOX({
+            boundingBox,
+          }).subscribe((data) => {
+            console.log(data);
+          });
+
+          // const center = [(boundingBox[0][0] + boundingBox[2][0]) / 2, (boundingBox[0][1] + boundingBox[2][1]) / 2];
+
+
+          // const latLngsLength = latLngs.length;
+          // const latSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lat, 0);
+          // const lngSum = latLngs.reduce((acc: number, latLng: any) => acc + latLng.lng, 0);
+          // const lat = latSum / latLngsLength;
+          // const lng = lngSum / latLngsLength;
+          // const center = [lat, lng] as any;
+          // const radius = 0.1;
+          // const circle = L.circle(center, {
+          //   color: 'red',
+          //   fillColor: '#f03',
+          //   fillOpacity: 0.5,
+          //   radius: radius * 1000,
+          // }).addTo(map);
 
 
           // this.mapService.saveGeoJSON({

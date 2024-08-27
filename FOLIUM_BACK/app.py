@@ -38,6 +38,8 @@ belarus = gpd.read_file("data/border/belarus.geojson")
 world = gpd.read_file("data/border/world.geojson")
 world_main = gpd.read_file("data/border/world_main.geojson")
 
+world_bbox = gpd.read_file("data/border/world_main_bbox.geojson")
+
 world_capitals = gpd.read_file("data/world/capitals.geojson")
 
 @app.route("/map")
@@ -86,10 +88,24 @@ def main_map():
         
         map.fit_bounds([start, end])
     
-    # for geojson_data in geojson_borders:
-    #     addMapDot(map, geojson_data)
+    for geojson_data in geojson_borders:
+        addMapDot(map, geojson_data)
     
     # addMapDot(map, world_main, "black")
+
+    print("world_bbox")
+    print(world_bbox)
+    for index, row in world_bbox.iterrows():
+        print(row.geometry)
+        # coords = row.geometry.boundary.coords
+        # # draw polygon
+        # polygon = Polygon(coords)
+        # folium.GeoJson(polygon).add_to(map)
+        # coords = row.geometry.centroid.coords
+        # draw polygon
+        # polygon = Polygon(coords)
+        # folium.GeoJson(polygon).add_to(map)
+
 
     return renderMap(map, cross_points)
 
@@ -131,6 +147,44 @@ def save_geojson():
         "geometry": {
             "type": "Point",
             "coordinates": [longitude, latitude]
+        },
+        "properties": {}
+    }
+
+    # Append the new feature to existing features
+    existing_data["features"].append(new_feature)
+
+    # Save the updated GeoJSON data to a file
+    try:
+        with open(geojson_file, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+        return jsonify({"message": "GeoJSON data saved successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/save-bbox', methods=['POST'])
+def save_bbox():
+    # Ensure the request content type is JSON
+    if not request.is_json:
+        return jsonify({"error": "Request must be in JSON format"}), 400
+
+    # Get the JSON data from the request
+    data = request.get_json()
+
+    # Load existing GeoJSON data
+    geojson_file = 'data/border/world_main_bbox.geojson'
+    existing_data = load_existing_data(geojson_file)
+
+    coordinates = []
+    for point in data["boundingBox"]:
+        coordinates.append([point[1], point[0]])
+
+    # Create a new feature
+    new_feature = {
+        "type": "Feature",
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [coordinates]
         },
         "properties": {}
     }

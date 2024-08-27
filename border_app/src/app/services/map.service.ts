@@ -26,4 +26,8 @@ export class MapService {
   saveGeoJSON(data: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/save-geojson`, data);
   }
+
+  saveGeoJSONBBOX(data: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/save-bbox`, data);
+  }
 }
