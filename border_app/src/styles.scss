@@ -17,12 +17,33 @@ $theme-colors: (
 // Import the rest of Bootstrap
 @import "node_modules/bootstrap/scss/bootstrap";
 
-
-.leaflet-control-container {
-  display: none !important;
+.leaflet-routing-container {
+  display: none;
 }
 
-.leaflet-interactive {
+.leaflet-control-zoom {
+  border: 0 !important;
+  background-color: #333;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+a.leaflet-control-zoom-in,
+a.leaflet-control-zoom-out {
+  background-color: #444;
+  border-radius: 4px;
+  text-align: center;
   cursor: pointer;
-  fill: #f1c40f !important
+  color: #fff;
+  border: 0;
+  border-radius: 4px;
+  margin: 0;
+  font-size: 18px !important;
+
+  &.leaflet-disabled {
+    background-color: #000;
+  }
 }

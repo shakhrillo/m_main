@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { provideHttpClient } from '@angular/common/http';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
-import { SafeUrlPipe } from './pipes/safe';
 import { DirectionsFilterFormComponent } from './components/directions-filter-form/directions-filter-form.component';
+import { SafeUrlPipe } from './pipes/safe';
 
 @NgModule({
   declarations: [
@@ -15,23 +16,15 @@ import { DirectionsFilterFormComponent } from './components/directions-filter-fo
   ],
   imports: [
     BrowserModule,
+    FontAwesomeModule,
     AppRoutingModule,
     LeafletModule,
     DirectionsFilterFormComponent
   ],
   providers: [
     provideHttpClient(),
-    // provideHttpClient(withInterceptorsFor([{
-    //   provide: HTTP_INTERCEPTORS,
-    //   // useClass: () => {},
-    //   multi: true
-    // }])),
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
-function withInterceptorsFor(arg0: { provide: import("@angular/core").InjectionToken<readonly import("@angular/common/http").HttpInterceptor[]>; useClass: any; multi: boolean; }[]): import("@angular/common/http").HttpFeature<import("@angular/common/http").HttpFeatureKind>
-{
-  throw new Error('Function not implemented.');
+export class AppModule {
 }
-

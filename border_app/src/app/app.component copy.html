@@ -1,0 +1,88 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      Border Crossing App
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <app-directions-filter-form />
+
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">
+            <img src="assets/icons/drive.png" alt="src/assets/icons/walk.png">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img src="assets/icons/motorcycle.png" alt="src/assets/icons/motorcycle.png">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img src="assets/icons/walk.png" alt="src/assets/icons/walk.png">
+          </a>
+        </li>
+      </ul>
+
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item" *ngFor="let crossPoint of crossPoints">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              {{crossPoint.name}}
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <strong>Verkhny Lars (A-158)</strong>
+                  <br>
+                  <div class="badge mr-1 bg-success">Open</div>
+                  <div class="badge mx-1 bg-info">24/7</div>
+
+                  <div class="row mt-2">
+                    <ng-container *ngFor="let img of [
+                      'https://arminfo.info/mcgallery/20180110112144%D0%91%D0%B5%D0%B7-%D0%B8%D0%BC%D0%B5%D0%BD%D0%B8-1.jpg',
+                      'https://media.alphanews.am/wp-content/uploads/2024/06/06130249/lars.jpg'
+                    ]">
+                      <div class="col-md-3">
+                        <div
+                          [ngStyle]="{ 'background-image': 'url(' + img + ')' }"
+                          style="background-size: cover; background-position: center; height: 100px;border-radius: 5px;"
+                        ></div>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <br />
+                  <h6>Documents</h6>
+
+                </li>
+                <li class="list-group-item">
+                  <strong>Sarpi (A-147)</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <iframe 
+        [src]="iframeBlob.url | safeUrl" 
+        class="iframe-map"
+        name="iframe-map"
+        [ngStyle]="{ 'height': iframeMapHeight + 'px' }"
+        #iframeMap
+      ></iframe>
+    </div>
+  </div>
+</div>
