@@ -31,6 +31,18 @@ $theme-colors: (
   gap: 6px;
 }
 
+.leaflet-control-scale-line {
+  background-color: #333;
+  border-radius: 8px;
+  padding: 6px;
+  text-shadow: none;
+  color: #fff;
+  min-width: 40px;
+  min-height: 26px;
+  border: 0;
+  box-shadow: none;
+}
+
 a.leaflet-control-zoom-in,
 a.leaflet-control-zoom-out {
   background-color: #444;
@@ -46,4 +58,52 @@ a.leaflet-control-zoom-out {
   &.leaflet-disabled {
     background-color: #000;
   }
+}
+
+.custom-icon,
+.shield-icon {
+  width: 42px;
+  height: 42px;
+  background-color: orange;
+  border-radius: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border: 2px solid #000;
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: #000;
+  }
+}
+
+.shield-icon {
+  background-color: red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  border-color: red;
+  svg {
+    fill: #fafafa;
+  }
+}
+
+#map-dialog {
+  background-color: #000;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 6px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  max-width: 300px;
+  min-height: 100px;
+  position: absolute;
+  top: 300px;
+  left: 200px;
+  z-index: 1000;
 }

@@ -1,8 +1,11 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 
-import { faCoffee, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faRoute, faMap } from '@fortawesome/free-solid-svg-icons';
+
+const locationPinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0S384 86 384 192z"/></svg>';
+const shieldSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64L0 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-181.7L149.2 96 64 96l0-32c0-17.7-14.3-32-32-32zM405.2 96l-74.3 0-5.4 10.7L234.8 288l74.3 0 5.4-10.7L405.2 96zM362.8 288l74.3 0 5.4-10.7L533.2 96l-74.3 0-5.4 10.7L362.8 288zM202.8 96l-5.4 10.7L106.8 288l74.3 0 5.4-10.7L277.2 96l-74.3 0zm288 192l85.2 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-384c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 53.7L490.8 288z"/></svg>';
 
 (L.Control as any).MousePosition = (L.Control as any).extend({
   options: {
@@ -79,11 +82,12 @@ L.Map.addInitHook(function (this: any) {
 export class AppComponent implements AfterViewInit {
   private map: any;
   public faMap = faMap;
+  public faRoute = faRoute;
 
   private initMap(): void {
     this.map = L.map('leaflet-map', {
-      center: [ 39.8282, -98.5795 ],
-      zoom: 3,
+      // center: [ 39.8282, -98.5795 ],
+      // zoom: 3,
       zoomControl: false
     });
 
@@ -125,15 +129,50 @@ export class AppComponent implements AfterViewInit {
         L.latLng(
           52.11645103330338,
           23.565991994138614
-        ),
-        L.latLng(52.5200, 13.4050)
+        )
+        // L.latLng(52.5200, 13.4050)
       ],
-      routeWhileDragging: true
+      routeWhileDragging: true,
+      ["lineOptions" as any]: {
+        styles: [
+          { 
+            color: 'orange',
+            opacity: 0.8,
+            weight: 8
+          }
+        ]
+      },
+      // disable adding waypoints by dragging the route
+      ["draggableWaypoints" as any]: false,
+      // disable adding waypoints by clicking the map
+      ["addWaypoints" as any]: false,
+      // change custom point icon
+      ["createMarker" as any]: (i: number, wp: any, nWps: number) => {
+        if (i === 0) {
+          return L.marker(wp.latLng, {
+            icon: L.divIcon({
+              className: 'custom-icon',
+              html: locationPinSvg,
+              iconSize: [24, 24]
+            })
+          });
+        }
+
+        return L.marker(wp.latLng, {
+          icon: L.divIcon({
+            className: 'custom-icon',
+            html: locationPinSvg,
+            iconSize: [24, 24]
+          })
+        });
+      },
+
+
+            
     });
     
     route.on('routesfound', (e: any) => {
       const routes = e.routes;
-      console.log(routes);
 
       for (let i = 0; i < routes.length; i++) {
         const route = routes[i];
@@ -154,6 +193,41 @@ export class AppComponent implements AfterViewInit {
     console.log(coordinates);
 
     route.addTo(this.map);
+
+    // Points list
+    const points = [
+      [23.565991994138614,52.61645103330338],
+      [24.01066201210699,50.67744924933163],
+      [22.16900082250538,48.42756980917761]
+    ] as [number, number][];
+
+    const pointsLayer = L.layerGroup();
+
+    points.forEach(point => {
+      const pointMarker = L.marker([
+        point[1],
+        point[0]
+      ], {
+        icon: L.divIcon({
+          className: 'shield-icon',
+          html: shieldSvg,
+          iconSize: [24, 24]
+        })
+      });
+      pointMarker.on('click', (event: any) => {
+        console.log('point clicked');
+        const mapDialog = document.getElementById('map-dialog') as HTMLElement;
+        // set the dialog position
+        mapDialog.style.top = `${event.originalEvent.clientY - 50}px`;
+        mapDialog.style.left = `${event.originalEvent.clientX - 100}px`;
+
+
+
+      });
+      pointMarker.addTo(pointsLayer);
+    });
+
+    pointsLayer.addTo(this.map);
   }
 
   constructor() { }
