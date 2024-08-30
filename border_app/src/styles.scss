@@ -83,27 +83,68 @@ a.leaflet-control-zoom-out {
 
 .shield-icon {
   background-color: red;
-  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-  border-color: red;
+  // box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  border-color: transparent;
   svg {
     fill: #fafafa;
+  }
+
+  &.active {
+    background-color: #078d00;
+    box-shadow: 0 0 5px rgba(7, 141, 0, 0.5);
+    border-color: #078d00;
+    &::after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid #078d00;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    svg {
+      fill: #fafafa;
+    }
   }
 }
 
 #map-dialog {
-  background-color: #000;
+  background-color: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
-  padding: 6px;
-  color: #fff;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 200px;
   max-width: 300px;
-  min-height: 100px;
   position: absolute;
   top: 300px;
+  height: 92px;
   left: 200px;
   z-index: 1000;
+
+  .dialog-title {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 12px;
+  }
+
+  .dialog-content {
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  .dialog-badge {
+    background-color: #078d00;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-block;
+    text-transform: uppercase;
+  }
 }

@@ -214,15 +214,24 @@ export class AppComponent implements AfterViewInit {
           iconSize: [24, 24]
         })
       });
-      pointMarker.on('click', (event: any) => {
-        console.log('point clicked');
+      // on hover event
+      pointMarker.on('mouseover', (event: any) => {
+        const targetElm = event.originalEvent.target;
+        targetElm.classList.add('active');
+        const boundingRect = targetElm.getBoundingClientRect();
+        console.log('position: ', boundingRect);
         const mapDialog = document.getElementById('map-dialog') as HTMLElement;
         // set the dialog position
-        mapDialog.style.top = `${event.originalEvent.clientY - 50}px`;
-        mapDialog.style.left = `${event.originalEvent.clientX - 100}px`;
+        mapDialog.style.top = `${boundingRect.top - 98}px`;
+        mapDialog.style.left = `${boundingRect.left - mapDialog.offsetWidth / 2 + 12}px`;
+      });
+      pointMarker.on('mouseout', (event: any) => {
+        const targetElm = event.originalEvent.target;
+        targetElm.classList.remove('active');
 
-
-
+        const mapDialog = document.getElementById('map-dialog') as HTMLElement;
+        mapDialog.style.top = '-9999px';
+        mapDialog.style.left = '-9999px';
       });
       pointMarker.addTo(pointsLayer);
     });
