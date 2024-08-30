@@ -7,6 +7,29 @@
   </button>
   <button class="btn btn-primary">Berlin</button>
 </div>
+<div class="map-controls-content">
+  <!-- header -->
+  <div class="map-controls-header">
+    <div class="map-controls-title">Map type</div>
+    <div class="map-controls-close">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </div>
+  </div>
+  <section>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+      <label class="form-check-label" for="flexRadioDefault1">
+        Basic
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+      <label class="form-check-label" for="flexRadioDefault2">
+        Satellite
+      </label>
+    </div>
+  </section>
+</div>
 <div id="map-controls">
   <button id="zoom-in" class="btn btn-primary">
     <fa-icon [icon]="faMap"></fa-icon>

@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 
-import { faRoute, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faRoute, faMap, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const locationPinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0S384 86 384 192z"/></svg>';
 const shieldSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64L0 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-181.7L149.2 96 64 96l0-32c0-17.7-14.3-32-32-32zM405.2 96l-74.3 0-5.4 10.7L234.8 288l74.3 0 5.4-10.7L405.2 96zM362.8 288l74.3 0 5.4-10.7L533.2 96l-74.3 0-5.4 10.7L362.8 288zM202.8 96l-5.4 10.7L106.8 288l74.3 0 5.4-10.7L277.2 96l-74.3 0zm288 192l85.2 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-384c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 53.7L490.8 288z"/></svg>';
@@ -83,6 +83,7 @@ export class AppComponent implements AfterViewInit {
   private map: any;
   public faMap = faMap;
   public faRoute = faRoute;
+  public faTimes = faTimes;
 
   private initMap(): void {
     this.map = L.map('leaflet-map', {
@@ -96,6 +97,15 @@ export class AppComponent implements AfterViewInit {
       minZoom: 3,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
+
+    // Satellite google maps
+    // const tiles = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    //   maxZoom: 20,
+    //   subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    // });
+
+    // Dark google maps
+
 
     // leaflet control scale options
     const scaleOptions = {
