@@ -98,15 +98,6 @@ export class AppComponent implements AfterViewInit {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
-    // Satellite google maps
-    // const tiles = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    //   maxZoom: 20,
-    //   subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    // });
-
-    // Dark google maps
-
-
     // leaflet control scale options
     const scaleOptions = {
       position: 'bottomleft',
@@ -236,12 +227,16 @@ export class AppComponent implements AfterViewInit {
         mapDialog.style.left = `${boundingRect.left - mapDialog.offsetWidth / 2 + 12}px`;
       });
       pointMarker.on('mouseout', (event: any) => {
-        const targetElm = event.originalEvent.target;
-        targetElm.classList.remove('active');
+        // const targetElm = event.originalEvent.target;
+        // targetElm.classList.remove('active');
 
+        // const mapDialog = document.getElementById('map-dialog') as HTMLElement;
+        // mapDialog.style.top = '-9999px';
+        // mapDialog.style.left = '-9999px';
+      });
+      pointMarker.on('click', (event: any) => {
         const mapDialog = document.getElementById('map-dialog') as HTMLElement;
-        mapDialog.style.top = '-9999px';
-        mapDialog.style.left = '-9999px';
+        mapDialog.classList.add('active');
       });
       pointMarker.addTo(pointsLayer);
     });

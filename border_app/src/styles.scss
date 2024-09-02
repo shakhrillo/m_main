@@ -147,4 +147,15 @@ a.leaflet-control-zoom-out {
     display: inline-block;
     text-transform: uppercase;
   }
+
+  transition: all 0.3s ease-in-out;
+
+  &.active {
+    max-width: 600px;
+    width: 600px;
+    height: calc(100vh - 140px);
+    left: 30px !important;
+    top: 70px !important;
+    z-index: 1000;
+  }
 }

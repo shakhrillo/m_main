@@ -1,11 +1,26 @@
 <div id="leaflet-map">
 </div>
 <div id="map-directions">
-  <button class="btn btn-primary">Moscow</button>
+  <!-- <button class="btn btn-primary">Moscow</button> -->
+  <!-- search -->
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="From" aria-label="Search for a place"
+      aria-describedby="button-addon2">
+    <!-- <button class="btn btn-primary" type="button" id="button-addon2">
+      <fa-icon [icon]="faSearch"></fa-icon>
+    </button> -->
+  </div>
   <button class="btn btn-light text-primary" readonly>
     <fa-icon [icon]="faRoute"></fa-icon>
   </button>
-  <button class="btn btn-primary">Berlin</button>
+  <!-- <button class="btn btn-primary">Berlin</button> -->
+   <div class="input-group">
+    <input type="text" class="form-control" placeholder="To" aria-label="Search for a place"
+      aria-describedby="button-addon2">
+    <!-- <button class="btn btn-primary" type="button" id="button-addon2">
+      <fa-icon [icon]="faSearch"></fa-icon>
+    </button> -->
+  </div>
 </div>
 <div class="map-controls-content">
   <!-- header -->
@@ -35,9 +50,63 @@
     <fa-icon [icon]="faMap"></fa-icon>
   </button>
 </div>
-<div id="map-dialog">
+<div id="map-dialog" class="active">
   <div class="dialog-title">Verkhny Lars (RU)</div>
   <div class="dialog-title">Lars (GE)</div>
-  <div class="dialog-content">Waiting time <i>12h</i></div>
-  <div class="dialog-badge">open</div>
+  <!-- <div class="dialog-content">Waiting time <i>12h</i></div>
+  <div class="dialog-badge">open</div> -->
+  <div class="badge text-bg-success">Open 24/7</div>
+  <div class="badge text-bg-danger">You need a hotel</div>
+  <div class="badge text-bg-warning">Not a family friendly</div>
+  <div class="badge text-bg-warning">Waiting time +10h</div>
+  
+  <div class="badge text-bg-info">RU > PL (+1h)</div>
+  <div class="badge text-bg-info">PL > RU (+10h)</div>
+
+  <hr>
+
+  <table class="table">
+    <!-- <thead>
+      <tr>
+        <th scope="col">Property</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead> -->
+    <tbody>
+      <tr>
+        <td>Passangers are separated</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>WC</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>ATM</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Restaurant</td>
+        <td>Within 5 km</td>
+      </tr>
+      <tr>
+        <td>Shop</td>
+        <td>Within 5 km</td>
+      </tr>
+      <tr>
+        <td>Hotel</td>
+        <td>Within 5 km</td>
+      </tr>
+      <tr>
+        <td>Gas station</td>
+        <td>Within 5 km</td>
+      </tr>
+      <tr>
+        <td>Car wash</td>
+        <td>Within 35 km</td>
+      </tr>
+    </tbody>
+  </table>
+
 </div>
+
