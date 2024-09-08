@@ -108,5 +108,35 @@
     </tbody>
   </table>
 
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Premium / 15$</h5>
+      <div class="card-text">
+        <ul>
+          <li>Fast track</li>
+          <li>Free coffee</li>
+          <li>Free Wi-Fi</li>
+          <li>Free WC</li>
+          <li>Free parking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="subscribeToStripe()">Buy</button>
+    </div>
+  </div>
+
+  <!-- Auth -->
+  <p *ngIf="isLoggedIn; else loggedOut">
+    <button (click)="logout()">Log out</button>
+  </p>
+
+  <ng-template #loggedOut>
+    <p>
+      <button (click)="loginWithGoogle()">Log in with Google</button>
+      <button (click)="loginAnonymously()">Log in with Anonymously</button>
+    </p>
+  </ng-template>
+
 </div>
 

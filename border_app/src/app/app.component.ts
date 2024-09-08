@@ -1,9 +1,11 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, inject, Optional } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 
 import { faRoute, faMap, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { MapService } from './services/map.service';
+import { Auth, GoogleAuthProvider, signInAnonymously, signInWithPopup } from '@angular/fire/auth';
+import { Firestore, collectionData, collection, addDoc, onSnapshot, CollectionReference, DocumentData } from '@angular/fire/firestore';
 
 const weatherApiKey = "fc61665737d2e0ceb93f78e7188d861f";
 
@@ -276,11 +278,111 @@ export class AppComponent implements AfterViewInit {
     }).addTo(this.map);
   }
 
+  isLoggedIn = false;
   constructor(
-    private mapService: MapService
-  ) { }
+    private mapService: MapService,
+    @Optional() private auth: Auth
+  ) {
+    this.auth.onAuthStateChanged((user) => {
+      this.isLoggedIn = user ? true : false
+
+      if (this.isLoggedIn) {
+        console.log('user is logged in');
+      } else {
+        console.log('user is logged ou t');
+      }
+    });
+
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
   }
+
+  async logout() {
+    await this.auth.signOut();
+  }
+
+  async loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const auth = await signInWithPopup(this.auth, provider);
+    console.log(auth);
+    // await this.router.navigate(this.redirect);
+  }
+
+  async loginAnonymously() {
+    const auth = await signInAnonymously(this.auth);
+    console.log(auth);
+    // await this.router.navigate(this.redirect);
+  }
+
+  firestore: Firestore = inject(Firestore);
+  async subscribeToStripe() {
+    const currentUser = await this.auth.currentUser;
+    if (!currentUser) {
+      throw new Error('Not authenticated');
+    }
+    const checkout_sessions$ = collection(this.firestore, `customers/${currentUser.uid}/checkout_sessions`);
+    
+    const doc = addDoc(checkout_sessions$, {
+      price: "price_1PwjJ5FEd0pNpaEzEBk0U3S7",
+      success_url: window.location.origin,
+      cancel_url: window.location.origin,
+    })
+
+    onSnapshot(checkout_sessions$, (snap) => {
+      snap.docChanges().forEach((change) => {
+        const data = change.doc.data();
+        if (data) {
+          const { error, url } = data;
+          if (error) {
+            console.log(data);
+            console.log(`An error occurred: ${error.message}`);
+          }
+          if (url) {
+            // console.log(url);
+            window.location.assign(url);
+          }
+        }
+      });
+    });
+
+    // ON_SNAPSHOT(checkout_sessions$, (snap) => {
+    //   const data = snap.data();
+    //   if (data) {
+    //     const { error, url } = data;
+    //     if (error) {
+    //       alert(`An error occurred: ${error.message}`);
+    //     }
+    //     if (url) {
+    //       window.location.assign(url);
+    //     }
+    //   }
+    // }, { includeMetadataChanges: true });
+    
+
+    // const docRef = await this.firestore
+    //   .collection('customers')
+    //   .doc(currentUser.uid)
+    //   .collection('checkout_sessions')
+    //   .add({
+    //     price: "prod_QoM1UYReb07VDP",
+    //     success_url: window.location.origin,
+    //     cancel_url: window.location.origin,
+    //   });
+
+    // docRef.onSnapshot((snap) => {
+    //   const data = snap.data();
+    //   if (data) {
+    //     const { error, url } = data;
+    //     if (error) {
+    //       alert(`An error occurred: ${error.message}`);
+    //     }
+    //     if (url) {
+    //       window.location.assign(url);
+    //     }
+    //   }
+    // });
+  }
 }
+
