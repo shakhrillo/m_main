@@ -30,4 +30,15 @@ export class MapService {
   saveGeoJSONBBOX(data: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/save-bbox`, data);
   }
+
+  getWeather(lat: number, lon: number): Observable<any> {
+    // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather`, {
+      params: {
+        lat: lat.toString(),
+        lon: lon.toString(),
+        appid: 'fc61665737d2e0ceb93f78e7188d861f'
+      }
+    });
+  }
 }

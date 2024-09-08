@@ -3,6 +3,9 @@ import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 
 import { faRoute, faMap, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { MapService } from './services/map.service';
+
+const weatherApiKey = "fc61665737d2e0ceb93f78e7188d861f";
 
 const locationPinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0S384 86 384 192z"/></svg>';
 const shieldSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64L0 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-181.7L149.2 96 64 96l0-32c0-17.7-14.3-32-32-32zM405.2 96l-74.3 0-5.4 10.7L234.8 288l74.3 0 5.4-10.7L405.2 96zM362.8 288l74.3 0 5.4-10.7L533.2 96l-74.3 0-5.4 10.7L362.8 288zM202.8 96l-5.4 10.7L106.8 288l74.3 0 5.4-10.7L277.2 96l-74.3 0zm288 192l85.2 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-384c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 53.7L490.8 288z"/></svg>';
@@ -235,16 +238,47 @@ export class AppComponent implements AfterViewInit {
         // mapDialog.style.left = '-9999px';
       });
       pointMarker.on('click', (event: any) => {
-        const mapDialog = document.getElementById('map-dialog') as HTMLElement;
-        mapDialog.classList.add('active');
+        // const mapDialog = document.getElementById('map-dialog') as HTMLElement;
+        // mapDialog.classList.add('active');
+
+        this.mapService.getWeather(point[1], point[0]).subscribe((data: any) => {
+          console.log(data);
+          // draw weather polygon on the map
+          // const weatherLayer = L.geoJSON(data, {
+          //   style: (feature: any) => {
+          //     return {
+          //       color: 'blue',
+          //       weight: 2,
+          //       opacity: 0.8
+          //     };
+          //   }
+          // });
+
+          // weatherLayer.addTo(this.map);
+
+        });
       });
       pointMarker.addTo(pointsLayer);
     });
 
     pointsLayer.addTo(this.map);
+
+
+    const londonPolygon = L.polygon([
+      [51.5185, -0.1357],
+      [51.5185, -0.1157],
+      [51.4985, -0.1157],
+      [51.4985, -0.1357]
+    ], {
+        color: 'blue',
+        fillColor: '#blue',
+        fillOpacity: 0.5
+    }).addTo(this.map);
   }
 
-  constructor() { }
+  constructor(
+    private mapService: MapService
+  ) { }
 
   ngAfterViewInit(): void {
     this.initMap();
