@@ -1,4 +1,5 @@
 import asyncio
+from selenium import webdriver
 from selenium_scrap.helper.get_filtered_elements import get_filtered_elements
 from selenium_scrap.google_map_reviews_data import google_map_reviews_data
 from selenium_scrap.google_map_review_link import google_map_review_link
@@ -46,8 +47,13 @@ async def google_map_search(text):
     print('-' * 50)
 
     # results = await google_map_reviews_data(driver, result_links)
-
     results = []
+    for url in review_urls:
+        print(url)
+        messages = await google_map_reviews_data(driver, [url])
+
+        for message in messages:
+            results.append(message)
 
     print('results done')
 

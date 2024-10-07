@@ -1,7 +1,7 @@
-import asyncio
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+# import asyncio
+# from selenium import webdriver
+# from selenium.webdriver.chrome.service import Service
+# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -53,11 +53,11 @@ async def google_map_reviews(driver, url):
     # scroll height
     scrollHeight = parentElmOfvyucnb.get_attribute("scrollHeight")
     driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", parentElmOfvyucnb)
-    # time.sleep(2)
+    time.sleep(2)
 
     while True:
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", parentElmOfvyucnb)
-        # time.sleep(2)
+        time.sleep(2)
         newScrollHeight = parentElmOfvyucnb.get_attribute("scrollHeight")
 
         if newScrollHeight == scrollHeight:
@@ -87,7 +87,7 @@ async def google_map_reviews(driver, url):
     for i in MyEned:
         messages.append(i.text)
 
-    # time.sleep(2)
+    time.sleep(2)
 
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
