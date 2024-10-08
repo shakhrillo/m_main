@@ -34,7 +34,9 @@ import mysql.connector
         # f.write(point + '\n')
 
 loop = asyncio.get_event_loop()
-review_data = loop.run_until_complete(google_map_search('Kulata and Promachonas'))
+# review_data = loop.run_until_complete(google_map_search("Kulata and Promachonas"))
+# review_data = loop.run_until_complete(google_map_search("Qafë Botë"))
+review_data = loop.run_until_complete(google_map_search("Sarpi"))
 
 print(len(review_data))
 

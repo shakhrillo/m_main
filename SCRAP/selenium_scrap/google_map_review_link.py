@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 async def google_map_review_link(driver, url):
 
     if url is None or url == '' or 'maps' not in url:
+        print('Invalid URL')
         return ''
 
     driver.execute_script("window.open('');")
