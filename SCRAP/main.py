@@ -36,14 +36,26 @@ import mysql.connector
 loop = asyncio.get_event_loop()
 # review_data = loop.run_until_complete(google_map_search("Kulata and Promachonas"))
 # review_data = loop.run_until_complete(google_map_search("Qafë Botë"))
-review_data = loop.run_until_complete(google_map_search("Τελωνείο Κρυσταλλοπηγής"))
+review_data = loop.run_until_complete(google_map_search("Tazhen"))
 
 print(len(review_data))
 
 # save as csv
 with open('google_reviews.csv', 'w') as f:
+    # name, address, phone, reviews
+    # f.write('User, User info, Review\n')
+    # for review in review_data:
+    #     f.write(review['user_name'] + ', ' + review['user_info'] + ', ' + review['review'] + '\n')
+
+    f.write('User, User info, Review\n')
     for review in review_data:
-        f.write(review + '\n')
+        user_name = review.get('user_name', 'N/A')
+        user_info = review.get('user_info', 'N/A')
+        review_text = review.get('content', 'N/A')
+        review_date = review.get('date', 'N/A')
+        f.write(f'{user_name},"{user_info}","{review_text}",{review_date}\n')
+
+print('Done')
 
 # print("Links: ")
 # print(google_search)

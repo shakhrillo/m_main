@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 import time
 
 options = webdriver.ChromeOptions()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("--lang=en")
 
 service = Service(ChromeDriverManager().install())
