@@ -74,14 +74,6 @@ class MainApplication(tk.Frame):
     comments = asyncio.run(open_website(url, driver))
     print(comments)
 
-
-
-    # url = "https://www.google.com/maps"
-    # driver.get(url)
-    # WebDriverWait(driver, 10).until(
-    #   lambda d: d.execute_script('return document.readyState') == 'complete'
-    # )
-
     time.sleep(5)
   def __init__(self, parent, *args, **kwargs):
     tk.Frame.__init__(self, parent, *args, **kwargs)
