@@ -1,32 +1,15 @@
-# Use an official Node.js runtime as the base image
-FROM node:18
+FROM ubuntu:20.04
 
-# Install dependencies for downloading and installing Google Chrome
+# Install Chrome
 RUN apt-get update && \
-    apt-get install -y wget gnupg apt-transport-https ca-certificates && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-    rm google-chrome-stable_current_amd64.deb && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y wget gnupg2 && \
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y google-chrome-stable
 
-# Create and set the working directory inside the container
-WORKDIR /app
+# Install Selenium
+RUN pip install selenium
 
-# Copy the package.json and package-lock.json (if available)
-COPY package*.json ./
-
-# Install the dependencies
-RUN npm install
-
-# Copy the rest of the application code
-COPY . .
-
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Set environment variables for Chrome
-ENV CHROME_BIN=/usr/bin/google-chrome
-
-# Define the command to run the app
-CMD ["npm", "start"]
+# Start Chrome with Selenium
+CMD ["google-chrome", "--no-sandbox"]
