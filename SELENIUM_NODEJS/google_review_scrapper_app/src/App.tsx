@@ -98,8 +98,8 @@ const App = () => {
                           src={review.reviewer.photoUrl}
                           alt="user"
                         />
-                        <h5>{review.reviewer.name}</h5>
-                        <small>{review.reviewer.info}</small>
+                        {/* <h5>{review.reviewer.name}</h5> */}
+                        {/* <small>{review.reviewer.info}</small> */}
                       </td>
                       <td>{review.reviewScore}</td>
                       <td>{review.timeAgo}</td>
@@ -129,10 +129,10 @@ const App = () => {
             <h5 className="card-title">{info.mainTitle}</h5>
             <p className="card-text">{info.mainSubtitle}</p>
             <p className="card-text">Reviews: {info.mainReview}</p>
-            <a href="">{info.address.name}</a>
-            <p>
+            {/* <a href="">{info.address.name}</a> */}
+            {/* <p>
               Lat: {info.address.latitude}, Lng: {info.address.longitude}
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
