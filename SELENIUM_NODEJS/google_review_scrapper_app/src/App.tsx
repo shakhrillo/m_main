@@ -1,17 +1,70 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import Button from "react-bootstrap/Button"
 import Navbar from "./components/navbar"
+
+import { initializeApp } from 'firebase/app';
+import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
+import { getAuth, signInAnonymously } from "firebase/auth";
+
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAbWEKCv0vFuretjZhtxrrXBHKgTOy-7cE",
+  authDomain: "borderline-dev.firebaseapp.com",
+  projectId: "borderline-dev",
+  storageBucket: "borderline-dev.appspot.com",
+  messagingSenderId: "406001897389",
+  appId: "1:406001897389:web:bcf2d6fd7ea1b69c749b24",
+  measurementId: "G-YJ9H91CHK1"
+};
+
+const fsapp = initializeApp(firebaseConfig);
+const db = getFirestore(fsapp);
 
 const App = () => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(false)
   const [info, setInfo] = useState({} as any)
+  const [auth, setAuth] = useState({} as any)
+  const [uniqueId, setUniqueId] = useState("")
+  // const uniqueId = url.replace(/[^a-zA-Z0-9]/g, '');
+
+  useEffect(() => {
+    // Sign in anonymously
+    const auth = getAuth();
+    signInAnonymously(auth)
+      .then(() => {
+        console.log("Sign in successfully")
+        setAuth(auth)
+      })
+      .catch((error) => {
+        console.error("Error signing in:", error);
+      });
+  }, [])
+
+  useEffect(() => {
+    if (uniqueId) {
+      getDoc(doc(db, "reviews", uniqueId))
+        .then((doc: any) => {
+          if (doc.exists()) {
+            console.log("Document data:", doc.data());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
+  }, [uniqueId])
 
   function handleSubmit(e: any) {
     e.preventDefault()
     const url = document.getElementById("url") as HTMLInputElement
     console.log(url.value)
+
+    setUniqueId(url.value.replace(/[^a-zA-Z0-9]/g, ''))
 
     // Loading spinner
     // document.querySelector(".spinner-border")?.classList.add("d-block");
