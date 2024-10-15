@@ -44,6 +44,7 @@ const App = () => {
 
   useEffect(() => {
     if (uniqueId) {
+      console.log('uniqueId', uniqueId);
       getDoc(doc(db, "reviews", uniqueId))
         .then((doc: any) => {
           if (doc.exists()) {
