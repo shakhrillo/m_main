@@ -74,11 +74,22 @@ const firestore = new Firestore({
   keyFilename: path.join(__dirname, 'keys.json')
 });
 
-async function addDocument(id, content) {
+async function setDocument(id, content) {
   const docRef = firestore.collection('reviews').doc(id);
-  if (!docRef.exists) {
-    await firestore.collection('reviews').doc(id).set(content);
+  await docRef.set(content);
+}
+
+async function getDocument(id) {
+  const docRef = firestore.collection('reviews').doc(id);
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    return null;
   }
+  return doc.data();
+}
+
+async function updateDocument(id, content) {
+  const docRef = firestore.collection('reviews').doc(id);
   await docRef.update(content);
 }
 
@@ -94,7 +105,7 @@ const openWebsite = async (url) => {
 
   const uniqueId = url.replace(/[^a-zA-Z0-9]/g, '');
 
-  await addDocument(uniqueId, {
+  setDocument(uniqueId, {
     url,
     status: 'started',
     createdAt: new Date().toISOString()
@@ -134,6 +145,10 @@ const openWebsite = async (url) => {
   async function stopContainer() {
     const command = `docker stop ${containerName} && docker rm ${containerName}`;
     try {
+      await updateDocument(uniqueId, {
+        status: 'completed',
+        completedAt: new Date().toISOString()
+      });
       const result = await execPromise(command);
       console.log(`Docker container stopped and removed: ${result}`);
     } catch (error) {
@@ -213,8 +228,9 @@ const openWebsite = async (url) => {
       info.address.name = await addressButton.getAttribute('aria-label');
     }
 
-    await addDocument(uniqueId, {
-      info,
+    await updateDocument(uniqueId, {
+      status: 'in-progress',
+      info
     });
 
     console.log('Info:', info);

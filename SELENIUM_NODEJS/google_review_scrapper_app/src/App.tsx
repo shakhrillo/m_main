@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button"
 import Navbar from "./components/navbar"
 
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot } from "firebase/firestore";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -43,21 +43,18 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (uniqueId) {
-      console.log('uniqueId', uniqueId);
-      getDoc(doc(db, "reviews", uniqueId))
-        .then((doc: any) => {
-          if (doc.exists()) {
-            console.log("Document data:", doc.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-    }
+    if (!uniqueId) return;
+    const unsubscribe = onSnapshot(doc(db, "reviews", uniqueId), (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        console.log("Document data:", docSnapshot.data());
+      } else {
+        console.log("No such document!");
+      }
+    }, (error) => {
+      console.log("Error getting document:", error);
+    });
+
+    return () => unsubscribe();
   }, [uniqueId])
 
   function handleSubmit(e: any) {
