@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "@google-cloud/firestore": "^7.10.0",
     "axios": "^1.7.7",
     "express": "^4.21.1",
+    "firebase": "^10.14.1",
     "selenium-webdriver": "^4.25.0"
   },
   "scripts": {

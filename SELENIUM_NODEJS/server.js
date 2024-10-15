@@ -11,6 +11,31 @@ const app = express();
 const port = 3000;
 const { exec } = require('child_process');
 
+// Import the functions you need from the SDKs you need
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
+// const firebase = require('firebase/app');
+// require('firebase/analytics');
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAbWEKCv0vFuretjZhtxrrXBHKgTOy-7cE",
+//   authDomain: "borderline-dev.firebaseapp.com",
+//   projectId: "borderline-dev",
+//   storageBucket: "borderline-dev.appspot.com",
+//   messagingSenderId: "406001897389",
+//   appId: "1:406001897389:web:bcf2d6fd7ea1b69c749b24",
+//   measurementId: "G-YJ9H91CHK1"
+// };
+
+// Initialize Firebase
+// const fapp = firebase.initializeApp(firebaseConfig);
+// const analyticsInstance = firebase.analytics();
+
 // Enable CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -43,9 +68,37 @@ function changeLanguageToEnglish(url) {
   }
 }
 
+const { Firestore } = require('@google-cloud/firestore');
+const firestore = new Firestore({
+  projectId: 'borderline-dev',
+  keyFilename: path.join(__dirname, 'keys.json')
+});
+
+async function addDocument(id, content) {
+  const docRef = firestore.collection('reviews').doc(id);
+  if (!docRef.exists) {
+    await firestore.collection('reviews').doc(id).set(content);
+  }
+  await docRef.update(content);
+}
+
+async function addDocumentReview(id, content) {
+  const docCollection = firestore.collection(`reviews/${id}/reviews`)
+  await docCollection.add(content);
+}
+
+
 const openWebsite = async (url) => {
   url = decodeURIComponent(url);
   console.log('Opening website:', url);
+
+  const uniqueId = url.replace(/[^a-zA-Z0-9]/g, '');
+
+  await addDocument(uniqueId, {
+    url,
+    status: 'started',
+    createdAt: new Date().toISOString()
+  });
 
   const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const subPort = generatedPort + 1;
@@ -92,7 +145,7 @@ const openWebsite = async (url) => {
   await startContainer();
 
   // wait for the container to start
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   console.log('Docker container started');
 
   const driver = new Builder()
@@ -160,13 +213,15 @@ const openWebsite = async (url) => {
       info.address.name = await addressButton.getAttribute('aria-label');
     }
 
+    await addDocument(uniqueId, {
+      info,
+    });
+
     console.log('Info:', info);
 
-
     for (const button of allButtons) {
-      const dataTabIndex = await button.getAttribute('data-tab-index');
-      const areaSelected = await button.getAttribute('aria-selected');
-      if (dataTabIndex === '1' && areaSelected === 'false') {
+      const tabText = await button.getText();
+      if (tabText.toLowerCase().includes('reviews')) {
         console.log('Opening review tab');
         await button.click();
         await driver.sleep(2000);
@@ -176,16 +231,10 @@ const openWebsite = async (url) => {
       }
     }
 
-    const allDivs = await driver.findElements(By.xpath("//div[@tabindex='-1']"));
     let parentElm = null;
-
-    // Parent element is the div that contains all the reviews
-    for (const div of allDivs) {
-      const jslog = await div.getAttribute('jslog');
-      if (jslog && jslog.includes('mutable:true')) {
-        parentElm = div;
-        break;
-      }
+    const vyucnb = await driver.findElements(By.className("vyucnb"));
+    if (vyucnb.length > 0) {
+      parentElm = await vyucnb[0].findElement(By.xpath("parent::*"));
     }
 
     if (!parentElm) {
@@ -203,6 +252,7 @@ const openWebsite = async (url) => {
       await driver.sleep(2000);
       const newScrollHeight = await parentElm.getAttribute("scrollHeight");
       if (newScrollHeight === scrollHeight) {
+        console.log('Reached the bottom of the reviews');
         break;
       }
       scrollHeight = newScrollHeight;
@@ -210,35 +260,39 @@ const openWebsite = async (url) => {
 
     // Click on the button to show more photos
     const allButtonsAgain = await driver.findElements(By.xpath("//button"));
+    console.log('Clicking on the button to show more photos', allButtonsAgain.length);
     for (const button of allButtonsAgain) {
       const jsaction = await button.getAttribute('jsaction');
       if (jsaction && jsaction.includes('review.showMorePhotos')) {
         await button.click();
-        await driver.sleep(2000);
+        // await driver.sleep(2000);
       }
     }
 
     // Click on the review more button
     const allReviewMoreButtons = await driver.findElements(By.xpath("//button"));
+    console.log('Clicking on the review more button', allReviewMoreButtons.length);
     for (const button of allReviewMoreButtons) {
       const jsaction = await button.getAttribute('jsaction');
       if (jsaction && jsaction.includes('review.expandReview')) {
         await button.click();
-        await driver.sleep(2000);
+        // await driver.sleep(2000);
       }
     }
 
     // Click on the show original button
     const allShowOriginalButtons = await driver.findElements(By.xpath("//button"));
+    console.log('Clicking on the show original button', allShowOriginalButtons.length);
     for (const button of allShowOriginalButtons) {
       const jsaction = await button.getAttribute('jsaction');
       const ariaChecked = await button.getAttribute('aria-checked');
       if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
         await button.click();
-        await driver.sleep(2000);
+        // await driver.sleep(2000);
       }
     }
 
+    console.log('Filtering reviews');
     const filteredReviews = [];
     const allDataReviewId = await driver.findElements(By.xpath("//div[@data-review-id]"));
     for (const element of allDataReviewId) {
@@ -249,7 +303,6 @@ const openWebsite = async (url) => {
     }
 
     console.log('Starting to extract reviews');
-
     const messages = [];
     for (const element of filteredReviews) {
       console.log('Extracting review images');
@@ -263,16 +316,17 @@ const openWebsite = async (url) => {
           const style = await button.getAttribute('style');
           const imageUrl = style.split('url("')[1].split('");')[0];
           extractedImageUrls.push(imageUrl);
-          await driver.sleep(2000);
+          // await driver.sleep(2000);
         }
       }
-      for (const imageUrl of extractedImageUrls) {
-        const formattedUrl = imageUrl.split('=')[0] + '=w1000';
-        const response = await axios.get(formattedUrl, { responseType: 'arraybuffer' });
-        const imageName = `${Date.now()}.png`;
-        fs.writeFileSync(path.join(imagesDir, imageName), response.data);
-        savedImages.push(imageName);
-      }
+      console.log('Extracted image urls:', extractedImageUrls.length);
+      // for (const imageUrl of extractedImageUrls) {
+      //   const formattedUrl = imageUrl.split('=')[0] + '=w1000';
+      //   const response = await axios.get(formattedUrl, { responseType: 'arraybuffer' });
+      //   const imageName = `${Date.now()}.png`;
+      //   fs.writeFileSync(path.join(imagesDir, imageName), response.data);
+      //   savedImages.push(imageName);
+      // }
 
       console.log('Extracting reviewer');
       const reviewer = {};
@@ -298,54 +352,55 @@ const openWebsite = async (url) => {
       }
 
       console.log('Extracting review text');
-      let reviewText = "";
-      let reviewMyened = await element.findElements(By.className("MyEned"));
-      if (reviewMyened.length > 0) {
-        const reviewMyenedFirstChild = await reviewMyened[0].findElement(By.xpath("*"));
-        let reviewMyenedText = await reviewMyenedFirstChild.getText();
-        reviewMyenedText = reviewMyenedText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        reviewText = reviewMyenedText;
-      }
+      let reviewText = await element.getText();
+      // let reviewMyened = await element.findElements(By.className("MyEned"));
+      // if (reviewMyened.length > 0) {
+      //   const reviewMyenedFirstChild = await reviewMyened[0].findElement(By.xpath("*"));
+      //   let reviewMyenedText = await reviewMyenedFirstChild.getText();
+      //   reviewMyenedText = reviewMyenedText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      //   reviewText = reviewMyenedText;
+      // }
 
-      console.log('Extracting review score');
-      let reviewContent = null;
-      let reviewScore = "";
-      const reviewStars = await element.findElement(By.xpath(".//span[@aria-label]"));
-      if (reviewStars) {
-        reviewScoreParent = await reviewStars.findElement(By.xpath("parent::*"));
-        reviewScoreParentNext = await reviewScoreParent.findElement(By.xpath("following-sibling::*"));
-        if(reviewScoreParentNext) {
-          reviewContent = await reviewScoreParentNext.getText();
-          if (reviewContent) {
-            reviewContent = reviewContent.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            // remove reviewText from reviewContent
-            if(reviewContent.includes(reviewText)) {
-              reviewContent = reviewContent.replace(reviewText, '');
-            }
-          }
-        }
+      // console.log('Extracting review score');
+      // let reviewContent = null;
+      // let reviewScore = "";
+      // const reviewStars = await element.findElement(By.xpath(".//span[@aria-label]"));
+      // if (reviewStars) {
+      //   reviewScoreParent = await reviewStars.findElement(By.xpath("parent::*"));
+      //   reviewScoreParentNext = await reviewScoreParent.findElement(By.xpath("following-sibling::*"));
+      //   if(reviewScoreParentNext) {
+      //     reviewContent = await reviewScoreParentNext.getText();
+      //     if (reviewContent) {
+      //       reviewContent = reviewContent.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      //       // remove reviewText from reviewContent
+      //       if(reviewContent.includes(reviewText)) {
+      //         reviewContent = reviewContent.replace(reviewText, '');
+      //       }
+      //     }
+      //   }
 
-        reviewScore = await reviewStars.getAttribute('aria-label');
-      }
+      //   reviewScore = await reviewStars.getAttribute('aria-label');
+      // }
 
-      let timeAgo = null;
-      if(reviewStars) {
-        const timeAgoElm = await reviewStars.findElement(By.xpath("following-sibling::span"));
-        timeAgo = await timeAgoElm.getText();
-      }
+      // let timeAgo = null;
+      // if(reviewStars) {
+      //   const timeAgoElm = await reviewStars.findElement(By.xpath("following-sibling::span"));
+      //   timeAgo = await timeAgoElm.getText();
+      // }
 
       const message = {
         reviewText,
-        content: reviewContent,
+        // content: reviewContent,
         images: extractedImageUrls,
-        timeAgo,
-        reviewScore,
+        // timeAgo,
+        // reviewScore,
         reviewer
       }
 
       console.log('Message:', message);
 
       messages.push(message);
+      addDocumentReview(uniqueId, message);
     }
 
     console.log('Done extracting reviews');
