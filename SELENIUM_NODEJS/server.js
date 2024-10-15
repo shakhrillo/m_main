@@ -45,11 +45,8 @@ function changeLanguageToEnglish(url) {
 
 const openWebsite = async (url) => {
   url = decodeURIComponent(url);
-  // url = changeLanguageToEnglish(url);
   console.log('Opening website:', url);
-  // const driver = await new Builder().forBrowser('firefox').build();
 
-  // const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const subPort = generatedPort + 1;
   const imageName = `selenium/standalone-firefox:4.25.0-20241010`;
@@ -58,15 +55,15 @@ const openWebsite = async (url) => {
 
   function execPromise(command) {
     return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                reject(`Error: ${error.message}`);
-            } else if (stderr) {
-                reject(`Error: ${stderr}`);
-            } else {
-                resolve(stdout);
-            }
-        });
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          reject(`Error: ${error.message}`);
+        } else if (stderr) {
+          reject(`Error: ${stderr}`);
+        } else {
+          resolve(stdout);
+        }
+      });
     });
   }
 
@@ -76,7 +73,7 @@ const openWebsite = async (url) => {
       const result = await execPromise(command);
       console.log(`Docker container started: ${result}`);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   }
 
@@ -115,15 +112,10 @@ const openWebsite = async (url) => {
     console.log('Getting URL:', url);
     await driver.get(url);
     console.log('Got URL:', url);
-    // await driver.wait(until.titleContains('Google Maps'), 10000);
-    // await driver.sleep(5000);
 
     const title = await driver.getTitle();
     console.log('Title:', title);
 
-    // div role="tablist"
-    // const roleTabList = await driver.findElement(By.xpath("//div[@role='tablist']"));
-    // const allButtons = await roleTabList.findElements(By.xpath(".//button"));
     const allButtons = await driver.findElements(By.xpath("//button[@role='tab']"));
 
     console.log('All buttons:', allButtons.length);
@@ -147,15 +139,21 @@ const openWebsite = async (url) => {
     const mainReviews = await roleMainDiv.findElements(By.xpath(".//span[@aria-label]"));
     for (const review of mainReviews) {
       const ariaLabel = await review.getAttribute('aria-label');
+      const role = await review.getAttribute('role');
+      if(ariaLabel.includes('stars') && role === 'img') {
+        info.mainRate = ariaLabel;
+      }
+
       if (ariaLabel.includes('reviews')) {
         info.mainReview = await review.getText();
         break;
       }
     }
 
+    const currentUrl = await driver.getCurrentUrl();
     info.address = {
       'name': '',
-      ...extractLatLng(url)
+      ...extractLatLng(currentUrl)
     }
     const addressButton = await driver.findElement(By.xpath("//button[@data-item-id='address']"));
     if (addressButton) {
@@ -217,7 +215,6 @@ const openWebsite = async (url) => {
       if (jsaction && jsaction.includes('review.showMorePhotos')) {
         await button.click();
         await driver.sleep(2000);
-        break;
       }
     }
 
@@ -228,7 +225,6 @@ const openWebsite = async (url) => {
       if (jsaction && jsaction.includes('review.expandReview')) {
         await button.click();
         await driver.sleep(2000);
-        break;
       }
     }
 
@@ -240,7 +236,6 @@ const openWebsite = async (url) => {
       if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
         await button.click();
         await driver.sleep(2000);
-        break;
       }
     }
 
@@ -302,32 +297,46 @@ const openWebsite = async (url) => {
         }
       }
 
+      console.log('Extracting review text');
+      let reviewText = "";
+      let reviewMyened = await element.findElements(By.className("MyEned"));
+      if (reviewMyened.length > 0) {
+        const reviewMyenedFirstChild = await reviewMyened[0].findElement(By.xpath("*"));
+        let reviewMyenedText = await reviewMyenedFirstChild.getText();
+        reviewMyenedText = reviewMyenedText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        reviewText = reviewMyenedText;
+      }
+
       console.log('Extracting review score');
+      let reviewContent = null;
       let reviewScore = "";
       const reviewStars = await element.findElement(By.xpath(".//span[@aria-label]"));
       if (reviewStars) {
+        reviewScoreParent = await reviewStars.findElement(By.xpath("parent::*"));
+        reviewScoreParentNext = await reviewScoreParent.findElement(By.xpath("following-sibling::*"));
+        if(reviewScoreParentNext) {
+          reviewContent = await reviewScoreParentNext.getText();
+          if (reviewContent) {
+            reviewContent = reviewContent.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+            // remove reviewText from reviewContent
+            if(reviewContent.includes(reviewText)) {
+              reviewContent = reviewContent.replace(reviewText, '');
+            }
+          }
+        }
+
         reviewScore = await reviewStars.getAttribute('aria-label');
       }
 
       let timeAgo = null;
       if(reviewStars) {
-        // next element is the time ago
         const timeAgoElm = await reviewStars.findElement(By.xpath("following-sibling::span"));
         timeAgo = await timeAgoElm.getText();
       }
 
-
-      console.log('Extracting review text');
-      let reviewText = "";
-      const reviewMyened = await element.findElements(By.className("MyEned"));
-      if (reviewMyened.length > 0) {
-        let reviewMyenedText = await reviewMyened[0].getText();
-        reviewMyenedText = reviewMyenedText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        reviewText = reviewMyenedText;
-      }
-
       const message = {
-        content: reviewText,
+        reviewText,
+        content: reviewContent,
         images: extractedImageUrls,
         timeAgo,
         reviewScore,
