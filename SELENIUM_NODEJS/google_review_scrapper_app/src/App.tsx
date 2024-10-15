@@ -22,7 +22,7 @@ const fsapp = initializeApp(firebaseConfig);
 const db = getFirestore(fsapp);
 
 const App = () => {
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState([] as any[])
   const [loading, setLoading] = useState(false)
   const [info, setInfo] = useState({} as any)
   const [auth, setAuth] = useState({} as any)
@@ -44,9 +44,13 @@ const App = () => {
 
   useEffect(() => {
     if (!uniqueId) return;
+    setInfo({} as any)
+    setReviews([])
     const unsubscribe = onSnapshot(doc(db, "reviews", uniqueId), (docSnapshot) => {
       if (docSnapshot.exists()) {
         console.log("Document data:", docSnapshot.data());
+        const data = docSnapshot.data()
+        setInfo(data.info || {})
       } else {
         console.log("No such document!");
       }
@@ -54,7 +58,19 @@ const App = () => {
       console.log("Error getting document:", error);
     });
 
-    return () => unsubscribe();
+    const unsubscribeReviews = onSnapshot(collection(db, "reviews", uniqueId, "reviews"), (querySnapshot) => {
+      const reviews: any[] = []
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        reviews.push(doc.data())
+      });
+      setReviews(reviews)
+    });
+
+    return () => {
+      unsubscribe()
+      unsubscribeReviews()
+    }
   }, [uniqueId])
 
   function handleSubmit(e: any) {
@@ -74,7 +90,7 @@ const App = () => {
       .then(data => {
         console.log(data)
         setReviews(data.messages)
-        setInfo(data.info)
+        // setInfo(data.info)
         // Remove spinner
         // document.querySelector(".spinner-border")?.classList.remove("d-block");
       })
@@ -165,7 +181,7 @@ const App = () => {
                           />
                         ))}
                       </td>
-                      <td>{review.content}</td>
+                      <td>{review.reviewText}</td>
                     </tr>
                   ))}
                 </tbody>

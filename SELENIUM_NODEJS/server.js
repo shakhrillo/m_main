@@ -255,7 +255,8 @@ const openWebsite = async (url) => {
 
     if (!parentElm) {
       console.log('Parent element not found');
-      return {};
+      // give error for try
+      throw new Error('Parent element not found');
     }
 
     // Scroll to the bottom of the reviews
