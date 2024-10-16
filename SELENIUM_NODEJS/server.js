@@ -445,9 +445,14 @@ app.get('/review', async (req, res) => {
     return;
   }
 
-  const reviews = await openWebsite(queryUrl) || [];
+  const reviews = openWebsite(queryUrl) || [];
   console.log(reviews.length);
-  res.send(reviews);
+  // res.send(reviews);
+
+  res.send({
+    message: 'Review extraction started'
+  });
+
 });
 
 // app.get('/items/:itemId', (req, res) => {

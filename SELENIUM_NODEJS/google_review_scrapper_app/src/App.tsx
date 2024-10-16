@@ -89,7 +89,7 @@ const App = () => {
       .then(res => res.json())
       .then(data => {
         console.log(data)
-        setReviews(data.messages)
+        // setReviews(data.messages)
         // setInfo(data.info)
         // Remove spinner
         // document.querySelector(".spinner-border")?.classList.remove("d-block");
