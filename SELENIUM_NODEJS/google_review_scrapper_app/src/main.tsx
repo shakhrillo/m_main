@@ -1,9 +1,43 @@
-import React from "react"
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import App from "./App"
+import
+  {
+    createBrowserRouter,
+    RouterProvider,
+  } from "react-router-dom"
 import { store } from "./app/store"
+import Navbar from "./components/navbar"
 import "./index.css"
+import DashboardView from "./views/dashboard"
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Landing page will be here</div>,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardView />,
+    children: [
+      {
+        path: "user",
+        element: <div>Dashboard page will be here</div>,
+      }
+    ]
+  },
+  {
+    path: "/about",
+    element: <div>About page</div>,
+  },
+  {
+    path: "/price",
+    element: <div>Price page</div>,
+  },
+  {
+    path: "/contact",
+    element: <div>Contact page</div>,
+  }
+]);
 
 const container = document.getElementById("root")
 
@@ -11,11 +45,10 @@ if (container) {
   const root = createRoot(container)
 
   root.render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </React.StrictMode>,
+    <Provider store={store}>
+      <Navbar />
+      <RouterProvider router={router} />
+    </Provider>
   )
 } else {
   throw new Error(
