@@ -50,6 +50,7 @@ function DashboardView() {
             <th scope="col">#</th>
             <th scope="col">Title</th>
             <th scope="col">Date</th>
+            <th scope="col">Url</th>
             <th scope="col">Status</th>
             <th scope="col">Actions</th>
           </tr>
@@ -75,6 +76,21 @@ function DashboardView() {
                     <span className="badge bg-danger ms-2">
                       {Math.round((new Date(review.completedAt).getTime() - new Date(review.createdAt).getTime()) / 1000)}s
                     </span>
+                  </td>
+                  <td>
+                    {
+                      review.fileUrl ? 
+                        <a href={review.fileUrl} className="text-warning">
+                          Dowload JSON
+                        </a> : null
+                    }
+                    <br />
+                    {
+                      review.fileUrlCsv ?
+                        <a href={review.fileUrlCsv} className="text-warning">
+                          Dowload CSV
+                        </a> : null
+                    }
                   </td>
                   <td>
                     <span className={`badge bg-${review.status === 'completed' ? 'success' : review.status === 'pending' ? 'warning' : 'danger'}`}>{review.status}</span>

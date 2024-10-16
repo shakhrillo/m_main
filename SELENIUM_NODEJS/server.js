@@ -10,6 +10,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const { exec } = require('child_process');
+const { Storage } = require('@google-cloud/storage');
+
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from "firebase/app";
@@ -421,6 +423,54 @@ const openWebsite = async (url) => {
     }
 
     console.log('Done extracting reviews');
+
+    // create reviews folder if not exists
+    const reviewsDir = path.join(__dirname, 'reviews');
+    if (!fs.existsSync(reviewsDir)) {
+      fs.mkdirSync(reviewsDir);
+    }
+
+    // save json locally
+    const jsonPath = path.join(__dirname, 'reviews', `${uniqueId}.json`);
+    fs.writeFileSync(jsonPath, JSON.stringify(messages, null, 2));
+
+    // save csv locally
+    const csvPath = path.join(__dirname, 'reviews', `${uniqueId}.csv`);
+    const csvContent = messages.map((message) => {
+      return `${message.reviewText}\n`;
+    }).join('\n');
+    fs.writeFileSync(csvPath, csvContent);
+
+    // Upload the file to Google Cloud Storage
+    const bucketName = 'borderline-dev.appspot.com';
+    const storage = new Storage({
+      projectId: 'borderline-dev',
+      keyFilename: path.join(__dirname, 'keys.json')
+    });
+
+    const bucket = storage.bucket(bucketName);
+    const destination = `reviews/${uniqueId}.json`;
+    await bucket.upload(jsonPath, {
+      destination
+    });
+
+    const destinationCsv = `reviews/${uniqueId}.csv`;
+    await bucket.upload(csvPath, {
+      destination: destinationCsv
+    });
+
+    // Update the document with the file URL
+    const [metadata] = await bucket.file(destination).getMetadata();
+    const fileUrl = metadata.mediaLink;
+    
+    const [metadataCsv] = await bucket.file(destinationCsv).getMetadata();
+    const fileUrlCsv = metadataCsv.mediaLink;
+
+    await updateDocument(uniqueId, {
+      status: 'completed',
+      fileUrl,
+      fileUrlCsv,
+    });
 
     return {info, messages};
   } catch (error) {
