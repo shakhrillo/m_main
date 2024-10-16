@@ -9,6 +9,7 @@ import { store } from "./app/store"
 import Navbar from "./components/navbar"
 import "./index.css"
 import DashboardView from "./views/dashboard"
+import ReviewsView from "./views/reviews"
 
 const router = createBrowserRouter([
   {
@@ -18,12 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardView />,
-    children: [
-      {
-        path: "user",
-        element: <div>Dashboard page will be here</div>,
-      }
-    ]
+  },
+  {
+    path: "/dashboard/review/:place",
+    element: <ReviewsView />
   },
   {
     path: "/about",
