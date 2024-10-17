@@ -468,8 +468,8 @@ const openWebsite = async (url) => {
 
     await updateDocument(uniqueId, {
       status: 'completed',
-      fileUrl,
-      fileUrlCsv,
+      fileUrl: destination,
+      fileUrlCsv: destinationCsv
     });
 
     return {info, messages};

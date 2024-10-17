@@ -1,0 +1,12 @@
+[
+  {
+    "origin": [
+      "https://borderlist.com/",
+      "borderlist.com",
+      "http://localhost:4200",
+      "https://borderline-dev.web.app"
+    ],
+    "method": ["GET", "POST", "PUT"],
+    "maxAgeSeconds": 3600
+  }
+]

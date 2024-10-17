@@ -1,4 +1,9 @@
 import { collection, orderBy, onSnapshot, query } from "firebase/firestore";
+import { 
+  getStorage, 
+  ref, 
+  getDownloadURL
+} from "firebase/storage";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 
@@ -58,6 +63,14 @@ function DashboardView() {
     setCurrentPage(pageNumber);
   };
 
+  const downloadFile = async (url: string) => {
+    const storage = getStorage();
+    const fileRef = ref(storage, url);
+    const fileUrl = await getDownloadURL(fileRef);
+    
+    window.open(fileUrl, '_blank');
+  }
+
   return (
     <div className="container">
       <div className="card my-2">
@@ -107,16 +120,17 @@ function DashboardView() {
                   <td>
                     {
                       review.fileUrl ? 
-                        <a href={review.fileUrl} className="text-warning">
+                        <button className="btn btn-primary" onClick={() => downloadFile(review.fileUrl)}>
                           Download JSON
-                        </a> : null
+                        </button> : null
                     }
                     <br />
                     {
                       review.fileUrlCsv ?
-                        <a href={review.fileUrlCsv} className="text-warning">
+                        <button className="btn btn-success" onClick={() => downloadFile(review.fileUrlCsv)}>
                           Download CSV
-                        </a> : null
+                        </button>
+                      : null
                     }
                   </td>
                   <td>
