@@ -1,59 +1,37 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+'use strict';
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
-
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
+const functions = require('firebase-functions/v1');
+const admin = require('firebase-admin');
 admin.initializeApp();
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
-exports.createUserDetails = functions.auth.user().onCreate(async (user) => {
-  // Extract user information
-  const { uid, email, displayName } = user;
-
-  // Define initial user details
-  const userDetails = {
-    name: displayName || "Anonymous",
-    email: email,
-    balance: 0, // initial balance
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-  };
-
-  try {
-    // Store user details in Firestore
-    await admin.firestore().collection("users").doc(uid).set(userDetails);
-    console.log("User details created successfully:", uid);
-  } catch (error) {
-    console.error("Error creating user details:", error);
-  }
+const { Logging } = require('@google-cloud/logging');
+const logging = new Logging({
+  projectId: process.env.GCLOUD_PROJECT,
 });
 
-// Delete user details when a user is deleted
-exports.deleteUserDetails = functions.auth.user().onDelete(async (user) => {
-  const uid = user.uid;
-
-  try {
-    // Delete user details from Firestore
-    await admin.firestore().collection("users").doc(uid).delete();
-    console.log("User details deleted successfully:", uid);
-  } catch (error) {
-    console.error("Error deleting user details:", error);
-  }
+const { Stripe } = require('stripe');
+const stripe = new Stripe('sk_test_JkJ81uFJzAmzz5yBKkgwpC9e', {
+  apiVersion: '2020-08-27',
 });
 
+/**
+ * When a user is created, create a Stripe customer object for them.
+ *
+ * @see https://stripe.com/docs/payments/save-and-reuse#web-create-customer
+ */
+exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
+  const customer = await stripe.customers.create({ email: user.email });
+  const intent = await stripe.setupIntents.create({
+    customer: customer.id,
+  });
+  
+  await admin.firestore().collection('app_customers').doc(user.uid).set({
+    user_id: user.uid,
+    balance: 0,
+  });
+
+  await admin.firestore().collection('stripe_customers').doc(user.uid).set({
+    customer_id: customer.id,
+    setup_secret: intent.client_secret,
+  });
+  return;
+});
