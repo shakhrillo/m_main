@@ -1,16 +1,36 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
-const signInAnonymouslyAction = createAsyncThunk('auth/signInAnonymously', async () => {
+const registerEmailAndPasswordAction = createAsyncThunk('auth/registerEmailAndPassword', async (payload: { email: string, password: string }) => {
   const auth = getAuth();
   try {
-    await signInAnonymously(auth);
-    console.log("Sign in successfully")
+    await createUserWithEmailAndPassword(auth, payload.email, payload.password);
     return auth
   } catch (error) {
-    console.error("Error signing in:", error);
-    return {}
+    console.error("Error registering:", error);
+    return null
   }
 });
 
-export { signInAnonymouslyAction }
+const signInEmailAndPasswordAction = createAsyncThunk('auth/signInEmailAndPassword', async (payload: { email: string, password: string }) => {
+  const auth = getAuth();
+  try {
+    await signInWithEmailAndPassword(auth, payload.email, payload.password);
+    return auth
+  } catch (error) {
+    console.error("Error signing in:", error);
+    return null
+  }
+});
+
+const signInWithGoogleAction = createAsyncThunk('auth/signInWithGoogle', async () => {
+  const auth = getAuth();
+  return signInWithPopup(auth, new GoogleAuthProvider());
+});
+
+const signOutAction = createAsyncThunk('auth/signOut', async () => {
+  const auth = getAuth();
+  return auth.signOut()
+});
+
+export { registerEmailAndPasswordAction, signInEmailAndPasswordAction, signOutAction, signInWithGoogleAction };

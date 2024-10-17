@@ -3,8 +3,7 @@ import { initFirebase } from "./actions";
 
 const initialState = {
   db: null as any,
-  loading: false,
-  error: null as any
+  fsapp: null as any,
 };
 
 const firebaseSlice = createSlice({
@@ -12,16 +11,10 @@ const firebaseSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(initFirebase.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(initFirebase.fulfilled, (state, action) => {
-      state.loading = false;
-      state.db = action.payload;
-    });
-    builder.addCase(initFirebase.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error;
+      console.log('Firebase initialized', action.payload);
+      state.db = action.payload.db;
+      state.fsapp = action.payload.fsapp;
     });
   }
 });

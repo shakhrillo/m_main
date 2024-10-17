@@ -1,20 +1,28 @@
-import { getAuth, signInAnonymously } from "firebase/auth";
-import { useState, useEffect } from "react";
-import { signInAnonymouslyAction } from "../../features/auth/action";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { signOutAction } from "../../features/auth/action";
 import { initFirebase } from "../../features/firebase/actions";
+import { setUser } from "../../features/auth";
 
 function Navbar() {
   const dispatch = useAppDispatch();
-  const [auth, setAuth] = useState({} as any);
 
-  const db = useAppSelector((state) => state.firebase.db);
+  const user = useAppSelector((state) => state.auth.user);
+  const fsapp = useAppSelector((state) => state.firebase.fsapp);
 
   useEffect(() => {
-    if (!db) return;
+    if (!fsapp) return;
     
-    dispatch(signInAnonymouslyAction())
-  }, [db])
+    const auth = getAuth(fsapp);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(setUser(user));
+      } else {
+        dispatch(setUser(null));
+      }
+    });
+  }, [fsapp])
 
   useEffect(() => {
     dispatch(initFirebase());
@@ -42,7 +50,17 @@ function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" aria-disabled="true">Log out</a>
+            {
+              user ? (
+                <a className="nav-link" onClick={() => {
+                  dispatch(signOutAction())
+                }}>Log out</a>
+              ) : (
+                <a className="nav-link" href={'/auth'}>
+                  Log in
+                </a>
+              )
+            }
           </li>
         </ul>
       </div>

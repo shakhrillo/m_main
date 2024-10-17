@@ -1,29 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInAnonymouslyAction } from "./action";
 
 const initialState = {
-  user: null as any,
-  loading: false,
-  error: null as any
+  user: null as any
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(signInAnonymouslyAction.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(signInAnonymouslyAction.fulfilled, (state, action) => {
-      state.loading = false;
+  reducers: {
+    setUser: (state, action) => {
       state.user = action.payload;
-    });
-    builder.addCase(signInAnonymouslyAction.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error;
-    });
+    }
+  },
+  extraReducers: (builder) => {
   }
 });
 
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

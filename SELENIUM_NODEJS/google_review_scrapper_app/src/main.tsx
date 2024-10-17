@@ -10,6 +10,7 @@ import Navbar from "./components/navbar"
 import "./index.css"
 import DashboardView from "./views/dashboard"
 import ReviewsView from "./views/reviews"
+import AuthView from "./views/auth"
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <div>Contact page</div>,
+  },
+  {
+    path: "/auth",
+    element: <AuthView />
   }
 ]);
 

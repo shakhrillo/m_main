@@ -7,6 +7,7 @@ function DashboardView() {
   const [reviews, setReviews] = useState([] as any[]);
   
   const db = useAppSelector((state) => state.firebase.db);
+  const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (!db) return;

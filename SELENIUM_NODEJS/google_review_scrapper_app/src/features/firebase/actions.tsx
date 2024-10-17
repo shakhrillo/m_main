@@ -16,7 +16,10 @@ const initFirebase = createAsyncThunk('firebase/initFirebase', async () => {
   const fsapp = initializeApp(firebaseConfig);
   const db = getFirestore(fsapp);
 
-  return db;
+  return {
+    fsapp,
+    db
+  }
 })
 
 export { initFirebase }
