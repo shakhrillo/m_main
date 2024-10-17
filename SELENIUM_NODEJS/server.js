@@ -26,9 +26,9 @@ const { Storage } = require('@google-cloud/storage');
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
 //   apiKey: "AIzaSyAbWEKCv0vFuretjZhtxrrXBHKgTOy-7cE",
-//   authDomain: "borderline-dev.firebaseapp.com",
-//   projectId: "borderline-dev",
-//   storageBucket: "borderline-dev.appspot.com",
+//   authDomain: "map-review-scrap.firebaseapp.com",
+//   projectId: "map-review-scrap",
+//   storageBucket: "map-review-scrap.appspot.com",
 //   messagingSenderId: "406001897389",
 //   appId: "1:406001897389:web:bcf2d6fd7ea1b69c749b24",
 //   measurementId: "G-YJ9H91CHK1"
@@ -72,7 +72,7 @@ function changeLanguageToEnglish(url) {
 
 const { Firestore } = require('@google-cloud/firestore');
 const firestore = new Firestore({
-  projectId: 'borderline-dev',
+  projectId: 'map-review-scrap',
   keyFilename: path.join(__dirname, 'keys.json')
 });
 
@@ -442,9 +442,9 @@ const openWebsite = async (url) => {
     fs.writeFileSync(csvPath, csvContent);
 
     // Upload the file to Google Cloud Storage
-    const bucketName = 'borderline-dev.appspot.com';
+    const bucketName = 'map-review-scrap.appspot.com';
     const storage = new Storage({
-      projectId: 'borderline-dev',
+      projectId: 'map-review-scrap',
       keyFilename: path.join(__dirname, 'keys.json')
     });
 
