@@ -1,20 +1,23 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, orderBy, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 
 function DashboardView() {
   const [scrapingUrl, setScrapingUrl] = useState('');
   const [reviews, setReviews] = useState([] as any[]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 10;
+
   const db = useAppSelector((state) => state.firebase.db);
   const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (!db) return;
     setReviews([]);    
-    const collectionReviews = collection(db, "reviews");
+    let collectionReviews = collection(db, "reviews");
+    const reviewsQuery = query(collectionReviews, orderBy('createdAt', 'desc'));
 
-    onSnapshot(collectionReviews, (querySnapshot) => {
+    onSnapshot(reviewsQuery, (querySnapshot) => {
       setReviews([]);
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -31,6 +34,29 @@ function DashboardView() {
     await fetch(`http://localhost:3000/review?url=${encodeReviewURL}`);
     setScrapingUrl('');
   }
+
+  // Pagination handling
+  const indexOfLastReview = currentPage * reviewsPerPage;
+  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="container">
@@ -58,10 +84,10 @@ function DashboardView() {
         </thead>
         <tbody>
           {
-            reviews && reviews.map((review: any, index: number) => {
+            currentReviews.map((review: any, index: number) => {
               return (
-                <tr key={index}>
-                  <th scope="row">{index + 1}</th>
+                <tr key={review.id}>
+                  <th scope="row">{indexOfFirstReview + index + 1}</th>
                   {
                     review.info ? <td>
                       <h6>
@@ -82,14 +108,14 @@ function DashboardView() {
                     {
                       review.fileUrl ? 
                         <a href={review.fileUrl} className="text-warning">
-                          Dowload JSON
+                          Download JSON
                         </a> : null
                     }
                     <br />
                     {
                       review.fileUrlCsv ?
                         <a href={review.fileUrlCsv} className="text-warning">
-                          Dowload CSV
+                          Download CSV
                         </a> : null
                     }
                   </td>
@@ -108,6 +134,21 @@ function DashboardView() {
           }
         </tbody>
       </table>
+      <div className="pagination">
+        <button className="btn btn-secondary" onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Previous
+        </button>
+        {
+          Array.from({ length: totalPages }, (_, i) => (
+            <button key={i + 1} className={`btn ${currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'}`} onClick={() => handlePageClick(i + 1)}>
+              {i + 1}
+            </button>
+          ))
+        }
+        <button className="btn btn-secondary" onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }
