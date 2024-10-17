@@ -8,6 +8,7 @@ import DashboardView from "./views/dashboard"
 import ReviewsView from "./views/reviews"
 import AuthView from "./views/auth"
 import PricingView from "./views/pricing"
+import UsersView from "./views/user"
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard/review/:place",
     element: <ReviewsView />,
+  },
+  {
+    path: "/user",
+    element: <UsersView />
   },
   {
     path: "/about",

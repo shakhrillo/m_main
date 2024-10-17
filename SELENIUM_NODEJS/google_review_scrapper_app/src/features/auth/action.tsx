@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updatePassword } from "firebase/auth";
 
 const registerEmailAndPasswordAction = createAsyncThunk('auth/registerEmailAndPassword', async (payload: { email: string, password: string }) => {
   const auth = getAuth();
@@ -33,4 +33,20 @@ const signOutAction = createAsyncThunk('auth/signOut', async () => {
   return auth.signOut()
 });
 
-export { registerEmailAndPasswordAction, signInEmailAndPasswordAction, signOutAction, signInWithGoogleAction };
+const updateAccountPasswordAction = createAsyncThunk('auth/updateAccountPassword', async (payload: { password: string }) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  
+  if (!user) {
+    return null
+  }
+
+  return await updatePassword(user, payload.password);
+});
+
+const deleteAccountAction = createAsyncThunk('auth/deleteAccount', async () => {
+  const auth = getAuth();
+  return auth.currentUser?.delete()
+});
+
+export { registerEmailAndPasswordAction, signInEmailAndPasswordAction, signOutAction, signInWithGoogleAction, deleteAccountAction, updateAccountPasswordAction };
