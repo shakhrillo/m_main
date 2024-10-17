@@ -1,80 +1,62 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import { buyProductAction, loadProductPrices, loadProducts } from "../../features/products/actions"
 import "../../style/pricing_view.css"
-import { Accordion } from "react-bootstrap"
-
-const plansItems = {
-  basic: [
-    "Employee Onboarding",
-    "Time and Attendance Tracking",
-    "Basic Payroll Processing",
-    "Employee Self-Service Portal",
-    "Standard Reporting",
-    "Email Support",
-    "50 Employee Profiles",
-    "Mobile App Access",
-  ],
-  enterprise: [
-    "All Professional Plan Features Plus",
-    "Unlimited Employee Profiles",
-    "Dedicated Account Manager",
-    "Onboarding and Training Support",
-    "Custom Workflows and Approvals",
-    "API Access for Custom Integration",
-    "Multi-Language and Multi-Currency Support",
-    "Advanced Compliance Management",
-  ],
-}
+import { collection, onSnapshot } from "firebase/firestore"
 
 const PricingView: React.FC = () => {
-  const [isBasicPlan, setIsBasicPlan] = useState(true)
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [buying, setBuying] = useState(false);
+  
+  const db = useAppSelector((state) => state.firebase.db);
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const products = useAppSelector((state) => state.products.products);
+  const prices = useAppSelector((state) => state.products.prices);
 
-  const renderPlanCard = (plan: "basic" | "enterprise") => (
-    <div className={`col pricing__plans-item`}>
-      <div
-        className={`pricing__card ${plan === "enterprise" ? "pricing__card--enterprise" : ""}`}
-      >
-        <h2
-          className={`pricing__card-title ${plan === "enterprise" && "enterprise"}`}
-        >
-          {plan === "basic" ? "Basic Plan" : "Enterprise Plan"}
-        </h2>
-        <h1
-          className={`pricing__card-price ${plan === "enterprise" && "enterprise"}`}
-        >
-          ${plan === "basic" ? "29" : "99"}
-          <span>/month</span>
-        </h1>
-        <span
-          className={`pricing__card-description ${plan === "enterprise" && "enterprise"}`}
-        >
-          {plan === "basic"
-            ? "Perfect for small businesses."
-            : "Ideal for larger organizations."}
-        </span>
-        <button
-          className={`btn pricing__button ${plan == "enterprise" && "pricing__button-secondary"}`}
-          onClick={() => setIsBasicPlan(plan === "basic")}
-        >
-          {plan == "basic" ? "Book a Demo" : "Get started with Enterprise"}
-        </button>
-        <ul className="pricing__list">
-          {(plan === "basic" ? plansItems.basic : plansItems.enterprise).map(
-            (item, index) => (
-              <li
-                key={index}
-                className={`pricing__list-item ${plan === "enterprise" && "enterprise"}`}
-              >
-                <span className="pricing__list-item-icon d-flex justify-content-center align-items-center">
-                  <i className="bi bi-check text-white d-flex justify-content-center align-items-center"></i>
-                </span>
-                {item}
-              </li>
-            ),
-          )}
-        </ul>
-      </div>
-    </div>
-  )
+  useEffect(() => {
+    if (!db) return;
+    dispatch(loadProducts({ db }));
+  }, [dispatch, db]);
+
+  useEffect(() => {
+    if (!db || !currentUser || !buying) return;
+
+    setLoading(true);
+    const checkoutSessionsCollection = collection(db, "customers", currentUser.uid, "checkout_sessions");
+    const unsubscribe = onSnapshot(checkoutSessionsCollection, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const { error, url } = change.doc.data();
+        if (error) {
+          setError(error);
+        }
+        if (url) {
+          setLoading(false);
+          setBuying(false);
+          setError("");
+          window.location.assign(url);
+        }
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    }
+  }, [dispatch, db, currentUser, buying]);
+
+  useEffect(() => {
+    if (!products) return;
+
+    products.forEach((product) => {
+      dispatch(loadProductPrices({ db, productId: product.id }));
+    });
+  }, [products]);
+
+  async function buyProduct(product: any, price: any) {
+    dispatch(buyProductAction({ db, currentUser, price }));
+    setBuying(true);
+  }
 
   return (
     <div className="container">
@@ -85,15 +67,73 @@ const PricingView: React.FC = () => {
         </span>
       </header>
       <div className="row gap-3 pricing__plans">
-        {renderPlanCard("basic")}
-        {renderPlanCard("enterprise")}
+        {
+          products.map((product, index) => (
+            <div key={index} className="col pricing__plans-item">
+              <div className="pricing__card">
+                <h2 className="pricing__card-title">{product.name}</h2>
+                <h1 className="pricing__card-price">
+                  ${prices[product.id]?.unit_amount / 100}
+                  <span>/{prices[product.id]?.recurring.interval}</span>
+                </h1>
+                <span className="pricing__card-description">{product.description}</span>
+                <button className="btn pricing__button" onClick={() => buyProduct(product, prices[product.id])} disabled={loading}>
+                  Get started with {product.name}
+                </button>
+                
+                {error && <span className="text-danger">{error}</span>}
+
+                <ul className="pricing__list">
+                  {
+                    [
+                      'Employee Onboarding',
+                      'Time and Attendance Tracking',
+                      'Basic Payroll Processing',
+                      'Employee Self-Service Portal',
+                      'Standard Reporting'
+                    ].map((item, index) => (
+                      <li key={index} className="pricing__list-item">
+                        <span className="pricing__list-item-icon d-flex justify-content-center align-items-center">
+                          <i className="bi bi-check text-white d-flex justify-content-center align-items-center"></i>
+                        </span>
+                        {item}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </div>
+          ))
+        }
       </div>
       <div className="pricing__trusted-us">
         <span>More than 100+ companies trusted us.</span>
         <div className="pricing__trusted-us__items mt-4">
-          {[...Array(9)].map((_, index) => (
-            <div key={index} className="pricing__trusted-us__item" />
-          ))}
+          {
+            [
+              "https://logo.clearbit.com/airbnb.com?size=50",
+              "https://logo.clearbit.com/amazon.com?size=50",
+              "https://logo.clearbit.com/apple.com?size=50",
+              "https://logo.clearbit.com/facebook.com?size=50",
+              "https://logo.clearbit.com/google.com?size=50",
+              "https://logo.clearbit.com/microsoft.com?size=50",
+              "https://logo.clearbit.com/netflix.com?size=50",
+              "https://logo.clearbit.com/slack.com?size=50",
+              "https://logo.clearbit.com/twitter.com?size=50"
+            ].map((icon, index) => (
+              <div key={index} className="pricing__trusted-us__item" 
+                style={{ 
+                  backgroundImage: `url(${icon})`,
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  opacity: 1,
+                  backgroundColor: 'white',
+                  border: '1px solid #f1f1f1',
+                }}
+              ></div>
+            ))
+          }
         </div>
       </div>
       <div className="my-5 d-flex flex-column gap-4 text-center">

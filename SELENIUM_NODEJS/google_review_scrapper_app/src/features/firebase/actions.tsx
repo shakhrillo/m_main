@@ -4,13 +4,12 @@ import { getFirestore } from "firebase/firestore";
 
 const initFirebase = createAsyncThunk('firebase/initFirebase', async () => {
   const firebaseConfig = {
-    apiKey: "AIzaSyAbWEKCv0vFuretjZhtxrrXBHKgTOy-7cE",
-    authDomain: "borderline-dev.firebaseapp.com",
-    projectId: "borderline-dev",
-    storageBucket: "borderline-dev.appspot.com",
-    messagingSenderId: "406001897389",
-    appId: "1:406001897389:web:bcf2d6fd7ea1b69c749b24",
-    measurementId: "G-YJ9H91CHK1"
+    apiKey: "AIzaSyCVMAJ7QdZYcUZ2G8zyBrHP5q7iZvbmM8o",
+    authDomain: "map-review-scrap.firebaseapp.com",
+    projectId: "map-review-scrap",
+    storageBucket: "map-review-scrap.appspot.com",
+    messagingSenderId: "348810635690",
+    appId: "1:348810635690:web:db2f887e347b93297ae3d3"
   };
   
   const fsapp = initializeApp(firebaseConfig);
