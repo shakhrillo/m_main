@@ -1,16 +1,13 @@
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import
-  {
-    createBrowserRouter,
-    RouterProvider,
-  } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { store } from "./app/store"
 import Navbar from "./components/navbar"
 import "./index.css"
 import DashboardView from "./views/dashboard"
 import ReviewsView from "./views/reviews"
 import AuthView from "./views/auth"
+import PricingView from "./views/pricing"
 
 const router = createBrowserRouter([
   {
@@ -23,7 +20,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard/review/:place",
-    element: <ReviewsView />
+    element: <ReviewsView />,
   },
   {
     path: "/about",
@@ -31,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/price",
-    element: <div>Price page</div>,
+    element: <PricingView />,
   },
   {
     path: "/contact",
@@ -39,9 +36,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth",
-    element: <AuthView />
-  }
-]);
+    element: <AuthView />,
+  },
+])
 
 const container = document.getElementById("root")
 
@@ -52,7 +49,7 @@ if (container) {
     <Provider store={store}>
       <Navbar />
       <RouterProvider router={router} />
-    </Provider>
+    </Provider>,
   )
 } else {
   throw new Error(
