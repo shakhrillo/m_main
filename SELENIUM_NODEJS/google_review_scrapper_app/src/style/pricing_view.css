@@ -1,15 +1,3 @@
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap');
-
-/* Bootstrap Icons */
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-
-:root {
-    --font-family: "Josefin Sans", sans-serif;
-    --color-primary: #3c486b;
-    --color-secondary: #7564ee;
-}
-
 .enterprise {
     color: #fff !important;
 }
@@ -22,25 +10,31 @@
     color: var(--color-primary);
     font-family: var(--font-family);
     font-size: 2.875rem;
+    /* 46px */
 }
 
 .pricing__subtitle {
     color: var(--color-primary);
     font-family: var(--font-family);
     font-size: 0.8125rem;
+    /* 13px */
 }
 
 .pricing__plans {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
+    /* 20px */
     padding: 0 20%;
 }
 
 .pricing__card {
     padding: 1.5rem;
+    /* 24px */
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    /* 8px */
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+    /* 0 2px 10px */
 }
 
 .pricing__card--enterprise {
@@ -57,18 +51,22 @@
 
 .pricing__card-price span {
     font-size: 0.875rem;
+    /* 14px */
     opacity: 0.5;
 }
 
 .pricing__button {
     width: 100%;
     margin: 1rem 0;
+    /* 16px */
     background-color: var(--color-secondary);
     color: #fff;
     font-family: var(--font-family);
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    /* 8px 16px */
+    border-radius: 0.25rem;
+    /* 4px */
     cursor: pointer;
 }
 
@@ -78,22 +76,25 @@
 }
 
 .pricing__trusted-us {
-    margin-top: 3rem;
+    font-size: 1rem;
+    margin-top: 1.875rem;
+    /* 30px */
     text-align: center;
+    font-family: var(--font-family);
+    color: var(--color-primary);
 }
 
 .pricing__trusted-us__items {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    width: 100%;
+    gap: 3rem;
+    /* 32px */
 }
 
 .pricing__trusted-us__item {
-    width: 120px;
-    height: 50px;
-    background-color: var(--color-primary);
-    opacity: 0.5;
-    border-radius: 6px;
+    height: 2rem;
+    /* 32px */
 }
 
 .pricing__list {
@@ -104,26 +105,34 @@
 .pricing__list-item {
     display: flex;
     gap: 0.625rem;
+    /* 10px */
     margin: 0.625rem 0;
+    /* 10px */
     font-size: 0.875rem;
+    /* 14px */
     color: var(--color-primary);
 }
 
 .pricing__list-item-icon {
-    width: 1rem;
-    height: 1rem;
+    width: 0.625rem;
+    /* 10px */
+    height: 0.625rem;
+    /* 10px */
     border-radius: 50%;
     background-color: var(--color-secondary);
-    box-shadow: 0 0 0 0.25rem rgba(117, 100, 238, 0.2);
+    box-shadow: 0 0 0 0.0625rem rgba(117, 100, 238, 0.2);
+    /* 0 0 0 0.25rem */
 }
 
 .pricing__faq .card {
-    box-shadow: 0 0 0px 0.25rem rgba(117, 100, 238, 0.2);
+    box-shadow: 0 0 0 0.0625rem rgba(117, 100, 238, 0.2);
+    /* 0 0 0px */
 }
 
 .pricing__faq-header h3 {
     font-family: var(--font-family);
-    font-size: 22px;
+    font-size: 1.375rem;
+    /* 22px */
     color: var(--color-primary);
     margin: 0;
 }
@@ -143,15 +152,16 @@
 }
 
 .pricing__faq-body.open {
-    max-height: 100px;
-    /* Adjust as needed */
+    max-height: 6.25rem;
+    /* 100px */
     opacity: 1;
     text-align: start;
 }
 
 .icon {
     cursor: pointer;
-    font-size: 26px;
+    font-size: 1.625rem;
+    /* 26px */
     color: var(--color-secondary);
     transition: transform 0.5s ease;
 }

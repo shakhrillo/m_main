@@ -2,7 +2,48 @@ import React, { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { buyProductAction, loadProductPrices, loadProducts } from "../../features/products/actions"
 import "../../style/pricing_view.css"
+<<<<<<< HEAD
 import { collection, onSnapshot } from "firebase/firestore"
+=======
+import docker from "../../imags/docker.png"
+import atlassian from "../../imags/atlassian.png"
+import basecamp from "../../imags/basecamp.png"
+import dropbox from "../../imags/dropbox.png"
+import fiverr from "../../imags/fiverr.png"
+import amplitude from "../../imags/amplitude.png"
+
+const plansItems = {
+  basic: [
+    "Employee Onboarding",
+    "Time and Attendance Tracking",
+    "Basic Payroll Processing",
+    "Employee Self-Service Portal",
+    "Standard Reporting",
+    "Email Support",
+    "50 Employee Profiles",
+    "Mobile App Access",
+  ],
+  enterprise: [
+    "All Professional Plan Features Plus",
+    "Unlimited Employee Profiles",
+    "Dedicated Account Manager",
+    "Onboarding and Training Support",
+    "Custom Workflows and Approvals",
+    "API Access for Custom Integration",
+    "Multi-Language and Multi-Currency Support",
+    "Advanced Compliance Management",
+  ],
+}
+>>>>>>> 45e0b73 (dashboard)
+
+const trusteCompaniesLogos = [
+  docker,
+  atlassian,
+  basecamp,
+  dropbox,
+  fiverr,
+  amplitude,
+]
 
 const PricingView: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -109,6 +150,7 @@ const PricingView: React.FC = () => {
       <div className="pricing__trusted-us">
         <span>More than 100+ companies trusted us.</span>
         <div className="pricing__trusted-us__items mt-4">
+<<<<<<< HEAD
           {
             [
               "https://logo.clearbit.com/airbnb.com?size=50",
@@ -134,6 +176,11 @@ const PricingView: React.FC = () => {
               ></div>
             ))
           }
+=======
+          {trusteCompaniesLogos.map((_, index) => (
+            <img src={_} key={index} className="pricing__trusted-us__item" />
+          ))}
+>>>>>>> 45e0b73 (dashboard)
         </div>
       </div>
       <div className="my-5 d-flex flex-column gap-4 text-center">
