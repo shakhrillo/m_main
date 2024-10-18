@@ -372,6 +372,8 @@ const openWebsite = async (url) => {
 
       console.log('Extracting review text');
       let reviewText = await element.getText();
+      const reviewTextArray = reviewText.split('\n');
+
       // let reviewMyened = await element.findElements(By.className("MyEned"));
       // if (reviewMyened.length > 0) {
       //   const reviewMyenedFirstChild = await reviewMyened[0].findElement(By.xpath("*"));
@@ -409,6 +411,7 @@ const openWebsite = async (url) => {
 
       const message = {
         reviewText,
+        reviewTextArray,
         // content: reviewContent,
         images: extractedImageUrls,
         // timeAgo,

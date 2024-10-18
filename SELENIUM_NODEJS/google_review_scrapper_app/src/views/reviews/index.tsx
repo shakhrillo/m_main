@@ -27,11 +27,12 @@ function ReviewsView() {
     setReviews([])
     const collectionReviews = collection(db, "reviews", place, "reviews")
 
-    onSnapshot(collectionReviews, querySnapshot => {
-      setReviews([])
-      querySnapshot.forEach(doc => {
-        const data = doc.data()
-        setReviews(prev => [
+    onSnapshot(collectionReviews, (querySnapshot) => {
+      setReviews([]);
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        console.log('data', data);
+        setReviews((prev) => [
           ...prev,
           {
             ...data,
