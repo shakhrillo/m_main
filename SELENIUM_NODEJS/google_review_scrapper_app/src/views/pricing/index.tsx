@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { buyProductAction, loadProductPrices, loadProducts } from "../../features/products/actions"
 import "../../style/pricing_view.css"
-<<<<<<< HEAD
 import { collection, onSnapshot } from "firebase/firestore"
-=======
 import docker from "../../imags/docker.png"
 import atlassian from "../../imags/atlassian.png"
 import basecamp from "../../imags/basecamp.png"
@@ -34,7 +32,6 @@ const plansItems = {
     "Advanced Compliance Management",
   ],
 }
->>>>>>> 45e0b73 (dashboard)
 
 const trusteCompaniesLogos = [
   docker,
@@ -150,37 +147,9 @@ const PricingView: React.FC = () => {
       <div className="pricing__trusted-us">
         <span>More than 100+ companies trusted us.</span>
         <div className="pricing__trusted-us__items mt-4">
-<<<<<<< HEAD
-          {
-            [
-              "https://logo.clearbit.com/airbnb.com?size=50",
-              "https://logo.clearbit.com/amazon.com?size=50",
-              "https://logo.clearbit.com/apple.com?size=50",
-              "https://logo.clearbit.com/facebook.com?size=50",
-              "https://logo.clearbit.com/google.com?size=50",
-              "https://logo.clearbit.com/microsoft.com?size=50",
-              "https://logo.clearbit.com/netflix.com?size=50",
-              "https://logo.clearbit.com/slack.com?size=50",
-              "https://logo.clearbit.com/twitter.com?size=50"
-            ].map((icon, index) => (
-              <div key={index} className="pricing__trusted-us__item" 
-                style={{ 
-                  backgroundImage: `url(${icon})`,
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  opacity: 1,
-                  backgroundColor: 'white',
-                  border: '1px solid #f1f1f1',
-                }}
-              ></div>
-            ))
-          }
-=======
           {trusteCompaniesLogos.map((_, index) => (
             <img src={_} key={index} className="pricing__trusted-us__item" />
           ))}
->>>>>>> 45e0b73 (dashboard)
         </div>
       </div>
       <div className="my-5 d-flex flex-column gap-4 text-center">
