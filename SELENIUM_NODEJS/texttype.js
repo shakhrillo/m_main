@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(__dirname, 'reviews', 'httpsmapsappgooglBU6QMyYeP3e6j2Mv7.json');
+const filePath = path.join(__dirname, 'reviews', 'httpsmapsappgooglDZWCUkvrpiBD7gkd8.json');
 const data = fs.readFileSync(filePath, 'utf-8');
 let reviews = JSON.parse(data);
 
@@ -20,6 +20,9 @@ const extracted = {
 console.log(reviews.length);
 
 function extractReviewText(reviewTextArray) {
+  if (!reviewTextArray || reviewTextArray.length === 0) {
+    return "";
+  }
   let user = reviewTextArray[0];
   let userInformation = reviewTextArray[1];
   let rate = reviewTextArray.find(text => text.includes("/5"));
@@ -75,7 +78,7 @@ function extractReviewText(reviewTextArray) {
   // Extract review text if startIndex is valid
   if (startIndex !== -1) {
     startIndex += 1;
-    if(reviewTextArray[startIndex].toLowerCase() === "new") { // Skip the 'new' if it exists
+    if(reviewTextArray[startIndex] && reviewTextArray[startIndex].toLowerCase() === "new") { // Skip the 'new' if it exists
       startIndex += 1;
     }
     reviewText = reviewTextArray.slice(startIndex, endIndex).join(" ").trim();
@@ -96,8 +99,10 @@ function extractReviewText(reviewTextArray) {
     // remove more than one space
     reviewText = reviewText.replace(/\s{2,}/g, ' ');
 
-    // remove the last numbers
-    reviewText = reviewText.replace(/\d+$/g, "");
+    // remove everything after  if exists
+    if (reviewText.includes('')) {
+      reviewText = reviewText.split('')[0];
+    }
 
     // remove this 
     reviewText = reviewText.replace(//g, "");

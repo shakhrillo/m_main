@@ -56,9 +56,11 @@ function ReviewsView() {
       { icon: "", text: "#" },
       { icon: "bi-person", text: "User" },
       { icon: "bi-stars", text: "Score" },
+      { icon: "bi-check", text: "Platform" },
       { icon: "bi-clock", text: "Date" },
       { icon: "bi-image", text: "Images" },
       { icon: "bi-chat-square-text", text: "Content" },
+      { icon: "bi-chat-text", text: "Response" },
     ],
   }
 
@@ -130,9 +132,10 @@ function ReviewsView() {
                     <th scope="row">{indexOfFirstReview + index + 1}</th>
                     <td className="view__table-item">{review.reviewer.name}</td>
                     <td>
-                      <StarRating rating={String(review.score)} />
+                      <StarRating rating={String(review.rate)} />
                     </td>
-                    <td>{new Date(review.date).toLocaleDateString()}</td>
+                    <td>{review.platform}</td>
+                    <td>{review.time}</td>
                     <td>
                       <div
                         className="view__table-images"
@@ -160,7 +163,29 @@ function ReviewsView() {
                       </div>
                     </td>
                     <td className="view__table-content">
-                      <span>{review.reviewText}</span>
+                      <span>{review.myendText || "-"}</span>
+                      <hr />
+                      {
+                        (review.reviewText && review.reviewText.reviewObj) ?
+                        Object.keys(review.reviewText.reviewObj).map((key, index) => (
+                          <div key={index}>
+                            <b>{key}</b>: {review.reviewText.reviewObj[key]}
+                          </div>
+                        ))
+                        :null
+                      }
+                      <hr />
+                      {
+                        (review.reviewText && review.reviewText.reviewOverview) ?
+                        review.reviewText.reviewOverview.map((overview: string, index: number) => (
+                          <div key={index}>{overview}</div>
+                        ))
+                        :null
+
+                      }
+                    </td>
+                    <td className="view__table-content">
+                      <span>{review.response || "-"}</span>
                     </td>
                   </tr>
                 ))}
