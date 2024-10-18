@@ -35,10 +35,10 @@ const PricingView: React.FC = () => {
   const payments = useAppSelector((state) => state.customer.payments);
 
   useEffect(() => {
-    if (!db) return;
+    if (!db || !currentUser) return;
     dispatch(loadProducts({ db }));
     dispatch(loadCustomer({ db, customerId: currentUser.uid }));
-  }, [dispatch, db]);
+  }, [dispatch, db, currentUser]);
 
   useEffect(() => {
     if (!currentUser) return;
