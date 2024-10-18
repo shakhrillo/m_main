@@ -2,18 +2,26 @@ import { collection, orderBy, onSnapshot, query } from "firebase/firestore"
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
+import Pagination from 'react-bootstrap/Pagination';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 import "../../style/dashboard.css"
 import StarRating from "../../components/star-rating"
 
 function DashboardView() {
+  const [show, setShow] = useState(false);
+
   const [scrapingUrl, setScrapingUrl] = useState("")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
-
+  
   const db = useAppSelector(state => state.firebase.db)
   const user = useAppSelector(state => state.auth.user)
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     if (!db) return
@@ -40,6 +48,7 @@ function DashboardView() {
     const encodeReviewURL = encodeURIComponent(url)
     await fetch(`http://localhost:3000/review?url=${encodeReviewURL}`)
     setScrapingUrl("")
+    handleClose()
   }
 
   // Pagination handling
@@ -78,6 +87,37 @@ function DashboardView() {
       <div className="container">
         <div className="card">
           <div className="card-body">
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Review</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="mb-3">
+                  <label htmlFor="reviewUrl" className="form-label">Review URL</label>
+                  <input type="text" className="form-control" id="reviewUrl" value={scrapingUrl} onChange={(e) => setScrapingUrl(e.target.value)} />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={() => startScraping(scrapingUrl)}>
+                  Start Scraping
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            <div className="d-flex justify-content-between align-items-center">
+              <h2>Dashboard</h2>
+              <Button variant="primary" onClick={handleShow}>
+                <i className="bi-plus"></i>
+                Add Review
+              </Button>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div className="card">
+          <div className="card-body">
             <table className="table dashboard__table">
               <thead>
                 <tr>
@@ -88,7 +128,11 @@ function DashboardView() {
                   </th>
                   <th scope="col">
                     <i className="bi-clock" />
-                    Date
+                    Created
+                  </th>
+                  <th scope="col">
+                    <i className="bi-clock" />
+                    Completed
                   </th>
                   <th scope="col">
                     <i className="bi-download"></i>
@@ -108,98 +152,75 @@ function DashboardView() {
                     <tr key={review.id}>
                       <th scope="row">{indexOfFirstReview + index + 1}</th>
                       <td>
-                        <div className="d-flex flex-column  dashboard__table-item">
-                          <span>{review.info.mainTitle} </span>
-                          <div className="d-flex gap-1 align-items-center">
-                            <StarRating rating={review.info.mainRate} />
-                            <span>{review.info.mainReview} reviews</span>
+                        {
+                          review.info ? (
+                            <div className="d-flex flex-column  dashboard__table-item">
+                              <span>{review.info.mainTitle} </span>
+                              <div className="d-flex gap-1 align-items-center">
+                                <StarRating rating={review.info.mainRate} />
+                                <span>{review.info.mainReview} reviews</span>
+                              </div>
+                            </div>
+                          ) : 
+                          <div className="d-flex flex-column  dashboard__table-item">
+                            <span>
+                              Loading...
+                            </span>
+                          </div>
+                        }
+                      </td>
+                      <td>
+                        <div className="d-flex gap-2">
+                          <i className="bi-clock"></i>
+                          <div className="d-flex flex-column">
+                            <span>
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                            <small>
+                              {new Date(review.createdAt).toLocaleTimeString()}
+                            </small>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div className="dashboard__table-date">
-                          <div className="d-flex gap-2">
-                            <i className="bi-play-circle"></i>
-                            {new Date(review.createdAt).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "2-digit",
-                                day: "2-digit",
-                                year: "numeric",
-                              },
-                            )}{" "}
-                            -{" "}
-                            {new Date(review.createdAt).toLocaleTimeString(
-                              "en-US",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              },
-                            )}
-                          </div>
-                          <div className="d-flex gap-2 text-capitalize justify-content-end">
-                            Done in -{" "}
-                            {Math.round(
-                              (new Date(review.completedAt).getTime() -
-                                new Date(review.createdAt).getTime()) /
-                                1000,
-                            )}{" "}
-                            seconds
-                            <i className="bi-stop-circle"></i>
+                        <div className="d-flex gap-2">
+                          <i className="bi-clock"></i>
+                          <div className="d-flex flex-column">
+                            <span>
+                              {new Date(review.completedAt).toLocaleDateString()}
+                            </span>
+                            <small>
+                              {new Date(review.completedAt).toLocaleTimeString()}
+                            </small>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div className="d-flex gap-2 dashboard__table-file">
-                          <button
-                            onClick={() => downloadFile(review.fileUrl)}
-                            className="btn btn-sm d-flex gap-2 px-3"
-                          >
-                            <i className="bi-download"></i>
-                            Download JSON
+                        <div className="d-flex gap-2">
+                          <button onClick={() => downloadFile(review.fileUrl)} className="btn btn-sm btn-outline-secondary">
+                            <i className="bi-download me-2"></i>
+                            JSON
                           </button>
-                          <button
-                            onClick={() => downloadFile(review.fileUrlCsv)}
-                            className="btn btn-sm d-flex gap-2 px-3"
-                          >
-                            <i className="bi-download"></i>
-                            Download CSV
+                          <button onClick={() => downloadFile(review.fileUrlCsv)} className="btn btn-sm btn-outline-secondary">
+                            <i className="bi-download me-2"></i>
+                            CSV
                           </button>
                         </div>
                       </td>
                       <td>
                         <div className="d-flex gap-2">
-                          {/* review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger" */}
-                          <div
-                            className={`dashboard__table-status ${
-                              review.status === "completed"
-                                ? "completed"
-                                : review.status === "pending"
-                                  ? "canceled"
-                                  : "danger"
-                            } py-1 px-2 `}
-                          >
-                            <span>
-                              {review.status === "completed"
-                                ? "Complated"
-                                : "Pending"}
-                            </span>
-                          </div>
+                          <span className={`p-2 badge bg-${review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger"}`}>
+                            {review.status}
+                          </span>
                         </div>
                       </td>
                       <td>
-                        <div className="d-flex gap-2 dashboard__table-actions">
-                          <button
-                            onClick={() =>
-                              (window.location.href = `/dashboard/review/${review.id}`)
-                            }
-                            className="btn btn-sm d-flex gap-2 px-3"
-                          >
+                        <div className="d-flex gap-2">
+                          <button onClick={() => (window.location.href = `/dashboard/review/${review.id}`)} className="btn btn-sm btn-outline-secondary">
                             <i className="bi-eye"></i>
                             View
                           </button>
-                          <button className="btn btn-sm d-flex gap-2 px-3">
+                          <button className="btn btn-sm btn-outline-danger">
                             <i className="bi-trash"></i>
                             Delete
                           </button>
@@ -211,131 +232,20 @@ function DashboardView() {
               </tbody>
             </table>
           </div>
-        </div>
-        {/* <div className="card my-2">
-          <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label">Map place link</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="https://"
-                value={scrapingUrl}
-                onChange={e => setScrapingUrl(e.target.value)}
-              />
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={() => startScraping(scrapingUrl)}
-              disabled={!scrapingUrl}
-            >
-              Start scrapping
-            </button>
+          <div className="card-footer">
+            <Pagination>
+              <Pagination.First onClick={() => handlePageClick(1)} />
+              <Pagination.Prev onClick={handlePreviousPage} />
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <Pagination.Item key={i + 1} active={currentPage === i + 1} onClick={() => handlePageClick(i + 1)}>
+                    {i + 1}
+                  </Pagination.Item>
+                ))}
+              <Pagination.Next onClick={handleNextPage} />
+              <Pagination.Last onClick={() => handlePageClick(totalPages)} />
+            </Pagination>
           </div>
         </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Title</th>
-              <th scope="col">Date</th>
-              <th scope="col">Url</th>
-              <th scope="col">Status</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentReviews.map((review: any, index: number) => {
-              return (
-                <tr key={review.id}>
-                  <th scope="row">{indexOfFirstReview + index + 1}</th>
-                  {review.info ? (
-                    <td>
-                      <h6>
-                        {review.info.mainTitle}{" "}
-                        <i>{review.info.mainReview} reviews</i>
-                      </h6>
-                      <span className="badge bg-info">
-                        {review.info.mainRate}
-                      </span>
-                    </td>
-                  ) : null}
-                  <td>
-                    {new Date(review.createdAt).toLocaleString()}
-                    <span className="badge bg-danger ms-2">
-                      {Math.round(
-                        (new Date(review.completedAt).getTime() -
-                          new Date(review.createdAt).getTime()) /
-                          1000,
-                      )}
-                      s
-                    </span>
-                  </td>
-                  <td>
-                    {review.fileUrl ? (
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => downloadFile(review.fileUrl)}
-                      >
-                        Download JSON
-                      </button>
-                    ) : null}
-                    <br />
-                    {review.fileUrlCsv ? (
-                      <button
-                        className="btn btn-success"
-                        onClick={() => downloadFile(review.fileUrlCsv)}
-                      >
-                        Download CSV
-                      </button>
-                    ) : null}
-                  </td>
-                  <td>
-                    <span
-                      className={`badge bg-${review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger"}`}
-                    >
-                      {review.status}
-                    </span>
-                  </td>
-                  <td className="d-flex gap-2">
-                    <a
-                      className="btn btn-primary"
-                      href={`/dashboard/review/${review.id}`}
-                    >
-                      View
-                    </a>
-                    <button className="btn btn-danger">Delete</button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-        <div className="pagination">
-          <button
-            className="btn btn-secondary"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={`btn ${currentPage === i + 1 ? "btn-primary" : "btn-secondary"}`}
-              onClick={() => handlePageClick(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="btn btn-secondary"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div> */}
       </div>
     </div>
   )
