@@ -44,7 +44,7 @@ const PricingView: React.FC = () => {
     if (!currentUser) return;
     dispatch(loadCustomerSubscriptions({ db, customerId: currentUser.uid }));
     dispatch(loadCustomerPayments({ db, customerId: currentUser.uid }));
-  }, [customer]);
+  }, [customer, currentUser]);
 
   useEffect(() => {
     if (!purchaseId) return;
