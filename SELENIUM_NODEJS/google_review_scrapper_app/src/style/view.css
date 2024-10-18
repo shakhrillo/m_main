@@ -3,6 +3,20 @@
     height: calc(100vh - 64px);
 }
 
+.view__all-images__carousel-title {
+    font-family: var(--font-family);
+    color: var(--color-primary);
+}
+
+.view__all-images__carousel-item {
+    height: 400px;
+    background-color: #686868;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+}
+
 .view__table {
     width: 100%;
 }
