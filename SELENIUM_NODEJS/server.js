@@ -299,6 +299,17 @@ const openWebsite = async (url) => {
       }
     }
 
+    // pane.wfvdle1780.review.expandOwnerResponse
+    const allOwnerResponseButtons = await driver.findElements(By.xpath("//button"));
+    console.log('Clicking on the owner response button', allOwnerResponseButtons.length);
+    for (const button of allOwnerResponseButtons) {
+      const jsaction = await button.getAttribute('jsaction');
+      if (jsaction && jsaction.includes('review.expandOwnerResponse')) {
+        await button.click();
+        // await driver.sleep(2000);
+      }
+    }
+
     // Click on the show original button
     const allShowOriginalButtons = await driver.findElements(By.xpath("//button"));
     console.log('Clicking on the show original button', allShowOriginalButtons.length);
