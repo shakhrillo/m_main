@@ -114,6 +114,7 @@ function extractReviewText(reviewTextArray, myendText) {
 
     for (let i = 0; i < reviewTextArr.length; i++) {
       const textValue = reviewTextArr[i];
+      const containsOnlyDigit = /^\d+$/.test(textValue);
       let nextTextValue = reviewTextArr[i + 1] || '';
 
       if (
@@ -121,14 +122,22 @@ function extractReviewText(reviewTextArray, myendText) {
         !myendText.includes(textValue) && 
         !textValue.includes('') &&
         !textValue.includes('See translation (English)') &&
-        !nextTextValue.includes('')
+        !nextTextValue.includes('') &&
+        !containsOnlyDigit
       ) {
+        // remove from myendText
+        myendText = myendText.replace(textValue, '');
+
         const nextTextValue = reviewTextArr[i + 1];
         // Check if 'nextTextValue' exists and does not contain a digit
         const nextTextValueExists = nextTextValue !== undefined;
         const nextTextValueContainsDigit = nextTextValueExists && /\d/.test(nextTextValue);
         const currentTextValueContainsDigit = /\d/.test(textValue);
-        if (nextTextValueExists && !nextTextValueContainsDigit && !currentTextValueContainsDigit) {
+        if (
+          nextTextValueExists && 
+          // !nextTextValueContainsDigit && 
+          !currentTextValueContainsDigit
+        ) {
           reviewObj[textValue] = nextTextValue;
           // Skip the next iteration as it has already been processed
           i += 1;
