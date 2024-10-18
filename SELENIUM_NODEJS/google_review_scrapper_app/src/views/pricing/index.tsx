@@ -1,15 +1,15 @@
+import { doc, onSnapshot } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import { loadCustomer, loadCustomerPayments, loadCustomerSubscriptions } from "../../features/customer/action"
 import { buyProductAction, loadProductPrices, loadProducts } from "../../features/products/actions"
-import "../../style/pricing_view.css"
-import { collection, doc, limitToLast, onSnapshot, orderBy, query } from "firebase/firestore"
-import docker from "../../imags/docker.png"
+import amplitude from "../../imags/amplitude.png"
 import atlassian from "../../imags/atlassian.png"
 import basecamp from "../../imags/basecamp.png"
+import docker from "../../imags/docker.png"
 import dropbox from "../../imags/dropbox.png"
 import fiverr from "../../imags/fiverr.png"
-import amplitude from "../../imags/amplitude.png"
-import { loadCustomer, loadCustomerPayments, loadCustomerSubscriptions } from "../../features/customer/action"
+import "../../style/pricing_view.css"
 
 const trusteCompaniesLogos = [
   docker,
@@ -45,11 +45,6 @@ const PricingView: React.FC = () => {
     dispatch(loadCustomerSubscriptions({ db, customerId: currentUser.uid }));
     dispatch(loadCustomerPayments({ db, customerId: currentUser.uid }));
   }, [customer]);
-
-  useEffect(() => {
-    console.log('Subscriptions and Payments:');
-    console.log(subscriptions, payments);
-  }, [subscriptions, payments]);
 
   useEffect(() => {
     if (!purchaseId) return;
