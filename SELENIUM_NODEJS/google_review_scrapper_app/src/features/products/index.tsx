@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadProductPrices, loadProducts } from "./actions";
+import { buyProductAction, loadProductPrices, loadProducts } from "./actions";
 
 const initialState = {
   products: [] as any[],
   prices: {} as any,
+  purchaseId: "",
 };
 
 const productsSlice = createSlice({
@@ -17,6 +18,9 @@ const productsSlice = createSlice({
     builder.addCase(loadProductPrices.fulfilled, (state, action) => {
       const productId = action.payload[0].productId || 'default';
       state.prices[productId] = action.payload[0];
+    });
+    builder.addCase(buyProductAction.fulfilled, (state, action) => {
+      state.purchaseId = action.payload;
     });
   }
 });

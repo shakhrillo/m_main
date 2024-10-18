@@ -2,36 +2,13 @@ import React, { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { buyProductAction, loadProductPrices, loadProducts } from "../../features/products/actions"
 import "../../style/pricing_view.css"
-import { collection, onSnapshot } from "firebase/firestore"
+import { collection, doc, limitToLast, onSnapshot, orderBy, query } from "firebase/firestore"
 import docker from "../../imags/docker.png"
 import atlassian from "../../imags/atlassian.png"
 import basecamp from "../../imags/basecamp.png"
 import dropbox from "../../imags/dropbox.png"
 import fiverr from "../../imags/fiverr.png"
 import amplitude from "../../imags/amplitude.png"
-
-const plansItems = {
-  basic: [
-    "Employee Onboarding",
-    "Time and Attendance Tracking",
-    "Basic Payroll Processing",
-    "Employee Self-Service Portal",
-    "Standard Reporting",
-    "Email Support",
-    "50 Employee Profiles",
-    "Mobile App Access",
-  ],
-  enterprise: [
-    "All Professional Plan Features Plus",
-    "Unlimited Employee Profiles",
-    "Dedicated Account Manager",
-    "Onboarding and Training Support",
-    "Custom Workflows and Approvals",
-    "API Access for Custom Integration",
-    "Multi-Language and Multi-Currency Support",
-    "Advanced Compliance Management",
-  ],
-}
 
 const trusteCompaniesLogos = [
   docker,
@@ -46,12 +23,12 @@ const PricingView: React.FC = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [buying, setBuying] = useState(false);
   
   const db = useAppSelector((state) => state.firebase.db);
   const currentUser = useAppSelector((state) => state.auth.user);
   const products = useAppSelector((state) => state.products.products);
   const prices = useAppSelector((state) => state.products.prices);
+  const purchaseId = useAppSelector((state) => state.products.purchaseId);
 
   useEffect(() => {
     if (!db) return;
@@ -59,29 +36,21 @@ const PricingView: React.FC = () => {
   }, [dispatch, db]);
 
   useEffect(() => {
-    if (!db || !currentUser || !buying) return;
-
-    setLoading(true);
-    const checkoutSessionsCollection = collection(db, "customers", currentUser.uid, "checkout_sessions");
-    const unsubscribe = onSnapshot(checkoutSessionsCollection, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const { error, url } = change.doc.data();
-        if (error) {
-          setError(error);
-        }
-        if (url) {
-          setLoading(false);
-          setBuying(false);
-          setError("");
-          window.location.assign(url);
-        }
-      });
+    if (!purchaseId) return;
+    const purchaseDoc = doc(db, "customers", currentUser.uid, "checkout_sessions", purchaseId);
+    onSnapshot(purchaseDoc, (doc) => {
+      const { error, url } = doc.data() || {};
+      if (error) {
+        setError(error);
+      }
+      if (url) {
+        setLoading(false);
+        setError("");
+        window.location.assign(url);
+      }
     });
 
-    return () => {
-      unsubscribe();
-    }
-  }, [dispatch, db, currentUser, buying]);
+  }, [purchaseId]);
 
   useEffect(() => {
     if (!products) return;
@@ -93,7 +62,7 @@ const PricingView: React.FC = () => {
 
   async function buyProduct(product: any, price: any) {
     dispatch(buyProductAction({ db, currentUser, price }));
-    setBuying(true);
+    setLoading(true);
   }
 
   return (

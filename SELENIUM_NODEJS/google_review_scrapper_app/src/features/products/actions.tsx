@@ -39,7 +39,7 @@ const buyProductAction = createAsyncThunk('firestore/buyProduct', async ({ db, c
     cancel_url: window.location.origin,
   });
 
-  return docRef;
+  return docRef.id;
 });
 
 export { loadProducts, loadProductPrices, buyProductAction };
