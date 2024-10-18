@@ -105,7 +105,7 @@ function DashboardView() {
               <tbody>
                 {currentReviews.map((review: any, index: number) => {
                   return (
-                    <tr>
+                    <tr key={review.id}>
                       <th scope="row">{indexOfFirstReview + index + 1}</th>
                       <td>
                         <div className="d-flex flex-column  dashboard__table-item">
