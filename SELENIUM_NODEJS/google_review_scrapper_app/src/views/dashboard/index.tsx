@@ -2,26 +2,26 @@ import { collection, orderBy, onSnapshot, query } from "firebase/firestore"
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
-import Pagination from 'react-bootstrap/Pagination';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Pagination from "react-bootstrap/Pagination"
+import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
 
 import "../../style/dashboard.css"
 import StarRating from "../../components/star-rating"
 
 function DashboardView() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
 
   const [scrapingUrl, setScrapingUrl] = useState("")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
-  
+
   const db = useAppSelector(state => state.firebase.db)
   const user = useAppSelector(state => state.auth.user)
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   useEffect(() => {
     if (!db) return
@@ -87,31 +87,27 @@ function DashboardView() {
       <div className="container">
         <div className="card">
           <div className="card-body">
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Add Review</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="mb-3">
-                  <label htmlFor="reviewUrl" className="form-label">Review URL</label>
-                  <input type="text" className="form-control" id="reviewUrl" value={scrapingUrl} onChange={(e) => setScrapingUrl(e.target.value)} />
-                </div>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={() => startScraping(scrapingUrl)}>
-                  Start Scraping
-                </Button>
-              </Modal.Footer>
-            </Modal>
             <div className="d-flex justify-content-between align-items-center">
-              <h2>Dashboard</h2>
-              <Button variant="primary" onClick={handleShow}>
+              <div className="dashboard__scrapper">
+                <input
+                  type="text"
+                  id="reviewUrl"
+                  value={scrapingUrl}
+                  onChange={e => setScrapingUrl(e.target.value)}
+                  placeholder="Add the URL address"
+                />
+                <button
+                  className="btn"
+                  onClick={() => startScraping(scrapingUrl)}
+                >
+                  Add Review
+                </button>
+              </div>
+              {/* <h2>Dashboard</h2> */}
+              {/* <Button variant="primary" onClick={handleShow}>
                 <i className="bi-plus"></i>
                 Add Review
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
@@ -152,22 +148,19 @@ function DashboardView() {
                     <tr key={review.id}>
                       <th scope="row">{indexOfFirstReview + index + 1}</th>
                       <td>
-                        {
-                          review.info ? (
-                            <div className="d-flex flex-column  dashboard__table-item">
-                              <span>{review.info.mainTitle} </span>
-                              <div className="d-flex gap-1 align-items-center">
-                                <StarRating rating={review.info.mainRate} />
-                                <span>{review.info.mainReview} reviews</span>
-                              </div>
-                            </div>
-                          ) : 
+                        {review.info ? (
                           <div className="d-flex flex-column  dashboard__table-item">
-                            <span>
-                              Loading...
-                            </span>
+                            <span>{review.info.mainTitle} </span>
+                            <div className="d-flex gap-1 align-items-center">
+                              <StarRating rating={review.info.mainRate} />
+                              <span>{review.info.mainReview} reviews</span>
+                            </div>
                           </div>
-                        }
+                        ) : (
+                          <div className="d-flex flex-column  dashboard__table-item">
+                            <span>Loading...</span>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div className="d-flex gap-2">
@@ -187,21 +180,31 @@ function DashboardView() {
                           <i className="bi-clock"></i>
                           <div className="d-flex flex-column">
                             <span>
-                              {new Date(review.completedAt).toLocaleDateString()}
+                              {new Date(
+                                review.completedAt,
+                              ).toLocaleDateString()}
                             </span>
                             <small>
-                              {new Date(review.completedAt).toLocaleTimeString()}
+                              {new Date(
+                                review.completedAt,
+                              ).toLocaleTimeString()}
                             </small>
                           </div>
                         </div>
                       </td>
                       <td>
                         <div className="d-flex gap-2">
-                          <button onClick={() => downloadFile(review.fileUrl)} className="btn btn-sm btn-outline-secondary">
+                          <button
+                            onClick={() => downloadFile(review.fileUrl)}
+                            className="btn btn-sm btn-outline-secondary"
+                          >
                             <i className="bi-download me-2"></i>
                             JSON
                           </button>
-                          <button onClick={() => downloadFile(review.fileUrlCsv)} className="btn btn-sm btn-outline-secondary">
+                          <button
+                            onClick={() => downloadFile(review.fileUrlCsv)}
+                            className="btn btn-sm btn-outline-secondary"
+                          >
                             <i className="bi-download me-2"></i>
                             CSV
                           </button>
@@ -209,14 +212,21 @@ function DashboardView() {
                       </td>
                       <td>
                         <div className="d-flex gap-2">
-                          <span className={`p-2 badge bg-${review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger"}`}>
+                          <span
+                            className={`p-2 badge bg-${review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger"}`}
+                          >
                             {review.status}
                           </span>
                         </div>
                       </td>
                       <td>
                         <div className="d-flex gap-2">
-                          <button onClick={() => (window.location.href = `/dashboard/review/${review.id}`)} className="btn btn-sm btn-outline-secondary">
+                          <button
+                            onClick={() =>
+                              (window.location.href = `/dashboard/review/${review.id}`)
+                            }
+                            className="btn btn-sm btn-outline-secondary"
+                          >
                             <i className="bi-eye"></i>
                             View
                           </button>
@@ -236,11 +246,15 @@ function DashboardView() {
             <Pagination>
               <Pagination.First onClick={() => handlePageClick(1)} />
               <Pagination.Prev onClick={handlePreviousPage} />
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <Pagination.Item key={i + 1} active={currentPage === i + 1} onClick={() => handlePageClick(i + 1)}>
-                    {i + 1}
-                  </Pagination.Item>
-                ))}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <Pagination.Item
+                  key={i + 1}
+                  active={currentPage === i + 1}
+                  onClick={() => handlePageClick(i + 1)}
+                >
+                  {i + 1}
+                </Pagination.Item>
+              ))}
               <Pagination.Next onClick={handleNextPage} />
               <Pagination.Last onClick={() => handlePageClick(totalPages)} />
             </Pagination>
