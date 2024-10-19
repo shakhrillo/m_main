@@ -167,4 +167,7 @@ cython_debug/
 
 node_modules/
 dist/
-reviews/
+reviews/*.csv
+reviews/**/*.csv
+reviews/*.json
+reviews/**/*.json
