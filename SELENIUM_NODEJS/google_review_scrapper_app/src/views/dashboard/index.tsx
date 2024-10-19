@@ -1,13 +1,11 @@
-import { collection, orderBy, onSnapshot, query } from "firebase/firestore"
-import { getStorage, ref, getDownloadURL } from "firebase/storage"
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
+import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
-import { useAppSelector } from "../../app/hooks"
 import Pagination from "react-bootstrap/Pagination"
-import Button from "react-bootstrap/Button"
-import Modal from "react-bootstrap/Modal"
+import { useAppSelector } from "../../app/hooks"
 
-import "../../style/dashboard.css"
 import StarRating from "../../components/star-rating"
+import "../../style/dashboard.css"
 
 function DashboardView() {
   const [show, setShow] = useState(false)
