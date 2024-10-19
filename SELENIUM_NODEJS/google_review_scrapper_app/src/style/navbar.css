@@ -2,6 +2,7 @@
   background-color: #fff;
   border-bottom: 1px solid #e9ecef;
   z-index: 1000;
+  height: 56px;
 }
 
 .navbar-brand {
