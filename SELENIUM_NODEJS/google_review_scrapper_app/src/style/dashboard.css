@@ -1,15 +1,21 @@
 .sidebar {
-    height: calc(100vh - 60px);
+    height: 100vh;
     width: 250px;
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
-    background-color: #fafafa;
-    padding-top: 20px;
+    background-color: #fff;
+    border-right: 1px solid #eee;
+    padding-top: 60px;
 }
 
 .list-group {
     border-radius: 0;
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
 }
 
 .list-group-item-action {
@@ -32,8 +38,9 @@
 }
 
 .content {
-    width: 100%;
+    width: calc(100% - 250px);
     padding: 24px;
+    margin-left: 250px;
 }
 
 .dashboard {

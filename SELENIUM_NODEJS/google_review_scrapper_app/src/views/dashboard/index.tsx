@@ -90,17 +90,29 @@ function DashboardView() {
 
   return (
     <div className="dashboard">
-      <div className="sidebar d-flex flex-column flex-shrink-0 p-3">
+      <div className="sidebar">
         <div className="list-group">
           <button type="button" className="list-group-item list-group-item-action" aria-current="true">
-            Scrap
+            <span>
+              Scrap
+            </span>
+            <span className="badge bg-warning rounded-pill ms-2">1</span>
+            <span className="w-100"></span>
+            <i className="bi-caret-down"></i>
           </button>
           <div className="list-group list-group-nested">
-            <a href="#" className="list-group-item list-group-item-action active">Reviews</a>
+            <a href="#" className="list-group-item list-group-item-action active">
+              Reviews
+              <span className="badge bg-warning rounded-pill ms-2">1</span>
+            </a>
             <a href="#" className="list-group-item list-group-item-action">Places</a>
           </div>
           <button type="button" className="list-group-item list-group-item-action">
-            Payments
+            <span>
+              Payments
+            </span>
+            <span className="w-100"></span>
+            <i className="bi-caret-down"></i>
           </button>
           <div className="list-group list-group-nested">
             <a href="#" className="list-group-item list-group-item-action">Subscriptions</a>
