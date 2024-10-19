@@ -35,6 +35,16 @@ const router = createBrowserRouter([
             element: <ScrapPlacesView />
           }
         ]
+      },
+      {
+        path: "payments",
+        element: <Outlet />,
+        children: [
+          {
+            path: "subscription",
+            element: <Subscription />,
+          },
+        ]
       }
     ]
   },
@@ -57,18 +67,6 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthView />,
-  },
-  {
-    path: "/subscription",
-    element: <Subscription />,
-  },
-  {
-    path: "/scrap/reviews",
-    element: <ScrapReviewsView />
-  },
-  {
-    path: "/scrap/places",
-    element: <ScrapPlacesView />
   }
 ])
 

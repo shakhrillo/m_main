@@ -112,7 +112,7 @@ function DashboardView() {
             <i className="bi-caret-down"></i>
           </button>
           <div className="list-group list-group-nested">
-            <a href="#" className="list-group-item list-group-item-action">Subscriptions</a>
+            <a href="/payments/subscription" className="list-group-item list-group-item-action">Subscriptions</a>
             <a href="#" className="list-group-item list-group-item-action">History</a>
           </div>
           <button type="button" className="list-group-item list-group-item-action">
