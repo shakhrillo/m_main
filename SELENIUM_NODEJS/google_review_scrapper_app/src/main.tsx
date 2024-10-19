@@ -4,12 +4,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { store } from "./app/store"
 import Navbar from "./components/navbar"
 import "./index.css"
-import DashboardView from "./views/dashboard"
-import ReviewsView from "./views/reviews"
 import AuthView from "./views/auth"
+import DashboardView from "./views/dashboard"
 import PricingView from "./views/pricing"
-import UsersView from "./views/user"
+import ReviewsView from "./views/reviews"
+import ScrapPlacesView from "./views/scrap/places"
+import ScrapReviewsView from "./views/scrap/reviews"
 import Subscription from "./views/subscription"
+import UsersView from "./views/user"
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
     path: "/subscription",
     element: <Subscription />,
   },
+  {
+    path: "/scrap/reviews",
+    element: <ScrapReviewsView />
+  },
+  {
+    path: "/scrap/places",
+    element: <ScrapPlacesView />
+  }
 ])
 
 const container = document.getElementById("root")

@@ -99,11 +99,11 @@ function DashboardView() {
             <i className="bi-caret-down"></i>
           </button>
           <div className="list-group list-group-nested">
-            <a href="#" className="list-group-item list-group-item-action active">
+            <a href="/scrap/reviews" className="list-group-item list-group-item-action active">
               Reviews
               <span className="badge bg-warning rounded-pill ms-2">1</span>
             </a>
-            <a href="#" className="list-group-item list-group-item-action">Places</a>
+            <a href="/scrap/places" className="list-group-item list-group-item-action">Places</a>
           </div>
           <button type="button" className="list-group-item list-group-item-action">
             <span>
