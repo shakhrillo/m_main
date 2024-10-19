@@ -89,8 +89,46 @@ function DashboardView() {
   }
 
   return (
-    <div className="dashboard pt-4">
-      <div className="container">
+    <div className="dashboard">
+      <div className="sidebar d-flex flex-column flex-shrink-0 p-3">
+        <h4>Menu</h4>
+        <ul className="nav nav-pills flex-column mb-auto">
+          <li className="nav-item">
+            <a href="" className="nav-link">
+              Usage
+            </a>
+          </li>
+          <hr />
+          <li className="nav-item">
+            <a href="#" className="nav-link">Scrap</a>
+            <ul>
+              <li>
+                <a href="#" className="nav-link active">Reviews</a>
+              </li>
+              <li>
+                <a href="#" className="nav-link">Places</a>
+              </li>
+            </ul>
+          </li>
+          <hr />
+          <li>
+            <a href="#" className="nav-link">Payments</a>
+            <ul>
+              <li>
+                <a href="#" className="nav-link">Subscriptions</a>
+              </li>
+              <li>
+                <a href="#" className="nav-link">History</a>
+              </li>
+            </ul>
+          </li>
+          <hr />
+          <li>
+            <a href="#" className="nav-link">Settings</a>
+          </li>
+        </ul>
+      </div>
+      <div className="content">
         <div className="card">
           <div className="card-body">
             <div className="d-flex justify-content-between align-items-center">

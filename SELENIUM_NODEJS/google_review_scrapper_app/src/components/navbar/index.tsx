@@ -29,8 +29,8 @@ function Navbar() {
   }, [])
 
   return (
-    <nav className="navbar bg-body-tertiary">
-      <div className="container">
+    <nav className="navbar bg-primary">
+      <div className="container-fluid">
         <a className="navbar-brand" href={'/'}>GMap Review Scrapper</a>
         <ul className="d-flex flex-row gap-3 navbar-nav align-items-center">
           <li className="nav-item">

@@ -1,6 +1,30 @@
+.sidebar {
+    height: calc(100vh - 60px);
+    width: 250px;
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: #eee;
+    padding-top: 20px;
+}
+
+.sidebar .nav-link {
+    color: #495057;
+    padding: 10px 20px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #495057;
+}
+
+.content {
+    width: 100%;
+    padding: 24px;
+}
+
 .dashboard {
-    background-color: #f6f6f6;
-    height: calc(100vh - 64px);
+    width: 100%;
+    display: flex;
 }
 
 .dashboard__scrapper input:focus {
