@@ -4,17 +4,31 @@
     position: relative;
     top: 0;
     left: 0;
-    background-color: #eee;
+    background-color: #fafafa;
     padding-top: 20px;
 }
 
-.sidebar .nav-link {
-    color: #495057;
-    padding: 10px 20px;
+.list-group {
+    border-radius: 0;
 }
 
-.sidebar .nav-link:hover {
-    background-color: #495057;
+.list-group-item-action {
+    border-radius: 0;
+    border: 0;
+    background-color: transparent;
+    color: #3c486b;
+}
+
+.list-group.list-group-nested {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.list-group-item-action.active {
+    background-color: transparent;
+    font-weight: 600;
+    color: #000;
 }
 
 .content {

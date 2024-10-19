@@ -91,42 +91,25 @@ function DashboardView() {
   return (
     <div className="dashboard">
       <div className="sidebar d-flex flex-column flex-shrink-0 p-3">
-        <h4>Menu</h4>
-        <ul className="nav nav-pills flex-column mb-auto">
-          <li className="nav-item">
-            <a href="" className="nav-link">
-              Usage
-            </a>
-          </li>
-          <hr />
-          <li className="nav-item">
-            <a href="#" className="nav-link">Scrap</a>
-            <ul>
-              <li>
-                <a href="#" className="nav-link active">Reviews</a>
-              </li>
-              <li>
-                <a href="#" className="nav-link">Places</a>
-              </li>
-            </ul>
-          </li>
-          <hr />
-          <li>
-            <a href="#" className="nav-link">Payments</a>
-            <ul>
-              <li>
-                <a href="#" className="nav-link">Subscriptions</a>
-              </li>
-              <li>
-                <a href="#" className="nav-link">History</a>
-              </li>
-            </ul>
-          </li>
-          <hr />
-          <li>
-            <a href="#" className="nav-link">Settings</a>
-          </li>
-        </ul>
+        <div className="list-group">
+          <button type="button" className="list-group-item list-group-item-action" aria-current="true">
+            Scrap
+          </button>
+          <div className="list-group list-group-nested">
+            <a href="#" className="list-group-item list-group-item-action active">Reviews</a>
+            <a href="#" className="list-group-item list-group-item-action">Places</a>
+          </div>
+          <button type="button" className="list-group-item list-group-item-action">
+            Payments
+          </button>
+          <div className="list-group list-group-nested">
+            <a href="#" className="list-group-item list-group-item-action">Subscriptions</a>
+            <a href="#" className="list-group-item list-group-item-action">History</a>
+          </div>
+          <button type="button" className="list-group-item list-group-item-action">
+            Settings
+          </button>
+        </div>
       </div>
       <div className="content">
         <div className="card">
