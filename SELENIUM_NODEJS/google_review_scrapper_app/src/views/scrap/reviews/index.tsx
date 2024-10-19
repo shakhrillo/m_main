@@ -87,27 +87,37 @@ function ScrapReviewsView() {
 
   return (
     <div className="container-fluid">
-      <div className="card">
-        <div className="card-header">
-          <div className="input-group">
-            <input
-              type="text"
-              id="reviewUrl"
-              value={scrapingUrl}
-              onChange={e => setScrapingUrl(e.target.value)}
-              placeholder="Add the URL address"
-              className="form-control"
-            />
-            <button
-              onClick={() => startScraping(scrapingUrl)}
-              className="btn btn-primary"
-              disabled={scrapingUrl === ""}
-            >
-              Add Review
-            </button>
+      <div className="row">
+        <div className="col-12">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item"><a href="#">Scrap</a></li>
+              <li className="breadcrumb-item active"><a href="#">Reviews</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div className="col-12">
+          <div className="p-3 bg-light mb-3">
+            <div className="input-group">
+              <input
+                type="text"
+                id="reviewUrl"
+                value={scrapingUrl}
+                onChange={e => setScrapingUrl(e.target.value)}
+                placeholder="Add the URL address"
+                className="form-control"
+              />
+              <button
+                onClick={() => startScraping(scrapingUrl)}
+                className="btn btn-primary"
+                disabled={scrapingUrl === ""}
+              >
+                Add Review
+              </button>
+            </div>
           </div>
         </div>
-        <div className="card-body">
+        <div className="col-12">
           <table className="table custom-table">
             <thead>
               <tr>
@@ -121,7 +131,7 @@ function ScrapReviewsView() {
                   Created
                 </th>
                 <th scope="col">
-                  <i className="bi-clock" />
+                  <i className="bi-stopwatch" />
                   Completed
                 </th>
                 <th scope="col">
@@ -158,7 +168,6 @@ function ScrapReviewsView() {
                     </td>
                     <td>
                       <div className="d-flex gap-2">
-                        <i className="bi-clock"></i>
                         <div className="d-flex flex-column">
                           <span>
                             {new Date(review.createdAt).toLocaleDateString()}
@@ -170,21 +179,20 @@ function ScrapReviewsView() {
                       </div>
                     </td>
                     <td>
-                      <div className="d-flex gap-2">
-                        <i className="bi-clock"></i>
-                        <div className="d-flex flex-column">
+                      {
+                        review.createdAt ?
+                        (
                           <span>
-                            {new Date(
-                              review.completedAt,
-                            ).toLocaleDateString()}
+                            {
+                              Number((new Date(review.completedAt).getTime() - new Date(review.createdAt).getTime()) / 60000).toFixed(2)
+                            } min
                           </span>
-                          <small>
-                            {new Date(
-                              review.completedAt,
-                            ).toLocaleTimeString()}
-                          </small>
-                        </div>
-                      </div>
+                        ) : (
+                          <span>
+                            Loading...
+                          </span>
+                        )
+                      }
                     </td>
                     <td>
                       <div className="d-flex gap-2">
@@ -234,7 +242,7 @@ function ScrapReviewsView() {
             </tbody>
           </table>
         </div>
-        <div className="card-footer">
+        <div className="col-12">
           <Pagination>
             <Pagination.First onClick={() => handlePageClick(1)} />
             <Pagination.Prev onClick={handlePreviousPage} />

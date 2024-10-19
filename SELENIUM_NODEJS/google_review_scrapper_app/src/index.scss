@@ -71,7 +71,7 @@ $theme-font-family-base: $font-family-base;
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar"; // Requires nav
 @import "bootstrap/scss/card";
-// @import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/breadcrumb";
 // @import "bootstrap/scss/accordion";
 @import "bootstrap/scss/pagination";
 @import "bootstrap/scss/badge";
