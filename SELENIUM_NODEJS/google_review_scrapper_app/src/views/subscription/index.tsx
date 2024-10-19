@@ -75,6 +75,16 @@ function SubscriptionView() {
     { icon: "", text: "Status" },
   ]
 
+  async function cancelSubscription(subscriptionId: string) {
+    await fetch(`http://localhost:3000/cancel-subscription`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ subscriptionId })
+    });
+  }
+
   return (
     <div className="subscription subscription--padding-top">
       <div className="container">
@@ -91,6 +101,9 @@ function SubscriptionView() {
                       <div className="subscription__price-title">
                         <h1>
                           {plans[item.plan.amount]['name']}
+                          <span className="badge bg-success">
+                            {subscription.status}
+                          </span>
                         </h1>
                         <h1>
                           ${item.plan.amount / 100} 
@@ -127,6 +140,12 @@ function SubscriptionView() {
                           </span>
                         </h4>
                       </div>
+                    </div>
+                    <div className="card-footer">
+                      {/* cancel subscription */}
+                      <button className="btn btn-danger" onClick={() => cancelSubscription(subscription.id)}>
+                        Cancel subscription
+                      </button>
                     </div>
                   </div>
                 ))

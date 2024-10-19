@@ -11,7 +11,8 @@ const app = express();
 const port = 3000;
 const { exec } = require('child_process');
 const { Storage } = require('@google-cloud/storage');
-
+const stripe = require('stripe')('sk_test_JkJ81uFJzAmzz5yBKkgwpC9e'); // Replace with your actual Stripe secret key
+const cors = require('cors');
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from "firebase/app";
@@ -39,11 +40,15 @@ const { Storage } = require('@google-cloud/storage');
 // const analyticsInstance = firebase.analytics();
 
 // Enable CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  
+//   next();
+// });
+app.use(cors());
+app.use(express.json());
 
 function extractReviewText(reviewTextArray, myendText) {
   if (!reviewTextArray || reviewTextArray.length === 0) {
@@ -816,6 +821,30 @@ app.delete('/reviews/:id', async (req, res) => {
 //     query
 //   });
 // });
+
+app.post('/cancel-subscription', async (req, res) => {
+  const { subscriptionId } = req.body; // Expect subscriptionId to be sent in the request body
+
+  if (!subscriptionId) {
+    res.status(400).send({
+      message: 'Subscription ID is required'
+    });
+    return;
+  }
+
+  try {
+    const subscription = await stripe.subscriptions.cancel(subscriptionId);
+    res.send({
+      message: 'Subscription cancelled successfully',
+      subscription
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: `Error: ${error}`
+    });
+  }
+
+});
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
