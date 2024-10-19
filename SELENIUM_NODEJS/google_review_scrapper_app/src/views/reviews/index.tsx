@@ -24,6 +24,10 @@ function ReviewsView() {
   const [reviewsPerPage] = useState(15) // Number of reviews per page
   const db = useAppSelector(state => state.firebase.db)
 
+  const [ratingOverviewVisibility, setRatingOverviewVisibility] = useState<
+    Record<string, boolean>
+  >({})
+
   useEffect(() => {
     if (!db || !place) return
     setReviews([])
@@ -62,7 +66,7 @@ function ReviewsView() {
         ])
       })
     })
-
+    console.log("Reviews: ", reviews)
     return () => {
       unsubscribe()
     }
@@ -103,6 +107,13 @@ function ReviewsView() {
     })
   }
 
+  const toggleRatingOverview = (id: string) => {
+    setRatingOverviewVisibility(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
   return (
     <div className="view">
       <Modal show={show} onHide={handleClose} size="lg" centered>
@@ -131,8 +142,8 @@ function ReviewsView() {
       <div className="container">
         {placeInfo.info ? (
           <div className="card mb-2">
-            <div className="card-body place-info">
-              <div>
+            <div className="card-body place-info row">
+              <div className="col-3">
                 <h5 className="card-title place-info__title">
                   <i className="bi-geo-alt me-2"></i>
                   {placeInfo.info.mainTitle}
@@ -144,7 +155,7 @@ function ReviewsView() {
                   {placeInfo.info.address.longitude})
                 </p>
               </div>
-              <div className="ms-5 d-flex flex-column gap-2 place-info__created-at">
+              <div className="col-2 d-flex flex-column gap-2 place-info__created-at">
                 <span className="">
                   <i className="bi-play-circle me-2"></i>
                   {new Date(placeInfo.createdAt)
@@ -170,7 +181,7 @@ function ReviewsView() {
                 </span>
               </div>
 
-              <div className="view__rating ms-5 d-flex flex-column gap-2">
+              <div className="col-2 view__rating ms-5 d-flex flex-column gap-2">
                 <span className="d-flex gap-2 align-items-center">
                   Rating:{" "}
                   <StarRating rating={String(placeInfo.info.mainRate)} />
@@ -179,7 +190,7 @@ function ReviewsView() {
                   Reviews: {placeInfo.info.mainReview.replace(/[()]/g, "")}
                 </span>
               </div>
-              <div className="ms-5 d-flex gap-2 align-items-center">
+              <div className="col d-flex gap-2 align-items-center">
                 <span className="place__status badge bg-primary ms-2 me-4">
                   {placeInfo.status}
                 </span>
@@ -259,24 +270,67 @@ function ReviewsView() {
                     </td>
                     <td className="view__table-content">
                       <span>{review.myendText || "-"}</span>
-                      <hr />
-                      {review.reviewText && review.reviewText.reviewObj
-                        ? Object.keys(review.reviewText.reviewObj).map(
-                            (key, index) => (
-                              <div key={index}>
-                                <b>{key}</b>: {review.reviewText.reviewObj[key]}
+                      {Object.keys(review.reviewText.reviewObj).length ||
+                      review.reviewText.reviewOverview.length ? (
+                        <div className="view__table-content__show-overview">
+                          <a
+                            onClick={() => toggleRatingOverview(review.id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            Rating Overview
+                          </a>
+                          <i
+                            className={`bi-chevron-down ${ratingOverviewVisibility[review.id] ? "rotate" : ""}`}
+                          ></i>
+                        </div>
+                      ) : null}
+
+                      {/* Display the rating overview based on visibility */}
+                      {ratingOverviewVisibility[review.id] && (
+                        <div className="card view__table-content__rating-overview">
+                          <div className="card-body d-flex row">
+                            {Object.keys(review.reviewText.reviewObj).length ? (
+                              <div className="col">
+                                {review.reviewText &&
+                                review.reviewText.reviewObj
+                                  ? Object.keys(
+                                      review.reviewText.reviewObj,
+                                    ).map((key, index) => (
+                                      <div
+                                        className="view__table-content__review"
+                                        key={index}
+                                      >
+                                        <b>{key}</b>:{" "}
+                                        <span>
+                                          {review.reviewText.reviewObj[key]}
+                                        </span>
+                                      </div>
+                                    ))
+                                  : null}
                               </div>
-                            ),
-                          )
-                        : null}
-                      <hr />
-                      {review.reviewText && review.reviewText.reviewOverview
-                        ? review.reviewText.reviewOverview.map(
-                            (overview: string, index: number) => (
-                              <div key={index}>{overview}</div>
-                            ),
-                          )
-                        : null}
+                            ) : null}
+                            {review.reviewText.reviewOverview.length ? (
+                              <div className="col">
+                                {review.reviewText.reviewOverview.map(
+                                  (overview: string, index: number) => {
+                                    const str = overview
+                                    const [text, number] = str.split(": ")
+                                    return (
+                                      <div
+                                        className="d-flex gap-2 view__table-content__overview"
+                                        key={index}
+                                      >
+                                        <b>{text}: </b>
+                                        <StarRating rating={`${number}`} />
+                                      </div>
+                                    )
+                                  },
+                                )}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      )}
                     </td>
                     <td className="view__table-content">
                       <span>{review.response || "-"}</span>
