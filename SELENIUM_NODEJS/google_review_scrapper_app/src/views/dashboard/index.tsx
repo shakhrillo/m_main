@@ -92,7 +92,7 @@ function DashboardView() {
     <div className="dashboard">
       <div className="sidebar">
         <div className="list-group">
-          <button type="button" className="list-group-item list-group-item-action" aria-current="true">
+          <button type="button" className="list-group-item list-group-item-action">
             <span>
               Scrap
             </span>

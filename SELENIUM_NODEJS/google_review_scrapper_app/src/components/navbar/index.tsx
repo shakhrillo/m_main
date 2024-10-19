@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { signOutAction } from "../../features/auth/action";
 import { initFirebase } from "../../features/firebase/actions";
 import { setUser } from "../../features/auth";
+import "../../style/navbar.css";
 
 function Navbar() {
   const dispatch = useAppDispatch();
@@ -29,9 +30,11 @@ function Navbar() {
   }, [])
 
   return (
-    <nav className="navbar">
+    <nav className="navbar custom-navbar">
       <div className="container-fluid">
-        <a className="navbar-brand" href={'/'}>GMap Review Scrapper</a>
+        <a className="navbar-brand" href={'/'}>
+          <img src="https://cdn.freebiesupply.com/images/large/2x/amazon-logo-transparent.png" alt="" height="24" />
+        </a>
         <ul className="d-flex flex-row gap-3 navbar-nav align-items-center">
           <li className="nav-item">
             <a className="nav-link" href={'/about'}>About</a>
