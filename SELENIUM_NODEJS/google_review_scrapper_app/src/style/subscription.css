@@ -132,12 +132,6 @@
     opacity: 0.8;
 }
 
-.subscription__table thead tr th:nth-child(3),
-.subscription__table thead tr th:nth-child(4),
-.subscription__table thead tr th:nth-child(5) {
-    width: 230px;
-}
-
 .subscription__table thead tr th i {
     margin-right: 8px;
 }
