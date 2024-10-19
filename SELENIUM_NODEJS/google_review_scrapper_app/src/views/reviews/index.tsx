@@ -29,7 +29,7 @@ function ReviewsView() {
     setReviews([])
     const docReview = doc(db, "reviews", place)
 
-    const unsubscribe = onSnapshot(docReview, (doc) => {
+    const unsubscribe = onSnapshot(docReview, doc => {
       if (doc.exists()) {
         console.log("Document data:", doc.data())
         setPlaceInfo({
@@ -43,17 +43,17 @@ function ReviewsView() {
       unsubscribe()
     }
   }, [db, place])
-  
+
   useEffect(() => {
     if (!db || !place) return
     setReviews([])
     const collectionReviews = collection(db, "reviews", place, "reviews")
 
-    const unsubscribe = onSnapshot(collectionReviews, (querySnapshot) => {
-      setReviews([]);
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        setReviews((prev) => [
+    const unsubscribe = onSnapshot(collectionReviews, querySnapshot => {
+      setReviews([])
+      querySnapshot.forEach(doc => {
+        const data = doc.data()
+        setReviews(prev => [
           ...prev,
           {
             ...data,
@@ -129,58 +129,85 @@ function ReviewsView() {
         </Modal.Footer>
       </Modal>
       <div className="container">
-        {
-          placeInfo.info ? (
-
-            <div className="card mb-2">
-              <div className="card-body">
-                <h5 className="card-title">
+        {placeInfo.info ? (
+          <div className="card mb-2">
+            <div className="card-body place-info">
+              <div>
+                <h5 className="card-title place-info__title">
+                  <i className="bi-geo-alt me-2"></i>
                   {placeInfo.info.mainTitle}
-                  <span className="badge bg-primary ms-2">
-                    {placeInfo.status}
-                  </span>
                 </h5>
-                <p className="card-text">{placeInfo.info.address.name} ({placeInfo.info.address.latitude} - {placeInfo.info.address.longitude})</p>
-                <p className="card-text">
-                  Created at: {placeInfo.createdAt}
+                <p className="card-text place-info__subtitle">
+                  <i className="bi-geo me-2"></i>
+                  {placeInfo.info.address.name.replace("Address: ", "")} (
+                  {placeInfo.info.address.latitude} -{" "}
+                  {placeInfo.info.address.longitude})
                 </p>
-                <p className="card-text">
-                  Completed at: {placeInfo.completedAt}
-                </p>
-
-                <div className="view__rating">
-                  <StarRating rating={String(placeInfo.info.mainRate)} />
-                  <span>{placeInfo.info.mainReview} reviews</span>
-                </div>
               </div>
-              <div className="card-footer">
-                <div className="d-flex gap-2">
-                  <button
-                    onClick={() => downloadFile(placeInfo.fileUrl)}
-                    className="btn btn-secondary"
-                  >
-                    <i className="bi-download me-2"></i>
-                    JSON
-                  </button>
-                  <button
-                    onClick={() => downloadFile(placeInfo.fileUrlCsv)}
-                    className="btn btn-secondary"
-                  >
-                    <i className="bi-download me-2"></i>
-                    CSV
-                  </button>
-                  <button
-                    onClick={() => deleteReview(placeInfo.id)}
-                    className="btn btn-danger ms-auto"
-                  >
-                    <i className="bi-trash me-2"></i>
-                    Delete
-                  </button>
-                </div>
+              <div className="ms-5 d-flex flex-column gap-2 place-info__created-at">
+                <span className="">
+                  <i className="bi-play-circle me-2"></i>
+                  {new Date(placeInfo.createdAt)
+                    .toLocaleDateString("en-GB")
+                    .replace(/\//g, "/")}{" "}
+                  -
+                  {new Date(placeInfo.createdAt).toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+
+                <span className="">
+                  <i className="bi-stop-circle me-2"></i>
+                  {new Date(placeInfo.completedAt)
+                    .toLocaleDateString("en-GB")
+                    .replace(/\//g, "/")}{" "}
+                  -
+                  {new Date(placeInfo.completedAt).toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+
+              <div className="view__rating ms-5 d-flex flex-column gap-2">
+                <span className="d-flex gap-2 align-items-center">
+                  Rating:{" "}
+                  <StarRating rating={String(placeInfo.info.mainRate)} />
+                </span>
+                <span>
+                  Reviews: {placeInfo.info.mainReview.replace(/[()]/g, "")}
+                </span>
+              </div>
+              <div className="ms-5 d-flex gap-2 align-items-center">
+                <span className="place__status badge bg-primary ms-2 me-4">
+                  {placeInfo.status}
+                </span>
+                <button
+                  onClick={() => downloadFile(placeInfo.fileUrl)}
+                  className="btn  btn-outline-secondary"
+                >
+                  <i className="bi-download me-2"></i>
+                  JSON
+                </button>
+                <button
+                  onClick={() => downloadFile(placeInfo.fileUrlCsv)}
+                  className="btn  btn-outline-secondary me-4"
+                >
+                  <i className="bi-download me-2"></i>
+                  CSV
+                </button>
+                <button
+                  onClick={() => deleteReview(placeInfo.id)}
+                  className="btn btn-outline-danger ms-auto"
+                >
+                  <i className="bi-trash me-2"></i>
+                  Delete
+                </button>
               </div>
             </div>
-          ) : null
-        }
+          </div>
+        ) : null}
         <div className="card">
           <div className="card-body">
             <table className="table view__table">
@@ -233,24 +260,23 @@ function ReviewsView() {
                     <td className="view__table-content">
                       <span>{review.myendText || "-"}</span>
                       <hr />
-                      {
-                        (review.reviewText && review.reviewText.reviewObj) ?
-                        Object.keys(review.reviewText.reviewObj).map((key, index) => (
-                          <div key={index}>
-                            <b>{key}</b>: {review.reviewText.reviewObj[key]}
-                          </div>
-                        ))
-                        :null
-                      }
+                      {review.reviewText && review.reviewText.reviewObj
+                        ? Object.keys(review.reviewText.reviewObj).map(
+                            (key, index) => (
+                              <div key={index}>
+                                <b>{key}</b>: {review.reviewText.reviewObj[key]}
+                              </div>
+                            ),
+                          )
+                        : null}
                       <hr />
-                      {
-                        (review.reviewText && review.reviewText.reviewOverview) ?
-                        review.reviewText.reviewOverview.map((overview: string, index: number) => (
-                          <div key={index}>{overview}</div>
-                        ))
-                        :null
-
-                      }
+                      {review.reviewText && review.reviewText.reviewOverview
+                        ? review.reviewText.reviewOverview.map(
+                            (overview: string, index: number) => (
+                              <div key={index}>{overview}</div>
+                            ),
+                          )
+                        : null}
                     </td>
                     <td className="view__table-content">
                       <span>{review.response || "-"}</span>

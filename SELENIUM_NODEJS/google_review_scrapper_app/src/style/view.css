@@ -83,13 +83,25 @@
     color: var(--color-primary);
     vertical-align: middle;
 }
-/* 
-.view__table-content span {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5em;
-    max-height: 3em;
-} */
+
+.place-info {
+    display: flex;
+}
+
+.place-info__subtitle,
+.place-info__created-at,
+.place-info__title,
+.view__rating {
+    font-family: var(--font-family);
+    color: var(--color-primary);
+}
+
+.place__status {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-family);
+    text-transform: capitalize;
+    font-weight: 400;
+    font-size: 14px;
+    height: 38px;
+}
