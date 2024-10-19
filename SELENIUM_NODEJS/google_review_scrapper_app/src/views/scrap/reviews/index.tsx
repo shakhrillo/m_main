@@ -108,7 +108,7 @@ function ScrapReviewsView() {
           </div>
         </div>
         <div className="card-body">
-          <table className="table dashboard__table">
+          <table className="table custom-table">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -143,7 +143,7 @@ function ScrapReviewsView() {
                     <th scope="row">{indexOfFirstReview + index + 1}</th>
                     <td>
                       {review.info ? (
-                        <div className="d-flex flex-column  dashboard__table-item">
+                        <div className="d-flex flex-column">
                           <span>{review.info.mainTitle} </span>
                           <div className="d-flex gap-1 align-items-center">
                             <StarRating rating={review.info.mainRate} />
@@ -151,7 +151,7 @@ function ScrapReviewsView() {
                           </div>
                         </div>
                       ) : (
-                        <div className="d-flex flex-column  dashboard__table-item">
+                        <div className="d-flex flex-column">
                           <span>Loading...</span>
                         </div>
                       )}
@@ -188,19 +188,19 @@ function ScrapReviewsView() {
                     </td>
                     <td>
                       <div className="d-flex gap-2">
+                        <select
+                          className="form-select"
+                          aria-label="Default select example"
+                        >
+                          <option value={review.fileUrl}>JSON</option>
+                          <option value={review.fileUrlCsv}>CSV</option>
+                        </select>
+
                         <button
                           onClick={() => downloadFile(review.fileUrl)}
-                          className="btn btn-sm btn-outline-secondary"
+                          className="btn"
                         >
-                          <i className="bi-download me-2"></i>
-                          JSON
-                        </button>
-                        <button
-                          onClick={() => downloadFile(review.fileUrlCsv)}
-                          className="btn btn-sm btn-outline-secondary"
-                        >
-                          <i className="bi-download me-2"></i>
-                          CSV
+                          <i className="bi-download"></i>
                         </button>
                       </div>
                     </td>
@@ -219,14 +219,12 @@ function ScrapReviewsView() {
                           onClick={() =>
                             (window.location.href = `/dashboard/review/${review.id}`)
                           }
-                          className="btn btn-sm btn-outline-secondary"
+                          className="btn btn-outline-secondary"
                         >
                           <i className="bi-eye"></i>
-                          View
                         </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={() => deleteReview(review.id)}>
+                        <button className="btn btn-outline-danger" onClick={() => deleteReview(review.id)}>
                           <i className="bi-trash"></i>
-                          Delete
                         </button>
                       </div>
                     </td>
