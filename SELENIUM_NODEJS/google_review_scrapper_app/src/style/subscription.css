@@ -32,6 +32,12 @@
     opacity: 0.5;
 }
 
+.subscription__payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
 .subscription__term {
     display: flex;
     align-items: center;
