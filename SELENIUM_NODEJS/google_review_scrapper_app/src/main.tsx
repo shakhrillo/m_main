@@ -9,6 +9,7 @@ import ReviewsView from "./views/reviews"
 import AuthView from "./views/auth"
 import PricingView from "./views/pricing"
 import UsersView from "./views/user"
+import Subscription from "./views/subscription"
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <UsersView />
+    element: <UsersView />,
   },
   {
     path: "/about",
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthView />,
+  },
+  {
+    path: "/subscription",
+    element: <Subscription />,
   },
 ])
 
