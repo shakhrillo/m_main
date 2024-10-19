@@ -48,43 +48,6 @@
     display: flex;
 }
 
-.dashboard__scrapper input:focus {
-    outline: none;
-}
-
-.dashboard__scrapper input {
-    flex: 1;
-    border: none;
-    background-color: #f6f6f6;
-    font-family: var(--font-family);
-    color: var(--color-primary);
-    font-size: 14px;
-}
-
-.dashboard__scrapper button:hover {
-    border-color: var(--color-primary);
-    background-color: #fff;
-}
-
-.dashboard__scrapper button {
-    border: 1px solid #dee2e6;
-    background-color: #fff;
-    font-family: var(--font-family);
-    font-weight: 400;
-    color: var(--color-primary);
-    font-size: 14px;
-    height: 32px;
-}
-
-.dashboard__scrapper {
-    padding: 3px 12px;
-    width: 100%;
-    display: flex;
-    border: 1px solid #dee2e6;
-    background-color: #f6f6f6;
-    border-radius: 6px;
-}
-
 .dashboard__table thead tr th {
     font-family: "Josefin Sans", sans-serif;
     font-size: 15px;

@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { store } from "./app/store"
 import Navbar from "./components/navbar"
 import "./index.css"
@@ -16,11 +16,23 @@ import UsersView from "./views/user"
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Landing page will be here</div>,
-  },
-  {
-    path: "/dashboard",
     element: <DashboardView />,
+    children: [
+      {
+        path: "scrap",
+        element: <Outlet />,
+        children: [
+          {
+            path: "reviews",
+            element: <ScrapReviewsView />
+          },
+          {
+            path: "places",
+            element: <ScrapPlacesView />
+          }
+        ]
+      }
+    ]
   },
   {
     path: "/dashboard/review/:place",
