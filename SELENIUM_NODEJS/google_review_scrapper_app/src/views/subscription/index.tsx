@@ -112,6 +112,13 @@ function SubscriptionView() {
                           </span>
                         </h1>
                       </div>
+                      {
+                        subscription.status === 'active' && 
+                        subscription.current_period_end &&
+                        <span className="badge bg-dark text-light">
+                          Next payment: {new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()}
+                        </span>
+                      }
                       <ul className="subscription__features">
                         {plans[item.plan.amount]['features'].map((feature: any, feature_index: number) => (
                           <li key={feature_index} className="subscription__feature-item">
