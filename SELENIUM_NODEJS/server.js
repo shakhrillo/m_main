@@ -41,6 +41,7 @@ const { Storage } = require('@google-cloud/storage');
 // Enable CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE');
   next();
 });
 
@@ -196,6 +197,7 @@ function extractReviewText(reviewTextArray, myendText) {
 
   if (responseStartIndex !== -1) {
     response = reviewTextArray.slice(responseStartIndex + 1).join(" ").trim();
+    response = response.replace('See translation (English)', '');
   }
 
   return {
@@ -722,6 +724,88 @@ app.get('/review', async (req, res) => {
     message: 'Review extraction started'
   });
 
+});
+
+async function deleteCollection(collectionRef, batchSize = 100) {
+  const query = collectionRef.limit(batchSize);
+  return new Promise((resolve, reject) => {
+      deleteQueryBatch(query, resolve, reject);
+  });
+}
+
+async function deleteQueryBatch(query, resolve, reject) {
+  const snapshot = await query.get();
+
+  const batchSize = snapshot.size;
+  if (batchSize === 0) {
+      // When there are no documents left, the operation is complete
+      resolve();
+      return;
+  }
+
+  // Delete documents in a batch
+  const batch = firestore.batch();
+  snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+  });
+
+  await batch.commit();
+
+  // Recurse on the next process tick, to allow for memory cleanup
+  process.nextTick(() => {
+      deleteQueryBatch(query, resolve, reject);
+  });
+}
+
+async function deleteCollectionRecursively(collectionPath) {
+  const collectionRef = firestore.collection(collectionPath);
+
+  // Delete top-level documents in the collection
+  await deleteCollection(collectionRef);
+
+  // Delete subcollections for each document
+  const documentSnapshots = await collectionRef.get();
+  const deleteSubcollectionsPromises = [];
+
+  documentSnapshots.forEach(doc => {
+    const subcollectionsPromise = doc.ref.listCollections().then(subcollections => {
+      const subcollectionDeletes = subcollections.map(subcollection =>
+        deleteCollectionRecursively(subcollection.path)
+      );
+      return Promise.all(subcollectionDeletes);
+    });
+
+    deleteSubcollectionsPromises.push(subcollectionsPromise);
+  });
+
+  // Wait for all subcollection deletes to finish
+  await Promise.all(deleteSubcollectionsPromises);
+}
+
+app.delete('/reviews/:id', async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send({
+      message: 'ID is required'
+    });
+    return;
+  }
+
+  try {
+    // set delete status
+    await updateDocument(id, {
+      status: 'deleting'
+    });
+    await deleteCollectionRecursively(`reviews/${id}/reviews`);
+    await firestore.collection('reviews').doc(id).delete();
+    res.send({
+      message: 'Review deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: `Error: ${error}`
+    });
+  }
 });
 
 // app.get('/items/:itemId', (req, res) => {

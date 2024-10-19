@@ -51,6 +51,12 @@ function DashboardView() {
     handleClose()
   }
 
+  async function deleteReview(id: string) {
+    await fetch(`http://localhost:3000/reviews/${id}`, {
+      method: "DELETE",
+    })
+  }
+
   // Pagination handling
   const indexOfLastReview = currentPage * reviewsPerPage
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage
@@ -230,7 +236,7 @@ function DashboardView() {
                             <i className="bi-eye"></i>
                             View
                           </button>
-                          <button className="btn btn-sm btn-outline-danger">
+                          <button className="btn btn-sm btn-outline-danger" onClick={() => deleteReview(review.id)}>
                             <i className="bi-trash"></i>
                             Delete
                           </button>
