@@ -225,7 +225,7 @@ function ScrapReviewsView() {
                       <div className="d-flex gap-2">
                         <button
                           onClick={() =>
-                            (window.location.href = `/dashboard/review/${review.id}`)
+                            (window.location.href = `/scrap/review/${review.id}`)
                           }
                           className="btn btn-outline-secondary"
                         >
