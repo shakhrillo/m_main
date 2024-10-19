@@ -142,10 +142,12 @@ function SubscriptionView() {
                       </div>
                     </div>
                     <div className="card-footer">
-                      {/* cancel subscription */}
-                      <button className="btn btn-danger" onClick={() => cancelSubscription(subscription.id)}>
+                      <button className="btn btn-danger" onClick={() => cancelSubscription(subscription.id)} disabled={subscription.status !== 'active'}>
                         Cancel subscription
                       </button>
+                      <small>
+                        Canceled at: {subscription.canceled_at ? new Date(subscription.canceled_at.seconds * 1000).toLocaleDateString() : 'N/A'}
+                      </small>
                     </div>
                   </div>
                 ))
