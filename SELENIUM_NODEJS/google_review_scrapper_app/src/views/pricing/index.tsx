@@ -31,8 +31,6 @@ const PricingView: React.FC = () => {
   const prices = useAppSelector((state) => state.products.prices);
   const purchaseId = useAppSelector((state) => state.products.purchaseId);
   const customer = useAppSelector((state) => state.customer.customer);
-  const subscriptions = useAppSelector((state) => state.customer.subscriptions);
-  const payments = useAppSelector((state) => state.customer.payments);
 
   useEffect(() => {
     if (!db || !currentUser) return;
@@ -84,51 +82,7 @@ const PricingView: React.FC = () => {
           From startup to Enterprises: Plan your trip and enjoy
         </span>
       </header>
-      <h5>
-        Subscription
-      </h5>
-      <ul>
-        {
-          subscriptions.map((subscription, index) => (
-            <li key={index}>
-              <span className={subscription.status === 'active' ? 'text-success' : 'text-danger'}>
-                {subscription.status}
-              </span>
-              <br />
-              <span>
-                Starts at: {new Date(subscription.current_period_start.seconds * 1000).toLocaleDateString()}
-              </span>
-              <br />
-              <span>
-                Ends at: {new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-      <h6>
-        Payment history
-      </h6>
-      <ul>
-        {
-          payments.map((payment, index) => (
-            <li key={index}>
-              <span>
-                Amount: {payment.amount / 100} usd
-              </span>
-              <br />
-              <span>
-                Date: {new Date(payment.created * 1000).toLocaleDateString()}
-              </span>
-              <br />
-              <span className={payment.status === 'succeeded' ? 'text-success' : 'text-danger'}>
-                Status: {payment.status}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-      <div className="row gap-3 pricing__plans">
+      <div className="row pricing__plans">
         {
           products.map((product, index) => (
             <div key={index} className="col pricing__plans-item">
