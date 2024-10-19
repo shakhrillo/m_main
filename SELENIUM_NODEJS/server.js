@@ -533,9 +533,9 @@ const openWebsite = async (url) => {
         const jsaction = await button.getAttribute('jsaction');
         if (jsaction && jsaction.includes('review.openPhoto')) {
           const style = await button.getAttribute('style');
-          const imageUrl = style.split('url("')[1].split('");')[0];
+          let imageUrl = style.split('url("')[1].split('");')[0];
+          imageUrl = imageUrl.split('=')[0] + '=w1200';
           extractedImageUrls.push(imageUrl);
-          // await driver.sleep(2000);
         }
       }
       console.log('Extracted image urls:', extractedImageUrls.length);
