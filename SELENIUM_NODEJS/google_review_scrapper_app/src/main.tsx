@@ -6,12 +6,13 @@ import Navbar from "./components/navbar"
 import "./index.scss"
 import AuthView from "./views/auth"
 import DashboardView from "./views/dashboard"
+import PaymentsHistoryView from "./views/payments/history"
+import PaymentsSubscriptionView from "./views/payments/subscription"
 import PricingView from "./views/pricing"
 import ScrapPlacesView from "./views/scrap/places"
 import ScrapReviewsView from "./views/scrap/reviews"
-import Subscription from "./views/subscription"
-import UsersView from "./views/user"
 import ScrapReviewsReviewView from "./views/scrap/reviews/review"
+import UsersView from "./views/user"
 
 const router = createBrowserRouter([
   {
@@ -42,7 +43,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "subscription",
-            element: <Subscription />,
+            element: <PaymentsSubscriptionView />,
+          },
+          {
+            path: "history",
+            element: <PaymentsHistoryView />,
           },
         ]
       }

@@ -1,12 +1,9 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import customer from "../../features/customer";
-import { loadCustomer, loadCustomerPayments, loadCustomerSubscriptions } from "../../features/customer/action";
-import masterCard from "../../imags/mastercard.png";
-import visa from "../../imags/visa.png";
-import "../../style/subscription.css";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { loadCustomer, loadCustomerPayments, loadCustomerSubscriptions } from "../../../features/customer/action";
+import "../../../style/subscription.css";
 
-function SubscriptionView() {
+function PaymentsHistoryView() {
   const dispatch = useAppDispatch();
 
   const db = useAppSelector((state) => state.firebase.db);
@@ -89,81 +86,9 @@ function SubscriptionView() {
     <div className="subscription subscription--padding-top">
       <div className="container">
         <div className="row">
-          <div className="col">
-            <header className="subscription__header text-start mt-5">
-              <h3 className="subscription__title">Your active plan</h3>
-            </header>
-            {
-              subscriptions.map((subscription, index) => (
-                subscription.items.map((item: any, item_index: number) => (
-                  <div key={index} className="card subscription__active">
-                    <div className="card-body subscription__price">
-                      <div className="subscription__price-title">
-                        <h1>
-                          {plans[item.plan.amount]['name']}
-                          <span className="badge bg-success">
-                            {subscription.status}
-                          </span>
-                        </h1>
-                        <h1>
-                          ${item.plan.amount / 100} 
-                          <span>
-                            /{item.plan.interval}
-                          </span>
-                        </h1>
-                      </div>
-                      {
-                        subscription.status === 'active' && 
-                        subscription.current_period_end &&
-                        <span className="badge bg-dark text-light">
-                          Next payment: {new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()}
-                        </span>
-                      }
-                      <ul className="subscription__features">
-                        {plans[item.plan.amount]['features'].map((feature: any, feature_index: number) => (
-                          <li key={feature_index} className="subscription__feature-item">
-                            <span className="subscription__feature-icon">
-                              <i className="bi bi-check text-white"></i>
-                            </span>
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="subscription__term">
-                        <h4>
-                          Started: 
-                          <span>
-                            {
-                              new Date(subscription.current_period_start.seconds * 1000).toLocaleDateString()
-                            }
-                          </span>
-                        </h4>
-                        <h4>
-                          Ends:
-                          <span>
-                            {
-                              new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()
-                            }
-                          </span>
-                        </h4>
-                      </div>
-                    </div>
-                    <div className="card-footer">
-                      <button className="btn btn-danger" onClick={() => cancelSubscription(subscription.id)} disabled={subscription.status !== 'active'}>
-                        Cancel subscription
-                      </button>
-                      <small>
-                        Canceled at: {subscription.canceled_at ? new Date(subscription.canceled_at.seconds * 1000).toLocaleDateString() : 'N/A'}
-                      </small>
-                    </div>
-                  </div>
-                ))
-              ))
-            }
-          </div>
           <div className="col-12">
             <header className="subscription__header text-start mt-5">
-              <h3 className="subscription__title">History of plans</h3>
+              <h3 className="subscription__title">Payments history</h3>
             </header>
             <div className="card">
               <div className="card-body">
@@ -226,4 +151,4 @@ function SubscriptionView() {
   )
 }
 
-export default SubscriptionView
+export default PaymentsHistoryView

@@ -113,9 +113,9 @@ function DashboardView() {
           </button>
           <div className="list-group list-group-nested">
             <a href="/payments/subscription" className="list-group-item list-group-item-action">Subscriptions</a>
-            <a href="#" className="list-group-item list-group-item-action">History</a>
+            <a href="/payments/history" className="list-group-item list-group-item-action">History</a>
           </div>
-          <button type="button" className="list-group-item list-group-item-action">
+          <button type="button" className="list-group-item list-group-item-action" onClick={() => window.location.href = "/user"}>
             Settings
           </button>
         </div>
