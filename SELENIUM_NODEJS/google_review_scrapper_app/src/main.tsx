@@ -7,7 +7,6 @@ import "./index.scss"
 import AuthView from "./views/auth"
 import DashboardView from "./views/dashboard"
 import PricingView from "./views/pricing"
-import ReviewsView from "./views/reviews"
 import ScrapPlacesView from "./views/scrap/places"
 import ScrapReviewsView from "./views/scrap/reviews"
 import Subscription from "./views/subscription"
@@ -38,10 +37,6 @@ const router = createBrowserRouter([
         ]
       }
     ]
-  },
-  {
-    path: "/dashboard/review/:place",
-    element: <ReviewsView />,
   },
   {
     path: "/user",
