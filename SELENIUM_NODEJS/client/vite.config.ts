@@ -7,6 +7,13 @@ export default defineConfig({
   server: {
     open: true,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+      },
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",
