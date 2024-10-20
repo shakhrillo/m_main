@@ -159,7 +159,8 @@
     /* border-top: 1px solid var(--color-primary); */
 }
 
-.view__table-content__show-overview {
+.view__table-content__show-overview,
+.show-more-btn {
     /* border: 1px solid #3c486b50; */
     display: flex;
     align-items: center;
@@ -187,4 +188,31 @@
 .view__table-content__rating-overview.visible {
     max-height: 500px;
     opacity: 1;
+}
+
+.show-more-btn i {
+    display: flex;
+    align-items: center;
+}
+
+.show-more-btn {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    opacity: .7;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 2px;
+}
+
+
+.bi-chevron-down {
+    transition: transform 0.3s ease;
+    /* Smooth transition for rotation */
+}
+
+.rotate {
+    transform: rotate(180deg);
+    /* Rotate icon when the state is active */
 }

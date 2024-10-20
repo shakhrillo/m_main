@@ -114,6 +114,28 @@ function ScrapReviewsReviewView() {
     }))
   }
 
+  const [showMoreContent, setShowMoreContent] = useState<{
+    [key: string]: boolean
+  }>({})
+  const [showMoreResponse, setShowMoreresponse] = useState<{
+    [key: string]: boolean
+  }>({})
+
+  const toggleShowMore = (reviewId: string, item: "content" | "response") => {
+    if (item === "content") {
+      setShowMoreContent(prevState => ({
+        ...prevState,
+        [reviewId]: !prevState[reviewId],
+      }))
+    }
+    if (item === "response") {
+      setShowMoreresponse(prevState => ({
+        ...prevState,
+        [reviewId]: !prevState[reviewId],
+      }))
+    }
+  }
+
   return (
     <div className="view">
       <Modal show={show} onHide={handleClose} size="lg" centered>
@@ -260,112 +282,189 @@ function ScrapReviewsReviewView() {
                 </tr>
               </thead>
               <tbody>
-                {currentReviews.map((review, index) => (
-                  <tr key={index}>
-                    <th scope="row">{indexOfFirstReview + index + 1}</th>
-                    <td className="view__table-item">{review.reviewer.name}</td>
-                    <td>
-                      <StarRating rating={String(review.rate)} />
-                    </td>
-                    <td>{review.platform}</td>
-                    <td>{review.time}</td>
-                    <td>
-                      <div
-                        className="view__table-images"
-                        onClick={() => {
-                          setSelectedImages(review.images)
-                          handleShow()
-                        }}
-                      >
-                        {review.images
-                          .slice(0, 4)
-                          .map((imageSrc: string, imageId: number) => (
-                            <img
-                              key={imageId}
-                              src={imageSrc}
-                              style={{
-                                marginLeft: imageId > 0 ? "-15px" : "0",
-                              }}
-                            />
-                          ))}
-                        {review.images.length > 4 && (
-                          <div className="view__table-images--extra">
-                            +{review.images.length - 4}
+                {currentReviews.map((review, index) => {
+                  const isShown = showMoreContent[review.id]
+                  const showButton =
+                    review.myendText && review.myendText.length > 78
+                  return (
+                    <tr key={index}>
+                      <th scope="row">{indexOfFirstReview + index + 1}</th>
+                      <td className="view__table-item">
+                        {review.reviewer.name}
+                      </td>
+                      <td>
+                        <StarRating rating={String(review.rate)} />
+                      </td>
+                      <td>{review.platform}</td>
+                      <td>{review.time}</td>
+                      <td>
+                        <div
+                          className="view__table-images"
+                          onClick={() => {
+                            setSelectedImages(review.images)
+                            handleShow()
+                          }}
+                        >
+                          {review.images
+                            .slice(0, 4)
+                            .map((imageSrc: string, imageId: number) => (
+                              <img
+                                key={imageId}
+                                src={imageSrc}
+                                style={{
+                                  marginLeft: imageId > 0 ? "-15px" : "0",
+                                }}
+                              />
+                            ))}
+                          {review.images.length > 4 && (
+                            <div className="view__table-images--extra">
+                              +{review.images.length - 4}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="view__table-content">
+                        <div className="view__table-content__text">
+                          <div className="text-container">
+                            <span className={`review-text}`}>
+                              {review.myendText.length < 24 ? (
+                                review.myendText ? (
+                                  review.myendText
+                                ) : (
+                                  "-"
+                                )
+                              ) : (
+                                <>
+                                  {review.myendText.substring(
+                                    0,
+                                    !showMoreContent[review.id]
+                                      ? 24
+                                      : review.myendText.length,
+                                  ) +
+                                    `${!showMoreContent[review.id] ? " ..." : ""}`}
+                                  {
+                                    <button
+                                      onClick={() =>
+                                        toggleShowMore(review.id, "content")
+                                      }
+                                      className="show-more-btn ms-2"
+                                    >
+                                      {showMoreContent[review.id]
+                                        ? "Show less"
+                                        : "Show more"}
+                                      <i
+                                        className={`bi-chevron-down ${showMoreContent[review.id] ? "rotate" : ""}`}
+                                      ></i>
+                                    </button>
+                                  }
+                                </>
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                        {Object.keys(review.reviewText.reviewObj).length ||
+                        review.reviewText.reviewOverview.length ? (
+                          <div className="view__table-content__show-overview">
+                            <button
+                              onClick={() => toggleRatingOverview(review.id)}
+                              className="show-more-btn"
+                            >
+                              Rating Overview
+                              <i
+                                className={`bi-chevron-down ${ratingOverviewVisibility[review.id] ? "rotate" : ""}`}
+                              ></i>
+                            </button>
+                          </div>
+                        ) : null}
+
+                        {/* Display the rating overview based on visibility */}
+                        {ratingOverviewVisibility[review.id] && (
+                          <div className="card view__table-content__rating-overview">
+                            <div className="card-body d-flex row">
+                              {Object.keys(review.reviewText.reviewObj)
+                                .length ? (
+                                <div className="col">
+                                  {review.reviewText &&
+                                  review.reviewText.reviewObj
+                                    ? Object.keys(
+                                        review.reviewText.reviewObj,
+                                      ).map((key, index) => (
+                                        <div
+                                          className="view__table-content__review"
+                                          key={index}
+                                        >
+                                          <b>{key}</b>:{" "}
+                                          <span>
+                                            {review.reviewText.reviewObj[key]}
+                                          </span>
+                                        </div>
+                                      ))
+                                    : null}
+                                </div>
+                              ) : null}
+                              {review.reviewText.reviewOverview.length ? (
+                                <div className="col">
+                                  {review.reviewText.reviewOverview.map(
+                                    (overview: string, index: number) => {
+                                      const str = overview
+                                      const [text, number] = str.split(": ")
+                                      return (
+                                        <div
+                                          className="d-flex gap-2 view__table-content__overview"
+                                          key={index}
+                                        >
+                                          <b>{text}: </b>
+                                          <StarRating rating={`${number}`} />
+                                        </div>
+                                      )
+                                    },
+                                  )}
+                                </div>
+                              ) : null}
+                            </div>
                           </div>
                         )}
-                      </div>
-                    </td>
-                    <td className="view__table-content">
-                      <div className="view__table-content__text">
-                        <span>{review.myendText || "-"}</span>
-                      </div>
-                      {Object.keys(review.reviewText.reviewObj).length ||
-                      review.reviewText.reviewOverview.length ? (
-                        <div className="view__table-content__show-overview">
-                          <a
-                            onClick={() => toggleRatingOverview(review.id)}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Rating Overview
-                          </a>
-                          <i
-                            className={`bi-chevron-down ${ratingOverviewVisibility[review.id] ? "rotate" : ""}`}
-                          ></i>
-                        </div>
-                      ) : null}
-
-                      {/* Display the rating overview based on visibility */}
-                      {ratingOverviewVisibility[review.id] && (
-                        <div className="card view__table-content__rating-overview">
-                          <div className="card-body d-flex row">
-                            {Object.keys(review.reviewText.reviewObj).length ? (
-                              <div className="col">
-                                {review.reviewText &&
-                                review.reviewText.reviewObj
-                                  ? Object.keys(
-                                      review.reviewText.reviewObj,
-                                    ).map((key, index) => (
-                                      <div
-                                        className="view__table-content__review"
-                                        key={index}
-                                      >
-                                        <b>{key}</b>:{" "}
-                                        <span>
-                                          {review.reviewText.reviewObj[key]}
-                                        </span>
-                                      </div>
-                                    ))
-                                  : null}
-                              </div>
-                            ) : null}
-                            {review.reviewText.reviewOverview.length ? (
-                              <div className="col">
-                                {review.reviewText.reviewOverview.map(
-                                  (overview: string, index: number) => {
-                                    const str = overview
-                                    const [text, number] = str.split(": ")
-                                    return (
-                                      <div
-                                        className="d-flex gap-2 view__table-content__overview"
-                                        key={index}
-                                      >
-                                        <b>{text}: </b>
-                                        <StarRating rating={`${number}`} />
-                                      </div>
-                                    )
-                                  },
-                                )}
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                      )}
-                    </td>
-                    <td className="view__table-content">
-                      <span>{review.response || "-"}</span>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="view__table-content">
+                        <span>
+                          {review.response.length < 20 ? (
+                            review.response ? (
+                              review.response
+                            ) : (
+                              "-"
+                            )
+                          ) : (
+                            <>
+                              {review.response.substring(
+                                0,
+                                !showMoreResponse[review.id]
+                                  ? 20
+                                  : review.response.length,
+                              ) +
+                                `${!showMoreResponse[review.id] ? " ..." : ""}`}
+                              {
+                                <button
+                                  onClick={() =>
+                                    toggleShowMore(review.id, "response")
+                                  }
+                                  className="show-more-btn ms-2"
+                                >
+                                  {showMoreResponse[review.id]
+                                    ? "Show less"
+                                    : "Show more"}
+                                  <i
+                                    className={`bi-chevron-down ${showMoreResponse[review.id] ? "rotate" : ""}`}
+                                  ></i>
+                                </button>
+                              }
+                            </>
+                          )}
+                          {/* // review.response || "-" */}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
             <div className="pagination">
