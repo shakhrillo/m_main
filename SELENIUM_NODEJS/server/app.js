@@ -35,7 +35,9 @@ app.use((req, res, next) => {
 
 // User routes
 const userRoutes = require('./routes/user');
+const reviewRoutes = require('./routes/review');
 app.use('/api/users', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Error handling middleware
 const errorHandler = require('./middlewares/errorHandler');
