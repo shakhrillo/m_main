@@ -91,8 +91,12 @@ function ScrapReviewsView() {
         <div className="col-12">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="#">Scrap</a></li>
-              <li className="breadcrumb-item active"><a href="#">Reviews</a></li>
+              <li className="breadcrumb-item">
+                <a href="#">Scrap</a>
+              </li>
+              <li className="breadcrumb-item active">
+                <a href="#">Reviews</a>
+              </li>
             </ol>
           </nav>
         </div>
@@ -181,20 +185,18 @@ function ScrapReviewsView() {
                       </div>
                     </td>
                     <td>
-                      {
-                        review.createdAt ?
-                        (
-                          <span>
-                            {
-                              Number((new Date(review.completedAt).getTime() - new Date(review.createdAt).getTime()) / 60000).toFixed(2)
-                            } min
-                          </span>
-                        ) : (
-                          <span>
-                            Loading...
-                          </span>
-                        )
-                      }
+                      {review.createdAt ? (
+                        <span>
+                          {Number(
+                            (new Date(review.completedAt).getTime() -
+                              new Date(review.createdAt).getTime()) /
+                              60000,
+                          ).toFixed(2)}{" "}
+                          min
+                        </span>
+                      ) : (
+                        <span>Loading...</span>
+                      )}
                     </td>
                     <td>
                       <div className="d-flex gap-2">
@@ -233,7 +235,10 @@ function ScrapReviewsView() {
                         >
                           <i className="bi-eye"></i>
                         </button>
-                        <button className="btn btn-outline-danger" onClick={() => deleteReview(review.id)}>
+                        <button
+                          className="btn btn-outline-danger"
+                          onClick={() => deleteReview(review.id)}
+                        >
                           <i className="bi-trash"></i>
                         </button>
                       </div>

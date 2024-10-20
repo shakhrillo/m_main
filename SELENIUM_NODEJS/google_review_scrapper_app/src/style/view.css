@@ -1,6 +1,6 @@
 .view {
     background-color: #f6f6f6;
-    height: calc(100vh - 64px);
+    /* height: calc(100vh - 64px); */
 }
 
 .view__all-images__carousel-title {

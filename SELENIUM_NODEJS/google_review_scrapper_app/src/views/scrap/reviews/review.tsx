@@ -191,6 +191,33 @@ function ScrapReviewsReviewView() {
                 </span>
               </div>
               <div className="col d-flex gap-2 align-items-center">
+                <div className="d-flex gap-2 w-50">
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option value={placeInfo.fileUrl}>JSON</option>
+                    <option value={placeInfo.fileUrlCsv}>CSV</option>
+                  </select>
+
+                  <button
+                    onClick={() => downloadFile(placeInfo.fileUrl)}
+                    className="btn"
+                  >
+                    <i className="bi-download"></i>
+                  </button>
+                </div>
+                <span className="place__status badge bg-primary ms-3">
+                  {placeInfo.status}
+                </span>
+                <button
+                  className="btn btn-outline-danger ms-auto"
+                  onClick={() => deleteReview(placeInfo.id)}
+                >
+                  <i className="bi-trash"></i>
+                </button>
+              </div>
+              {/* <div className="col d-flex gap-2 align-items-center">
                 <span className="place__status badge bg-primary ms-2 me-4">
                   {placeInfo.status}
                 </span>
@@ -215,7 +242,7 @@ function ScrapReviewsReviewView() {
                   <i className="bi-trash me-2"></i>
                   Delete
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         ) : null}
