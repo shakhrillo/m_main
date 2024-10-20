@@ -76,6 +76,11 @@
     line-height: 13px;
 }
 
+.view__table tbody tr td:nth-child(8),
+.view__table tbody tr td:nth-child(7) {
+    vertical-align: top;
+}
+
 .view__table tbody tr td {
     font-family: var(--font-family);
     font-size: 15px;
@@ -120,11 +125,19 @@
 }
 
 .view__table thead tr th:nth-child(4) {
-    width: 100px;
+    width: 110px;
 }
 
 .view__table thead tr th:nth-child(5) {
     width: 120px;
+}
+
+.view__table thead tr th:nth-child(7) {
+    width: 350px;
+}
+
+.view__table thead tr th:nth-child(8) {
+    width: 310px;
 }
 
 
@@ -174,9 +187,4 @@
 .view__table-content__rating-overview.visible {
     max-height: 500px;
     opacity: 1;
-}
-
-.bi-chevron-down.rotate {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
 }

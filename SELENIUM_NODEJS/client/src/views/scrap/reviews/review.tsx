@@ -296,7 +296,9 @@ function ScrapReviewsReviewView() {
                       </div>
                     </td>
                     <td className="view__table-content">
-                      <span>{review.myendText || "-"}</span>
+                      <div className="view__table-content__text">
+                        <span>{review.myendText || "-"}</span>
+                      </div>
                       {Object.keys(review.reviewText.reviewObj).length ||
                       review.reviewText.reviewOverview.length ? (
                         <div className="view__table-content__show-overview">
