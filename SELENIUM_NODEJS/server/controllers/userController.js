@@ -7,7 +7,7 @@ exports.getUserById = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    const userDoc = await firestore.collection('users').doc(userId).get();
+    const userDoc = await firestore.collection('customers').doc(userId).get();
 
     if (!userDoc.exists) {
       return res.status(404).json({ message: 'User not found' });

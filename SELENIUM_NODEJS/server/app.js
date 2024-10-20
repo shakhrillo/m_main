@@ -17,7 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Firebase Middleware Example: Authenticate requests with Firebase
 app.use((req, res, next) => {
-  console.log('req.headers:', req.headers);
   const token = req.headers.authorization?.split(' ')[1];
 
   if (token) {
