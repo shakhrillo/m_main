@@ -154,7 +154,9 @@ function ScrapReviewsView() {
                     <td>
                       {review.info ? (
                         <div className="d-flex flex-column">
-                          <span>{review.info.mainTitle} </span>
+                          <a href={`/scrap/review/${review.id}`}>
+                            {review.info.mainTitle}
+                          </a>
                           <div className="d-flex gap-1 align-items-center">
                             <StarRating rating={review.info.mainRate} />
                             <span>{review.info.mainReview} reviews</span>
