@@ -1,19 +1,38 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+admin.initializeApp();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+exports.trackReviewCount = functions.firestore
+  .document('reviews/{userId}/userReviews/{reviewId}')
+  .onCreate(async (snap, context) => {
+    const statisticsUserRef = admin.firestore().doc(`statistics/users/${context.params.userId}`);
+    
+    try {
+      await admin.firestore().runTransaction(async transaction => {
+        const userSnapshot = await transaction.get(statisticsUserRef);
+        const newReviewCount = userSnapshot.data().reviewCount + 1;
+        transaction.update(statisticsUserRef, { reviewCount: newReviewCount });
+      });
+    }
+    catch (error) {
+      console.log('Transaction failed:', error);
+    }
+  });
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.trackReviewCount = functions.firestore
+  .document('reviews/{userId}/userReviews/{reviewId}')
+  .onDelete(async (snap, context) => {
+    const statisticsUserRef = admin.firestore().doc(`statistics/users/${context.params.userId}`);
+    
+    try {
+      await admin.firestore().runTransaction(async transaction => {
+        const userSnapshot = await transaction.get(statisticsUserRef);
+        const newReviewCount = userSnapshot.data().reviewCount - 1;
+        transaction.update(statisticsUserRef, { reviewCount: newReviewCount });
+      });
+    }
+    catch (error) {
+      console.log('Transaction failed:', error);
+    }
+  });
