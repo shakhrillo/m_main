@@ -67,6 +67,12 @@ $color-balance: #7564ee;
     }
   }
 
+  &__address-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 12px;
+  }
+
   &__edit-button {
     color: $color-primary;
     border-radius: 24px;
