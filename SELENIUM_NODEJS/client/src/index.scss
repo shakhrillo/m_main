@@ -1,9 +1,8 @@
 /* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap");
 
 /* Bootstrap Icons */
 @import url("bootstrap-icons/font/bootstrap-icons.min.css");
-
 
 // Override Bootstrap's Sass default variables
 //
@@ -15,7 +14,6 @@
 // CSS without writing _new_ styles. For example, you can either change
 // `$body-color` or write more CSS that override's Bootstrap's CSS like so:
 // `body { color: red; }`.
-
 
 //
 // Bring in Bootstrap
@@ -35,7 +33,7 @@
 $enable-gradients: true;
 $enable-shadows: true;
 
-$offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
+$offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 
 // Include functions first
 @import "bootstrap/scss/functions";
@@ -52,7 +50,7 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 // Custom theme variables
 $font-family-base: "Josefin Sans", sans-serif;
 $body-color: #3c486b !default;
-$primary: #3c486b !default;
+$primary-color: #3c486b !default;
 $secondary: #7564ee !default;
 
 // Apply the custom font family
@@ -99,37 +97,42 @@ $theme-font-family-base: $font-family-base;
 
 // Custom styles using Bootstrap utility classes and your theme variables
 body {
-    font-family: $font-family-base;
-    color: $body-color;
+  font-family: $font-family-base;
+  color: $body-color;
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .btn-primary {
-    background-color: $primary;
-    border-color: $primary;
-    &:hover {
-        background-color: darken($primary, 10%);
-        border-color: darken($primary, 10%);
-    }
+  background-color: $primary-color;
+  border-color: $primary-color;
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    border-color: darken($primary-color, 10%);
+  }
 }
 
 .btn-secondary {
-    background-color: $secondary;
-    border-color: $secondary;
-    &:hover {
-        background-color: darken($secondary, 10%);
-        border-color: darken($secondary, 10%);
-    }
+  background-color: $secondary;
+  border-color: $secondary;
+  &:hover {
+    background-color: darken($secondary, 10%);
+    border-color: darken($secondary, 10%);
+  }
 }
 
 // Additional customizations
-h1, h2, h3, h4, h5, h6 {
-    font-family: $font-family-base;
-    color: $primary;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-family-base;
+  color: $primary-color;
 }

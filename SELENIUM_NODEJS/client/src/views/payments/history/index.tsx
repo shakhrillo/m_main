@@ -1,47 +1,51 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { loadCustomer, loadCustomerPayments, loadCustomerSubscriptions } from "../../../features/customer/action";
-import "../../../style/subscription.css";
+import { useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "../../../app/hooks"
+import {
+  loadCustomer,
+  loadCustomerPayments,
+  loadCustomerSubscriptions,
+} from "../../../features/customer/action"
+import "../../../style/subscription.scss"
 
 function PaymentsHistoryView() {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
-  const db = useAppSelector((state) => state.firebase.db);
-  const currentUser = useAppSelector((state) => state.auth.user);
-  const customer = useAppSelector((state) => state.customer.customer);
-  const subscriptions = useAppSelector((state) => state.customer.subscriptions);
-  const payments = useAppSelector((state) => state.customer.payments);
-
-  useEffect(() => {
-    console.log("subscriptions", subscriptions);
-    console.log("payments", payments);
-  }, [subscriptions, payments]);
+  const db = useAppSelector(state => state.firebase.db)
+  const currentUser = useAppSelector(state => state.auth.user)
+  const customer = useAppSelector(state => state.customer.customer)
+  const subscriptions = useAppSelector(state => state.customer.subscriptions)
+  const payments = useAppSelector(state => state.customer.payments)
 
   useEffect(() => {
-    if (!db || !currentUser) return;
-    dispatch(loadCustomer({ db, customerId: currentUser.uid }));
-  }, [dispatch, db, currentUser]);
+    console.log("subscriptions", subscriptions)
+    console.log("payments", payments)
+  }, [subscriptions, payments])
 
   useEffect(() => {
-    if (!currentUser) return;
-    dispatch(loadCustomerSubscriptions({ db, customerId: currentUser.uid }));
-    dispatch(loadCustomerPayments({ db, customerId: currentUser.uid }));
-  }, [customer, currentUser]);
+    if (!db || !currentUser) return
+    dispatch(loadCustomer({ db, customerId: currentUser.uid }))
+  }, [dispatch, db, currentUser])
+
+  useEffect(() => {
+    if (!currentUser) return
+    dispatch(loadCustomerSubscriptions({ db, customerId: currentUser.uid }))
+    dispatch(loadCustomerPayments({ db, customerId: currentUser.uid }))
+  }, [customer, currentUser])
 
   const plans: any = {
     "4500": {
-      "name": "Basic membership (GMS)",
-      "features": [
+      name: "Basic membership (GMS)",
+      features: [
         "Employee Onboarding",
         "Time and Attendance Tracking",
         "Basic Payroll Processing",
         "Employee Self-Service Portal",
         "Standard Reporting",
-      ]
+      ],
     },
     "15000": {
-      "name": "Premium membership (GMS)",
-      "features": [
+      name: "Premium membership (GMS)",
+      features: [
         "Employee Onboarding",
         "Time and Attendance Tracking",
         "Basic Payroll Processing",
@@ -49,18 +53,18 @@ function PaymentsHistoryView() {
         "Standard Reporting",
         "Advanced Reporting",
         "Custom Reporting",
-      ]
+      ],
     },
     "700": {
-      "name": "Jet membership (GMS)",
-      "features": [
+      name: "Jet membership (GMS)",
+      features: [
         "Employee Onboarding",
         "Time and Attendance Tracking",
         "Basic Payroll Processing",
         "Employee Self-Service Portal",
         "Standard Reporting",
-      ]
-    }
+      ],
+    },
   }
 
   const tableHeader = [
@@ -74,12 +78,12 @@ function PaymentsHistoryView() {
 
   async function cancelSubscription(subscriptionId: string) {
     await fetch(`http://localhost:3000/cancel-subscription`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ subscriptionId })
-    });
+      body: JSON.stringify({ subscriptionId }),
+    })
   }
 
   return (
@@ -104,19 +108,20 @@ function PaymentsHistoryView() {
                     </tr>
                   </thead>
                   <tbody>
-                    {
-                      payments.map((payment, index) => (
-                        payment.charges.data.map((charge: any, charge_index: number) => (
-                          <tr key={index + '_' + charge_index}>
+                    {payments.map((payment, index) =>
+                      payment.charges.data.map(
+                        (charge: any, charge_index: number) => (
+                          <tr key={index + "_" + charge_index}>
                             <th scope="row">{index + 1}</th>
                             <td>
-                              {
-                                charge.amount === 4500
-                                ? "Basic membership (GMS)" : "Premium membership (GMS)"
-                              }
+                              {charge.amount === 4500
+                                ? "Basic membership (GMS)"
+                                : "Premium membership (GMS)"}
                             </td>
                             <td>
-                              {new Date(charge.created * 1000).toLocaleDateString()}
+                              {new Date(
+                                charge.created * 1000,
+                              ).toLocaleDateString()}
                             </td>
                             <td>
                               {charge.amount / 100} {charge.currency}
@@ -124,22 +129,35 @@ function PaymentsHistoryView() {
                             <td>
                               <div className="d-flex align-items-center gap-2">
                                 <small>
-                                  **** {charge.payment_method_details.card.last4} ({charge.payment_method_details.card.exp_month}/{charge.payment_method_details.card.exp_year})
+                                  ****{" "}
+                                  {charge.payment_method_details.card.last4} (
+                                  {charge.payment_method_details.card.exp_month}
+                                  /{charge.payment_method_details.card.exp_year}
+                                  )
                                 </small>
                                 <span className="badge bg-dark text-light">
-                                  {charge.payment_method_details.card.brand === "visa" ? "VISA" : "MC"}
+                                  {charge.payment_method_details.card.brand ===
+                                  "visa"
+                                    ? "VISA"
+                                    : "MC"}
                                 </span>
                               </div>
                             </td>
                             <td>
-                              <span className={charge.status === 'succeeded' ? 'badge bg-success' : 'badge bg-danger'}>
+                              <span
+                                className={
+                                  charge.status === "succeeded"
+                                    ? "badge bg-success"
+                                    : "badge bg-danger"
+                                }
+                              >
                                 {charge.status}
                               </span>
                             </td>
                           </tr>
-                        ))
-                      ))
-                    }
+                        ),
+                      ),
+                    )}
                   </tbody>
                 </table>
               </div>
