@@ -1,10 +1,11 @@
-// server.js
 require('dotenv').config();
-
-const app = require('./app'); // Import the app from app.js
+const app = require('./app');
 const PORT = process.env.PORT;
 
-// Start the server
+// clear all console form the terminal
+// process.stdout.write('\x1bc');
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+

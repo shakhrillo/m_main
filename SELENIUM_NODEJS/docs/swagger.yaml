@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Review API
+  version: 1.0.0
+  description: API for creating and managing reviews in an Express application.
+  
+paths:
+  /api/reviews:
+    post:
+      summary: Create a new review
+      description: Creates a new review with a rating and comment. User authentication is required.
+      tags:
+        - Reviews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  description: Rating of the product or service.
+                  example: 5
+                comment:
+                  type: string
+                  description: Comment about the product or service.
+                  example: "Excellent service!"
+              required:
+                - rating
+                - comment
+      responses:
+        '201':
+          description: Review successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the created review.
+                    example: "abc123"
+                  rating:
+                    type: integer
+                    description: Rating provided by the user.
+                    example: 5
+                  comment:
+                    type: string
+                    description: Comment provided by the user.
+                    example: "Excellent service!"
+                  userId:
+                    type: string
+                    description: ID of the user who created the review.
+                    example: "user123"
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: Timestamp when the review was created.
+                    example: "2024-10-22T10:10:10Z"
+        '400':
+          description: Bad request - Rating and comment are required.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Rating and comment are required"
+        '401':
+          description: Unauthorized - Authentication token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
