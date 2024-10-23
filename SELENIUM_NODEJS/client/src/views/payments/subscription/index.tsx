@@ -33,7 +33,7 @@ function PaymentsSubscriptionView() {
   }, [customer, currentUser])
 
   const plans: any = {
-    "4500": {
+    "1000": {
       name: "Basic membership (GMS)",
       features: [
         "Employee Onboarding",
@@ -92,81 +92,85 @@ function PaymentsSubscriptionView() {
                     key={index}
                     className="col-4 card position-relative subscription__active"
                   >
-                    <div className="card-body subscription__price">
-                      {subscription.status === "active" && (
-                        <div className="py-3 mt-3">
-                          <span className="active-badge position-absolute bg-dark text-light">
-                            Next payment:{" "}
-                            {new Date(
-                              subscription.current_period_end.seconds * 1000,
-                            ).toLocaleDateString()}
-                          </span>
-                          <span
-                            role="button"
-                            className="active-badge position-absolute opacity-100"
-                          >
-                            {subscription.status}
-                          </span>
-                        </div>
-                      )}
-                      <div className="subscription__price-title">
-                        <h1>{plans[item.plan.amount]["name"]}</h1>
-                        <h1 className="d-flex align-items-end">
-                          ${item.plan.amount / 100}
-                          <span>/{item.plan.interval}</span>
-                        </h1>
-                      </div>
-                      <div className="">
-                        <ul className="subscription__features">
-                          {plans[item.plan.amount]["features"].map(
-                            (feature: any, feature_index: number) => (
-                              <li
-                                key={feature_index}
-                                className="subscription__feature-item"
+                    {
+                      plans[item.plan.amount] && (
+                        <div className="card-body subscription__price">
+                          {subscription.status === "active" && (
+                            <div className="py-3 mt-3">
+                              <span className="active-badge position-absolute bg-dark text-light">
+                                Next payment:{" "}
+                                {new Date(
+                                  subscription.current_period_end.seconds * 1000,
+                                ).toLocaleDateString()}
+                              </span>
+                              <span
+                                role="button"
+                                className="active-badge position-absolute opacity-100"
                               >
-                                <span className="subscription__feature-icon">
-                                  <i className="bi bi-check text-success"></i>
-                                </span>
-                                {feature}
-                              </li>
-                            ),
+                                {subscription.status}
+                              </span>
+                            </div>
                           )}
-                        </ul>
-                      </div>
-                      <div className="d-flex flex-column gap-2 mt-auto">
-                        <button
-                          className="btn btn-outline-danger btn-sm"
-                          onClick={() => cancelSubscription(subscription.id)}
-                          disabled={
-                            subscription.status !== "active" ||
-                            subscription.canceled_at
-                          }
-                        >
-                          {subscription.canceled_at
-                            ? `Canceled at: ${new Date(subscription.canceled_at.seconds * 1000).toLocaleDateString()}`
-                            : "Cancel subscription"}
-                        </button>
-                        <div className="subscription__term">
-                          <h4>
-                            Started:
-                            <span>
-                              {new Date(
-                                subscription.current_period_start.seconds *
-                                  1000,
-                              ).toLocaleDateString()}
-                            </span>
-                          </h4>
-                          <h4>
-                            Ends:
-                            <span>
-                              {new Date(
-                                subscription.current_period_end.seconds * 1000,
-                              ).toLocaleDateString()}
-                            </span>
-                          </h4>
+                          <div className="subscription__price-title">
+                            <h1>{plans[item.plan.amount]["name"]}</h1>
+                            <h1 className="d-flex align-items-end">
+                              ${item.plan.amount / 100}
+                              <span>/{item.plan.interval}</span>
+                            </h1>
+                          </div>
+                          <div className="">
+                            <ul className="subscription__features">
+                              {plans[item.plan.amount]["features"].map(
+                                (feature: any, feature_index: number) => (
+                                  <li
+                                    key={feature_index}
+                                    className="subscription__feature-item"
+                                  >
+                                    <span className="subscription__feature-icon">
+                                      <i className="bi bi-check text-success"></i>
+                                    </span>
+                                    {feature}
+                                  </li>
+                                ),
+                              )}
+                            </ul>
+                          </div>
+                          <div className="d-flex flex-column gap-2 mt-auto">
+                            <button
+                              className="btn btn-outline-danger btn-sm"
+                              onClick={() => cancelSubscription(subscription.id)}
+                              disabled={
+                                subscription.status !== "active" ||
+                                subscription.canceled_at
+                              }
+                            >
+                              {subscription.canceled_at
+                                ? `Canceled at: ${new Date(subscription.canceled_at.seconds * 1000).toLocaleDateString()}`
+                                : "Cancel subscription"}
+                            </button>
+                            <div className="subscription__term">
+                              <h4>
+                                Started:
+                                <span>
+                                  {new Date(
+                                    subscription.current_period_start.seconds *
+                                      1000,
+                                  ).toLocaleDateString()}
+                                </span>
+                              </h4>
+                              <h4>
+                                Ends:
+                                <span>
+                                  {new Date(
+                                    subscription.current_period_end.seconds * 1000,
+                                  ).toLocaleDateString()}
+                                </span>
+                              </h4>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      )
+                    }
                   </div>
                 )),
               )}

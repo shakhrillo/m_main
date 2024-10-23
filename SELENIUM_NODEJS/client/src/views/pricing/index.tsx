@@ -93,7 +93,7 @@ const PricingView: React.FC = () => {
                   <span>/{prices[product.id]?.recurring.interval}</span>
                 </h1>
                 <span className="pricing__card-description">{product.description}</span>
-                <button className="btn pricing__button" onClick={() => buyProduct(product, prices[product.id])} disabled={loading}>
+                <button className="btn btn-primary" onClick={() => buyProduct(product, prices[product.id])} disabled={loading}>
                   Get started with {product.name}
                 </button>
                 
