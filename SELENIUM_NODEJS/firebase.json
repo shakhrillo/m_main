@@ -41,7 +41,6 @@
     "singleProjectMode": true
   },
   "extensions": {
-    "firestore-stripe-payments": "invertase/firestore-stripe-payments@0.3.9",
-    "firestore-stripe-payments-9y5v": "invertase/firestore-stripe-payments@0.3.9"
+    "firestore-stripe-payments": "invertase/firestore-stripe-payments@0.3.9"
   }
 }
