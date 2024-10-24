@@ -6,7 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const { admin } = require('./config/firebase'); // Import Firebase config
+const { admin } = require('../firebase/main');
 
 const app = express();
 
@@ -20,24 +20,26 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use((req, res, next) => {
-//   const token = req.headers.authorization?.split(' ')[1];
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    const token = req.headers.authorization?.split(' ')[1];
 
-//   console.log('Token:', token);
-
-//   if (token) {
-//     admin
-//       .auth()
-//       .verifyIdToken(token)
-//       .then((decodedToken) => {
-//         req.user = decodedToken;
-//         next();
-//       })
-//       .catch(() => res.status(401).json({ message: 'Unauthorized' }));
-//   } else {
-//     next();
-//   }
-// });
+    if (token) {
+      admin
+        .auth()
+        .verifyIdToken(token)
+        .then((decodedToken) => {
+          req.user = decodedToken;
+          next();
+        })
+        .catch(() => res.status(401).json({ message: 'Unauthorized' }));
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 // User routes
 const userRoutes = require('./routes/user');

@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-const { firestore, auth } = require('../config/firebase');
+const { firestore, auth } = require('../../firebase/main');
 
 // Example function to get a user by ID from Firestore
 exports.getUserById = async (req, res) => {

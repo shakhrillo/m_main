@@ -1,6 +1,4 @@
-const { firestore } = require('../config/firebase');
-
-const { startContainer, stopAndRemoveContainer } = require("../services/dockerService");
+const { startContainer, stopAndRemoveContainer } = require("./dockerUtils");
 const { 
   openOverviewTab,
   openReviewTab,
@@ -17,6 +15,7 @@ const {
   extractReviewText
 } = require("./seleniumUtils");
 const { Builder } = require('selenium-webdriver');
+const firestore = require('../firebase/main').firestore;
 
 exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueId) => {
   console.log('Opening website:', url);
@@ -64,11 +63,11 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
       message.review = await extractReviewText(element);
       messages.push(message);
       await firestore.collection(
-        `reviews`
+        `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}/messages`
       ).add(message)
     }
 
-    console.log('Messages:', messages.length);
+    return messages;
   } catch (error) {
     stopAndRemoveContainer(containerName, uniqueId);
     console.error('Failed to start container:', error);
