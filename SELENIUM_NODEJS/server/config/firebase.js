@@ -11,17 +11,11 @@ admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
-// set emulators
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-
 // Initialize Firestore
 admin.firestore().settings({
-  host: 'localhost:8080',
+  host: 'localhost:8282',
   ssl: false
 });
-
-// Initialize Authentication
-// admin.auth().useEmulator('http://localhost:9099');
 
 const firestore = admin.firestore();
 const auth = admin.auth();

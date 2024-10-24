@@ -1,6 +1,7 @@
 // controllers/reviewController.js
 
 const { firestore, auth } = require('../config/firebase');
+const { openWebsite } = require('../utils/selenium');
 
 exports.getReviews = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values for page and limit
@@ -42,26 +43,40 @@ exports.getReviews = async (req, res) => {
 };
 
 exports.createReview = async (req, res) => {
-  const { rating, comment } = req.body;
+  let { url, uid } = req.body;
 
-  if (!rating || !comment) {
-    return res.status(400).json({ message: 'Rating and comment are required' });
+  if (!url) {
+    return res.status(400).json({ message: 'URL is required' });
   }
 
   try {
-    // const token = req.headers.authorization?.split(' ')[1];
-    // const { uid } = await auth.verifyIdToken(token);
+    // const token = req.headers.authorization
+    // console.log('Token:', token);
+    console.log('UID:', uid);
 
-    const review = {
-      rating,
-      comment,
-      // userId: uid,
-      createdAt: new Date(),
-    };
+    const generatedPort = Math.floor(Math.random() * 10000) + 10000;
+    const subPort = generatedPort + 1;
+    const imageName = `selenium/standalone-firefox:4.25.0-20241010`;
+    const containerName = `selenium-${Date.now()}`;
+    url = decodeURIComponent(url);
 
-    const newReview = await firestore.collection('reviews').add(review);
+    const docId = await firestore.collection(
+      `users/${uid}/reviews`
+    ).add({
+      url,
+      container: {
+        name: containerName,
+        port: generatedPort,
+        subPort,
+        image: imageName,
+      },
+      serverTimestamp: new Date(),
+      status: 'STARTED',
+    });
 
-    res.status(201).json({ id: newReview.id, ...review });
+    openWebsite(url, containerName, generatedPort, subPort, docId.id);
+
+    res.status(201).json({ message: 'Review created successfully' });
   } catch (err) {
     console.error('Error creating review:', err);
     res.status(500).json({ message: 'Internal server error' });

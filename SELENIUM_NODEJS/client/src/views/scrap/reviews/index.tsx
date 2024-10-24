@@ -9,24 +9,29 @@ import "../../../style/dashboard.css"
 function ScrapReviewsView() {
   const [show, setShow] = useState(false)
 
-  const [scrapingUrl, setScrapingUrl] = useState("")
+  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/9QKrrhLEbhNHdvEg9")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
 
   const db = useAppSelector(state => state.firebase.db)
   const user = useAppSelector(state => state.auth.user)
+  const token = useAppSelector(state => state.auth.token)
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   useEffect(() => {
-    if (!db) return
-    setReviews([])
-    let collectionReviews = collection(db, "reviews")
-    const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
+    console.log("Loaded: ", reviews)
+  }, [reviews])
 
-    onSnapshot(reviewsQuery, querySnapshot => {
+  useEffect(() => {
+    if (!db || !user) return;
+    setReviews([])
+    let collectionReviews = collection(db, `users/${user.uid}/reviews`)
+    // const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
+
+    onSnapshot(collectionReviews, querySnapshot => {
       setReviews([])
       querySnapshot.forEach(doc => {
         const data = doc.data()
@@ -39,11 +44,24 @@ function ScrapReviewsView() {
         ])
       })
     })
-  }, [db])
+  }, [db, user])
 
   async function startScraping(url: string) {
     const encodeReviewURL = encodeURIComponent(url)
-    await fetch(`http://localhost:3000/review?url=${encodeReviewURL}`)
+    // await fetch(`http://localhost:4444//api/reviews?url=${encodeReviewURL}`)
+    await fetch(`http://localhost:4444/api/reviews`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // authorization
+        "Authorization": token
+      },
+      body: JSON.stringify({
+        url: encodeReviewURL,
+        uid: user.uid,
+        // token: user.token,
+      }),
+    })
     setScrapingUrl("")
     handleClose()
   }

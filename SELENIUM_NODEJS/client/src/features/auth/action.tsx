@@ -49,4 +49,9 @@ const deleteAccountAction = createAsyncThunk('auth/deleteAccount', async () => {
   return auth.currentUser?.delete()
 });
 
-export { registerEmailAndPasswordAction, signInEmailAndPasswordAction, signOutAction, signInWithGoogleAction, deleteAccountAction, updateAccountPasswordAction };
+const getUserTokenAction = createAsyncThunk('auth/getUserToken', async () => {
+  const auth = getAuth();
+  return auth.currentUser?.getIdToken()
+});
+
+export { registerEmailAndPasswordAction, signInEmailAndPasswordAction, signOutAction, signInWithGoogleAction, deleteAccountAction, updateAccountPasswordAction, getUserTokenAction };

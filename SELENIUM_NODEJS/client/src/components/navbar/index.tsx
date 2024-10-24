@@ -1,8 +1,8 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUser } from "../../features/auth";
-import { signOutAction } from "../../features/auth/action";
+import { getUserTokenAction, signOutAction } from "../../features/auth/action";
 import { initFirebase } from "../../features/firebase/actions";
 import "../../style/navbar.css";
 
@@ -17,6 +17,8 @@ function Navbar() {
     
     const auth = getAuth(fsapp);
     onAuthStateChanged(auth, (user) => {
+      dispatch(getUserTokenAction());
+      
       if (user) {
         dispatch(setUser(user));
       } else {
