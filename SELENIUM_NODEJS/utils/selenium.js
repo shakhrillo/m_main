@@ -31,6 +31,10 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
     const title = await driver.getTitle();
     console.log('Page title:', title);
 
+    await firestore.doc(
+      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
+    ).update({ status: 'started', title });
+
     await openOverviewTab(driver);
     await openReviewTab(driver);
 
@@ -43,11 +47,17 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
 
     await scrollToBottom(driver, parentElm);
 
+    await firestore.doc(
+      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
+    ).update({ status: 'processing' });
     await clickShowMorePhotosButton(driver);
     await clickExpandReviewButtons(driver);
     await clickShowReviewInOriginalButtons(driver);
     await clickExpandOwnerResponseButtons(driver);
     await clickShowOwnerResponseInOriginalButtons(driver);
+    await firestore.doc(
+      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
+    ).update({ status: 'finilizing' });
 
     const filteredReviews = await filterSingleChildReviews(driver);
     console.log('Filtered reviews:', filteredReviews.length);
@@ -66,6 +76,10 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
         `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}/messages`
       ).add(message)
     }
+
+    await firestore.doc(
+      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
+    ).update({ status: 'completed', totalMessages: messages.length, completedAt: new Date() });
 
     return messages;
   } catch (error) {

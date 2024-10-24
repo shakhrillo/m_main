@@ -1,7 +1,4 @@
-// controllers/reviewController.js
-
-const { firestore, auth } = require('../../firebase/main');
-const { openWebsite } = require('../../utils/selenium');
+const { firestore } = require('../../firebase/main');
 
 exports.getReviews = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values for page and limit
@@ -60,7 +57,7 @@ exports.createReview = async (req, res) => {
     const containerName = `selenium-${Date.now()}`;
     url = decodeURIComponent(url);
 
-    const docId = await firestore.collection(
+    await firestore.collection(
       `users/${uid}/reviews`
     ).add({
       url,
@@ -71,10 +68,9 @@ exports.createReview = async (req, res) => {
         image: imageName,
       },
       serverTimestamp: new Date(),
+      createdAt: new Date(),
       status: 'STARTED',
     });
-
-    // openWebsite(url, containerName, generatedPort, subPort, docId.id);
 
     res.status(201).json({ message: 'Review created successfully' });
   } catch (err) {

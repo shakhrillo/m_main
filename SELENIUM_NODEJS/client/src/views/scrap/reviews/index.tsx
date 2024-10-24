@@ -174,14 +174,14 @@ function ScrapReviewsView() {
                   <tr key={review.id}>
                     <th scope="row">{indexOfFirstReview + index + 1}</th>
                     <td>
-                      {review.info ? (
+                      {review.title ? (
                         <div className="d-flex flex-column">
                           <a href={`/scrap/review/${review.id}`}>
-                            {review.info.mainTitle}
+                            {review.title}
                           </a>
                           <div className="d-flex gap-1 align-items-center">
-                            <StarRating rating={review.info.mainRate} />
-                            <span>{review.info.mainReview} reviews</span>
+                            {/* <StarRating rating={review.info.mainRate} /> */}
+                            <span>{review.totalMessages || 0} reviews</span>
                           </div>
                         </div>
                       ) : (
@@ -193,28 +193,24 @@ function ScrapReviewsView() {
                     <td>
                       <div className="d-flex gap-2">
                         <div className="d-flex flex-column">
-                          <span>
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
-                          <small>
-                            {new Date(review.createdAt).toLocaleTimeString()}
-                          </small>
+                          {review.createdAt.seconds ? (
+                            <span>
+                              {new Date(review.createdAt.seconds * 1000).toLocaleDateString()}
+                            </span>
+                          ) : (
+                            <span>Loading...</span>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td>
-                      {review.createdAt ? (
-                        <span>
-                          {Number(
-                            (new Date(review.completedAt).getTime() -
-                              new Date(review.createdAt).getTime()) /
-                              60000,
-                          ).toFixed(2)}{" "}
-                          min
-                        </span>
-                      ) : (
-                        <span>Loading...</span>
-                      )}
+                    {review.completedAt.seconds ? (
+                      <span>
+                        {new Date(review.completedAt.seconds * 1000).toLocaleDateString()}
+                      </span>
+                    ) : (
+                      <span>Loading...</span>
+                    )}
                     </td>
                     <td>
                       <div className="d-flex gap-2">
