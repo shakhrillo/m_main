@@ -19,7 +19,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon server/server.js",
-    "watch": "NODE_ENV=development node utils/watcher.js",
+    "watch": "NODE_ENV=development nodemon utils/watcher.js",
     "start": "NODE_ENV=production node server/server.js"
   },
   "devDependencies": {

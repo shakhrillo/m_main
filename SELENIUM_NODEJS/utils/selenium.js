@@ -1,4 +1,5 @@
 const { startContainer, stopAndRemoveContainer } = require("./dockerUtils");
+const { updateReviewStatus } = require("./firestoreUtils");
 const { 
   openOverviewTab,
   openReviewTab,
@@ -17,11 +18,19 @@ const {
 const { Builder } = require('selenium-webdriver');
 const firestore = require('../firebase/main').firestore;
 
-exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueId) => {
+exports.openWebsite = async (
+  url,
+  containerName,
+  imageName,
+  generatedPort,
+  subPort,
+  reviewId,
+  uid
+) => {
   console.log('Opening website:', url);
 
   try {
-    await startContainer(containerName, generatedPort, subPort, 'custom-selenium-firefox:latest');
+    await startContainer(containerName, generatedPort, subPort, imageName);
     const driver = new Builder()
       .usingServer(`http://localhost:${generatedPort}/wd/hub`)
       .forBrowser('firefox')
@@ -31,9 +40,7 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
     const title = await driver.getTitle();
     console.log('Page title:', title);
 
-    await firestore.doc(
-      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
-    ).update({ status: 'started', title });
+    await updateReviewStatus(uid, reviewId, { status: 'started', title });
 
     await openOverviewTab(driver);
     await openReviewTab(driver);
@@ -47,17 +54,15 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
 
     await scrollToBottom(driver, parentElm);
 
-    await firestore.doc(
-      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
-    ).update({ status: 'processing' });
+    await updateReviewStatus(uid, reviewId, { status: 'processing' });
+
     await clickShowMorePhotosButton(driver);
     await clickExpandReviewButtons(driver);
     await clickShowReviewInOriginalButtons(driver);
     await clickExpandOwnerResponseButtons(driver);
     await clickShowOwnerResponseInOriginalButtons(driver);
-    await firestore.doc(
-      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
-    ).update({ status: 'finilizing' });
+    
+    await updateReviewStatus(uid, reviewId, { status: 'finalizing' });
 
     const filteredReviews = await filterSingleChildReviews(driver);
     console.log('Filtered reviews:', filteredReviews.length);
@@ -77,9 +82,11 @@ exports.openWebsite = async (url, containerName, generatedPort, subPort, uniqueI
       ).add(message)
     }
 
-    await firestore.doc(
-      `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}`
-    ).update({ status: 'completed', totalMessages: messages.length, completedAt: new Date() });
+    await updateReviewStatus(uid, reviewId, {
+      status: 'completed',
+      totalMessages: messages.length,
+      completedAt: new Date()
+    });
 
     return messages;
   } catch (error) {

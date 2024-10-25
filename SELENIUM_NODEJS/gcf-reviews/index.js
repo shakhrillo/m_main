@@ -1,22 +1,45 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
-*
-* See a full list of supported triggers at https://firebase.google.com/docs/functions
-*/
+const {onDocumentCreated} = require("firebase-functions/v2/firestore");
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
-const {onDocumentWritten, onDocumentCreated} = require("firebase-functions/v2/firestore");
+initializeApp();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+function setupSeleniumContainer(url) {
+  const generatedPort = Math.floor(Math.random() * 10000) + 10000;
+  const subPort = generatedPort + 1;
+  // const imageName = 'selenium/standalone-firefox:4.25.0-20241010';
+  const imageName = 'custom-selenium-firefox:latest';
+  const containerName = `selenium-${Date.now()}`;
 
-// `users/${uid}/reviews`
+  return {
+    generatedPort,
+    subPort,
+    imageName,
+    containerName,
+    url
+  };
+}
+
 exports.reviewCreated = onDocumentCreated("users/{uid}/reviews/{reviewId}", async (event) => {
-  // update created time
-  // const review = event.data();
-  logger.info("Review created", event);
+  const snapshot = event.data;
+  if (!snapshot) {
+    console.log("No data associated with the event");
+    return;
+  }
+  const data = snapshot.data();
+  if (!data) {
+    console.log("No data associated with the event");
+    return;
+  }
+  const uid = event.params.uid;
+  const reviewId = event.params.reviewId;
+  const docker = setupSeleniumContainer(data.url);
 
+  await getFirestore().collection(`reviews`).add({
+    uid,
+    reviewId,
+    ...docker,
+  });
+
+  console.log(`Review created: ${reviewId}`);
 });

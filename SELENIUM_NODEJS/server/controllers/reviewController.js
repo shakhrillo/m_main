@@ -49,25 +49,11 @@ exports.createReview = async (req, res) => {
   try {
     // const token = req.headers.authorization
     // console.log('Token:', token);
-    console.log('UID:', uid);
 
-    const generatedPort = Math.floor(Math.random() * 10000) + 10000;
-    const subPort = generatedPort + 1;
-    const imageName = `selenium/standalone-firefox:4.25.0-20241010`;
-    const containerName = `selenium-${Date.now()}`;
     url = decodeURIComponent(url);
 
-    await firestore.collection(
-      `users/${uid}/reviews`
-    ).add({
+    await firestore.collection(`users/${uid}/reviews`).add({
       url,
-      container: {
-        name: containerName,
-        port: generatedPort,
-        subPort,
-        image: imageName,
-      },
-      serverTimestamp: new Date(),
       createdAt: new Date(),
       status: 'STARTED',
     });

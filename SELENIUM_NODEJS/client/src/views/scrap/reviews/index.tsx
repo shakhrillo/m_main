@@ -193,24 +193,24 @@ function ScrapReviewsView() {
                     <td>
                       <div className="d-flex gap-2">
                         <div className="d-flex flex-column">
-                          {review.createdAt.seconds ? (
+                          {/* {review.createdAt.seconds ? (
                             <span>
                               {new Date(review.createdAt.seconds * 1000).toLocaleDateString()}
                             </span>
                           ) : (
                             <span>Loading...</span>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </td>
                     <td>
-                    {review.completedAt.seconds ? (
+                    {/* {review.completedAt.seconds ? (
                       <span>
                         {new Date(review.completedAt.seconds * 1000).toLocaleDateString()}
                       </span>
                     ) : (
                       <span>Loading...</span>
-                    )}
+                    )} */}
                     </td>
                     <td>
                       <div className="d-flex gap-2">
