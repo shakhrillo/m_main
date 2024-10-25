@@ -77,26 +77,61 @@ async function reviewTabParentElement(driver) {
 }
 
 async function scrollToBottom(driver, parentElm) {
+  let allFilteredReviews = [];
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
   const startedTime = new Date().getTime();
   console.log('Scrolling to bottom of the page');
 
   await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
-  await driver.sleep(getRandomNumber(1000, 3000));
 
   while (true) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
-    await driver.sleep(getRandomNumber(2000, 4000));
+
+    // Optional: Add small delay to simulate human interaction
+    // await driver.sleep(getRandomNumber(200, 800));
+
+    await clickShowMorePhotosButton(driver);
+    await clickExpandReviewButtons(driver);
+    await clickShowReviewInOriginalButtons(driver);
+    await clickExpandOwnerResponseButtons(driver);
+    await clickShowOwnerResponseInOriginalButtons(driver);
+
+    const filteredReviews = await filterSingleChildReviews(driver);
+    allFilteredReviews.push(...filteredReviews);
+    allFilteredReviews = allFilteredReviews.filter((review, index, self) =>
+      index === self.findIndex((t) => (
+        t.dataReviewId === review.dataReviewId
+      ))
+    );
     
+    // for (const review of allFilteredReviews) {
+    //   const element = review.element;
+    
+    //   // Ensure that all the asynchronous actions complete in sequence
+    //   await clickShowMorePhotosButton(element);
+    //   await clickExpandReviewButtons(element);
+    //   await clickShowReviewInOriginalButtons(element);
+    //   await clickExpandOwnerResponseButtons(element);
+    //   await clickShowOwnerResponseInOriginalButtons(element);
+    // }
+    
+    console.log('Filtered reviews:', allFilteredReviews.length);
+
     const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
+    console.log('Current & Pre', currentScrollHeight, '=', previousScrollHeight);
+
     if (currentScrollHeight === previousScrollHeight) {
       const endedTime = new Date().getTime();
       console.log('Time taken to scroll to bottom:', (endedTime - startedTime) / 1000, 'seconds');
-      break;
+      break;  // Break the loop when scrollHeight doesn't change
     }
+    
     previousScrollHeight = currentScrollHeight;
   }
+
+  return allFilteredReviews;  // Return after loop finishes
 }
+
 
 async function clickShowMorePhotosButton(driver) {
   const allButtons = await findElementsByXPath(driver, "//button");
@@ -108,7 +143,7 @@ async function clickShowMorePhotosButton(driver) {
     const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showMorePhotos')) {
       await button.click();
-      await driver.sleep(getRandomNumber(40, 80));
+      // await driver.sleep(getRandomNumber(40, 80));
     }
   }
 
@@ -118,15 +153,14 @@ async function clickShowMorePhotosButton(driver) {
 
 async function clickExpandReviewButtons(driver) {
   const allButtons = await findElementsByXPath(driver, "//button");
-  const attributesToExtract = ['jsaction'];
+  const attributesToExtract = ['jsaction', 'aria-expanded'];
   const startedTime = new Date().getTime();
 
   console.log('Clicking all buttons to expand reviews');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
-    if (jsaction && jsaction.includes('review.expandReview')) {
+    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(button, attributesToExtract);
+    if (jsaction && jsaction.includes('review.expandReview') && ariaExpanded === 'false') {
       await button.click();
-      await driver.sleep(getRandomNumber(40, 80));
     }
   }
 
@@ -144,7 +178,7 @@ async function clickShowReviewInOriginalButtons(driver) {
     const { 'jsaction': jsaction, 'aria-checked': ariaChecked } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
       await button.click();
-      await driver.sleep(getRandomNumber(40, 80));
+      // await driver.sleep(getRandomNumber(40, 80));
     }
   }
 
@@ -154,15 +188,15 @@ async function clickShowReviewInOriginalButtons(driver) {
 
 async function clickExpandOwnerResponseButtons(driver) {
   const allButtons = await findElementsByXPath(driver, "//button");
-  const attributesToExtract = ['jsaction'];
+  const attributesToExtract = ['jsaction', 'aria-expanded'];
   const startedTime = new Date().getTime();
 
   console.log('Clicking all buttons to expand owner responses');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
-    if (jsaction && jsaction.includes('review.expandOwnerResponse')) {
+    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(button, attributesToExtract);
+    if (jsaction && jsaction.includes('review.expandOwnerResponse') && ariaExpanded === 'false') {
       await button.click();
-      await driver.sleep(getRandomNumber(40, 80));
+      // await driver.sleep(getRandomNumber(40, 80));
     }
   }
 
@@ -180,7 +214,7 @@ async function clickShowOwnerResponseInOriginalButtons(driver) {
     const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
       await button.click();
-      await driver.sleep(getRandomNumber(40, 80));
+      // await driver.sleep(getRandomNumber(40, 80));
     }
   }
 
@@ -194,9 +228,13 @@ async function filterSingleChildReviews(driver) {
 
   for (const element of allElements) {
     const childElements = await findElementsByXPath(element, ".//div[@data-review-id]");
+    const dataReviewId = await element.getAttribute("data-review-id");
     
     if (childElements.length === 1) {
-      filteredReviews.push(element);
+      filteredReviews.push({
+        dataReviewId,
+        element,
+      });
     }
   }
 

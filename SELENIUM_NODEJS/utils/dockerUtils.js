@@ -36,7 +36,7 @@ async function waitForContainerLog(containerName, logMessage, timeout = 30000) {
 }
 
 async function startContainer(containerName, generatedPort, subPort, imageName) {
-  const command = `docker run -d --name ${containerName} -p ${generatedPort}:4444 -p ${subPort}:7900 --shm-size="4g" ${imageName}`;
+  const command = `docker run -d --name ${containerName} -p ${generatedPort}:4444 -p ${subPort}:7900 --shm-size="2g" ${imageName}`;
 
   try {
     const result = await execPromise(command);

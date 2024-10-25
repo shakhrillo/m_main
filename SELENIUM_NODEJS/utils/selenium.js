@@ -51,23 +51,23 @@ exports.openWebsite = async (
       throw new Error('Parent element not found');
     }
 
-    await scrollToBottom(driver, parentElm);
-
     await updateReviewStatus(uid, reviewId, { status: 'processing' });
-
-    await clickShowMorePhotosButton(driver);
-    await clickExpandReviewButtons(driver);
-    await clickShowReviewInOriginalButtons(driver);
-    await clickExpandOwnerResponseButtons(driver);
-    await clickShowOwnerResponseInOriginalButtons(driver);
+    
+    const filteredReviews = await scrollToBottom(driver, parentElm);
+    // await clickShowMorePhotosButton(driver);
+    // await clickExpandReviewButtons(driver);
+    // await clickShowReviewInOriginalButtons(driver);
+    // await clickExpandOwnerResponseButtons(driver);
+    // await clickShowOwnerResponseInOriginalButtons(driver);
+    // const filteredReviews = await filterSingleChildReviews(driver);
     
     await updateReviewStatus(uid, reviewId, { status: 'finalizing' });
 
-    const filteredReviews = await filterSingleChildReviews(driver);
-    console.log('Filtered reviews:', filteredReviews.length);
+    console.log('Filtered reviews>>>>>', filteredReviews.length);
     
     const messages = [];
-    for (const element of filteredReviews) {
+    for (const filteredReview of filteredReviews) {
+      const element = filteredReview.element;
       const message = {
         ...await extractReviewText(element),
         imageUrls: await extractImageUrlsFromButtons(element),
