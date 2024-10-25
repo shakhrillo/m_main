@@ -122,12 +122,6 @@ async function scrollToBottom(driver, parentElm) {
       return true;
     });
 
-    // _allButtons = _allButtons.filter((button, index, self) =>
-    //   index === self.findIndex((t) => (
-    //     t.dataReviewId === button.dataReviewId
-    //   ))
-    // );
-
     console.log('Total buttons:', allButtons.length, uniqueButtons.length);
 
     for (const _button of uniqueButtons) {
@@ -176,12 +170,6 @@ async function scrollToBottom(driver, parentElm) {
 
     const endedTimeBtn = new Date().getTime();
     console.log('Time taken to click all buttons:', (endedTimeBtn - startedTimeBtn) / 1000, 'seconds');
-
-    // await clickShowMorePhotosButton(allButtons, parentElm);
-    // await clickExpandReviewButtons(allButtons, parentElm);
-    // await clickShowReviewInOriginalButtons(allButtons, parentElm);
-    // await clickExpandOwnerResponseButtons(allButtons, parentElm);
-    // await clickShowOwnerResponseInOriginalButtons(allButtons, parentElm);
 
     const filteredReviews = await filterSingleChildReviews(parentElm);
     allFilteredReviews.push(...filteredReviews);
