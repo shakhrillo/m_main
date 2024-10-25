@@ -79,123 +79,79 @@ async function reviewTabParentElement(driver) {
 async function scrollToBottom(driver, parentElm) {
   let allFilteredReviews = [];
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
-  const startedTime = new Date().getTime();
+  const startTime = Date.now();
   console.log('Scrolling to bottom of the page');
   let _allButtons = [];
 
+  // Initial scroll to load elements
   await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
   while (true) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
-    const startedTimeBtn = new Date().getTime();
     const allButtons = await findElementsByXPath(parentElm, "//button");
-    const showMorePhotosButtons = [];
-    const reviewExpandReviewButtons = [];
-    const reviewShowReviewInOriginalButtons = [];
-    const reviewExpandOwnerResponseButtons = [];
-    const reviewShowOwnerResponseInOriginal = [];
-    for (const button of allButtons) {
-      const {
-        'data-review-id': dataReviewId,
-        'jsaction': jsaction,
-        'aria-expanded': ariaExpanded,
-        'aria-checked': ariaChecked
-      } = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked']);
 
-      _allButtons.push({
-        dataReviewId,
-        jsaction,
-        ariaExpanded,
-        ariaChecked,
-        button
-      });
-    }
+    // Collect attributes in parallel
+    const buttonAttributes = await Promise.all(allButtons.map(button => 
+      getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id'])
+        .then(attrs => ({ ...attrs, button }))
+    ));
 
-    // Filter buttons based on dataReviewId
+    _allButtons.push(...buttonAttributes);
+
+    // Filter unique buttons by 'data-review-id'
     const seen = new Set();
-    const uniqueButtons = _allButtons.filter(button => {
-      if (seen.has(button.dataReviewId)) {
-        return false;
-      }
-      seen.add(button.dataReviewId);
+    const uniqueButtons = _allButtons.filter(({ 'data-review-id': dataReviewId }) => {
+      if (seen.has(dataReviewId)) return false;
+      seen.add(dataReviewId);
       return true;
     });
 
     console.log('Total buttons:', allButtons.length, uniqueButtons.length);
 
-    for (const _button of uniqueButtons) {
-      const { dataReviewId, jsaction, ariaExpanded, ariaChecked, button } = _button;
+    // Categorize buttons
+    const showMorePhotosButtons = [];
+    const reviewExpandReviewButtons = [];
+    const reviewShowReviewInOriginalButtons = [];
+    const reviewExpandOwnerResponseButtons = [];
+    const reviewShowOwnerResponseInOriginal = [];
 
-      if (jsaction && jsaction.includes('review.showMorePhotos')) {
-        showMorePhotosButtons.push(button);
-      }
-
-      if (jsaction && jsaction.includes('review.expandReview') && ariaExpanded === 'false') {
-        reviewExpandReviewButtons.push(button);
-      }
-
-      if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
-        reviewShowReviewInOriginalButtons.push(button);
-      }
-
-      if (jsaction && jsaction.includes('review.expandOwnerResponse') && ariaExpanded === 'false') {
-        reviewExpandOwnerResponseButtons.push(button);
-      }
-
-      if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
-        reviewShowOwnerResponseInOriginal.push(button);
-      }
+    for (const { jsaction, ariaExpanded, ariaChecked, button } of uniqueButtons) {
+      if (jsaction?.includes('review.showMorePhotos')) showMorePhotosButtons.push(button);
+      if (jsaction?.includes('review.expandReview') && ariaExpanded === 'false') reviewExpandReviewButtons.push(button);
+      if (jsaction?.includes('review.showReviewInOriginal') && ariaChecked === 'true') reviewShowReviewInOriginalButtons.push(button);
+      if (jsaction?.includes('review.expandOwnerResponse') && ariaExpanded === 'false') reviewExpandOwnerResponseButtons.push(button);
+      if (jsaction?.includes('review.showOwnerResponseInOriginal')) reviewShowOwnerResponseInOriginal.push(button);
     }
 
-    for (const button of showMorePhotosButtons) {
-      await button.click();
-    }
+    // Click buttons in parallel for each category
+    await Promise.all([
+      ...showMorePhotosButtons.map(button => button.click()),
+      ...reviewExpandReviewButtons.map(button => button.click()),
+      ...reviewShowReviewInOriginalButtons.map(button => button.click()),
+      ...reviewExpandOwnerResponseButtons.map(button => button.click()),
+      ...reviewShowOwnerResponseInOriginal.map(button => button.click())
+    ]);
 
-    for (const button of reviewExpandReviewButtons) {
-      await button.click();
-    }
-
-    for (const button of reviewShowReviewInOriginalButtons) {
-      await button.click();
-    }
-
-    for (const button of reviewExpandOwnerResponseButtons) {
-      await button.click();
-    }
-
-    for (const button of reviewShowOwnerResponseInOriginal) {
-      await button.click();
-    }
-
-    const endedTimeBtn = new Date().getTime();
-    console.log('Time taken to click all buttons:', (endedTimeBtn - startedTimeBtn) / 1000, 'seconds');
-
+    // Filter and remove duplicates from reviews
     const filteredReviews = await filterSingleChildReviews(parentElm);
     allFilteredReviews.push(...filteredReviews);
-    allFilteredReviews = allFilteredReviews.filter((review, index, self) =>
-      index === self.findIndex((t) => (
-        t.dataReviewId === review.dataReviewId
-      ))
-    );
-    
+    allFilteredReviews = [...new Map(allFilteredReviews.map(review => [review.dataReviewId, review])).values()];
+
     console.log('Filtered reviews:', allFilteredReviews.length);
 
+    // Check if scrolling reached the bottom
     const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
-    console.log('Current & Pre', currentScrollHeight, '=', previousScrollHeight);
-
     if (currentScrollHeight === previousScrollHeight) {
-      const endedTime = new Date().getTime();
-      console.log('Time taken to scroll to bottom:', (endedTime - startedTime) / 1000, 'seconds');
-      break;  // Break the loop when scrollHeight doesn't change
+      console.log('Scrolling finished, time taken:', (Date.now() - startTime) / 1000, 'seconds');
+      break;
     }
-    
+
     previousScrollHeight = currentScrollHeight;
   }
 
-  return allFilteredReviews;  // Return after loop finishes
+  return allFilteredReviews;
 }
-
 
 async function clickShowMorePhotosButton(allButtons, driver) {
   // const allButtons = await findElementsByXPath(driver, "//button");
