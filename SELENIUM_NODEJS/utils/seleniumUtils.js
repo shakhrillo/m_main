@@ -104,17 +104,6 @@ async function scrollToBottom(driver, parentElm) {
       ))
     );
     
-    // for (const review of allFilteredReviews) {
-    //   const element = review.element;
-    
-    //   // Ensure that all the asynchronous actions complete in sequence
-    //   await clickShowMorePhotosButton(element);
-    //   await clickExpandReviewButtons(element);
-    //   await clickShowReviewInOriginalButtons(element);
-    //   await clickExpandOwnerResponseButtons(element);
-    //   await clickShowOwnerResponseInOriginalButtons(element);
-    // }
-    
     console.log('Filtered reviews:', allFilteredReviews.length);
 
     const currentScrollHeight = await parentElm.getAttribute("scrollHeight");

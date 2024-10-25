@@ -183,6 +183,18 @@ function ScrapReviewsView() {
                             {/* <StarRating rating={review.info.mainRate} /> */}
                             <span>{review.totalMessages || 0} reviews</span>
                           </div>
+                          <div className="d-flex gap-1 align-items-center">
+                            <span>Completed:</span>
+                            <span className="badge bg-info">
+                              {
+                                review.completedAt && review.createdAt ? (
+                                  Number((review.completedAt.seconds - review.createdAt.seconds) / 60).toFixed(2) + " min"
+                                ) : (
+                                  "Loading..."
+                                )
+                              }
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         <div className="d-flex flex-column">
@@ -193,24 +205,34 @@ function ScrapReviewsView() {
                     <td>
                       <div className="d-flex gap-2">
                         <div className="d-flex flex-column">
-                          {/* {review.createdAt.seconds ? (
-                            <span>
-                              {new Date(review.createdAt.seconds * 1000).toLocaleDateString()}
-                            </span>
+                          {(review.createdAt && review.createdAt.seconds) ? (
+                            <div className="d-flex flex-column gap-2">
+                              <span>
+                                {new Date(review.createdAt.seconds * 1000).toLocaleDateString()}
+                              </span>
+                              <small>
+                                {new Date(review.createdAt.seconds * 1000).toLocaleTimeString()}
+                              </small>
+                            </div>
                           ) : (
                             <span>Loading...</span>
-                          )} */}
+                          )}
                         </div>
                       </div>
                     </td>
                     <td>
-                    {/* {review.completedAt.seconds ? (
-                      <span>
-                        {new Date(review.completedAt.seconds * 1000).toLocaleDateString()}
-                      </span>
+                    {review.completedAt && review.completedAt.seconds ? (
+                      <div className="d-flex flex-column gap-2">
+                        <span>
+                          {new Date(review.completedAt.seconds * 1000).toLocaleDateString()}
+                        </span>
+                        <small>
+                          {new Date(review.completedAt.seconds * 1000).toLocaleTimeString()}
+                        </small>
+                      </div>
                     ) : (
                       <span>Loading...</span>
-                    )} */}
+                    )}
                     </td>
                     <td>
                       <div className="d-flex gap-2">
