@@ -81,22 +81,109 @@ async function scrollToBottom(driver, parentElm) {
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
   const startedTime = new Date().getTime();
   console.log('Scrolling to bottom of the page');
+  let _allButtons = [];
 
   await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
   while (true) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
-    // Optional: Add small delay to simulate human interaction
-    // await driver.sleep(getRandomNumber(200, 800));
+    const startedTimeBtn = new Date().getTime();
+    const allButtons = await findElementsByXPath(parentElm, "//button");
+    const showMorePhotosButtons = [];
+    const reviewExpandReviewButtons = [];
+    const reviewShowReviewInOriginalButtons = [];
+    const reviewExpandOwnerResponseButtons = [];
+    const reviewShowOwnerResponseInOriginal = [];
+    for (const button of allButtons) {
+      const {
+        'data-review-id': dataReviewId,
+        'jsaction': jsaction,
+        'aria-expanded': ariaExpanded,
+        'aria-checked': ariaChecked
+      } = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked']);
 
-    await clickShowMorePhotosButton(driver);
-    await clickExpandReviewButtons(driver);
-    await clickShowReviewInOriginalButtons(driver);
-    await clickExpandOwnerResponseButtons(driver);
-    await clickShowOwnerResponseInOriginalButtons(driver);
+      _allButtons.push({
+        dataReviewId,
+        jsaction,
+        ariaExpanded,
+        ariaChecked,
+        button
+      });
+    }
 
-    const filteredReviews = await filterSingleChildReviews(driver);
+    // Filter buttons based on dataReviewId
+    const seen = new Set();
+    const uniqueButtons = _allButtons.filter(button => {
+      if (seen.has(button.dataReviewId)) {
+        return false;
+      }
+      seen.add(button.dataReviewId);
+      return true;
+    });
+
+    // _allButtons = _allButtons.filter((button, index, self) =>
+    //   index === self.findIndex((t) => (
+    //     t.dataReviewId === button.dataReviewId
+    //   ))
+    // );
+
+    console.log('Total buttons:', allButtons.length, uniqueButtons.length);
+
+    for (const _button of uniqueButtons) {
+      const { dataReviewId, jsaction, ariaExpanded, ariaChecked, button } = _button;
+
+      if (jsaction && jsaction.includes('review.showMorePhotos')) {
+        showMorePhotosButtons.push(button);
+      }
+
+      if (jsaction && jsaction.includes('review.expandReview') && ariaExpanded === 'false') {
+        reviewExpandReviewButtons.push(button);
+      }
+
+      if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
+        reviewShowReviewInOriginalButtons.push(button);
+      }
+
+      if (jsaction && jsaction.includes('review.expandOwnerResponse') && ariaExpanded === 'false') {
+        reviewExpandOwnerResponseButtons.push(button);
+      }
+
+      if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
+        reviewShowOwnerResponseInOriginal.push(button);
+      }
+    }
+
+    for (const button of showMorePhotosButtons) {
+      await button.click();
+    }
+
+    for (const button of reviewExpandReviewButtons) {
+      await button.click();
+    }
+
+    for (const button of reviewShowReviewInOriginalButtons) {
+      await button.click();
+    }
+
+    for (const button of reviewExpandOwnerResponseButtons) {
+      await button.click();
+    }
+
+    for (const button of reviewShowOwnerResponseInOriginal) {
+      await button.click();
+    }
+
+    const endedTimeBtn = new Date().getTime();
+    console.log('Time taken to click all buttons:', (endedTimeBtn - startedTimeBtn) / 1000, 'seconds');
+
+    // await clickShowMorePhotosButton(allButtons, parentElm);
+    // await clickExpandReviewButtons(allButtons, parentElm);
+    // await clickShowReviewInOriginalButtons(allButtons, parentElm);
+    // await clickExpandOwnerResponseButtons(allButtons, parentElm);
+    // await clickShowOwnerResponseInOriginalButtons(allButtons, parentElm);
+
+    const filteredReviews = await filterSingleChildReviews(parentElm);
     allFilteredReviews.push(...filteredReviews);
     allFilteredReviews = allFilteredReviews.filter((review, index, self) =>
       index === self.findIndex((t) => (
@@ -122,8 +209,8 @@ async function scrollToBottom(driver, parentElm) {
 }
 
 
-async function clickShowMorePhotosButton(driver) {
-  const allButtons = await findElementsByXPath(driver, "//button");
+async function clickShowMorePhotosButton(allButtons, driver) {
+  // const allButtons = await findElementsByXPath(driver, "//button");
   const attributesToExtract = ['jsaction'];
   const startedTime = new Date().getTime();
   
@@ -140,8 +227,8 @@ async function clickShowMorePhotosButton(driver) {
   console.log('Time taken to click all buttons:', (endedTime - startedTime) / 1000, 'seconds');
 }
 
-async function clickExpandReviewButtons(driver) {
-  const allButtons = await findElementsByXPath(driver, "//button");
+async function clickExpandReviewButtons(allButtons, driver) {
+  // const allButtons = await findElementsByXPath(driver, "//button");
   const attributesToExtract = ['jsaction', 'aria-expanded'];
   const startedTime = new Date().getTime();
 
@@ -157,8 +244,8 @@ async function clickExpandReviewButtons(driver) {
   console.log('Time taken to click all buttons:', (endedTime - startedTime) / 1000, 'seconds');
 }
 
-async function clickShowReviewInOriginalButtons(driver) {
-  const allButtons = await findElementsByXPath(driver, "//button");
+async function clickShowReviewInOriginalButtons(allButtons, driver) {
+  // const allButtons = await findElementsByXPath(driver, "//button");
   const attributesToExtract = ['jsaction', 'aria-checked'];
   const startedTime = new Date().getTime();
 
@@ -175,8 +262,8 @@ async function clickShowReviewInOriginalButtons(driver) {
   console.log('Time taken to click all buttons:', (endedTime - startedTime) / 1000, 'seconds');
 }
 
-async function clickExpandOwnerResponseButtons(driver) {
-  const allButtons = await findElementsByXPath(driver, "//button");
+async function clickExpandOwnerResponseButtons(allButtons, driver) {
+  // const allButtons = await findElementsByXPath(driver, "//button");
   const attributesToExtract = ['jsaction', 'aria-expanded'];
   const startedTime = new Date().getTime();
 
@@ -193,8 +280,8 @@ async function clickExpandOwnerResponseButtons(driver) {
   console.log('Time taken to click all buttons:', (endedTime - startedTime) / 1000, 'seconds');
 }
 
-async function clickShowOwnerResponseInOriginalButtons(driver) {
-  const allButtons = await findElementsByXPath(driver, "//button");
+async function clickShowOwnerResponseInOriginalButtons(allButtons, driver) {
+  // const allButtons = await findElementsByXPath(driver, "//button");
   const attributesToExtract = ['jsaction'];
   const startedTime = new Date().getTime();
 
