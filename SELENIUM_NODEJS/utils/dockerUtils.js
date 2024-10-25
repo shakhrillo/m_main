@@ -48,7 +48,7 @@ async function startContainer(containerName, generatedPort, subPort, imageName) 
   }
 }
 
-async function stopAndRemoveContainer(containerName, uniqueId) {
+async function stopAndRemoveContainer(containerName) {
   const command = `docker stop ${containerName} && docker rm ${containerName}`;
   
   try {

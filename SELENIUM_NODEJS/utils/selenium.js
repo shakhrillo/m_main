@@ -16,7 +16,6 @@ const {
   extractReviewText
 } = require("./seleniumUtils");
 const { Builder } = require('selenium-webdriver');
-const firestore = require('../firebase/main').firestore;
 
 exports.openWebsite = async (
   url,
@@ -77,9 +76,7 @@ exports.openWebsite = async (
       message.imageUrls = await extractImageUrlsFromButtons(element);
       message.review = await extractReviewText(element);
       messages.push(message);
-      await firestore.collection(
-        `users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/${uniqueId}/messages`
-      ).add(message)
+      await addMessageToReview(uid, reviewId, message);
     }
 
     await updateReviewStatus(uid, reviewId, {
@@ -90,7 +87,7 @@ exports.openWebsite = async (
 
     return messages;
   } catch (error) {
-    stopAndRemoveContainer(containerName, uniqueId);
+    stopAndRemoveContainer(containerName);
     console.error('Failed to start container:', error);
   }
 }

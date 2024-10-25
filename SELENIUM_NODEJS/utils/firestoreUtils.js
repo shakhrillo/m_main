@@ -10,6 +10,16 @@ const updateReviewStatus = async (userId, uniqueId, data) => {
   }
 };
 
+const addMessageToReview = async (userId, uniqueId, message) => {
+  try {
+    const collectionRef = firestore.collection(`users/${userId}/reviews/${uniqueId}/messages`);
+    await collectionRef.add(message);
+  } catch (error) {
+    console.error("Error adding message: ", error);
+  }
+};
+
 module.exports = {
   updateReviewStatus,
+  addMessageToReview
 };
