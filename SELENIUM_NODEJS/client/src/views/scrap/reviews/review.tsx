@@ -51,12 +51,15 @@ function ScrapReviewsReviewView() {
   useEffect(() => {
     if (!db || !place) return
     setReviews([])
-    const collectionReviews = collection(db, "reviews", place, "reviews")
+    // /users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/iIAB1z5Tz9TIH7Ngl8u1/messages
+    console.log("Place: ", place)
+    const collectionReviews = collection(db, "users", "G9PSHlQo4Fo4fXYHZlqflPA6ClBl", "reviews", place, "messages")
 
     const unsubscribe = onSnapshot(collectionReviews, querySnapshot => {
       setReviews([])
       querySnapshot.forEach(doc => {
-        const data = doc.data()
+        const data = doc.data();
+        console.log("Document data:", data)
         setReviews(prev => [
           ...prev,
           {
@@ -290,13 +293,13 @@ function ScrapReviewsReviewView() {
                     <tr key={index}>
                       <th scope="row">{indexOfFirstReview + index + 1}</th>
                       <td className="view__table-item">
-                        {review.reviewer.name}
+                        {review.extractedReviewText.user}
                       </td>
                       <td>
                         <StarRating rating={String(review.rate)} />
                       </td>
-                      <td>{review.platform}</td>
-                      <td>{review.time}</td>
+                      <td>{review.extractedReviewText.platform}</td>
+                      <td>{review.extractedReviewText.time}</td>
                       <td>
                         <div
                           className="view__table-images"
@@ -305,7 +308,7 @@ function ScrapReviewsReviewView() {
                             handleShow()
                           }}
                         >
-                          {review.images
+                          {review.imageUrls
                             .slice(0, 4)
                             .map((imageSrc: string, imageId: number) => (
                               <img
@@ -316,9 +319,9 @@ function ScrapReviewsReviewView() {
                                 }}
                               />
                             ))}
-                          {review.images.length > 4 && (
+                          {review.imageUrls.length > 4 && (
                             <div className="view__table-images--extra">
-                              +{review.images.length - 4}
+                              +{review.imageUrls.length - 4}
                             </div>
                           )}
                         </div>
