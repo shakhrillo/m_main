@@ -24,7 +24,7 @@ async function openOverviewTab(driver) {
   let isOverviewTabSelectedAlready = false;
 
   for (const button of allButtons) {
-    const { dataTabIndex, areaSelected } = await getElementAttributes(button, attributesToExtract);
+    const { 'data-tab-index': dataTabIndex, 'aria-selected': areaSelected } = await getElementAttributes(button, attributesToExtract);
     
     if (dataTabIndex === '0' && areaSelected === 'false') {
       isOverviewTabSelectedAlready = false;
@@ -86,7 +86,7 @@ async function scrollToBottom(driver, parentElm) {
 
   while (true) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
-    await driver.sleep(getRandomNumber(1000, 3000));
+    await driver.sleep(getRandomNumber(2000, 4000));
     
     const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
     if (currentScrollHeight === previousScrollHeight) {
@@ -105,7 +105,7 @@ async function clickShowMorePhotosButton(driver) {
   
   console.log('Clicking all buttons to show more photos');
   for (const button of allButtons) {
-    const { jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showMorePhotos')) {
       await button.click();
       await driver.sleep(getRandomNumber(40, 80));
@@ -123,7 +123,7 @@ async function clickExpandReviewButtons(driver) {
 
   console.log('Clicking all buttons to expand reviews');
   for (const button of allButtons) {
-    const { jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.expandReview')) {
       await button.click();
       await driver.sleep(getRandomNumber(40, 80));
@@ -141,7 +141,7 @@ async function clickShowReviewInOriginalButtons(driver) {
 
   console.log('Clicking all buttons to show original reviews');
   for (const button of allButtons) {
-    const { jsaction, ariaChecked } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'aria-checked': ariaChecked } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
       await button.click();
       await driver.sleep(getRandomNumber(40, 80));
@@ -159,7 +159,7 @@ async function clickExpandOwnerResponseButtons(driver) {
 
   console.log('Clicking all buttons to expand owner responses');
   for (const button of allButtons) {
-    const { jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.expandOwnerResponse')) {
       await button.click();
       await driver.sleep(getRandomNumber(40, 80));
@@ -177,7 +177,7 @@ async function clickShowOwnerResponseInOriginalButtons(driver) {
 
   console.log('Clicking all buttons to show owner responses');
   for (const button of allButtons) {
-    const { jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
       await button.click();
       await driver.sleep(getRandomNumber(40, 80));
@@ -209,7 +209,7 @@ async function extractImageUrlsFromButtons(element) {
   const attributesToExtract = ['jsaction', 'style'];
 
   for (const button of allButtons) {
-    const { jsaction, style } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'style': style } = await getElementAttributes(button, attributesToExtract);
     if (jsaction && jsaction.includes('review.openPhoto')) {
       let imageUrl = style.split('url("')[1]?.split('");')[0];
 

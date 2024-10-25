@@ -10,11 +10,15 @@
 
 .view__all-images__carousel-item {
     height: 400px;
-    background-color: #686868;
+    background-color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 6px;
+}
+
+.view__all-images__carousel-item img {
+    height: 100%;
 }
 
 .view__table {
