@@ -23,6 +23,7 @@ function ScrapReviewsReviewView() {
   const [currentPage, setCurrentPage] = useState(1)
   const [reviewsPerPage] = useState(15) // Number of reviews per page
   const db = useAppSelector(state => state.firebase.db)
+  const user = useAppSelector(state => state.auth.user)
 
   const [ratingOverviewVisibility, setRatingOverviewVisibility] = useState<
     Record<string, boolean>
@@ -49,11 +50,10 @@ function ScrapReviewsReviewView() {
   }, [db, place])
 
   useEffect(() => {
-    if (!db || !place) return
+    if (!db || !place || !user) return
     setReviews([])
-    // /users/G9PSHlQo4Fo4fXYHZlqflPA6ClBl/reviews/iIAB1z5Tz9TIH7Ngl8u1/messages
-    console.log("Place: ", place)
-    const collectionReviews = collection(db, "users", "G9PSHlQo4Fo4fXYHZlqflPA6ClBl", "reviews", place, "messages")
+
+    const collectionReviews = collection(db, "users", user.uid, "reviews", place, "messages")
 
     const unsubscribe = onSnapshot(collectionReviews, querySnapshot => {
       setReviews([])
@@ -73,7 +73,7 @@ function ScrapReviewsReviewView() {
     return () => {
       unsubscribe()
     }
-  }, [db, place])
+  }, [db, user, place])
 
   // Pagination calculations
   const indexOfLastReview = currentPage * reviewsPerPage
@@ -293,18 +293,22 @@ function ScrapReviewsReviewView() {
                     <tr key={index}>
                       <th scope="row">{indexOfFirstReview + index + 1}</th>
                       <td className="view__table-item">
-                        {review.extractedReviewText.user}
+                        {review.user}
                       </td>
                       <td>
                         <StarRating rating={String(review.rate)} />
                       </td>
-                      <td>{review.extractedReviewText.platform}</td>
-                      <td>{review.extractedReviewText.time}</td>
+                      <td>
+                        {review.platform}
+                      </td>
+                      <td>
+                        {review.time}
+                      </td>
                       <td>
                         <div
                           className="view__table-images"
                           onClick={() => {
-                            setSelectedImages(review.images)
+                            setSelectedImages(review.imageUrls)
                             handleShow()
                           }}
                         >
@@ -462,7 +466,6 @@ function ScrapReviewsReviewView() {
                               }
                             </>
                           )}
-                          {/* // review.response || "-" */}
                         </span>
                       </td>
                     </tr>

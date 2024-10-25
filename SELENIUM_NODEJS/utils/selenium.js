@@ -69,12 +69,9 @@ exports.openWebsite = async (
     const messages = [];
     for (const element of filteredReviews) {
       const message = {
-        imageUrls: [],
-        review: {}
+        ...await extractReviewText(element),
+        imageUrls: await extractImageUrlsFromButtons(element),
       }
-
-      message.imageUrls = await extractImageUrlsFromButtons(element);
-      message.review = await extractReviewText(element);
       messages.push(message);
       await addMessageToReview(uid, reviewId, message);
     }

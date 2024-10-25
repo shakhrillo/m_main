@@ -279,8 +279,6 @@ function extractReviewTextInner(reviewTextArray, myendText) {
     }
   }
 
-  // myendText
-
   // Extract review text if startIndex is valid
   if (startIndex !== -1) {
     startIndex += 1;
@@ -387,6 +385,7 @@ function extractReviewTextInner(reviewTextArray, myendText) {
     reviewText,
     response,
     responseTime,
+    myendText
   }
 }
 
@@ -402,12 +401,7 @@ async function extractReviewText(element) {
     myendText = await reviewMyenedFirstChild.getText();
   }
 
-  const extractedReviewText = extractReviewTextInner(reviewTextArray, myendText);
-
-  return {
-    extractedReviewText,
-    myendText
-  }
+  return extractReviewTextInner(reviewTextArray, myendText);
 }
 
 module.exports = { 
