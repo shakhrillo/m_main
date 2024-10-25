@@ -1,5 +1,5 @@
 const { startContainer, stopAndRemoveContainer } = require("./dockerUtils");
-const { updateReviewStatus } = require("./firestoreUtils");
+const { updateReviewStatus, addMessageToReview } = require("./firestoreUtils");
 const { 
   openOverviewTab,
   openReviewTab,
@@ -84,6 +84,8 @@ exports.openWebsite = async (
       totalMessages: messages.length,
       completedAt: new Date()
     });
+
+    stopAndRemoveContainer(containerName);
 
     return messages;
   } catch (error) {
