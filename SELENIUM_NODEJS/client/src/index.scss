@@ -101,31 +101,6 @@ body {
   color: $body-color;
 }
 
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-}
-
-.btn-primary {
-  background-color: $primary-color;
-  border-color: $primary-color;
-  &:hover {
-    background-color: darken($primary-color, 10%);
-    border-color: darken($primary-color, 10%);
-  }
-}
-
-.btn-secondary {
-  background-color: $secondary;
-  border-color: $secondary;
-  &:hover {
-    background-color: darken($secondary, 10%);
-    border-color: darken($secondary, 10%);
-  }
-}
-
 // Additional customizations
 h1,
 h2,

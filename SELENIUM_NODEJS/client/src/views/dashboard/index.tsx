@@ -2,9 +2,11 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
+import Navbar from "../../components/navbar"
 
 import { Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
+import logoImg from "../../assets/logo.svg";
 
 function DashboardView() {
   const [show, setShow] = useState(false)
@@ -88,14 +90,17 @@ function DashboardView() {
   return (
     <div className="dashboard">
       <div className="sidebar">
+        <a className="navbar-brand p-0" href={'/'}>
+          <img src={logoImg} alt="logo" height="60" />
+        </a>
         <div className="list-group">
           <button type="button" className="list-group-item list-group-item-action">
             <span>
               Scrap
             </span>
-            <span className="badge bg-warning rounded-pill ms-2">1</span>
+            {/* <span className="badge bg-warning rounded-pill ms-2">1</span>
             <span className="w-100"></span>
-            <i className="bi-caret-down"></i>
+            <i className="bi-caret-down"></i> */}
           </button>
           <div className="list-group list-group-nested">
             <a href="/scrap/reviews" className="list-group-item list-group-item-action active">
@@ -121,6 +126,7 @@ function DashboardView() {
         </div>
       </div>
       <div className="content">
+        <Navbar />
         <Outlet />
       </div>
     </div>

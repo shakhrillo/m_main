@@ -82,7 +82,6 @@ if (container) {
 
   root.render(
     <Provider store={store}>
-      <Navbar />
       <RouterProvider router={router} />
     </Provider>,
   )

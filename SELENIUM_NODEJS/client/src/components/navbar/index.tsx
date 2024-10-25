@@ -6,6 +6,8 @@ import { getUserTokenAction, signOutAction } from "../../features/auth/action";
 import { initFirebase } from "../../features/firebase/actions";
 import "../../style/navbar.css";
 
+import logoImg from "../../assets/logo.svg";
+
 function Navbar() {
   const dispatch = useAppDispatch();
 
@@ -42,8 +44,8 @@ function Navbar() {
   return (
     <nav className="navbar custom-navbar">
       <div className="container-fluid">
-        <a className="navbar-brand" href={'/'}>
-          <img src="https://cdn.freebiesupply.com/images/large/2x/amazon-logo-transparent.png" alt="" height="24" />
+        <a className="navbar-brand p-0" href={'/'}>
+          {/* <img src={logoImg} alt="logo" height="40" /> */}
         </a>
         <button className="btn btn-outline-secondary me-2" type="button" onClick={handleClick}>
           {user ? 'Log out' : 'Log in'}
