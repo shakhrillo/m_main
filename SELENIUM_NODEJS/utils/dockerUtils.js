@@ -36,7 +36,17 @@ async function waitForContainerLog(containerName, logMessage, timeout = 30000) {
 }
 
 async function startContainer(containerName, generatedPort, subPort, imageName) {
-  const command = `docker run -d --name ${containerName} -p ${generatedPort}:4444 -p ${subPort}:7900 --shm-size="2g" ${imageName}`;
+  // const command = `docker run -d --name ${containerName} -p ${generatedPort}:4444 -p ${subPort}:7900 --shm-size="8g" ${imageName}`;
+  // docker run seleniarm/standalone-chromium
+  const command = `docker run -d --name ${containerName} \
+    -p ${generatedPort}:4444 \
+    -p ${subPort}:7900 \
+    --shm-size="2g" \
+    --rm \
+    --env SE_NODE_MAX_SESSIONS=1 \
+    --env SE_NODE_OVERRIDE_MAX_SESSIONS=true \
+    --env SE_SESSION_REQUEST_TIMEOUT=300 \
+    seleniarm/standalone-chromium:latest`;
 
   try {
     const result = await execPromise(command);

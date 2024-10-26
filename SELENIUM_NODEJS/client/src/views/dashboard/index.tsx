@@ -2,7 +2,6 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
-import Navbar from "../../components/navbar"
 
 import { Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
@@ -126,7 +125,6 @@ function DashboardView() {
         </div>
       </div>
       <div className="content">
-        <Navbar />
         <Outlet />
       </div>
     </div>

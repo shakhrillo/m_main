@@ -8,7 +8,7 @@ function setupSeleniumContainer(url) {
   const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const subPort = generatedPort + 1;
   // const imageName = 'selenium/standalone-firefox:4.25.0-20241010';
-  const imageName = 'custom-selenium-firefox:latest';
+  const imageName = 'selenium/standalone-chrome:latest';
   const containerName = `selenium-${Date.now()}`;
 
   return {

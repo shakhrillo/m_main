@@ -369,7 +369,7 @@ function ScrapReviewsReviewView() {
                             </span>
                           </div>
                         </div>
-                        {Object.keys(review.reviewText.reviewObj).length ||
+                        {/* {Object.keys(review.reviewText.reviewObj).length ||
                         review.reviewText.reviewOverview.length ? (
                           <div className="view__table-content__show-overview">
                             <button
@@ -382,7 +382,7 @@ function ScrapReviewsReviewView() {
                               ></i>
                             </button>
                           </div>
-                        ) : null}
+                        ) : null} */}
 
                         {/* Display the rating overview based on visibility */}
                         {ratingOverviewVisibility[review.id] && (

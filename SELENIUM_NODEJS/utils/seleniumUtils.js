@@ -8,11 +8,21 @@ async function findElementsByXPath(driver, xpath) {
   return await driver.findElements(By.xpath(xpath));
 }
 
-async function getElementAttributes(element, attributes) {
+async function getElementAttributes(driver, element, attributes) {
   const attributeValues = {};
 
+  // Loop through the list of attributes
   for (const attr of attributes) {
-    attributeValues[attr] = await element.getAttribute(attr);
+    try {
+      // Get the attribute value
+      attributeValues[attr] = await element.getAttribute(attr);
+    } catch (error) {
+      console.error(`Error getting attribute ${attr}:`, error);
+      attributeValues[attr] = null; // or handle it as needed
+    }
+    
+    // Sleep for a random duration between 80 and 200 ms
+    // await driver.sleep(getRandomNumber(80, 200));
   }
 
   return attributeValues;
@@ -24,7 +34,7 @@ async function openOverviewTab(driver) {
   let isOverviewTabSelectedAlready = false;
 
   for (const button of allButtons) {
-    const { 'data-tab-index': dataTabIndex, 'aria-selected': areaSelected } = await getElementAttributes(button, attributesToExtract);
+    const { 'data-tab-index': dataTabIndex, 'aria-selected': areaSelected } = await getElementAttributes(driver, button, attributesToExtract);
     
     if (dataTabIndex === '0' && areaSelected === 'false') {
       isOverviewTabSelectedAlready = false;
@@ -73,86 +83,181 @@ async function reviewTabParentElement(driver) {
     parentElm = await vyucnb[0].findElement(By.xpath("parent::*"));
   }
 
-  return parentElm;
+  return {parentElm};
+}
+
+async function beforeTheLastChildInsideParentChildren(parent) {
+  const beforeTheLastChild = await parent.findElement(By.xpath("child::*[last()-1]"));
+  const beforeTheLastChildChildren = await beforeTheLastChild.findElements(By.xpath("child::*"));
+
+  return beforeTheLastChildChildren;
+}
+
+async function getAllAfterElementTillEnd(parent, element) {
+  console.log('Getting all elements after the specified element');
+  const allChildren = await parent.findElements(By.xpath("child::*"));
+  console.log('Total children:', allChildren.length);
+
+  // Get the unique attribute (like `data-review-id`) of the target element
+  const targetAttribute = await element.getAttribute("data-review-id");
+  let startIndex = -1;
+
+  // Find the index by comparing unique attribute values
+  for (let i = 0; i < allChildren.length; i++) {
+    const childAttribute = await allChildren[i].getAttribute("data-review-id");
+    if (childAttribute === targetAttribute) {
+      startIndex = i;
+      break;
+    }
+  }
+
+  // Return elements after the target element if found
+  return startIndex !== -1 ? allChildren.slice(startIndex) : [];
+}
+
+async function lastChildInsideParent(parent) {
+  const lastChild = await parent.findElement(By.xpath("child::*[last()]"));
+  const lastChildChildren = await lastChild.findElements(By.xpath("child::*"));
+
+  return lastChildChildren.length;
 }
 
 async function scrollToBottom(driver, parentElm) {
-  let allFilteredReviews = new Map();
+  const allFilteredReviews = new Map();
+  const extractedMessages = [];
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
-  const startTime = Date.now();
-  console.log('Scrolling to bottom of the page');
-  const checkedButtons = new Set();
 
-  // Initial scroll to load elements
-  await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
+  console.log('Starting scroll to bottom of the page');
+  await initialScroll(driver, parentElm);
 
-  while (true) {
-    await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
-
-    // Pause to allow elements to load after scrolling
-    // await driver.sleep(500); // 500ms delay, adjust as necessary
-
-    // Fetch and filter buttons
-    const allButtons = await findElementsByXPath(parentElm, "//button");
-    const newButtons = [];
-
-    for (const button of allButtons) {
-      const dataReviewId = await button.getAttribute('data-review-id');
-      if (dataReviewId && !checkedButtons.has(dataReviewId)) {
-        checkedButtons.add(dataReviewId);
-        newButtons.push(button);
-      }
-    }
-
-    const uniqueButtons = await Promise.all(newButtons.map(async (button) => {
-      const attributes = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id']);
-      return { ...attributes, button };
-    }));
-
-    // Categorize and execute button actions in parallel
-    const categorizedButtons = {
-      showMorePhotos: [],
-      expandReview: [],
-      showReviewInOriginal: [],
-      expandOwnerResponse: [],
-      showOwnerResponseInOriginal: []
-    };
-
-    uniqueButtons.forEach(({ jsaction, ariaExpanded, ariaChecked, button }) => {
-      if (jsaction?.includes('review.showMorePhotos')) categorizedButtons.showMorePhotos.push(button);
-      if (jsaction?.includes('review.expandReview') && ariaExpanded === 'false') categorizedButtons.expandReview.push(button);
-      if (jsaction?.includes('review.showReviewInOriginal') && ariaChecked === 'true') categorizedButtons.showReviewInOriginal.push(button);
-      if (jsaction?.includes('review.expandOwnerResponse') && ariaExpanded === 'false') categorizedButtons.expandOwnerResponse.push(button);
-      if (jsaction?.includes('review.showOwnerResponseInOriginal')) categorizedButtons.showOwnerResponseInOriginal.push(button);
-    });
-
-    await Promise.all(Object.values(categorizedButtons).flat().map(button => button.click()));
-
-    // Filter unique reviews
+  // Continuously scroll until bottom is reached
+  while (await continueScrolling(driver, parentElm, previousScrollHeight)) {
+    previousScrollHeight = await parentElm.getAttribute("scrollHeight");
+    
     const filteredReviews = await filterSingleChildReviews(parentElm);
-    filteredReviews.forEach(({ dataReviewId, element }) => {
-      // console.log('dataReviewId->', dataReviewId);
-      if (!allFilteredReviews.has(dataReviewId)) {
-        allFilteredReviews.set({ dataReviewId, element });
-      }
-    });
-    // allFilteredReviews = [
-    //   ...new Map([...allFilteredReviews, ...filteredReviews].map(review => [review.dataReviewId, review])).values()
-    // ];
+    console.log('Filtered reviews length:', filteredReviews.length);
+    for (const filteredReview of filteredReviews) {
+      const dataReviewId = await filteredReview.getAttribute("data-review-id");
+      const message = {
+        ...(await extractReviewText(filteredReview)),
+        imageUrls: await extractImageUrlsFromButtons(filteredReview, driver),
+        dataReviewId
+      };
 
-    console.log('Filtered reviews length:', allFilteredReviews.size);
-
-    // Check if scrolling reached the bottom
-    const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
-    if (currentScrollHeight === previousScrollHeight) {
-      console.log('Scrolling finished, time taken:', (Date.now() - startTime) / 1000, 'seconds');
-      break;
+      extractedMessages.push(message);
     }
-
-    previousScrollHeight = currentScrollHeight;
   }
 
-  return allFilteredReviews;
+  console.log('Extracted messages length:', extractedMessages.length);
+
+  await driver.sleep(getRandomNumber(2000, 3000));
+  console.log('Starting to extract reviews');
+
+  let allButtons = [];
+  try {
+    allButtons = await findElementsByXPath(parentElm, "//button");
+    // Continue with your logic
+  } catch (error) {
+    console.error("Error finding buttons:", error);
+  }
+  console.log('All buttons length:', allButtons.length);
+  // await driver.sleep(getRandomNumber(2000, 3000));
+  // const categorizedButtons = categorizeButtons(await extractButtonAttributes(driver, allButtons));
+  // console.log('Categorized buttons:', categorizedButtons.showMorePhotos.length, categorizedButtons.expandReview.length, categorizedButtons.showReviewInOriginal.length, categorizedButtons.expandOwnerResponse.length, categorizedButtons.showOwnerResponseInOriginal.length);
+
+  // // Click on all relevant buttons
+  // await clickAllButtons(categorizedButtons);
+
+  // Collect unique reviews
+  // const filteredReviews = await filterSingleChildReviews(parentElm);
+  // console.log('Filtered reviews length:', filteredReviews.length);
+  // // await extractReviews(filteredReviews, allFilteredReviews, extractedMessages, driver);
+
+  // for (const filteredReview of filteredReviews) {
+  //   const message = {
+  //     ...(await extractReviewText(filteredReview)),
+  //     imageUrls: await extractImageUrlsFromButtons(filteredReview, driver),
+  //   };
+
+  //   extractedMessages.push(message);
+  // }
+
+  // console.log('Extracted messages length:', extractedMessages.length);
+  return extractedMessages;
+}
+
+// Helper functions
+async function initialScroll(driver, parentElm) {
+  await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
+  await driver.sleep(getRandomNumber(2000, 3000));
+}
+
+async function continueScrolling(driver, parentElm, previousScrollHeight) {
+  await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
+  await driver.sleep(getRandomNumber(2000, 3000));
+
+  const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
+  if (currentScrollHeight === previousScrollHeight) {
+    console.log('Scrolling finished');
+    return false;
+  }
+  return true;
+}
+
+async function extractButtonAttributes(driver, buttons) {
+  return await Promise.all(buttons.map(async (button) => {
+    const attributes = await getElementAttributes(driver, button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id']);
+    await driver.sleep(getRandomNumber(80, 200));
+    return { ...attributes, button };
+  }));
+}
+
+function categorizeButtons(buttons) {
+  const categories = {
+    showMorePhotos: [],
+    expandReview: [],
+    showReviewInOriginal: [],
+    expandOwnerResponse: [],
+    showOwnerResponseInOriginal: []
+  };
+
+  buttons.forEach(({ jsaction, ariaExpanded, ariaChecked, button }) => {
+    if (jsaction?.includes('review.showMorePhotos')) categories.showMorePhotos.push(button);
+    if (jsaction?.includes('review.expandReview') && ariaExpanded === 'false') categories.expandReview.push(button);
+    if (jsaction?.includes('review.showReviewInOriginal') && ariaChecked === 'true') categories.showReviewInOriginal.push(button);
+    if (jsaction?.includes('review.expandOwnerResponse') && ariaExpanded === 'false') categories.expandOwnerResponse.push(button);
+    if (jsaction?.includes('review.showOwnerResponseInOriginal')) categories.showOwnerResponseInOriginal.push(button);
+  });
+
+  return categories;
+}
+
+async function clickAllButtons(categorizedButtons) {
+  await Promise.all(Object.values(categorizedButtons).flat().map(button => button.click()));
+}
+
+async function extractReviews(filteredReviews, allFilteredReviews, extractedMessages, driver) {
+  // for (const { dataReviewId, element } of filteredReviews) {
+  //   if (!allFilteredReviews.has(dataReviewId)) {
+  //     allFilteredReviews.set(dataReviewId, element);
+      
+  //     const message = {
+  //       ...(await extractReviewText(element)),
+  //       imageUrls: await extractImageUrlsFromButtons(element, driver),
+  //     };
+
+  //     extractedMessages.push(message);
+  //   }
+  // }
+
+  for (const filteredReview of filteredReviews) {
+    const message = {
+      ...(await extractReviewText(filteredReview)),
+      imageUrls: await extractImageUrlsFromButtons(filteredReview, driver),
+    };
+
+    extractedMessages.push(message);
+  }
 }
 
 
@@ -163,7 +268,7 @@ async function clickShowMorePhotosButton(allButtons, driver) {
   
   console.log('Clicking all buttons to show more photos');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showMorePhotos')) {
       await button.click();
       // await driver.sleep(getRandomNumber(40, 80));
@@ -181,7 +286,7 @@ async function clickExpandReviewButtons(allButtons, driver) {
 
   console.log('Clicking all buttons to expand reviews');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.expandReview') && ariaExpanded === 'false') {
       await button.click();
     }
@@ -198,7 +303,7 @@ async function clickShowReviewInOriginalButtons(allButtons, driver) {
 
   console.log('Clicking all buttons to show original reviews');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction, 'aria-checked': ariaChecked } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'aria-checked': ariaChecked } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showReviewInOriginal') && ariaChecked === 'true') {
       await button.click();
       // await driver.sleep(getRandomNumber(40, 80));
@@ -216,7 +321,7 @@ async function clickExpandOwnerResponseButtons(allButtons, driver) {
 
   console.log('Clicking all buttons to expand owner responses');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.expandOwnerResponse') && ariaExpanded === 'false') {
       await button.click();
       // await driver.sleep(getRandomNumber(40, 80));
@@ -234,7 +339,7 @@ async function clickShowOwnerResponseInOriginalButtons(allButtons, driver) {
 
   console.log('Clicking all buttons to show owner responses');
   for (const button of allButtons) {
-    const { 'jsaction': jsaction } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
       await button.click();
       // await driver.sleep(getRandomNumber(40, 80));
@@ -253,6 +358,8 @@ async function filterSingleChildReviews(driver) {
   // const allElements = await findElementsByXPath(driver, "//div[@data-review-id]");
   const allElements = await driver.findElements(By.xpath("//div[contains(@class, 'jftiEf') and contains(@class, 'fontBodyMedium')]"));
   console.log('Checking allElements:', allElements.length);
+
+  return allElements;
   
   // Use Promise.all to concurrently check each element
   await Promise.all(allElements.map(async (element) => {
@@ -269,13 +376,13 @@ async function filterSingleChildReviews(driver) {
   return filteredReviews;
 }
 
-async function extractImageUrlsFromButtons(element) {
+async function extractImageUrlsFromButtons(element, driver) {
   const extractedImageUrls = [];
   const allButtons = await findElementsByXPath(element, ".//button");
   const attributesToExtract = ['jsaction', 'style'];
 
   for (const button of allButtons) {
-    const { 'jsaction': jsaction, 'style': style } = await getElementAttributes(button, attributesToExtract);
+    const { 'jsaction': jsaction, 'style': style } = await getElementAttributes(driver, button, attributesToExtract);
     if (jsaction && jsaction.includes('review.openPhoto')) {
       let imageUrl = style.split('url("')[1]?.split('");')[0];
 
@@ -443,15 +550,15 @@ function extractReviewTextInner(reviewTextArray, myendText) {
   }
 
   return {
-    user,
-    userInformation,
+    user: user ? user : "",
+    userInformation: userInformation ? userInformation : "",
     rate: rate ? rate : "",
-    time,
-    platform,
-    reviewText,
-    response,
-    responseTime,
-    myendText
+    time: time ? time : "",
+    platform: platform,
+    reviewText: reviewText,
+    response: response,
+    responseTime: responseTime,
+    myendText: myendText
   }
 }
 
@@ -483,5 +590,9 @@ module.exports = {
   filterSingleChildReviews,
 
   extractImageUrlsFromButtons,
-  extractReviewText
+  extractReviewText,
+
+  lastChildInsideParent,
+  beforeTheLastChildInsideParentChildren,
+  getAllAfterElementTillEnd
 };

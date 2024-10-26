@@ -24,7 +24,9 @@ const signInEmailAndPasswordAction = createAsyncThunk('auth/signInEmailAndPasswo
 });
 
 const signInWithGoogleAction = createAsyncThunk('auth/signInWithGoogle', async () => {
+  console.log("Signing in with Google");
   const auth = getAuth();
+  console.log("Auth:", auth);
   return signInWithPopup(auth, new GoogleAuthProvider());
 });
 
