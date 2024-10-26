@@ -53,28 +53,30 @@ exports.openWebsite = async (
 
     
     let { parentElm } = await reviewTabParentElement(driver);
+    const _parentElm = parentElm;
     
     let previousScrollHeight = 0;
     let currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
-    const messages = [];    
+    const messages = [];
+    let lastElementId = null;
 
+    let count = 0;
     while (previousScrollHeight !== currentScrollHeight) {
       console.log('Scrolling to the bottom');
-      const elements = await beforeTheLastChildInsideParentChildren(parentElm);
-      // allElements.push(...elements);
-      
-      let count = 0;
-      for (const element of elements) {
-        console.log('Processing review:', count);
+      let { parentElm } = await reviewTabParentElement(driver);
+      const { allElements, lastValidElementId } = await beforeTheLastChildInsideParentChildren(parentElm, lastElementId);
+      console.log('Elements:', allElements.length);
+      console.log('Last element id:', lastValidElementId);
+      lastElementId = lastValidElementId;
+
+      for (const element of allElements) {
         if (!element) {
-          console.log('Element not found');
           continue;
         }
 
         const _children = await element.findElements(By.xpath("child::*"));
 
         if (_children.length === 0) {
-          console.log('Review text not found');
           continue;
         }
 
@@ -85,31 +87,31 @@ exports.openWebsite = async (
         };
 
         if (!message.id) {
-          console.log('Review id not found');
+          // console.log('Review id not found');
           continue;
         }
 
         if (messages.find(m => m.id === message.id)) {
-          console.log('Review already exists');
+          // console.log('Review already exists');
           continue;
         }
 
+        console.log('Processing review:', count);
         messages.push(message);
         await addMessageToReview(uid, reviewId, message);
         count++;
       }
 
       // Scroll to the bottom
-      await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", parentElm);
-
+      await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", _parentElm);
       // Wait for content to load
       await driver.sleep(2500);
 
       // Update scroll heights
       previousScrollHeight = currentScrollHeight;
-      currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
+      currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", _parentElm);
 
-      if (lastChildInsideParent(parentElm) == 0 || previousScrollHeight === currentScrollHeight) {
+      if (lastChildInsideParent(_parentElm) == 0) {
         console.log('Reached the end, scroll height has not changed');
         break;
       }
