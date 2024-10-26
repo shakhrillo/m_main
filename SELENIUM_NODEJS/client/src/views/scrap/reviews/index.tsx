@@ -106,18 +106,16 @@ function ScrapReviewsView() {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-12">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <a href="#">Scrap</a>
-              </li>
-              <li className="breadcrumb-item active">
-                <a href="#">Reviews</a>
-              </li>
-            </ol>
-          </nav>
+        <div className="col">
+          <h1 className="h3 mb-3">Reviews</h1>
         </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <hr />
+        </div>
+      </div>
+      <div className="row">
         <div className="col-12">
           <div className="p-3 bg-light mb-3">
             <div className="input-group">
