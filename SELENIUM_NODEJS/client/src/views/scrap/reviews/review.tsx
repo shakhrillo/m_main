@@ -30,11 +30,12 @@ function ScrapReviewsReviewView() {
   >({})
 
   useEffect(() => {
-    if (!db || !place) return
+    if (!db || !place || !user) return
     setReviews([])
-    const docReview = doc(db, "reviews", place)
 
-    const unsubscribe = onSnapshot(docReview, doc => {
+    const collectionReviewInfo = doc(db, "users", user.uid, "reviews", place)
+
+    const unsubscribe = onSnapshot(collectionReviewInfo, doc => {
       if (doc.exists()) {
         console.log("Document data:", doc.data())
         setPlaceInfo({
@@ -47,7 +48,7 @@ function ScrapReviewsReviewView() {
     return () => {
       unsubscribe()
     }
-  }, [db, place])
+  }, [db, user, place])
 
   useEffect(() => {
     if (!db || !place || !user) return
@@ -165,54 +166,38 @@ function ScrapReviewsReviewView() {
         </Modal.Footer>
       </Modal>
       <div className="container">
-        {placeInfo.info ? (
+        {placeInfo ? (
           <div className="card mb-2">
             <div className="card-body place-info row">
               <div className="col-3">
                 <h5 className="card-title place-info__title">
                   <i className="bi-geo-alt me-2"></i>
-                  {placeInfo.info.mainTitle}
+                  {placeInfo.title}
+                  <span className="badge bg-primary ms-2">
+                    {placeInfo.totalMessages} reviews
+                  </span>
                 </h5>
-                <p className="card-text place-info__subtitle">
-                  <i className="bi-geo me-2"></i>
-                  {placeInfo.info.address.name.replace("Address: ", "")} (
-                  {placeInfo.info.address.latitude} -{" "}
-                  {placeInfo.info.address.longitude})
-                </p>
               </div>
               <div className="col-2 d-flex flex-column gap-2 place-info__created-at">
                 <span className="">
                   <i className="bi-play-circle me-2"></i>
-                  {new Date(placeInfo.createdAt)
-                    .toLocaleDateString("en-GB")
-                    .replace(/\//g, "/")}{" "}
-                  -
-                  {new Date(placeInfo.createdAt).toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-
-                <span className="">
-                  <i className="bi-stop-circle me-2"></i>
-                  {new Date(placeInfo.completedAt)
-                    .toLocaleDateString("en-GB")
-                    .replace(/\//g, "/")}{" "}
-                  -
-                  {new Date(placeInfo.completedAt).toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {
+                    placeInfo.completedAt && placeInfo.createdAt ? (
+                      Number((placeInfo.completedAt.seconds - placeInfo.createdAt.seconds) / 60).toFixed(2) + " min"
+                    ) : (
+                      "Loading..."
+                    )
+                  }
                 </span>
               </div>
 
               <div className="col-2 view__rating ms-5 d-flex flex-column gap-2">
                 <span className="d-flex gap-2 align-items-center">
-                  Rating:{" "}
-                  <StarRating rating={String(placeInfo.info.mainRate)} />
+                  {/* Rating:{" "}
+                  <StarRating rating={String(placeInfo.info.mainRate)} /> */}
                 </span>
                 <span>
-                  Reviews: {placeInfo.info.mainReview.replace(/[()]/g, "")}
+                  {/* Reviews: {placeInfo.info.mainReview.replace(/[()]/g, "")} */}
                 </span>
               </div>
               <div className="col d-flex gap-2 align-items-center">
@@ -474,25 +459,55 @@ function ScrapReviewsReviewView() {
               </tbody>
             </table>
             <div className="pagination">
-              <Pagination>
-                <Pagination.Prev
-                  onClick={() => paginate(currentPage - 1)}
-                  disabled={currentPage === 1}
-                />
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <Pagination.Item
-                    key={i + 1}
-                    active={currentPage === i + 1}
-                    onClick={() => paginate(i + 1)}
-                  >
-                    {i + 1}
-                  </Pagination.Item>
-                ))}
-                <Pagination.Next
-                  onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                />
-              </Pagination>
+            <Pagination>
+              <Pagination.Prev
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+
+              {/* Show first page and ellipsis if needed */}
+              <Pagination.Item
+                active={currentPage === 1}
+                onClick={() => paginate(1)}
+              >
+                1
+              </Pagination.Item>
+              {currentPage > 4 && <Pagination.Ellipsis />}
+
+              {/* Show pages around the current page */}
+              {Array.from({ length: 5 }, (_, i) => {
+                const page = currentPage - 2 + i;
+                if (page > 1 && page < totalPages) {
+                  return (
+                    <Pagination.Item
+                      key={page}
+                      active={currentPage === page}
+                      onClick={() => paginate(page)}
+                    >
+                      {page}
+                    </Pagination.Item>
+                  );
+                }
+                return null;
+              })}
+
+              {/* Show ellipsis and last page if needed */}
+              {currentPage < totalPages - 3 && <Pagination.Ellipsis />}
+              {totalPages > 1 && (
+                <Pagination.Item
+                  active={currentPage === totalPages}
+                  onClick={() => paginate(totalPages)}
+                >
+                  {totalPages}
+                </Pagination.Item>
+              )}
+
+              <Pagination.Next
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+
             </div>
           </div>
         </div>
