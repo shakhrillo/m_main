@@ -53,7 +53,7 @@ exports.openWebsite = async (
 
     
     let { parentElm } = await reviewTabParentElement(driver);
-    const _parentElm = parentElm;
+    // const _parentElm = parentElm;
     
     let previousScrollHeight = 0;
     let currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
@@ -61,40 +61,43 @@ exports.openWebsite = async (
     let lastElementId = null;
 
     let count = 0;
-    while (previousScrollHeight !== currentScrollHeight) {
+    let isFullyLoaded = false;
+
+    // while (previousScrollHeight !== currentScrollHeight) {
+    while (!isFullyLoaded) {
       console.log('Scrolling to the bottom');
       let { parentElm } = await reviewTabParentElement(driver);
-      const { allElements, lastValidElementId } = await beforeTheLastChildInsideParentChildren(parentElm, lastElementId);
+      const { allElements, lastValidElementId, lastChildChildrenLength } = await beforeTheLastChildInsideParentChildren(parentElm, lastElementId);
       console.log('Elements:', allElements.length);
       console.log('Last element id:', lastValidElementId);
       lastElementId = lastValidElementId;
 
-      for (const element of allElements) {
-        if (!element) {
-          continue;
-        }
+      for (const e of allElements) {
+        // if (!element) {
+        //   continue;
+        // }
 
-        const _children = await element.findElements(By.xpath("child::*"));
+        // const _children = await element.findElements(By.xpath("child::*"));
 
-        if (_children.length === 0) {
-          continue;
-        }
+        // if (_children.length === 0) {
+        //   continue;
+        // }
 
         const message = {
-          ...(await extractReviewText(element)),
-          imageUrls: await extractImageUrlsFromButtons(element, driver),
-          id: await element.getAttribute("data-review-id")
+          ...(await extractReviewText(e.element)),
+          imageUrls: await extractImageUrlsFromButtons(e.element, driver),
+          id: e.id
         };
 
-        if (!message.id) {
+        // if (!message.id) {
           // console.log('Review id not found');
-          continue;
-        }
+        //   continue;
+        // }
 
-        if (messages.find(m => m.id === message.id)) {
-          // console.log('Review already exists');
-          continue;
-        }
+        // if (messages.find(m => m.id === message.id)) {
+        //   // console.log('Review already exists');
+        //   continue;
+        // }
 
         console.log('Processing review:', count);
         messages.push(message);
@@ -103,15 +106,19 @@ exports.openWebsite = async (
       }
 
       // Scroll to the bottom
-      await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", _parentElm);
+      await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", parentElm);
       // Wait for content to load
-      await driver.sleep(2500);
+      // await driver.sleep(2500);
 
       // Update scroll heights
       previousScrollHeight = currentScrollHeight;
-      currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", _parentElm);
+      currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
+      // currentScrollHeight += lastChildChildrenLength;
 
-      if (lastChildInsideParent(_parentElm) == 0) {
+      console.log('Last child:', lastChildChildrenLength);
+      
+      if (lastChildChildrenLength === 0) {
+        isFullyLoaded = true;
         console.log('Reached the end, scroll height has not changed');
         break;
       }

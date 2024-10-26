@@ -90,9 +90,16 @@ async function reviewTabParentElement(driver) {
 async function beforeTheLastChildInsideParentChildren(parent, lastElementId = null) {
   const allElements = [];
   let lastValidElementId = lastElementId || null;
+  let lastChildChildrenLength = 0;
 
   try {
     // Get the second-to-last child in the parent's children
+    const lastChild = await parent.findElement(By.xpath("child::*[last()]"));
+    const lastChildChildren = await lastChild.findElements(By.xpath("child::*"));
+    lastChildChildrenLength = lastChildChildren.length;
+    // const lastChild = await parent.findElement(By.xpath("child::*[last()]"));
+    // lastChildChildren = await lastChild.findElements(By.xpath("child::*")).length;
+    
     const beforeTheLastChild = await parent.findElement(By.xpath("child::*[last()-1]"));
     
     // Determine the starting element based on lastElementId or use the first child of beforeTheLastChild
@@ -110,7 +117,10 @@ async function beforeTheLastChildInsideParentChildren(parent, lastElementId = nu
       const elementId = await nextElement.getAttribute("data-review-id");
       if (elementId) {
         lastValidElementId = elementId;
-        allElements.push(nextElement);
+        allElements.push({
+          id: elementId,
+          element: nextElement
+        });
       }
 
       // Move to the next sibling, if it exists
@@ -120,7 +130,7 @@ async function beforeTheLastChildInsideParentChildren(parent, lastElementId = nu
     console.error("Error finding elements:", error);
   }
 
-  return {allElements, lastValidElementId};
+  return {allElements, lastValidElementId, lastChildChildrenLength};
 }
   
 
