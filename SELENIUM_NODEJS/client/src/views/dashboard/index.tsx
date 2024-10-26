@@ -93,12 +93,12 @@ function DashboardView() {
           <img src={logoImg} alt="logo" height="60" />
         </a>
         <div className="list-group">
-          <button type="button" className="list-group-item list-group-item-action active">
+          <a type="button" className="list-group-item list-group-item-action active" href="/scrap/reviews">
             <i className="bi-search"></i>
             <span>
               Scrap Reviews
             </span>
-          </button>
+          </a>
           <div className="list-group list-group-nested d-none">
             <a href="/scrap/reviews" className="list-group-item list-group-item-action">
               Reviews
