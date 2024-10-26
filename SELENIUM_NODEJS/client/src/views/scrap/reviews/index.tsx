@@ -9,7 +9,7 @@ import "../../../style/dashboard.css"
 function ScrapReviewsView() {
   const [show, setShow] = useState(false)
 
-  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/MAB3TUTz6MbJfb246")
+  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/eUdPBiVDVRfP5zrr8")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10

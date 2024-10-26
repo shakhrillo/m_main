@@ -63,18 +63,21 @@ exports.openWebsite = async (
     
     await updateReviewStatus(uid, reviewId, { status: 'finalizing' });
 
-    console.log('Filtered reviews>>>>>', filteredReviews.length);
+    console.log('Filtered reviews>>>>>', filteredReviews.size);
     
-    const messages = [];
-    for (const filteredReview of filteredReviews) {
-      const element = filteredReview.element;
-      const message = {
-        ...await extractReviewText(element),
-        imageUrls: await extractImageUrlsFromButtons(element),
-      }
-      messages.push(message);
-      await addMessageToReview(uid, reviewId, message);
-    }
+    const messages = await Promise.all(
+      filteredReviews.forEach(async (filteredReview) => {
+        const element = filteredReview.element;
+        const message = {
+          ...(await extractReviewText(element)),
+          imageUrls: await extractImageUrlsFromButtons(element),
+        };
+    
+        // Call the addMessageToReview function concurrently
+        await addMessageToReview(uid, reviewId, message);
+        return message; // Return the message to include it in the messages array
+      })
+    );    
 
     await updateReviewStatus(uid, reviewId, {
       status: 'completed',

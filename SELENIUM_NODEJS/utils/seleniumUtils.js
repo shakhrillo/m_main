@@ -77,7 +77,7 @@ async function reviewTabParentElement(driver) {
 }
 
 async function scrollToBottom(driver, parentElm) {
-  let allFilteredReviews = [];
+  let allFilteredReviews = new Map();
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
   const startTime = Date.now();
   console.log('Scrolling to bottom of the page');
@@ -130,11 +130,17 @@ async function scrollToBottom(driver, parentElm) {
 
     // Filter unique reviews
     const filteredReviews = await filterSingleChildReviews(parentElm);
-    allFilteredReviews = [
-      ...new Map([...allFilteredReviews, ...filteredReviews].map(review => [review.dataReviewId, review])).values()
-    ];
+    filteredReviews.forEach(({ dataReviewId, element }) => {
+      // console.log('dataReviewId->', dataReviewId);
+      if (!allFilteredReviews.has(dataReviewId)) {
+        allFilteredReviews.set({ dataReviewId, element });
+      }
+    });
+    // allFilteredReviews = [
+    //   ...new Map([...allFilteredReviews, ...filteredReviews].map(review => [review.dataReviewId, review])).values()
+    // ];
 
-    console.log('Filtered reviews:', allFilteredReviews.length);
+    console.log('Filtered reviews length:', allFilteredReviews.size);
 
     // Check if scrolling reached the bottom
     const currentScrollHeight = await parentElm.getAttribute("scrollHeight");
@@ -241,19 +247,24 @@ async function clickShowOwnerResponseInOriginalButtons(allButtons, driver) {
 
 async function filterSingleChildReviews(driver) {
   const filteredReviews = [];
-  const allElements = await findElementsByXPath(driver, "//div[@data-review-id]");
-
-  for (const element of allElements) {
+  
+  // fontBodyMedium
+  // const allElements = await driver.findElements(By.xpath("//div[contains(@class, 'jftiEf')]//div[contains(@class, 'fontBodyMedium')]"));
+  // const allElements = await findElementsByXPath(driver, "//div[@data-review-id]");
+  const allElements = await driver.findElements(By.xpath("//div[contains(@class, 'jftiEf') and contains(@class, 'fontBodyMedium')]"));
+  console.log('Checking allElements:', allElements.length);
+  
+  // Use Promise.all to concurrently check each element
+  await Promise.all(allElements.map(async (element) => {
+    // Check if the element has exactly one child with data-review-id
     const childElements = await findElementsByXPath(element, ".//div[@data-review-id]");
-    const dataReviewId = await element.getAttribute("data-review-id");
     
     if (childElements.length === 1) {
-      filteredReviews.push({
-        dataReviewId,
-        element,
-      });
+      // Fetch data-review-id only when condition is met
+      const dataReviewId = await element.getAttribute("data-review-id");
+      filteredReviews.push({ dataReviewId, element });
     }
-  }
+  }));
 
   return filteredReviews;
 }
