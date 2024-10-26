@@ -89,53 +89,50 @@ async function scrollToBottom(driver, parentElm) {
   while (true) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
+    // Pause to allow elements to load after scrolling
+    // await driver.sleep(500); // 500ms delay, adjust as necessary
+
+    // Fetch and filter buttons
     const allButtons = await findElementsByXPath(parentElm, "//button");
     const newButtons = [];
 
-    // Filter out buttons that have already been checked
     for (const button of allButtons) {
-      const id = await getElementAttributes(button, ['data-review-id']).then(attrs => attrs['data-review-id']);
-      if (!checkedButtons.has(id)) {
-        checkedButtons.add(id);
-        newButtons.push(button); // Only add buttons that haven't been checked
+      const dataReviewId = await button.getAttribute('data-review-id');
+      if (dataReviewId && !checkedButtons.has(dataReviewId)) {
+        checkedButtons.add(dataReviewId);
+        newButtons.push(button);
       }
     }
 
-    console.log('New buttons:', newButtons.length);
-
-    const uniqueButtons = await Promise.all(newButtons.map(async button => {
-      const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded, 'aria-checked': ariaChecked, 'data-review-id': dataReviewId } = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id']);
-      return { jsaction, ariaExpanded, ariaChecked, button, 'data-review-id': dataReviewId };
+    const uniqueButtons = await Promise.all(newButtons.map(async (button) => {
+      const attributes = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id']);
+      return { ...attributes, button };
     }));
 
-    // Categorize buttons
-    const showMorePhotosButtons = [];
-    const reviewExpandReviewButtons = [];
-    const reviewShowReviewInOriginalButtons = [];
-    const reviewExpandOwnerResponseButtons = [];
-    const reviewShowOwnerResponseInOriginal = [];
+    // Categorize and execute button actions in parallel
+    const categorizedButtons = {
+      showMorePhotos: [],
+      expandReview: [],
+      showReviewInOriginal: [],
+      expandOwnerResponse: [],
+      showOwnerResponseInOriginal: []
+    };
 
-    for (const { jsaction, ariaExpanded, ariaChecked, button } of uniqueButtons) {
-      if (jsaction?.includes('review.showMorePhotos')) showMorePhotosButtons.push(button);
-      if (jsaction?.includes('review.expandReview') && ariaExpanded === 'false') reviewExpandReviewButtons.push(button);
-      if (jsaction?.includes('review.showReviewInOriginal') && ariaChecked === 'true') reviewShowReviewInOriginalButtons.push(button);
-      if (jsaction?.includes('review.expandOwnerResponse') && ariaExpanded === 'false') reviewExpandOwnerResponseButtons.push(button);
-      if (jsaction?.includes('review.showOwnerResponseInOriginal')) reviewShowOwnerResponseInOriginal.push(button);
-    }
+    uniqueButtons.forEach(({ jsaction, ariaExpanded, ariaChecked, button }) => {
+      if (jsaction?.includes('review.showMorePhotos')) categorizedButtons.showMorePhotos.push(button);
+      if (jsaction?.includes('review.expandReview') && ariaExpanded === 'false') categorizedButtons.expandReview.push(button);
+      if (jsaction?.includes('review.showReviewInOriginal') && ariaChecked === 'true') categorizedButtons.showReviewInOriginal.push(button);
+      if (jsaction?.includes('review.expandOwnerResponse') && ariaExpanded === 'false') categorizedButtons.expandOwnerResponse.push(button);
+      if (jsaction?.includes('review.showOwnerResponseInOriginal')) categorizedButtons.showOwnerResponseInOriginal.push(button);
+    });
 
-    // Click buttons in parallel for each category
-    await Promise.all([
-      ...showMorePhotosButtons.map(button => button.click()),
-      ...reviewExpandReviewButtons.map(button => button.click()),
-      ...reviewShowReviewInOriginalButtons.map(button => button.click()),
-      ...reviewExpandOwnerResponseButtons.map(button => button.click()),
-      ...reviewShowOwnerResponseInOriginal.map(button => button.click())
-    ]);
+    await Promise.all(Object.values(categorizedButtons).flat().map(button => button.click()));
 
-    // Filter and remove duplicates from reviews
+    // Filter unique reviews
     const filteredReviews = await filterSingleChildReviews(parentElm);
-    allFilteredReviews.push(...filteredReviews);
-    allFilteredReviews = [...new Map(allFilteredReviews.map(review => [review.dataReviewId, review])).values()];
+    allFilteredReviews = [
+      ...new Map([...allFilteredReviews, ...filteredReviews].map(review => [review.dataReviewId, review])).values()
+    ];
 
     console.log('Filtered reviews:', allFilteredReviews.length);
 
@@ -151,6 +148,7 @@ async function scrollToBottom(driver, parentElm) {
 
   return allFilteredReviews;
 }
+
 
 async function clickShowMorePhotosButton(allButtons, driver) {
   // const allButtons = await findElementsByXPath(driver, "//button");
