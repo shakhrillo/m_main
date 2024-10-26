@@ -1,5 +1,6 @@
 /* Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 /* Bootstrap Icons */
 @import url("bootstrap-icons/font/bootstrap-icons.min.css");
@@ -48,7 +49,7 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 @import "bootstrap/scss/reboot";
 
 // Custom theme variables
-$font-family-base: "Josefin Sans", sans-serif;
+$font-family-base: 'Inter', sans-serif;
 $body-color: #3c486b !default;
 $primary-color: #3c486b !default;
 $secondary: #7564ee !default;
@@ -110,4 +111,9 @@ h5,
 h6 {
   font-family: $font-family-base;
   color: $primary-color;
+}
+
+
+.firebase-emulator-warning {
+  display: none;
 }

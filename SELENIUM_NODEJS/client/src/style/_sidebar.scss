@@ -5,23 +5,29 @@
   top: 0;
   left: 0;
   border-right: $border-width solid $border-color;
-  background-color: #fbfbfb;
+  background-color: #fff;
+  z-index: 9999;
 }
 
 .list-group {
   border-radius: 0;
+  height: calc(100vh - 60px);
+  padding: 10px 0;
 }
 
 .list-group-item {
   display: flex;
   align-items: center;
+  background-color: transparent;
+  padding: 10px 20px;
+  gap: 16px;
 }
 
 .list-group-item-action {
   border-radius: 0;
   border: 0;
   background-color: transparent;
-  color: $secondary;
+  color: $body-color;
 }
 
 .list-group.list-group-nested {

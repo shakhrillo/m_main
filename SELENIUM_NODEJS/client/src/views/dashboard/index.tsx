@@ -5,7 +5,7 @@ import { useAppSelector } from "../../app/hooks"
 
 import { Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.png";
 
 function DashboardView() {
   const [show, setShow] = useState(false)
@@ -94,14 +94,12 @@ function DashboardView() {
         </a>
         <div className="list-group">
           <button type="button" className="list-group-item list-group-item-action">
+            <i className="bi-search"></i>
             <span>
-              Scrap
+              Scrap Reviews
             </span>
-            {/* <span className="badge bg-warning rounded-pill ms-2">1</span>
-            <span className="w-100"></span>
-            <i className="bi-caret-down"></i> */}
           </button>
-          <div className="list-group list-group-nested">
+          <div className="list-group list-group-nested d-none">
             <a href="/scrap/reviews" className="list-group-item list-group-item-action active">
               Reviews
               <span className="badge bg-warning rounded-pill ms-2">1</span>
@@ -109,18 +107,34 @@ function DashboardView() {
             <a href="/scrap/places" className="list-group-item list-group-item-action">Places</a>
           </div>
           <button type="button" className="list-group-item list-group-item-action">
+            <i className="bi-bar-chart"></i>
             <span>
-              Payments
+              Usage
             </span>
-            <span className="w-100"></span>
-            <i className="bi-caret-down"></i>
           </button>
-          <div className="list-group list-group-nested">
-            <a href="/payments/subscription" className="list-group-item list-group-item-action">Subscriptions</a>
-            <a href="/payments/history" className="list-group-item list-group-item-action">History</a>
-          </div>
-          <button type="button" className="list-group-item list-group-item-action" onClick={() => window.location.href = "/user"}>
-            Settings
+          <button type="button" className="list-group-item list-group-item-action">
+            <i className="bi-credit-card"></i>
+            <span>
+              Subscription
+            </span>
+          </button>
+          <button type="button" className="list-group-item list-group-item-action">
+            <i className="bi-gear"></i>
+            <span>
+              Settings
+            </span>
+          </button>
+          <button type="button" className="list-group-item list-group-item-action">
+            <i className="bi-question-circle"></i>
+            <span>
+              Help
+            </span>
+          </button>
+          <button type="button" className="list-group-item list-group-item-action text-danger mt-auto">
+            <i className="bi-box-arrow-right"></i>
+            <span>
+              Logout
+            </span>
           </button>
         </div>
       </div>
