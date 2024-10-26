@@ -9,7 +9,7 @@ import "../../../style/dashboard.css"
 function ScrapReviewsView() {
   const [show, setShow] = useState(false)
 
-  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/9QKrrhLEbhNHdvEg9")
+  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/MAB3TUTz6MbJfb246")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
@@ -176,7 +176,7 @@ function ScrapReviewsView() {
                     <td>
                       {review.title ? (
                         <div className="d-flex flex-column">
-                          <a href={`/scrap/review/${review.id}`}>
+                          <a href={`${review.url}`} target="_blank">
                             {review.title}
                           </a>
                           <div className="d-flex gap-1 align-items-center">

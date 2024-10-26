@@ -81,7 +81,7 @@ async function scrollToBottom(driver, parentElm) {
   let previousScrollHeight = await parentElm.getAttribute("scrollHeight");
   const startTime = Date.now();
   console.log('Scrolling to bottom of the page');
-  let _allButtons = [];
+  const checkedButtons = new Set();
 
   // Initial scroll to load elements
   await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
@@ -90,24 +90,23 @@ async function scrollToBottom(driver, parentElm) {
     await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", parentElm);
 
     const allButtons = await findElementsByXPath(parentElm, "//button");
+    const newButtons = [];
 
-    // Collect attributes in parallel
-    const buttonAttributes = await Promise.all(allButtons.map(button => 
-      getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id'])
-        .then(attrs => ({ ...attrs, button }))
-    ));
+    // Filter out buttons that have already been checked
+    for (const button of allButtons) {
+      const id = await getElementAttributes(button, ['data-review-id']).then(attrs => attrs['data-review-id']);
+      if (!checkedButtons.has(id)) {
+        checkedButtons.add(id);
+        newButtons.push(button); // Only add buttons that haven't been checked
+      }
+    }
 
-    _allButtons.push(...buttonAttributes);
+    console.log('New buttons:', newButtons.length);
 
-    // Filter unique buttons by 'data-review-id'
-    const seen = new Set();
-    const uniqueButtons = _allButtons.filter(({ 'data-review-id': dataReviewId }) => {
-      if (seen.has(dataReviewId)) return false;
-      seen.add(dataReviewId);
-      return true;
-    });
-
-    console.log('Total buttons:', allButtons.length, uniqueButtons.length);
+    const uniqueButtons = await Promise.all(newButtons.map(async button => {
+      const { 'jsaction': jsaction, 'aria-expanded': ariaExpanded, 'aria-checked': ariaChecked, 'data-review-id': dataReviewId } = await getElementAttributes(button, ['jsaction', 'aria-expanded', 'aria-checked', 'data-review-id']);
+      return { jsaction, ariaExpanded, ariaChecked, button, 'data-review-id': dataReviewId };
+    }));
 
     // Categorize buttons
     const showMorePhotosButtons = [];
