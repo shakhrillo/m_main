@@ -30,6 +30,10 @@
   color: $body-color;
 }
 
+.list-group-item.list-group-item-action.active {
+  background-color: #f6f6f6;
+}
+
 .list-group.list-group-nested {
   background-color: $light;
   border-top: $border-width solid $border-color;
