@@ -19,7 +19,8 @@ const {
   beforeTheLastChildInsideParentChildren,
   getAllAfterElementTillEnd
 } = require("./seleniumUtils");
-const { By, Builder } = require('selenium-webdriver');
+const { By, Builder, Capabilities } = require('selenium-webdriver');
+const webdriver = require('selenium-webdriver');
 
 
 exports.openWebsite = async (
@@ -32,16 +33,26 @@ exports.openWebsite = async (
   browserName,
   uid
 ) => {
-  console.log('Opening website:', url);
+  console.log('Opening website:', url, browserName);
 
   try {
-    await startContainer(containerName, generatedPort, subPort, imageName);
-    console.log('Container started:', containerName);
-    console.log(`http://localhost:${generatedPort}/wd/hub`)
+    const gcURL = await startContainer(containerName, generatedPort, subPort, imageName);
+    console.log('Container started:', gcURL);
+    // https://selenium-1730029569461-348810635690.us-central1.run.app
+    // {"browserName":"chrome","browserVersion":"132.0","goog:chromeOptions":{"binary":"/usr/bin/google-chrome"},"platformName":"linux","se:containerName":"","se:noVncPort":7900,"se:vncEnabled":true}
     const driver = new Builder()
-      .usingServer(`http://localhost:${generatedPort}/wd/hub`)
-      .forBrowser(browserName)
+      .forBrowser(webdriver.Browser.CHROME)
+      .usingServer(`${gcURL}/wd/hub`)
       .build();
+
+// gcloud iam service-accounts create selenium-invoker \
+//   --description "This service accounts invokes Selenium on Google Cloud Run." 
+//   --display-name "Selenium Invoker"
+
+// gcloud run services add-iam-policy-binding selenium-1730030886522 \
+//   --member serviceAccount:selenium-invoker@map-review-scrap.iam.gserviceaccount.com \
+//   --role roles/run.invoker \
+//   --region us-central1
 
     await driver.get(url);
     const title = await driver.getTitle();
@@ -50,8 +61,28 @@ exports.openWebsite = async (
     await updateReviewStatus(uid, reviewId, { status: 'started', title });
 
     await openOverviewTab(driver);
-    await openReviewTab(driver);
+    // wait 2 seconds
+    await driver.sleep(2000);
 
+    await openReviewTab(driver);
+    await driver.sleep(2000);
+
+    // click on sort by newest
+    // aria-label="Sort reviews"
+    const sortButton = await driver.findElements(By.xpath("//button[@aria-label='Sort reviews']"));
+    if (sortButton.length > 0) {
+      await sortButton[0].click();
+      await driver.sleep(2000);
+      // role="menuitemradio"
+      const newestButton = await driver.findElements(By.xpath("//div[@role='menuitemradio']"));
+      for (const b of newestButton) {
+        const text = await b.getText();
+        if (text.toLowerCase().includes('newest')) {
+          await b.click();
+          break;
+        }
+      }
+    }
     
     let { parentElm } = await reviewTabParentElement(driver);
     // const _parentElm = parentElm;

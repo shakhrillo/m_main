@@ -25,7 +25,7 @@ const browsers = {
 function setupSeleniumContainer(url) {
   const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const subPort = generatedPort + 1;
-  const imageName = browsers.edge.dev;
+  const imageName = browsers.chrome.dev;
   const containerName = `selenium-${Date.now()}`;
 
   return {
@@ -34,7 +34,7 @@ function setupSeleniumContainer(url) {
     imageName,
     containerName,
     url,
-    browserName: browsers.edge.name
+    browserName: browsers.chrome.name
   };
 }
 
