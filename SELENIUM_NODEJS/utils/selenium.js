@@ -39,7 +39,7 @@ exports.openWebsite = async (
     console.log(`http://localhost:${generatedPort}/wd/hub`)
     const driver = new Builder()
       .usingServer(`http://localhost:${generatedPort}/wd/hub`)
-      .forBrowser('chrome')
+      .forBrowser('MicrosoftEdge')
       .build();
 
     await driver.get(url);

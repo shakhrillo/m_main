@@ -42,11 +42,13 @@ async function startContainer(containerName, generatedPort, subPort, imageName) 
     -p ${generatedPort}:4444 \
     -p ${subPort}:7900 \
     --shm-size="2g" \
+    --platform linux/amd64 \
     --rm \
     --env SE_NODE_MAX_SESSIONS=1 \
     --env SE_NODE_OVERRIDE_MAX_SESSIONS=true \
     --env SE_SESSION_REQUEST_TIMEOUT=300 \
-    seleniarm/standalone-chromium:latest`;
+    ${imageName}`;
+    // seleniarm/standalone-chromium:latest`;
 
   try {
     const result = await execPromise(command);
