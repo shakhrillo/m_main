@@ -22,6 +22,7 @@ try {
             data.generatedPort,
             data.subPort,
             data.reviewId,
+            data.browserName,
             data.uid
           );
         }

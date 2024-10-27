@@ -29,6 +29,7 @@ exports.openWebsite = async (
   generatedPort,
   subPort,
   reviewId,
+  browserName,
   uid
 ) => {
   console.log('Opening website:', url);
@@ -39,7 +40,7 @@ exports.openWebsite = async (
     console.log(`http://localhost:${generatedPort}/wd/hub`)
     const driver = new Builder()
       .usingServer(`http://localhost:${generatedPort}/wd/hub`)
-      .forBrowser('MicrosoftEdge')
+      .forBrowser(browserName)
       .build();
 
     await driver.get(url);

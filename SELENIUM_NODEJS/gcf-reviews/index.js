@@ -4,11 +4,28 @@ const {getFirestore} = require("firebase-admin/firestore");
 
 initializeApp();
 
+const browsers = {
+  chrome: {
+    beta: 'selenium/standalone-chrome:beta',
+    dev: 'selenium/standalone-chrome:dev',
+    name: 'chrome'
+  },
+  firefox: {
+    beta: 'selenium/standalone-firefox:beta',
+    dev: 'selenium/standalone-firefox:dev',
+    name: 'firefox'
+  },
+  edge: {
+    beta: 'selenium/standalone-edge:beta',
+    dev: 'selenium/standalone-edge:dev',
+    name: 'MicrosoftEdge'
+  }
+}
+
 function setupSeleniumContainer(url) {
   const generatedPort = Math.floor(Math.random() * 10000) + 10000;
   const subPort = generatedPort + 1;
-  // const imageName = 'selenium/standalone-firefox:4.25.0-20241010';
-  const imageName = 'selenium/standalone-edge:beta';
+  const imageName = browsers.edge.dev;
   const containerName = `selenium-${Date.now()}`;
 
   return {
@@ -16,7 +33,8 @@ function setupSeleniumContainer(url) {
     subPort,
     imageName,
     containerName,
-    url
+    url,
+    browserName: browsers.edge.name
   };
 }
 
