@@ -27,8 +27,53 @@ functions.cloudEvent('helloFirestore2', async cloudEvent => {
 
   const projectId = 'map-review-scrap';
   const region = 'us-central1';
-  const serviceName = 'latestgchrome';
+  const serviceName = 'latestgchromesel2' + Date.now();
+  
   try {
+    const parent = `projects/${projectId}/locations/${region}`;
+
+    const service = {
+      template: {
+        containers: [
+          {
+            image: 'selenium/standalone-chrome:dev',
+            ports: [{
+              containerPort: 4444
+            }],
+            resources: {
+              limits: {
+                cpu: '8',
+                memory: '8Gi'
+              }
+            }
+          }
+        ]
+      },
+    };
+
+    const serviceId = serviceName;
+
+    const request = {
+      parent,
+      serviceId,
+      service
+    };
+
+    let wbURL = '';
+
+    try {
+      // Run request
+      const [operation] = await runClient.createService(request);
+      const [response] = await operation.promise();
+      console.log('Service created:');
+      console.log(response)
+      wbURL = response.uri;
+      console.log('Webdriver URL:', wbURL);
+
+    } catch (error) {
+      console.error('Error creating service:', error);
+    }
+
     // Construct the resource name
     const resource = `projects/${projectId}/locations/${region}/services/${serviceName}`;
 
@@ -49,104 +94,26 @@ functions.cloudEvent('helloFirestore2', async cloudEvent => {
     await runClient.setIamPolicy({ resource, policy });
 
     console.log(`Successfully added IAM policy binding to ${serviceName}`);
+    console.log(`Webdriver URL: ${wbURL}`);
+    
+    const driver = new Builder()
+      .forBrowser(webdriver.Browser.CHROME)
+      .usingServer(`${wbURL}/wd/hub`)
+      .build();
+
+    await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
+    const title = await driver.getTitle();
+    console.log('Page title:', title);
+
+    // exit driver
+    await driver.quit();
+    console.log('Driver quit');
+
+    // remove service
+    await runClient.deleteService({ name: resource });
+
+    console.log('Service deleted');
   } catch (error) {
     console.error('Error adding IAM policy binding:', error);
   }
-
-  // const jsonPayload = firestoreReceived.value.jsonPayload;
-  // const fields = jsonPayload.fields;
-
-  // const url = fields.url.stringValue;
-
-  // const token = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  // const driver = new Builder()
-  //   .forBrowser(webdriver.Browser.CHROME)
-  //   .usingServer(`https://latestgchrome-348810635690.us-central1.run.app/wd/hub`)
-  //   .build();
-
-  // await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
-  // const title = await driver.getTitle();
-  // console.log('Page title:', title);
-
-  // // exit driver
-  // driver.quit();
-  // console.log('Driver quit');
-
-  // const parent = 'projects/map-review-scrap/locations/us-central1';
-
-  // const service = {
-  //   template: {
-  //     containers: [
-  //       {
-  //         image: 'selenium/standalone-chrome:dev',
-  //         ports: [{
-  //           containerPort: 4444
-  //         }],
-  //         resources: {
-  //           limits: {
-  //             cpu: '8',
-  //             memory: '8Gi'
-  //           }
-  //         },
-  //         // unauthenticated invoker
-  //         serviceAccount: '
-
-  //       }
-  //     ]
-  //   },
-  // };
-
-  // const serviceId = 'latestgchrome';
-
-  // const request = {
-  //   parent,
-  //   serviceId,
-  //   service
-  // };
-
-  // try {
-  //   // Run request
-  //   const [operation] = await runClient.createService(request);
-  //   const [response] = await operation.promise();
-  //   console.log('Service created:', response);
-  // } catch (error) {
-  //   console.error('Error creating service:', error);
-  // }
-
-  // change 
-  // Allow unauthenticated invocations
-  // Check this if you are creating a public API or website.
-  // gcloud run services add-iam-policy-binding latestgchrome \
-  //   --member=allUsers \
-  //   --role=roles/run.invoker \
-  //   --region=us-central1
-
-  console.log('Service invoker added');
-
-
-
-  // const deployCommand = `gcloud run deploy latestgchrome \
-  //   --image selenium/standalone-chrome:dev} \
-  //   --platform managed \
-  //   --region us-central1 \
-  //   --allow-unauthenticated \
-  //   --port 4444 \
-  //   --cpu 8 \
-  //   --memory 8Gi`;
-
-  // exec(deployCommand, (error, stdout, stderr) => {
-  //   if (error) {
-  //     return reject(`Error deploying service: ${stderr}`);
-  //   }
-
-  //   // Retrieve the service URL
-  //   const urlCommand = `gcloud run services describe ${containerName} --region us-central1 --format "value(status.url)"`;
-  //   exec(urlCommand, (err, urlStdout, urlStderr) => {
-  //     if (err) {
-  //       return reject(`Error retrieving service URL: ${urlStderr}`);
-  //     }
-  //     resolve(urlStdout.trim());
-  //   });
-  // });
-
 });
