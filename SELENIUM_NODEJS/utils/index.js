@@ -1,4 +1,5 @@
 const functions = require('@google-cloud/functions-framework');
+const Firestore = require('@google-cloud/firestore');
 const protobuf = require('protobufjs');
 const { ServicesClient } = require('@google-cloud/run').v2;
 const { Builder } = require('selenium-webdriver');
@@ -8,8 +9,23 @@ const openReviewTab = require('./selenium-helper/openReviewTab');
 const sortReviewsByNewest = require('./selenium-helper/sortReviewsByNewest');
 const reviewTabParentElement = require('./selenium-helper/reviewTabParentElement');
 const beforeTheLastChildInsideParentChildren = require('./selenium-helper/beforeTheLastChildInsideParentChildren');
+const extractReviewText = require('./selenium-helper/extractReviewText');
+const extractImageUrlsFromButtons = require('./selenium-helper/extractImageUrlsFromButtons');
+
+const firestore = new Firestore({
+  projectId: 'map-review-scrap'
+});
 
 const runClient = new ServicesClient();
+
+const addMessageToReview = async (userId, uniqueId, message) => {
+  try {
+    const collectionRef = firestore.collection(`users/${userId}/reviews/${uniqueId}/messages`);
+    await collectionRef.add(message);
+  } catch (error) {
+    console.error("Error adding message: ", error);
+  }
+};
 
 async function loadProto() {
   console.log('Loading protos...');
@@ -66,14 +82,15 @@ async function configureIAMPolicy(projectId, region, serviceName) {
   console.log(`Successfully added IAM policy binding to ${serviceName}`);
 }
 
-async function runWebDriverTest(wbURL) {
+async function runWebDriverTest(wbURL, reviewURL, pushId) {
   const driver = new Builder()
     .forBrowser(webdriver.Browser.CHROME)
     .usingServer(`${wbURL}/wd/hub`)
     .build();
 
   try {
-    await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
+    // await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
+    await driver.get(reviewURL);
     const title = await driver.getTitle();
     console.log('Page title:', title);
 
@@ -103,11 +120,15 @@ async function runWebDriverTest(wbURL) {
 
       for (const e of allElements) {
         const message = {
-          // ...(await extractReviewText(e.element)),
-          // imageUrls: await extractImageUrlsFromButtons(e.element, driver),
+          ...(await extractReviewText(e.element)),
+          imageUrls: await extractImageUrlsFromButtons(e.element, driver),
           id: e.id
         };
         console.log('Message:', message);
+        
+        const collectionRef = firestore.collection(`gmpreviews/${pushId}/reviews`);
+        await collectionRef.add(message);
+        
         messages.push(message);
         count++;
       }
@@ -141,23 +162,29 @@ async function deleteService(projectId, region, serviceName) {
   console.log('Service deleted');
 }
 
-functions.cloudEvent('helloFirestore2', async cloudEvent => {
+functions.cloudEvent('messagewatch', async cloudEvent => {
   console.log(`Function triggered by event on: ${cloudEvent.source}`);
   console.log(`Event type: ${cloudEvent.type}`);
 
   try {
     const DocumentEventData = await loadProto();
     const firestoreReceived = await decodeFirestoreData(DocumentEventData, cloudEvent.data);
-
+    
     console.log('\nOld value:', JSON.stringify(firestoreReceived.oldValue, null, 2));
     console.log('\nNew value:', JSON.stringify(firestoreReceived.value, null, 2));
 
+    const pushId = firestoreReceived.value.name.split('/').pop();
+    console.log('Push ID:', pushId);
+
+    let reviewURL = firestoreReceived.value.fields.url.stringValue;
+    console.log('Review URL:', reviewURL);
+    
     const projectId = 'map-review-scrap';
     const region = 'us-central1';
 
     const { uri: wbURL, serviceName } = await createCloudRunService(projectId, region);
     await configureIAMPolicy(projectId, region, serviceName);
-    await runWebDriverTest(wbURL);
+    await runWebDriverTest(wbURL, reviewURL, pushId);
     await deleteService(projectId, region, serviceName);
 
   } catch (error) {
