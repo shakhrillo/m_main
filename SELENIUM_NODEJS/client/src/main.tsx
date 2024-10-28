@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { store } from "./app/store"
-import Navbar from "./components/navbar"
+import { FirebaseProvider } from "./contexts/FirebaseProvider"
 import "./index.scss"
 import AuthView from "./views/auth"
 import DashboardView from "./views/dashboard"
@@ -13,6 +13,8 @@ import ScrapPlacesView from "./views/scrap/places"
 import ScrapReviewsView from "./views/scrap/reviews"
 import ScrapReviewsReviewView from "./views/scrap/reviews/review"
 import UsersView from "./views/user"
+import App from "./App"
+
 
 const router = createBrowserRouter([
   {
@@ -82,8 +84,10 @@ if (container) {
 
   root.render(
     <Provider store={store}>
-      <Navbar />
-      <RouterProvider router={router} />
+      <FirebaseProvider>
+        <App />
+        {/* <RouterProvider router={router} /> */}
+      </FirebaseProvider>
     </Provider>,
   )
 } else {

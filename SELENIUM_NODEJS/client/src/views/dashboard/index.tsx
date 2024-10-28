@@ -6,6 +6,7 @@ import { useAppSelector } from "../../app/hooks"
 import { Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
 import logoImg from "../../assets/logo.png";
+import { useFirebase } from "../../contexts/FirebaseProvider"
 
 function DashboardView() {
   const [show, setShow] = useState(false)
@@ -20,6 +21,12 @@ function DashboardView() {
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+
+  const usFb = useFirebase();
+
+  useEffect(() => {
+    console.log('usFb', usFb);
+  }, [usFb]);
 
   useEffect(() => {
     if (!db) return
