@@ -1,119 +1,166 @@
 const functions = require('@google-cloud/functions-framework');
 const protobuf = require('protobufjs');
 const { ServicesClient } = require('@google-cloud/run').v2;
-const webdriver = require('selenium-webdriver');
 const { Builder } = require('selenium-webdriver');
+const webdriver = require('selenium-webdriver');
+const openOverviewTab = require('./selenium-helper/openOverviewTab');
+const openReviewTab = require('./selenium-helper/openReviewTab');
+const sortReviewsByNewest = require('./selenium-helper/sortReviewsByNewest');
+const reviewTabParentElement = require('./selenium-helper/reviewTabParentElement');
+const beforeTheLastChildInsideParentChildren = require('./selenium-helper/beforeTheLastChildInsideParentChildren');
 
 const runClient = new ServicesClient();
+
+async function loadProto() {
+  console.log('Loading protos...');
+  const root = await protobuf.load('data.proto');
+  return root.lookupType('google.events.cloud.firestore.v1.DocumentEventData');
+}
+
+async function decodeFirestoreData(DocumentEventData, data) {
+  console.log('Decoding data...');
+  return DocumentEventData.decode(data);
+}
+
+async function createCloudRunService(projectId, region) {
+  const serviceName = 'latestgchromesel2' + Date.now();
+  const parent = `projects/${projectId}/locations/${region}`;
+
+  const service = {
+    template: {
+      containers: [
+        {
+          image: 'selenium/standalone-chrome:dev',
+          ports: [{ containerPort: 4444 }],
+          resources: { limits: { cpu: '8', memory: '8Gi' } }
+        }
+      ]
+    }
+  };
+
+  try {
+    const [operation] = await runClient.createService({
+      parent,
+      serviceId: serviceName,
+      service
+    });
+    const [response] = await operation.promise();
+    console.log('Service created:', response);
+    return { uri: response.uri, serviceName };
+  } catch (error) {
+    console.error('Error creating service:', error);
+    throw error;
+  }
+}
+
+async function configureIAMPolicy(projectId, region, serviceName) {
+  const resource = `projects/${projectId}/locations/${region}/services/${serviceName}`;
+  const [policy] = await runClient.getIamPolicy({ resource });
+
+  policy.bindings.push({
+    role: 'roles/run.invoker',
+    members: ['allUsers']
+  });
+
+  await runClient.setIamPolicy({ resource, policy });
+  console.log(`Successfully added IAM policy binding to ${serviceName}`);
+}
+
+async function runWebDriverTest(wbURL) {
+  const driver = new Builder()
+    .forBrowser(webdriver.Browser.CHROME)
+    .usingServer(`${wbURL}/wd/hub`)
+    .build();
+
+  try {
+    await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
+    const title = await driver.getTitle();
+    console.log('Page title:', title);
+
+    openOverviewTab(driver);
+    await driver.sleep(2000);
+    await openReviewTab(driver);
+    await driver.sleep(2000);
+    await sortReviewsByNewest(driver);
+    await driver.sleep(2000);
+    let { parentElm } = await reviewTabParentElement(driver);
+    console.log('Parent element loaded');
+
+    let currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
+    const messages = [];
+    let lastElementId = null;
+
+    let count = 0;
+    let isFullyLoaded = false;
+
+    while (!isFullyLoaded) {
+      console.log('Scrolling to the bottom');
+      let { parentElm } = await reviewTabParentElement(driver);
+      const { allElements, lastValidElementId, lastChildChildrenLength } = await beforeTheLastChildInsideParentChildren(parentElm, lastElementId);
+      console.log('Elements:', allElements.length);
+      console.log('Last element id:', lastValidElementId);
+      lastElementId = lastValidElementId;
+
+      for (const e of allElements) {
+        const message = {
+          // ...(await extractReviewText(e.element)),
+          // imageUrls: await extractImageUrlsFromButtons(e.element, driver),
+          id: e.id
+        };
+        console.log('Message:', message);
+        messages.push(message);
+        count++;
+      }
+
+      // Scroll to the bottom
+      await driver.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", parentElm);
+
+      // Update scroll heights
+      previousScrollHeight = currentScrollHeight;
+      currentScrollHeight = await driver.executeScript("return arguments[0].scrollHeight;", parentElm);
+
+      console.log('Last child:', lastChildChildrenLength);
+      
+      if (lastChildChildrenLength === 0) {
+        isFullyLoaded = true;
+        console.log('Reached the end, scroll height has not changed');
+        break;
+      }
+    }
+
+    console.log('Messages:', messages.length);
+  } finally {
+    await driver.quit();
+    console.log('Driver quit');
+  }
+}
+
+async function deleteService(projectId, region, serviceName) {
+  const resource = `projects/${projectId}/locations/${region}/services/${serviceName}`;
+  await runClient.deleteService({ name: resource });
+  console.log('Service deleted');
+}
 
 functions.cloudEvent('helloFirestore2', async cloudEvent => {
   console.log(`Function triggered by event on: ${cloudEvent.source}`);
   console.log(`Event type: ${cloudEvent.type}`);
 
-  console.log('Loading protos...');
-  const root = await protobuf.load('data.proto');
-  const DocumentEventData = root.lookupType(
-    'google.events.cloud.firestore.v1.DocumentEventData'
-  );
-
-  console.log('Decoding data...');
-  const firestoreReceived = DocumentEventData.decode(cloudEvent.data);
-
-  console.log('\nOld value:');
-  console.log(JSON.stringify(firestoreReceived.oldValue, null, 2));
-
-  console.log('\nNew value:');
-  console.log(JSON.stringify(firestoreReceived.value, null, 2));
-
-  const projectId = 'map-review-scrap';
-  const region = 'us-central1';
-  const serviceName = 'latestgchromesel2' + Date.now();
-  
   try {
-    const parent = `projects/${projectId}/locations/${region}`;
+    const DocumentEventData = await loadProto();
+    const firestoreReceived = await decodeFirestoreData(DocumentEventData, cloudEvent.data);
 
-    const service = {
-      template: {
-        containers: [
-          {
-            image: 'selenium/standalone-chrome:dev',
-            ports: [{
-              containerPort: 4444
-            }],
-            resources: {
-              limits: {
-                cpu: '8',
-                memory: '8Gi'
-              }
-            }
-          }
-        ]
-      },
-    };
+    console.log('\nOld value:', JSON.stringify(firestoreReceived.oldValue, null, 2));
+    console.log('\nNew value:', JSON.stringify(firestoreReceived.value, null, 2));
 
-    const serviceId = serviceName;
+    const projectId = 'map-review-scrap';
+    const region = 'us-central1';
 
-    const request = {
-      parent,
-      serviceId,
-      service
-    };
+    const { uri: wbURL, serviceName } = await createCloudRunService(projectId, region);
+    await configureIAMPolicy(projectId, region, serviceName);
+    await runWebDriverTest(wbURL);
+    await deleteService(projectId, region, serviceName);
 
-    let wbURL = '';
-
-    try {
-      // Run request
-      const [operation] = await runClient.createService(request);
-      const [response] = await operation.promise();
-      console.log('Service created:');
-      console.log(response)
-      wbURL = response.uri;
-      console.log('Webdriver URL:', wbURL);
-
-    } catch (error) {
-      console.error('Error creating service:', error);
-    }
-
-    // Construct the resource name
-    const resource = `projects/${projectId}/locations/${region}/services/${serviceName}`;
-
-    // Get the existing IAM policy for the service
-    const [policy] = await runClient.getIamPolicy({ resource });
-
-    console.log('Current IAM policy:', JSON.stringify(policy, null, 2));
-
-    // Add the new binding for allUsers
-    policy.bindings.push({
-      role: 'roles/run.invoker',
-      members: ['allUsers'],
-    });
-
-    console.log('Updated IAM policy:', JSON.stringify(policy, null, 2));
-
-    // Set the updated IAM policy
-    await runClient.setIamPolicy({ resource, policy });
-
-    console.log(`Successfully added IAM policy binding to ${serviceName}`);
-    console.log(`Webdriver URL: ${wbURL}`);
-    
-    const driver = new Builder()
-      .forBrowser(webdriver.Browser.CHROME)
-      .usingServer(`${wbURL}/wd/hub`)
-      .build();
-
-    await driver.get('https://maps.app.goo.gl/7BEYcHcHi5M1SmVf6');
-    const title = await driver.getTitle();
-    console.log('Page title:', title);
-
-    // exit driver
-    await driver.quit();
-    console.log('Driver quit');
-
-    // remove service
-    await runClient.deleteService({ name: resource });
-
-    console.log('Service deleted');
   } catch (error) {
-    console.error('Error adding IAM policy binding:', error);
+    console.error('Error processing Firestore event:', error);
   }
 });
