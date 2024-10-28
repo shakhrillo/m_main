@@ -44,15 +44,14 @@ async function startContainer(containerName, generatedPort, subPort, imageName) 
 
 async function stopAndRemoveContainer(containerName) {
   console.log('Stopping and removing container:', containerName);
-  // const command = `docker stop ${containerName} && docker rm ${containerName}`;
-  // const command = `gcloud run services delete ${containerName} --platform managed --region us-central1 --quiet`;
+  const command = `gcloud run services delete ${containerName} --platform managed --region us-central1 --quiet`;
   
-  // try {
-  //   const result = await execPromise(command);
-  //   console.log(`Docker container ${containerName} stopped and removed: ${result}`);
-  // } catch (error) {
-  //   console.error(`Failed to stop and remove container ${containerName}:`, error);
-  // }
+  try {
+    const result = await execPromise(command);
+    console.log(`Docker container ${containerName} stopped and removed: ${result}`);
+  } catch (error) {
+    console.error(`Failed to stop and remove container ${containerName}:`, error);
+  }
 }
 
 module.exports = {
