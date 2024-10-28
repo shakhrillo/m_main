@@ -18,14 +18,21 @@ const firestore = new Firestore({
 
 const runClient = new ServicesClient();
 
-const addMessageToReview = async (userId, uniqueId, message) => {
-  try {
-    const collectionRef = firestore.collection(`users/${userId}/reviews/${uniqueId}/messages`);
-    await collectionRef.add(message);
-  } catch (error) {
-    console.error("Error adding message: ", error);
+async function batchWriteLargeArray(collectionRef, data) {
+  const batch = firestore.batch();
+  const chunkSize = 500;
+
+  for (let i = 0; i < data.length; i += chunkSize) {
+    const chunk = data.slice(i, i + chunkSize);
+    chunk.forEach((doc) => {
+      const docRef = collectionRef.doc(doc.id);
+      batch.set(docRef, doc);
+    });
+
+    await batch.commit();
   }
-};
+}
+
 
 async function loadProto() {
   console.log('Loading protos...');
@@ -126,8 +133,8 @@ async function runWebDriverTest(wbURL, reviewURL, pushId) {
         };
         console.log('Message:', message);
         
-        const collectionRef = firestore.collection(`gmpreviews/${pushId}/reviews`);
-        await collectionRef.add(message);
+        // const collectionRef = firestore.collection(`gmpreviews/${pushId}/reviews`);
+        // await collectionRef.add(message);
         
         messages.push(message);
         count++;
@@ -148,6 +155,8 @@ async function runWebDriverTest(wbURL, reviewURL, pushId) {
         break;
       }
     }
+
+    batchWriteLargeArray(firestore.collection(`gmpreviews/${pushId}/reviews`), messages);
 
     console.log('Messages:', messages.length);
   } finally {
