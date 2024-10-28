@@ -1,8 +1,14 @@
 // src/AppRoutes.tsx
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import LoginPage from './pages/LoginPage';
+import DashboardView from './views/dashboard';
+import PaymentsHistoryView from './views/payments/history';
+import PaymentsSubscriptionView from './views/payments/subscription';
+import ScrapPlacesView from './views/scrap/places';
+import ScrapReviewsView from './views/scrap/reviews';
+import ScrapReviewsReviewView from './views/scrap/reviews/review';
 
 const router = createBrowserRouter([
   {
@@ -15,11 +21,45 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <PrivateRoute />,
+    element: <Outlet />,
     children: [
       {
         path: '',
-        element: 'Dashboard Page',
+        element: <DashboardView />,
+        children: [
+          {
+            path: "scrap",
+            element: <Outlet />,
+            children: [
+              {
+                path: "reviews",
+                element: <ScrapReviewsView />,
+              },
+              {
+                path: "review/:place",
+                element: <ScrapReviewsReviewView />,
+              },
+              {
+                path: "places",
+                element: <ScrapPlacesView />
+              }
+            ]
+          },
+          {
+            path: "payments",
+            element: <Outlet />,
+            children: [
+              {
+                path: "subscription",
+                element: <PaymentsSubscriptionView />,
+              },
+              {
+                path: "history",
+                element: <PaymentsHistoryView />,
+              },
+            ]
+          }
+        ]
       },
     ],
   },

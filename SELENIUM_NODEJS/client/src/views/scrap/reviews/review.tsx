@@ -9,6 +9,7 @@ import { Modal, Carousel } from "react-bootstrap"
 import StarRating from "../../../components/star-rating"
 import "../../../style/view.css"
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
+import { useFirebase } from "../../../contexts/FirebaseProvider"
 
 function ScrapReviewsReviewView() {
   let { place } = useParams()
@@ -19,21 +20,23 @@ function ScrapReviewsReviewView() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const { firestore, user } = useFirebase();
+
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const [reviewsPerPage] = useState(15) // Number of reviews per page
   const db = useAppSelector(state => state.firebase.db)
-  const user = useAppSelector(state => state.auth.user)
+  // const user = useAppSelector(state => state.auth.user)
 
   const [ratingOverviewVisibility, setRatingOverviewVisibility] = useState<
     Record<string, boolean>
   >({})
 
   useEffect(() => {
-    if (!db || !place || !user) return
+    if (!firestore || !place || !user) return
     setReviews([])
 
-    const collectionReviewInfo = doc(db, "users", user.uid, "reviews", place)
+    const collectionReviewInfo = doc(firestore, "users", user.uid, "reviews", place)
 
     const unsubscribe = onSnapshot(collectionReviewInfo, doc => {
       if (doc.exists()) {
@@ -48,13 +51,13 @@ function ScrapReviewsReviewView() {
     return () => {
       unsubscribe()
     }
-  }, [db, user, place])
+  }, [firestore, user, place])
 
   useEffect(() => {
-    if (!db || !place || !user) return
+    if (!firestore || !place || !user) return
     setReviews([])
 
-    const collectionReviews = collection(db, "users", user.uid, "reviews", place, "messages")
+    const collectionReviews = collection(firestore, "users", user.uid, "reviews", place, "reviews")
 
     const unsubscribe = onSnapshot(collectionReviews, querySnapshot => {
       setReviews([])
@@ -74,7 +77,7 @@ function ScrapReviewsReviewView() {
     return () => {
       unsubscribe()
     }
-  }, [db, user, place])
+  }, [firestore, user, place])
 
   // Pagination calculations
   const indexOfLastReview = currentPage * reviewsPerPage

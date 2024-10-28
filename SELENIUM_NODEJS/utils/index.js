@@ -89,7 +89,7 @@ async function configureIAMPolicy(projectId, region, serviceName) {
   console.log(`Successfully added IAM policy binding to ${serviceName}`);
 }
 
-async function runWebDriverTest(wbURL, reviewURL, pushId) {
+async function runWebDriverTest(wbURL, reviewURL, uid, pushId) {
   const driver = new Builder()
     .forBrowser(webdriver.Browser.CHROME)
     .usingServer(`${wbURL}/wd/hub`)
@@ -100,6 +100,12 @@ async function runWebDriverTest(wbURL, reviewURL, pushId) {
     await driver.get(reviewURL);
     const title = await driver.getTitle();
     console.log('Page title:', title);
+
+    await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
+      title: title,
+      createdAt: new Date(),
+      status: 'in-progress'
+    });
 
     openOverviewTab(driver);
     await driver.sleep(2000);
@@ -156,7 +162,14 @@ async function runWebDriverTest(wbURL, reviewURL, pushId) {
       }
     }
 
-    batchWriteLargeArray(firestore.collection(`gmpreviews/${pushId}/reviews`), messages);
+    let collectionReviews = firestore.collection(`users/${uid}/reviews/${pushId}/reviews`);
+    batchWriteLargeArray(collectionReviews, messages);
+
+    await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
+      status: 'completed',
+      completedAt: new Date(),
+      totalReviews: messages.length
+    });
 
     console.log('Messages:', messages.length);
   } finally {
@@ -187,13 +200,16 @@ functions.cloudEvent('messagewatch', async cloudEvent => {
 
     let reviewURL = firestoreReceived.value.fields.url.stringValue;
     console.log('Review URL:', reviewURL);
+
+    let uid = firestoreReceived.value.fields.uid.stringValue;
+    console.log('UID:', uid);
     
     const projectId = 'map-review-scrap';
     const region = 'us-central1';
 
     const { uri: wbURL, serviceName } = await createCloudRunService(projectId, region);
     await configureIAMPolicy(projectId, region, serviceName);
-    await runWebDriverTest(wbURL, reviewURL, pushId);
+    await runWebDriverTest(wbURL, reviewURL, uid, pushId);
     await deleteService(projectId, region, serviceName);
 
   } catch (error) {

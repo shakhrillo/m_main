@@ -1,15 +1,21 @@
 // src/pages/LoginPage.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFirebase } from '../contexts/FirebaseProvider';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
-  const { login, googleLogin } = useFirebase();
+  const { login, user, googleLogin } = useFirebase();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate('/dashboard');
+  //   }
+  // }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

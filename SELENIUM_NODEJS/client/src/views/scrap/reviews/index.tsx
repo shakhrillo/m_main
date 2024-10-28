@@ -1,13 +1,16 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
+import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import Pagination from "react-bootstrap/Pagination"
 import { useAppSelector } from "../../../app/hooks"
 import StarRating from "../../../components/star-rating"
 import "../../../style/dashboard.css"
+import { useFirebase } from "../../../contexts/FirebaseProvider"
 
 function ScrapReviewsView() {
   const [show, setShow] = useState(false)
+
+  const { firestore, user } = useFirebase()
 
   const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/eUdPBiVDVRfP5zrr8")
   const [reviews, setReviews] = useState([] as any[])
@@ -15,7 +18,7 @@ function ScrapReviewsView() {
   const reviewsPerPage = 10
 
   const db = useAppSelector(state => state.firebase.db)
-  const user = useAppSelector(state => state.auth.user)
+  // const user = useAppSelector(state => state.auth.user)
   const token = useAppSelector(state => state.auth.token)
 
   const handleClose = () => setShow(false)
@@ -26,9 +29,9 @@ function ScrapReviewsView() {
   }, [reviews])
 
   useEffect(() => {
-    if (!db || !user) return;
+    if (!firestore || !user) return;
     setReviews([])
-    let collectionReviews = collection(db, `users/${user.uid}/reviews`)
+    let collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
     // const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
 
     onSnapshot(collectionReviews, querySnapshot => {
@@ -44,24 +47,17 @@ function ScrapReviewsView() {
         ])
       })
     })
-  }, [db, user])
+  }, [firestore, user])
 
   async function startScraping(url: string) {
-    const encodeReviewURL = encodeURIComponent(url)
-    // await fetch(`http://localhost:4444//api/reviews?url=${encodeReviewURL}`)
-    await fetch(`http://localhost:4444/api/reviews`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // authorization
-        "Authorization": token
-      },
-      body: JSON.stringify({
-        url: encodeReviewURL,
-        uid: user.uid,
-        // token: user.token,
-      }),
+    const uid = user ? user.uid : ""
+    console.log(`users/${uid}/reviews`)
+    let collectionReviews = collection(firestore, `users/${uid}/reviews`);
+    await addDoc(collectionReviews, {
+      url,
+      uid
     })
+
     setScrapingUrl("")
     handleClose()
   }
@@ -263,7 +259,7 @@ function ScrapReviewsView() {
                       <div className="d-flex gap-2">
                         <button
                           onClick={() =>
-                            (window.location.href = `/scrap/review/${review.id}`)
+                            (window.location.href = `/dashboard/scrap/review/${review.id}`)
                           }
                           className="btn btn-outline-secondary"
                         >

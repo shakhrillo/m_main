@@ -100,18 +100,18 @@ function DashboardView() {
           <img src={logoImg} alt="logo" height="60" />
         </a>
         <div className="list-group">
-          <a type="button" className="list-group-item list-group-item-action active" href="/scrap/reviews">
+          <a type="button" className="list-group-item list-group-item-action active" href="/dashboard/scrap/reviews">
             <i className="bi-search"></i>
             <span>
               Scrap Reviews
             </span>
           </a>
           <div className="list-group list-group-nested d-none">
-            <a href="/scrap/reviews" className="list-group-item list-group-item-action">
+            <a href="/dashboard/scrap/reviews" className="list-group-item list-group-item-action">
               Reviews
               <span className="badge bg-warning rounded-pill ms-2">1</span>
             </a>
-            <a href="/scrap/places" className="list-group-item list-group-item-action">Places</a>
+            <a href="/dashboard/scrap/places" className="list-group-item list-group-item-action">Places</a>
           </div>
           <button type="button" className="list-group-item list-group-item-action">
             <i className="bi-bar-chart"></i>
