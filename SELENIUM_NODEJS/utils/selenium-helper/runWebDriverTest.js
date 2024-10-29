@@ -13,6 +13,8 @@ const clickShowReviewInOriginalButtons = require('./clickShowReviewInOriginalBut
 const clickExpandOwnerResponseButtons = require('./clickExpandOwnerResponseButtons');
 const clickShowOwnerResponseInOriginalButtons = require('./clickShowOwnerResponseInOriginalButtons');
 
+const chrome = require("selenium-webdriver/chrome");
+
 const Firestore = require('@google-cloud/firestore');
 
 const firestore = new Firestore({
@@ -36,6 +38,9 @@ async function batchWriteLargeArray(collectionRef, data) {
 
 async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
   let driver;
+  const options = new chrome.Options();
+  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+
   try {
     if (isDev) {
       driver = new Builder()
@@ -45,6 +50,7 @@ async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
       driver = new Builder()
         .forBrowser(webdriver.Browser.CHROME)
         .usingServer(`${wbURL}/wd/hub`)
+        .setChromeOptions(options)
         .build();
     }
 
@@ -56,6 +62,7 @@ async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
       await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
         title: title,
         createdAt: new Date(),
+        seleniumSession: `${wbURL}/ui/#/sessions`,
         status: 'in-progress'
       });
     }

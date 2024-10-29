@@ -41,3 +41,5 @@ gcloud functions deploy messagewatch \
     --trigger-event-filters=type=google.cloud.firestore.document.v1.created \
     --trigger-event-filters=database='(default)' \
     --trigger-event-filters-path-pattern=document='users/{uid}/reviews/{pushId}'
+
+

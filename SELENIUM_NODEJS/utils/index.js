@@ -26,9 +26,18 @@ async function createCloudRunService(projectId, region) {
         {
           image: 'selenium/standalone-chrome:dev',
           ports: [{ containerPort: 4444 }],
-          resources: { limits: { cpu: '8', memory: '32Gi' } }
+          resources: { limits: { cpu: '8', memory: '32Gi' } },
+          livenessProbe: {
+            httpGet: {
+              path: '/status',
+              port: 4444
+            },
+            initialDelaySeconds: 30,
+            periodSeconds: 10
+          },
         }
-      ]
+      ],
+      health_check_disabled: false
     }
   };
 

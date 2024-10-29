@@ -271,6 +271,15 @@ function ScrapReviewsView() {
                         >
                           <i className="bi-trash"></i>
                         </button>
+                        {/* session play btn */}
+                        <button
+                          className="btn btn-outline-primary"
+                          onClick={() => {
+                            window.location.href = `${review.seleniumSession}`
+                          }}
+                        >
+                          <i className="bi-play"></i>
+                        </button>
                       </div>
                     </td>
                   </tr>
