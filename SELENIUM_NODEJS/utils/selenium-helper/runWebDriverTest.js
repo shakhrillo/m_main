@@ -35,8 +35,8 @@ async function batchWriteLargeArray(collectionRef, data) {
 }
 
 async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
+  let driver;
   try {
-    let driver;
     if (isDev) {
       driver = new Builder()
         .forBrowser(webdriver.Browser.CHROME)
@@ -83,8 +83,35 @@ async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
     let isFullyLoaded = false;
 
     while (!isFullyLoaded) {
+      const driverSession = await driver.getSession();
+      console.log('Session ID:', driverSession.getId());
+      
+      if (!driverSession) {
+        // reconnect driver
+        console.log('Reconnecting driver');
+
+        await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
+          status: 'reconnecting',
+          reconnectedAt: new Date()
+        });
+
+        driver = new Builder()
+          .forBrowser(webdriver.Browser.CHROME)
+          .usingServer(`${wbURL}/wd/hub`)
+          .build();
+
+        console.log('Reconnected driver');
+
+        await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
+          status: 'reccnnected',
+          reconnectedAt: new Date()
+        });
+
+      }
+
       console.log('Scrolling to the bottom');
-      // await 2sec
+      console.log('Extracted messages:', messages.length);
+
       await driver.sleep(2000);
       let { parentElm } = await reviewTabParentElement(driver);
       
@@ -144,11 +171,15 @@ async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
 
     console.log('Messages:', messages.length);
   } catch (error) {
-    await driver.quit();
+    if (driver) {
+      await driver.quit();
+    }
     console.error('Error:', error);
   } finally {
-    await driver.quit();
-    console.log('Driver quit');
+    if (driver) {
+      await driver.quit();
+    }
+    console.warn('Driver quit');
   }
 }
 

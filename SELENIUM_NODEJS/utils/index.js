@@ -26,7 +26,7 @@ async function createCloudRunService(projectId, region) {
         {
           image: 'selenium/standalone-chrome:dev',
           ports: [{ containerPort: 4444 }],
-          resources: { limits: { cpu: '16', memory: '16Gi' } }
+          resources: { limits: { cpu: '8', memory: '32Gi' } }
         }
       ]
     }
@@ -63,7 +63,7 @@ async function configureIAMPolicy(projectId, region, serviceName) {
 async function deleteService(projectId, region, serviceName) {
   const resource = `projects/${projectId}/locations/${region}/services/${serviceName}`;
   await runClient.deleteService({ name: resource });
-  console.log('Service deleted');
+  console.warn('Service deleted');
 }
 
 functions.cloudEvent('messagewatch', async cloudEvent => {
@@ -72,7 +72,7 @@ functions.cloudEvent('messagewatch', async cloudEvent => {
 
   const projectId = 'map-review-scrap';
   const region = 'us-central1';
-  let serviceName;
+  let extractedServiceName;
 
   try {
     const DocumentEventData = await loadProto();
@@ -91,14 +91,14 @@ functions.cloudEvent('messagewatch', async cloudEvent => {
     console.log('UID:', uid);
 
     const { uri: wbURL, serviceName } = await createCloudRunService(projectId, region);
-    serviceName = serviceName;
+    extractedServiceName = serviceName;
     await configureIAMPolicy(projectId, region, serviceName);
     await runWebDriverTest(wbURL, reviewURL, uid, pushId);
     await deleteService(projectId, region, serviceName);
 
   } catch (error) {
-    if (serviceName) {
-      await deleteService(projectId, region, serviceName);
+    if (extractedServiceName) {
+      await deleteService(projectId, region, extractedServiceName);
     }
     console.error('Error processing Firestore event:', error);
   }

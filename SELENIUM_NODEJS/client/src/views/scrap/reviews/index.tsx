@@ -1,4 +1,4 @@
-import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import Pagination from "react-bootstrap/Pagination"
@@ -63,9 +63,9 @@ function ScrapReviewsView() {
   }
 
   async function deleteReview(id: string) {
-    await fetch(`http://localhost:3000/reviews/${id}`, {
-      method: "DELETE",
-    })
+    const uid = user ? user.uid : "";
+    await deleteDoc(doc(firestore, `users/${uid}/reviews/${id}`));
+    console.log("Document successfully deleted!");
   }
 
   // Pagination handling
