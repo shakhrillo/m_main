@@ -10,8 +10,6 @@ async function beforeTheLastChildInsideParentChildren(parent, lastElementId = nu
     const lastChild = await parent.findElement(By.xpath("child::*[last()]"));
     const lastChildChildren = await lastChild.findElements(By.xpath("child::*"));
     lastChildChildrenLength = lastChildChildren.length;
-    // const lastChild = await parent.findElement(By.xpath("child::*[last()]"));
-    // lastChildChildren = await lastChild.findElements(By.xpath("child::*")).length;
     
     const beforeTheLastChild = await parent.findElement(By.xpath("child::*[last()-1]"));
     

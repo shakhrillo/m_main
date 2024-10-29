@@ -3,25 +3,18 @@ const getRandomNumber = require('./getRandomNumber');
 
 async function openReviewTab(driver) {
   const allButtons = await findElementsByXPath(driver, "//button[@role='tab']");
-  let isReviewTabSelectedAlready = false;
 
   for (const button of allButtons) {
     const tabText = await button.getText();
     if (tabText.toLowerCase().includes('reviews')) {
-      isReviewTabSelectedAlready = false
+      console.log('Opening review tab');
       await button.click();
       await driver.sleep(getRandomNumber(1000, 3000));
-      break;
-    } else {
-      isReviewTabSelectedAlready = true;
+      return;
     }
   }
 
-  if (isReviewTabSelectedAlready) {
-    console.log('Already review tab is selected');
-  } else {
-    console.log('Opening review tab');
-  }
+  console.log('Review tab is already selected');
 }
 
 module.exports = openReviewTab;

@@ -5,26 +5,19 @@ const getRandomNumber = require('./getRandomNumber');
 async function openOverviewTab(driver) {
   const allButtons = await findElementsByXPath(driver, "//button[@role='tab']");
   const attributesToExtract = ['data-tab-index', 'aria-selected'];
-  let isOverviewTabSelectedAlready = false;
-
+  
   for (const button of allButtons) {
-    const { 'data-tab-index': dataTabIndex, 'aria-selected': areaSelected } = await getElementAttributes(button, attributesToExtract);
+    const { 'data-tab-index': dataTabIndex, 'aria-selected': ariaSelected } = await getElementAttributes(button, attributesToExtract);
     
-    if (dataTabIndex === '0' && areaSelected === 'false') {
-      isOverviewTabSelectedAlready = false;
+    if (dataTabIndex === '0' && ariaSelected === 'false') {
+      console.log('Opening overview tab');
       await button.click();
       await driver.sleep(getRandomNumber(1000, 3000));
-      break;
-    } else {
-      isOverviewTabSelectedAlready = true;
+      return;
     }
   }
 
-  if (isOverviewTabSelectedAlready) {
-    console.log('Already overview tab is selected');
-  } else {
-    console.log('Opening overview tab');
-  }
+  console.log('Overview tab is already selected');
 }
 
 module.exports = openOverviewTab;

@@ -1,7 +1,7 @@
 const findElementsByXPath = require('./findElementsByXPath');
 const getElementAttributes = require('./getElementAttributes');
 
-async function extractImageUrlsFromButtons(element, driver) {
+async function extractImageUrlsFromButtons(element) {
   const extractedImageUrls = [];
   const allButtons = await findElementsByXPath(element, ".//button");
   const attributesToExtract = ['jsaction', 'style'];

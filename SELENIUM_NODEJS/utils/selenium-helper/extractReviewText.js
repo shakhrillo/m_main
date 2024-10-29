@@ -167,6 +167,10 @@ function extractReviewTextInner(reviewTextArray, myendText) {
 }
 
 async function extractReviewText(element) {
+  if (!element) {
+    return {};
+  }
+  
   let reviewText = await element.getText();
   const reviewTextArray = reviewText.split('\n');
 
