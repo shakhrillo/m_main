@@ -175,7 +175,7 @@ function ScrapReviewsView() {
                           </a>
                           <div className="d-flex gap-1 align-items-center">
                             {/* <StarRating rating={review.info.mainRate} /> */}
-                            <span>{review.totalMessages || 0} reviews</span>
+                            <span>{review.totalReviews || 0} reviews</span>
                           </div>
                           <div className="d-flex gap-1 align-items-center">
                             <span>Completed:</span>
