@@ -16,7 +16,7 @@ async function main(url) {
   console.log('Unique elements:', uniqueElements.length);
   console.log('All elements:', allElements.length);
   if (uniqueElements.length > 0) {
-    console.log('First text:', uniqueElements[0].text);
+    console.log('First text:', uniqueElements[0].textContent);
   }
 
   await browser.close();
