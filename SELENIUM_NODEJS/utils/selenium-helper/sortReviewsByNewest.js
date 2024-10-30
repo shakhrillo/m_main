@@ -4,6 +4,8 @@ async function sortReviewsByNewest(driver) {
   try {
     // Locate and click the Sort Reviews button
     const sortButton = await driver.findElements(By.xpath("//button[@aria-label='Sort reviews' or @aria-label='Most relevant']"));
+
+    console.log('Sort button:', sortButton.length);
     
     if (sortButton.length > 0) {
       await sortButton[0].click();
@@ -15,6 +17,7 @@ async function sortReviewsByNewest(driver) {
       for (const item of menuItems) {
         if ((await item.getText()).toLowerCase().includes('newest')) {
           await item.click();
+          console.log('Clicked on Newest');
           break;
         }
       }

@@ -39,21 +39,7 @@ async function batchWriteLargeArray(collectionRef, data) {
 async function runWebDriverTest(wbURL, reviewURL, uid, pushId, isDev) {
   let driver;
   const options = new chrome.Options();
-  options.addArguments(
-    "--headless",                     // Run in headless mode
-    "--no-sandbox",                   // Bypass OS security model, needed for Docker
-    "--disable-dev-shm-usage",        // Overcome limited resource problems
-    "--disable-gpu",                  // Disable GPU for faster performance in headless
-    "--window-size=1920,1080",        // Set a fixed window size
-    "--disable-extensions",           // Disable extensions to reduce memory usage
-    "--disable-blink-features=AutomationControlled",  // Avoid detection as a bot
-    "--disable-infobars",             // Remove infobars
-    "--disable-browser-side-navigation", // Improve performance by reducing overhead
-    "--disable-software-rasterizer",  // Use software-based rendering for stability
-    "--no-first-run",                 // Skip first run wizards
-    "--disable-background-networking", // Disable background networking tasks
-    "--enable-automation"             // Make Chrome behave in a fully automated way
-  );
+  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
 
   try {
     if (isDev) {
