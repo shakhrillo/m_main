@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/firestore": "^7.10.0",
     "@google-cloud/functions-framework": "^3.4.2",
+    "protobufjs": "^7.4.0",
     "puppeteer": "^23.6.1"
   }
 }
