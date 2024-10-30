@@ -1,5 +1,3 @@
-// import puppeteer from 'puppeteer';
-// import functions from '@google-cloud/functions-framework';
 const puppeteer = require('puppeteer');
 const functions = require('@google-cloud/functions-framework');
 
