@@ -269,8 +269,6 @@ async function getReviewElements(page, parent, lastChildId) {
   const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
   let isNewElements = !lastChildId;
 
-  console.log('lastChildId:', lastChildId);
-
   await Promise.all(beforeTheLastChildChildren.map(async (child) => {
     const isChildInViewport = await child.isIntersectingViewport();
     if (!isChildInViewport) {
@@ -282,9 +280,8 @@ async function getReviewElements(page, parent, lastChildId) {
     
     if (!elementId) return;
 
-    console.log('elementId:', elementId);
     await wait(2000);
-
+    
     if (elementId === lastChildId && !isNewElements) {
       isNewElements = true;
       return;
@@ -343,7 +340,7 @@ async function scrollAndCollectElements(page, firestore, uid, pushId) {
         await wait(500);
       }
 
-      await wait(2000);
+      await wait(500);
       console.log("Scrolling a little bit more");
       await page.evaluate(() => window.scrollBy(0, window.innerHeight));
       
@@ -356,6 +353,28 @@ async function scrollAndCollectElements(page, firestore, uid, pushId) {
   }
 
   return allElements;
+}
+
+async function scrollAndCollectElements__(page) {
+  const reviewsContainer = await getReviewsContainer(page);
+  let isScrollFinished = false;
+
+  while (!isScrollFinished) {
+    const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
+    const isLastChildInViewport = await lastChild.isIntersectingViewport();
+    
+    if (!isLastChildInViewport) {
+      await page.evaluate(el => el.scrollIntoView(), lastChild);
+    }
+
+    if (completed) {
+      isScrollFinished = true;
+      break;
+    }
+
+    console.log("Scrolling...");
+    await wait(1000);
+  }
 }
 
 module.exports = { clickReviewTab, scrollAndCollectElements };

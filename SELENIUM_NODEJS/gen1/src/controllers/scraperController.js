@@ -28,8 +28,36 @@ async function batchWriteLargeArray(collectionRef, data) {
 async function main(url, uid, pushId, isDev) {
   try {
     const browser = await launchBrowser();  
-    await wait(waitTime);
+    await wait(2000);
     const page = await openPage(browser, url);
+    
+    // Enable request interception
+    await page.setRequestInterception(true);
+
+    // Filter out requests for images, stylesheets, and other media
+    page.on('request', (request) => {
+      const disabledRequests = [
+        'googleusercontent',
+        'preview',
+        'analytics',
+        'ads',
+        'fonts',
+        '/maps/vt'
+      ]
+      if (disabledRequests.some((disabledRequest) => request.url().includes(disabledRequest))) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+
+    // Disable canvas by overriding its methods
+    await page.evaluateOnNewDocument(() => {
+      HTMLCanvasElement.prototype.getContext = () => {
+        // Return null to prevent any rendering on canvas
+        return null;
+      };
+    });
     
     if (!isDev) {
       await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
@@ -39,9 +67,9 @@ async function main(url, uid, pushId, isDev) {
       });
     }
   
-    await wait(waitTime);
+    await wait(1000);
     await clickReviewTab(page);
-    await wait(waitTime);
+    await wait(1000);
     const sortButton = await page.$('button[aria-label="Sort reviews"]');
     if (!sortButton) {
       throw new Error('Sort button not found');
@@ -57,9 +85,9 @@ async function main(url, uid, pushId, isDev) {
         break;
       }
     }
-    await wait(20000000);
+    await wait(2000);
   
-    const allElements = await scrollAndCollectElements(page, firestore, uid, pushId);
+    const allElements = await scrollAndCollectElements(page, firestore, uid, pushId) || [];
     const uniqueElements = filterUniqueElements(allElements);
   
     console.log('Unique elements:', uniqueElements.length);
