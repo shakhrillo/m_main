@@ -262,44 +262,43 @@ async function extractReviewText(page, elementHandle) {
 }
 
 async function getReviewElements(page, parent, lastChildId) {
-  // let lastChildId;
   let elements = [];
   
-  // if (allElements.length) {
-  //   const lastChild = allElements[allElements.length - 1];
-  //   lastChildId = lastChild.id;
-  // }
+  const parentChildren = await parent.$$(':scope > *');
+  const beforeTheLastChild = parentChildren[parentChildren.length - 2];
+  const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
+  let isNewElements = !lastChildId;
 
-  try {
-    const parentChildren = await parent.$$(':scope > *');
-    const beforeTheLastChild = parentChildren[parentChildren.length - 2];
-    const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
-    let isNewElements = !lastChildId;
+  console.log('lastChildId:', lastChildId);
 
-    console.log('lastChildId:', lastChildId);
+  await Promise.all(beforeTheLastChildChildren.map(async (child) => {
+    const isChildInViewport = await child.isIntersectingViewport();
+    if (!isChildInViewport) {
+      await page.evaluate(el => el.scrollIntoView(), child);
+      await wait(1000);
+    }
+    
+    const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
+    
+    if (!elementId) return;
 
-    await Promise.all(beforeTheLastChildChildren.map(async (child) => {
-      const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
-      if (!elementId) return;
+    console.log('elementId:', elementId);
+    await wait(2000);
 
-      if (elementId === lastChildId && !isNewElements) {
-        isNewElements = true;
-        return;
-      }
+    if (elementId === lastChildId && !isNewElements) {
+      isNewElements = true;
+      return;
+    }
 
-      if (isNewElements) {
-        elements.push({
-          id: elementId,
-          element: child,
-          textContent: await extractReviewText(page, child),
-          text: await child.evaluate(el => el.textContent),
-        }); 
-      }
-    }));
-
-  } catch (error) {
-    console.error("Error finding elements:", error);
-  }
+    if (isNewElements) {
+      elements.push({
+        id: elementId,
+        element: child,
+        textContent: await extractReviewText(page, child),
+        text: await child.evaluate(el => el.textContent),
+      }); 
+    }
+  }));
 
   return elements;
 }
@@ -314,26 +313,46 @@ async function checkInfiniteScroll(reviewsContainer) {
   }
 }
 
-async function scrollAndCollectElements(page) {
+async function scrollAndCollectElements(page, firestore, uid, pushId) {
   const reviewsContainer = await getReviewsContainer(page);
   let isScrollFinished = false;
   let allElements = [];
+  let lastId = null;
+  // let waitTime = 5000;
 
   while (!isScrollFinished) {
-    await clickExpandReviewAndResponse(page);
-    const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
-    allElements.push(...elements);
-    logger.info(`Collected ${allElements.length} elements`);
-    
-    const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
-    
-    if (completed) {
-      isScrollFinished = true;
-      break;
-    }
+    try {
+      const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
+      if (lastId !== allElements[allElements.length - 1]?.id || !allElements.length) {
+        await clickExpandReviewAndResponse(page);
+        lastId = allElements[allElements.length - 1]?.id;
+        const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
+        allElements.push(...elements);
+        console.log(`Collected ${allElements.length} elements`);
+      }
+      
+      if (completed) {
+        isScrollFinished = true;
+        console.log("Scrolling completed");
+        break;
+      }
 
-    await page.evaluate(el => el.scrollIntoView(), lastChild);
-    await wait(2000);
+      const isLastChildInViewport = await lastChild.isIntersectingViewport();
+      if (!isLastChildInViewport) {
+        await page.evaluate(el => el.scrollIntoView(), lastChild);
+        await wait(500);
+      }
+
+      await wait(2000);
+      console.log("Scrolling a little bit more");
+      await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+      
+      // await firestore.doc(`users/${uid}/reviews/${pushId}`).update({
+      //   status: allElements.length
+      // });
+    } catch (error) {
+      console.error("Error scrolling and collecting elements:", error);
+    }
   }
 
   return allElements;

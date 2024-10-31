@@ -30,6 +30,9 @@ functions.cloudEvent('pupgo', async cloudEvent => {
   console.log('UID:', uid);
 
   // const url = 'https://maps.app.goo.gl/y1zVscXEZYcjXx5w8';
-  await main(reviewURL, uid, pushId);
-  
+  try {
+    await main(reviewURL, uid, pushId);
+  } catch (error) {
+    console.error('Error occurred:', error);
+  }
 });
