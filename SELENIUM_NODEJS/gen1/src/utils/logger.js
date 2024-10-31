@@ -15,7 +15,7 @@ function log(message, level = 'INFO') {
   const logMessage = `${timestamp} [${level}]: ${message}\n`;
 
   // Print to console
-  console.log(logMessage);
+  // console.log(logMessage);
 
   // Append to log file
   fs.appendFileSync(logFilePath, logMessage, 'utf8');

@@ -41,18 +41,17 @@ async function getReviewsContainer(page) {
 
   return parentElm;
 }
-
 async function ensureButtonInViewport(button) {
   const isButtonInViewport = await button.isIntersectingViewport();
   if (!isButtonInViewport) {
     await button.scrollIntoView();
     await wait(500);
-    logger.info('Scrolling to button');
   }
 }
 
 async function clickExpandReviewAndResponse(page) {
   const allButtons = await page.$$('button[aria-expanded="false"], button[aria-checked="true"]');
+  logger.info('Clicking expand review and response buttons');
 
   for (const button of allButtons) {
     const jsaction = await button.evaluate(el => el.getAttribute('jsaction'));
@@ -250,7 +249,7 @@ async function extractReviewText(page, elementHandle) {
   let myendText = "";
 
   // Select elements with the class name "MyEned"
-  const reviewMyenedHandles = await page.$$('.MyEned');
+  const reviewMyenedHandles = await elementHandle.$$('.MyEned');
   if (reviewMyenedHandles.length > 0) {
     // Get the first child element and its text
     const reviewMyenedFirstChildHandle = await reviewMyenedHandles[0].$('*');
@@ -262,19 +261,22 @@ async function extractReviewText(page, elementHandle) {
   return extractReviewTextInner(reviewTextArray, myendText);
 }
 
-async function getReviewElements(page, parent, allElements = []) {
-  let lastChildId;
+async function getReviewElements(page, parent, lastChildId) {
+  // let lastChildId;
+  let elements = [];
   
-  if (allElements.length) {
-    const lastChild = allElements[allElements.length - 1];
-    lastChildId = lastChild.id;
-  }
+  // if (allElements.length) {
+  //   const lastChild = allElements[allElements.length - 1];
+  //   lastChildId = lastChild.id;
+  // }
 
   try {
     const parentChildren = await parent.$$(':scope > *');
     const beforeTheLastChild = parentChildren[parentChildren.length - 2];
     const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
     let isNewElements = !lastChildId;
+
+    console.log('lastChildId:', lastChildId);
 
     await Promise.all(beforeTheLastChildChildren.map(async (child) => {
       const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
@@ -286,7 +288,7 @@ async function getReviewElements(page, parent, allElements = []) {
       }
 
       if (isNewElements) {
-        allElements.push({
+        elements.push({
           id: elementId,
           element: child,
           textContent: await extractReviewText(page, child),
@@ -299,7 +301,7 @@ async function getReviewElements(page, parent, allElements = []) {
     console.error("Error finding elements:", error);
   }
 
-  return allElements;
+  return elements;
 }
 
 async function checkInfiniteScroll(reviewsContainer) {
@@ -319,7 +321,10 @@ async function scrollAndCollectElements(page) {
 
   while (!isScrollFinished) {
     await clickExpandReviewAndResponse(page);
-    allElements = await getReviewElements(page, reviewsContainer, allElements);
+    const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
+    allElements.push(...elements);
+    logger.info(`Collected ${allElements.length} elements`);
+    
     const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
     
     if (completed) {
@@ -328,6 +333,7 @@ async function scrollAndCollectElements(page) {
     }
 
     await page.evaluate(el => el.scrollIntoView(), lastChild);
+    await wait(2000);
   }
 
   return allElements;

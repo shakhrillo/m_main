@@ -68,6 +68,7 @@ function ScrapReviewsReviewView() {
           ...prev,
           {
             ...data,
+            ...data['textContent'],
             id: doc.id,
           },
         ])
@@ -300,7 +301,7 @@ function ScrapReviewsReviewView() {
                             handleShow()
                           }}
                         >
-                          {review.imageUrls
+                          {/* {review.imageUrls
                             .slice(0, 4)
                             .map((imageSrc: string, imageId: number) => (
                               <img
@@ -315,7 +316,7 @@ function ScrapReviewsReviewView() {
                             <div className="view__table-images--extra">
                               +{review.imageUrls.length - 4}
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </td>
                       <td className="view__table-content">
@@ -397,7 +398,7 @@ function ScrapReviewsReviewView() {
                                     : null}
                                 </div>
                               ) : null}
-                              {review.reviewText.reviewOverview.length ? (
+                              {/* {review.reviewText.reviewOverview.length ? (
                                 <div className="col">
                                   {review.reviewText.reviewOverview.map(
                                     (overview: string, index: number) => {
@@ -415,7 +416,7 @@ function ScrapReviewsReviewView() {
                                     },
                                   )}
                                 </div>
-                              ) : null}
+                              ) : null} */}
                             </div>
                           </div>
                         )}
