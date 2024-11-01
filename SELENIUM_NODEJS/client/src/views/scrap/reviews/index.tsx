@@ -51,11 +51,25 @@ function ScrapReviewsView() {
 
   async function startScraping(url: string) {
     const uid = user ? user.uid : ""
-    console.log(`users/${uid}/reviews`)
-    let collectionReviews = collection(firestore, `users/${uid}/reviews`);
-    await addDoc(collectionReviews, {
-      url,
-      uid
+    // console.log(`users/${uid}/reviews`)
+    // let collectionReviews = collection(firestore, `users/${uid}/reviews`);
+    // await addDoc(collectionReviews, {
+    //   url,
+    //   uid
+    // })
+
+    const token = await user?.getIdToken()
+
+    // with http
+    await fetch("http://localhost:1337/api/reviews", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        url,
+      }),
     })
 
     setScrapingUrl("")
