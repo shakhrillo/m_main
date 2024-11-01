@@ -8,9 +8,8 @@ const { batchWriteLargeArray, updateReview } = require('./reviewController');
 async function main(url, uid, pushId, isDev) {
   try {
     const browser = await launchBrowser();  
-    await wait(2000);
     const page = await openPage(browser, url);
-    
+    await wait(2000);
     // Enable request interception
     await page.setRequestInterception(true);
 
@@ -40,14 +39,12 @@ async function main(url, uid, pushId, isDev) {
     });
 
     const title = await page.title();
-    
     await updateReview(uid, pushId, {
       title,
       createdAt: new Date(),
       status: 'in-progress'
     });
-  
-    await wait(1000);
+
     await clickReviewTab(page);
     await wait(1000);
     const sortButton = await page.$('button[aria-label="Sort reviews"]');
@@ -55,7 +52,7 @@ async function main(url, uid, pushId, isDev) {
       throw new Error('Sort button not found');
     }
     sortButton.click();
-    await wait(2000);
+    await wait(400);
     const menuItemRadios = await page.$$('[role="menuitemradio"]');
     for (menuItem of menuItemRadios) {
       const text = await page.evaluate((el) => el.textContent, menuItem);
@@ -65,7 +62,6 @@ async function main(url, uid, pushId, isDev) {
         break;
       }
     }
-    await wait(2000);
   
     const allElements = await scrollAndCollectElements(page) || [];
     const uniqueElements = filterUniqueElements(allElements);

@@ -1,6 +1,6 @@
 module.exports = {
   launch: {
-    headless: !true,               // Traditional headless mode for lower resource usage
+    headless: true,               // Traditional headless mode for lower resource usage
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',

@@ -45,7 +45,6 @@ async function ensureButtonInViewport(button) {
   const isButtonInViewport = await button.isIntersectingViewport();
   if (!isButtonInViewport) {
     await button.scrollIntoView();
-    await wait(500);
   }
 }
 
@@ -270,10 +269,10 @@ async function getReviewElements(page, parent, lastChildId) {
   let isNewElements = !lastChildId;
 
   await Promise.all(beforeTheLastChildChildren.map(async (child) => {
-    const isChildInViewport = await child.isIntersectingViewport();
-    if (!isChildInViewport) {
-      await page.evaluate(el => el.scrollIntoView(), child);
-    }
+    // const isChildInViewport = await child.isIntersectingViewport();
+    // if (!isChildInViewport) {
+    //   await page.evaluate(el => el.scrollIntoView(), child);
+    // }
     
     const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
     
@@ -291,7 +290,7 @@ async function getReviewElements(page, parent, lastChildId) {
         textContent: await extractReviewText(page, child),
         text: await child.evaluate(el => el.textContent),
       });
-      
+      console.log(`Element ${elementId}`);
       await wait(1000);
     }
   }));
@@ -314,7 +313,6 @@ async function scrollAndCollectElements(page) {
   let isScrollFinished = false;
   let allElements = [];
   let lastId = null;
-  // let waitTime = 5000;
 
   while (!isScrollFinished) {
     try {
@@ -336,13 +334,10 @@ async function scrollAndCollectElements(page) {
       const isLastChildInViewport = await lastChild.isIntersectingViewport();
       if (!isLastChildInViewport) {
         await page.evaluate(el => el.scrollIntoView(), lastChild);
-        await wait(500);
       }
 
-      await wait(500);
       console.log("Scrolling a little bit more");
-      await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-      await wait(2000);
+      await wait(400);
     } catch (error) {
       console.error("Error scrolling and collecting elements:", error);
     }
