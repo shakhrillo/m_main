@@ -262,38 +262,83 @@ async function extractReviewText(page, elementHandle) {
 
 async function getReviewElements(page, parent, lastChildId) {
   let elements = [];
-  
-  const parentChildren = await parent.$$(':scope > *');
-  const beforeTheLastChild = parentChildren[parentChildren.length - 2];
-  const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
-  let isNewElements = !lastChildId;
 
-  await Promise.all(beforeTheLastChildChildren.map(async (child) => {
-    // const isChildInViewport = await child.isIntersectingViewport();
-    // if (!isChildInViewport) {
-    //   await page.evaluate(el => el.scrollIntoView(), child);
-    // }
-    
-    const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
-    
-    if (!elementId) return;
-    
-    if (elementId === lastChildId && !isNewElements) {
-      isNewElements = true;
-      return;
+  if(lastChildId) {
+    console.log('Last child id:', lastChildId);
+
+    // const lastChild = await page.$$(`[data-review-id="${lastChildId}"].jftiEf`);
+    const lastChild = await parent.$(`.jftiEf[data-review-id="${lastChildId}"]`);
+    if (!lastChild) {
+      console.log('Last child not found');
+      return elements;
     }
 
-    if (isNewElements) {
-      elements.push({
-        id: elementId,
-        element: child,
-        textContent: await extractReviewText(page, child),
-        text: await child.evaluate(el => el.textContent),
+    let lastChildNextElement = await lastChild.evaluateHandle(el => el.nextElementSibling);
+
+    while(lastChildNextElement) {
+      let elementId;
+      try {
+        elementId = await lastChildNextElement.evaluate(el => {
+          if (!el) return null;
+          return el.getAttribute('data-review-id');
+        });
+      } catch (error) {
+        console.error('Error getting element id:', error);
+      }
+      if (elementId) {
+        elements.push({
+          id: elementId,
+          element: lastChildNextElement,
+          textContent: await extractReviewText(page, lastChildNextElement),
+          text: await lastChildNextElement.evaluate(el => el.textContent),
+        });
+      }
+
+      // Get the next sibling after processing the current element
+      const nextSibling = await lastChildNextElement.evaluateHandle(el => {
+        if (!el) return null;
+        return el.nextElementSibling;
       });
-      console.log(`Element ${elementId}`);
-      await wait(1000);
+      if (JSON.stringify(nextSibling) === '{}' || !nextSibling) {
+        console.log('Next sibling is the same as the current element');
+        break
+      }
+      lastChildNextElement = nextSibling;
     }
-  }));
+  } else {
+    const parentChildren = await parent.$$(':scope > *');
+    const beforeTheLastChild = parentChildren[parentChildren.length - 2];
+    const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
+    let isNewElements = !lastChildId;
+  
+    await Promise.all(beforeTheLastChildChildren.map(async (child) => {
+      // const isChildInViewport = await child.isIntersectingViewport();
+      // if (!isChildInViewport) {
+      //   await page.evaluate(el => el.scrollIntoView(), child);
+      // }
+      
+      const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
+      
+      if (!elementId) return;
+      
+      if (elementId === lastChildId && !isNewElements) {
+        isNewElements = true;
+        return;
+      }
+  
+      if (isNewElements) {
+        elements.push({
+          id: elementId,
+          element: child,
+          textContent: await extractReviewText(page, child),
+          text: await child.evaluate(el => el.textContent),
+        });
+        console.log(`Element ${elementId}`);
+        await wait(1000);
+      }
+    }));
+  }
+  
 
   return elements;
 }
@@ -317,13 +362,13 @@ async function scrollAndCollectElements(page) {
   while (!isScrollFinished) {
     try {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
-      if (lastId !== allElements[allElements.length - 1]?.id || !allElements.length) {
-        await clickExpandReviewAndResponse(page);
-        lastId = allElements[allElements.length - 1]?.id;
-        const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
-        allElements.push(...elements);
-        console.log(`Collected ${allElements.length} elements`);
-      }
+      // if (lastId !== allElements[allElements.length - 1]?.id || !allElements.length) {
+      // }
+      await clickExpandReviewAndResponse(page);
+      lastId = allElements[allElements.length - 1]?.id;
+      const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
+      allElements.push(...elements);
+      console.log(`Collected ${allElements.length} elements`);
       
       if (completed) {
         isScrollFinished = true;
