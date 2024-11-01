@@ -10,12 +10,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-  origin: '*', // Allow all origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed methods
+// Configure CORS to allow only http://localhost:4200
+const corsOptions = {
+  origin: 'http://localhost:4200', // Allow only localhost:4200
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Allow credentials
-  optionsSuccessStatus: 204 // Some legacy browsers choke on 204
-}));
+  optionsSuccessStatus: 204 // For legacy browser support
+};
+
+// Enable CORS with specified options
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
