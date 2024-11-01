@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(verifyIdToken);
 
 // Routes
-app.use('/api/reviews', reviewsRoutes);
+app.use('/', reviewsRoutes);
 
 // Default Route
 app.get('/', (req, res) => {

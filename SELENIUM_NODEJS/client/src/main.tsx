@@ -18,7 +18,11 @@ import App from "./App"
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/auth",
+    element: <AuthView />,
+  },
+  {
+    path: "/ss",
     element: <DashboardView />,
     children: [
       {
@@ -70,10 +74,6 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <div>Contact page</div>,
-  },
-  {
-    path: "/auth",
-    element: <AuthView />,
   }
 ])
 
