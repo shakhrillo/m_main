@@ -1,3 +1,4 @@
+const { updateReview } = require('../controllers/reviewController');
 const logger = require('./logger');
 const wait = require('./wait');
 
@@ -353,7 +354,7 @@ async function checkInfiniteScroll(reviewsContainer) {
   }
 }
 
-async function scrollAndCollectElements(page) {
+async function scrollAndCollectElements(page, uid, pushId) {
   const reviewsContainer = await getReviewsContainer(page);
   let isScrollFinished = false;
   let allElements = [];
@@ -362,13 +363,15 @@ async function scrollAndCollectElements(page) {
   while (!isScrollFinished) {
     try {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
-      // if (lastId !== allElements[allElements.length - 1]?.id || !allElements.length) {
-      // }
       await clickExpandReviewAndResponse(page);
       lastId = allElements[allElements.length - 1]?.id;
       const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
       allElements.push(...elements);
       console.log(`Collected ${allElements.length} elements`);
+
+      await updateReview(uid, pushId, {
+        extractedReviews: allElements.length,
+      });
       
       if (completed) {
         isScrollFinished = true;

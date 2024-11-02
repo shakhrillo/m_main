@@ -1,16 +1,14 @@
 module.exports = {
   launch: {
-    headless: true,               // Traditional headless mode for lower resource usage
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu'
-
-      // '--auto-open-devtools-for-tabs'
     ],
-    defaultViewport: null,         // Prevents resizing issues, helps reduce memory overhead
-    timeout: 30000,                // Sets a reasonable timeout of 30 seconds
+    defaultViewport: null,
+    timeout: 30000
   },
   goto: {
     waitUntil: 'networkidle2'

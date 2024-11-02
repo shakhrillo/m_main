@@ -2,17 +2,16 @@ const wait = require('../utils/wait');
 const { launchBrowser, openPage } = require('../utils/browser');
 const { clickReviewTab, scrollAndCollectElements } = require('../utils/elementUtils');
 const filterUniqueElements = require('../utils/filter');
-const { waitTime } = require('../config/settings');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
 
-async function main(url, uid, pushId, isDev) {
+async function main(url, uid, pushId) {
   try {
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
     await wait(2000);
+    
     // Enable request interception
     await page.setRequestInterception(true);
-
     // Filter out requests for images, stylesheets, and other media
     page.on('request', (request) => {
       const disabledRequests = [
@@ -28,14 +27,6 @@ async function main(url, uid, pushId, isDev) {
       } else {
         request.continue();
       }
-    });
-
-    // Disable canvas by overriding its methods
-    await page.evaluateOnNewDocument(() => {
-      HTMLCanvasElement.prototype.getContext = () => {
-        // Return null to prevent any rendering on canvas
-        return null;
-      };
     });
 
     const title = await page.title();
@@ -63,7 +54,7 @@ async function main(url, uid, pushId, isDev) {
       }
     }
   
-    const allElements = await scrollAndCollectElements(page) || [];
+    const allElements = await scrollAndCollectElements(page, uid, pushId) || [];
     const uniqueElements = filterUniqueElements(allElements);
   
     console.log('Unique elements:', uniqueElements.length);
