@@ -68,6 +68,10 @@ async function main(url, uid, pushId) {
         id: element.id || '',
         text: element.text || '',
         textContent: element.textContent || '',
+        imageUrls: element.imageUrls || [],
+        rating: element.rating || 0,
+        user: element.user || '',
+        qa: element.qa || '',
       };
     });
     await batchWriteLargeArray(uid, pushId, messages);

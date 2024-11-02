@@ -261,6 +261,101 @@ async function extractReviewText(page, elementHandle) {
   return extractReviewTextInner(reviewTextArray, myendText);
 }
 
+async function extractImageUrlsFromButtons(page, reviewId) {
+  const extractedImageUrls = [];
+  const allButtons = await page.$$(`button[data-review-id="${reviewId}"][jsaction*="review.openPhoto"]`);
+
+  for (const button of allButtons) {
+    const imageUrl = await button.evaluate(el => {
+      const style = el.getAttribute('style');
+      if (style) {
+        const imageUrl = style.split('url("')[1]?.split('");')[0];
+        if (imageUrl) {
+          return imageUrl.split('=')[0] + '=w1200';
+        }
+      }
+    });
+    if (imageUrl) {
+      extractedImageUrls.push(imageUrl);
+    }
+  }
+
+  return extractedImageUrls;
+}
+
+async function extractRating(element) {
+  const rateElement = await element.$('span[role="img"][aria-label*="stars"]');
+  if (!rateElement) {
+    return null;
+  }
+  const rateText = await rateElement.evaluate(el => el.getAttribute('aria-label'));
+  return rateText;
+}
+
+async function extractQuestions(element) {
+  const MyEned = await element.$$('.MyEned');
+
+  const extractedQA = [];
+
+  let rateElementParentNextSiblingLastChildChildren;
+
+  if(MyEned.length) {
+    const MyEnedLastChildren = await MyEned[0].$$(':scope > *');
+    if (MyEnedLastChildren.length < 2) {
+      return [];
+    }
+    rateElementParentNextSiblingLastChildChildren = await MyEnedLastChildren[1].$$(':scope > *');
+  } else {
+    const rateElement = await element.$('span[role="img"][aria-label*="stars"]');
+    if (!rateElement) {
+      return [];
+    }
+
+    const rateElementParent = await rateElement.evaluateHandle(el => el.parentElement?.nextElementSibling?.firstElementChild);
+    if (!rateElementParent || JSON.stringify(rateElementParent) === '{}') {
+      rateElementParentNextSiblingLastChildChildren = [];
+    } else {
+      rateElementParentNextSiblingLastChildChildren = await rateElementParent.$$(':scope > *');
+    }
+  }
+
+  for (const questionContainer of rateElementParentNextSiblingLastChildChildren) {
+    const question = await questionContainer.evaluate(el => el.innerText);
+    extractedQA.push(question);
+  }
+
+  return extractedQA;
+}
+
+async function extractReviewer(page, reviewId) {
+  const reviewerButton = await page.$$(`button[jsaction*="review.reviewerLink"][data-review-id="${reviewId}"]`);
+
+  if (!reviewerButton.length) return null;
+
+  const results = {
+    name: '',
+    info: '',
+    href: '',
+    content: '',
+  }
+
+  for (const button of reviewerButton) {
+    const {href, content} = await button.evaluate(el => {
+      const href = el.getAttribute('data-href')
+      const content = el.innerText.split('\n')
+
+      return { href, content };
+    });
+
+    results.name = content[0] || '';
+    results.info = (content[1] || '').split('·').map((item) => item.trim());
+    results.href = href;
+    results.content = content;
+  }
+
+  return results;
+}
+
 async function getReviewElements(page, parent, lastChildId) {
   let elements = [];
 
@@ -291,6 +386,10 @@ async function getReviewElements(page, parent, lastChildId) {
           id: elementId,
           element: lastChildNextElement,
           textContent: await extractReviewText(page, lastChildNextElement),
+          imageUrls: await extractImageUrlsFromButtons(page, elementId),
+          rating: await extractRating(lastChildNextElement),
+          qa: await extractQuestions(lastChildNextElement),
+          user: await extractReviewer(lastChildNextElement, elementId),
           text: await lastChildNextElement.evaluate(el => el.textContent),
         });
       }
@@ -332,6 +431,10 @@ async function getReviewElements(page, parent, lastChildId) {
           id: elementId,
           element: child,
           textContent: await extractReviewText(page, child),
+          imageUrls: await extractImageUrlsFromButtons(page, elementId),
+          rating: await extractRating(child),
+          qa: await extractQuestions(child),
+          user: await extractReviewer(child, elementId),
           text: await child.evaluate(el => el.textContent),
         });
         console.log(`Element ${elementId}`);

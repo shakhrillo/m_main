@@ -285,7 +285,16 @@ function ScrapReviewsReviewView() {
                         {review.user}
                       </td>
                       <td>
-                        <StarRating rating={String(review.rate)} />
+                        {
+                          review.rating ?
+                            <StarRating rating={
+                              parseInt(
+                                review.rating.match(/(\d+)/)![0],
+                                10,
+                              ).toString()
+                            } />
+                            : "-"
+                        }
                       </td>
                       <td>
                         {review.platform}
@@ -301,7 +310,7 @@ function ScrapReviewsReviewView() {
                             handleShow()
                           }}
                         >
-                          {/* {review.imageUrls
+                          {review.imageUrls
                             .slice(0, 4)
                             .map((imageSrc: string, imageId: number) => (
                               <img
@@ -316,11 +325,26 @@ function ScrapReviewsReviewView() {
                             <div className="view__table-images--extra">
                               +{review.imageUrls.length - 4}
                             </div>
-                          )} */}
+                          )}
                         </div>
                       </td>
                       <td className="view__table-content">
                         <div className="view__table-content__text">
+                          <span className="review-text">
+                            {
+                              review.qa.length ? (
+                                review.qa.map((qa: any, index: number) => (
+                                  <div key={index} className="view__table-content__review">
+                                    {/* <b>{qa.question}</b>:{" "} */}
+                                    <span>
+                                      {qa}
+                                    </span>
+                                    <hr />
+                                  </div>
+                                ))
+                              ) : null
+                            }
+                          </span>
                           <div className="text-container">
                             <span className={`review-text}`}>
                               {review.myendText.length < 24 ? (
