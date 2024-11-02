@@ -51,7 +51,7 @@ const router = createBrowserRouter([
         element: <Outlet />,
         children: [
           {
-            path: "subscription",
+            path: "",
             element: <PaymentsSubscriptionView />,
           },
           {

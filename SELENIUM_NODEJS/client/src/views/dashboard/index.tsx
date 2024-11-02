@@ -119,12 +119,12 @@ function DashboardView() {
               Usage
             </span>
           </a>
-          <button type="button" className="list-group-item list-group-item-action">
+          <a type="button" className="list-group-item list-group-item-action" href="/payments">
             <i className="bi-credit-card"></i>
             <span>
               Payments
             </span>
-          </button>
+          </a>
           <button type="button" className="list-group-item list-group-item-action">
             <i className="bi-gear"></i>
             <span>
