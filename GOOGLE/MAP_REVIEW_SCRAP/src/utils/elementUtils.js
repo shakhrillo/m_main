@@ -50,24 +50,25 @@ async function ensureButtonInViewport(button) {
 }
 
 async function getOwnerResponse(reviewElement) {
-  let ownerResponseText = '';
+  let ownerResponse = '';
 
-  // Locate the star rating element
-  const starRatingElement = await reviewElement.$('span[role="img"][aria-label*="stars"]');
-  if (!starRatingElement) return ownerResponseText; // Return empty if no star rating element is found
+  // Find the star rating element within the review
+  const starRating = await reviewElement.$('span[role="img"][aria-label*="stars"]');
+  if (!starRating) return ownerResponse; // Return empty if no star rating is found
 
-  // Traverse up to locate the parent element that contains additional review details
-  const reviewDetailContainer = await starRatingElement.evaluateHandle(element => element.parentElement.parentElement);
-  const responseContainer = await reviewDetailContainer.evaluateHandle(element => element.lastElementChild);
+  // Navigate to the container holding the review details
+  const reviewContainer = await starRating.evaluateHandle(el => el.parentElement.parentElement);
+  const responseSection = await reviewContainer.evaluateHandle(el => el.lastElementChild);
 
-  // Check if this element contains the "Response from the owner" text
-  const responseContainerText = await responseContainer.evaluate(element => element.textContent);
-  if (responseContainerText.includes('Response from the owner')) {
-    const responseTextElement = await responseContainer.evaluateHandle(element => element.lastElementChild);
-    ownerResponseText = await responseTextElement.evaluate(element => element.textContent);
+  // Check if this section includes the "Response from the owner" text
+  const responseSectionText = await responseSection.evaluate(el => el.textContent);
+  if (responseSectionText.includes('Response from the owner')) {
+    const responseContentDivs = await responseSection.$$('div');
+    const responseContent = responseContentDivs[1];
+    ownerResponse = await responseContent.evaluate(el => el.textContent);
   }
 
-  return ownerResponseText;
+  return ownerResponse;
 }
 
 async function getOwnerResponseTime(reviewElement) {

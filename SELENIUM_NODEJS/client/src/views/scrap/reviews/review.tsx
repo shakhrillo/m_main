@@ -166,10 +166,7 @@ function ScrapReviewsReviewView() {
                           {
                             review.rating ?
                             <StarRating rating={
-                              parseInt(
-                                review.rating.match(/(\d+)/)![0],
-                                10,
-                              ).toString()
+                              (review.rating?.match(/(\d+)/)?.[0] ? parseInt(review.rating.match(/(\d+)/)[0], 10) : 0).toString()
                             } />
                             : "-"
                           }
