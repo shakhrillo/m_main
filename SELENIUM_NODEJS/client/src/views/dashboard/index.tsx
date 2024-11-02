@@ -113,12 +113,12 @@ function DashboardView() {
             </a>
             <a href="/dashboard/scrap/places" className="list-group-item list-group-item-action">Places</a>
           </div>
-          <button type="button" className="list-group-item list-group-item-action">
+          <a type="button" className="list-group-item list-group-item-action" href="/usage">
             <i className="bi-bar-chart"></i>
             <span>
               Usage
             </span>
-          </button>
+          </a>
           <button type="button" className="list-group-item list-group-item-action">
             <i className="bi-credit-card"></i>
             <span>

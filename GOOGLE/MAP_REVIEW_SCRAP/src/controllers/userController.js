@@ -1,4 +1,4 @@
-const {auth} = require('../services/firebaseAdmin');
+const {auth, firestore} = require('../services/firebaseAdmin');
 
 const verifyIdToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -17,6 +17,27 @@ const verifyIdToken = async (req, res, next) => {
   }
 }
 
+const getUser = async (uid) => {
+  const userRef = firestore.collection(`users`);
+
+  return userRef.doc(uid).get();
+}
+
+const updateUser = async (uid, data) => {
+  const reviewsRef = firestore.collection(`users`);
+
+  return reviewsRef.doc(uid).update(data);
+}
+
+const createUserUsage = async (uid, data) => {
+  const reviewsRef = firestore.collection(`users/${uid}/usage`);
+
+  return reviewsRef.add(data);
+}
+
 module.exports = {
-  verifyIdToken
+  verifyIdToken,
+  getUser,
+  updateUser,
+  createUserUsage
 }

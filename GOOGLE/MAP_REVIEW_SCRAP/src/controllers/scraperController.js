@@ -3,6 +3,7 @@ const { launchBrowser, openPage } = require('../utils/browser');
 const { clickReviewTab, scrollAndCollectElements } = require('../utils/elementUtils');
 const filterUniqueElements = require('../utils/filter');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
+const { getUser, updateUser, createUserUsage } = require('./userController');
 
 async function main(url, uid, pushId) {
   try {
@@ -82,6 +83,23 @@ async function main(url, uid, pushId) {
       status: 'completed',
       totalReviews: uniqueElements.length,
       completedAt: new Date()
+    });
+
+    const currentUser = await getUser(uid);
+    const coinBalance = currentUser.data().coinBalance || 0;
+    const newCoinBalance = coinBalance - uniqueElements.length;
+
+    await updateUser(uid, {
+      lastScraped: new Date(),
+      coinBalance: newCoinBalance
+    });
+
+    await createUserUsage(uid, {
+      title,
+      pushId,
+      url,
+      createdAt: new Date(),
+      spentCoins: uniqueElements.length
     });
   
     return uniqueElements;

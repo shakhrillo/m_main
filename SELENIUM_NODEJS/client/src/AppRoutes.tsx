@@ -9,6 +9,7 @@ import PaymentsSubscriptionView from './views/payments/subscription';
 import ScrapPlacesView from './views/scrap/places';
 import ScrapReviewsView from './views/scrap/reviews';
 import ScrapReviewsReviewView from './views/scrap/reviews/review';
+import UsageView from './views/usage';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
             element: <ScrapReviewsReviewView />,
           },
         ]
+      },
+      {
+        path: "usage",
+        element: <UsageView />,
       },
       {
         path: "places",
