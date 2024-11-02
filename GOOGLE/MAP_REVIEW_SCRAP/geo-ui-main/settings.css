@@ -1,0 +1,85 @@
+.geo-settings {
+    color: var(--primary);
+}
+
+.geo-settings h5 {
+    font-weight: 600;
+}
+
+.geo-settings p {
+    font-size: 14px;
+    opacity: .7;
+}
+
+.geo-user-avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.geo-user-avatar-info h5 {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.geo-user-avatar-info p {
+    margin: 0;
+    color: var(--primary-80);
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.geo-user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.geo-user-avatar button,
+.geo-input button {
+    border: 1px solid var(--primary-70);
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.geo-full-name h6 {
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.geo-input label {
+    font-size: 12px;
+    color: var(--primary-80);
+}
+
+.geo-input input {
+    color: var(--primary);
+}
+
+.geo-input input::placeholder {
+    color: var(--primary-50);
+    font-size: 14px;
+}
+
+.geo-input .input-group span {
+    color: var(--primary-80);
+}
+
+.btn-danger-outline {
+    background-color: var(--white);
+    color: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+
+.geo-btn-primary {
+    background-color: var(--indigo);
+    color: var(--white);
+    font-size: 12px;
+}
+
+.geo-btn-secondary {
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 12px;
+}

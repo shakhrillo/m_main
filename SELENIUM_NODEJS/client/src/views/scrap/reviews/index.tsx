@@ -1,32 +1,17 @@
-import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query } from "firebase/firestore"
+import { collection, deleteDoc, doc, onSnapshot, Timestamp } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
-import Pagination from "react-bootstrap/Pagination"
-import { useAppSelector } from "../../../app/hooks"
-import StarRating from "../../../components/star-rating"
-import "../../../style/dashboard.css"
+import { Pagination } from "react-bootstrap"
 import { useFirebase } from "../../../contexts/FirebaseProvider"
+import "../../../style/dashboard.css"
 
 function ScrapReviewsView() {
-  const [show, setShow] = useState(false)
-
   const { firestore, user } = useFirebase()
 
   const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/riZCSrRF56yNFPLJ8")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
-
-  const db = useAppSelector(state => state.firebase.db)
-  // const user = useAppSelector(state => state.auth.user)
-  const token = useAppSelector(state => state.auth.token)
-
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  useEffect(() => {
-    console.log("Loaded: ", reviews)
-  }, [reviews])
 
   useEffect(() => {
     if (!firestore || !user) return;
@@ -50,17 +35,10 @@ function ScrapReviewsView() {
   }, [firestore, user])
 
   async function startScraping(url: string) {
+    setScrapingUrl("")
     const uid = user ? user.uid : ""
-    // console.log(`users/${uid}/reviews`)
-    // let collectionReviews = collection(firestore, `users/${uid}/reviews`);
-    // await addDoc(collectionReviews, {
-    //   url,
-    //   uid
-    // })
-
     const token = await user?.getIdToken()
 
-    // with http
     // const url = `http://34.122.24.195`;
     await fetch("http://127.0.0.1:1337", {
       method: "POST",
@@ -74,7 +52,6 @@ function ScrapReviewsView() {
     })
 
     setScrapingUrl("")
-    handleClose()
   }
 
   async function deleteReview(id: string) {
@@ -114,215 +91,150 @@ function ScrapReviewsView() {
     window.open(fileUrl, "_blank")
   }
 
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col">
-          <h1 className="h3 mb-3">Reviews</h1>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <hr />
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12">
-          <div className="p-3 bg-light mb-3">
-            <div className="input-group">
-              <input
-                type="text"
-                id="reviewUrl"
-                value={scrapingUrl}
-                onChange={e => setScrapingUrl(e.target.value)}
-                placeholder="Add the URL address"
-                className="form-control"
-              />
-              <button
-                onClick={() => startScraping(scrapingUrl)}
-                className="btn btn-primary"
-                disabled={scrapingUrl === ""}
-              >
-                Add Review
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="col-12">
-          <table className="table custom-table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">
-                  <i className="bi-geo" />
-                  Places
-                </th>
-                <th scope="col">
-                  <i className="bi-clock" />
-                  Created
-                </th>
-                <th scope="col">
-                  <i className="bi-stopwatch" />
-                  Completed
-                </th>
-                <th scope="col">
-                  <i className="bi-download"></i>
-                  File
-                </th>
-                <th scope="col">
-                  <i className="bi-clipboard-check"></i>Status
-                </th>
-                <th scope="col">
-                  <i className="bi-gear"></i>Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentReviews.map((review: any, index: number) => {
-                return (
-                  <tr key={review.id}>
-                    <th scope="row">{indexOfFirstReview + index + 1}</th>
-                    <td>
-                      {review.title ? (
-                        <div className="d-flex flex-column">
-                          <a href={`${review.url}`} target="_blank">
-                            {review.title}
-                          </a>
-                          <div className="d-flex gap-1 flex-column">
-                            {/* <StarRating rating={review.info.mainRate} /> */}
-                            <span className="badge bg-primary">
-                              Extracting: {review.extractedReviews || 0} reviews
-                            </span>
-                            <span>Extracted: {review.totalReviews || 0} reviews</span>
-                          </div>
-                          <div className="d-flex gap-1 align-items-center">
-                            <span>Completed:</span>
-                            <span className="badge bg-info">
-                              {
-                                review.completedAt && review.createdAt ? (
-                                  Number((review.completedAt.seconds - review.createdAt.seconds) / 60).toFixed(2) + " min"
-                                ) : (
-                                  "Loading..."
-                                )
-                              }
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="d-flex flex-column">
-                          <span>Loading...</span>
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <div className="d-flex flex-column">
-                          {(review.createdAt && review.createdAt.seconds) ? (
-                            <div className="d-flex flex-column gap-2">
-                              <span>
-                                {new Date(review.createdAt.seconds * 1000).toLocaleDateString()}
-                              </span>
-                              <small>
-                                {new Date(review.createdAt.seconds * 1000).toLocaleTimeString()}
-                              </small>
-                            </div>
-                          ) : (
-                            <span>Loading...</span>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                    {review.completedAt && review.completedAt.seconds ? (
-                      <div className="d-flex flex-column gap-2">
-                        <span>
-                          {new Date(review.completedAt.seconds * 1000).toLocaleDateString()}
-                        </span>
-                        <small>
-                          {new Date(review.completedAt.seconds * 1000).toLocaleTimeString()}
-                        </small>
-                      </div>
-                    ) : (
-                      <span>Loading...</span>
-                    )}
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <select
-                          className="form-select"
-                          aria-label="Default select example"
-                        >
-                          <option value={review.fileUrl}>JSON</option>
-                          <option value={review.fileUrlCsv}>CSV</option>
-                        </select>
+  function renderCount(review: any) {
+    if (!review || !review.extractedReviews) return <i className="bi-question-lg"></i>
+    let count = review.extractedReviews || 0;
+    if (!count) {
+      count = review.totalReviews;
+    }
 
-                        <button
-                          onClick={() => downloadFile(review.fileUrl)}
-                          className="btn"
-                        >
-                          <i className="bi-download"></i>
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <span
-                          className={`p-2 badge bg-${review.status === "completed" ? "success" : review.status === "pending" ? "warning" : "danger"}`}
-                        >
-                          {review.status}
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <button
-                          onClick={() =>
-                            (window.location.href = `/dashboard/scrap/review/${review.id}`)
-                          }
-                          className="btn btn-outline-secondary"
-                        >
-                          <i className="bi-eye"></i>
-                        </button>
-                        <button
-                          className="btn btn-outline-danger"
-                          onClick={() => deleteReview(review.id)}
-                        >
-                          <i className="bi-trash"></i>
-                        </button>
-                        {/* session play btn */}
-                        <button
-                          className="btn btn-outline-primary"
-                          onClick={() => {
-                            window.location.href = `${review.seleniumSession}`
-                          }}
-                        >
-                          <i className="bi-play"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+    return <span>{count} reviews</span>
+  }
+
+  function renderStatus(status: string) {
+    switch (status) {
+      case "completed":
+        return <i className="bi-check-lg"></i>
+      case "failed":
+        return <i className="bi-x-lg"></i>
+      case "in-progress":
+        return <i className="bi-arrow-repeat"></i>
+      default:
+        return <i className="bi-question-lg"></i>
+    }
+  }
+
+  function formatTime(date: Timestamp) {
+    if (!date || !date.seconds) return "";
+
+    const d = new Date(date.seconds * 1000)
+    return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+  }
+
+  function spentTime(start: Timestamp, end: Timestamp) {
+    if (!start || !end) return "";
+
+    const diff = end.seconds - start.seconds;
+    if (diff < 60) {
+      return `${diff} seconds`
+    } else if (diff < 3600) {
+      return `${Math.floor(diff / 60)} minutes`
+    } else {
+      return `${Math.floor(diff / 3600)} hours`
+    }
+  }
+
+  return (
+    <div className="card">
+      <div className="card-header">
+        <div className="input-group">
+          <input type="text" className="form-control" placeholder="Place URL" aria-describedby="addon-wrapping" value={scrapingUrl} onChange={e => setScrapingUrl(e.target.value)} />
+          <button className="btn btn-primary" type="button" id="addon-wrapping" onClick={() => startScraping(scrapingUrl)} disabled={!scrapingUrl}>
+            Start
+          </button>
         </div>
-        <div className="col-12">
-          <Pagination>
-            <Pagination.First onClick={() => handlePageClick(1)} />
-            <Pagination.Prev onClick={handlePreviousPage} />
-            {Array.from({ length: totalPages }, (_, i) => (
-              <Pagination.Item
-                key={i + 1}
-                active={currentPage === i + 1}
-                onClick={() => handlePageClick(i + 1)}
-              >
-                {i + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next onClick={handleNextPage} />
-            <Pagination.Last onClick={() => handlePageClick(totalPages)} />
-          </Pagination>
-        </div>
+      </div>
+      <div className="card-body">
+        <table className="table geo-table">
+          <thead>
+            <tr>
+              {
+                [{
+                  title: "#",
+                  icon: "",
+                }, {
+                  title: "Place",
+                  icon: "bi-geo",
+                }, {
+                  title: "Date",
+                  icon: "bi-clock",
+                }, {
+                  title: "Reviews",
+                  icon: "bi-chat-square-text",
+                }, {
+                  title: "Time",
+                  icon: "bi-hourglass",
+                }, {
+                  title: "Download",
+                  icon: "bi-cloud-download",
+                }].map((item, index) => (
+                  <th scope="col" key={index}>
+                    <i className={item.icon}></i>
+                    {item.title}
+                  </th>
+                ))
+              }
+            </tr>
+          </thead>
+          <tbody>
+            {
+              currentReviews.map((review, index) => (
+                <tr key={review.id}>
+                  <td>
+                    <div className="d-flex">
+                      <div className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}>
+                        {renderStatus(review.status)}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a href={`https://maps.app.goo.gl/${review.placeId}`} target="_blank" rel="noreferrer">
+                    {review.title.replace(/ - Google Maps/g, "")}
+                    </a>
+                  </td>
+                  <td>{formatTime(review.createdAt)}</td>
+                  <td>{renderCount(review)}</td>
+                  <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                  <td>
+                    <div className="d-flex gap-2 geo-select">
+                      <select className="form-select" aria-label="Default select example">
+                        <option>JSON</option>
+                        <option value="1">CSV</option>
+                      </select>
+                      <button className="btn border" onClick={() => downloadFile(review.url)}><i className="bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <div className="card-footer">
+        <Pagination>
+          <Pagination.First onClick={() => handlePageClick(1)} disabled={currentPage === 1}>
+            <i className="bi-chevron-double-left"></i>
+          </Pagination.First>
+          <Pagination.Prev onClick={handlePreviousPage} disabled={currentPage === 1}>
+            <i className="bi-chevron-left"></i>
+          </Pagination.Prev>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <Pagination.Item
+              key={i + 1}
+              active={currentPage === i + 1}
+              onClick={() => handlePageClick(i + 1)}
+              disabled={currentPage === i + 1}
+            >
+              {i + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={handleNextPage} disabled={currentPage === totalPages}>
+            <i className="bi-chevron-right"></i>
+          </Pagination.Next>
+          <Pagination.Last onClick={() => handlePageClick(totalPages)} disabled={currentPage === totalPages}>
+            <i className="bi-chevron-double-right"></i>
+          </Pagination.Last>
+        </Pagination>
       </div>
     </div>
   )

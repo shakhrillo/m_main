@@ -1,0 +1,210 @@
+:root {
+    --primary: rgba(60, 72, 107, 1);
+    --primary-90: rgba(60, 72, 107, 0.9);
+    --primary-80: rgba(60, 72, 107, 0.8);
+    --primary-70: rgba(60, 72, 107, 0.7);
+    --primary-50: rgba(60, 72, 107, 0.5);
+    --primary-60: rgba(60, 72, 107, 0.6);
+    --primary-30: rgba(60, 72, 107, 0.3);
+    --primary-20: rgba(60, 72, 107, 0.2);
+    --primary-10: rgba(60, 72, 107, 0.1);
+    --danger: rgba(179, 38, 30, 1);
+    --danger-10: rgba(179, 38, 30, 0.1);
+    --indigo: rgba(88, 66, 214, 1);
+    --indigo-10: rgba(88, 66, 214, 0.1);
+    --success: rgba(52, 199, 89, 1);
+    --success-10: rgba(52, 199, 89, 0.1);
+    --white: #ffffff;
+    --black: #000000
+}
+
+* {
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background-color: #f6f6f6;
+}
+
+hr {
+    border-top: 1px solid var(--primary-10);
+    opacity: 1;
+}
+
+.geo-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+.geo-logo img {
+    width: 220px;
+}
+
+.geo-menu-item.active {
+    background-color: var(--white);
+    border: 1px solid var(--primary-20);
+}
+
+.geo-menu-item {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    font-size: 18px;
+    border: none;
+    padding: 0 11px;
+    border-radius: 6px;
+}
+
+.geo-menu-item a {
+    display: flex;
+    gap: 12px;
+    color: var(--primary-90);
+    text-decoration: none;
+}
+
+.geo-menu-wrapper {
+    height: 100vh;
+    display: flex;
+}
+
+.geo-menu-wrapper .card-body,
+.geo-menu-wrapper .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.geo-right-wrapper {
+    display: flex;
+    border-radius: 28px;
+    border-color: var(--primary-10);
+    background-color: #f6f6f6;
+}
+
+
+
+.search-input {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input .input-group input {
+    background-color: transparent;
+    color: var(--primary);
+    font-size: 16px;
+}
+
+.search-input .input-group input::placeholder {
+    color: var(--primary-60);
+    font-size: 16px;
+}
+
+.search-input .btn {
+    background-color: var(--indigo);
+    color: var(--white);
+    font-weight: 300;
+}
+
+.progress-status {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.geo-badge.canceled {
+    background-color: var(--danger-10);
+    color: var(--danger);
+    border-color: var(--danger);
+
+}
+
+.geo-badge.success {
+    background-color: var(--success-10);
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.geo-badge {
+    height: 38px;
+    color: var(--indigo);
+    padding-left: 16px;
+    padding-right: 16px;
+    background-color: var(--indigo-10);
+    border: 1px solid var(--indigo);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.search-input .btn:active {
+    background-color: var(--indigo);
+    opacity: .9;
+    color: var(--white);
+}
+
+.geo-right-body {
+    border-radius: 28px;
+    flex: 1;
+}
+
+.geo-filter {
+    display: flex;
+    height: 38px;
+    background-color: #f6f6f6;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.geo-filter input:checked+.btn {
+    border-color: var(--primary-30);
+    background-color: var(--white);
+}
+
+.geo-filter label {
+    height: 32px;
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.geo-table thead tr th i {
+    margin-right: 8px;
+}
+
+.geo-table thead tr th {
+    color: var(--primary);
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.geo-select select,
+.geo-select button,
+.geo-table tbody tr th,
+.geo-table tbody tr td,
+.geo-table tbody tr td a {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--primary);
+    align-content: center;
+    text-decoration: none;
+}
+
+.geo-pagination ul li a {
+    color: var(--primary);
+    background-color: transparent;
+}
+
+.geo-pagination ul li a.active {
+    background-color: var(--white);
+    color: var(--primary);
+    border-radius: 6px;
+}
+
+.geo-pagination ul li a.disabled {
+    background-color: transparent;
+    opacity: .7;
+}
