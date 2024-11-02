@@ -208,17 +208,17 @@ function ScrapReviewsReviewView() {
                       </td>
                       <td>
                         <p>
-                          {review.myendText}
+                          {review.review}
                         </p>
+                        <hr />
                         <p>
                           {
                             review.qa.map((qa: any, index: number) => (
-                              <>
-                                <span key={index}>
+                              <span key={index}>
+                                <span>
                                   {qa}
                                 </span>
-                                <hr />
-                              </>
+                              </span>
                             ))
                           }
                         </p>

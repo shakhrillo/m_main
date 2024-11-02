@@ -38,7 +38,7 @@ async function main(url, uid, pushId) {
 
     await clickReviewTab(page);
     await wait(1000);
-    const sortButton = await page.$('button[aria-label="Sort reviews"]');
+    const sortButton = await page.$('button[aria-label="Sort reviews"], button[aria-label="Most relevant"]');
     if (!sortButton) {
       throw new Error('Sort button not found');
     }
@@ -66,12 +66,12 @@ async function main(url, uid, pushId) {
     const messages = allElements.map((element) => {
       return {
         id: element.id || '',
-        text: element.text || '',
-        textContent: element.textContent || '',
+        review: element.review || '',
+        response: element.response || '',
         imageUrls: element.imageUrls || [],
-        rating: element.rating || 0,
-        user: element.user || '',
-        qa: element.qa || '',
+        rating: element.rating || '',
+        qa: element.qa || [],
+        user: element.user || ''
       };
     });
     await batchWriteLargeArray(uid, pushId, messages);

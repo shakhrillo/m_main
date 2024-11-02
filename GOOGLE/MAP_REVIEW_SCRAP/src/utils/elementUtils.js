@@ -50,28 +50,10 @@ async function ensureButtonInViewport(button) {
 }
 
 async function clickExpandReviewAndResponse(page) {
-  const allButtons = await page.$$('button[aria-expanded="false"], button[aria-checked="true"]');
-  logger.info('Clicking expand review and response buttons');
-
+  const allButtons = await page.$$('button[jsaction*="review.expandReview"], button[jsaction*="review.showReviewInOriginal"], button[jsaction*="review.expandOwnerResponse"], button[jsaction*="review.showOwnerResponseInOriginal"]');
   for (const button of allButtons) {
-    const jsaction = await button.evaluate(el => el.getAttribute('jsaction'));
-    if (jsaction && jsaction.includes('review.expandReview')) {
-      await ensureButtonInViewport(button);
-      await button.click();
-      logger.info('Clicked expand review button');
-    } else if (jsaction && jsaction.includes('review.showReviewInOriginal')) {
-      await ensureButtonInViewport(button);
-      await button.click();
-      logger.info('Clicked show review in original button');
-    } else if (jsaction && jsaction.includes('review.expandOwnerResponse')) {
-      await ensureButtonInViewport(button);
-      await button.click();
-      logger.info('Clicked expand owner response button');
-    } else if (jsaction && jsaction.includes('review.showOwnerResponseInOriginal')) {
-      await ensureButtonInViewport(button);
-      await button.click();
-      logger.info('Clicked show owner response in original button');
-    }
+    await ensureButtonInViewport(button);
+    await button.click();
   }
 }
 
@@ -241,6 +223,27 @@ function extractReviewTextInner(reviewTextArray, myendText) {
   }
 }
 
+async function getOwnerResponse(reviewElement) {
+  let ownerResponseText = '';
+
+  // Locate the star rating element
+  const starRatingElement = await reviewElement.$('span[role="img"][aria-label*="stars"]');
+  if (!starRatingElement) return ownerResponseText; // Return empty if no star rating element is found
+
+  // Traverse up to locate the parent element that contains additional review details
+  const reviewDetailContainer = await starRatingElement.evaluateHandle(element => element.parentElement.parentElement);
+  const responseContainer = await reviewDetailContainer.evaluateHandle(element => element.lastElementChild);
+
+  // Check if this element contains the "Response from the owner" text
+  const responseContainerText = await responseContainer.evaluate(element => element.textContent);
+  if (responseContainerText.includes('Response from the owner')) {
+    const responseTextElement = await responseContainer.evaluateHandle(element => element.lastElementChild);
+    ownerResponseText = await responseTextElement.evaluate(element => element.textContent);
+  }
+
+  return ownerResponseText;
+}
+
 async function extractReviewText(element) {
   const reviewContainer = await element.$$('.MyEned');
   if (!reviewContainer.length) {
@@ -346,66 +349,66 @@ async function extractReviewer(page, reviewId) {
   return results;
 }
 
-async function getReviewElements(page, parent, lastChildId) {
-  const elements = [];
+async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
+  const newReviewElements = [];
 
-  const getElementDetails = async (element, elementId) => ({
-    id: elementId,
-    element,
-    textContent: await extractReviewText(element),
-    imageUrls: await extractImageUrlsFromButtons(page, elementId),
-    rating: await extractRating(element),
-    qa: await extractQuestions(element),
-    user: await extractReviewer(element, elementId),
-    text: await element.evaluate(el => el.textContent),
+  const fetchReviewDetails = async (reviewElement, reviewId) => ({
+    id: reviewId,
+    element: reviewElement,
+    review: await extractReviewText(reviewElement),
+    response: await getOwnerResponse(reviewElement),
+    imageUrls: await extractImageUrlsFromButtons(page, reviewId),
+    rating: await extractRating(reviewElement),
+    qa: await extractQuestions(reviewElement),
+    user: await extractReviewer(reviewElement, reviewId)
   });
 
-  if (lastChildId) {
-    console.log('Last child id:', lastChildId);
-    const lastChild = await parent.$(`.jftiEf[data-review-id="${lastChildId}"]`);
+  if (lastFetchedReviewId) {
+    console.log('Last fetched review ID:', lastFetchedReviewId);
+    const lastFetchedReviewElement = await reviewContainer.$(`.jftiEf[data-review-id="${lastFetchedReviewId}"]`);
 
-    if (!lastChild) {
-      console.log('Last child not found');
-      return elements;
+    if (!lastFetchedReviewElement) {
+      console.log('Last fetched review element not found');
+      return newReviewElements;
     }
 
-    let nextElement = await lastChild.evaluateHandle(el => el.nextElementSibling);
+    let nextSiblingElement = await lastFetchedReviewElement.evaluateHandle(el => el.nextElementSibling);
 
-    while (nextElement) {
-      const elementId = await nextElement.evaluate(el => el?.getAttribute('data-review-id'));
-      if (elementId) {
-        elements.push(await getElementDetails(nextElement, elementId));
+    while (nextSiblingElement) {
+      const reviewId = await nextSiblingElement.evaluate(el => el?.getAttribute('data-review-id'));
+      if (reviewId) {
+        newReviewElements.push(await fetchReviewDetails(nextSiblingElement, reviewId));
       }
 
-      const nextSibling = await nextElement.evaluateHandle(el => el.nextElementSibling);
-      if (!nextSibling || JSON.stringify(nextSibling) === '{}') {
+      const nextElement = await nextSiblingElement.evaluateHandle(el => el.nextElementSibling);
+      if (!nextElement || JSON.stringify(nextElement) === '{}') {
         console.log('No more siblings');
         break;
       }
-      nextElement = nextSibling;
+      nextSiblingElement = nextElement;
     }
   } else {
-    const parentChildren = await parent.$$(':scope > *');
-    const beforeLastChild = parentChildren[parentChildren.length - 2];
-    const beforeLastChildChildren = await beforeLastChild.$$(':scope > *');
-    let isNewElements = !lastChildId;
+    const reviewContainerChildren = await reviewContainer.$$(':scope > *');
+    const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
+    const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
+    let shouldFetchNewElements = !lastFetchedReviewId;
 
-    for (const child of beforeLastChildChildren) {
-      const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
-      if (!elementId) continue;
+    for (const childElement of secondLastChildDescendants) {
+      const reviewId = await childElement.evaluate(el => el.getAttribute('data-review-id'));
+      if (!reviewId) continue;
 
-      if (elementId === lastChildId && !isNewElements) {
-        isNewElements = true;
+      if (reviewId === lastFetchedReviewId && !shouldFetchNewElements) {
+        shouldFetchNewElements = true;
         continue;
       }
 
-      if (isNewElements) {
-        elements.push(await getElementDetails(child, elementId));
+      if (shouldFetchNewElements) {
+        newReviewElements.push(await fetchReviewDetails(childElement, reviewId));
       }
     }
   }
 
-  return elements;
+  return newReviewElements;
 }
 
 async function checkInfiniteScroll(reviewsContainer) {
