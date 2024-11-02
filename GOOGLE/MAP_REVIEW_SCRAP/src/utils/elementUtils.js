@@ -347,91 +347,63 @@ async function extractReviewer(page, reviewId) {
 }
 
 async function getReviewElements(page, parent, lastChildId) {
-  let elements = [];
+  const elements = [];
 
-  if(lastChildId) {
+  const getElementDetails = async (element, elementId) => ({
+    id: elementId,
+    element,
+    textContent: await extractReviewText(element),
+    imageUrls: await extractImageUrlsFromButtons(page, elementId),
+    rating: await extractRating(element),
+    qa: await extractQuestions(element),
+    user: await extractReviewer(element, elementId),
+    text: await element.evaluate(el => el.textContent),
+  });
+
+  if (lastChildId) {
     console.log('Last child id:', lastChildId);
-
     const lastChild = await parent.$(`.jftiEf[data-review-id="${lastChildId}"]`);
+
     if (!lastChild) {
       console.log('Last child not found');
       return elements;
     }
 
-    let lastChildNextElement = await lastChild.evaluateHandle(el => el.nextElementSibling);
+    let nextElement = await lastChild.evaluateHandle(el => el.nextElementSibling);
 
-    while(lastChildNextElement) {
-      let elementId;
-      try {
-        elementId = await lastChildNextElement.evaluate(el => {
-          if (!el) return null;
-          return el.getAttribute('data-review-id');
-        });
-      } catch (error) {
-        console.error('Error getting element id:', error);
-      }
+    while (nextElement) {
+      const elementId = await nextElement.evaluate(el => el?.getAttribute('data-review-id'));
       if (elementId) {
-        elements.push({
-          id: elementId,
-          element: lastChildNextElement,
-          textContent: await extractReviewText(lastChildNextElement),
-          imageUrls: await extractImageUrlsFromButtons(page, elementId),
-          rating: await extractRating(lastChildNextElement),
-          qa: await extractQuestions(lastChildNextElement),
-          user: await extractReviewer(lastChildNextElement, elementId),
-          text: await lastChildNextElement.evaluate(el => el.textContent),
-        });
+        elements.push(await getElementDetails(nextElement, elementId));
       }
 
-      // Get the next sibling after processing the current element
-      const nextSibling = await lastChildNextElement.evaluateHandle(el => {
-        if (!el) return null;
-        return el.nextElementSibling;
-      });
-      if (JSON.stringify(nextSibling) === '{}' || !nextSibling) {
-        console.log('Next sibling is the same as the current element');
-        break
+      const nextSibling = await nextElement.evaluateHandle(el => el.nextElementSibling);
+      if (!nextSibling || JSON.stringify(nextSibling) === '{}') {
+        console.log('No more siblings');
+        break;
       }
-      lastChildNextElement = nextSibling;
+      nextElement = nextSibling;
     }
   } else {
     const parentChildren = await parent.$$(':scope > *');
-    const beforeTheLastChild = parentChildren[parentChildren.length - 2];
-    const beforeTheLastChildChildren = await beforeTheLastChild.$$(':scope > *');
+    const beforeLastChild = parentChildren[parentChildren.length - 2];
+    const beforeLastChildChildren = await beforeLastChild.$$(':scope > *');
     let isNewElements = !lastChildId;
-  
-    await Promise.all(beforeTheLastChildChildren.map(async (child) => {
-      // const isChildInViewport = await child.isIntersectingViewport();
-      // if (!isChildInViewport) {
-      //   await page.evaluate(el => el.scrollIntoView(), child);
-      // }
-      
+
+    for (const child of beforeLastChildChildren) {
       const elementId = await child.evaluate(el => el.getAttribute('data-review-id'));
-      
-      if (!elementId) return;
-      
+      if (!elementId) continue;
+
       if (elementId === lastChildId && !isNewElements) {
         isNewElements = true;
-        return;
+        continue;
       }
-  
+
       if (isNewElements) {
-        elements.push({
-          id: elementId,
-          element: child,
-          textContent: await extractReviewText(child),
-          imageUrls: await extractImageUrlsFromButtons(page, elementId),
-          rating: await extractRating(child),
-          qa: await extractQuestions(child),
-          user: await extractReviewer(child, elementId),
-          text: await child.evaluate(el => el.textContent),
-        });
-        console.log(`Element ${elementId}`);
-        await wait(1000);
+        elements.push(await getElementDetails(child, elementId));
       }
-    }));
+    }
   }
-  
 
   return elements;
 }
