@@ -140,153 +140,110 @@ function ScrapReviewsReviewView() {
       </Modal>
       <div className="d-flex flex-column gap-3">
         <ReviewInfo />
-        
-        <div className="card">
-          <div className="card-body">
-            <table className="table view__table">
-              <thead>
-                <tr>
-                  {table.header.map((e, inde) => (
-                    <th scope="col" key={inde}>
-                      <i className={e.icon} />
-                      {e.text}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentReviews.map((review, index) => {
-                  return (
-                    <tr key={index}>
-                      <th scope="row">{indexOfFirstReview + index + 1}</th>
-                      <td>
-                        <a href={review.user.href} target="_blank" rel="noreferrer" className="d-flex gap-1 flex-wrap">
-                          {review.user.name || "Anonymous"}
 
-                          {
-                            review.rating ?
-                            <StarRating rating={
-                              (review.rating?.match(/(\d+)/)?.[0] ? parseInt(review.rating.match(/(\d+)/)[0], 10) : 0).toString()
-                            } />
-                            : "-"
-                          }
-                        </a>
-                        <span className="d-flex gap-1 flex-wrap">
-                          {
-                            review.user.info.length ? (
-                              review.user.info.map((info: string, index: number) => (
-                                <span key={index}>
-                                  {info}
-                                </span>
-                              ))
-                            ) : null
-                          }
-                        </span>
-                      </td>
-                      <td>
-                        {review.date}
-                      </td>
-                      <td>
-                        {review.imageUrls.length ? (
-                          review.imageUrls.map((imageUrl: string, index: number) => (
-                            <img
-                              key={index}
-                              src={imageUrl}
-                              alt={`Review ${index}`}
-                              width="50"
-                              height="50"
-                              onClick={() => {
-                                setSelectedImages(review.imageUrls)
-                                handleShow()
-                              }}
-                            />
-                          ))
-                        ) : "-"}
-                      </td>
-                      <td className="w-100">
-                        <p>
-                          {review.review}
-                        </p>
-                        <hr />
-                        <p>
-                          {
-                            review.qa.map((qa: any, index: number) => (
-                              <span key={index}>
-                                <span>
-                                  {qa}
-                                </span>
-                              </span>
-                            ))
-                          }
-                        </p>
-                      </td>
-                      <td className="w-100">
-                        <p>
-                          {review.response}
-                        </p>
-                        <hr />
-                        <small>
-                          {review.responseTime}
-                        </small>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-            <div className="pagination">
-            <Pagination>
-              <Pagination.Prev
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              />
-
-              {/* Show first page and ellipsis if needed */}
-              <Pagination.Item
-                active={currentPage === 1}
-                onClick={() => paginate(1)}
-              >
-                1
-              </Pagination.Item>
-              {currentPage > 4 && <Pagination.Ellipsis />}
-
-              {/* Show pages around the current page */}
-              {Array.from({ length: 5 }, (_, i) => {
-                const page = currentPage - 2 + i;
-                if (page > 1 && page < totalPages) {
-                  return (
-                    <Pagination.Item
-                      key={page}
-                      active={currentPage === page}
-                      onClick={() => paginate(page)}
-                    >
-                      {page}
-                    </Pagination.Item>
-                  );
-                }
-                return null;
-              })}
-
-              {/* Show ellipsis and last page if needed */}
-              {currentPage < totalPages - 3 && <Pagination.Ellipsis />}
-              {totalPages > 1 && (
-                <Pagination.Item
-                  active={currentPage === totalPages}
-                  onClick={() => paginate(totalPages)}
-                >
-                  {totalPages}
-                </Pagination.Item>
-              )}
-
-              <Pagination.Next
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              />
-            </Pagination>
-
+        {currentReviews.map((review, index) => (
+          <div className="card" key={index}>
+            <div className="card-body">
+              <a href={review.user.href} target="_blank" rel="noreferrer">
+                {review.user.name || "Anonymous"}
+              </a>
+              <div className="d-flex gap-2">
+                {review.user.info.length ? (
+                  review.user.info.map((info: string, index: number) => (
+                    <span key={index}>
+                      {info}
+                    </span>
+                  ))
+                ) : null}
+              </div>
+              <i>
+                Created at: {review.date}
+              </i>
+              <StarRating rating={
+                (review.rating?.match(/(\d+)/)?.[0] ? parseInt(review.rating.match(/(\d+)/)[0], 10) : 0).toString()
+              } />
+              <p>
+                {review.review}
+              </p>
+              {
+                review.qa.length ? (
+                  <ul>
+                    {review.qa.map((qa: string, index: number) => (
+                      <li key={index}>
+                        {qa}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null
+              }
+              {
+                review.response.length ? (
+                  <div>
+                    <hr />
+                    <h6>
+                      <strong>Owner response:</strong>
+                    </h6>
+                    <span>
+                      {review.response}
+                    </span>
+                    <small>
+                      {review.responseTime}
+                    </small>
+                  </div>
+                ) : null
+              }
             </div>
           </div>
-        </div>
+        ))}
+
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+
+          {/* Show first page and ellipsis if needed */}
+          <Pagination.Item
+            active={currentPage === 1}
+            onClick={() => paginate(1)}
+          >
+            1
+          </Pagination.Item>
+          {currentPage > 4 && <Pagination.Ellipsis />}
+
+          {/* Show pages around the current page */}
+          {Array.from({ length: 5 }, (_, i) => {
+            const page = currentPage - 2 + i;
+            if (page > 1 && page < totalPages) {
+              return (
+                <Pagination.Item
+                  key={page}
+                  active={currentPage === page}
+                  onClick={() => paginate(page)}
+                >
+                  {page}
+                </Pagination.Item>
+              );
+            }
+            return null;
+          })}
+
+          {/* Show ellipsis and last page if needed */}
+          {currentPage < totalPages - 3 && <Pagination.Ellipsis />}
+          {totalPages > 1 && (
+            <Pagination.Item
+              active={currentPage === totalPages}
+              onClick={() => paginate(totalPages)}
+            >
+              {totalPages}
+            </Pagination.Item>
+          )}
+
+          <Pagination.Next
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
       </div>
     </div>
   )
