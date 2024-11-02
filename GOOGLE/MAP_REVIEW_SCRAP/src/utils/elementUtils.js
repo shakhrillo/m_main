@@ -124,13 +124,36 @@ async function extractImageUrlsFromButtons(page, reviewId) {
   return extractedImageUrls;
 }
 
-async function extractRating(element) {
-  const rateElement = await element.$('span[role="img"][aria-label*="stars"]');
-  if (!rateElement) {
-    return null;
+async function extractReviewRating(element, reviewId) {
+  const ratingElement = await element.$('span[role="img"][aria-label*="stars"]');
+  if (!ratingElement) {
+    const thumbsUpButton = await element.$(`button[data-review-id="${reviewId}"][jsaction*="review.toggleThumbsUp"]`);
+    if (!thumbsUpButton) {
+      const firstChildElement = await element.evaluateHandle(el => 
+        el?.firstElementChild?.firstElementChild?.lastElementChild?.firstElementChild
+      );
+
+      if (!firstChildElement) return '';
+
+      const spanElements = await firstChildElement.$$('span');
+      if (!spanElements || spanElements.length < 2) {
+        return '';
+      }
+      return spanElements[0].evaluate(el => el.innerText);
+    }
+    
+    const secondChildElement = await thumbsUpButton.evaluateHandle(el => {
+      const parentElement = el.parentElement?.parentElement;
+      return parentElement?.firstElementChild?.children[0];
+    });
+    
+    if (!secondChildElement) return '';
+    const innerText = await secondChildElement.evaluate(el => el.innerText);
+    
+    return innerText;
   }
-  const rateText = await rateElement.evaluate(el => el.getAttribute('aria-label'));
-  return rateText;
+  const ratingText = await ratingElement.evaluate(el => el.getAttribute('aria-label'));
+  return ratingText;
 }
 
 async function getReviewDate(element, reviewId) {
@@ -255,7 +278,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
       response: await getOwnerResponse(reviewElement),
       responseTime: await getOwnerResponseTime(reviewElement),
       imageUrls: await extractImageUrlsFromButtons(page, reviewId),
-      rating: await extractRating(reviewElement),
+      rating: await extractReviewRating(reviewElement, reviewId),
       qa: await extractQuestions(reviewElement),
       user: await extractReviewer(reviewElement, reviewId)
     }
