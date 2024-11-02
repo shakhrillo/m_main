@@ -100,7 +100,7 @@ function DashboardView() {
           <img src={logoImg} alt="logo" height="60" />
         </a>
         <div className="list-group">
-          <a type="button" className="list-group-item list-group-item-action active" href="/reviews">
+          <a type="button" className="list-group-item list-group-item-action" href="/reviews">
             <i className="bi-search"></i>
             <span>
               Scrap Reviews
@@ -122,7 +122,7 @@ function DashboardView() {
           <button type="button" className="list-group-item list-group-item-action">
             <i className="bi-credit-card"></i>
             <span>
-              Subscription
+              Payments
             </span>
           </button>
           <button type="button" className="list-group-item list-group-item-action">
