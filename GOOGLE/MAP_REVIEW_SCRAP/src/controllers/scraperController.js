@@ -67,11 +67,12 @@ async function main(url, uid, pushId) {
       return {
         id: element.id || '',
         review: element.review || '',
+        date: element.date || '',
         response: element.response || '',
         imageUrls: element.imageUrls || [],
         rating: element.rating || '',
         qa: element.qa || [],
-        user: element.user || ''
+        user: element.user || {}
       };
     });
     await batchWriteLargeArray(uid, pushId, messages);

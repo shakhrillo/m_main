@@ -285,6 +285,13 @@ async function extractRating(element) {
   return rateText;
 }
 
+async function getReviewDate(element) {
+  const starRatingElement = await element.$('span[role="img"][aria-label*="stars"]');
+  const reviewDateElement = await starRatingElement.evaluateHandle(el => el.nextElementSibling);
+  const reviewDateText = await reviewDateElement.evaluate(el => el.innerText);
+  return reviewDateText;
+}
+
 async function extractQuestions(element) {
   const MyEned = await element.$$('.MyEned');
 
@@ -356,6 +363,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
     id: reviewId,
     element: reviewElement,
     review: await extractReviewText(reviewElement),
+    date: await getReviewDate(reviewElement),
     response: await getOwnerResponse(reviewElement),
     imageUrls: await extractImageUrlsFromButtons(page, reviewId),
     rating: await extractRating(reviewElement),
