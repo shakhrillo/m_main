@@ -187,9 +187,12 @@ function ScrapReviewsView() {
                           <a href={`${review.url}`} target="_blank">
                             {review.title}
                           </a>
-                          <div className="d-flex gap-1 align-items-center">
+                          <div className="d-flex gap-1 flex-column">
                             {/* <StarRating rating={review.info.mainRate} /> */}
-                            <span>{review.totalReviews || 0} reviews</span>
+                            <span className="badge bg-primary">
+                              Extracting: {review.extractedReviews || 0} reviews
+                            </span>
+                            <span>Extracted: {review.totalReviews || 0} reviews</span>
                           </div>
                           <div className="d-flex gap-1 align-items-center">
                             <span>Completed:</span>
