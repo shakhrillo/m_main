@@ -241,24 +241,14 @@ function extractReviewTextInner(reviewTextArray, myendText) {
   }
 }
 
-async function extractReviewText(page, elementHandle) {
-  // Get the text content of the element
-  const reviewText = await page.evaluate(el => el.innerText, elementHandle);
-  const reviewTextArray = reviewText.split('\n');
-
-  let myendText = "";
-
-  // Select elements with the class name "MyEned"
-  const reviewMyenedHandles = await elementHandle.$$('.MyEned');
-  if (reviewMyenedHandles.length > 0) {
-    // Get the first child element and its text
-    const reviewMyenedFirstChildHandle = await reviewMyenedHandles[0].$('*');
-    if (reviewMyenedFirstChildHandle) {
-      myendText = await page.evaluate(el => el.innerText, reviewMyenedFirstChildHandle);
-    }
+async function extractReviewText(element) {
+  const reviewContainer = await element.$$('.MyEned');
+  if (!reviewContainer.length) {
+    return '';
   }
-
-  return extractReviewTextInner(reviewTextArray, myendText);
+  const reviewText = await reviewContainer[0].$('span');
+  const textContent = await reviewText.evaluate(el => el.textContent);
+  return textContent;
 }
 
 async function extractImageUrlsFromButtons(page, reviewId) {
@@ -362,7 +352,6 @@ async function getReviewElements(page, parent, lastChildId) {
   if(lastChildId) {
     console.log('Last child id:', lastChildId);
 
-    // const lastChild = await page.$$(`[data-review-id="${lastChildId}"].jftiEf`);
     const lastChild = await parent.$(`.jftiEf[data-review-id="${lastChildId}"]`);
     if (!lastChild) {
       console.log('Last child not found');
@@ -385,7 +374,7 @@ async function getReviewElements(page, parent, lastChildId) {
         elements.push({
           id: elementId,
           element: lastChildNextElement,
-          textContent: await extractReviewText(page, lastChildNextElement),
+          textContent: await extractReviewText(lastChildNextElement),
           imageUrls: await extractImageUrlsFromButtons(page, elementId),
           rating: await extractRating(lastChildNextElement),
           qa: await extractQuestions(lastChildNextElement),
@@ -430,7 +419,7 @@ async function getReviewElements(page, parent, lastChildId) {
         elements.push({
           id: elementId,
           element: child,
-          textContent: await extractReviewText(page, child),
+          textContent: await extractReviewText(child),
           imageUrls: await extractImageUrlsFromButtons(page, elementId),
           rating: await extractRating(child),
           qa: await extractQuestions(child),
