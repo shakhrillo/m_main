@@ -10,6 +10,7 @@ import StarRating from "../../../components/star-rating"
 import "../../../style/view.css"
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
 import { useFirebase } from "../../../contexts/FirebaseProvider"
+import ReviewInfo from "./reviewInfo"
 
 function ScrapReviewsReviewView() {
   let { place } = useParams()
@@ -145,7 +146,7 @@ function ScrapReviewsReviewView() {
   }
 
   return (
-    <div className="view">
+    <div>
       <Modal show={show} onHide={handleClose} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title className="view__all-images__carousel-title">
@@ -169,97 +170,9 @@ function ScrapReviewsReviewView() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="container">
-        {placeInfo ? (
-          <div className="card mb-2">
-            <div className="card-body place-info row">
-              <div className="col-3">
-                <h5 className="card-title place-info__title">
-                  <i className="bi-geo-alt me-2"></i>
-                  {placeInfo.title}
-                  <span className="badge bg-primary ms-2">
-                    {placeInfo.totalMessages} reviews
-                  </span>
-                </h5>
-              </div>
-              <div className="col-2 d-flex flex-column gap-2 place-info__created-at">
-                <span className="">
-                  <i className="bi-play-circle me-2"></i>
-                  {
-                    placeInfo.completedAt && placeInfo.createdAt ? (
-                      Number((placeInfo.completedAt.seconds - placeInfo.createdAt.seconds) / 60).toFixed(2) + " min"
-                    ) : (
-                      "Loading..."
-                    )
-                  }
-                </span>
-              </div>
-
-              <div className="col-2 view__rating ms-5 d-flex flex-column gap-2">
-                <span className="d-flex gap-2 align-items-center">
-                  {/* Rating:{" "}
-                  <StarRating rating={String(placeInfo.info.mainRate)} /> */}
-                </span>
-                <span>
-                  {/* Reviews: {placeInfo.info.mainReview.replace(/[()]/g, "")} */}
-                </span>
-              </div>
-              <div className="col d-flex gap-2 align-items-center">
-                <div className="d-flex gap-2 w-50">
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                  >
-                    <option value={placeInfo.fileUrl}>JSON</option>
-                    <option value={placeInfo.fileUrlCsv}>CSV</option>
-                  </select>
-
-                  <button
-                    onClick={() => downloadFile(placeInfo.fileUrl)}
-                    className="btn"
-                  >
-                    <i className="bi-download"></i>
-                  </button>
-                </div>
-                <span className="place__status badge bg-primary ms-3">
-                  {placeInfo.status}
-                </span>
-                <button
-                  className="btn btn-outline-danger ms-auto"
-                  onClick={() => deleteReview(placeInfo.id)}
-                >
-                  <i className="bi-trash"></i>
-                </button>
-              </div>
-              {/* <div className="col d-flex gap-2 align-items-center">
-                <span className="place__status badge bg-primary ms-2 me-4">
-                  {placeInfo.status}
-                </span>
-                <button
-                  onClick={() => downloadFile(placeInfo.fileUrl)}
-                  className="btn  btn-outline-secondary"
-                >
-                  <i className="bi-download me-2"></i>
-                  JSON
-                </button>
-                <button
-                  onClick={() => downloadFile(placeInfo.fileUrlCsv)}
-                  className="btn  btn-outline-secondary me-4"
-                >
-                  <i className="bi-download me-2"></i>
-                  CSV
-                </button>
-                <button
-                  onClick={() => deleteReview(placeInfo.id)}
-                  className="btn btn-outline-danger ms-auto"
-                >
-                  <i className="bi-trash me-2"></i>
-                  Delete
-                </button>
-              </div> */}
-            </div>
-          </div>
-        ) : null}
+      <div className="d-flex flex-column gap-3">
+        <ReviewInfo />
+        
         <div className="card">
           <div className="card-body">
             <table className="table view__table">

@@ -25,8 +25,12 @@ const router = createBrowserRouter([
     children: [
       {
         path: "reviews",
-        element: <ScrapReviewsView />,
+        element: <Outlet />,
         children: [
+          {
+            path: "",
+            element: <ScrapReviewsView />,
+          },
           {
             path: ":place",
             element: <ScrapReviewsReviewView />,
