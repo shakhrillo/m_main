@@ -20,48 +20,38 @@ const router = createBrowserRouter([
     element: <LoginPage />
   },
   {
-    path: '/dashboard',
-    element: <Outlet />,
+    path: '',
+    element: <DashboardView />,
     children: [
       {
-        path: '',
-        element: <DashboardView />,
+        path: "reviews",
+        element: <ScrapReviewsView />,
         children: [
           {
-            path: "scrap",
-            element: <Outlet />,
-            children: [
-              {
-                path: "reviews",
-                element: <ScrapReviewsView />,
-              },
-              {
-                path: "review/:place",
-                element: <ScrapReviewsReviewView />,
-              },
-              {
-                path: "places",
-                element: <ScrapPlacesView />
-              }
-            ]
+            path: ":place",
+            element: <ScrapReviewsReviewView />,
           },
-          {
-            path: "payments",
-            element: <Outlet />,
-            children: [
-              {
-                path: "subscription",
-                element: <PaymentsSubscriptionView />,
-              },
-              {
-                path: "history",
-                element: <PaymentsHistoryView />,
-              },
-            ]
-          }
         ]
       },
-    ],
+      {
+        path: "places",
+        element: <ScrapPlacesView />
+      },
+      {
+        path: "payments",
+        element: <Outlet />,
+        children: [
+          {
+            path: "subscription",
+            element: <PaymentsSubscriptionView />,
+          },
+          {
+            path: "history",
+            element: <PaymentsHistoryView />,
+          },
+        ]
+      }
+    ]
   },
 ]);
 

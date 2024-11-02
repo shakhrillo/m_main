@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, onSnapshot, Timestamp } from "firebase/firestore"
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { Pagination } from "react-bootstrap"
@@ -17,9 +17,9 @@ function ScrapReviewsView() {
     if (!firestore || !user) return;
     setReviews([])
     let collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
-    // const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
+    const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
 
-    onSnapshot(collectionReviews, querySnapshot => {
+    onSnapshot(reviewsQuery, querySnapshot => {
       setReviews([])
       querySnapshot.forEach(doc => {
         const data = doc.data()
@@ -36,7 +36,6 @@ function ScrapReviewsView() {
 
   async function startScraping(url: string) {
     setScrapingUrl("")
-    const uid = user ? user.uid : ""
     const token = await user?.getIdToken()
 
     // const url = `http://34.122.24.195`;
@@ -178,7 +177,7 @@ function ScrapReviewsView() {
           </thead>
           <tbody>
             {
-              currentReviews.map((review, index) => (
+              currentReviews.map((review) => (
                 <tr key={review.id}>
                   <td>
                     <div className="d-flex">
@@ -188,7 +187,7 @@ function ScrapReviewsView() {
                     </div>
                   </td>
                   <td>
-                    <a href={`https://maps.app.goo.gl/${review.placeId}`} target="_blank" rel="noreferrer">
+                    <a href={`/reviews/${review.id}`}>
                     {review.title.replace(/ - Google Maps/g, "")}
                     </a>
                   </td>

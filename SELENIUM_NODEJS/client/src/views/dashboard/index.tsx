@@ -100,7 +100,7 @@ function DashboardView() {
           <img src={logoImg} alt="logo" height="60" />
         </a>
         <div className="list-group">
-          <a type="button" className="list-group-item list-group-item-action active" href="/dashboard/scrap/reviews">
+          <a type="button" className="list-group-item list-group-item-action active" href="/reviews">
             <i className="bi-search"></i>
             <span>
               Scrap Reviews
