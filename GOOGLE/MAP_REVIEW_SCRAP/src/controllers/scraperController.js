@@ -69,8 +69,9 @@ async function main(url, uid, pushId) {
         review: element.review || '',
         date: element.date || '',
         response: element.response || '',
+        responseTime: element.responseTime || '',
         imageUrls: element.imageUrls || [],
-        rating: element.rating || '',
+        rating: element.rating || 0,
         qa: element.qa || [],
         user: element.user || {}
       };

@@ -8,7 +8,7 @@ import "../../../style/dashboard.css"
 function ScrapReviewsView() {
   const { firestore, user } = useFirebase()
 
-  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/gQo2peJf4rjbk4DHA")
+  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/bxvqHy9QCoFWwpTp8")
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10

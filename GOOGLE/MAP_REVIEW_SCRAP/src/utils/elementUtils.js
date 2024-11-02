@@ -54,6 +54,7 @@ async function clickExpandReviewAndResponse(page) {
   for (const button of allButtons) {
     await ensureButtonInViewport(button);
     await button.click();
+    await wait(1000);
   }
 }
 
@@ -244,6 +245,28 @@ async function getOwnerResponse(reviewElement) {
   return ownerResponseText;
 }
 
+async function getOwnerResponseTime(reviewElement) {
+  let ownerResponseDate = '';
+
+  // Locate the star rating element
+  const starRatingElement = await reviewElement.$('span[role="img"][aria-label*="stars"]');
+  if (!starRatingElement) return ownerResponseDate; // Return empty if no star rating element is found
+
+  // Traverse up to locate the parent element that contains additional review details
+  const reviewDetailContainer = await starRatingElement.evaluateHandle(element => element.parentElement.parentElement);
+  const responseContainer = await reviewDetailContainer.evaluateHandle(element => element.lastElementChild);
+
+  // Check if this element contains the "Response from the owner" text
+  const responseContainerText = await responseContainer.evaluate(element => element.textContent);
+  if (responseContainerText.includes('Response from the owner')) {
+    const responseTextElement = await responseContainer.evaluateHandle(element => element.firstElementChild);
+    ownerResponseDate = await responseTextElement.evaluate(element => element.textContent);
+    ownerResponseDate = ownerResponseDate.split('Response from the owner')[1].trim();
+  }
+
+  return ownerResponseDate;
+}
+
 async function extractReviewText(element) {
   const reviewContainer = await element.$$('.MyEned');
   if (!reviewContainer.length) {
@@ -287,6 +310,9 @@ async function extractRating(element) {
 
 async function getReviewDate(element) {
   const starRatingElement = await element.$('span[role="img"][aria-label*="stars"]');
+  if (!starRatingElement) {
+    return null;
+  }
   const reviewDateElement = await starRatingElement.evaluateHandle(el => el.nextElementSibling);
   const reviewDateText = await reviewDateElement.evaluate(el => el.innerText);
   return reviewDateText;
@@ -365,6 +391,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
     review: await extractReviewText(reviewElement),
     date: await getReviewDate(reviewElement),
     response: await getOwnerResponse(reviewElement),
+    responseTime: await getOwnerResponseTime(reviewElement),
     imageUrls: await extractImageUrlsFromButtons(page, reviewId),
     rating: await extractRating(reviewElement),
     qa: await extractQuestions(reviewElement),

@@ -187,7 +187,7 @@ function ScrapReviewsReviewView() {
                         </span>
                       </td>
                       <td>
-                        {review.time}
+                        {review.date}
                       </td>
                       <td>
                         {review.imageUrls.length ? (
@@ -227,6 +227,10 @@ function ScrapReviewsReviewView() {
                         <p>
                           {review.response}
                         </p>
+                        <hr />
+                        <small>
+                          {review.responseTime}
+                        </small>
                       </td>
                     </tr>
                   )
