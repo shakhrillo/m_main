@@ -49,19 +49,6 @@ async function ensureButtonInViewport(button) {
   }
 }
 
-async function clickExpandReviewAndResponse(page) {
-  const allButtons = await page.$$('button[jsaction*="review.expandReview"], button[jsaction*="review.showReviewInOriginal"], button[jsaction*="review.expandOwnerResponse"], button[jsaction*="review.showOwnerResponseInOriginal"]');
-  let counter = 0;
-  for (const button of allButtons) {
-    await ensureButtonInViewport(button);
-    await button.click();
-    counter++;
-    await wait(600);
-  }
-
-  console.log(`Clicked ${counter} buttons`);
-}
-
 async function getOwnerResponse(reviewElement) {
   let ownerResponseText = '';
 
@@ -146,10 +133,33 @@ async function extractRating(element) {
   return rateText;
 }
 
-async function getReviewDate(element) {
+async function getReviewDate(element, reviewId) {
   const starRatingElement = await element.$('span[role="img"][aria-label*="stars"]');
   if (!starRatingElement) {
-    return null;
+    const thumbsUpButton = await element.$(`button[data-review-id="${reviewId}"][jsaction*="review.toggleThumbsUp"]`);
+    if (!thumbsUpButton) {
+      const firstChild = await element.evaluateHandle(el => 
+        el?.firstElementChild?.firstElementChild?.lastElementChild?.firstElementChild
+      );
+
+      if (!firstChild) return '';
+
+      const secondChildDiv = await firstChild.$$('span');
+      if (!secondChildDiv || secondChildDiv.length < 2) {
+        return '';
+      }
+      return secondChildDiv[1].evaluate(el => el.innerText);
+    }
+    
+    const secondChild = await thumbsUpButton.evaluateHandle(el => {
+      const parent = el.parentElement?.parentElement;
+      return parent?.firstElementChild?.children[1];
+    });
+    
+    if (!secondChild) return '';
+    const innerText = await secondChild.evaluate(el => el.innerText);
+    
+    return innerText;
   }
   const reviewDateElement = await starRatingElement.evaluateHandle(el => el.nextElementSibling);
   const reviewDateText = await reviewDateElement.evaluate(el => el.innerText);
@@ -231,21 +241,17 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
       button[jsaction*="review.showOwnerResponseInOriginal"]
     `);
 
-    let count = 0;
     for (const button of buttons) {
       await ensureButtonInViewport(button);
       await button.click();
       await wait(200);
-      count++;
     }
-
-    console.log(`Clicked ${count} buttons`);
   
     return {
       id: reviewId,
       element: reviewElement,
       review: await extractReviewText(reviewElement),
-      date: await getReviewDate(reviewElement),
+      date: await getReviewDate(reviewElement, reviewId),
       response: await getOwnerResponse(reviewElement),
       responseTime: await getOwnerResponseTime(reviewElement),
       imageUrls: await extractImageUrlsFromButtons(page, reviewId),
@@ -322,8 +328,6 @@ async function scrollAndCollectElements(page, uid, pushId) {
   while (!isScrollFinished) {
     try {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
-      // await wait(2000);
-      // await clickExpandReviewAndResponse(page);
       lastId = allElements[allElements.length - 1]?.id;
       const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
       allElements.push(...elements);

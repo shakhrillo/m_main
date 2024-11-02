@@ -206,7 +206,7 @@ function ScrapReviewsReviewView() {
                           ))
                         ) : "-"}
                       </td>
-                      <td>
+                      <td className="w-100">
                         <p>
                           {review.review}
                         </p>
@@ -223,7 +223,7 @@ function ScrapReviewsReviewView() {
                           }
                         </p>
                       </td>
-                      <td>
+                      <td className="w-100">
                         <p>
                           {review.response}
                         </p>
