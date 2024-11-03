@@ -1,12 +1,45 @@
 import { useEffect, useState } from "react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+declare var Chart: any;
 
 function UsageView() {
   const [userInformation, setUserInformation] = useState({} as any);
   const [usage, setUsage] = useState([] as any[]);
   const { firestore, user } = useFirebase();
 
+  useEffect(() => {
+    const ctx = document.getElementById('usageChart');
+
+    const dates = Array.from({ length: 30 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      return date;
+    });
+
+    const usageData = Array.from({ length: 30 }, () => Math.floor(Math.random() * 100));
+
+    console.log('usageData', usageData);
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: dates.map((date) => date.toLocaleDateString()),
+        datasets: [{
+          label: '',
+          data: usageData,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }, []);
   useEffect(() => {
     if (!firestore || !user) return;
     console.log('user', user);
@@ -41,6 +74,16 @@ function UsageView() {
 
   return (
     <div>
+      <div className="row mb-4">
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h5>Usage for this month</h5>
+              <canvas id="usageChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="card">
         <div className="card-body">
           <h3 className="display-6">
