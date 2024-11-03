@@ -24,7 +24,7 @@ function PaymentsSubscriptionView() {
 
   async function buyCoins() {
     const token = await user?.getIdToken()
-    const response = await fetch("http://127.0.0.1:1337/api/stripe", {
+    const response = await fetch("http://34.122.24.195/api/stripe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
