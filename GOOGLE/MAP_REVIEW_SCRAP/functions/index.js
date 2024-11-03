@@ -1,62 +1,67 @@
+require('dotenv').config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-
 admin.initializeApp();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// No need to initialize the Stripe client here
-// const stripe = require('stripe')(functions.config().stripe.api_key);
-
-exports.createPaymentIntent = functions.https.onCall(async (data, context) => {
-  const { amount } = data;
-  const stripe = require('stripe')(functions.params.defineSecret('STRIPE_SECRET_KEY').value()); // Retrieve the secret here
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: "usd",
-      automatic_payment_methods: { enabled: true },
-    });
-
-    const { client_secret: clientSecret, id } = paymentIntent;
-
-    return {
-      id,
-      clientSecret,
-      amount,
-      message: "Created",
-    };
-  } catch (error) {
-    throw new functions.https.HttpsError("unknown", error);
-  }
-});
-
-exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
-  const sig = req.headers["stripe-signature"];
-  const stripe = require('stripe')(functions.params.defineSecret('STRIPE_SECRET_KEY').value()); // Retrieve the secret here
-
-  console.log("Webhook called.");
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, functions.params.defineSecret('STRIPE_WEBHOOK_SECRET').value());
-  } catch (error) {
-    console.error(error);
-    res.status(400).send(`Webhook Error: ${error.message}`);
-    return;
+exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {
+  let event = request.rawBody;
+  console.log(event);
+  // Only verify the event if you have an endpoint secret defined.
+  // Otherwise use the basic event deserialized with JSON.parse
+  if (endpointSecret) {
+    // Get the signature sent by Stripe
+    const signature = request.headers['stripe-signature'];
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.rawBody,
+        signature,
+        endpointSecret
+      );
+    } catch (err) {
+      console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      return response.sendStatus(400);
+    }
   }
 
+  // checkout.session.completed
+  // payment_intent.payment_failed
+  // payment_intent.succeeded
+  
+  // Handle the event
   switch (event.type) {
-    case "payment_intent.succeeded":
+    case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;
-      console.log("PaymentIntent was successful!");
+      // Then define and call a method to handle the successful payment intent.
+      // handlePaymentIntentSucceeded(paymentIntent);
+      await admin.firestore().collection(`users/${paymentIntent.metadata.userId}/payments`).add({
+        amount: paymentIntent.amount,
+        created: admin.firestore.Timestamp.now(),
+        payment_method: paymentIntent.payment_method,
+        status: paymentIntent.status,
+      });
+      const userRef = admin.firestore().doc(`users/${paymentIntent.metadata.userId}`);
+      const userDoc = await userRef.get();
+      const user = userDoc.data();
+      await userRef.update({
+        coinBalance: user.coinBalance + paymentIntent.amount,
+      });
       break;
-    case "payment_intent.payment_failed":
-      const paymentFailed = event.data.object;
-      console.log("PaymentIntent failed!");
+    case 'payment_method.attached':
+      const paymentMethod = event.data.object;
+      await admin.firestore().collection(`users/${paymentMethod.metadata.userId}/payment_methods`).add({
+        payment_method: paymentMethod.id,
+        created: admin.firestore.Timestamp.now(),
+      });
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handlePaymentMethodAttached(paymentMethod);
       break;
+    // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  res.json({ received: true });
+  response.send();
 });
+

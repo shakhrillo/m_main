@@ -19,8 +19,11 @@ exports.createCheckoutSession = async (req, res) => {
                 },
             ],
             mode: "payment",
-            success_url: "https://yourdomain.com/success",
-            cancel_url: "https://yourdomain.com/cancel",
+            success_url: "http://localhost:4200/payments",
+            cancel_url: "http://localhost:4200/payments",
+            metadata: {
+                userId: req.user.uid,
+            },
         });
 
         // Redirect to Stripe checkout URL

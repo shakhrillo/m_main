@@ -1,16 +1,20 @@
 import { useState } from "react"
 import { useAppDispatch } from "../../../app/hooks"
 import "../../../style/subscription.scss"
+import { useFirebase } from "../../../contexts/FirebaseProvider"
 
 function PaymentsSubscriptionView() {
   const [amount, setAmount] = useState(0)
   const dispatch = useAppDispatch()
+  const { user } = useFirebase()
 
   async function buyCoins() {
+    const token = await user?.getIdToken()
     const response = await fetch("http://127.0.0.1:1337/api/stripe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ amount }),
     })
