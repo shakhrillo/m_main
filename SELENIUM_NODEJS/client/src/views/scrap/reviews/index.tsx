@@ -93,7 +93,15 @@ function ScrapReviewsView() {
     setCurrentPage(pageNumber)
   }
 
-  const downloadFile = async (url: string) => {
+  const downloadFile = async (review: any, id: string) => {
+    const selected = document.getElementById(id) as HTMLSelectElement;
+    if (!selected) return
+    const selectedValue = selected.value || "json";
+    console.log(review, selectedValue);
+    const url = review[selectedValue + "Url"];
+
+    console.log('url', url);
+    
     const storage = getStorage()
     const fileRef = ref(storage, url)
     const fileUrl = await getDownloadURL(fileRef)
@@ -287,14 +295,15 @@ function ScrapReviewsView() {
                       <div className="d-flex gap-2 geo-select">
                         <select
                           className="form-select"
-                          aria-label="Default select example"
+                          aria-label={`Download ${review.title}`}
+                          id={`download-${review.id}`}
                         >
-                          <option>JSON</option>
-                          <option value="1">CSV</option>
+                          <option value="json">JSON</option>
+                          <option value="csv">CSV</option>
                         </select>
                         <button
                           className="btn border"
-                          onClick={() => downloadFile(review.url)}
+                          onClick={() => downloadFile(review, `download-${review.id}`)}
                         >
                           <i className="bi-download"></i>
                         </button>

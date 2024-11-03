@@ -117,6 +117,8 @@ async function main(url, uid, pushId) {
   
     await updateReview(uid, pushId, {
       status: 'completed',
+      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${pushId}.csv`,
+      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${pushId}.json`,
       totalReviews: uniqueElements.length,
       completedAt: new Date()
     });
