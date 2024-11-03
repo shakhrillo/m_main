@@ -1,9 +1,21 @@
+const fs = require('fs');
+const path = require('path');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const { uploadFile } = require('../services/storageService');
 const wait = require('../utils/wait');
 const { launchBrowser, openPage } = require('../utils/browser');
 const { clickReviewTab, scrollAndCollectElements } = require('../utils/elementUtils');
 const filterUniqueElements = require('../utils/filter');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
 const { getUser, updateUser, createUserUsage } = require('./userController');
+
+// Define a temporary directory in your project (e.g., ./temp)
+const tempDir = path.join(__dirname, 'temp');
+
+// Ensure the directory exists
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir);
+}
 
 async function main(url, uid, pushId) {
   try {
@@ -63,8 +75,30 @@ async function main(url, uid, pushId) {
   
     await page.close();
     await browser.close();
+
+    const jsonFileName = path.join(tempDir, `${pushId}.json`);
+    const csvFileName = path.join(tempDir, `${pushId}.csv`);
+    
+    // Write the JSON file
+    fs.writeFileSync(jsonFileName, JSON.stringify(uniqueElements, null, 2));
+
+    // Define the CSV writer
+    const csvWriter = createCsvWriter({
+      path: csvFileName,
+      header: Object.keys(uniqueElements[0]).map(key => ({ id: key, title: key })), // Adjust headers based on your data structure
+      // Add any additional options if necessary
+    });
+
+    // Write the CSV file
+    await csvWriter.writeRecords(uniqueElements);
+
+    await uploadFile(fs.readFileSync(jsonFileName), `json/${pushId}.json`);
+    await uploadFile(fs.readFileSync(csvFileName), `csv/${pushId}.csv`);
+
+    fs.unlinkSync(jsonFileName);
+    fs.unlinkSync(csvFileName);
   
-    const messages = allElements.map((element) => {
+    const messages = uniqueElements.map((element) => {
       return {
         id: element.id || '',
         review: element.review || '',
@@ -74,7 +108,9 @@ async function main(url, uid, pushId) {
         imageUrls: element.imageUrls || [],
         rating: element.rating || 0,
         qa: element.qa || [],
-        user: element.user || {}
+        user: element.user || {},
+        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${pushId}.csv`,
+        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${pushId}.json`
       };
     });
     await batchWriteLargeArray(uid, pushId, messages);

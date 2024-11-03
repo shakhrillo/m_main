@@ -17,7 +17,7 @@ function ScrapReviewsView() {
   const { firestore, user } = useFirebase()
 
   const [scrapingUrl, setScrapingUrl] = useState(
-    "https://maps.app.goo.gl/bxvqHy9QCoFWwpTp8",
+    "https://maps.app.goo.gl/cGWBC5Y3GMPVFBkv6",
   )
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
@@ -50,7 +50,7 @@ function ScrapReviewsView() {
     const token = await user?.getIdToken()
 
     // const url = `http://34.122.24.195`;
-    await fetch("http://34.122.24.195/api/reviews", {
+    await fetch("http://127.0.0.1:1337/api/reviews", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
