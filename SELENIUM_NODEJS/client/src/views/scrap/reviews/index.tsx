@@ -39,7 +39,7 @@ function ScrapReviewsView() {
     const token = await user?.getIdToken()
 
     // const url = `http://34.122.24.195`;
-    await fetch("http://127.0.0.1:1337", {
+    await fetch("http://34.122.24.195", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
