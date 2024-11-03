@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
-import { Pagination } from "react-bootstrap"
+import { Pagination, ToggleButton, ToggleButtonGroup } from "react-bootstrap"
 import { useFirebase } from "../../../contexts/FirebaseProvider"
 import "../../../style/dashboard.css"
 
@@ -21,6 +21,7 @@ function ScrapReviewsView() {
   )
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedValue, setSelectedValue] = useState("all")
   const reviewsPerPage = 10
 
   useEffect(() => {
@@ -145,106 +146,166 @@ function ScrapReviewsView() {
   }
 
   return (
-    <div className="reviews card">
-      <div className="card-header">
-        <div className="input-group">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Place URL"
-            aria-describedby="addon-wrapping"
-            value={scrapingUrl}
-            onChange={e => setScrapingUrl(e.target.value)}
-          />
-          <button
-            className="btn btn-primary"
-            type="button"
-            id="addon-wrapping"
-            onClick={() => startScraping(scrapingUrl)}
-            disabled={!scrapingUrl}
-          >
-            Start
-          </button>
+    <div className="reviews card bg-transparent">
+      <div className="card-body border-0">
+        <div className="card border-0 bg-transparent">
+          <div className="card-body">
+            <div className="row">
+              <div className="col-6 d-flex gap-2">
+                <div className="input-group">
+                  <input
+                    type="text"
+                    className="form-control bg-transparent"
+                    placeholder="Place URL"
+                    aria-describedby="addon-wrapping"
+                    value={scrapingUrl}
+                    onChange={e => setScrapingUrl(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn"
+                  type="button"
+                  id="addon-wrapping"
+                  onClick={() => startScraping(scrapingUrl)}
+                  disabled={!scrapingUrl}
+                >
+                  Start
+                </button>
+              </div>
+              <div className="col d-flex gap-3 justify-content-center">
+                {/* <div className="badge canceled"> */}
+                {/* <div className="badge complted"> */}
+                <div className="badge on-progress">
+                  {/* Canceled */}
+                  {/* Success */}
+                  <li>On Progress</li>
+                </div>
+                <div className="badge on-progress bg-transparent">00m 12s</div>
+              </div>
+              <div className="col d-flex justify-content-end">
+                <button className="btn btn-danger">STOP</button>
+              </div>
+            </div>
+            <div className="card border-0 mt-3">
+              <div className="card-body">
+                <div className="d-flex">
+                  <ToggleButtonGroup
+                    type="radio"
+                    name="options-base"
+                    value={selectedValue}
+                    onChange={value => setSelectedValue(value)}
+                    className="filter"
+                  >
+                    <ToggleButton
+                      id="option5"
+                      value="all"
+                      variant="outline-primary"
+                    >
+                      All
+                    </ToggleButton>
+                    <ToggleButton
+                      id="option6"
+                      value="completed"
+                      variant="outline-primary"
+                    >
+                      Completed
+                    </ToggleButton>
+                    <ToggleButton
+                      id="option8"
+                      value="canceled"
+                      variant="outline-primary"
+                    >
+                      Canceled
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="card-body">
-        <table className="table geo-table">
-          <thead>
-            <tr>
-              {[
-                {
-                  title: "#",
-                  icon: "",
-                },
-                {
-                  title: "Place",
-                  icon: "bi-geo",
-                },
-                {
-                  title: "Date",
-                  icon: "bi-clock",
-                },
-                {
-                  title: "Reviews",
-                  icon: "bi-chat-square-text",
-                },
-                {
-                  title: "Time",
-                  icon: "bi-hourglass",
-                },
-                {
-                  title: "Download",
-                  icon: "bi-cloud-download",
-                },
-              ].map((item, index) => (
-                <th scope="col" key={index}>
-                  <i className={item.icon}></i>
-                  {item.title}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {currentReviews.map(review => (
-              <tr key={review.id}>
-                <td>
-                  <div className="d-flex">
-                    <div
-                      className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
-                    >
-                      {renderStatus(review.status)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href={`/reviews/${review.id}`}>
-                    {review.title.replace(/ - Google Maps/g, "")}
-                  </a>
-                </td>
-                <td>{formatTime(review.createdAt)}</td>
-                <td>{renderCount(review)}</td>
-                <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                <td>
-                  <div className="d-flex gap-2 geo-select">
-                    <select
-                      className="form-select"
-                      aria-label="Default select example"
-                    >
-                      <option>JSON</option>
-                      <option value="1">CSV</option>
-                    </select>
-                    <button
-                      className="btn border"
-                      onClick={() => downloadFile(review.url)}
-                    >
-                      <i className="bi-download"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="card border-0">
+          <div className="card-body bg-white">
+            <table className="table geo-table">
+              <thead>
+                <tr>
+                  {[
+                    {
+                      title: "#",
+                      icon: "",
+                    },
+                    {
+                      title: "Place",
+                      icon: "bi-geo",
+                    },
+                    {
+                      title: "Date",
+                      icon: "bi-clock",
+                    },
+                    {
+                      title: "Reviews",
+                      icon: "bi-chat-square-text",
+                    },
+                    {
+                      title: "Time",
+                      icon: "bi-hourglass",
+                    },
+                    {
+                      title: "Download",
+                      icon: "bi-cloud-download",
+                    },
+                  ].map((item, index) => (
+                    <th scope="col" key={index}>
+                      <i className={item.icon}></i>
+                      {item.title}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentReviews.map(review => (
+                  <tr key={review.id}>
+                    <td>
+                      <div className="d-flex">
+                        <div
+                          className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                        >
+                          {renderStatus(review.status)}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <a href={`/reviews/${review.id}`}>
+                        {review.title.replace(/ - Google Maps/g, "")}
+                      </a>
+                    </td>
+                    <td>{formatTime(review.createdAt)}</td>
+                    <td>{renderCount(review)}</td>
+                    <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                    <td>
+                      <div className="d-flex gap-2 geo-select">
+                        <select
+                          className="form-select"
+                          aria-label="Default select example"
+                        >
+                          <option>JSON</option>
+                          <option value="1">CSV</option>
+                        </select>
+                        <button
+                          className="btn border"
+                          onClick={() => downloadFile(review.url)}
+                        >
+                          <i className="bi-download"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <div className="card-footer">
         <Pagination>
