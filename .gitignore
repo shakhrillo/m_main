@@ -127,7 +127,6 @@ celerybeat.pid
 env/
 venv/
 devnv/
-images/
 *.zip
 *.tar.gz
 ENV/
