@@ -34,7 +34,7 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
   const sig = req.headers["stripe-signature"];
   const stripe = require('stripe')(functions.params.defineSecret('STRIPE_SECRET_KEY').value()); // Retrieve the secret here
 
-  console.log("Webhook called >");
+  console.log("Webhook called.");
   let event;
 
   try {
