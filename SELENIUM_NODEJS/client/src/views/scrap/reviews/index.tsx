@@ -97,11 +97,7 @@ function ScrapReviewsView() {
     const selected = document.getElementById(id) as HTMLSelectElement;
     if (!selected) return
     const selectedValue = selected.value || "json";
-    console.log(review, selectedValue);
     const url = review[selectedValue + "Url"];
-
-    console.log('url', url);
-    
     const storage = getStorage()
     const fileRef = ref(storage, url)
     const fileUrl = await getDownloadURL(fileRef)
