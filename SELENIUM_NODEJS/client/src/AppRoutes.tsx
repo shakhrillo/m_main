@@ -52,6 +52,14 @@ const router = createBrowserRouter([
         element: <UsersView />
       },
       {
+        path: "settings",
+        element: "Settings",
+      },
+      {
+        path: "help",
+        element: "Help",
+      },
+      {
         path: "places",
         element: <ScrapPlacesView />
       },
