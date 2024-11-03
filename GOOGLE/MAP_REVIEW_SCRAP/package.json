@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "set-env": "dotenv -e .env firebase functions:config:set stripe.secret_key=$STRIPE_SECRET_KEY stripe.webhook_secret=$STRIPE_WEBHOOK_SECRET",
+    "deploy": "npm run set-env && firebase deploy --only functions",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
     "prestart": "node node_modules/puppeteer/install.mjs"
