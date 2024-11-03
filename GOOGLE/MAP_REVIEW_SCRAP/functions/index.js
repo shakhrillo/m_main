@@ -1,9 +1,50 @@
 require('dotenv').config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const { onDocumentCreated } = require('firebase-functions/firestore');
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+// watch new collection(firestore, `users/${user?.uid}/reviews`);
+exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', async (event) => {
+  console.log('event:', event);
+  const snapshot = event.data;
+  if (!snapshot) {
+    console.log("No data associated with the event");
+    return;
+  }
+  const review = snapshot.data();
+
+  console.log('New review added:', review);
+
+  const userId = event.params.userId;
+  const reviewId = event.params.reviewId;
+  const token = review.token;
+
+  console.log('New review added:', review);
+  console.log('userId:', userId);
+  console.log('reviewId:', reviewId);
+
+  // http request to
+  const url = 'http://34.122.24.195/api/reviews';
+  const body = {
+    userId,
+    reviewId,
+    ...review
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  console.log('response:', response);
+});
 
 exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {
   let event = request.rawBody;

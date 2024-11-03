@@ -46,7 +46,8 @@ async function main(url, uid, pushId) {
     await updateReview(uid, pushId, {
       title,
       createdAt: new Date(),
-      status: 'in-progress'
+      status: 'in-progress',
+      token: ''
     });
 
     await clickReviewTab(page);

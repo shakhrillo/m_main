@@ -1,27 +1,56 @@
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  Timestamp,
-} from "firebase/firestore"
+import
+  {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    orderBy,
+    query,
+    Timestamp,
+  } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
-import { Pagination, ToggleButton, ToggleButtonGroup } from "react-bootstrap"
+import { Pagination } from "react-bootstrap"
 import { useFirebase } from "../../../contexts/FirebaseProvider"
 import "../../../style/dashboard.css"
+import { User } from "firebase/auth"
+
+async function encodeToken(user: User) {
+  try {
+    const token = await user.getIdToken(); // Get the ID token
+    const secretKey = 'secret'; // Replace with your actual secret key
+
+    // Use a simple Base64 encoding instead of jsonwebtoken
+    const encodedToken = btoa(token + '.' + secretKey);
+    return encodedToken;
+  } catch (error) {
+    console.error('Error encoding token:', error);
+  }
+}
+
+const sortBy = [
+  "Most Relevant",
+  "Newest",
+  "Lowest rating",
+  "Highest rating",
+]
+
+const defaultScrap = {
+  url: "https://maps.app.goo.gl/y5NbtGn4iWqndgsQ8",
+  limit: 50,
+  sortBy: sortBy[0],
+  extractImageUrls: false,
+  ownerResponse: true,
+  onlyGoogleReviews: false,
+}
 
 function ScrapReviewsView() {
   const { firestore, user } = useFirebase()
 
-  const [scrapingUrl, setScrapingUrl] = useState(
-    "https://maps.app.goo.gl/cGWBC5Y3GMPVFBkv6",
-  )
+  const [scrap, setScrap] = useState(defaultScrap)
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedValue, setSelectedValue] = useState("all")
   const reviewsPerPage = 10
 
   useEffect(() => {
@@ -45,23 +74,19 @@ function ScrapReviewsView() {
     })
   }, [firestore, user])
 
-  async function startScraping(url: string) {
-    setScrapingUrl("")
-    const token = await user?.getIdToken()
-
-    // const url = `http://34.122.24.195`;
-    await fetch("http://127.0.0.1:1337/api/reviews", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        url,
-      }),
+  async function startScraping() {
+    if (!firestore || !user) return
+    setScrap(defaultScrap);
+    const collectionReviews = collection(firestore, `users/${user?.uid}/reviews`);
+    const token = await user.getIdToken();
+    console.log("Token:", token);
+    const docRef = await addDoc(collectionReviews, {
+      ...scrap,
+      status: "in-progress",
+      createdAt: new Date(),
+      token
     })
-
-    setScrapingUrl("")
+    console.log("Document written with ID: ", docRef.id)
   }
 
   async function deleteReview(id: string) {
@@ -157,13 +182,13 @@ function ScrapReviewsView() {
             <form>
               <div className="mb-3">
                 <label className="form-label">Sharable URL</label>
-                <input type="email" className="form-control" placeholder="Place URL" value={scrapingUrl} onChange={e => setScrapingUrl(e.target.value)} />
+                <input type="email" className="form-control" placeholder="Place URL" value={scrap.url} onChange={e => setScrap({ ...scrap, url: e.target.value })} />
               </div>
               <div className="mb-3">
                 <label className="form-label">
                   Extract limit
                 </label>
-                <input type="number" className="form-control" placeholder="Extract limit" disabled />
+                <input type="number" className="form-control" placeholder="Extract limit" disabled value={scrap.limit} onChange={e => setScrap({ ...scrap, limit: parseInt(e.target.value) })} />
                 <div className="form-text">
                   For demo purposes, the extract limit is disabled.
                 </div>
@@ -172,26 +197,28 @@ function ScrapReviewsView() {
                 <label className="form-label">
                   Sort by
                 </label>
-                <select className="form-select">
-                  <option value="rating">Newest</option>
-                  <option value="date">Lowest rating</option>
-                  <option value="date">Highest rating</option>
+                <select className="form-select" value={scrap.sortBy} onChange={e => setScrap({ ...scrap, sortBy: e.target.value })}>
+                  {sortBy.map((item, index) => (
+                    <option key={index} value={item}>
+                      {item}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" />
+                <input type="checkbox" className="form-check-input" checked={scrap.extractImageUrls} onChange={e => setScrap({ ...scrap, extractImageUrls: e.target.checked })} />
                 <label className="form-label">
                   Extract image urls
                 </label>
               </div>
               <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" />
+                <input type="checkbox" className="form-check-input" checked={scrap.ownerResponse} onChange={e => setScrap({ ...scrap, ownerResponse: e.target.checked })} />
                 <label className="form-label">
                   Owner response
                 </label>
               </div>
               <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" />
+                <input type="checkbox" className="form-check-input" checked={scrap.onlyGoogleReviews} onChange={e => setScrap({ ...scrap, onlyGoogleReviews: e.target.checked })} />
                 <label className="form-label">
                   Only Google reviews
                 </label>
@@ -200,8 +227,7 @@ function ScrapReviewsView() {
             <button
               className="btn btn-primary w-100 mt-3"
               type="button"
-              onClick={() => startScraping(scrapingUrl)}
-              disabled={!scrapingUrl}
+              onClick={() => startScraping()}
             >
               Start
             </button>
@@ -267,7 +293,7 @@ function ScrapReviewsView() {
                         </td>
                         <td>
                           <a href={`/reviews/${review.id}`}>
-                            {review.title.replace(/ - Google Maps/g, "")}
+                            {review?.title?.replace(/ - Google Maps/g, "")}
                           </a>
                         </td>
                         <td>{formatTime(review.createdAt)}</td>
