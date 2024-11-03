@@ -132,7 +132,7 @@ function DashboardView() {
               className={({ isActive }) =>
                 `list-group-item list-group-item-action ${isActive ? "active" : ""}`
               }
-              to="/reviews"
+              to="/settings"
             >
               <i className="bi-gear"></i>
               <span>Settings</span>
@@ -141,7 +141,7 @@ function DashboardView() {
               className={({ isActive }) =>
                 `list-group-item list-group-item-action ${isActive ? "active" : ""}`
               }
-              to="/reviews"
+              to="/settings"
             >
               <i className="bi-question-circle"></i>
               <span>Help</span>
@@ -150,7 +150,7 @@ function DashboardView() {
               className={({ isActive }) =>
                 `list-group-item list-group-item-action mt-auto border-top ${isActive ? "active" : ""}`
               }
-              to="/reviews"
+              to="/settings"
             >
               <i className="bi-box-arrow-left"></i>
               <span>Logout</span>
