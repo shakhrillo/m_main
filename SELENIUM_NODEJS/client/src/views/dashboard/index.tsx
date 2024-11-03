@@ -3,9 +3,9 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
 
-import { Outlet } from "react-router-dom"
+import { NavLink, Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
-import logoImg from "../../assets/logo.png"
+import logoImg from "../../assets/images/logo.png"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 function DashboardView() {
@@ -97,119 +97,66 @@ function DashboardView() {
     <div className="dashboard">
       <div className="sidebar card border-0">
         <div className="card-body">
-          <a className="navbar-brand" href={"/"}>
+          <NavLink className="navbar-brand" to={"/"}>
             <img src={logoImg} alt="logo" />
-          </a>
+          </NavLink>
           <div className="list-group mt-4">
-            <a type="button" className="list-group-item mb" href="/reviews">
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item mb ${isActive ? "active" : ""}`
+              }
+              to="/reviews"
+            >
               <i className="bi-search"></i>
               <span>Scrap Reviews</span>
-            </a>
-            <a
-              type="button"
-              className="list-group-item list-group-item-action"
-              href="/usage"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item list-group-item-action ${isActive ? "active" : ""}`
+              }
+              to="/usage"
             >
               <i className="bi-bar-chart"></i>
               <span>Usage</span>
-            </a>
-            <a
-              type="button"
-              className="list-group-item list-group-item-action"
-              href="/payments"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item list-group-item-action ${isActive ? "active" : ""}`
+              }
+              to="/payments"
             >
               <i className="bi-credit-card"></i>
               <span>Payments</span>
-            </a>
-            <a
-              type="button"
-              className="list-group-item list-group-item-action"
-              href="/reviews"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item list-group-item-action ${isActive ? "active" : ""}`
+              }
+              to="/reviews"
             >
               <i className="bi-gear"></i>
               <span>Settings</span>
-            </a>
-            <a
-              type="button"
-              className="list-group-item list-group-item-action"
-              href="/reviews"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item list-group-item-action ${isActive ? "active" : ""}`
+              }
+              to="/reviews"
             >
               <i className="bi-question-circle"></i>
               <span>Help</span>
-            </a>
-            {/* <hr className="mt-auto" /> */}
-            <a
-              type="button"
-              className="list-group-item list-group-item-action mt-auto border-top"
-              href="/reviews"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `list-group-item list-group-item-action mt-auto border-top ${isActive ? "active" : ""}`
+              }
+              to="/reviews"
             >
               <i className="bi-box-arrow-left"></i>
               <span>Logout</span>
-            </a>
+            </NavLink>
           </div>
         </div>
-        {/* <div className="list-group">
-          <a
-            type="button"
-            className="list-group-item list-group-item-action"
-            href="/reviews"
-          >
-            <i className="bi-search"></i>
-            <span>Scrap Reviews</span>
-          </a>
-          <div className="list-group list-group-nested d-none">
-            <a
-              href="/dashboard/scrap/reviews"
-              className="list-group-item list-group-item-action"
-            >
-              Reviews
-              <span className="badge bg-warning rounded-pill ms-2">1</span>
-            </a>
-            <a
-              href="/dashboard/scrap/places"
-              className="list-group-item list-group-item-action"
-            >
-              Places
-            </a>
-          </div>
-          <a
-            type="button"
-            className="list-group-item list-group-item-action"
-            href="/usage"
-          >
-            <i className="bi-bar-chart"></i>
-            <span>Usage</span>
-          </a>
-          <a
-            type="button"
-            className="list-group-item list-group-item-action"
-            href="/payments"
-          >
-            <i className="bi-credit-card"></i>
-            <span>Payments</span>
-          </a>
-          <button
-            type="button"
-            className="list-group-item list-group-item-action"
-          >
-            <i className="bi-gear"></i>
-            <span>Settings</span>
-          </button>
-          <button
-            type="button"
-            className="list-group-item list-group-item-action"
-          >
-            <i className="bi-question-circle"></i>
-            <span>Help</span>
-          </button>
-          <button
-            type="button"
-            className="list-group-item list-group-item-action text-danger mt-auto"
-          >
-            <i className="bi-box-arrow-right"></i>
-            <span>Logout</span>
-          </button>
-        </div> */}
       </div>
       <div className="content">
         <Outlet />

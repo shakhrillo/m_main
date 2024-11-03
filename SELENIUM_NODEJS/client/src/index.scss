@@ -1,6 +1,6 @@
 /* Google Fonts */
 // @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 /* Bootstrap Icons */
 @import url("bootstrap-icons/font/bootstrap-icons.min.css");
@@ -49,7 +49,7 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 @import "bootstrap/scss/reboot";
 
 // Custom theme variables
-$font-family-base: 'Inter', sans-serif;
+$font-family-base: "Inter", sans-serif;
 $body-color: #3c486b !default;
 $primary-color: #3c486b !default;
 $secondary: #7564ee !default;
@@ -117,18 +117,6 @@ h6 {
   display: none !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 :root {
   --primary: rgba(60, 72, 107, 1);
   --primary-90: rgba(60, 72, 107, 0.9);
@@ -146,7 +134,7 @@ h6 {
   --success: rgba(52, 199, 89, 1);
   --success-10: rgba(52, 199, 89, 0.1);
   --white: #ffffff;
-  --black: #000000
+  --black: #000000;
 }
 
 * {
@@ -216,8 +204,6 @@ hr {
   background-color: #f6f6f6;
 }
 
-
-
 .search-input {
   display: flex;
   gap: 10px;
@@ -250,7 +236,6 @@ hr {
   background-color: var(--danger-10);
   color: var(--danger);
   border-color: var(--danger);
-
 }
 
 .geo-badge.success {
@@ -272,7 +257,7 @@ hr {
 
 .search-input .btn:active {
   background-color: var(--indigo);
-  opacity: .9;
+  opacity: 0.9;
   color: var(--white);
 }
 
@@ -290,7 +275,7 @@ hr {
   border-radius: 6px;
 }
 
-.geo-filter input:checked+.btn {
+.geo-filter input:checked + .btn {
   border-color: var(--primary-30);
   background-color: var(--white);
 }
@@ -336,5 +321,5 @@ hr {
 
 .geo-pagination ul li a.disabled {
   background-color: transparent;
-  opacity: .7;
+  opacity: 0.7;
 }

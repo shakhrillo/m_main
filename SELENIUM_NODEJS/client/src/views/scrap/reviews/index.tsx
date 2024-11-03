@@ -1,4 +1,12 @@
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore"
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+} from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { Pagination } from "react-bootstrap"
@@ -8,13 +16,15 @@ import "../../../style/dashboard.css"
 function ScrapReviewsView() {
   const { firestore, user } = useFirebase()
 
-  const [scrapingUrl, setScrapingUrl] = useState("https://maps.app.goo.gl/bxvqHy9QCoFWwpTp8")
+  const [scrapingUrl, setScrapingUrl] = useState(
+    "https://maps.app.goo.gl/bxvqHy9QCoFWwpTp8",
+  )
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const reviewsPerPage = 10
 
   useEffect(() => {
-    if (!firestore || !user) return;
+    if (!firestore || !user) return
     setReviews([])
     let collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
     const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
@@ -54,9 +64,9 @@ function ScrapReviewsView() {
   }
 
   async function deleteReview(id: string) {
-    const uid = user ? user.uid : "";
-    await deleteDoc(doc(firestore, `users/${uid}/reviews/${id}`));
-    console.log("Document successfully deleted!");
+    const uid = user ? user.uid : ""
+    await deleteDoc(doc(firestore, `users/${uid}/reviews/${id}`))
+    console.log("Document successfully deleted!")
   }
 
   // Pagination handling
@@ -91,10 +101,11 @@ function ScrapReviewsView() {
   }
 
   function renderCount(review: any) {
-    if (!review || !review.extractedReviews) return <i className="bi-question-lg"></i>
-    let count = review.extractedReviews || 0;
+    if (!review || !review.extractedReviews)
+      return <i className="bi-question-lg"></i>
+    let count = review.extractedReviews || 0
     if (!count) {
-      count = review.totalReviews;
+      count = review.totalReviews
     }
 
     return <span>{count} reviews</span>
@@ -114,16 +125,16 @@ function ScrapReviewsView() {
   }
 
   function formatTime(date: Timestamp) {
-    if (!date || !date.seconds) return "";
+    if (!date || !date.seconds) return ""
 
     const d = new Date(date.seconds * 1000)
     return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
   }
 
   function spentTime(start: Timestamp, end: Timestamp) {
-    if (!start || !end) return "";
+    if (!start || !end) return ""
 
-    const diff = end.seconds - start.seconds;
+    const diff = end.seconds - start.seconds
     if (diff < 60) {
       return `${diff} seconds`
     } else if (diff < 3600) {
@@ -134,11 +145,24 @@ function ScrapReviewsView() {
   }
 
   return (
-    <div className="card">
+    <div className="reviews card">
       <div className="card-header">
         <div className="input-group">
-          <input type="text" className="form-control" placeholder="Place URL" aria-describedby="addon-wrapping" value={scrapingUrl} onChange={e => setScrapingUrl(e.target.value)} />
-          <button className="btn btn-primary" type="button" id="addon-wrapping" onClick={() => startScraping(scrapingUrl)} disabled={!scrapingUrl}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Place URL"
+            aria-describedby="addon-wrapping"
+            value={scrapingUrl}
+            onChange={e => setScrapingUrl(e.target.value)}
+          />
+          <button
+            className="btn btn-primary"
+            type="button"
+            id="addon-wrapping"
+            onClick={() => startScraping(scrapingUrl)}
+            disabled={!scrapingUrl}
+          >
             Start
           </button>
         </div>
@@ -147,74 +171,93 @@ function ScrapReviewsView() {
         <table className="table geo-table">
           <thead>
             <tr>
-              {
-                [{
+              {[
+                {
                   title: "#",
                   icon: "",
-                }, {
+                },
+                {
                   title: "Place",
                   icon: "bi-geo",
-                }, {
+                },
+                {
                   title: "Date",
                   icon: "bi-clock",
-                }, {
+                },
+                {
                   title: "Reviews",
                   icon: "bi-chat-square-text",
-                }, {
+                },
+                {
                   title: "Time",
                   icon: "bi-hourglass",
-                }, {
+                },
+                {
                   title: "Download",
                   icon: "bi-cloud-download",
-                }].map((item, index) => (
-                  <th scope="col" key={index}>
-                    <i className={item.icon}></i>
-                    {item.title}
-                  </th>
-                ))
-              }
+                },
+              ].map((item, index) => (
+                <th scope="col" key={index}>
+                  <i className={item.icon}></i>
+                  {item.title}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {
-              currentReviews.map((review) => (
-                <tr key={review.id}>
-                  <td>
-                    <div className="d-flex">
-                      <div className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}>
-                        {renderStatus(review.status)}
-                      </div>
+            {currentReviews.map(review => (
+              <tr key={review.id}>
+                <td>
+                  <div className="d-flex">
+                    <div
+                      className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                    >
+                      {renderStatus(review.status)}
                     </div>
-                  </td>
-                  <td>
-                    <a href={`/reviews/${review.id}`}>
+                  </div>
+                </td>
+                <td>
+                  <a href={`/reviews/${review.id}`}>
                     {review.title.replace(/ - Google Maps/g, "")}
-                    </a>
-                  </td>
-                  <td>{formatTime(review.createdAt)}</td>
-                  <td>{renderCount(review)}</td>
-                  <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                  <td>
-                    <div className="d-flex gap-2 geo-select">
-                      <select className="form-select" aria-label="Default select example">
-                        <option>JSON</option>
-                        <option value="1">CSV</option>
-                      </select>
-                      <button className="btn border" onClick={() => downloadFile(review.url)}><i className="bi-download"></i></button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            }
+                  </a>
+                </td>
+                <td>{formatTime(review.createdAt)}</td>
+                <td>{renderCount(review)}</td>
+                <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                <td>
+                  <div className="d-flex gap-2 geo-select">
+                    <select
+                      className="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option>JSON</option>
+                      <option value="1">CSV</option>
+                    </select>
+                    <button
+                      className="btn border"
+                      onClick={() => downloadFile(review.url)}
+                    >
+                      <i className="bi-download"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
       <div className="card-footer">
         <Pagination>
-          <Pagination.First onClick={() => handlePageClick(1)} disabled={currentPage === 1}>
+          <Pagination.First
+            onClick={() => handlePageClick(1)}
+            disabled={currentPage === 1}
+          >
             <i className="bi-chevron-double-left"></i>
           </Pagination.First>
-          <Pagination.Prev onClick={handlePreviousPage} disabled={currentPage === 1}>
+          <Pagination.Prev
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
             <i className="bi-chevron-left"></i>
           </Pagination.Prev>
           {Array.from({ length: totalPages }, (_, i) => (
@@ -227,10 +270,16 @@ function ScrapReviewsView() {
               {i + 1}
             </Pagination.Item>
           ))}
-          <Pagination.Next onClick={handleNextPage} disabled={currentPage === totalPages}>
+          <Pagination.Next
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
             <i className="bi-chevron-right"></i>
           </Pagination.Next>
-          <Pagination.Last onClick={() => handlePageClick(totalPages)} disabled={currentPage === totalPages}>
+          <Pagination.Last
+            onClick={() => handlePageClick(totalPages)}
+            disabled={currentPage === totalPages}
+          >
             <i className="bi-chevron-double-right"></i>
           </Pagination.Last>
         </Pagination>

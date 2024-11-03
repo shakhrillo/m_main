@@ -21,6 +21,11 @@
     margin-bottom: .5rem;
 }
 
+.sidebar .list-group-item.active {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
 .sidebar .list-group-item {
     display: flex;
     height: 40px;
