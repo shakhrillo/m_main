@@ -1,40 +1,47 @@
-.content {
+.dashboard {
+    display: flex;
+    width: 100%;
+}
+
+.dashboard__content {
     width: calc(100% - 250px);
     margin-left: 250px;
     padding: 24px;
     background-color: var(--bg-color);
 }
 
-.dashboard {
-    width: 100%;
+.dashboard__sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    background-color: #fff;
+}
+
+.sidebar__logo-link {
     display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--primary-10);
 }
 
-.sidebar .navbar-brand {
-    padding: 10px 20px;
+.sidebar__logo {
+    width: 100%;
 }
 
-.sidebar {
-    background-color: #f6f6f6;
+.sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 16px;
+    color: var(--primary);
+    border-radius: 6px;
+    opacity: 0.7;
+    border-width: 0;
 }
 
-.sidebar .list-group-item.active {
+.sidebar__nav-item--active {
     background-color: #fff;
     font-weight: 600;
-    border-width: 0;
-    margin: 0;
     opacity: 1;
-}
-
-.sidebar .list-group-item {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    font-size: 16px;
-    border-radius: 6px;
-    color: var(--primary);
-    border: 0;
-    opacity: 0.7;
 }
 
 .reviews input {

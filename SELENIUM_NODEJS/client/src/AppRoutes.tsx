@@ -25,6 +25,10 @@ const router = createBrowserRouter([
     element: <DashboardView />,
     children: [
       {
+        path: "",
+        element: "Dashboard",
+      },
+      {
         path: "reviews",
         element: <Outlet />,
         children: [
