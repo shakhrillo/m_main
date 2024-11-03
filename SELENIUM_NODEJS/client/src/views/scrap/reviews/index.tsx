@@ -150,205 +150,193 @@ function ScrapReviewsView() {
   }
 
   return (
-    <div className="reviews card bg-transparent">
-      <div className="card-body border-0">
-        <div className="card border-0 bg-transparent">
+    <div className="row">
+      <div className="col-3">
+        <div className="card">
           <div className="card-body">
-            <div className="row">
-              <div className="col-6 d-flex gap-2">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control bg-transparent"
-                    placeholder="Place URL"
-                    aria-describedby="addon-wrapping"
-                    value={scrapingUrl}
-                    onChange={e => setScrapingUrl(e.target.value)}
-                  />
-                </div>
-                <button
-                  className="btn"
-                  type="button"
-                  id="addon-wrapping"
-                  onClick={() => startScraping(scrapingUrl)}
-                  disabled={!scrapingUrl}
-                >
-                  Start
-                </button>
+            <form>
+              <div className="mb-3">
+                <label className="form-label">Sharable URL</label>
+                <input type="email" className="form-control" placeholder="Place URL" value={scrapingUrl} onChange={e => setScrapingUrl(e.target.value)} />
               </div>
-              <div className="col d-flex gap-3 justify-content-center">
-                {/* <div className="badge canceled"> */}
-                {/* <div className="badge complted"> */}
-                <div className="badge on-progress">
-                  {/* Canceled */}
-                  {/* Success */}
-                  <li>On Progress</li>
-                </div>
-                <div className="badge on-progress bg-transparent">00m 12s</div>
-              </div>
-              <div className="col d-flex justify-content-end">
-                <button className="btn btn-danger">STOP</button>
-              </div>
-            </div>
-            <div className="card border-0 mt-3">
-              <div className="card-body">
-                <div className="d-flex">
-                  <ToggleButtonGroup
-                    type="radio"
-                    name="options-base"
-                    value={selectedValue}
-                    onChange={value => setSelectedValue(value)}
-                    className="filter"
-                  >
-                    <ToggleButton
-                      id="option5"
-                      value="all"
-                      variant="outline-primary"
-                    >
-                      All
-                    </ToggleButton>
-                    <ToggleButton
-                      id="option6"
-                      value="completed"
-                      variant="outline-primary"
-                    >
-                      Completed
-                    </ToggleButton>
-                    <ToggleButton
-                      id="option8"
-                      value="canceled"
-                      variant="outline-primary"
-                    >
-                      Canceled
-                    </ToggleButton>
-                  </ToggleButtonGroup>
+              <div className="mb-3">
+                <label className="form-label">
+                  Extract limit
+                </label>
+                <input type="number" className="form-control" placeholder="Extract limit" disabled />
+                <div className="form-text">
+                  For demo purposes, the extract limit is disabled.
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="card-body">
-        <div className="card border-0">
-          <div className="card-body bg-white">
-            <table className="table geo-table">
-              <thead>
-                <tr>
-                  {[
-                    {
-                      title: "#",
-                      icon: "",
-                    },
-                    {
-                      title: "Place",
-                      icon: "bi-geo",
-                    },
-                    {
-                      title: "Date",
-                      icon: "bi-clock",
-                    },
-                    {
-                      title: "Reviews",
-                      icon: "bi-chat-square-text",
-                    },
-                    {
-                      title: "Time",
-                      icon: "bi-hourglass",
-                    },
-                    {
-                      title: "Download",
-                      icon: "bi-cloud-download",
-                    },
-                  ].map((item, index) => (
-                    <th scope="col" key={index}>
-                      <i className={item.icon}></i>
-                      {item.title}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentReviews.map(review => (
-                  <tr key={review.id}>
-                    <td>
-                      <div className="d-flex">
-                        <div
-                          className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
-                        >
-                          {renderStatus(review.status)}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <a href={`/reviews/${review.id}`}>
-                        {review.title.replace(/ - Google Maps/g, "")}
-                      </a>
-                    </td>
-                    <td>{formatTime(review.createdAt)}</td>
-                    <td>{renderCount(review)}</td>
-                    <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                    <td>
-                      <div className="d-flex gap-2 geo-select">
-                        <select
-                          className="form-select"
-                          aria-label={`Download ${review.title}`}
-                          id={`download-${review.id}`}
-                        >
-                          <option value="json">JSON</option>
-                          <option value="csv">CSV</option>
-                        </select>
-                        <button
-                          className="btn border"
-                          onClick={() => downloadFile(review, `download-${review.id}`)}
-                        >
-                          <i className="bi-download"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div className="card-footer">
-        <Pagination>
-          <Pagination.First
-            onClick={() => handlePageClick(1)}
-            disabled={currentPage === 1}
-          >
-            <i className="bi-chevron-double-left"></i>
-          </Pagination.First>
-          <Pagination.Prev
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            <i className="bi-chevron-left"></i>
-          </Pagination.Prev>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Pagination.Item
-              key={i + 1}
-              active={currentPage === i + 1}
-              onClick={() => handlePageClick(i + 1)}
-              disabled={currentPage === i + 1}
+              <div className="mb-3">
+                <label className="form-label">
+                  Sort by
+                </label>
+                <select className="form-select">
+                  <option value="rating">Newest</option>
+                  <option value="date">Lowest rating</option>
+                  <option value="date">Highest rating</option>
+                </select>
+              </div>
+              <div className="mb-3 form-check">
+                <input type="checkbox" className="form-check-input" />
+                <label className="form-label">
+                  Extract image urls
+                </label>
+              </div>
+              <div className="mb-3 form-check">
+                <input type="checkbox" className="form-check-input" />
+                <label className="form-label">
+                  Owner response
+                </label>
+              </div>
+              <div className="mb-3 form-check">
+                <input type="checkbox" className="form-check-input" />
+                <label className="form-label">
+                  Only Google reviews
+                </label>
+              </div>
+            </form>
+            <button
+              className="btn btn-primary w-100 mt-3"
+              type="button"
+              onClick={() => startScraping(scrapingUrl)}
+              disabled={!scrapingUrl}
             >
-              {i + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            <i className="bi-chevron-right"></i>
-          </Pagination.Next>
-          <Pagination.Last
-            onClick={() => handlePageClick(totalPages)}
-            disabled={currentPage === totalPages}
-          >
-            <i className="bi-chevron-double-right"></i>
-          </Pagination.Last>
-        </Pagination>
+              Start
+            </button>
+            
+            <small className="form-text text-muted">
+              The scraping process may take a few minutes.
+            </small>
+          </div>
+        </div>
+      </div>
+      <div className="col-9">
+        <div className="reviews card">
+          <div className="card-body">
+            <div className="card border-0">
+              <div className="card-body bg-white">
+                <table className="table geo-table">
+                  <thead>
+                    <tr>
+                      {[
+                        {
+                          title: "#",
+                          icon: "",
+                        },
+                        {
+                          title: "Place",
+                          icon: "bi-geo",
+                        },
+                        {
+                          title: "Date",
+                          icon: "bi-clock",
+                        },
+                        {
+                          title: "Reviews",
+                          icon: "bi-chat-square-text",
+                        },
+                        {
+                          title: "Time",
+                          icon: "bi-hourglass",
+                        },
+                        {
+                          title: "Download",
+                          icon: "bi-cloud-download",
+                        },
+                      ].map((item, index) => (
+                        <th scope="col" key={index}>
+                          <i className={item.icon}></i>
+                          {item.title}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentReviews.map(review => (
+                      <tr key={review.id}>
+                        <td>
+                          <div className="d-flex">
+                            <div
+                              className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                            >
+                              {renderStatus(review.status)}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <a href={`/reviews/${review.id}`}>
+                            {review.title.replace(/ - Google Maps/g, "")}
+                          </a>
+                        </td>
+                        <td>{formatTime(review.createdAt)}</td>
+                        <td>{renderCount(review)}</td>
+                        <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                        <td>
+                          <div className="d-flex gap-2 geo-select">
+                            <select
+                              className="form-select"
+                              aria-label={`Download ${review.title}`}
+                              id={`download-${review.id}`}
+                            >
+                              <option value="json">JSON</option>
+                              <option value="csv">CSV</option>
+                            </select>
+                            <button
+                              className="btn border"
+                              onClick={() => downloadFile(review, `download-${review.id}`)}
+                            >
+                              <i className="bi-download"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="card-footer">
+            <Pagination>
+              <Pagination.First
+                onClick={() => handlePageClick(1)}
+                disabled={currentPage === 1}
+              >
+                <i className="bi-chevron-double-left"></i>
+              </Pagination.First>
+              <Pagination.Prev
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                <i className="bi-chevron-left"></i>
+              </Pagination.Prev>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <Pagination.Item
+                  key={i + 1}
+                  active={currentPage === i + 1}
+                  onClick={() => handlePageClick(i + 1)}
+                  disabled={currentPage === i + 1}
+                >
+                  {i + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                <i className="bi-chevron-right"></i>
+              </Pagination.Next>
+              <Pagination.Last
+                onClick={() => handlePageClick(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                <i className="bi-chevron-double-right"></i>
+              </Pagination.Last>
+            </Pagination>
+          </div>
+        </div>
       </div>
     </div>
   )
