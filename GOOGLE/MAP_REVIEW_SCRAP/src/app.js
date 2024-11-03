@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const reviewsRoutes = require('./routes/reviewsRoutes');
+const stripeRoutes = require('./routes/stripeRoutes');
 const { verifyIdToken } = require('./controllers/userController');
 
 const app = express();
@@ -24,7 +25,8 @@ app.use((err, req, res, next) => {
 });
 
 // Routes
-app.use('/', reviewsRoutes);
+app.use('/api/reviews', reviewsRoutes);
+app.use('/api/stripe', stripeRoutes);
 app.get('/', (req, res) => res.send('Server is running'));
 
 // Start the server
