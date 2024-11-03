@@ -5,7 +5,7 @@ import { useAppSelector } from "../../app/hooks"
 
 import { Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
-import logoImg from "../../assets/logo.png";
+import logoImg from "../../assets/logo.png"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 function DashboardView() {
@@ -22,11 +22,11 @@ function DashboardView() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const usFb = useFirebase();
+  const usFb = useFirebase()
 
   useEffect(() => {
-    console.log('usFb', usFb);
-  }, [usFb]);
+    console.log("usFb", usFb)
+  }, [usFb])
 
   useEffect(() => {
     if (!db) return
@@ -95,55 +95,121 @@ function DashboardView() {
 
   return (
     <div className="dashboard">
-      <div className="sidebar">
-        <a className="navbar-brand p-0" href={'/'}>
-          <img src={logoImg} alt="logo" height="60" />
-        </a>
-        <div className="list-group">
-          <a type="button" className="list-group-item list-group-item-action" href="/reviews">
+      <div className="sidebar card border-0">
+        <div className="card-body">
+          <a className="navbar-brand" href={"/"}>
+            <img src={logoImg} alt="logo" />
+          </a>
+          <div className="list-group mt-4">
+            <a type="button" className="list-group-item mb" href="/reviews">
+              <i className="bi-search"></i>
+              <span>Scrap Reviews</span>
+            </a>
+            <a
+              type="button"
+              className="list-group-item list-group-item-action"
+              href="/usage"
+            >
+              <i className="bi-bar-chart"></i>
+              <span>Usage</span>
+            </a>
+            <a
+              type="button"
+              className="list-group-item list-group-item-action"
+              href="/payments"
+            >
+              <i className="bi-credit-card"></i>
+              <span>Payments</span>
+            </a>
+            <a
+              type="button"
+              className="list-group-item list-group-item-action"
+              href="/reviews"
+            >
+              <i className="bi-gear"></i>
+              <span>Settings</span>
+            </a>
+            <a
+              type="button"
+              className="list-group-item list-group-item-action"
+              href="/reviews"
+            >
+              <i className="bi-question-circle"></i>
+              <span>Help</span>
+            </a>
+            {/* <hr className="mt-auto" /> */}
+            <a
+              type="button"
+              className="list-group-item list-group-item-action mt-auto border-top"
+              href="/reviews"
+            >
+              <i className="bi-box-arrow-left"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+        {/* <div className="list-group">
+          <a
+            type="button"
+            className="list-group-item list-group-item-action"
+            href="/reviews"
+          >
             <i className="bi-search"></i>
-            <span>
-              Scrap Reviews
-            </span>
+            <span>Scrap Reviews</span>
           </a>
           <div className="list-group list-group-nested d-none">
-            <a href="/dashboard/scrap/reviews" className="list-group-item list-group-item-action">
+            <a
+              href="/dashboard/scrap/reviews"
+              className="list-group-item list-group-item-action"
+            >
               Reviews
               <span className="badge bg-warning rounded-pill ms-2">1</span>
             </a>
-            <a href="/dashboard/scrap/places" className="list-group-item list-group-item-action">Places</a>
+            <a
+              href="/dashboard/scrap/places"
+              className="list-group-item list-group-item-action"
+            >
+              Places
+            </a>
           </div>
-          <a type="button" className="list-group-item list-group-item-action" href="/usage">
+          <a
+            type="button"
+            className="list-group-item list-group-item-action"
+            href="/usage"
+          >
             <i className="bi-bar-chart"></i>
-            <span>
-              Usage
-            </span>
+            <span>Usage</span>
           </a>
-          <a type="button" className="list-group-item list-group-item-action" href="/payments">
+          <a
+            type="button"
+            className="list-group-item list-group-item-action"
+            href="/payments"
+          >
             <i className="bi-credit-card"></i>
-            <span>
-              Payments
-            </span>
+            <span>Payments</span>
           </a>
-          <button type="button" className="list-group-item list-group-item-action">
+          <button
+            type="button"
+            className="list-group-item list-group-item-action"
+          >
             <i className="bi-gear"></i>
-            <span>
-              Settings
-            </span>
+            <span>Settings</span>
           </button>
-          <button type="button" className="list-group-item list-group-item-action">
+          <button
+            type="button"
+            className="list-group-item list-group-item-action"
+          >
             <i className="bi-question-circle"></i>
-            <span>
-              Help
-            </span>
+            <span>Help</span>
           </button>
-          <button type="button" className="list-group-item list-group-item-action text-danger mt-auto">
+          <button
+            type="button"
+            className="list-group-item list-group-item-action text-danger mt-auto"
+          >
             <i className="bi-box-arrow-right"></i>
-            <span>
-              Logout
-            </span>
+            <span>Logout</span>
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="content">
         <Outlet />

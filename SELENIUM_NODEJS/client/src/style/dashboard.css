@@ -8,3 +8,24 @@
     width: 100%;
     display: flex;
 }
+
+.sidebar .navbar-brand {
+    padding: 10px 20px;
+}
+
+.sidebar {
+    background-color: #f6f6f6;
+}
+
+.sidebar .list-group-item:first-child {
+    margin-bottom: .5rem;
+}
+
+.sidebar .list-group-item {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    font-size: 16px;
+    border-radius: 6px;
+    color: #3c486b;
+}
