@@ -7,7 +7,6 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {
   let event = request.rawBody;
-  console.log(event);
   // Only verify the event if you have an endpoint secret defined.
   // Otherwise use the basic event deserialized with JSON.parse
   if (endpointSecret) {
@@ -25,6 +24,8 @@ exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request,
     }
   }
 
+  console.log(event);
+
   // checkout.session.completed
   // payment_intent.payment_failed
   // payment_intent.succeeded
@@ -33,6 +34,7 @@ exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request,
   switch (event.type) {
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;
+      console.log('metadata-->', paymentIntent.metadata);
       // Then define and call a method to handle the successful payment intent.
       // handlePaymentIntentSucceeded(paymentIntent);
       await admin.firestore().collection(`users/${paymentIntent.metadata.userId}/payments`).add({
@@ -44,8 +46,9 @@ exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request,
       const userRef = admin.firestore().doc(`users/${paymentIntent.metadata.userId}`);
       const userDoc = await userRef.get();
       const user = userDoc.data();
+      const coinBalance = user.coinBalance || 0;
       await userRef.update({
-        coinBalance: user.coinBalance + paymentIntent.amount,
+        coinBalance: coinBalance + paymentIntent.amount,
       });
       break;
     case 'payment_method.attached':

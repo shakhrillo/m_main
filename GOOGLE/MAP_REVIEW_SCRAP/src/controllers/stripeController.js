@@ -21,8 +21,10 @@ exports.createCheckoutSession = async (req, res) => {
             mode: "payment",
             success_url: "http://localhost:4200/payments",
             cancel_url: "http://localhost:4200/payments",
-            metadata: {
-                userId: req.user.uid,
+            payment_intent_data: {  // Add metadata to payment intent directly
+                metadata: {
+                    userId: req.user.uid,
+                },
             },
         });
 

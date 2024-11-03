@@ -5,7 +5,7 @@ import { useAppSelector } from "../../app/hooks"
 
 import { NavLink, Outlet } from "react-router-dom"
 import "../../style/dashboard.css"
-import logoImg from "../../assets/images/logo.png"
+// import logoImg from "../../assets/images/logo.png"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 function DashboardView() {
@@ -98,7 +98,7 @@ function DashboardView() {
       <div className="sidebar card border-0">
         <div className="card-body">
           <NavLink className="navbar-brand" to={"/"}>
-            <img src={logoImg} alt="logo" />
+            {/* <img src={logoImg} alt="logo" /> */}
           </NavLink>
           <div className="list-group mt-4">
             <NavLink

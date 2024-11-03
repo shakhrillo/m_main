@@ -11,7 +11,12 @@ service cloud.firestore {
         	allow read, write: if request.auth.uid != null;
       	}
       }
+
       match /usage/{usageId} {
+        allow read, write: if request.auth.uid != null;
+      }
+
+      match /payments/{paymentId} {
         allow read, write: if request.auth.uid != null;
       }
     }
