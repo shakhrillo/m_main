@@ -4,13 +4,11 @@ const router = express.Router();
 const scrap = require('../controllers/scraperController');
 
 router.post('/', async (req, res) => {
-  const { 
-    userId,
-    reviewId,
-    url
-  } = req.body;
+  const user = req.user;
+  const uid = user.uid;
+  const { reviewId, url } = req.body;
 
-  scrap(url, userId, reviewId, limit = 50);
+  scrap(url, uid, reviewId, limit = 50);
 
   res.json({
     success: true

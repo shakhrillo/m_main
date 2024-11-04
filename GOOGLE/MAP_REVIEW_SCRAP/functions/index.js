@@ -1,10 +1,36 @@
 require('dotenv').config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const { onDocumentCreated } = require('firebase-functions/firestore');
+const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/firestore');
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const endPointURL = 'http://34.57.204.128/api/reviews';
+
+async function postReview(data) {
+  try {
+    const response = await fetch(endPointURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Check if the response status is OK (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Parse and return the JSON response
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error posting review:', error);
+    throw error; // Re-throw the error to be handled by the caller if needed
+  }
+}
 
 exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', async (event) => {
   const snapshot = event.data;
@@ -43,6 +69,54 @@ exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', as
   });
 });
 
+exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
+  const snapshot = event.data;
+  const status = snapshot.data();
+  const statusActive = status.active;
+
+  if (!statusActive) {
+    const pendingCollection = admin.firestore().collection(`pending`);
+    const pendingSnapshot = await pendingCollection.get();
+    const pendingDocs = pendingSnapshot.docs;
+    if (pendingDocs.length === 0) {
+      return;
+    }
+    const pendingDoc = pendingDocs[0];
+    const review = pendingDoc.data();
+    try {
+      // set status active to true
+      await snapshot.ref.update({
+        active: true,
+      });
+      await postReview(review);
+      await pendingDoc.ref.delete();
+    } catch (error) {
+      console.error('Error posting review:', error);
+    }
+  }
+});
+
+exports.watchPending = onDocumentCreated('pending/{pendingId}', async (event) => {
+  const statusDoc = admin.firestore().doc(`status/app`);
+  const statusSnapshot = await statusDoc.get();
+  const status = statusSnapshot.data();
+  const statusActive = status.active;
+
+  if (!statusActive) {
+    const snapshot = event.data;
+    const review = snapshot.data();
+    try {
+      await statusDoc.update({
+        active: true,
+      });
+      await postReview(review);
+      await snapshot.ref.delete();
+    } catch (error) {
+      console.error('Error posting review:', error);
+    }
+  }
+});
+
 exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', async (event) => {
   console.log('event:', event);
   const snapshot = event.data;
@@ -51,35 +125,8 @@ exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', 
     return;
   }
   const review = snapshot.data();
-
-  console.log('New review added:', review);
-
-  const userId = event.params.userId;
-  const reviewId = event.params.reviewId;
-  const token = review.token;
-
-  console.log('New review added:', review);
-  console.log('userId:', userId);
-  console.log('reviewId:', reviewId);
-
-  // http request to
-  const url = 'http://34.57.204.128/api/reviews';
-  const body = {
-    userId,
-    reviewId,
-    ...review
-  };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  console.log('response:', response);
+  const pendingCollection = admin.firestore().collection(`pending`);
+  await pendingCollection.add(review);
 });
 
 exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {

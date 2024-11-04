@@ -11,6 +11,7 @@ const clickReviewTab = require('../utils/clickReviewTab');
 const sortReviews = require('../utils/sortReviews');
 const enableRequestInterception = require('./enableRequestInterception');
 const { scrollAndCollectElements } = require('../utils/scrollAndCollectElements');
+const { firestore } = require('../services/firebaseAdmin');
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, 'temp');
@@ -117,6 +118,20 @@ async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
       createdAt: new Date(),
       spentCoins: uniqueElements.length
     });
+
+    // status/app status = false
+    const statusDoc = firestore.doc(`status/app`);
+    // check statusDoc is available or create it
+    const statusSnapshot = await statusDoc.get();
+    if (!statusSnapshot.exists) {
+      await statusDoc.set({
+        active: false,
+      });
+    } else {
+      statusDoc.update({
+        active: false,
+      });
+    }
   
     return uniqueElements;
   } catch (error) {
