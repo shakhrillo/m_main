@@ -79,7 +79,6 @@ function ScrapReviewsView() {
     setScrap(defaultScrap);
     const collectionReviews = collection(firestore, `users/${user?.uid}/reviews`);
     const token = await user.getIdToken();
-    console.log("Token:", token);
     const docRef = await addDoc(collectionReviews, {
       ...scrap,
       status: "in-progress",

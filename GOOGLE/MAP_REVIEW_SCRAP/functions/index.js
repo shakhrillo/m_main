@@ -6,7 +6,43 @@ admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// watch new collection(firestore, `users/${user?.uid}/reviews`);
+exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', async (event) => {
+  const snapshot = event.data;
+  const coin = snapshot.data();
+  const amount = coin.amount;
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "Custom Amount",
+          },
+          unit_amount: amount,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: "http://localhost:4200/payments",
+    cancel_url: "http://localhost:4200/payments",
+    payment_intent_data: {  // Add metadata to payment intent directly
+      metadata: {
+        userId: event.params.userId,
+      },
+    },
+  });
+
+  console.log('session:', session);
+
+  const userCollection = admin.firestore().collection(`users/${event.params.userId}/buy`);
+  await userCollection.add({
+    url: session.url,
+  });
+});
+
 exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', async (event) => {
   console.log('event:', event);
   const snapshot = event.data;
