@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     url
   } = req.body;
 
-  scrap(url, userId, reviewId);
+  scrap(url, userId, reviewId, limit = 50);
 
   res.json({
     success: true

@@ -11,7 +11,8 @@ module.exports = {
     timeout: 30000
   },
   goto: {
-    waitUntil: 'networkidle2'
+    waitUntil: 'networkidle2',
+    timeout: 30000
   },
   viewport: {
     width: 600,

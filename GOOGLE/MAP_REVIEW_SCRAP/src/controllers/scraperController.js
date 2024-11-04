@@ -4,10 +4,13 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const { uploadFile } = require('../services/storageService');
 const wait = require('../utils/wait');
 const { launchBrowser, openPage } = require('../utils/browser');
-const { clickReviewTab, scrollAndCollectElements } = require('../utils/elementUtils');
+const { scrollAndCollectElements } = require('../utils/elementUtils');
 const filterUniqueElements = require('../utils/filter');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
 const { getUser, updateUser, createUserUsage } = require('./userController');
+const clickReviewTab = require('../utils/clickReviewTab');
+const sortReviews = require('../utils/sortReviews');
+const enableRequestInterception = require('./enableRequestInterception');
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, 'temp');
@@ -17,32 +20,12 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
 
-async function main(url, uid, pushId) {
+async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
   try {
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
-    await wait(2000);
-    
-    // Enable request interception
-    await page.setRequestInterception(true);
-    // Filter out requests for images, stylesheets, and other media
-    page.on('request', (request) => {
-      const disabledRequests = [
-        'googleusercontent',
-        'preview',
-        'analytics',
-        'ads',
-        'fonts',
-        '/maps/vt'
-      ]
-      if (disabledRequests.some((disabledRequest) => request.url().includes(disabledRequest))) {
-        request.abort();
-      } else {
-        request.continue();
-      }
-    });
-
     const title = await page.title();
+
     await updateReview(uid, pushId, {
       title,
       createdAt: new Date(),
@@ -50,23 +33,17 @@ async function main(url, uid, pushId) {
       token: ''
     });
 
+    await enableRequestInterception(page, [
+      'googleusercontent',
+      'preview',
+      'analytics',
+      'ads',
+      'fonts',
+      '/maps/vt'
+    ]);
+
     await clickReviewTab(page);
-    await wait(1000);
-    const sortButton = await page.$('button[aria-label="Sort reviews"], button[aria-label="Most relevant"]');
-    if (!sortButton) {
-      throw new Error('Sort button not found');
-    }
-    sortButton.click();
-    await wait(400);
-    const menuItemRadios = await page.$$('[role="menuitemradio"]');
-    for (menuItem of menuItemRadios) {
-      const text = await page.evaluate((el) => el.textContent, menuItem);
-      if (text === 'Newest') {
-        console.log('Clicking newest menu item');
-        menuItem.click();
-        break;
-      }
-    }
+    await sortReviews(page, sortBy);
   
     const allElements = await scrollAndCollectElements(page, uid, pushId) || [];
     const uniqueElements = filterUniqueElements(allElements);

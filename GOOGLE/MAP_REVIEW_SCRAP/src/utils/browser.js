@@ -1,19 +1,46 @@
 const puppeteer = require('puppeteer');
 const config = require('../config/settings');
 const logger = require('./logger');
+const wait = require('./wait');
 
 async function launchBrowser() {
-  logger.info('Launching browser');
-  return await puppeteer.launch(config.launch);
+  try {
+    logger.info('Launching browser...');
+    const browser = await puppeteer.launch(config.launch);
+    logger.info('Browser launched successfully');
+    return browser;
+  } catch (error) {
+    logger.error('Failed to launch browser:', error);
+    throw error;
+  }
 }
 
 async function openPage(browser, url) {
-  logger.info(`Opening page: ${url}`);
-  const page = await browser.newPage();
-  await page.goto(url, config.goto);
-  await page.setViewport(config.viewport);
-  logger.info('Page opened');
-  return page;
+  try {
+    let pages = await browser.pages();
+    const page = pages.length > 0 ? pages[0] : await browser.newPage();
+
+    logger.info(`Opening page: ${url}`);
+
+    const navigationTimeout = config?.goto?.timeout || 30000;
+
+    await page.goto(url, { ...config.goto, timeout: navigationTimeout });
+
+    const viewportConfig = config.viewport || { width: 600, height: 800 };
+    await page.setViewport(viewportConfig);
+
+    await wait(400);
+    await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: navigationTimeout });
+    await wait(400);
+
+    logger.info('Page opened successfully');
+    return page;
+
+  } catch (error) {
+    logger.error(`Failed to open page: ${url}. Error: ${error.message}`);
+
+    return null;
+  }
 }
 
 module.exports = { launchBrowser, openPage };

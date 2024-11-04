@@ -1,47 +1,8 @@
 const { updateReview } = require('../controllers/reviewController');
+const getReviewsContainer = require('./getReviewsContainer');
 const logger = require('./logger');
 const wait = require('./wait');
 
-async function clickReviewTab(page) {
-  logger.info('Clicking review tab');
-  const allButtons = await page.$$('button[role="tab"][aria-selected="false"]');
-  
-  if (!allButtons.length) {
-    logger.error('No review tab found');
-    return;
-  }
-
-  for (const button of allButtons) {
-    const tabText = await button.evaluate(el => el.textContent);
-    if (tabText.toLowerCase().includes('reviews')) {
-      logger.info('Clicking review tab');
-      await button.click();
-      break;
-    }
-  }
-}
-
-async function getReviewsContainer(page) {
-  logger.info('Getting reviews container');
-
-  try {
-    await page.waitForSelector('.vyucnb', { timeout: 5000 });
-  } catch (error) {
-    logger.error('Reviews container did not load in time');
-    return null;
-  }
-
-  const vyucnb = await page.$$('.vyucnb');
-  let parentElm;
-
-  if (vyucnb.length) {
-    parentElm = await page.evaluateHandle(el => el.parentElement, vyucnb[0]);
-  } else {
-    logger.error('No reviews container found');
-  }
-
-  return parentElm;
-}
 async function ensureButtonInViewport(button) {
   const isButtonInViewport = await button.isIntersectingViewport();
   if (!isButtonInViewport) {
@@ -343,23 +304,30 @@ async function checkInfiniteScroll(reviewsContainer) {
   }
 }
 
-async function scrollAndCollectElements(page, uid, pushId) {
+async function scrollAndCollectElements(page, uid, pushId, limit=50) {
   const reviewsContainer = await getReviewsContainer(page);
+  if (!reviewsContainer) {
+    logger.error('Reviews container not found');
+    return [];
+  }
+
   let isScrollFinished = false;
   let allElements = [];
   let lastId = null;
 
   while (!isScrollFinished) {
     try {
-      // scroll to beginning reviewsContainer
-      await reviewsContainer.evaluate(el => el.scrollIntoView());
-      await wait(200);
-
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
       lastId = allElements[allElements.length - 1]?.id;
       const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);
       allElements.push(...elements);
       console.log(`Collected ${allElements.length} elements`);
+
+      if (allElements.length >= limit) {
+        isScrollFinished = true;
+        console.log("Limit reached");
+        break;
+      }
 
       await updateReview(uid, pushId, {
         extractedReviews: allElements.length,
@@ -386,4 +354,4 @@ async function scrollAndCollectElements(page, uid, pushId) {
   return allElements;
 }
 
-module.exports = { clickReviewTab, scrollAndCollectElements };
+module.exports = { scrollAndCollectElements };
