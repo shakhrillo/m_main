@@ -48,12 +48,22 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
 
       // If unique elements count hasn't increased, wait before scrolling again
       if (uniqueElements.length <= previousUniqueCount) {
-        logger.info('No new unique elements found, waiting before scrolling again...');
+        console.log('No new unique elements found, waiting before scrolling again...');
         let el = uniqueElements[uniqueElements.length - 1];
-        if (el) {
-          await page.evaluate(el => el.scrollIntoView(), el.element);
+        let retryScroll = 5;
+        while(retryScroll > 0) {
+          if (el) {
+            await page.evaluate(el => el.scrollIntoView(), el.element);
+          }
+          await wait(5000); // Wait for 5 seconds
+          const isLastChildInViewport = await lastChild.isIntersectingViewport();
+          if (!isLastChildInViewport) {
+            await page.evaluate(el => el.scrollIntoView(), lastChild);
+          }
+          retryScroll--;
+          console.log('Retrying scroll...');
         }
-        await wait(5000); // Wait for 5 seconds
+        console.log('Retried scrolling, continuing...');
       } else {
         previousUniqueCount = uniqueElements.length; // Update the unique count
       }
