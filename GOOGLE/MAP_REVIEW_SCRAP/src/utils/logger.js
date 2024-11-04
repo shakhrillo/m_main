@@ -14,11 +14,14 @@ function log(message, level = 'INFO') {
   const timestamp = new Date().toISOString();
   const logMessage = `${timestamp} [${level}]: ${message}\n`;
 
+  if (level === 'ERROR') {
+    console.error(logMessage);
+  }
   // Print to console
-  console.log(logMessage);
+  // console.log(logMessage);
 
   // Append to log file
-  fs.appendFileSync(logFilePath, logMessage, 'utf8');
+  // fs.appendFileSync(logFilePath, logMessage, 'utf8');
 }
 
 // Export logger functions

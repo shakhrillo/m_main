@@ -4,6 +4,7 @@ const { updateReview } = require('../controllers/reviewController');
 const checkInfiniteScroll = require('./checkInfiniteScroll');
 const getReviewElements = require('./getReviewElements');
 const getReviewsContainer = require('./getReviewsContainer');
+const filterUniqueElements = require('./filter');
 
 /**
  * Scrolls through a page to collect review elements up to a specified limit.
@@ -32,9 +33,11 @@ async function scrollAndCollectElements(page, uid, pushId, limit = 50) {
 
       const elements = await getReviewElements(page, reviewsContainer, lastId);
       allElements.push(...elements);
-      logger.info(`Collected ${allElements.length} elements`);
+      console.log(`Collected ${allElements.length} elements`);
 
-      if (allElements.length >= limit) {
+      const uniqueElements = filterUniqueElements(allElements) || [];
+      console.log('Unique elements:', uniqueElements.length);
+      if (uniqueElements.length >= limit) {
         isScrollFinished = true;
         logger.info('Limit reached, stopping scroll');
         break;
