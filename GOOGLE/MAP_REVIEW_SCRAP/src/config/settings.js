@@ -1,11 +1,17 @@
 module.exports = {
   launch: {
+    product: 'firefox',
     headless: true,
     args: [
-      '--no-sandbox',
+      '--no-sandbox',                // Bypasses sandbox, which can slow down VMs
       '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu'
+      '--disable-gpu',                // No GPU in many VMs, so this saves overhead
+      '--disable-dev-shm-usage',      // Avoids `/dev/shm` usage, which is limited on VMs
+      '--single-process',             // Runs Chrome in a single process, useful for limited CPU
+      '--no-zygote',                  // Speeds up launch by skipping zygote process
+      '--disable-accelerated-2d-canvas', // Reduces CPU load by avoiding unnecessary canvas rendering
+      '--no-first-run',               // Skips initial setup checks
+      '--no-default-browser-check'    // Bypasses default browser check
     ],
     defaultViewport: null,
     timeout: 30000
