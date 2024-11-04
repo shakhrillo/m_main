@@ -1,10 +1,8 @@
-// src/pages/LoginPage.tsx
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import logo from "../assets/images/logo.png"
 import "../style/login.css"
-import { FormControl, InputGroup } from "react-bootstrap"
 
 const LoginPage: React.FC = () => {
   const { login, user, googleLogin } = useFirebase()
@@ -117,7 +115,8 @@ const LoginPage: React.FC = () => {
                   Login
                 </button>
                 <span className="mt-3">
-                  Not registered? <a href="#">Create an Account</a>
+                  Not registered?{" "}
+                  <Link to={"/register"}>Create an Account</Link>
                 </span>
               </form>
               <small>
