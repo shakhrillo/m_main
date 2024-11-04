@@ -1,9 +1,9 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
 import PrivateRoute from "../components/PrivateRoute"
+import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout"
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
 import LoginPage from "../pages/LoginPage"
 import RegisterPage from "../pages/RegisterPage"
-import DashboardView from "../views/dashboard"
 import PaymentsHistoryView from "../views/payments/history"
 import PaymentsSubscriptionView from "../views/payments/subscription"
 import ScrapPlacesView from "../views/scrap/places"
@@ -32,7 +32,7 @@ const paymentsRoutes = {
 
 const dashboardRoutes = {
   path: "",
-  element: <DashboardView />,
+  element: <DashboardLayout />,
   children: [
     { path: "", element: "Dashboard" },
     reviewsRoutes,
