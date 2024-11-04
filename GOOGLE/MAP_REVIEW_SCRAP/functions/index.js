@@ -126,7 +126,10 @@ exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', 
   }
   const review = snapshot.data();
   const pendingCollection = admin.firestore().collection(`pending`);
-  await pendingCollection.add(review);
+  await pendingCollection.add({
+    ...review,
+    reviewId: event.params.reviewId,
+  });
 });
 
 exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {

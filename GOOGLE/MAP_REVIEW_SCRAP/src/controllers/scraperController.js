@@ -119,9 +119,7 @@ async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
       spentCoins: uniqueElements.length
     });
 
-    // status/app status = false
     const statusDoc = firestore.doc(`status/app`);
-    // check statusDoc is available or create it
     const statusSnapshot = await statusDoc.get();
     if (!statusSnapshot.exists) {
       await statusDoc.set({
@@ -136,6 +134,17 @@ async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
     return uniqueElements;
   } catch (error) {
     console.error('Error occurred:', error);
+    const statusDoc = firestore.doc(`status/app`);
+    const statusSnapshot = await statusDoc.get();
+    if (!statusSnapshot.exists) {
+      await statusDoc.set({
+        active: false,
+      });
+    } else {
+      statusDoc.update({
+        active: false,
+      });
+    }
   }
 }
 
