@@ -38,7 +38,7 @@ const sortBy = [
 
 const defaultScrap = {
   url: "https://maps.app.goo.gl/y5NbtGn4iWqndgsQ8",
-  limit: 50,
+  limit: 5000,
   sortBy: sortBy[0],
   extractImageUrls: false,
   ownerResponse: true,
@@ -133,7 +133,7 @@ function ScrapReviewsView() {
     if (!review || !review.extractedReviews)
       return <i className="bi-question-lg"></i>
     let count = review.extractedReviews || 0
-    if (!count) {
+    if (count < (review.totalReviews || 0)) {
       count = review.totalReviews
     }
 

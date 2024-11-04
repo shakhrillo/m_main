@@ -6,7 +6,7 @@ const scrap = require('../controllers/scraperController');
 router.post('/', async (req, res) => {
   const user = req.user;
   const uid = user.uid;
-  const { reviewId, url } = req.body;
+  const { reviewId, url, limit } = req.body;
 
   scrap(url, uid, reviewId, limit = 50);
 

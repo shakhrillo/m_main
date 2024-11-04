@@ -84,7 +84,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
         if (reviewId) {
           const reviewDetails = await fetchReviewDetails(nextSiblingElement, reviewId);
           if (reviewDetails) newReviewElements.push(reviewDetails); // Only push if details are valid
-          await wait(400);
+          await wait(40);
         }
 
         const nextElement = await nextSiblingElement.evaluateHandle(el => el.nextElementSibling);
