@@ -5,7 +5,7 @@ const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/fir
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const endPointURL = 'http://34.68.75.80/api/reviews';
+const endPointURL = 'http://34.46.41.115/api/reviews';
 
 async function postReview(data) {
   try {
@@ -70,11 +70,11 @@ exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', as
 });
 
 exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
-  const snapshot = event.data;
-  const status = snapshot.data();
-  const statusActive = status.active;
+  const newValue = event.data.after.data();
+  console.log('newValue:', newValue);
+  const newStatusActive = newValue.active;
 
-  if (!statusActive) {
+  if (!newStatusActive) {
     const pendingCollection = admin.firestore().collection(`pending`);
     const pendingSnapshot = await pendingCollection.get();
     const pendingDocs = pendingSnapshot.docs;
@@ -85,7 +85,7 @@ exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
     const review = pendingDoc.data();
     try {
       // set status active to true
-      await snapshot.ref.update({
+      await event.data.after.ref.update({
         active: true,
       });
       await postReview(review);

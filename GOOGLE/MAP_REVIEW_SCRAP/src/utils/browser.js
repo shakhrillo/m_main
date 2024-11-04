@@ -29,9 +29,7 @@ async function openPage(browser, url) {
     const viewportConfig = config.viewport || { width: 600, height: 800 };
     await page.setViewport(viewportConfig);
 
-    await wait(400);
-    await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: navigationTimeout });
-    await wait(400);
+    await wait(2000);
 
     logger.info('Page opened successfully');
     return page;
