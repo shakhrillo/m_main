@@ -140,3 +140,55 @@ $color-balance: #7564ee;
     }
   }
 }
+
+.profile label {
+  color: var(--primary);
+  font-size: 12px;
+}
+
+.profile input {
+  font-size: 14px;
+  border: 1px solid var(--primary);
+}
+
+.profile input::placeholder {
+  color: var(--primary-70);
+}
+
+.profile .form-control:focus {
+  box-shadow: none;
+  border: 1px solid var(--indigo);
+}
+
+.profile .input-group input {
+  border-right: 0;
+}
+
+.profile .input-group span {
+  border: 1px solid var(--primary);
+  background-color: #ffffff;
+  font-size: 14px;
+}
+
+.profile button:hover {
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.profile button {
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  font-size: 14px;
+}
+.profile button:hover,
+.profile button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+.profile button[type="submit"] {
+  background-color: var(--indigo);
+  color: var(--white);
+}
