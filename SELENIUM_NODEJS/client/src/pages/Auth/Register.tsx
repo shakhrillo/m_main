@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { useFirebase } from "../contexts/FirebaseProvider"
 import { Link, useNavigate } from "react-router-dom"
-import logo from "../assets/images/logo.png"
-import "../style/register.css"
+import logo from "../../assets/images/logo.svg"
+import "../../style/register.css"
 
-const RegisterPage: React.FC = () => {
+const Register: React.FC = () => {
   //   const { login, user, googleLogin } = useFirebase()
   const navigate = useNavigate()
 
@@ -166,4 +165,4 @@ const RegisterPage: React.FC = () => {
   )
 }
 
-export default RegisterPage
+export default Register

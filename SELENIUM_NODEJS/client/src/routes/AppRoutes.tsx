@@ -2,8 +2,8 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-rou
 import PrivateRoute from "../components/PrivateRoute"
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout"
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
-import LoginPage from "../pages/LoginPage"
-import RegisterPage from "../pages/RegisterPage"
+import Login from "../pages/Auth/Login"
+import Register from "../pages/Auth/Register"
 import PaymentsHistoryView from "../views/payments/history"
 import PaymentsSubscriptionView from "../views/payments/subscription"
 import ScrapPlacesView from "../views/scrap/places"
@@ -11,6 +11,7 @@ import ScrapReviewsView from "../views/scrap/reviews"
 import ScrapReviewsReviewView from "../views/scrap/reviews/review"
 import UsageView from "../views/usage"
 import UsersView from "../views/user"
+import Logout from "../pages/Auth/Logout"
 
 const reviewsRoutes = {
   path: "reviews",
@@ -46,8 +47,15 @@ const dashboardRoutes = {
 }
 
 const router = createBrowserRouter([
-  { path: "/register", element: <RegisterPage /> },
-  { path: "/login", element: <LoginPage /> },
+  {
+    path: "auth",
+    element: <Outlet />,
+    children: [
+      { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
+      { path: "logout", element: <Logout /> },
+    ]
+  },
   {
     path: "/",
     element: <PrivateRoute />,

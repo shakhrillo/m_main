@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
     { path: "/payments", icon: "bi-credit-card", label: "Payments" },
     { path: "/settings", icon: "bi-gear", label: "Settings" },
     { path: "/help", icon: "bi-question-circle", label: "Help" },
-    { path: "/logout", icon: "bi-box-arrow-left", label: "Logout", additionalClass: "sidebar__link--logout" },
+    { path: "/auth/logout", icon: "bi-box-arrow-left", label: "Logout", additionalClass: "sidebar__link--logout" },
   ];
 
   return (

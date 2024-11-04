@@ -10,7 +10,7 @@ const PrivateRoute: React.FC = () => {
     console.log('User', user);
   }, [user]);
 
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  return user ? <Outlet /> : <Navigate to="/auth/login" replace />;
 };
 
 export default PrivateRoute;
