@@ -4,13 +4,13 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const { uploadFile } = require('../services/storageService');
 const wait = require('../utils/wait');
 const { launchBrowser, openPage } = require('../utils/browser');
-const { scrollAndCollectElements } = require('../utils/elementUtils');
 const filterUniqueElements = require('../utils/filter');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
 const { getUser, updateUser, createUserUsage } = require('./userController');
 const clickReviewTab = require('../utils/clickReviewTab');
 const sortReviews = require('../utils/sortReviews');
 const enableRequestInterception = require('./enableRequestInterception');
+const { scrollAndCollectElements } = require('../utils/scrollAndCollectElements');
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, 'temp');
