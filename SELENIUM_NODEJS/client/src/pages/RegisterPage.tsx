@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { Link, useNavigate } from "react-router-dom"
 import logo from "../assets/images/logo.png"
-import "../style/login.css"
+import "../style/register.css"
 
 const RegisterPage: React.FC = () => {
   //   const { login, user, googleLogin } = useFirebase()
@@ -44,7 +44,7 @@ const RegisterPage: React.FC = () => {
   //   }
 
   return (
-    <div className="row login bg-white">
+    <div className="row register bg-white">
       <div className="col d-flex align-items-center justify-content-center">
         <div className="bg-white card h-100 border-0 flex-grow-1 p-5">
           <div className="card-body">
@@ -143,7 +143,7 @@ const RegisterPage: React.FC = () => {
                   </div>
                 </div>
                 <button type="submit" className="btn mt-3">
-                  Login
+                  Register
                 </button>
                 <span className="mt-3">
                   Got an account? <Link to={"/login"}>Login here!</Link>

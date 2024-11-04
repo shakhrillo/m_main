@@ -1,0 +1,82 @@
+.register {
+    height: 100vh;
+    width: 100vw;
+}
+
+.register .col:first-child {
+    max-width: 524px;
+    padding: 36px;
+}
+
+.register .card {
+    background-color: var(--bg-color);
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.register h3 {
+    margin: 0;
+}
+
+.register p,
+.register a,
+.register span {
+    font-size: 12px;
+    color: var(--primary-70);
+}
+
+.register button:hover,
+.register button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+.register button[type="submit"] {
+    background-color: var(--indigo);
+    color: var(--white);
+}
+
+.register label {
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.register input {
+    font-size: 14px;
+    border: 1px solid var(--primary);
+}
+
+.register input::placeholder {
+    color: var(--primary-70);
+}
+
+.register .form-control:focus {
+    box-shadow: none;
+    border: 1px solid var(--indigo);
+}
+
+.register .input-group input {
+    border-right: 0;
+}
+
+.register .input-group span {
+    border: 1px solid var(--primary);
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+.register .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.register small {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--primary-70);
+}
+
+.register-bg {
+    background-image: url("../assets/images/login-background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
