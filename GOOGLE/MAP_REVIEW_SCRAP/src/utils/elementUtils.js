@@ -351,6 +351,10 @@ async function scrollAndCollectElements(page, uid, pushId) {
 
   while (!isScrollFinished) {
     try {
+      // scroll to beginning reviewsContainer
+      await reviewsContainer.evaluate(el => el.scrollIntoView());
+      await wait(200);
+
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
       lastId = allElements[allElements.length - 1]?.id;
       const elements = await getReviewElements(page, reviewsContainer, allElements[allElements.length - 1]?.id);

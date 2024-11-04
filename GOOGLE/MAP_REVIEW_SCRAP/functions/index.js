@@ -63,7 +63,7 @@ exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', 
   console.log('reviewId:', reviewId);
 
   // http request to
-  const url = 'http://34.122.24.195/api/reviews';
+  const url = 'http://34.57.204.128/api/reviews';
   const body = {
     userId,
     reviewId,

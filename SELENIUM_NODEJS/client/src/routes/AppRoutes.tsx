@@ -51,16 +51,19 @@ const dashboardRoutes = {
   ],
 }
 
+const authRoutes = {
+  path: "auth",
+  element: <Outlet />,
+  children: [
+    { path: "register", element: <Register /> },
+    { path: "login", element: <Login /> },
+    { path: "logout", element: <Logout /> },
+  ]
+}
+
+
 const router = createBrowserRouter([
-  {
-    path: "auth",
-    element: <Outlet />,
-    children: [
-      { path: "register", element: <Register /> },
-      { path: "login", element: <Login /> },
-      { path: "logout", element: <Logout /> },
-    ]
-  },
+  authRoutes,
   {
     path: "/",
     element: <PrivateRoute />,

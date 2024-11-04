@@ -33,6 +33,10 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   const checkAuth = async () => {
     return new Promise((resolve, reject) => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log('user', user);
+        user?.getIdToken().then((token) => {
+          console.log('token', token);
+        })
         setIsLoading(false);
         unsubscribe();
         resolve(user);
