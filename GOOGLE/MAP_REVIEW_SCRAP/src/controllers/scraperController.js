@@ -21,7 +21,7 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
 
-async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
+async function main(url, uid, pushId, limit, sortBy) {
   try {
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
@@ -46,7 +46,7 @@ async function main(url, uid, pushId, limit=50, sortBy='Lowest rating') {
     await clickReviewTab(page);
     await sortReviews(page, sortBy);
   
-    const allElements = await scrollAndCollectElements(page, uid, pushId) || [];
+    const allElements = await scrollAndCollectElements(page, uid, pushId, limit) || [];
     const uniqueElements = filterUniqueElements(allElements);
   
     console.log('Unique elements:', uniqueElements.length);

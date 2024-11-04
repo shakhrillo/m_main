@@ -8,7 +8,7 @@ router.post('/', async (req, res) => {
   const uid = user.uid;
   const { reviewId, url, limit } = req.body;
 
-  scrap(url, uid, reviewId, limit = 50);
+  scrap(url, uid, reviewId, limit, sortBy);
 
   res.json({
     success: true

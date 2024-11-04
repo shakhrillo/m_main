@@ -15,7 +15,7 @@ const filterUniqueElements = require('./filter');
  * @param {number} [limit=50] - The maximum number of review elements to collect.
  * @returns {Promise<Array>} - A promise that resolves to an array of collected review elements.
  */
-async function scrollAndCollectElements(page, uid, pushId, limit = 50) {
+async function scrollAndCollectElements(page, uid, pushId, limit) {
   const reviewsContainer = await getReviewsContainer(page);
   if (!reviewsContainer) {
     logger.error('Reviews container not found');
