@@ -16,9 +16,9 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate("/dashboard")
     }
-  }, [user, navigate]);
+  }, [user, navigate])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -116,7 +116,7 @@ const Login: React.FC = () => {
                 </button>
                 <span className="mt-3">
                   Not registered?{" "}
-                  <Link to={"/register"}>Create an Account</Link>
+                  <Link to={"/auth/register"}>Create an Account</Link>
                 </span>
               </form>
               <small>
