@@ -14,11 +14,11 @@ const LoginPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null)
 
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate('/dashboard');
-  //   }
-  // }, [user, navigate]);
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

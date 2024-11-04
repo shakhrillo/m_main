@@ -11,6 +11,8 @@ interface FirebaseContextProps {
   login: (email: string, password: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   logout: () => Promise<void>;
+  checkAuth: () => Promise<any>;
+  isLoading: boolean;
 }
 
 const FirebaseContext = createContext<FirebaseContextProps | null>(null);
@@ -21,11 +23,22 @@ interface FirebaseProviderProps {
 
 export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, setUser);
     return () => unsubscribe();
   }, []);
+
+  const checkAuth = async () => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsLoading(false);
+        unsubscribe();
+        resolve(user);
+      }, reject);
+    });
+  }
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
@@ -39,7 +52,7 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     await signOut(auth);
   };
 
-  const firebaseServices = { auth, firestore, user, login, googleLogin, logout };
+  const firebaseServices = { auth, firestore, isLoading, checkAuth, user, login, googleLogin, logout };
 
   return (
     <FirebaseContext.Provider value={firebaseServices}>
