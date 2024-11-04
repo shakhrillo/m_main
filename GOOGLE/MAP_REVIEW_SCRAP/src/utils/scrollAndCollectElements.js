@@ -56,7 +56,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit = 50) {
       }
 
       logger.info('Scrolling a little bit more');
-      await wait(400); // Wait for a short duration to allow more reviews to load
+      await wait(1000); // Wait for a short duration to allow more reviews to load
     } catch (error) {
       logger.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error

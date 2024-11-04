@@ -46,7 +46,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
           await button.scrollIntoView();
         }
         await button.click(); // Click to expand the review
-        await wait(200); // Wait for any animations or loading
+        await wait(400); // Wait for any animations or loading
       }
 
       return {
@@ -84,6 +84,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
         if (reviewId) {
           const reviewDetails = await fetchReviewDetails(nextSiblingElement, reviewId);
           if (reviewDetails) newReviewElements.push(reviewDetails); // Only push if details are valid
+          await wait(400);
         }
 
         const nextElement = await nextSiblingElement.evaluateHandle(el => el.nextElementSibling);

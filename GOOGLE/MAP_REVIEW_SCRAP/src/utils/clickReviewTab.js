@@ -28,7 +28,7 @@ async function clickReviewTab(page, retries = 3) {
         if (tabText.includes('reviews')) {
           logger.info('Found and clicking the review tab');
           await button.click();
-          await wait(500); // Short delay for click to take effect
+          await wait(1000); // Short delay for click to take effect
           return;
         }
       }

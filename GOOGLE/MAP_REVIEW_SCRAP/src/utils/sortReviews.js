@@ -1,4 +1,5 @@
 const logger = require("./logger");
+const wait = require("./wait");
 
 /**
  * Sorts the reviews on a page based on the specified criteria.
@@ -20,7 +21,7 @@ async function sortReviews(page, sortBy = 'Newest') {
     
     // Click the sort button and wait for the menu to appear
     await sortButton.click();
-    await page.waitForSelector('[role="menuitemradio"]', { timeout: 2000 });
+    await wait(1000);
 
     const menuItemRadios = await page.$$('[role="menuitemradio"]');
     let foundNewest = false;
