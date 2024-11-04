@@ -39,7 +39,7 @@ const sortBy = [
 const defaultScrap = {
   url: "https://maps.app.goo.gl/y5NbtGn4iWqndgsQ8",
   limit: 5000,
-  sortBy: sortBy[0],
+  sortBy: sortBy[1],
   extractImageUrls: false,
   ownerResponse: true,
   onlyGoogleReviews: false,
