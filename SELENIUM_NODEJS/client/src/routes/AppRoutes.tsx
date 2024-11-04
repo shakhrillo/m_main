@@ -1,4 +1,9 @@
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom"
 import PrivateRoute from "../components/PrivateRoute"
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout"
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
@@ -35,7 +40,7 @@ const dashboardRoutes = {
   path: "",
   element: <DashboardLayout />,
   children: [
-    { path: "", element: "Dashboard" },
+    { path: "", element: <Navigate to={"reviews"} replace /> },
     reviewsRoutes,
     { path: "usage", element: <UsageView /> },
     { path: "user", element: <UsersView /> },
@@ -63,14 +68,16 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/" replace />
-  }
+    element: <Navigate to="/" replace />,
+  },
 ])
 
 const AppRoutes = () => {
-  return <PreloaderLayout>
-    <RouterProvider router={router} />
-  </PreloaderLayout>
+  return (
+    <PreloaderLayout>
+      <RouterProvider router={router} />
+    </PreloaderLayout>
+  )
 }
 
 export default AppRoutes

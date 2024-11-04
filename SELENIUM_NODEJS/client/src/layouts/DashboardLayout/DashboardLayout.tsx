@@ -1,9 +1,9 @@
 // src/layouts/DashboardLayout/DashboardLayout.tsx
 
-import React from 'react';
-import Sidebar from './Sidebar';
-import MainContent from './MainContent';
-import './DashboardLayout.css';
+import React from "react"
+import Sidebar from "./Sidebar"
+import MainContent from "./MainContent"
+import "./DashboardLayout.css"
 
 const DashboardLayout: React.FC = () => {
   return (
@@ -11,7 +11,7 @@ const DashboardLayout: React.FC = () => {
       <Sidebar />
       <MainContent />
     </div>
-  );
-};
+  )
+}
 
-export default DashboardLayout;
+export default DashboardLayout
