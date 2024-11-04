@@ -25,6 +25,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
   let isScrollFinished = false;
   let allElements = [];
   let lastId = null;
+  let previousUniqueCount = 0; // Track the count of unique elements
 
   while (!isScrollFinished) {
     try {
@@ -37,6 +38,26 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
 
       const uniqueElements = filterUniqueElements(allElements) || [];
       console.log('Unique elements:', uniqueElements.length);
+
+      let el = uniqueElements[uniqueElements.length - 1];
+      if (el) {
+        await page.evaluate(el => el.scrollIntoView(), el.element);
+      }
+
+      await wait(100);
+
+      // If unique elements count hasn't increased, wait before scrolling again
+      if (uniqueElements.length <= previousUniqueCount) {
+        logger.info('No new unique elements found, waiting before scrolling again...');
+        let el = uniqueElements[uniqueElements.length - 1];
+        if (el) {
+          await page.evaluate(el => el.scrollIntoView(), el.element);
+        }
+        await wait(5000); // Wait for 5 seconds
+      } else {
+        previousUniqueCount = uniqueElements.length; // Update the unique count
+      }
+
       if (uniqueElements.length >= limit) {
         isScrollFinished = true;
         logger.info('Limit reached, stopping scroll');
@@ -46,7 +67,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       await updateReview(uid, pushId, {
         extractedReviews: allElements.length,
       });
-      
+
       if (completed) {
         isScrollFinished = true;
         logger.info('Scrolling completed, all elements collected');

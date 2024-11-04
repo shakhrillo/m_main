@@ -1,7 +1,6 @@
 module.exports = {
   launch: {
-    product: 'firefox',
-    headless: true,
+    headless: !true,
     args: [
       '--no-sandbox',                // Bypasses sandbox, which can slow down VMs
       '--disable-setuid-sandbox',
