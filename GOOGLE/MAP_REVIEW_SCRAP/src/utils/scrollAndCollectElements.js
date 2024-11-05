@@ -50,7 +50,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       if (uniqueElements.length >= 1) {
         let _el = uniqueElements[uniqueElements.length - 1];
         // console.log(_el)
-        let retryScroll = 15;
+        let retryScroll = 10;
         while(retryScroll > 0) {
           if (_el) {
             console.log('Scrolling to last unique element...');
@@ -99,7 +99,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       }
 
       logger.info('Scrolling a little bit more');
-      await wait(1000); // Wait for a short duration to allow more reviews to load
+      await wait(400); // Wait for a short duration to allow more reviews to load
     } catch (error) {
       logger.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error

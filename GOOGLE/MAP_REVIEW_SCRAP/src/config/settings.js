@@ -10,7 +10,9 @@ module.exports = {
       '--no-zygote',                  // Speeds up launch by skipping zygote process
       '--disable-accelerated-2d-canvas', // Reduces CPU load by avoiding unnecessary canvas rendering
       '--no-first-run',               // Skips initial setup checks
-      '--no-default-browser-check'    // Bypasses default browser check
+      '--no-default-browser-check',    // Bypasses default browser check
+      // show chrome devtools
+      // '--auto-open-devtools-for-tabs'
     ],
     defaultViewport: null,
     timeout: 30000

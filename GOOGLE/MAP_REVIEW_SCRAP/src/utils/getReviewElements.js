@@ -46,7 +46,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
           await button.scrollIntoView();
         }
         await button.click(); // Click to expand the review
-        await wait(400); // Wait for any animations or loading
+        // await wait(40); // Wait for any animations or loading
       }
 
       return {
@@ -71,6 +71,27 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
     if (lastFetchedReviewId) {
       logger.info(`Fetching reviews after ID: ${lastFetchedReviewId}`);
       const lastFetchedReviewElement = await reviewContainer.$(`.jftiEf[data-review-id="${lastFetchedReviewId}"]`);
+
+      if (lastFetchedReviewElement) {
+        try {
+          console.info('Removing previous siblings');
+          let previousSibling = await lastFetchedReviewElement.evaluateHandle((el) => el.previousSibling);
+        
+          while (previousSibling && JSON.stringify(previousSibling) !== '{}') {
+            await previousSibling.evaluate((el) => {
+              if (el && el.remove) el.remove();
+            });
+            previousSibling = await previousSibling.evaluateHandle((el) => {
+              if (el) return el.previousSibling;
+              return null;
+            });
+          }
+        } catch (error) {
+          console.error('Error removing previous siblings:', error);
+        }
+      }      
+
+      // await wait(1000); // Wait for any animations or loading
 
       if (!lastFetchedReviewElement) {
         logger.warn('Last fetched review element not found');
