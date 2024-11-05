@@ -22,13 +22,19 @@
   height: 100vh;
   width: 100vw;
   background-color: #f6f6f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 
   &__navbar {
     position: absolute;
     top: 0;
     left: 0;
+    padding: 12px 24px;
+    width: 100%;
 
-    &__logo {
+    &-logo {
       width: 170px;
     }
   }
@@ -36,10 +42,11 @@
   &__card {
     max-width: 370px;
     width: 100%;
-    border: 0;
     border-radius: 24px;
+    background-color: #fff;
+    padding: 48px;
 
-    &-header {
+    &__header {
       margin-bottom: 24px;
 
       &-title {
@@ -48,29 +55,26 @@
       }
     }
 
-    &-input {
-      font-size: 14px;
-      &::placeholder {
-        color: var(--primary-50);
-        font-size: 14px;
+    &__form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      &-submit {
+        display: grid;
+        margin-top: 1rem;
       }
     }
 
-    &-button {
-      font-size: 14px;
-      color: var(--primary);
-
-      &[type="submit"] {
-        background-color: var(--indigo);
-        color: #fff;
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
+    &__footer {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
+      text-align: center;
     }
 
-    &-link {
+    &__link {
       color: var(--primary);
     }
   }
@@ -78,5 +82,6 @@
   &__text {
     color: var(--primary-70);
     font-size: 12px;
+    text-align: center;
   }
 }
