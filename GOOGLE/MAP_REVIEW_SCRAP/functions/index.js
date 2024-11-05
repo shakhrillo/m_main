@@ -107,21 +107,12 @@ exports.watchPending = onDocumentCreated('pending/{pendingId}', async (event) =>
   const statusDoc = admin.firestore().doc(`status/app`);
   const statusSnapshot = await statusDoc.get();
   const status = statusSnapshot.data();
+  const statusCount = status.count || 0;
   const statusActive = status.active;
 
-  if (!statusActive) {
-    const snapshot = event.data;
-    const review = snapshot.data();
-    try {
-      await statusDoc.update({
-        active: true,
-      });
-      await postReview(review);
-      await snapshot.ref.delete();
-    } catch (error) {
-      console.error('Error posting review:', error);
-    }
-  }
+  await statusDoc.update({
+    count: statusCount + 1,
+  });
 });
 
 exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', async (event) => {
@@ -136,6 +127,7 @@ exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', 
   await pendingCollection.add({
     ...review,
     reviewId: event.params.reviewId,
+    userId: event.params.userId,
   });
 });
 

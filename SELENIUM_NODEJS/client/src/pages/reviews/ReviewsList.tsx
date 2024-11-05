@@ -17,11 +17,17 @@ const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
 const defaultScrap = {
   url: "https://maps.app.goo.gl/Zj3DVhizVttiFhAo7",
-  limit: 200,
+  limit: 50,
   sortBy: sortBy[1],
   extractImageUrls: false,
   ownerResponse: true,
   onlyGoogleReviews: false,
+
+  // "url": "https://maps.app.goo.gl/NmAddhWxtURsZsx3A",
+  // "reviewId": "Q4vNEoTkpOtdvgEmCe02",
+  // "userId": "MHKWy9QpFjfijMlKxeimUyOPYLt1",
+  // "limit": 1700,
+  // "sortBy": "Lowest rating",
 }
 
 function ReviewsList() {
@@ -60,12 +66,10 @@ function ReviewsList() {
       firestore,
       `users/${user?.uid}/reviews`,
     )
-    const token = await user.getIdToken()
     const docRef = await addDoc(collectionReviews, {
       ...scrap,
       status: "in-progress",
-      createdAt: new Date(),
-      token,
+      createdAt: new Date()
     })
     console.log("Document written with ID: ", docRef.id)
   }

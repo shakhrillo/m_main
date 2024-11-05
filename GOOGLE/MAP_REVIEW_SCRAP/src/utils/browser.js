@@ -32,7 +32,7 @@ async function openPage(browser, url) {
     return page;
 
   } catch (error) {
-    logger.error(`Failed to open page: ${url}. Error: ${error.message}`);
+    console.error(`Failed to open page: ${url}. Error: ${error.message}`);
 
     return null;
   }

@@ -23,7 +23,7 @@ function verifyToken(token) {
     "reviewId": "Q4vNEoTkpOtdvgEmCe02",
     "userId": "MHKWy9QpFjfijMlKxeimUyOPYLt1",
     "limit": 1700,
-    "sortBy": "Lowest rating"
+    "sortBy": "Newest"
   });
   // console.log('Token:', token);
   console.log('--'.repeat(20));
