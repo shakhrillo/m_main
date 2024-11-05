@@ -21,13 +21,19 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
 
-async function main(url, uid, pushId, limit, sortBy) {
+async function main({
+  url,
+  userId,
+  reviewId,
+  limit,
+  sortBy
+}) {
   try {
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
     const title = await page.title();
 
-    await updateReview(uid, pushId, {
+    await updateReview(userId, reviewId, {
       title,
       // createdAt: new Date(),
       status: 'in-progress',
@@ -47,7 +53,7 @@ async function main(url, uid, pushId, limit, sortBy) {
     await clickReviewTab(page);
     await sortReviews(page, sortBy);
   
-    const allElements = await scrollAndCollectElements(page, uid, pushId, limit) || [];
+    const allElements = await scrollAndCollectElements(page, userId, reviewId, limit) || [];
     const uniqueElements = filterUniqueElements(allElements);
   
     console.log('Unique elements:', uniqueElements.length);
@@ -56,8 +62,8 @@ async function main(url, uid, pushId, limit, sortBy) {
     await page.close();
     await browser.close();
 
-    const jsonFileName = path.join(tempDir, `${pushId}.json`);
-    const csvFileName = path.join(tempDir, `${pushId}.csv`);
+    const jsonFileName = path.join(tempDir, `${reviewId}.json`);
+    const csvFileName = path.join(tempDir, `${reviewId}.csv`);
     
     // Write the JSON file
     fs.writeFileSync(jsonFileName, JSON.stringify(uniqueElements, null, 2));
@@ -72,8 +78,8 @@ async function main(url, uid, pushId, limit, sortBy) {
     // Write the CSV file
     await csvWriter.writeRecords(uniqueElements);
 
-    await uploadFile(fs.readFileSync(jsonFileName), `json/${pushId}.json`);
-    await uploadFile(fs.readFileSync(csvFileName), `csv/${pushId}.csv`);
+    await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
+    await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
 
     fs.unlinkSync(jsonFileName);
     fs.unlinkSync(csvFileName);
@@ -89,21 +95,21 @@ async function main(url, uid, pushId, limit, sortBy) {
         rating: element.rating || 0,
         qa: element.qa || [],
         user: element.user || {},
-        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${pushId}.csv`,
-        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${pushId}.json`
+        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
+        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`
       };
     });
-    await batchWriteLargeArray(uid, pushId, messages);
+    await batchWriteLargeArray(userId, reviewId, messages);
   
-    await updateReview(uid, pushId, {
+    await updateReview(userId, reviewId, {
       status: 'completed',
-      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${pushId}.csv`,
-      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${pushId}.json`,
+      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
+      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
       totalReviews: uniqueElements.length,
       completedAt: new Date()
     });
 
-    // const currentUser = await getUser(uid);
+    // const currentUser = await getUser(userId);
     // const currentUserData = currentUser.data();
     // let coinBalance = 0;
     // if (currentUserData && currentUserData.coinBalance) {
@@ -111,14 +117,14 @@ async function main(url, uid, pushId, limit, sortBy) {
     // }
     // const newCoinBalance = coinBalance - uniqueElements.length;
 
-    // await updateUser(uid, {
+    // await updateUser(userId, {
     //   lastScraped: new Date(),
     //   coinBalance: newCoinBalance
     // });
 
-    await createUserUsage(uid, {
+    await createUserUsage(userId, {
       title,
-      pushId,
+      reviewId,
       url,
       createdAt: new Date(),
       spentCoins: uniqueElements.length
@@ -151,7 +157,7 @@ async function main(url, uid, pushId, limit, sortBy) {
       });
     }
 
-    await updateReview(uid, pushId, {
+    await updateReview(userId, reviewId, {
       status: 'failed',
       error: error.message,
       completedAt: new Date()

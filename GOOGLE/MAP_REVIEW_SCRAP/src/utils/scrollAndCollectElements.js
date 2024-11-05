@@ -1,4 +1,3 @@
-const logger = require('./logger');
 const wait = require('./wait');
 const { updateReview } = require('../controllers/reviewController');
 const checkInfiniteScroll = require('./checkInfiniteScroll');
@@ -18,7 +17,7 @@ const filterUniqueElements = require('./filter');
 async function scrollAndCollectElements(page, uid, pushId, limit) {
   const reviewsContainer = await getReviewsContainer(page);
   if (!reviewsContainer) {
-    logger.error('Reviews container not found');
+    console.error('Reviews container not found');
     return [];
   }
 
@@ -27,7 +26,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
   let lastId = null;
 
   const startTimestamp = Date.now();
-  let found = 0;
+  let lastLoggedTime = 0;
 
   while (!isScrollFinished) {
     try {
@@ -37,8 +36,6 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       const updatedTimestamp = Date.now();
       const spentInMinutes = (updatedTimestamp - startTimestamp) / 1000 / 60;
       
-      console.log('Container children count:', found, 'Spent:', spentInMinutes, 'minutes');
-
       let elements = [];
       try {
         elements = await getReviewElements(page, reviewsContainer);
@@ -47,22 +44,27 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       }
       allElements.push(...elements);
       const uniqueElements = filterUniqueElements(allElements) || [];
-      console.log('Unique elements:', uniqueElements.length);
 
       if (uniqueElements.length >= limit) {
         isScrollFinished = true;
-        logger.info('Limit reached, stopping scroll');
+        console.info('Limit reached, stopping scroll');
         break;
       }
 
-      await updateReview(uid, pushId, {
-        extractedReviews: allElements.length,
-        spentInMinutes,
-      });
+      // Console log every 15 seconds
+      if (Math.floor(spentInMinutes * 4) > lastLoggedTime) {
+        lastLoggedTime = Math.floor(spentInMinutes * 4);
+        console.log('Spent:', spentInMinutes, 'minutes');
+        console.log('All elements:', allElements.length);
+        await updateReview(uid, pushId, {
+          extractedReviews: allElements.length,
+          spentInMinutes,
+        });
+      }
 
       if (completed) {
         isScrollFinished = true;
-        logger.info('Scrolling completed, all elements collected');
+        console.info('Scrolling completed, all elements collected');
         break;
       }
 
@@ -79,7 +81,6 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         await page.evaluate(el => el.remove(), secondLastChildDescendants[i]);
       }
 
-      logger.info('Scrolling a little bit more');
       // scroll top .vyucnb
       await page.evaluate(() => {
         const el = document.querySelector('.vyucnb');
@@ -88,7 +89,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       
       await wait(2000); // Wait for a short duration to allow more reviews to load
     } catch (error) {
-      logger.error('Error scrolling and collecting elements:', error);
+      console.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error
     }
   }

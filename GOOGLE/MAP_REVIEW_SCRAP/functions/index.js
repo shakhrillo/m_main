@@ -2,20 +2,27 @@ require('dotenv').config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/firestore');
+const jwt = require('jsonwebtoken');
+const secretKey = process.env.SECRET_KEY || '';
+
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const endPointURL = 'http://34.44.21.16/api/reviews';
 
+function createToken(payload) {
+  return jwt.sign(payload, secretKey, { expiresIn: '12h' });
+}
+
 async function postReview(data) {
+  const token = createToken(data);
   try {
     const response = await fetch(endPointURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${data.token}`,
-      },
-      body: JSON.stringify(data),
+        'Authorization': `Bearer ${token}`,
+      }
     });
 
     // Check if the response status is OK (status code 200-299)

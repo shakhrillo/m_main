@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
-
+const authenticateToken = require('../middlewares/authMiddleware');
 const scrap = require('../controllers/scraperController');
 
-router.post('/', async (req, res) => {
-  const user = req.user;
-  const uid = user.uid;
-  const { reviewId, url, limit, sortBy } = req.body;
-
-  scrap(url, uid, reviewId, limit, sortBy);
-
-  res.json({
-    success: true
-  });
+router.post('/', authenticateToken, async (req, res) => {
+  scrap(req.data);
+  res.json(req.data);
 });
 
 module.exports = router;
