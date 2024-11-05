@@ -35,6 +35,7 @@ async function main(url, uid, pushId, limit, sortBy) {
     });
 
     await enableRequestInterception(page, [
+      '.css',
       'googleusercontent',
       'preview',
       'analytics',
@@ -54,8 +55,6 @@ async function main(url, uid, pushId, limit, sortBy) {
   
     await page.close();
     await browser.close();
-
-    return []
 
     const jsonFileName = path.join(tempDir, `${pushId}.json`);
     const csvFileName = path.join(tempDir, `${pushId}.csv`);

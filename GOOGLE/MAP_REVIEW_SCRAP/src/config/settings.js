@@ -1,6 +1,6 @@
 module.exports = {
   launch: {
-    headless: !true,
+    headless: true,
     args: [
       '--no-sandbox',                // Bypasses sandbox, which can slow down VMs
       '--disable-setuid-sandbox',
@@ -22,8 +22,8 @@ module.exports = {
     timeout: 30000
   },
   viewport: {
-    width: 1200,
-    height: 2000
+    width: 800,
+    height: 600
   },
   waitTime: 5000,
 };

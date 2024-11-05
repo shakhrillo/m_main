@@ -49,7 +49,7 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
         // await wait(40); // Wait for any animations or loading
       }
 
-      return {
+      const result =  {
         id: reviewId,
         element: reviewElement,
         review: await extractReviewText(reviewElement),
@@ -61,6 +61,8 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
         qa: await extractQuestions(reviewElement),
         user: await extractReviewer(reviewElement, reviewId)
       };
+
+      return result;
     } catch (error) {
       logger.error('Error in fetchReviewDetails:', error);
       return null; // Return null or handle error as needed
