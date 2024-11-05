@@ -143,67 +143,65 @@ exports.watchNewReview = onDocumentCreated('users/{userId}/reviews/{reviewId}', 
 });
 
 exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request, response) => {
-  let event = request.rawBody;
-  // Only verify the event if you have an endpoint secret defined.
-  // Otherwise use the basic event deserialized with JSON.parse
-  if (endpointSecret) {
-    // Get the signature sent by Stripe
-    const signature = request.headers['stripe-signature'];
-    try {
-      event = stripe.webhooks.constructEvent(
-        request.rawBody,
-        signature,
-        endpointSecret
-      );
-    } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed.`, err.message);
-      return response.sendStatus(400);
-    }
+  const signature = request.headers['stripe-signature'];
+  let event;
+
+  // Verify webhook signature if endpointSecret is defined
+  try {
+    event = endpointSecret
+      ? stripe.webhooks.constructEvent(request.rawBody, signature, endpointSecret)
+      : JSON.parse(request.rawBody);
+  } catch (err) {
+    console.error('⚠️ Webhook signature verification failed.', err.message);
+    return response.sendStatus(400);
   }
 
-  console.log(event);
+  const { type, data: { object: paymentIntent } } = event;
+  const { userId } = paymentIntent.metadata || {};
 
-  // checkout.session.completed
-  // payment_intent.payment_failed
-  // payment_intent.succeeded
-  
-  // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log('metadata-->', paymentIntent.metadata);
-      // Then define and call a method to handle the successful payment intent.
-      // handlePaymentIntentSucceeded(paymentIntent);
-      await admin.firestore().collection(`users/${paymentIntent.metadata.userId}/payments`).add({
+  if (!userId) {
+    console.error('⚠️ No userId found in payment metadata');
+    return response.sendStatus(400);
+  }
+
+  const userPaymentsRef = admin.firestore().collection(`users/${userId}/payments`);
+  const userRef = admin.firestore().doc(`users/${userId}`);
+
+  // Create a Firestore batch
+  const batch = admin.firestore().batch();
+
+  try {
+    if (type === 'payment_intent.succeeded' || type === 'payment_intent.payment_failed') {
+      // Add payment data to Firestore
+      const paymentDocRef = userPaymentsRef.doc();
+      batch.set(paymentDocRef, {
         amount: paymentIntent.amount,
         created: admin.firestore.Timestamp.now(),
         payment_method: paymentIntent.payment_method,
         status: paymentIntent.status,
       });
-      const userRef = admin.firestore().doc(`users/${paymentIntent.metadata.userId}`);
-      const userDoc = await userRef.get();
-      const user = userDoc.data();
-      const coinBalance = user.coinBalance || 0;
-      await userRef.update({
-        coinBalance: coinBalance + paymentIntent.amount,
-      });
-      break;
-    case 'payment_intent.payment_failed':
-      const paymentIntentFailed = event.data.object;
-      console.log('metadata-->', paymentIntentFailed.metadata);
-      // Then define and call a method to handle the failed payment intent.
-      // handlePaymentIntentFailed(paymentIntentFailed);
-      await admin.firestore().collection(`users/${paymentIntentFailed.metadata.userId}/payments`).add({
-        amount: paymentIntentFailed.amount,
-        created: admin.firestore.Timestamp.now(),
-        payment_method: paymentIntentFailed.payment_method,
-        status: paymentIntentFailed.status,
-      });
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+
+      // If payment succeeded, update user's coin balance
+      if (type === 'payment_intent.succeeded') {
+        const userDoc = await userRef.get();
+        const currentBalance = userDoc.exists ? userDoc.data().coinBalance || 0 : 0;
+
+        // Update the coin balance
+        batch.set(
+          userRef,
+          { coinBalance: currentBalance + paymentIntent.amount },
+          { merge: true }
+        );
+      }
+    } else {
+      console.log(`Unhandled event type ${type}`);
+    }
+
+    // Commit the batch
+    await batch.commit();
+    response.sendStatus(200);
+  } catch (error) {
+    console.error('Error handling webhook event:', error);
+    return response.sendStatus(500);
   }
-
-  response.send();
 });
-
