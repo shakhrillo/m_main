@@ -1,5 +1,3 @@
-const logger = require('./logger');
-
 /**
  * Extracts the reviewer's information from a review element on the given page.
  * 
@@ -10,38 +8,42 @@ const logger = require('./logger');
  */
 async function extractReviewer(page, reviewId) {
   try {
-    // Locate the reviewer button using the review ID
-    const reviewerButton = await page.$$(`button[jsaction*="review.reviewerLink"][data-review-id="${reviewId}"]`);
-    if (!reviewerButton.length) {
-      logger.warn(`No reviewer button found for review ID: ${reviewId}`);
-      return null; // Return null if no reviewer button is found
-    }
-
     const results = {
       name: '',
       info: [],
       href: '',
       content: [],
     };
+    // Locate the reviewer button using the review ID
+    const reviewerButton = await page.$$(`button[jsaction*="review.reviewerLink"][data-review-id="${reviewId}"]`) || [];
+    if (!reviewerButton.length) {
+      console.warn(`No reviewer button found for review ID: ${reviewId}`);
+      return results;
+    }
 
     // Extract information from the reviewer button(s)
     for (const button of reviewerButton) {
       const { href, content } = await button.evaluate(el => {
+        if (!el) return { href: '', content: [] };
+
         const href = el.getAttribute('data-href');
-        const content = el.innerText.split('\n');
+        let content = (el.innerText || '').split('\n');
 
         return { href, content };
       });
 
       results.name = content[0] || ''; // Set the reviewer's name
-      results.info = (content[1] || '').split('·').map(item => item.trim()); // Parse info into an array
+      results.info = (content[1] || '').split('·').map(item => {
+        if (item) return item.trim();
+        return '';
+      }); // Parse info into an array
       results.href = href; // Set the href
       results.content = content; // Set the content array
     }
 
     return results;
   } catch (error) {
-    logger.error('Error extracting reviewer information:', error);
+    console.error('Error extracting reviewer information:', error);
     return null; // Return null on error
   }
 }

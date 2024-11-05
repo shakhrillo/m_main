@@ -21,7 +21,7 @@ async function openPage(browser, url) {
     console.log(`Opening page: ${url}`);
 
     const navigationTimeout = config?.goto?.timeout || 30000;
-    await page.goto(url, { ...config.goto, timeout: navigationTimeout });
+    await page.goto(url, { ...config.goto, timeout: 0 });
 
     const viewportConfig = config.viewport || { width: 1200, height: 800 };
     await page.setViewport(viewportConfig);
