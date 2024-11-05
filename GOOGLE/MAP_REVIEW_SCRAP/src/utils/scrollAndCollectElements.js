@@ -39,33 +39,42 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       const uniqueElements = filterUniqueElements(allElements) || [];
       console.log('Unique elements:', uniqueElements.length);
 
-      let el = uniqueElements[uniqueElements.length - 1];
-      if (el) {
-        await page.evaluate(el => el.scrollIntoView(), el.element);
-      }
-
-      await wait(100);
-
       // If unique elements count hasn't increased, wait before scrolling again
       if (uniqueElements.length <= previousUniqueCount) {
         console.log('No new unique elements found, waiting before scrolling again...');
-        let el = uniqueElements[uniqueElements.length - 1];
-        let retryScroll = 5;
+        // await wait(5000); // Wait for 5 seconds
+      } else {
+        previousUniqueCount = uniqueElements.length; // Update the unique count
+      }
+
+      if (uniqueElements.length >= 1) {
+        let _el = uniqueElements[uniqueElements.length - 1];
+        // console.log(_el)
+        let retryScroll = 15;
         while(retryScroll > 0) {
-          if (el) {
-            await page.evaluate(el => el.scrollIntoView(), el.element);
+          if (_el) {
+            console.log('Scrolling to last unique element...');
+            const isElementInViewport = await _el.element.isIntersectingViewport();
+            // await page.evaluate(el => el.scrollIntoView(), el.element);
+            if (!isElementInViewport) {
+              try {
+                await page.evaluate(el => el.scrollIntoView(), _el.element);
+                console.log('Scrolled to last unique element');
+              } catch (error) {
+                console.error('Error scrolling to last unique element:', error);
+              }
+            }
           }
-          await wait(5000); // Wait for 5 seconds
+          await wait(1000); // Wait for 5 seconds
           const isLastChildInViewport = await lastChild.isIntersectingViewport();
           if (!isLastChildInViewport) {
+            console.log('Scrolling to last child...');
             await page.evaluate(el => el.scrollIntoView(), lastChild);
           }
           retryScroll--;
           console.log('Retrying scroll...');
         }
         console.log('Retried scrolling, continuing...');
-      } else {
-        previousUniqueCount = uniqueElements.length; // Update the unique count
       }
 
       if (uniqueElements.length >= limit) {

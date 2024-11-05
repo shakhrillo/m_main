@@ -29,7 +29,7 @@ async function main(url, uid, pushId, limit, sortBy) {
 
     await updateReview(uid, pushId, {
       title,
-      createdAt: new Date(),
+      // createdAt: new Date(),
       status: 'in-progress',
       token: ''
     });
