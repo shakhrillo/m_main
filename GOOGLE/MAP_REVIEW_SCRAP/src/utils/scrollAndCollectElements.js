@@ -39,7 +39,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       
       console.log('Container children count:', found, 'Spent:', spentInMinutes, 'minutes');
 
-      const elements = [];
+      let elements = [];
       try {
         elements = await getReviewElements(page, reviewsContainer);
       } catch (error) {

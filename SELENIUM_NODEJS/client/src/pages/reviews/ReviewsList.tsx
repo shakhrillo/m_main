@@ -289,8 +289,7 @@ function ReviewsList() {
                     </td>
                     <td>{formatTime(review.createdAt)}</td>
                     <td>
-                      {review.extractedReviews || 0} reviews
-                      {/* {renderCount(review)} */}
+                      {renderCount(review)}
                     </td>
                     <td>{spentTime(review.createdAt, review.completedAt)}</td>
                     <td>
