@@ -32,60 +32,65 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
       lastId = allElements[allElements.length - 1]?.id;
 
-      const elements = await getReviewElements(page, reviewsContainer, lastId);
-      allElements.push(...elements);
-      console.log(`Collected ${allElements.length} elements`);
+      const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
+      const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
+      const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
+      console.log('Container children count:', secondLastChildDescendants.length);
 
-      const uniqueElements = filterUniqueElements(allElements) || [];
-      console.log('Unique elements:', uniqueElements.length);
+      // const elements = await getReviewElements(page, reviewsContainer, lastId);
+      // allElements.push(...elements);
+      // console.log(`Collected ${allElements.length} elements`);
+
+      // const uniqueElements = filterUniqueElements(allElements) || [];
+      // console.log('Unique elements:', uniqueElements.length);
 
       // If unique elements count hasn't increased, wait before scrolling again
-      if (uniqueElements.length <= previousUniqueCount) {
-        console.log('No new unique elements found, waiting before scrolling again...');
-        // await wait(5000); // Wait for 5 seconds
-      } else {
-        previousUniqueCount = uniqueElements.length; // Update the unique count
-      }
+      // if (uniqueElements.length <= previousUniqueCount) {
+      //   console.log('No new unique elements found, waiting before scrolling again...');
+      //   // await wait(5000); // Wait for 5 seconds
+      // } else {
+      //   previousUniqueCount = uniqueElements.length; // Update the unique count
+      // }
 
-      if (uniqueElements.length >= 1) {
-        let _el = uniqueElements[uniqueElements.length - 1];
-        // console.log(_el)
-        let retryScroll = 10;
-        while(retryScroll > 0) {
-          if (_el) {
-            console.log('Scrolling to last unique element...');
-            const isElementInViewport = await _el.element.isIntersectingViewport();
-            // await page.evaluate(el => el.scrollIntoView(), el.element);
-            if (!isElementInViewport) {
-              try {
-                await page.evaluate(el => el.scrollIntoView(), _el.element);
-                console.log('Scrolled to last unique element');
-              } catch (error) {
-                console.error('Error scrolling to last unique element:', error);
-              }
-            }
-          }
-          await wait(1000); // Wait for 5 seconds
-          const isLastChildInViewport = await lastChild.isIntersectingViewport();
-          if (!isLastChildInViewport) {
-            console.log('Scrolling to last child...');
-            await page.evaluate(el => el.scrollIntoView(), lastChild);
-          }
-          retryScroll--;
-          console.log('Retrying scroll...');
-        }
-        console.log('Retried scrolling, continuing...');
-      }
+      // if (uniqueElements.length >= 1) {
+      //   let _el = uniqueElements[uniqueElements.length - 1];
+      //   // console.log(_el)
+      //   let retryScroll = 10;
+      //   while(retryScroll > 0) {
+      //     if (_el) {
+      //       console.log('Scrolling to last unique element...');
+      //       const isElementInViewport = await _el.element.isIntersectingViewport();
+      //       // await page.evaluate(el => el.scrollIntoView(), el.element);
+      //       if (!isElementInViewport) {
+      //         try {
+      //           await page.evaluate(el => el.scrollIntoView(), _el.element);
+      //           console.log('Scrolled to last unique element');
+      //         } catch (error) {
+      //           console.error('Error scrolling to last unique element:', error);
+      //         }
+      //       }
+      //     }
+      //     await wait(1000); // Wait for 5 seconds
+      //     const isLastChildInViewport = await lastChild.isIntersectingViewport();
+      //     if (!isLastChildInViewport) {
+      //       console.log('Scrolling to last child...');
+      //       await page.evaluate(el => el.scrollIntoView(), lastChild);
+      //     }
+      //     retryScroll--;
+      //     console.log('Retrying scroll...');
+      //   }
+      //   console.log('Retried scrolling, continuing...');
+      // }
 
-      if (uniqueElements.length >= limit) {
-        isScrollFinished = true;
-        logger.info('Limit reached, stopping scroll');
-        break;
-      }
+      // if (uniqueElements.length >= limit) {
+      //   isScrollFinished = true;
+      //   logger.info('Limit reached, stopping scroll');
+      //   break;
+      // }
 
-      await updateReview(uid, pushId, {
-        extractedReviews: allElements.length,
-      });
+      // await updateReview(uid, pushId, {
+      //   extractedReviews: allElements.length,
+      // });
 
       if (completed) {
         isScrollFinished = true;
