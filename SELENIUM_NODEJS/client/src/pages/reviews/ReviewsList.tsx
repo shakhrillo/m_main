@@ -1,25 +1,19 @@
-import
-  {
-    addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    onSnapshot,
-    orderBy,
-    query,
-    Timestamp,
-  } from "firebase/firestore"
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+} from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { Pagination } from "react-bootstrap"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
-const sortBy = [
-  "Most Relevant",
-  "Newest",
-  "Lowest rating",
-  "Highest rating",
-]
+const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
 const defaultScrap = {
   url: "https://maps.app.goo.gl/Zj3DVhizVttiFhAo7",
@@ -61,14 +55,17 @@ function ReviewsList() {
 
   async function startScraping() {
     if (!firestore || !user) return
-    setScrap(defaultScrap);
-    const collectionReviews = collection(firestore, `users/${user?.uid}/reviews`);
-    const token = await user.getIdToken();
+    setScrap(defaultScrap)
+    const collectionReviews = collection(
+      firestore,
+      `users/${user?.uid}/reviews`,
+    )
+    const token = await user.getIdToken()
     const docRef = await addDoc(collectionReviews, {
       ...scrap,
       status: "in-progress",
       createdAt: new Date(),
-      token
+      token,
     })
     console.log("Document written with ID: ", docRef.id)
   }
@@ -103,10 +100,10 @@ function ReviewsList() {
   }
 
   const downloadFile = async (review: any, id: string) => {
-    const selected = document.getElementById(id) as HTMLSelectElement;
+    const selected = document.getElementById(id) as HTMLSelectElement
     if (!selected) return
-    const selectedValue = selected.value || "json";
-    const url = review[selectedValue + "Url"];
+    const selectedValue = selected.value || "json"
+    const url = review[selectedValue + "Url"]
     const storage = getStorage()
     const fileRef = ref(storage, url)
     const fileUrl = await getDownloadURL(fileRef)
@@ -159,29 +156,53 @@ function ReviewsList() {
   }
 
   return (
-    <div className="row">
+    <div className="reviews row">
       <div className="col-3">
-        <div className="card">
-          <div className="card-body">
-            <form>
-              <div className="mb-3">
-                <label className="form-label">Sharable URL</label>
-                <input type="email" className="form-control" placeholder="Place URL" value={scrap.url} onChange={e => setScrap({ ...scrap, url: e.target.value })} />
+        <div className="reviews__scrap">
+          <div>
+            <form
+              onSubmit={() => startScraping()}
+              className="reviews__scrap__form"
+            >
+              <div className="reviews__scrap__form__group">
+                <label className="reviews__scrap__form__group__label">
+                  Sharable URL
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Place URL"
+                  value={scrap.url}
+                  onChange={e => setScrap({ ...scrap, url: e.target.value })}
+                />
               </div>
-              <div className="mb-3">
-                <label className="form-label">
+              <div className="reviews__scrap__form__group">
+                <label className="reviews__scrap__form__group__label">
                   Extract limit
                 </label>
-                <input type="number" className="form-control" placeholder="Extract limit" value={scrap.limit} onChange={e => setScrap({ ...scrap, limit: parseInt(e.target.value) })} />
-                <div className="form-text">
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Extract limit"
+                  disabled
+                  value={scrap.limit}
+                  onChange={e =>
+                    setScrap({ ...scrap, limit: parseInt(e.target.value) })
+                  }
+                />
+                <span className="reviews__scrap__form__group__text">
                   For demo purposes, the extract limit is disabled.
-                </div>
+                </span>
               </div>
-              <div className="mb-3">
-                <label className="form-label">
+              <div className="reviews__scrap__form__group">
+                <label className="reviews__scrap__form__group__label">
                   Sort by
                 </label>
-                <select className="form-select" value={scrap.sortBy} onChange={e => setScrap({ ...scrap, sortBy: e.target.value })}>
+                <select
+                  className="form-select"
+                  value={scrap.sortBy}
+                  onChange={e => setScrap({ ...scrap, sortBy: e.target.value })}
+                >
                   {sortBy.map((item, index) => (
                     <option key={index} value={item}>
                       {item}
@@ -189,132 +210,143 @@ function ReviewsList() {
                   ))}
                 </select>
               </div>
-              <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" checked={scrap.extractImageUrls} onChange={e => setScrap({ ...scrap, extractImageUrls: e.target.checked })} />
-                <label className="form-label">
+              <div className="reviews__scrap__form__group form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={scrap.extractImageUrls}
+                  onChange={e =>
+                    setScrap({ ...scrap, extractImageUrls: e.target.checked })
+                  }
+                />
+                <label className="reviews__scrap__form__group__label">
                   Extract image urls
                 </label>
               </div>
-              <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" checked={scrap.ownerResponse} onChange={e => setScrap({ ...scrap, ownerResponse: e.target.checked })} />
-                <label className="form-label">
+              <div className="reviews__scrap__form__group form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={scrap.ownerResponse}
+                  onChange={e =>
+                    setScrap({ ...scrap, ownerResponse: e.target.checked })
+                  }
+                />
+                <label className="reviews__scrap__form__group__label">
                   Owner response
                 </label>
               </div>
-              <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" checked={scrap.onlyGoogleReviews} onChange={e => setScrap({ ...scrap, onlyGoogleReviews: e.target.checked })} />
-                <label className="form-label">
+              <div className="reviews__scrap__form__group form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={scrap.onlyGoogleReviews}
+                  onChange={e =>
+                    setScrap({ ...scrap, onlyGoogleReviews: e.target.checked })
+                  }
+                />
+                <label className="reviews__scrap__form__group__label">
                   Only Google reviews
                 </label>
               </div>
+              <button className="btn btn-primary" type="submit">
+                Start
+              </button>
             </form>
-            <button
-              className="btn btn-primary w-100 mt-3"
-              type="button"
-              onClick={() => startScraping()}
-            >
-              Start
-            </button>
-            
-            <small className="form-text text-muted">
+            <div className="reviews__scrap__form__group"></div>
+
+            <span className="reviews__scrap__form__group__text">
               The scraping process may take a few minutes.
-            </small>
+            </span>
           </div>
         </div>
       </div>
       <div className="col-9">
-        <div className="card">
-          <div className="card-body">
-            <table className="table">
-              <thead>
-                <tr>
-                  {[
-                    {
-                      title: "#",
-                      icon: "",
-                    },
-                    {
-                      title: "Place",
-                      icon: "bi-geo",
-                    },
-                    {
-                      title: "Date",
-                      icon: "bi-clock",
-                    },
-                    {
-                      title: "Reviews",
-                      icon: "bi-chat-square-text",
-                    },
-                    {
-                      title: "Time",
-                      icon: "bi-hourglass",
-                    },
-                    {
-                      title: "Download",
-                      icon: "bi-cloud-download",
-                    },
-                  ].map((item, index) => (
-                    <th scope="col" key={index}>
-                      <i className={item.icon}></i>
-                      {item.title}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentReviews.map(review => (
-                  <tr key={review.id}>
-                    <td>
-                      <div className="d-flex">
-                        <div
-                          className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
-                        >
-                          {renderStatus(review.status)}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <a href={`/reviews/${review.id}`}>
-                        {review?.title?.replace(/ - Google Maps/g, "")}
-                      </a>
-                      <span className="d-block">
-                        <small>
-                          {
-                            review?.spentInMinutes
-                              ? `${review?.spentInMinutes.toFixed(2)} minutes`
-                              : ""
-                          }
-                        </small>
-                      </span>
-                    </td>
-                    <td>{formatTime(review.createdAt)}</td>
-                    <td>
-                      {renderCount(review)}
-                    </td>
-                    <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <select
-                          className="form-select"
-                          aria-label={`Download ${review.title}`}
-                          id={`download-${review.id}`}
-                        >
-                          <option value="json">JSON</option>
-                          <option value="csv">CSV</option>
-                        </select>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => downloadFile(review, `download-${review.id}`)}
-                        >
-                          <i className="bi bi-cloud-download"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+        <div className="reviews__scrap-list">
+          <table className="table">
+            <thead>
+              <tr>
+                {[
+                  {
+                    title: "#",
+                    icon: "",
+                  },
+                  {
+                    title: "Place",
+                    icon: "bi-geo",
+                  },
+                  {
+                    title: "Date",
+                    icon: "bi-clock",
+                  },
+                  {
+                    title: "Reviews",
+                    icon: "bi-chat-square-text",
+                  },
+                  {
+                    title: "Time",
+                    icon: "bi-hourglass",
+                  },
+                  {
+                    title: "Download",
+                    icon: "bi-cloud-download",
+                  },
+                ].map((item, index) => (
+                  <th
+                    className="reviews__scrap-list__teable__header-item"
+                    scope="col"
+                    key={index}
+                  >
+                    <i className={item.icon}></i>
+                    {item.title}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
+            <tbody>
+              {currentReviews.map(review => (
+                <tr key={review.id}>
+                  <td>
+                    <div className="d-flex">
+                      <div
+                        className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                      >
+                        {renderStatus(review.status)}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a href={`/reviews/${review.id}`}>
+                      {review?.title?.replace(/ - Google Maps/g, "")}
+                    </a>
+                  </td>
+                  <td>{formatTime(review.createdAt)}</td>
+                  <td>{renderCount(review)}</td>
+                  <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <select
+                        className="form-select"
+                        aria-label={`Download ${review.title}`}
+                        id={`download-${review.id}`}
+                      >
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                      </select>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          downloadFile(review, `download-${review.id}`)
+                        }
+                      >
+                        <i className="bi bi-cloud-download"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <div className="card-footer">
             <Pagination>
               <Pagination.First
