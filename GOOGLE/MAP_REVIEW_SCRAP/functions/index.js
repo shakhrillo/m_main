@@ -8,7 +8,7 @@ const secretKey = process.env.SECRET_KEY || '';
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const endPointURL = 'http://34.44.21.16/api/reviews';
+const endPointURL = 'http://34.44.203.98/api/reviews';
 
 function createToken(payload) {
   return jwt.sign(payload, secretKey, { expiresIn: '12h' });
@@ -89,24 +89,24 @@ exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
         return;
       }
 
+      // After the transaction completes, process the pending collection
+      const pendingCollection = admin.firestore().collection(`pending`);
+      const pendingSnapshot = await pendingCollection.get();
+      const pendingDocs = pendingSnapshot.docs;
+      
+      if (pendingDocs.length === 0) {
+        return;
+      }
+  
+      const pendingDoc = pendingDocs[0];
+      const review = pendingDoc.data();
+  
+      await postReview(review); // This is outside of transaction since it involves external processing
+      await pendingDoc.ref.delete();
+
       // Set active to true within the transaction
       transaction.update(statusDocRef, { active: true });
     });
-
-    // After the transaction completes, process the pending collection
-    const pendingCollection = admin.firestore().collection(`pending`);
-    const pendingSnapshot = await pendingCollection.get();
-    const pendingDocs = pendingSnapshot.docs;
-    
-    if (pendingDocs.length === 0) {
-      return;
-    }
-
-    const pendingDoc = pendingDocs[0];
-    const review = pendingDoc.data();
-
-    await postReview(review); // This is outside of transaction since it involves external processing
-    await pendingDoc.ref.delete();
   } catch (error) {
     console.error('Error posting review:', error);
   }
