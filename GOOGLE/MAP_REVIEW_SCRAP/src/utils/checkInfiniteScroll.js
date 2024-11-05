@@ -11,15 +11,25 @@
 async function checkInfiniteScroll(reviewsContainer) {
   try {
     // Evaluate the last child element of the reviews container
-    const lastChild = await reviewsContainer.evaluateHandle(el => el.lastElementChild);
+    const lastChild = await reviewsContainer.evaluateHandle(el => {
+      if (!el) {
+        return null;
+      }
+      return el.lastChild;
+    });
 
     // Check if lastChild is null
     if (!lastChild) {
-      throw new Error('No last child found in the reviews container.');
+      console.error('No last child found in the reviews container.');
     }
 
     // Get the children of the last child element
-    const lastChildChildren = await lastChild.evaluate(el => Array.from(el.children));
+    const lastChildChildren = await lastChild.evaluate(el => {
+      if (!el) {
+        return [];
+      }
+      return Array.from(el.children)
+    });
 
     // Return the last child and completion status
     return {
@@ -27,7 +37,7 @@ async function checkInfiniteScroll(reviewsContainer) {
       completed: lastChildChildren.length === 0,
     };
   } catch (error) {
-    logger.error('Failed to check infinite scroll:', error);
+    console.log('Failed to check infinite scroll:', error);
     throw new Error('Failed to check infinite scroll due to an evaluation error.');
   }
 }
