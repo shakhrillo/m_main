@@ -5,7 +5,7 @@ const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/fir
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const endPointURL = 'http://34.46.41.115/api/reviews';
+const endPointURL = 'http://34.57.189.45/api/reviews';
 
 async function postReview(data) {
   try {
