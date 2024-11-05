@@ -57,6 +57,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
 
       await updateReview(uid, pushId, {
         extractedReviews: allElements.length,
+        spentInMinutes,
       });
 
       if (completed) {
