@@ -160,16 +160,13 @@ function ReviewsList() {
       <div className="col-3">
         <div className="reviews__scrap">
           <div>
-            <form
-              onSubmit={() => startScraping()}
-              className="reviews__scrap__form"
-            >
+            <form className="reviews__scrap__form">
               <div className="reviews__scrap__form__group">
                 <label className="reviews__scrap__form__group__label">
                   Sharable URL
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   className="form-control"
                   placeholder="Place URL"
                   value={scrap.url}
@@ -184,7 +181,6 @@ function ReviewsList() {
                   type="number"
                   className="form-control"
                   placeholder="Extract limit"
-                  disabled
                   value={scrap.limit}
                   onChange={e =>
                     setScrap({ ...scrap, limit: parseInt(e.target.value) })
@@ -249,7 +245,10 @@ function ReviewsList() {
                   Only Google reviews
                 </label>
               </div>
-              <button className="btn btn-primary" type="submit">
+              <button className="btn btn-primary" onClick={(e) => {
+                e.preventDefault()
+                startScraping()
+              }}>
                 Start
               </button>
             </form>
@@ -327,6 +326,9 @@ function ReviewsList() {
                             : ""
                         }
                       </small>
+                    </span>
+                    <span>
+                      {review?.status}
                     </span>
                   </td>
                   <td>{formatTime(review.createdAt)}</td>

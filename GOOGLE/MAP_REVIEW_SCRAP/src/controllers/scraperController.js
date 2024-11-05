@@ -104,7 +104,11 @@ async function main(url, uid, pushId, limit, sortBy) {
     });
 
     const currentUser = await getUser(uid);
-    const coinBalance = currentUser.data().coinBalance || 0;
+    const currentUserData = currentUser.data();
+    let coinBalance = 0;
+    if (currentUserData && currentUserData.coinBalance) {
+      coinBalance = currentUserData.coinBalance;
+    }
     const newCoinBalance = coinBalance - uniqueElements.length;
 
     await updateUser(uid, {
