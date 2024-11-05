@@ -277,9 +277,21 @@ function ReviewsList() {
                       <a href={`/reviews/${review.id}`}>
                         {review?.title?.replace(/ - Google Maps/g, "")}
                       </a>
+                      <span className="d-block">
+                        <small>
+                          {
+                            review?.spentInMinutes
+                              ? `${review?.spentInMinutes.toFixed(2)} minutes`
+                              : ""
+                          }
+                        </small>
+                      </span>
                     </td>
                     <td>{formatTime(review.createdAt)}</td>
-                    <td>{renderCount(review)}</td>
+                    <td>
+                      {review.extractedReviews || 0} reviews
+                      {/* {renderCount(review)} */}
+                    </td>
                     <td>{spentTime(review.createdAt, review.completedAt)}</td>
                     <td>
                       <div className="d-flex gap-2">

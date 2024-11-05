@@ -41,7 +41,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
 
       const elements = [];
       try {
-        await getReviewElements(page, reviewsContainer);
+        elements = await getReviewElements(page, reviewsContainer);
       } catch (error) {
         console.error('Error getting review elements:', error);
       }
