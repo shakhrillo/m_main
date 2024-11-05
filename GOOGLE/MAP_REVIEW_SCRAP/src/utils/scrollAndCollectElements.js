@@ -39,7 +39,12 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       
       console.log('Container children count:', found, 'Spent:', spentInMinutes, 'minutes');
 
-      const elements = await getReviewElements(page, reviewsContainer);
+      const elements = [];
+      try {
+        await getReviewElements(page, reviewsContainer);
+      } catch (error) {
+        console.error('Error getting review elements:', error);
+      }
       allElements.push(...elements);
       const uniqueElements = filterUniqueElements(allElements) || [];
       console.log('Unique elements:', uniqueElements.length);

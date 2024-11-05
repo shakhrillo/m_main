@@ -22,8 +22,8 @@ const sortBy = [
 ]
 
 const defaultScrap = {
-  url: "https://maps.app.goo.gl/y5NbtGn4iWqndgsQ8",
-  limit: 5000,
+  url: "https://maps.app.goo.gl/Zj3DVhizVttiFhAo7",
+  limit: 200,
   sortBy: sortBy[1],
   extractImageUrls: false,
   ownerResponse: true,
@@ -172,7 +172,7 @@ function ReviewsList() {
                 <label className="form-label">
                   Extract limit
                 </label>
-                <input type="number" className="form-control" placeholder="Extract limit" disabled value={scrap.limit} onChange={e => setScrap({ ...scrap, limit: parseInt(e.target.value) })} />
+                <input type="number" className="form-control" placeholder="Extract limit" value={scrap.limit} onChange={e => setScrap({ ...scrap, limit: parseInt(e.target.value) })} />
                 <div className="form-text">
                   For demo purposes, the extract limit is disabled.
                 </div>

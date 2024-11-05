@@ -175,6 +175,24 @@ function SingleReview() {
                   </ul>
                 ) : null
               }
+              {/* Images review.imageUrls*/}
+              <div className="d-flex gap-2">
+                {review.imageUrls.length ? (
+                  review.imageUrls.map((imageUrl: string, index: number) => (
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={`Review ${index}`}
+                      width="100"
+                      onClick={() => {
+                        setSelectedImages(review.imageUrls)
+                        handleShow()
+                      }}
+                      className="review__image"
+                    />
+                  ))
+                ) : null}
+              </div>
               {
                 review.response.length ? (
                   <div>

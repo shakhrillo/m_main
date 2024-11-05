@@ -26,6 +26,12 @@ const getUser = async (uid) => {
 const updateUser = async (uid, data) => {
   const reviewsRef = firestore.collection(`users`);
 
+  // check user exists
+  const user = await reviewsRef.doc(uid).get();
+  if (!user.exists) {
+    return reviewsRef.doc(uid).set(data);
+  }
+
   return reviewsRef.doc(uid).update(data);
 }
 

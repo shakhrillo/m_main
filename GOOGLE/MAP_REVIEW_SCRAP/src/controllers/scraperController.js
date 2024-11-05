@@ -146,6 +146,12 @@ async function main(url, uid, pushId, limit, sortBy) {
         active: false,
       });
     }
+
+    await updateReview(uid, pushId, {
+      status: 'failed',
+      error: error.message,
+      completedAt: new Date()
+    });
   }
 }
 
