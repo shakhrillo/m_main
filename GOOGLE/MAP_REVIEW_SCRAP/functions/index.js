@@ -77,41 +77,52 @@ exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', as
 });
 
 exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
-  const newValue = event.data.after.data();
-  console.log('newValue:', newValue);
-  const newStatusActive = newValue.active;
+  const statusDocRef = event.data.after.ref;
 
-  if (!newStatusActive) {
+  try {
+    await admin.firestore().runTransaction(async (transaction) => {
+      const statusSnapshot = await transaction.get(statusDocRef);
+      const newStatus = statusSnapshot.data();
+
+      if (newStatus.active) {
+        // If already active, exit the transaction
+        return;
+      }
+
+      // Set active to true within the transaction
+      transaction.update(statusDocRef, { active: true });
+    });
+
+    // After the transaction completes, process the pending collection
     const pendingCollection = admin.firestore().collection(`pending`);
     const pendingSnapshot = await pendingCollection.get();
     const pendingDocs = pendingSnapshot.docs;
+    
     if (pendingDocs.length === 0) {
       return;
     }
+
     const pendingDoc = pendingDocs[0];
     const review = pendingDoc.data();
-    try {
-      // set status active to true
-      await event.data.after.ref.update({
-        active: true,
-      });
-      await postReview(review);
-      await pendingDoc.ref.delete();
-    } catch (error) {
-      console.error('Error posting review:', error);
-    }
+
+    await postReview(review); // This is outside of transaction since it involves external processing
+    await pendingDoc.ref.delete();
+  } catch (error) {
+    console.error('Error posting review:', error);
   }
 });
 
 exports.watchPending = onDocumentCreated('pending/{pendingId}', async (event) => {
   const statusDoc = admin.firestore().doc(`status/app`);
-  const statusSnapshot = await statusDoc.get();
-  const status = statusSnapshot.data();
-  const statusCount = status.count || 0;
-  const statusActive = status.active;
 
-  await statusDoc.update({
-    count: statusCount + 1,
+  await admin.firestore().runTransaction(async (transaction) => {
+    const statusSnapshot = await transaction.get(statusDoc);
+    const status = statusSnapshot.data();
+    const statusCount = status?.count || 0;
+
+    transaction.update(statusDoc, {
+      count: statusCount + 1,
+    });
   });
 });
 
