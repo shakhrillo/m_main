@@ -125,7 +125,7 @@ function SingleReview() {
             {selectedImages.map((imageSrc: string, imageId: number) => (
               <Carousel.Item key={imageId}>
                 <div className="view__all-images__carousel-item">
-                  <img src={imageSrc} alt={`Slide ${imageId}`} />
+                  <img src={imageSrc} alt={`Slide ${imageId}`} className="w-100" />
                 </div>
               </Carousel.Item>
             ))}
