@@ -320,6 +320,18 @@ function ReviewsList() {
                           {review?.title?.replace(/ - Google Maps/g, "")}
                         </a>
                       </div>
+                      <span className="d-block">
+                        <small>
+                          {
+                            review?.spentInMinutes
+                              ? `${review?.spentInMinutes.toFixed(2)} minutes`
+                              : ""
+                          }
+                        </small>
+                      </span>
+                      <span>
+                        {review?.status}
+                      </span>
                     </td>
                     <td>
                       <div className="reviews__scrap-list__table__text">
