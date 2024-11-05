@@ -103,18 +103,18 @@ async function main(url, uid, pushId, limit, sortBy) {
       completedAt: new Date()
     });
 
-    const currentUser = await getUser(uid);
-    const currentUserData = currentUser.data();
-    let coinBalance = 0;
-    if (currentUserData && currentUserData.coinBalance) {
-      coinBalance = currentUserData.coinBalance;
-    }
-    const newCoinBalance = coinBalance - uniqueElements.length;
+    // const currentUser = await getUser(uid);
+    // const currentUserData = currentUser.data();
+    // let coinBalance = 0;
+    // if (currentUserData && currentUserData.coinBalance) {
+    //   coinBalance = currentUserData.coinBalance;
+    // }
+    // const newCoinBalance = coinBalance - uniqueElements.length;
 
-    await updateUser(uid, {
-      lastScraped: new Date(),
-      coinBalance: newCoinBalance
-    });
+    // await updateUser(uid, {
+    //   lastScraped: new Date(),
+    //   coinBalance: newCoinBalance
+    // });
 
     await createUserUsage(uid, {
       title,
