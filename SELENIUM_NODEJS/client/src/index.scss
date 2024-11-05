@@ -214,12 +214,17 @@
         border-radius: 0.5rem;
         font-size: 18px;
 
-        &--success {
+        &--completed {
           background-color: var(--success-10);
           color: var(--success);
         }
 
-        &--danger {
+        &--in-progress {
+          background-color: var(--primary-20);
+          color: var(--primary);
+        }
+
+        &--failed {
           background-color: var(--danger-20);
           color: var(--danger);
         }

@@ -313,7 +313,8 @@ function ReviewsList() {
                   <tr key={review.id}>
                     <td>
                       <div
-                        className={`reviews__scrap-list__table__status ${review.status === "completed" ? "reviews__scrap-list__table__status--success" : "reviews__scrap-list__table__status--danger"}`}
+                        className={`reviews__scrap-list__table__status reviews__scrap-list__table__status--${review.status}`}
+                        // className={`reviews__scrap-list__table__status ${review.status === "completed" ? "reviews__scrap-list__table__status--success" : "reviews__scrap-list__table__status--danger"}÷`}
                       >
                         {renderStatus(review.status)}
                       </div>
