@@ -4,7 +4,7 @@ module.exports = {
       name: "map-review-scraper",
       script: "npm",
       args: "run start",
-      watch: true,
+      watch: false,
       env: {
         NODE_ENV: "production",
       },
