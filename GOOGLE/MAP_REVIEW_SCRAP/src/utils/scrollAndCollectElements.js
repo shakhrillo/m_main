@@ -68,9 +68,11 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         break;
       }
 
-      const isLastChildInViewport = await lastChild.isIntersectingViewport();
-      if (!isLastChildInViewport) {
-        await page.evaluate(el => el.scrollIntoView(), lastChild);
+      if (lastChild) {
+        const isLastChildInViewport = await lastChild.isIntersectingViewport();
+        if (!isLastChildInViewport) {
+          await page.evaluate(el => el.scrollIntoView(), lastChild);
+        }
       }
 
       const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
@@ -86,8 +88,16 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         const el = document.querySelector('.vyucnb');
         if (el) el.scrollIntoView();
       });
+      await wait(500);
+
+      // scroll bottom .vyucnb
+      await page.evaluate(() => {
+        const el = document.querySelector('.vyucnb');
+        const nextEl = el.nextElementSibling;
+        if (nextEl) nextEl.scrollIntoView();
+      });
       
-      await wait(2000); // Wait for a short duration to allow more reviews to load
+      await wait(500); // Wait for a short duration to allow more reviews to load
     } catch (error) {
       console.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error

@@ -40,40 +40,47 @@ async function postReview(data) {
 }
 
 exports.watchBuyCoins = onDocumentCreated('users/{userId}/buyCoins/{coinId}', async (event) => {
-  const snapshot = event.data;
-  const coin = snapshot.data();
-  const amount = coin.amount;
+  const { userId } = event.params;
+  const { amount } = event.data.data();
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Custom Amount",
+  const batch = admin.firestore().batch(); // Create a batch for atomic operations
+
+  try {
+    // Create a Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: { name: "Custom Amount" },
+            unit_amount: amount,
           },
-          unit_amount: amount,
+          quantity: 1,
         },
-        quantity: 1,
+      ],
+      mode: "payment",
+      success_url: "http://localhost:4200/payments",
+      cancel_url: "http://localhost:4200/payments",
+      payment_intent_data: {
+        metadata: { userId },
       },
-    ],
-    mode: "payment",
-    success_url: "http://localhost:4200/payments",
-    cancel_url: "http://localhost:4200/payments",
-    payment_intent_data: {  // Add metadata to payment intent directly
-      metadata: {
-        userId: event.params.userId,
-      },
-    },
-  });
+    });
 
-  console.log('session:', session);
+    console.log("Stripe session URL:", session.url);
 
-  const userCollection = admin.firestore().collection(`users/${event.params.userId}/buy`);
-  await userCollection.add({
-    url: session.url,
-  });
+    // Store the session URL in Firestore using the batch
+    const userBuyCollection = admin.firestore().collection(`users/${userId}/buy`);
+    const newDocRef = userBuyCollection.doc(); // Automatically generate a new document ID
+    batch.set(newDocRef, { url: session.url });
+
+    // Commit the batch
+    await batch.commit();
+    console.log("Session URL added to Firestore successfully");
+
+  } catch (error) {
+    console.error("Error creating Stripe session:", error);
+  }
 });
 
 exports.watchStatus = onDocumentUpdated('status/app', async (event) => {
