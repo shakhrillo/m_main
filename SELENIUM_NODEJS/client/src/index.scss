@@ -39,27 +39,24 @@
     border: 0;
     border-radius: 24px;
 
-    &__header {
+    &-header {
       margin-bottom: 24px;
 
-      &__title {
+      &-title {
         text-align: center;
         color: var(--primary);
       }
     }
 
-    &__image {
-      width: 180px;
-    }
-
-    &__input {
+    &-input {
+      font-size: 14px;
       &::placeholder {
         color: var(--primary-50);
         font-size: 14px;
       }
     }
 
-    &__button {
+    &-button {
       font-size: 14px;
       color: var(--primary);
 
@@ -73,7 +70,7 @@
       }
     }
 
-    &__link {
+    &-link {
       color: var(--primary);
     }
   }
