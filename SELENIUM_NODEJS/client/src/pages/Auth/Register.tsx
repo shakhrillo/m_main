@@ -39,43 +39,83 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col col-md-6 offset-md-3">
-          <div className="card mt-5">
-            <div className="card-body">
-              <div className="text-center mb-4">
-                <img src={logo} alt="logo" height="50" />
-              </div>
-              <div className="mb-3 row">
-                <label className="col-sm-3 col-form-label">Email</label>
-                <div className="col-sm-9">
-                  <input type="text" className="form-control" id="staticEmail" value="email@example.com" />
-                </div>
-              </div>
-              <div className="mb-3 row">
-                <label className="col-sm-3 col-form-label">Password</label>
-                <div className="col-sm-9">
-                  <input type="password" className="form-control" />
-                </div>
-              </div>
-              <div className="d-grid gap-2">
-                <button className="btn btn-primary" type="button">
-                  Register
-                </button>
-              </div>
-              <hr />
-              <div className="text-center">
-                <p>
-                  <Link to="/auth/login">Already have an account?</Link>
-                </p>
-                <p>or</p>
-                <button className="btn btn-outline-primary" onClick={handleGoogleLogin}>
-                  Continue with Google
-                </button>
-              </div>
-            </div>
+    <div className="registration container-fluid">
+      <nav className="registration__navbar">
+        <a href="#">
+          <img
+            className="registration__navbar-logo"
+            src={logo}
+            alt="GeoScraper logo"
+          />
+        </a>
+      </nav>
+      <div className="registration__card">
+        <div className="registration__card__header">
+          <h3 className="registration__card__header-title">Registration</h3>
+          <span className="registration__text">
+            Enter your details below to create your account.
+          </span>
+        </div>
+        <form className="registration__card__form" onSubmit={() => {}}>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="First name"
+            />
           </div>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Last name"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Password"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Confirm password"
+            />
+          </div>
+          <div className="registration__card__form-submit">
+            <button className="btn btn-primary" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+        <div className="registration__card__footer">
+          <span className="registration__text">Or register with</span>
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            onClick={handleGoogleLogin}
+          >
+            <i className="bi bi-google me-2"></i>
+            Register with Google
+          </button>
+        </div>
+        <div className="registration__text">
+          <span>
+            Already have an account?{" "}
+            <Link className="registration__card__link" to="/auth/login">
+              Login
+            </Link>
+          </span>
         </div>
       </div>
     </div>

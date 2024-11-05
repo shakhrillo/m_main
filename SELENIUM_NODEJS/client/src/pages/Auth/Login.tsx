@@ -51,7 +51,7 @@ const Login: React.FC = () => {
       </nav>
       <div className="login__card">
         <div className="login__card__header">
-          <h3 className="login__card-header-title">Login</h3>
+          <h3 className="login__card__header-title">Login</h3>
           <span className="login__text">
             Enter your details to get sign in to your account
           </span>
@@ -86,7 +86,7 @@ const Login: React.FC = () => {
             type="button"
             onClick={handleGoogleLogin}
           >
-            <i className="bi bi-google"></i>
+            <i className="bi bi-google me-2"></i>
             Login with Google
           </button>
         </div>
@@ -99,10 +99,6 @@ const Login: React.FC = () => {
           </span>
         </div>
       </div>
-      {/* <span className="text-nowrap mx-5">
-        Copeyright <i className="bi bi-c-circle"></i> GeoScraper 2024 | Privacy
-        Policy
-      </span> */}
     </div>
   )
 }
