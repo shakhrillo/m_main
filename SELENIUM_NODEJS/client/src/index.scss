@@ -9,7 +9,6 @@
   --primary-90: rgba(60, 72, 107, 0.9);
   --primary-80: rgba(60, 72, 107, 0.8);
   --primary-70: rgba(60, 72, 107, 0.7);
-  --primary-50: rgba(60, 72, 107, 0.5);
   --primary-60: rgba(60, 72, 107, 0.6);
   --primary-50: rgba(60, 72, 107, 0.5);
   --primary-40: rgba(60, 72, 107, 0.4);
@@ -25,39 +24,42 @@
   background-color: #f6f6f6;
 
   &__navbar {
+    position: absolute;
     top: 0;
     left: 0;
 
-    img {
+    &__logo {
       width: 170px;
     }
   }
 
   &__card {
     max-width: 370px;
-    width: 370px;
+    width: 100%;
     border: 0;
     border-radius: 24px;
 
-    &--header {
+    &__header {
       margin-bottom: 24px;
 
-      h3 {
+      &__title {
         text-align: center;
         color: var(--primary);
       }
     }
 
-    img {
+    &__image {
       width: 180px;
     }
 
-    input::placeholder {
-      color: var(--primary-50);
-      font-size: 14px;
+    &__input {
+      &::placeholder {
+        color: var(--primary-50);
+        font-size: 14px;
+      }
     }
 
-    button {
+    &__button {
       font-size: 14px;
       color: var(--primary);
 
@@ -71,12 +73,12 @@
       }
     }
 
-    a {
+    &__link {
       color: var(--primary);
     }
   }
 
-  span {
+  &__text {
     color: var(--primary-70);
     font-size: 12px;
   }
