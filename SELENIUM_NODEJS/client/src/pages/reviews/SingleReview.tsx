@@ -4,15 +4,14 @@ import { Carousel, Modal } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Pagination from "react-bootstrap/Pagination"
 import { useParams } from "react-router-dom"
-import { useAppSelector } from "../../../app/hooks"
+import { useAppSelector } from "../../app/hooks"
 
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
-import StarRating from "../../../components/star-rating"
-import { useFirebase } from "../../../contexts/FirebaseProvider"
-import "../../../style/view.css"
-import ReviewInfo from "./reviewInfo"
+import ReviewInfo from "../../components/ReviewInfo"
+import StarRating from "../../components/star-rating"
+import { useFirebase } from "../../contexts/FirebaseProvider"
 
-function ScrapReviewsReviewView() {
+function SingleReview() {
   let { place } = useParams()
   const [selectedImages, setSelectedImages] = useState([] as any[])
   const [show, setShow] = useState(false)
@@ -249,4 +248,4 @@ function ScrapReviewsReviewView() {
   )
 }
 
-export default ScrapReviewsReviewView
+export default SingleReview

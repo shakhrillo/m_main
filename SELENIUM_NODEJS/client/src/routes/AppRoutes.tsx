@@ -1,38 +1,29 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  Outlet,
-  RouterProvider,
-} from "react-router-dom"
+import
+  {
+    createBrowserRouter,
+    Navigate,
+    Outlet,
+    RouterProvider,
+  } from "react-router-dom"
 import PrivateRoute from "../components/PrivateRoute"
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout"
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
-import Login from "../pages/Auth/Login"
-import Register from "../pages/Auth/Register"
-import PaymentsHistoryView from "../views/payments/history"
-import PaymentsSubscriptionView from "../views/payments/subscription"
-import ScrapPlacesView from "../views/scrap/places"
-import ScrapReviewsView from "../views/scrap/reviews"
-import ScrapReviewsReviewView from "../views/scrap/reviews/review"
-import UsageView from "../views/usage"
-import UsersView from "../views/user"
-import Logout from "../pages/Auth/Logout"
+import Login from "../pages/auth/Login"
+import Logout from "../pages/auth/Logout"
+import Register from "../pages/auth/Register"
+import Help from "../pages/Help"
+import Payments from "../pages/Payments"
+import ReviewsList from "../pages/reviews/ReviewsList"
+import SingleReview from "../pages/reviews/SingleReview"
+import Settings from "../pages/Settings"
+import User from "../pages/User"
 
 const reviewsRoutes = {
   path: "reviews",
   element: <Outlet />,
   children: [
-    { path: "", element: <ScrapReviewsView /> },
-    { path: ":place", element: <ScrapReviewsReviewView /> },
-  ],
-}
-
-const paymentsRoutes = {
-  path: "payments",
-  element: <Outlet />,
-  children: [
-    { path: "", element: <PaymentsSubscriptionView /> },
-    { path: "history", element: <PaymentsHistoryView /> },
+    { path: "", element: <ReviewsList /> },
+    { path: ":place", element: <SingleReview /> },
   ],
 }
 
@@ -42,12 +33,10 @@ const dashboardRoutes = {
   children: [
     { path: "", element: <Navigate to={"reviews"} replace /> },
     reviewsRoutes,
-    { path: "usage", element: <UsageView /> },
-    { path: "user", element: <UsersView /> },
-    { path: "settings", element: "Settings" },
-    { path: "help", element: "Help" },
-    { path: "places", element: <ScrapPlacesView /> },
-    paymentsRoutes,
+    { path: "user", element: <User /> },
+    { path: "settings", element: <Settings /> },
+    { path: "help", element: <Help /> },
+    { path: "payments", element: <Payments /> },
   ],
 }
 
@@ -60,7 +49,6 @@ const authRoutes = {
     { path: "logout", element: <Logout /> },
   ]
 }
-
 
 const router = createBrowserRouter([
   authRoutes,

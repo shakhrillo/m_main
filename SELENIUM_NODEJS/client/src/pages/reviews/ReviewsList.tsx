@@ -12,22 +12,7 @@ import
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { Pagination } from "react-bootstrap"
-import { useFirebase } from "../../../contexts/FirebaseProvider"
-import "../../../style/dashboard.css"
-import { User } from "firebase/auth"
-
-async function encodeToken(user: User) {
-  try {
-    const token = await user.getIdToken(); // Get the ID token
-    const secretKey = 'secret'; // Replace with your actual secret key
-
-    // Use a simple Base64 encoding instead of jsonwebtoken
-    const encodedToken = btoa(token + '.' + secretKey);
-    return encodedToken;
-  } catch (error) {
-    console.error('Error encoding token:', error);
-  }
-}
+import { useFirebase } from "../../contexts/FirebaseProvider"
 
 const sortBy = [
   "Most Relevant",
@@ -45,7 +30,7 @@ const defaultScrap = {
   onlyGoogleReviews: false,
 }
 
-function ScrapReviewsView() {
+function ReviewsList() {
   const { firestore, user } = useFirebase()
 
   const [scrap, setScrap] = useState(defaultScrap)
@@ -238,90 +223,86 @@ function ScrapReviewsView() {
         </div>
       </div>
       <div className="col-9">
-        <div className="reviews card">
+        <div className="card">
           <div className="card-body">
-            <div className="card border-0">
-              <div className="card-body bg-white">
-                <table className="table geo-table">
-                  <thead>
-                    <tr>
-                      {[
-                        {
-                          title: "#",
-                          icon: "",
-                        },
-                        {
-                          title: "Place",
-                          icon: "bi-geo",
-                        },
-                        {
-                          title: "Date",
-                          icon: "bi-clock",
-                        },
-                        {
-                          title: "Reviews",
-                          icon: "bi-chat-square-text",
-                        },
-                        {
-                          title: "Time",
-                          icon: "bi-hourglass",
-                        },
-                        {
-                          title: "Download",
-                          icon: "bi-cloud-download",
-                        },
-                      ].map((item, index) => (
-                        <th scope="col" key={index}>
-                          <i className={item.icon}></i>
-                          {item.title}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentReviews.map(review => (
-                      <tr key={review.id}>
-                        <td>
-                          <div className="d-flex">
-                            <div
-                              className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
-                            >
-                              {renderStatus(review.status)}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <a href={`/reviews/${review.id}`}>
-                            {review?.title?.replace(/ - Google Maps/g, "")}
-                          </a>
-                        </td>
-                        <td>{formatTime(review.createdAt)}</td>
-                        <td>{renderCount(review)}</td>
-                        <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                        <td>
-                          <div className="d-flex gap-2 geo-select">
-                            <select
-                              className="form-select"
-                              aria-label={`Download ${review.title}`}
-                              id={`download-${review.id}`}
-                            >
-                              <option value="json">JSON</option>
-                              <option value="csv">CSV</option>
-                            </select>
-                            <button
-                              className="btn border"
-                              onClick={() => downloadFile(review, `download-${review.id}`)}
-                            >
-                              <i className="bi-download"></i>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  {[
+                    {
+                      title: "#",
+                      icon: "",
+                    },
+                    {
+                      title: "Place",
+                      icon: "bi-geo",
+                    },
+                    {
+                      title: "Date",
+                      icon: "bi-clock",
+                    },
+                    {
+                      title: "Reviews",
+                      icon: "bi-chat-square-text",
+                    },
+                    {
+                      title: "Time",
+                      icon: "bi-hourglass",
+                    },
+                    {
+                      title: "Download",
+                      icon: "bi-cloud-download",
+                    },
+                  ].map((item, index) => (
+                    <th scope="col" key={index}>
+                      <i className={item.icon}></i>
+                      {item.title}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentReviews.map(review => (
+                  <tr key={review.id}>
+                    <td>
+                      <div className="d-flex">
+                        <div
+                          className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                        >
+                          {renderStatus(review.status)}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <a href={`/reviews/${review.id}`}>
+                        {review?.title?.replace(/ - Google Maps/g, "")}
+                      </a>
+                    </td>
+                    <td>{formatTime(review.createdAt)}</td>
+                    <td>{renderCount(review)}</td>
+                    <td>{spentTime(review.createdAt, review.completedAt)}</td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <select
+                          className="form-select"
+                          aria-label={`Download ${review.title}`}
+                          id={`download-${review.id}`}
+                        >
+                          <option value="json">JSON</option>
+                          <option value="csv">CSV</option>
+                        </select>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => downloadFile(review, `download-${review.id}`)}
+                        >
+                          <i className="bi bi-cloud-download"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <div className="card-footer">
             <Pagination>
@@ -367,4 +348,4 @@ function ScrapReviewsView() {
   )
 }
 
-export default ScrapReviewsView
+export default ReviewsList

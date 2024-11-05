@@ -178,16 +178,18 @@ exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request,
         coinBalance: coinBalance + paymentIntent.amount,
       });
       break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      await admin.firestore().collection(`users/${paymentMethod.metadata.userId}/payment_methods`).add({
-        payment_method: paymentMethod.id,
+    case 'payment_intent.payment_failed':
+      const paymentIntentFailed = event.data.object;
+      console.log('metadata-->', paymentIntentFailed.metadata);
+      // Then define and call a method to handle the failed payment intent.
+      // handlePaymentIntentFailed(paymentIntentFailed);
+      await admin.firestore().collection(`users/${paymentIntentFailed.metadata.userId}/payments`).add({
+        amount: paymentIntentFailed.amount,
         created: admin.firestore.Timestamp.now(),
+        payment_method: paymentIntentFailed.payment_method,
+        status: paymentIntentFailed.status,
       });
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
       break;
-    // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
   }

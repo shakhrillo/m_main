@@ -1,7 +1,7 @@
 import { doc, onSnapshot, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebase } from "../../../contexts/FirebaseProvider";
+import { useFirebase } from "../contexts/FirebaseProvider";
 
 function ReviewInfo() {
   let { place } = useParams();

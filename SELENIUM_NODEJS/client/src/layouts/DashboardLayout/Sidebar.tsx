@@ -5,7 +5,6 @@ import logoImg from "../../assets/images/logo.svg";
 const Sidebar: React.FC = () => {
   const navLinks = [
     { path: "/reviews", icon: "bi-search", label: "Scrap Reviews" },
-    { path: "/usage", icon: "bi-bar-chart", label: "Usage" },
     { path: "/user", icon: "bi-person", label: "User" },
     { path: "/payments", icon: "bi-credit-card", label: "Payments" },
     { path: "/settings", icon: "bi-gear", label: "Settings" },
