@@ -245,10 +245,13 @@ function ReviewsList() {
                   Only Google reviews
                 </label>
               </div>
-              <button className="btn btn-primary" onClick={(e) => {
-                e.preventDefault()
-                startScraping()
-              }}>
+              <button
+                className="btn btn-primary"
+                onClick={e => {
+                  e.preventDefault()
+                  startScraping()
+                }}
+              >
                 Start
               </button>
             </form>
@@ -262,103 +265,103 @@ function ReviewsList() {
       </div>
       <div className="col-9">
         <div className="reviews__scrap-list">
-          <table className="table">
-            <thead>
-              <tr>
-                {[
-                  {
-                    title: "#",
-                    icon: "",
-                  },
-                  {
-                    title: "Place",
-                    icon: "bi-geo",
-                  },
-                  {
-                    title: "Date",
-                    icon: "bi-clock",
-                  },
-                  {
-                    title: "Reviews",
-                    icon: "bi-chat-square-text",
-                  },
-                  {
-                    title: "Time",
-                    icon: "bi-hourglass",
-                  },
-                  {
-                    title: "Download",
-                    icon: "bi-cloud-download",
-                  },
-                ].map((item, index) => (
-                  <th
-                    className="reviews__scrap-list__teable__header-item"
-                    scope="col"
-                    key={index}
-                  >
-                    <i className={item.icon}></i>
-                    {item.title}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {currentReviews.map(review => (
-                <tr key={review.id}>
-                  <td>
-                    <div className="d-flex">
+          <div className="reviews__scrap-list__table">
+            <table className="table">
+              <thead>
+                <tr>
+                  {[
+                    {
+                      title: "#",
+                      icon: "",
+                    },
+                    {
+                      title: "Place",
+                      icon: "bi-geo",
+                    },
+                    {
+                      title: "Date",
+                      icon: "bi-clock",
+                    },
+                    {
+                      title: "Reviews",
+                      icon: "bi-chat-square-text",
+                    },
+                    {
+                      title: "Time",
+                      icon: "bi-hourglass",
+                    },
+                    {
+                      title: "Download",
+                      icon: "bi-cloud-download",
+                    },
+                  ].map((item, index) => (
+                    <th scope="col" key={index}>
+                      <div className="reviews__scrap-list__table__header">
+                        {item.icon ? <i className={item.icon}></i> : ""}
+                        {item.title}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentReviews.map(review => (
+                  <tr key={review.id}>
+                    <td>
                       <div
-                        className={`geo-badge ${review.status === "completed" ? "success" : "danger"}`}
+                        className={`reviews__scrap-list__table__status ${review.status === "completed" ? "reviews__scrap-list__table__status--success" : "reviews__scrap-list__table__status--danger"}`}
                       >
                         {renderStatus(review.status)}
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <a href={`/reviews/${review.id}`}>
-                      {review?.title?.replace(/ - Google Maps/g, "")}
-                    </a>
-                    <span className="d-block">
-                      <small>
-                        {
-                          review?.spentInMinutes
-                            ? `${review?.spentInMinutes.toFixed(2)} minutes`
-                            : ""
-                        }
-                      </small>
-                    </span>
-                    <span>
-                      {review?.status}
-                    </span>
-                  </td>
-                  <td>{formatTime(review.createdAt)}</td>
-                  <td>{renderCount(review)}</td>
-                  <td>{spentTime(review.createdAt, review.completedAt)}</td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <select
-                        className="form-select"
-                        aria-label={`Download ${review.title}`}
-                        id={`download-${review.id}`}
-                      >
-                        <option value="json">JSON</option>
-                        <option value="csv">CSV</option>
-                      </select>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() =>
-                          downloadFile(review, `download-${review.id}`)
-                        }
-                      >
-                        <i className="bi bi-cloud-download"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="card-footer">
+                    </td>
+                    <td>
+                      <div className="reviews__scrap-list__table__text">
+                        <a href={`/reviews/${review.id}`}>
+                          {review?.title?.replace(/ - Google Maps/g, "")}
+                        </a>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="reviews__scrap-list__table__text">
+                        {formatTime(review.createdAt)}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="reviews__scrap-list__table__text">
+                        {renderCount(review)}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="reviews__scrap-list__table__text">
+                        {spentTime(review.createdAt, review.completedAt)}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="reviews__scrap-list__table__download">
+                        <select
+                          className="form-select"
+                          aria-label={`Download ${review.title}`}
+                          id={`download-${review.id}`}
+                        >
+                          <option value="json">JSON</option>
+                          <option value="csv">CSV</option>
+                        </select>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() =>
+                            downloadFile(review, `download-${review.id}`)
+                          }
+                        >
+                          <i className="bi bi-cloud-download"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="reviews__scrap-list__pagination">
             <Pagination>
               <Pagination.First
                 onClick={() => handlePageClick(1)}
