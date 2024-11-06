@@ -33,7 +33,6 @@ function puppeteerMutationListener(record, uid, pushId) {
     // spentInMinutes,
     scrolledReviews: storIdJson.length
   }).then(() => {
-    console.log('Updated');
   }).catch((error) => {
     console.error('Error updating:', error);
   });
