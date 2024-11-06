@@ -30,15 +30,15 @@ async function puppeteerMutationListener(records, uid, pushId) {
   console.log('Saved:', storIdJson.length);
 
   for (const record of records) {
-    const result = await fetchReviewDetails(page, record);
-    // console.log('Result:', result);
-    storIdJson.push(result);
+    fetchReviewDetails(page, record).then(async (result) => {
+      storIdJson.push(result);
+      await updateReview(uid, pushId, {
+        status: 'in-progress',
+        totalReviews: storIdJson.length
+      });
+    })
   }
 
-  await updateReview(uid, pushId, {
-    status: 'in-progress',
-    totalReviews: storIdJson.length
-  });
 }
 
 async function main({

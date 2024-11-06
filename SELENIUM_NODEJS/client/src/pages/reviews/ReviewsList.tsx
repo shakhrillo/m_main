@@ -329,7 +329,7 @@ function ReviewsList() {
                       {/* spentInMinutes,
                       scrolledReviews: storIdJson.length */}
                         <small>
-                          {review?.scrolledReviews}
+                          {review?.totalReviews}
                         </small>
                         <small>
                           {review?.spentInMinutes
