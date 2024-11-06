@@ -19,7 +19,7 @@ function verifyToken(token) {
 
 (async () => {
   const token = createToken({
-    "url": "https://maps.app.goo.gl/NmAddhWxtURsZsx3A",
+    "url": "https://maps.app.goo.gl/Zj3DVhizVttiFhAo7",
     "reviewId": "Q4vNEoTkpOtdvgEmCe02",
     "userId": "MHKWy9QpFjfijMlKxeimUyOPYLt1",
     "limit": 17000,
