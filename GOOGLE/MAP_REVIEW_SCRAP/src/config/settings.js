@@ -28,7 +28,7 @@ module.exports = {
       '--disable-setuid-sandbox',
       '--disable-speech-api',
       '--disable-sync',
-      '--hide-scrollbars',
+      // '--hide-scrollbars',
       '--ignore-gpu-blacklist',
       '--metrics-recording-only',
       '--mute-audio',
