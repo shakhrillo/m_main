@@ -34,6 +34,11 @@ async function puppeteerMutationListener(records, uid, pushId) {
     // console.log('Result:', result);
     storIdJson.push(result);
   }
+
+  await updateReview(uid, pushId, {
+    status: 'in-progress',
+    totalReviews: storIdJson.length
+  });
 }
 
 async function main({
