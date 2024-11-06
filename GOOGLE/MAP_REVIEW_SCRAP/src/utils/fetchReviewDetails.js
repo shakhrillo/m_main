@@ -41,7 +41,7 @@ const fetchReviewDetails = async (page, reviewId) => {
 
     return result;
   } catch (error) {
-    logger.error('Error in fetchReviewDetails:', error);
+    console.error('Error in fetchReviewDetails:', error);
     return null; // Return null or handle error as needed
   }
 };
