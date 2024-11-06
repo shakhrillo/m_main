@@ -32,6 +32,7 @@ async function main({
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
     const title = await page.title();
+    console.log('Title:', title);
 
     await updateReview(userId, reviewId, {
       title,
@@ -40,15 +41,15 @@ async function main({
       token: ''
     });
 
-    await enableRequestInterception(page, [
-      '.css',
-      'googleusercontent',
-      'preview',
-      'analytics',
-      'ads',
-      'fonts',
-      '/maps/vt'
-    ]);
+    // await enableRequestInterception(page, [
+    //   '.css',
+    //   'googleusercontent',
+    //   'preview',
+    //   'analytics',
+    //   'ads',
+    //   'fonts',
+    //   '/maps/vt'
+    // ]);
 
     await clickReviewTab(page);
     await sortReviews(page, sortBy);

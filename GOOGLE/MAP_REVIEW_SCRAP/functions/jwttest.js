@@ -22,7 +22,7 @@ function verifyToken(token) {
     "url": "https://maps.app.goo.gl/NmAddhWxtURsZsx3A",
     "reviewId": "Q4vNEoTkpOtdvgEmCe02",
     "userId": "MHKWy9QpFjfijMlKxeimUyOPYLt1",
-    "limit": 1700,
+    "limit": 17000,
     "sortBy": "Newest"
   });
   // console.log('Token:', token);
