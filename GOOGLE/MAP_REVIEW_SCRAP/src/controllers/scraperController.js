@@ -22,6 +22,7 @@ if (!fs.existsSync(tempDir)) {
 }
 
 const storIdJson = [];
+let info = {};
 
 function puppeteerMutationListener(record, uid, pushId, spentInMinutes) {
   console.log('Record:', record.length);
@@ -52,6 +53,14 @@ async function main({
     await page.setCacheEnabled(false);
 
     page.exposeFunction('puppeteerMutationListener', puppeteerMutationListener);
+
+    await page.evaluate((variable) => {
+      window.uid = variable;
+    }, userId);
+
+    await page.evaluate((variable) => {
+      window.pushId = variable;
+    }, reviewId);
 
     const title = await page.title();
     console.log('Title:', title);

@@ -326,6 +326,11 @@ function ReviewsList() {
                         </a>
                       </div>
                       <span className="d-block">
+                      {/* spentInMinutes,
+                      scrolledReviews: storIdJson.length */}
+                        <small>
+                          {review?.scrolledReviews}
+                        </small>
                         <small>
                           {review?.spentInMinutes
                             ? `${review?.spentInMinutes.toFixed(2)} minutes`
