@@ -1,4 +1,4 @@
-const logger = require('./logger');
+// const logger = require('./logger');
 
 /**
  * Retrieves the date of the owner's response to a review from a review element.
@@ -13,7 +13,7 @@ async function getOwnerResponseTime(reviewElement) {
     // Locate the star rating element
     const starRatingElement = await reviewElement.$('span[role="img"][aria-label*="stars"]');
     if (!starRatingElement) {
-      logger.warn('Star rating element not found in the review element.');
+      // logger.warn('Star rating element not found in the review element.');
       return ownerResponseDate; // Return empty if no star rating element is found
     }
 
@@ -30,10 +30,10 @@ async function getOwnerResponseTime(reviewElement) {
       ownerResponseDate = await responseTextElement.evaluate(element => element.textContent);
       ownerResponseDate = ownerResponseDate.split('Response from the owner')[1]?.trim() || ''; // Safely split and trim the response date
     } else {
-      logger.warn('Response from the owner not found in the response container.');
+      // logger.warn('Response from the owner not found in the response container.');
     }
   } catch (error) {
-    logger.error('Error retrieving owner response date:', error);
+    // logger.error('Error retrieving owner response date:', error);
   }
 
   return ownerResponseDate;

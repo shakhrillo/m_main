@@ -1,5 +1,3 @@
-const logger = require('./logger');
-
 /**
  * Extracts the date of a review from the given review element.
  * 
@@ -23,7 +21,7 @@ async function getReviewDate(element, reviewId) {
     // If no star rating element is found, check for the thumbs up button
     const thumbsUpButton = await element.$(`button[data-review-id="${reviewId}"][jsaction*="review.toggleThumbsUp"]`);
     if (!thumbsUpButton) {
-      logger.warn(`No thumbs up button found for review ID: ${reviewId}`);
+      // logger.warn(`No thumbs up button found for review ID: ${reviewId}`);
       
       // Attempt to access the first child element to find the review date
       const firstChild = await element.evaluateHandle(el => 
@@ -31,14 +29,14 @@ async function getReviewDate(element, reviewId) {
       );
 
       if (!firstChild) {
-        logger.warn('First child element not found.');
+        // logger.warn('First child element not found.');
         return ''; // Return empty if no first child element is found
       }
 
       // Check for span elements in the first child element
       const secondChildDiv = await firstChild.$$('span');
       if (!secondChildDiv || secondChildDiv.length < 2) {
-        logger.warn('Not enough span elements found to determine review date.');
+        // logger.warn('Not enough span elements found to determine review date.');
         return ''; // Return empty if not enough span elements are found
       }
 
@@ -53,14 +51,14 @@ async function getReviewDate(element, reviewId) {
     });
 
     if (!secondChild) {
-      logger.warn('Second child element not found from thumbs up button.');
+      // logger.warn('Second child element not found from thumbs up button.');
       return ''; // Return empty if no second child element is found
     }
 
     // Return the inner text of the second child element as the review date
     return await secondChild.evaluate(el => el.innerText);
   } catch (error) {
-    logger.error('Error extracting review date:', error);
+    // logger.error('Error extracting review date:', error);
     return ''; // Return empty on error
   }
 }

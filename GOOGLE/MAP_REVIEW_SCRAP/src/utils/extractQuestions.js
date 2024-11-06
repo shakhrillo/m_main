@@ -1,4 +1,4 @@
-const logger = require('./logger');
+// const logger = require('./logger');
 
 /**
  * Extracts questions from the given review element.
@@ -18,7 +18,7 @@ async function extractQuestions(element) {
       // If MyEned elements are found, access their last children
       const MyEnedLastChildren = await MyEned[0].$$(':scope > *');
       if (MyEnedLastChildren.length < 2) {
-        logger.warn('Not enough children found in MyEned to extract questions.');
+        // logger.warn('Not enough children found in MyEned to extract questions.');
         return []; // Return empty array if not enough children are found
       }
       rateElementParentNextSiblingLastChildChildren = await MyEnedLastChildren[1].$$(':scope > *');
@@ -26,14 +26,14 @@ async function extractQuestions(element) {
       // If no MyEned elements, check for the star rating element
       const rateElement = await element.$('span[role="img"][aria-label*="stars"]');
       if (!rateElement) {
-        logger.warn('No star rating element found.');
+        // logger.warn('No star rating element found.');
         return []; // Return empty array if no star rating element is found
       }
 
       // Get the parent element's next sibling's first child
       const rateElementParent = await rateElement.evaluateHandle(el => el.parentElement?.nextElementSibling?.firstElementChild);
       if (!rateElementParent || JSON.stringify(rateElementParent) === '{}') {
-        logger.warn('No valid parent element found for star rating.');
+        // logger.warn('No valid parent element found for star rating.');
         rateElementParentNextSiblingLastChildChildren = [];
       } else {
         // Access the children of the parent element
@@ -47,7 +47,7 @@ async function extractQuestions(element) {
       extractedQA.push(question);
     }
   } catch (error) {
-    logger.error('Error extracting questions:', error);
+    // logger.error('Error extracting questions:', error);
   }
 
   return extractedQA;

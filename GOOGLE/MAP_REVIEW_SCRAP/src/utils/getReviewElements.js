@@ -70,78 +70,29 @@ async function getReviewElements(page, reviewContainer, lastFetchedReviewId) {
   };
 
   try {
-    if (lastFetchedReviewId) {
-      logger.info(`Fetching reviews after ID: ${lastFetchedReviewId}`);
-      const lastFetchedReviewElement = await reviewContainer.$(`.jftiEf[data-review-id="${lastFetchedReviewId}"]`);
+    const reviewContainerChildren = await reviewContainer.$$(':scope > *');
+    const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
 
-      if (lastFetchedReviewElement) {
-        try {
-          console.info('Removing previous siblings');
-          let previousSibling = await lastFetchedReviewElement.evaluateHandle((el) => el.previousSibling);
-        
-          while (previousSibling && JSON.stringify(previousSibling) !== '{}') {
-            await previousSibling.evaluate((el) => {
-              if (el && el.remove) el.remove();
-            });
-            previousSibling = await previousSibling.evaluateHandle((el) => {
-              if (el) return el.previousSibling;
-              return null;
-            });
-          }
-        } catch (error) {
-          console.error('Error removing previous siblings:', error);
-        }
-      }      
+    if (!secondLastChild) {
+      logger.warn('Second last child not found');
+      return newReviewElements; // Return empty if no valid child
+    }
 
-      // await wait(1000); // Wait for any animations or loading
+    const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
+    let shouldFetchNewElements = true; // Start fetching elements
 
-      if (!lastFetchedReviewElement) {
-        logger.warn('Last fetched review element not found');
-        return newReviewElements; // Return empty if no element found
+    for (const childElement of secondLastChildDescendants) {
+      const reviewId = await childElement.evaluate(el => el.getAttribute('data-review-id'));
+      if (!reviewId) continue; // Skip if there's no review ID
+
+      if (reviewId === lastFetchedReviewId) {
+        shouldFetchNewElements = false; // Stop fetching once last fetched ID is reached
+        continue;
       }
 
-      let nextSiblingElement = await lastFetchedReviewElement.evaluateHandle(el => el.nextElementSibling);
-
-      while (nextSiblingElement) {
-        const reviewId = await nextSiblingElement.evaluate(el => el?.getAttribute('data-review-id'));
-        if (reviewId) {
-          const reviewDetails = await fetchReviewDetails(nextSiblingElement, reviewId);
-          if (reviewDetails) newReviewElements.push(reviewDetails); // Only push if details are valid
-          await wait(40);
-        }
-
-        const nextElement = await nextSiblingElement.evaluateHandle(el => el.nextElementSibling);
-        if (!nextElement || JSON.stringify(nextElement) === '{}') {
-          logger.info('No more siblings');
-          break; // Exit loop if there are no more siblings
-        }
-        nextSiblingElement = nextElement;
-      }
-    } else {
-      const reviewContainerChildren = await reviewContainer.$$(':scope > *');
-      const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
-
-      if (!secondLastChild) {
-        logger.warn('Second last child not found');
-        return newReviewElements; // Return empty if no valid child
-      }
-
-      const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
-      let shouldFetchNewElements = true; // Start fetching elements
-
-      for (const childElement of secondLastChildDescendants) {
-        const reviewId = await childElement.evaluate(el => el.getAttribute('data-review-id'));
-        if (!reviewId) continue; // Skip if there's no review ID
-
-        if (reviewId === lastFetchedReviewId) {
-          shouldFetchNewElements = false; // Stop fetching once last fetched ID is reached
-          continue;
-        }
-
-        if (shouldFetchNewElements) {
-          const reviewDetails = await fetchReviewDetails(childElement, reviewId);
-          if (reviewDetails) newReviewElements.push(reviewDetails); // Only push if details are valid
-        }
+      if (shouldFetchNewElements) {
+        const reviewDetails = await fetchReviewDetails(childElement, reviewId);
+        if (reviewDetails) newReviewElements.push(reviewDetails); // Only push if details are valid
       }
     }
   } catch (error) {

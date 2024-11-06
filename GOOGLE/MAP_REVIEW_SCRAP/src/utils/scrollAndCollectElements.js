@@ -68,19 +68,15 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         break;
       }
 
-      if (lastChild) {
-        const isLastChildInViewport = await lastChild.isIntersectingViewport();
-        if (!isLastChildInViewport) {
-          await page.evaluate(el => el.scrollIntoView(), lastChild);
+      if (elements.length > 0) {
+        const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
+        const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
+        const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
+        for (let i = 0; i < secondLastChildDescendants.length; i++) {
+          if (i !== getReviewElements.length - 1) {
+            await page.evaluate(el => el.remove(), secondLastChildDescendants[i]);
+          }
         }
-      }
-
-      const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
-      const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
-      const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
-      // remove half secondLastChildDescendants from node
-      for (let i = 0; i < secondLastChildDescendants.length; i++) {
-        await page.evaluate(el => el.remove(), secondLastChildDescendants[i]);
       }
 
       // scroll top .vyucnb
@@ -88,7 +84,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         const el = document.querySelector('.vyucnb');
         if (el) el.scrollIntoView();
       });
-      await wait(500);
+      await wait(100);
 
       // scroll bottom .vyucnb
       await page.evaluate(() => {
@@ -97,7 +93,16 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         if (nextEl) nextEl.scrollIntoView();
       });
       
-      await wait(500); // Wait for a short duration to allow more reviews to load
+      await wait(100);
+      
+      if (lastChild) {
+        const isLastChildInViewport = await lastChild.isIntersectingViewport();
+        if (!isLastChildInViewport) {
+          await page.evaluate(el => el.scrollIntoView(), lastChild);
+        }
+      }
+
+      await wait(100); // Wait for a short duration to allow more reviews to load
     } catch (error) {
       console.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error

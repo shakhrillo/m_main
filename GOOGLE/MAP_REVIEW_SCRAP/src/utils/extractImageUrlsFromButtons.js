@@ -1,4 +1,4 @@
-const logger = require('./logger');
+// const logger = require('./logger');
 
 /**
  * Extracts image URLs from buttons associated with a specific review.
@@ -14,7 +14,7 @@ async function extractImageUrlsFromButtons(page, reviewId) {
     // Select all buttons that match the given review ID and the action to open photos
     const allButtons = await page.$$(`button[data-review-id="${reviewId}"][jsaction*="review.openPhoto"]`);
     if (allButtons.length === 0) {
-      logger.warn(`No buttons found for review ID: ${reviewId}`);
+      // logger.warn(`No buttons found for review ID: ${reviewId}`);
       return extractedImageUrls; // Return empty array if no buttons are found
     }
 
@@ -36,7 +36,7 @@ async function extractImageUrlsFromButtons(page, reviewId) {
       }
     }
   } catch (error) {
-    logger.error('Error extracting image URLs from buttons:', error);
+    // logger.error('Error extracting image URLs from buttons:', error);
   }
 
   return extractedImageUrls;

@@ -1,6 +1,7 @@
 module.exports = {
   launch: {
-    headless: true,
+    headless: !true,
+    protocolTimeout: 60000, // Set this to a higher value (in milliseconds)
     args: [
       '--autoplay-policy=user-gesture-required',
       '--disable-background-networking',

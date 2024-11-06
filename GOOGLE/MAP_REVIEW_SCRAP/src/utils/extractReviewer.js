@@ -7,13 +7,13 @@
  * - A promise that resolves to an object containing the reviewer's name, info, href, and content or null if no reviewer is found.
  */
 async function extractReviewer(page, reviewId) {
+  const results = {
+    name: '',
+    info: [],
+    href: '',
+    content: [],
+  };
   try {
-    const results = {
-      name: '',
-      info: [],
-      href: '',
-      content: [],
-    };
     // Locate the reviewer button using the review ID
     const reviewerButton = await page.$$(`button[jsaction*="review.reviewerLink"][data-review-id="${reviewId}"]`) || [];
     if (!reviewerButton.length) {
@@ -44,8 +44,9 @@ async function extractReviewer(page, reviewId) {
     return results;
   } catch (error) {
     console.error('Error extracting reviewer information:', error);
-    return null; // Return null on error
   }
+
+  return results;
 }
 
 module.exports = extractReviewer;

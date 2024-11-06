@@ -1,4 +1,4 @@
-const logger = require('./logger');
+// const logger = require('./logger');
 
 /**
  * Retrieves the owner's response to a review from a review element.
@@ -13,21 +13,21 @@ async function getOwnerResponse(reviewElement) {
     // Find the star rating element within the review
     const starRating = await reviewElement.$('span[role="img"][aria-label*="stars"]');
     if (!starRating) {
-      logger.warn('Star rating not found in the review element.');
+      // logger.warn('Star rating not found in the review element.');
       return ownerResponse; // Return empty if no star rating is found
     }
 
     // Navigate to the container holding the review details
     const reviewContainer = await starRating.evaluateHandle(el => el.parentElement.parentElement);
     if (!reviewContainer) {
-      logger.warn('Review container not found.');
+      // logger.warn('Review container not found.');
       return ownerResponse; // Return empty if review container is not found
     }
 
     // Find the response section in the review container
     const responseSection = await reviewContainer.evaluateHandle(el => el.lastElementChild);
     if (!responseSection) {
-      logger.warn('Response section not found.');
+      // logger.warn('Response section not found.');
       return ownerResponse; // Return empty if response section is not found
     }
 
@@ -41,11 +41,11 @@ async function getOwnerResponse(reviewElement) {
         const responseContent = responseContentDivs[1];
         ownerResponse = await responseContent.evaluate(el => el.textContent.trim());
       } else {
-        logger.warn('Response content divs not found.');
+        // logger.warn('Response content divs not found.');
       }
     }
   } catch (error) {
-    logger.error('Error retrieving owner response:', error);
+    // logger.error('Error retrieving owner response:', error);
   }
 
   return ownerResponse;
