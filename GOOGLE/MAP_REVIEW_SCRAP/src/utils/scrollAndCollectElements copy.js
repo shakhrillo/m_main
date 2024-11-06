@@ -65,16 +65,102 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
   while (!isScrollFinished) {
     scrollCount++;
 
+    // wait 5 sec for each 30 scrolls and clear cache
+    // if (scrollCount % 30 === 0) {
+    //   console.log('Clearing cache...');
+    //   try {
+    //     await page.evaluate(() => {
+    //       caches.keys().then(function(names) {
+    //         for (let name of names) caches.delete(name);
+    //       });
+    //     });
+      
+    //     await page.evaluate(() => {
+    //       localStorage.clear();
+    //       sessionStorage.clear();
+    //     });
+      
+    //     const client = await page.target().createCDPSession();
+    //     await client.send('Network.clearBrowserCookies');
+    //     await client.send('Network.clearBrowserCache');
+    //     await wait(5000);
+    //     console.log('Cache cleared');
+    //   } catch (error) {
+    //     console.error('Error clearing cache:', error);
+    //   }
+    // }
+
     try {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
+      // lastId = allElements[allElements.length - 1]?.id;
+      
       const updatedTimestamp = Date.now();
       const spentInMinutes = (updatedTimestamp - startTimestamp) / 1000 / 60;
+      
+      // let elements = [];
+      // try {
+      //   elements = await getReviewElements(page, reviewsContainer);
+      // } catch (error) {
+      //   console.error('Error getting review elements:', error);
+      // }
+      // allElements.push(...elements);
+      // const uniqueElements = filterUniqueElements(allElements) || [];
+
+      // if (uniqueElements.length >= limit) {
+      //   isScrollFinished = true;
+      //   console.info('Limit reached, stopping scroll');
+      //   break;
+      // }
+
+      // Console log every 5 seconds
+      // if (Math.floor(spentInMinutes / 5) > lastLoggedTime) {
+      //   lastLoggedTime = Math.floor(spentInMinutes * 4);
+      //   console.log('Spent:', spentInMinutes, 'minutes');
+      //   await page.evaluate(() => {
+      //     const el = document.querySelector('.vyucnb');
+      //     if (el) el.scrollIntoView();
+      //   });
+      //   await wait(1000);
+      //   // console.log('All elements:', allElements.length);
+      //   // console.log('Unique elements:', uniqueElements.length);
+      //   // await updateReview(uid, pushId, {
+      //   //   extractedReviews: allElements.length,
+      //   //   spentInMinutes,
+      //   // });
+      // }
 
       if (completed) {
         isScrollFinished = true;
         console.info('Scrolling completed, all elements collected');
         break;
       }
+
+      // if (elements.length > 0) {
+      //   const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
+      //   const secondLastChild = reviewContainerChildren[reviewContainerChildren.length - 2];
+      //   const secondLastChildDescendants = await secondLastChild.$$(':scope > *');
+      //   for (let i = 0; i < secondLastChildDescendants.length; i++) {
+      //     if (i !== getReviewElements.length - 1) {
+      //       await page.evaluate(el => el.remove(), secondLastChildDescendants[i]);
+      //     }
+      //   }
+      // }
+
+      // scroll top .vyucnb
+      // await page.evaluate(() => {
+      //   const el = document.querySelector('.vyucnb');
+      //   if (el) el.scrollIntoView();
+      // });
+      // await wait(100);
+
+      // scroll bottom .vyucnb
+      // await page.evaluate(() => {
+      //   const el = document.querySelector('.vyucnb');
+      //   const nextEl = el.nextElementSibling;
+      //   if (nextEl) nextEl.scrollIntoView();
+      // });
+      
+      // await wait(100);
       
       if (lastChild) {
         const reviewContainerChildren = await reviewsContainer.$$(':scope > *');
@@ -87,7 +173,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
           await page.evaluate(el => el.scrollIntoView(), _lastChild);
         }
 
-        await wait(50);
+        await wait(500);
 
         const isLastChildInViewport = await lastChild.isIntersectingViewport();
         if (!isLastChildInViewport) {
@@ -95,11 +181,13 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
         }
       }
 
-      await wait(50); // Wait for a short duration to allow more reviews to load
+      await wait(500); // Wait for a short duration to allow more reviews to load
     } catch (error) {
       console.error('Error scrolling and collecting elements:', error);
       isScrollFinished = true; // Exit the loop on error
     }
+
+    // await wait(3000); // Wait for a short duration to allow more reviews to load
   }
 
   return allElements;

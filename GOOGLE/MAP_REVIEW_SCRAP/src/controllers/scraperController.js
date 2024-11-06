@@ -21,6 +21,15 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
 
+const storIdJson = [];
+
+function puppeteerMutationListener(record) {
+  console.log('Record:', record.length);
+  console.log('Saved:', storIdJson.length);
+
+  storIdJson.push(...record);
+}
+
 async function main({
   url,
   userId,
@@ -33,6 +42,9 @@ async function main({
     const page = await openPage(browser, url);
 
     await page.setCacheEnabled(false);
+
+    page.exposeFunction('puppeteerMutationListener', puppeteerMutationListener);
+
     const title = await page.title();
     console.log('Title:', title);
 

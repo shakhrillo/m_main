@@ -2,7 +2,7 @@ console.log('settings.js loaded', process.env.CHROME_PATH);
 module.exports = {
   launch: {
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    headless: !true,
+    headless: true,
     protocolTimeout: 60000, // Set this to a higher value (in milliseconds)
     args: [
       '--autoplay-policy=user-gesture-required',
@@ -60,7 +60,7 @@ module.exports = {
   },
   viewport: {
     width: 800,
-    height: 600
+    height: 1000
   },
   waitTime: 5000,
 };
