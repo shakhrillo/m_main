@@ -1,18 +1,24 @@
-import { doc, onSnapshot, Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useFirebase } from "../contexts/FirebaseProvider";
+import { doc, onSnapshot, Timestamp } from "firebase/firestore"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { useFirebase } from "../contexts/FirebaseProvider"
 
 function ReviewInfo() {
-  let { place } = useParams();
-  const [placeInfo, setPlaceInfo] = useState({} as any);
+  let { place } = useParams()
+  const [placeInfo, setPlaceInfo] = useState({} as any)
 
-  const { firestore, user } = useFirebase();
+  const { firestore, user } = useFirebase()
 
   useEffect(() => {
     if (!firestore || !place || !user) return
 
-    const collectionReviewInfo = doc(firestore, "users", user.uid, "reviews", place)
+    const collectionReviewInfo = doc(
+      firestore,
+      "users",
+      user.uid,
+      "reviews",
+      place,
+    )
 
     const unsubscribe = onSnapshot(collectionReviewInfo, doc => {
       if (doc.exists()) {
@@ -29,10 +35,11 @@ function ReviewInfo() {
   }, [firestore, user, place])
 
   function renderCount(review: any) {
-    if (!review || !review.extractedReviews) return <i className="bi-question-lg"></i>
-    let count = review.extractedReviews || 0;
+    if (!review || !review.extractedReviews)
+      return <i className="bi-question-lg"></i>
+    let count = review.extractedReviews || 0
     if (!count) {
-      count = review.totalReviews;
+      count = review.totalReviews
     }
 
     return <span>{count} reviews</span>
@@ -52,16 +59,16 @@ function ReviewInfo() {
   }
 
   function formatTime(date: Timestamp) {
-    if (!date || !date.seconds) return "";
+    if (!date || !date.seconds) return ""
 
     const d = new Date(date.seconds * 1000)
     return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
   }
 
   function spentTime(start: Timestamp, end: Timestamp) {
-    if (!start || !end) return "";
+    if (!start || !end) return ""
 
-    const diff = end.seconds - start.seconds;
+    const diff = end.seconds - start.seconds
     if (diff < 60) {
       return `${diff} seconds`
     } else if (diff < 3600) {
@@ -76,33 +83,49 @@ function ReviewInfo() {
   function deleteReview(id: string) {}
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <h5 className="card-title d-flex gap-2">
-          <span className={`text-${placeInfo.status === "completed" ? "success" : "danger"}`}>
+    <div className="review-info">
+      <div className="review-info__header">
+        <h5 className="review-info__header__title">
+          <span
+            className={`review-info__header__title__status review-info__header__title__status--${placeInfo.status}`}
+          >
             {renderStatus(placeInfo.status)}
           </span>
           {placeInfo.title}
         </h5>
-        <a href={placeInfo.url} target="_blank" className="btn btn-primary">
+        <a
+          href={placeInfo.url}
+          target="_blank"
+          className="btn btn-outline-secondary"
+        >
           Open in Google Maps
         </a>
-        <hr />
-        <p className="card-text">
-          <span className="fw-bold">Extracted reviews:</span> {renderCount(placeInfo)}  
-        </p>
-        <p className="card-text">
-          <span className="fw-bold">Start time:</span> {formatTime(placeInfo.createdAt)}
-        </p>
-        <p className="card-text">
-          <span className="fw-bold">End time:</span> {formatTime(placeInfo.completedAt)}
-        </p>
-        <p className="card-text">
-          <span className="fw-bold">Spent time:</span> {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
-        </p>
+      </div>
+      <hr />
+      <div className="review-info__details">
+        <div className="review-info__details__info">
+          Extracted reviews:{" "}
+          <span className="review-info__details__info__value">
+            {renderCount(placeInfo)}
+          </span>
+        </div>
+        <div className="review-info__details__info">
+          Start time:
+          <span> {formatTime(placeInfo.createdAt)} </span>
+        </div>
+        <div className="review-info__details__info">
+          End time:
+          <span> {formatTime(placeInfo.completedAt)} </span>
+        </div>
+        <div className="review-info__details__info">
+          Spent time:{" "}
+          <span className="review-info__details__info__value">
+            {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
+          </span>
+        </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ReviewInfo;
+export default ReviewInfo

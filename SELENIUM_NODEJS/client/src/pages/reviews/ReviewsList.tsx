@@ -69,7 +69,7 @@ function ReviewsList() {
     const docRef = await addDoc(collectionReviews, {
       ...scrap,
       status: "in-progress",
-      createdAt: new Date()
+      createdAt: new Date(),
     })
     console.log("Document written with ID: ", docRef.id)
   }
@@ -327,14 +327,14 @@ function ReviewsList() {
                       </div>
                       <span className="d-block">
                         <small>
-                          {
-                            review?.spentInMinutes
-                              ? `${review?.spentInMinutes.toFixed(2)} minutes`
-                              : ""
-                          }
+                          {review?.spentInMinutes
+                            ? `${review?.spentInMinutes.toFixed(2)} minutes`
+                            : ""}
                         </small>
                       </span>
-                      <span>
+                      <span
+                        className={`reviews__scrap-list__table__status--text reviews__scrap-list__table__status--${review.status}`}
+                      >
                         {review?.status}
                       </span>
                     </td>

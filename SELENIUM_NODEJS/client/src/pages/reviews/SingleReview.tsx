@@ -20,7 +20,7 @@ function SingleReview() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const { firestore, user } = useFirebase();
+  const { firestore, user } = useFirebase()
 
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
@@ -36,7 +36,13 @@ function SingleReview() {
     if (!firestore || !place || !user) return
     setReviews([])
 
-    const collectionReviewInfo = doc(firestore, "users", user.uid, "reviews", place)
+    const collectionReviewInfo = doc(
+      firestore,
+      "users",
+      user.uid,
+      "reviews",
+      place,
+    )
 
     const unsubscribe = onSnapshot(collectionReviewInfo, doc => {
       if (doc.exists()) {
@@ -57,12 +63,19 @@ function SingleReview() {
     if (!firestore || !place || !user) return
     setReviews([])
 
-    const collectionReviews = collection(firestore, "users", user.uid, "reviews", place, "reviews")
+    const collectionReviews = collection(
+      firestore,
+      "users",
+      user.uid,
+      "reviews",
+      place,
+      "reviews",
+    )
 
     const unsubscribe = onSnapshot(collectionReviews, querySnapshot => {
       setReviews([])
       querySnapshot.forEach(doc => {
-        const data = doc.data();
+        const data = doc.data()
         console.log("Document data:", data)
         setReviews(prev => [
           ...prev,
@@ -125,7 +138,7 @@ function SingleReview() {
             {selectedImages.map((imageSrc: string, imageId: number) => (
               <Carousel.Item key={imageId}>
                 <div className="view__all-images__carousel-item">
-                  <img src={imageSrc} alt={`Slide ${imageId}`} className="w-100" />
+                  <img src={imageSrc} alt={`Slide ${imageId}`} className="" />
                 </div>
               </Carousel.Item>
             ))}
@@ -137,48 +150,65 @@ function SingleReview() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="d-flex flex-column gap-3">
+      <div className="single-reviews">
         <ReviewInfo />
 
         {currentReviews.map((review, index) => (
-          <div className="card" key={index}>
-            <div className="card-body">
-              <a href={review.user.href} target="_blank" rel="noreferrer">
-                {review.user.name || "Anonymous"}
-              </a>
-              <div className="d-flex gap-2">
-                {review.user.info.length ? (
-                  review.user.info.map((info: string, index: number) => (
-                    <span key={index}>
-                      {info}
-                    </span>
-                  ))
-                ) : null}
+          <div className="single-reviews__item" key={index}>
+            <div className="single-reviews__item__header">
+              <div className="single-reviews__item__header__user">
+                <span className="single-reviews__item__header__user__icon">
+                  <i className="bi bi-person"></i>
+                </span>
+                <div className="single-reviews__item__header__user__info">
+                  <a
+                    className="single-reviews__item__header__user__info__name"
+                    href={review.user.href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {review.user.name || "Anonymous"}
+                  </a>
+                  <span className="single-reviews__item__header__user__info__status">
+                    {review.user.info.length ? review.user.info[0] : ""}
+                  </span>
+                </div>
               </div>
-              <i>
-                Created at: {review.date}
-              </i>
-              <StarRating rating={
-                (review.rating?.match(/(\d+)/)?.[0] ? parseInt(review.rating.match(/(\d+)/)[0], 10) : 0).toString()
-              } />
-              <p>
-                {review.review}
-              </p>
-              {
-                review.qa.length ? (
-                  <ul>
-                    {review.qa.map((qa: string, index: number) => (
-                      <li key={index}>
-                        {qa}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null
-              }
-              {/* Images review.imageUrls*/}
-              <div className="d-flex gap-2">
-                {review.imageUrls.length ? (
-                  review.imageUrls.map((imageUrl: string, index: number) => (
+              <span className="single-reviews__item__header__info">
+                {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
+                {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
+                {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
+                {review.user.info?.[1]?.split(" ")[0] || ""}
+              </span>
+            </div>
+            <div className="single-reviews__item__status">
+              <StarRating
+                rating={(review.rating?.match(/(\d+)/)?.[0]
+                  ? parseInt(review.rating.match(/(\d+)/)[0], 10)
+                  : 0
+                ).toString()}
+              />
+              {"|"}
+              <span>
+                Created at: <b>{review.date}</b>
+              </span>
+            </div>
+            <div>
+              <p className="single-reviews__item__review">{review.review}</p>
+              {review.qa.length ? (
+                <ul className="single-reviews__item__qa">
+                  {review.qa.map((qa: string, index: number) => (
+                    <li className="single-reviews__item__qa__item" key={index}>
+                      {" - "}
+                      {qa}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <div className="single-reviews__item__photos">
+              {review.imageUrls.length
+                ? review.imageUrls.map((imageUrl: string, index: number) => (
                     <img
                       key={index}
                       src={imageUrl}
@@ -188,28 +218,21 @@ function SingleReview() {
                         setSelectedImages(review.imageUrls)
                         handleShow()
                       }}
-                      className="review__image"
+                      className="single-reviews__item__photos__item"
                     />
                   ))
-                ) : null}
-              </div>
-              {
-                review.response.length ? (
-                  <div>
-                    <hr />
-                    <h6>
-                      <strong>Owner response:</strong>
-                    </h6>
-                    <span>
-                      {review.response}
-                    </span>
-                    <small>
-                      {review.responseTime}
-                    </small>
-                  </div>
-                ) : null
-              }
+                : null}
             </div>
+            {review.response.length ? (
+              <div>
+                <hr />
+                <h6>
+                  <strong>Owner response:</strong>
+                </h6>
+                <span>{review.response}</span>
+                <small>{review.responseTime}</small>
+              </div>
+            ) : null}
           </div>
         ))}
 
@@ -230,7 +253,7 @@ function SingleReview() {
 
           {/* Show pages around the current page */}
           {Array.from({ length: 5 }, (_, i) => {
-            const page = currentPage - 2 + i;
+            const page = currentPage - 2 + i
             if (page > 1 && page < totalPages) {
               return (
                 <Pagination.Item
@@ -240,9 +263,9 @@ function SingleReview() {
                 >
                   {page}
                 </Pagination.Item>
-              );
+              )
             }
-            return null;
+            return null
           })}
 
           {/* Show ellipsis and last page if needed */}

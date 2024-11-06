@@ -8,7 +8,8 @@
   height: 100vh;
   margin-left: 250px;
   padding: 24px;
-  background-color: #f6f6f6
+  background-color: #f6f6f6;
+  overflow-y: scroll;
 }
 
 .dashboard__sidebar {

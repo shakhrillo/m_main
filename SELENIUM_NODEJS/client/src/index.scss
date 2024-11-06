@@ -16,6 +16,7 @@
   --primary-20: rgba(60, 72, 107, 0.2);
   --primary-10: rgba(60, 72, 107, 0.1);
   --indigo: rgba(88, 66, 214, 1);
+  --indigo-10: rgba(88, 66, 214, 0.1);
   --danger: rgba(179, 38, 30, 1);
   --danger-20: rgba(179, 38, 30, 0.2);
   --danger-10: rgba(179, 38, 30, 0.1);
@@ -228,12 +229,18 @@
           background-color: var(--danger-20);
           color: var(--danger);
         }
+
+        &--text {
+          padding: 2px 6px;
+          font-size: 12px;
+          border-radius: 6px;
+          font-weight: 300;
+        }
       }
 
       &__text {
         display: flex;
         align-items: center;
-        height: 38px;
         color: var(--primary);
         font-size: 14px;
         font-weight: 500;
@@ -246,6 +253,151 @@
       &__download {
         display: flex;
         gap: 1rem;
+      }
+    }
+  }
+}
+
+.single-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__item {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &__user {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        &__icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem;
+          height: 2rem;
+          border-radius: 6px;
+          background-color: var(--primary-10);
+          color: var(--primary);
+          font-size: 18px;
+        }
+
+        &__info {
+          display: flex;
+          flex-direction: column;
+          color: var(--primary-70);
+          font-size: 12px;
+          font-weight: 500;
+
+          &__name {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 500;
+          }
+        }
+      }
+      &__info {
+        color: var(--primary-90);
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    &__status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-90);
+      font-size: 14px;
+    }
+
+    &__review {
+      color: var(--primary);
+    }
+    &__qa {
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      color: var(--primary);
+      background-color: var(--indigo-10);
+      list-style: none;
+    }
+    &__photos {
+      display: flex;
+      gap: 0.5rem;
+      &__item {
+        width: 50px;
+        height: 50px;
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
+.review-info {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__title {
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      &__status {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0.5rem;
+        font-size: 18px;
+
+        &--completed {
+          background-color: var(--success-10);
+          color: var(--success);
+        }
+
+        &--in-progress {
+          background-color: var(--primary-20);
+          color: var(--primary);
+        }
+
+        &--failed {
+          background-color: var(--danger-20);
+          color: var(--danger);
+        }
+      }
+    }
+  }
+  &__details {
+    display: flex;
+    justify-content: space-between;
+    &__info {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+
+      &__value {
+        border: 1px solid var(--primary-70);
+        padding: 2px 6px;
+        border-radius: 6px;
       }
     }
   }
