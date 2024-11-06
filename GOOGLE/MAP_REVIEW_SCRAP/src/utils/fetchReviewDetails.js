@@ -9,7 +9,7 @@ const getReviewDate = require("./getReviewDate");
 
 const fetchReviewDetails = async (page, reviewId) => {
   try {
-    const reviewElement = await page.$(`[data-review-id="${reviewId}"]`);
+    const reviewElement = await page.$(`.jftiEf[data-review-id="${reviewId}"]`);
     const buttons = await reviewElement.$$(`
       button[data-review-id="${reviewId}"][jsaction*="review.expandReview"],
       button[jsaction*="review.showReviewInOriginal"],
