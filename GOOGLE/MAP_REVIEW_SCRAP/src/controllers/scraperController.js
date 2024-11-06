@@ -53,8 +53,6 @@ async function main({
 
     await clickReviewTab(page);
     await sortReviews(page, sortBy);
-    await page.reload();
-
   
     const allElements = await scrollAndCollectElements(page, userId, reviewId, limit) || [];
     const uniqueElements = filterUniqueElements(allElements);
