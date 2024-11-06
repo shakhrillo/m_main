@@ -45,7 +45,7 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   }
 
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth, email, password)
   };
 
   const googleLogin = async () => {

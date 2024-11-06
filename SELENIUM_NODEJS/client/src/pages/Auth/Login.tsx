@@ -9,7 +9,6 @@ const Login: React.FC = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
 
   const [error, setError] = useState<string | null>(null)
 
@@ -23,9 +22,9 @@ const Login: React.FC = () => {
     e.preventDefault()
     try {
       await login(email, password)
-      navigate("/dashboard") // Redirect to a protected route after successful login
+      navigate("/dashboard")
     } catch (error) {
-      setError("Failed to log in. Please check your email and password.")
+      setError("Email or password is incorrect.")
     }
   }
 
@@ -61,9 +60,8 @@ const Login: React.FC = () => {
             <input
               type="text"
               className="form-control"
-              id="staticEmail"
               placeholder="Enter email"
-              // value="email@example.com"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -71,6 +69,7 @@ const Login: React.FC = () => {
               type="password"
               className="form-control"
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="login__card__form-submit">
@@ -78,6 +77,9 @@ const Login: React.FC = () => {
               Sign In
             </button>
           </div>
+          {
+            error && <div className="alert alert-danger">{error}</div>
+          }
         </form>
         <div className="login__card__footer">
           <span className="login__text">Or Sign in with</span>
