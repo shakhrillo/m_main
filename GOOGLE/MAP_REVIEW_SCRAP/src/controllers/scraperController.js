@@ -41,15 +41,15 @@ async function main({
       token: ''
     });
 
-    // await enableRequestInterception(page, [
-    //   '.css',
-    //   'googleusercontent',
-    //   'preview',
-    //   'analytics',
-    //   'ads',
-    //   'fonts',
-    //   '/maps/vt'
-    // ]);
+    await enableRequestInterception(page, [
+      '.css',
+      'googleusercontent',
+      'preview',
+      'analytics',
+      'ads',
+      'fonts',
+      '/maps/vt'
+    ]);
 
     await clickReviewTab(page);
     await sortReviews(page, sortBy);

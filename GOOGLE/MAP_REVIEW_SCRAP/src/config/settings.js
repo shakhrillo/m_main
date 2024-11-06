@@ -1,7 +1,6 @@
 module.exports = {
   launch: {
     headless: true,
-    browser: 'firefox',
     args: [
       '--autoplay-policy=user-gesture-required',
       '--disable-background-networking',
