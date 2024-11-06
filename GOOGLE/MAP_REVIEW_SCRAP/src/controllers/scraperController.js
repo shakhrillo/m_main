@@ -12,6 +12,7 @@ const sortReviews = require('../utils/sortReviews');
 const enableRequestInterception = require('./enableRequestInterception');
 const { scrollAndCollectElements } = require('../utils/scrollAndCollectElements');
 const { firestore } = require('../services/firebaseAdmin');
+const fetchReviewDetails = require('../utils/fetchReviewDetails');
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, 'temp');
@@ -22,20 +23,17 @@ if (!fs.existsSync(tempDir)) {
 }
 
 const storIdJson = [];
-let info = {};
+let page;
 
-function puppeteerMutationListener(record, uid, pushId) {
-  console.log('Record:', record.length);
+async function puppeteerMutationListener(records, uid, pushId) {
+  console.log('Record:', records.length);
   console.log('Saved:', storIdJson.length);
 
-  storIdJson.push(...record);
-  updateReview(uid, pushId, {
-    // spentInMinutes,
-    scrolledReviews: storIdJson.length
-  }).then(() => {
-  }).catch((error) => {
-    console.error('Error updating:', error);
-  });
+  for (const record of records) {
+    const result = await fetchReviewDetails(page, record);
+    // console.log('Result:', result);
+    storIdJson.push(result);
+  }
 }
 
 async function main({
@@ -47,7 +45,7 @@ async function main({
 }) {
   try {
     const browser = await launchBrowser();  
-    const page = await openPage(browser, url);
+    page = await openPage(browser, url);
 
     await page.setCacheEnabled(false);
 
