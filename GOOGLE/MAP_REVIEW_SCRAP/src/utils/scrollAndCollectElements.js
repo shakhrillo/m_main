@@ -54,9 +54,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
           // record.getAttribute("data-review-id");
           const addedNodeIds = addedNodes.map(node => node.getAttribute("data-review-id")).filter(Boolean);
           
-          const updatedTimestamp = Date.now();
-          const spentInMinutes = (updatedTimestamp - startTimestamp) / 1000 / 60;
-          puppeteerMutationListener(addedNodeIds, uid, pushId, spentInMinutes);
+          puppeteerMutationListener(addedNodeIds, uid, pushId);
         }
       }
     }

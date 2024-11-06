@@ -24,13 +24,13 @@ if (!fs.existsSync(tempDir)) {
 const storIdJson = [];
 let info = {};
 
-function puppeteerMutationListener(record, uid, pushId, spentInMinutes) {
+function puppeteerMutationListener(record, uid, pushId) {
   console.log('Record:', record.length);
   console.log('Saved:', storIdJson.length);
 
   storIdJson.push(...record);
   updateReview(uid, pushId, {
-    spentInMinutes,
+    // spentInMinutes,
     scrolledReviews: storIdJson.length
   }).then(() => {
     console.log('Updated');
