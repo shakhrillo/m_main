@@ -4,12 +4,14 @@ import logo from "../../assets/images/logo.svg"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 const Register: React.FC = () => {
-  const { login, user, googleLogin } = useFirebase()
+  const { register, user, googleLogin } = useFirebase()
   const navigate = useNavigate()
 
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const [error, setError] = useState<string | null>(null)
 
@@ -19,13 +21,29 @@ const Register: React.FC = () => {
     }
   }, [user, navigate])
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!email || !password || !firstName || !lastName || !confirmPassword) {
+      setError("All fields are required.")
+      return
+    }
+    
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.")
+      return
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.")
+      return
+    }
+
     try {
-      await login(email, password)
-      navigate("/dashboard") // Redirect to a protected route after successful login
+      await register(email, password, firstName, lastName);
+      navigate("/auth/login")
     } catch (error) {
-      setError("Failed to log in. Please check your email and password.")
+      setError("Failed to create an account.")
     }
   }
 
@@ -56,12 +74,13 @@ const Register: React.FC = () => {
             Enter your details below to create your account.
           </span>
         </div>
-        <form className="registration__card__form" onSubmit={() => {}}>
+        <form className="registration__card__form" onSubmit={handleRegister}>
           <div className="form-group">
             <input
               type="text"
               className="form-control"
               placeholder="First name"
+              onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -69,6 +88,7 @@ const Register: React.FC = () => {
               type="text"
               className="form-control"
               placeholder="Last name"
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -76,6 +96,7 @@ const Register: React.FC = () => {
               type="email"
               className="form-control"
               placeholder="Enter email"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -83,6 +104,7 @@ const Register: React.FC = () => {
               type="password"
               className="form-control"
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -90,6 +112,7 @@ const Register: React.FC = () => {
               type="password"
               className="form-control"
               placeholder="Confirm password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
           <div className="registration__card__form-submit">
@@ -97,6 +120,7 @@ const Register: React.FC = () => {
               Register
             </button>
           </div>
+          {error && <div className="alert alert-danger">{error}</div>}
         </form>
         <div className="registration__card__footer">
           <span className="registration__text">Or register with</span>
@@ -106,7 +130,7 @@ const Register: React.FC = () => {
             onClick={handleGoogleLogin}
           >
             <i className="bi bi-google me-2"></i>
-            Register with Google
+            Continue with Google
           </button>
         </div>
         <div className="registration__text">

@@ -1,6 +1,6 @@
 // src/contexts/FirebaseProvider.tsx
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Auth, GoogleAuthProvider, User, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { Auth, GoogleAuthProvider, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { Firestore } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
 
@@ -8,6 +8,7 @@ interface FirebaseContextProps {
   auth: Auth;
   firestore: Firestore;
   user: User | null;
+  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   logout: () => Promise<void>;
@@ -44,6 +45,12 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     });
   }
 
+  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+  }
+
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password)
   };
@@ -56,7 +63,7 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     await signOut(auth);
   };
 
-  const firebaseServices = { auth, firestore, isLoading, checkAuth, user, login, googleLogin, logout };
+  const firebaseServices = { auth, firestore, isLoading, checkAuth, user, register, login, googleLogin, logout };
 
   return (
     <FirebaseContext.Provider value={firebaseServices}>
