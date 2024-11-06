@@ -378,44 +378,72 @@ function ReviewsList() {
               </tbody>
             </table>
           </div>
-          <div className="reviews__scrap-list__pagination">
-            <Pagination>
-              <Pagination.First
-                onClick={() => handlePageClick(1)}
-                disabled={currentPage === 1}
+          <nav aria-label="scrap-pagination">
+            <ul className="pagination">
+              {/* Previous Button (Double Left) */}
+              <li
+                className={`pagination__item ${currentPage === 1 ? "pagination__item--disabled" : ""}`}
               >
-                <i className="bi-chevron-double-left"></i>
-              </Pagination.First>
-              <Pagination.Prev
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <i className="bi-chevron-left"></i>
-              </Pagination.Prev>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Pagination.Item
-                  key={i + 1}
-                  active={currentPage === i + 1}
-                  onClick={() => handlePageClick(i + 1)}
-                  disabled={currentPage === i + 1}
+                <a
+                  className="pagination__item__button pagination__link"
+                  onClick={() => handlePageClick(1)}
                 >
-                  {i + 1}
-                </Pagination.Item>
+                  <i className="bi-chevron-double-left pagination__icon"></i>
+                </a>
+              </li>
+
+              {/* Previous Button */}
+              <li
+                className={`pagination__item ${currentPage === 1 ? "pagination__item--disabled" : ""}`}
+              >
+                <a
+                  className="pagination__item__button pagination__link"
+                  onClick={handlePreviousPage}
+                >
+                  <i className="bi-chevron-left pagination__icon"></i>
+                </a>
+              </li>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, pageIndex) => (
+                <li
+                  key={pageIndex + 1}
+                  className={`pagination__item ${currentPage === pageIndex + 1 ? "pagination__item--active" : ""}`}
+                >
+                  <a
+                    className="pagination__item__button pagination__link"
+                    onClick={() => handlePageClick(pageIndex + 1)}
+                  >
+                    {pageIndex + 1}
+                  </a>
+                </li>
               ))}
-              <Pagination.Next
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
+
+              {/* Next Button */}
+              <li
+                className={`pagination__item ${currentPage === totalPages ? "pagination__item--disabled" : ""}`}
               >
-                <i className="bi-chevron-right"></i>
-              </Pagination.Next>
-              <Pagination.Last
-                onClick={() => handlePageClick(totalPages)}
-                disabled={currentPage === totalPages}
+                <a
+                  className="pagination__item__button pagination__link"
+                  onClick={handleNextPage}
+                >
+                  <i className="bi-chevron-right pagination__icon"></i>
+                </a>
+              </li>
+
+              {/* Next Button (Double Right) */}
+              <li
+                className={`pagination__item ${currentPage === totalPages ? "pagination__item--disabled" : ""}`}
               >
-                <i className="bi-chevron-double-right"></i>
-              </Pagination.Last>
-            </Pagination>
-          </div>
+                <a
+                  className="pagination__item__button pagination__link"
+                  onClick={() => handlePageClick(totalPages)}
+                >
+                  <i className="bi-chevron-double-right pagination__icon"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

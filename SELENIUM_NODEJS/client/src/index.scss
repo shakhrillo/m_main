@@ -402,3 +402,48 @@
     }
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 20px 0;
+  border: 0;
+
+  &__item {
+    display: flex;
+    &--disabled {
+      > .pagination__link {
+        background-color: #fff;
+        color: var(--primary-60);
+      }
+    }
+
+    &--active {
+      > .pagination__link {
+        background-color: var(--indigo);
+        color: #fff;
+        border-radius: 6px;
+      }
+    }
+    &__button {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 0;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #fff;
+      color: var(--primary);
+      transition:
+        background-color 0.3s,
+        color 0.3s;
+    }
+  }
+
+  &__link {
+    text-decoration: none;
+  }
+}
