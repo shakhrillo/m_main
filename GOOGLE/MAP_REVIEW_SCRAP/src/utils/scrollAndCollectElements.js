@@ -27,8 +27,36 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
 
   const startTimestamp = Date.now();
   let lastLoggedTime = 0;
+  let scrollCount = 0;
 
   while (!isScrollFinished) {
+    scrollCount++;
+
+    // wait 5 sec for each 30 scrolls and clear cache
+    if (scrollCount % 30 === 0) {
+      console.log('Clearing cache...');
+      try {
+        await page.evaluate(() => {
+          caches.keys().then(function(names) {
+            for (let name of names) caches.delete(name);
+          });
+        });
+      
+        await page.evaluate(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+        });
+      
+        const client = await page.target().createCDPSession();
+        await client.send('Network.clearBrowserCookies');
+        await client.send('Network.clearBrowserCache');
+        await wait(5000);
+        console.log('Cache cleared');
+      } catch (error) {
+        console.error('Error clearing cache:', error);
+      }
+    }
+
     try {
       const { lastChild, completed } = await checkInfiniteScroll(reviewsContainer);
       lastId = allElements[allElements.length - 1]?.id;

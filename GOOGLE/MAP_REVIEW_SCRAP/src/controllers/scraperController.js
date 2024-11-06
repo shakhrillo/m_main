@@ -31,6 +31,7 @@ async function main({
   try {
     const browser = await launchBrowser();  
     const page = await openPage(browser, url);
+    await page.setCacheEnabled(false);
     const title = await page.title();
     console.log('Title:', title);
 

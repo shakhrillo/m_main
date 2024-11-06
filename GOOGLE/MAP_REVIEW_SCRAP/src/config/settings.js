@@ -1,5 +1,7 @@
+console.log('settings.js loaded', process.env.CHROME_PATH);
 module.exports = {
   launch: {
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     headless: !true,
     protocolTimeout: 60000, // Set this to a higher value (in milliseconds)
     args: [
@@ -46,6 +48,8 @@ module.exports = {
       '--disable-sync',
       '--safebrowsing-disable-auto-update',
       '--disable-accelerated-2d-canvas',
+      '--disk-cache-dir=/dev/null',
+      '--disk-cache-size=0'
     ],
     defaultViewport: null,
     timeout: 30000
