@@ -1,12 +1,14 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React from "react"
+import { Outlet } from "react-router-dom"
+import DashboardTest from "./DashboardTest"
 
 const MainContent: React.FC = () => {
   return (
     <div className="dashboard__content">
-      <Outlet />
+      <DashboardTest />
+      {/* <Outlet /> */}
     </div>
-  );
-};
+  )
+}
 
-export default MainContent;
+export default MainContent

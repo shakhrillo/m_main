@@ -4,12 +4,13 @@
 }
 
 .dashboard__content {
-  width: calc(100% - 250px);
+  width: 100%;
+  /* width: calc(100% - 250px); */
   height: 100vh;
-  margin-left: 250px;
+  /* margin-left: 250px; */
   padding: 24px;
   background-color: #f6f6f6;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 .dashboard__sidebar {
