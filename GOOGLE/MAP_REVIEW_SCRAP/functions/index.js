@@ -8,7 +8,7 @@ const secretKey = process.env.SECRET_KEY || '';
 admin.initializeApp();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const endPointURL = 'http://104.154.160.232/api/reviews';
+const endPointURL = process.env.ENDPOINT_URL;
 
 function createToken(payload) {
   return jwt.sign(payload, secretKey, { expiresIn: '12h' });
