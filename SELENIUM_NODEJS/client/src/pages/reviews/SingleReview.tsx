@@ -4,7 +4,6 @@ import { Carousel, Modal } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Pagination from "react-bootstrap/Pagination"
 import { useParams } from "react-router-dom"
-import { useAppSelector } from "../../app/hooks"
 
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import ReviewInfo from "../../components/ReviewInfo"
@@ -25,12 +24,6 @@ function SingleReview() {
   const [reviews, setReviews] = useState([] as any[])
   const [currentPage, setCurrentPage] = useState(1)
   const [reviewsPerPage] = useState(15) // Number of reviews per page
-  const db = useAppSelector(state => state.firebase.db)
-  // const user = useAppSelector(state => state.auth.user)
-
-  const [ratingOverviewVisibility, setRatingOverviewVisibility] = useState<
-    Record<string, boolean>
-  >({})
 
   useEffect(() => {
     if (!firestore || !place || !user) return

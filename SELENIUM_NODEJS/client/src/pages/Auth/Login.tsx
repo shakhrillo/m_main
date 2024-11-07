@@ -80,6 +80,9 @@ const Login: React.FC = () => {
           {
             error && <div className="alert alert-danger">{error}</div>
           }
+          <a className="login__card__link" href="/auth/reset-password">
+            Forgot password?
+          </a>
         </form>
         <div className="login__card__footer">
           <span className="login__text">Or Sign in with</span>

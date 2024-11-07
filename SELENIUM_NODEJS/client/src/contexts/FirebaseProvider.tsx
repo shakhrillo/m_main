@@ -1,6 +1,6 @@
 // src/contexts/FirebaseProvider.tsx
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Auth, GoogleAuthProvider, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { Auth, GoogleAuthProvider, sendPasswordResetEmail, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { Firestore } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
 
@@ -13,6 +13,7 @@ interface FirebaseContextProps {
   googleLogin: () => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<any>;
+  resetPassword: (email: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -63,7 +64,11 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     await signOut(auth);
   };
 
-  const firebaseServices = { auth, firestore, isLoading, checkAuth, user, register, login, googleLogin, logout };
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  }
+
+  const firebaseServices = { auth, firestore, isLoading, checkAuth, user, register, login, googleLogin, logout, resetPassword };
 
   return (
     <FirebaseContext.Provider value={firebaseServices}>

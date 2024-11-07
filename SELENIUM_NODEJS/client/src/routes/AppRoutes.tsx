@@ -11,6 +11,7 @@ import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
 import Login from "../pages/auth/Login"
 import Logout from "../pages/auth/Logout"
 import Register from "../pages/auth/Register"
+import ResetPassword from "../pages/auth/ResetPassword"
 import Help from "../pages/Help"
 import Payments from "../pages/Payments"
 import ReviewsList from "../pages/reviews/ReviewsList"
@@ -47,6 +48,7 @@ const authRoutes = {
     { path: "register", element: <Register /> },
     { path: "login", element: <Login /> },
     { path: "logout", element: <Logout /> },
+    { path: "reset-password", element: <ResetPassword /> },
   ]
 }
 
@@ -65,9 +67,9 @@ const router = createBrowserRouter([
 
 const AppRoutes = () => {
   return (
-    // <PreloaderLayout>
+    <PreloaderLayout>
       <RouterProvider router={router} />
-    // </PreloaderLayout>
+    </PreloaderLayout>
   )
 }
 

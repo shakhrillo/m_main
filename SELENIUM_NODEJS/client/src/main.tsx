@@ -1,7 +1,5 @@
 import { createRoot } from "react-dom/client"
-import { Provider } from "react-redux"
 import App from "./App"
-import { store } from "./app/store"
 import { FirebaseProvider } from "./contexts/FirebaseProvider"
 import "./index.scss"
 
@@ -11,11 +9,9 @@ if (container) {
   const root = createRoot(container)
 
   root.render(
-    <Provider store={store}>
-      <FirebaseProvider>
-        <App />
-      </FirebaseProvider>
-    </Provider>,
+    <FirebaseProvider>
+      <App />
+    </FirebaseProvider>
   )
 } else {
   throw new Error(
