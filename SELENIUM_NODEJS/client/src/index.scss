@@ -190,7 +190,7 @@
         &__label {
           color: var(--primary);
           font-weight: 600;
-          font-size: 14px;
+          font-size: 12px;
         }
 
         &__text {
@@ -255,7 +255,7 @@
         display: flex;
         align-items: center;
         color: var(--primary);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
 
         a {
@@ -322,7 +322,7 @@
       }
       &__info {
         color: var(--primary-90);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
       }
     }
@@ -332,7 +332,7 @@
       align-items: center;
       gap: 0.5rem;
       color: var(--primary-90);
-      font-size: 14px;
+      font-size: 12px;
     }
 
     &__review {
@@ -405,7 +405,7 @@
     &__info {
       color: var(--primary);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 12px;
 
       &__value {
         border: 1px solid var(--primary-70);
@@ -440,13 +440,13 @@
       }
     }
     &__button {
-      width: 2rem;
-      height: 2rem;
+      width: 1.5rem;
+      height: 1.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
       border: 0;
-      font-size: 16px;
+      font-size: 12px;
       cursor: pointer;
       background-color: #fff;
       color: var(--primary);
@@ -493,7 +493,7 @@
         height: 31px;
         gap: 0.5rem;
         color: var(--primary-70);
-        font-size: 14px;
+        font-size: 12px;
 
         &--active {
           color: var(--primary-90);
@@ -519,8 +519,32 @@
   border: 1px solid var(--primary-10);
   border-radius: 14px;
   background-color: #fff;
+  display: flex;
+  flex: 1;
+
+  &__view-all {
+    display: flex;
+    justify-content: end;
+    padding: 0.5rem 1rem 0 1rem;
+    cursor: pointer;
+
+    &__btn {
+      display: flex;
+      gap: 0.5rem;
+      border-radius: 6px;
+      padding: 2px 12px;
+      background-color: var(--primary-5);
+      border: 1px solid var(--primary-20);
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--primary);
+    }
+  }
 
   &__wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     padding-bottom: 1rem;
   }
 
@@ -585,14 +609,23 @@
     font-size: 11px;
     color: var(--primary-70);
   }
-
+  &__full-screen {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  &__full-screen
+    .geo-dashboard__body-content__table__row:not(caption):last-child {
+    border-bottom: 1px solid var(--indigo-10);
+  }
   &__body {
-    padding: 1rem;
+    padding: 0.5rem 1rem;
 
     &-wrapper {
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid var(--indigo-10);
+      flex: 1;
     }
 
     &-header {
@@ -609,11 +642,15 @@
     &-badge {
       display: flex;
       position: relative;
-      padding: 6px 12px;
+      padding: 2px 12px;
       margin-right: 8px;
       border-radius: 6px;
       font-size: 12px;
       border: 1px solid;
+      gap: 0.5rem;
+      border-color: var(--primary-40);
+      background-color: var(--primary-5);
+      color: var(--primary);
 
       &--warning {
         color: var(--warning);
@@ -641,14 +678,19 @@
         content: "";
       }
     }
-
+    &__btns {
+      display: flex;
+      gap: 0.5rem;
+    }
     &-count,
     &-icon {
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 32px;
-      height: 32px;
+      // width: 24px;
+      padding: 0 8px;
+      height: 24px;
       border-radius: 6px;
       background-color: var(--primary-5);
       border: 1px solid var(--primary-20);
@@ -685,7 +727,7 @@
           gap: 0.5rem;
           font-weight: 500;
           color: var(--primary);
-          font-size: 14px;
+          font-size: 12px;
         }
       }
       &__row {
@@ -695,7 +737,7 @@
         &-body {
           text-align: center;
           font-weight: 400;
-          font-size: 14px;
+          font-size: 12px;
 
           &:not(caption):first-child {
             border-left-color: #fff;
@@ -714,7 +756,7 @@
             display: flex;
             align-items: center;
             color: var(--primary);
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             font-weight: 500;
           }
@@ -726,10 +768,10 @@
 
 .geo-input {
   height: 31px;
-  font-size: 14px;
+  font-size: 12px;
 
   &::placeholder {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--primary-50);
   }
 }
@@ -739,7 +781,7 @@
   justify-content: center;
   align-items: center;
   height: 31px;
-  font-size: 14px;
+  font-size: 12px;
   background-color: #fff;
   border-color: #fff;
   gap: 0.5rem;
@@ -757,7 +799,7 @@
   align-items: center;
   height: 31px;
   gap: 0.5rem;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--primary-90);
   white-space: nowrap;
 
@@ -772,7 +814,7 @@
   justify-content: center;
   align-items: center;
   height: 31px;
-  font-size: 14px;
+  font-size: 12px;
   background-color: var(--indigo);
   border-color: var(--indigo);
   white-space: nowrap;
