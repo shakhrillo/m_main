@@ -490,16 +490,14 @@
         padding: 4px 8px;
         border-radius: 6px;
         text-decoration: none;
-        height: 31px;
-        gap: 0.5rem;
-        color: var(--primary-70);
-        font-size: 12px;
+        gap: 1rem;
+        color: var(--primary-60);
+        border: 1px solid transparent;
 
         &--active {
           color: var(--primary-90);
           border: 1px solid var(--indigo-20);
           background-color: #fff;
-          font-weight: 600;
 
           > .sidebar__icon {
             color: var(--indigo);

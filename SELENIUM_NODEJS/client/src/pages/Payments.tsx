@@ -1,14 +1,27 @@
-import { addDoc, collection, doc, onSnapshot, orderBy, query } from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
+import { buyCoins, getBuyCoinsQuery, getPaymentsQuery } from "../services/firebaseService"
 
 function Payments() {
+  const { firestore, user } = useFirebase()
+  
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState([] as any[])
   const [amount, setAmount] = useState(0);
   const [userInformation, setUserInformation] = useState({} as any);
-  const { firestore, user } = useFirebase()
 
+  useEffect(() => {
+    if (!user || !firestore) return;
+  
+    const unsubscribe = onSnapshot(getPaymentsQuery(user.uid), (snapshot) => {
+      const historyData = snapshot.docs.map((doc) => doc.data());
+      setHistory(historyData);
+    });
+  
+    return () => unsubscribe();
+  }, [firestore, user]);
+  
   useEffect(() => {
     if (!firestore || !user) return;
     const userDoc = doc(firestore, `users/${user.uid}`);
@@ -24,52 +37,26 @@ function Payments() {
   }, [firestore, user]);
 
   useEffect(() => {
-    if (!user || !firestore) return
-    const collectionRef = collection(firestore, `users/${user.uid}/payments`)
-    const historyQuery = query(collectionRef, orderBy("created", "desc"))
-
-    const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
-      const data = snapshot.docs.map((doc) => doc.data())
-      console.log('data', data)
-      setHistory(data)
-    });
-
-    return unsubscribe
-  }, [firestore, user])
-
-  useEffect(() => {
-    if (!user || !firestore) return
-    const collectionRef = collection(firestore, `users/${user.uid}/buy`)
-    let initial = true
-
-    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    if (!user || !firestore) return;
+  
+    let initial = true;
+  
+    const unsubscribe = onSnapshot(getBuyCoinsQuery(user.uid), (snapshot) => {
       if (initial) {
-        initial = false
-        return
+        initial = false;
+        return;
       }
-
+  
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
-          const { url } = change.doc.data()
-          window.open(url, "_self")
+          const { url } = change.doc.data();
+          window.open(url, "_self");
         }
-      })
-    })
-
-    return unsubscribe
-    
-
-  }, [firestore, user])
-
-  async function buyCoins() {
-    if (!user || !firestore) return
-    setIsLoading(true)
-    const collectionRef = collection(firestore, `users/${user?.uid}/buyCoins`)
-    await addDoc(collectionRef, {
-      amount
+      });
     });
-    setAmount(0)
-  }
+  
+    return () => unsubscribe();
+  }, [firestore, user]);  
 
   return (
     <div>
@@ -98,7 +85,11 @@ function Payments() {
                   }}
                   placeholder="0.00"
                 />
-                <button className="btn btn-primary px-5" onClick={buyCoins} disabled={isLoading}>
+                <button className="btn btn-primary px-5" onClick={async () => {
+                  setIsLoading(true)
+                  await buyCoins(user!.uid, amount)
+                  setAmount(0)
+                }} disabled={isLoading}>
                   Buy
                 </button>
               </div>

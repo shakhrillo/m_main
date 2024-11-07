@@ -105,3 +105,28 @@ export const downloadFile = async (url: string) => {
   const fileUrl = await getDownloadURL(fileRef)
   return fileUrl
 }
+
+export const buyCoins = async (uid: string, amount: number) => {
+  if (!firestore || !uid) return
+  const collectionRef = collection(
+    firestore,
+    `users/${uid}/buyCoins`,
+  )
+  await addDoc(collectionRef, { amount })
+}
+
+export const getBuyCoinsQuery = (uid: string) => {
+  const collectionRef = collection(
+    firestore,
+    `users/${uid}/buy`,
+  )
+  return collectionRef
+}
+
+export const getPaymentsQuery = (uid: string) => {
+  const collectionRef = collection(
+    firestore,
+    `users/${uid}/payments`,
+  )
+  return query(collectionRef, orderBy("created", "desc"))
+}
