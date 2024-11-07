@@ -65,9 +65,9 @@ const router = createBrowserRouter([
 
 const AppRoutes = () => {
   return (
-    <PreloaderLayout>
+    // <PreloaderLayout>
       <RouterProvider router={router} />
-    </PreloaderLayout>
+    // </PreloaderLayout>
   )
 }
 
