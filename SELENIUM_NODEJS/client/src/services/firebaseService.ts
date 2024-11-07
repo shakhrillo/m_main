@@ -1,5 +1,7 @@
 import { createUserWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
-import { auth } from '../firebaseConfig';
+import { auth, firestore } from '../firebaseConfig';
+import { addDoc, collection, orderBy, query } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 export const login = async (email: string, password: string) => {
   if (!auth) {
@@ -61,4 +63,45 @@ export const checkAuth = async () => {
       resolve(user);
     }, reject);
   });
+}
+
+export const startExtractGmapReviews = async (
+  uid: string,
+  data: {
+    url: string,
+    limit: number,
+    sortBy: string,
+    extractImageUrls: boolean,
+    ownerResponse: boolean,
+    onlyGoogleReviews: boolean,
+  }
+) => {
+  const collectionReviews = collection(
+    firestore,
+    `users/${uid}/reviews`,
+  )
+
+  const docRef = await addDoc(collectionReviews, {
+    ...data,
+    status: "in-progress",
+    createdAt: new Date(),
+  })
+
+  return docRef.id
+}
+
+export const getReviewsQuery = (uid: string) => {
+  const collectionReviews = collection(
+    firestore,
+    `users/${uid}/reviews`,
+  )
+  const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
+  return reviewsQuery
+}
+
+export const downloadFile = async (url: string) => {
+  const storage = getStorage()
+  const fileRef = ref(storage, url)
+  const fileUrl = await getDownloadURL(fileRef)
+  return fileUrl
 }

@@ -1,17 +1,15 @@
 import
   {
-    addDoc,
     collection,
-    deleteDoc,
-    doc,
     onSnapshot,
     orderBy,
     query,
-    Timestamp,
+    Timestamp
   } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
+import { downloadFile, getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -33,45 +31,23 @@ function ReviewsList() {
   const reviewsPerPage = 10
 
   useEffect(() => {
-    if (!firestore || !user) return
-    setReviews([])
-    let collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
-    const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
-
-    onSnapshot(reviewsQuery, querySnapshot => {
-      setReviews([])
-      querySnapshot.forEach(doc => {
-        const data = doc.data()
-        setReviews(prev => [
-          ...prev,
-          {
-            ...data,
-            id: doc.id,
-          },
-        ])
-      })
-    })
-  }, [firestore, user])
+    if (!firestore || !user) return;
+  
+    const unsubscribe = onSnapshot(getReviewsQuery(user.uid), querySnapshot => {
+      const reviewsData = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setReviews(reviewsData);
+    });
+  
+    return () => unsubscribe();
+  }, [firestore, user]);  
 
   async function startScraping() {
     if (!firestore || !user) return
     setScrap(defaultScrap)
-    const collectionReviews = collection(
-      firestore,
-      `users/${user?.uid}/reviews`,
-    )
-    const docRef = await addDoc(collectionReviews, {
-      ...scrap,
-      status: "in-progress",
-      createdAt: new Date(),
-    })
-    console.log("Document written with ID: ", docRef.id)
-  }
-
-  async function deleteReview(id: string) {
-    const uid = user ? user.uid : ""
-    await deleteDoc(doc(firestore, `users/${uid}/reviews/${id}`))
-    console.log("Document successfully deleted!")
+    await startExtractGmapReviews(user.uid, scrap)
   }
 
   // Pagination handling
@@ -95,18 +71,6 @@ function ReviewsList() {
 
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber)
-  }
-
-  const downloadFile = async (review: any, id: string) => {
-    const selected = document.getElementById(id) as HTMLSelectElement
-    if (!selected) return
-    const selectedValue = selected.value || "json"
-    const url = review[selectedValue + "Url"]
-    const storage = getStorage()
-    const fileRef = ref(storage, url)
-    const fileUrl = await getDownloadURL(fileRef)
-
-    window.open(fileUrl, "_blank")
   }
 
   function renderCount(review: any) {
@@ -249,6 +213,7 @@ function ReviewsList() {
                   e.preventDefault()
                   startScraping()
                 }}
+                disabled={!scrap.url}
               >
                 Start
               </button>
@@ -358,15 +323,26 @@ function ReviewsList() {
                           className="form-select"
                           aria-label={`Download ${review.title}`}
                           id={`download-${review.id}`}
+                          disabled={review.status !== "completed"}
                         >
                           <option value="json">JSON</option>
                           <option value="csv">CSV</option>
                         </select>
                         <button
                           className="btn btn-primary"
-                          onClick={() =>
-                            downloadFile(review, `download-${review.id}`)
-                          }
+                          disabled={review.status !== "completed"}
+                          onClick={async () => {
+                            const selectedValue = (document.getElementById(`download-${review.id}`) as HTMLSelectElement).value || "json";
+                            console.log("selectedValue", selectedValue)
+                            let url;
+                            if (selectedValue === "json") {
+                              url = review.jsonUrl;
+                            } else {
+                              url = review.csvUrl;
+                            }
+                            const downloadUrl = await downloadFile(url);
+                            window.open(downloadUrl, "_blank");
+                          }}
                         >
                           <i className="bi bi-cloud-download"></i>
                         </button>
