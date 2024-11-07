@@ -1,33 +1,27 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  Timestamp,
-} from "firebase/firestore"
+import
+  {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    orderBy,
+    query,
+    Timestamp,
+  } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { useEffect, useState } from "react"
-import { Pagination } from "react-bootstrap"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
 const defaultScrap = {
-  url: "https://maps.app.goo.gl/Zj3DVhizVttiFhAo7",
+  url: "",
   limit: 50,
   sortBy: sortBy[1],
   extractImageUrls: false,
   ownerResponse: true,
-  onlyGoogleReviews: false,
-
-  // "url": "https://maps.app.goo.gl/NmAddhWxtURsZsx3A",
-  // "reviewId": "Q4vNEoTkpOtdvgEmCe02",
-  // "userId": "MHKWy9QpFjfijMlKxeimUyOPYLt1",
-  // "limit": 1700,
-  // "sortBy": "Lowest rating",
+  onlyGoogleReviews: false
 }
 
 function ReviewsList() {

@@ -1,19 +1,19 @@
 // src/layouts/PreloaderLayout/PreloaderLayout.tsx
 
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { checkAuth } from "../../services/firebaseService"
 import Preloader from "./Preloader"
-import { useFirebase } from "../../contexts/FirebaseProvider"
 
 interface PreloaderLayoutProps {
   children: React.ReactNode
 }
 
 const PreloaderLayout: React.FC<PreloaderLayoutProps> = ({ children }) => {
-  const { checkAuth, isLoading } = useFirebase()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+    checkAuth().then(() => setIsLoading(false))
+  }, [])
 
   return <>{isLoading ? <Preloader /> : children}</>
 }

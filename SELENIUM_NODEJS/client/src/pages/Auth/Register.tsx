@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logo from "../../assets/images/logo.svg"
 import { useFirebase } from "../../contexts/FirebaseProvider"
+import { googleLogin, register } from "../../services/firebaseService"
 
 const Register: React.FC = () => {
-  const { register, user, googleLogin } = useFirebase()
+  const { user } = useFirebase()
   const navigate = useNavigate()
 
   const [firstName, setFirstName] = useState("")
@@ -16,19 +17,18 @@ const Register: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    redirectToDashboard()
+  }, [user])
+
+  function redirectToDashboard() {
     if (user) {
       navigate("/dashboard")
     }
-  }, [user, navigate])
+  }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!email || !password || !firstName || !lastName || !confirmPassword) {
-      setError("All fields are required.")
-      return
-    }
-    
     if (password !== confirmPassword) {
       setError("Passwords do not match.")
       return
@@ -42,8 +42,12 @@ const Register: React.FC = () => {
     try {
       await register(email, password, firstName, lastName);
       navigate("/auth/login")
-    } catch (error) {
-      setError("Failed to create an account.")
+    } catch (error: any) {
+      if (typeof error === "string") {
+        setError(error)
+        return
+      }
+      setError(error?.message)
     }
   }
 

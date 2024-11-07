@@ -2,36 +2,39 @@ import React, { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logo from "../../assets/images/logo.png"
 import { useFirebase } from "../../contexts/FirebaseProvider"
+import { googleLogin, login } from "../../services/firebaseService"
 
 const Login: React.FC = () => {
-  const { login, user, googleLogin } = useFirebase()
+  const { user } = useFirebase()
   const navigate = useNavigate()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    redirectToDashboard()
+  }, [user])
+
+  function redirectToDashboard() {
     if (user) {
       navigate("/dashboard")
     }
-  }, [user, navigate])
+  }
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    
     try {
       await login(email, password)
-      navigate("/dashboard")
     } catch (error) {
       setError("Email or password is incorrect.")
     }
   }
 
-  const handleGoogleLogin = async () => {
+  async function handleGoogleLogin() {
     try {
       await googleLogin()
-      navigate("/dashboard")
     } catch (error) {
       setError("Failed to log in with Google.")
     }
@@ -40,7 +43,7 @@ const Login: React.FC = () => {
   return (
     <div className="login container-fluid">
       <nav className="login__navbar">
-        <a href="#">
+        <a href="/">
           <img
             className="login__navbar-logo"
             src={logo}

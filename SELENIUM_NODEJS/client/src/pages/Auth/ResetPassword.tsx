@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from "react"
 import logo from "../../assets/images/logo.png"
-import { useFirebase } from "../../contexts/FirebaseProvider"
+import { resetPassword } from "../../services/firebaseService"
 
 const ResetPassword: React.FC = () => {
-  const { user, resetPassword } = useFirebase()
-  const navigate = useNavigate()
-
   const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState("")
   const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard")
-    }
-  }, [user, navigate])
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       await resetPassword(email)
       setSuccess(true)
-      setTimeout(() => {
-        navigate("/auth/login")
-      }, 3000)
     } catch (error) {
       setError("Failed to reset password.")
     }
@@ -33,7 +20,7 @@ const ResetPassword: React.FC = () => {
   return (
     <div className="login container-fluid">
       <nav className="login__navbar">
-        <a href="#">
+        <a href="/">
           <img
             className="login__navbar-logo"
             src={logo}

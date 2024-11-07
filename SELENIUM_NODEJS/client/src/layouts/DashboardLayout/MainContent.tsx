@@ -5,8 +5,8 @@ import DashboardTest from "./DashboardTest"
 const MainContent: React.FC = () => {
   return (
     <div className="dashboard__content">
-      <DashboardTest />
-      {/* <Outlet /> */}
+      {/* <DashboardTest /> */}
+      <Outlet />
     </div>
   )
 }

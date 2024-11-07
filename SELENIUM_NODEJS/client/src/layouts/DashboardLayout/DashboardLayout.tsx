@@ -1,5 +1,3 @@
-// src/layouts/DashboardLayout/DashboardLayout.tsx
-
 import React from "react"
 import Sidebar from "./Sidebar"
 import MainContent from "./MainContent"
