@@ -1,6 +1,19 @@
-import { useState } from "react"
+import React, { useState } from "react"
 
 const DashboardTest: React.FC = () => {
+  // inputs
+  const [formData, setFormData] = useState({
+    scrapURl: "",
+    extractLimit: "",
+    sortBy: "",
+  })
+
+  const [filters, setFilters] = useState({
+    extraImage: false,
+    ownerResponse: true,
+    onlyGoogleReviews: false,
+  })
+
   const [inProggressTableShow, setInProggressTableShow] = useState(false)
   const [doneTableShow, setDoneTableShow] = useState(false)
   const [canceledTableShow, setCanceledTableShow] = useState(false)
@@ -10,105 +23,117 @@ const DashboardTest: React.FC = () => {
   const [canceledShow, setCanceledShow] = useState(false)
 
   const [viewAll, setViewAll] = useState(false)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const headerInputs = [
+    {
+      label: "Sharable URL",
+      placeholder: "Place URL",
+      value: formData.scrapURl,
+      onChange: handleInputChange,
+      name: "scrapURl",
+    },
+    {
+      label: "Extract limit",
+      placeholder: "Extract limit",
+      value: formData.extractLimit,
+      onChange: handleInputChange,
+      name: "extractLimit",
+    },
+    {
+      label: "Sort by",
+      placeholder: "Sort by",
+      value: formData.sortBy,
+      onChange: handleInputChange,
+      name: "sortBy",
+    },
+  ]
+
+  type FilterKey = keyof typeof filters
+
+  const handleFilterChange = (name: FilterKey) => {
+    setFilters(prev => ({ ...prev, [name]: !prev[name] }))
+  }
+  const headerFilters = [
+    {
+      icon: "bi-image",
+      label: "Extract image urls",
+      name: "extraImage" as FilterKey,
+    },
+    {
+      icon: "bi-megaphone",
+      label: "Owner response",
+      name: "ownerResponse" as FilterKey,
+    },
+    {
+      icon: "bi-google",
+      label: "Only Google reviews",
+      name: "onlyGoogleReviews" as FilterKey,
+    },
+  ]
+
+  const tableHeader = [
+    { text: "#" },
+    { text: "Place", icon: "geo" },
+    { text: "Date", icon: "clock" },
+    { text: "Reviews", icon: "chat-square-text" },
+    { text: "Time", icon: "hourglass-split" },
+    { text: "File format", icon: "file-earmark-zip" },
+    { text: "", icon: "" },
+  ]
   return (
     <div className="geo-dashboard">
       <div className="geo-dashboard__wrapper">
         <div className="geo-dashboard__header">
           <form className="geo-dashboard__form">
             <div className="geo-dashboard__row row">
-              <div className="geo-dashboard__column col">
-                <div className="geo-dashboard__form-group form-group">
-                  <label className="geo-dashboard__input-label" htmlFor="url">
-                    Sharable URL
-                  </label>
-                  <input
-                    placeholder="Place URL"
-                    type="text"
-                    className="geo-dashboard__input geo-input form-control"
-                    id="url"
-                  />
+              {headerInputs.map((input, index) => (
+                <div key={index} className="geo-dashboard__column col">
+                  <div className="geo-dashboard__form-group form-group">
+                    <label
+                      className="geo-dashboard__input-label"
+                      htmlFor={input.name}
+                    >
+                      {input.label}
+                    </label>
+                    <input
+                      name={input.name}
+                      value={input.value}
+                      onChange={input.onChange}
+                      placeholder={input.placeholder}
+                      type="text"
+                      className="geo-dashboard__input geo-input form-control"
+                      id={input.name}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="geo-dashboard__column col">
-                <div className="geo-dashboard__form-group form-group">
-                  <label
-                    className="geo-dashboard__input-label"
-                    htmlFor="extractLimit"
-                  >
-                    Extract limit
-                  </label>
-                  <input
-                    placeholder="Extract limit"
-                    type="text"
-                    className="geo-dashboard__input geo-input form-control "
-                    id="extractLimit"
-                    aria-describedby="extractLimit"
-                  />
-                </div>
-              </div>
-              <div className="geo-dashboard__column col">
-                <div className="geo-dashboard__form-group form-group">
-                  <label
-                    className="geo-dashboard__input-label"
-                    htmlFor="sortBy"
-                  >
-                    Sort by
-                  </label>
-                  <input
-                    placeholder="Sort by"
-                    type="text"
-                    className="geo-dashboard__input geo-input form-control"
-                    id="sortBy"
-                    aria-describedby="sortByHelp"
-                  />
-                </div>
-              </div>
+              ))}
             </div>
             <div className="geo-dashboard__filter">
               <div className="geo-dashboard__form-group form-group">
                 <div className="geo-dashboard__checkbox-group form-group">
-                  <div className="geo-dashboard__checkbox-item">
-                    <input
-                      type="checkbox"
-                      className="geo-dashboard__checkbox-input btn-check"
-                      id="extract-image"
-                    />
-                    <label
-                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
-                      htmlFor="extract-image"
-                    >
-                      <i className="bi bi-image"></i>
-                      Extract image URLs
-                    </label>
-                  </div>
-                  <div className="geo-dashboard__checkbox-item">
-                    <input
-                      type="checkbox"
-                      className="geo-dashboard__checkbox-input btn-check"
-                      id="owner-response"
-                    />
-                    <label
-                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
-                      htmlFor="owner-response"
-                    >
-                      <i className="bi bi-megaphone"></i>
-                      Owner response
-                    </label>
-                  </div>
-                  <div className="geo-dashboard__checkbox-item">
-                    <input
-                      type="checkbox"
-                      className="geo-dashboard__checkbox-input btn-check"
-                      id="google-reviews"
-                    />
-                    <label
-                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
-                      htmlFor="google-reviews"
-                    >
-                      <i className="bi bi-google"></i>
-                      Only Google reviews
-                    </label>
-                  </div>
+                  {headerFilters.map((filter, index) => (
+                    <div key={index} className="geo-dashboard__checkbox-item">
+                      <input
+                        checked={filters[filter.name]}
+                        onChange={() => handleFilterChange(filter.name)}
+                        type="checkbox"
+                        className="geo-dashboard__checkbox-input btn-check"
+                        id={filter.icon}
+                      />
+                      <label
+                        className="geo-dashboard__checkbox-label btn geo-btn-transparent"
+                        htmlFor={filter.icon}
+                      >
+                        <i className={`bi ${filter.icon}`}></i>
+                        {filter.label}
+                      </label>
+                    </div>
+                  ))}
                 </div>
               </div>
               <button className="geo-dashboard__start-btn geo-btn-primary btn btn-primary">
@@ -171,161 +196,21 @@ const DashboardTest: React.FC = () => {
               </div>
             </div>
             <div className="geo-dashboard__body-content">
-              <table
-                className={`${inProggressTableShow && "d-none"} geo-dashboard__body-content__table table table-bordered`}
-              >
-                <thead>
-                  <tr>
-                    <th className="geo-dashboard__body-content__table-header">
-                      #
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-geo"></i>
-                        Place
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-clock"></i>
-                        Date
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-chat-square-text"></i>
-                        Reviews
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-hourglass-split"></i>
-                        Time
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-file-earmark-zip"></i>
-                        File format
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content"></div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table
+                showTable={canceledTableShow}
+                tableHeader={tableHeader}
+                body={[
+                  {
+                    placeholder: "Selectum Colours Bodrum",
+                    date: "6 November 2024 - 03:01:05 PM",
+                    reviews: 1324,
+                    time: "46 seconds",
+                  },
+                ]}
+              />
             </div>
           </div>
-          {viewAll && (
-            <nav aria-label="scrap-pagination">
-              <ul className="pagination">
-                {/* Previous Button (Double Left) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-double-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Previous Button */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Page Numbers */}
-                {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
-                <li className={`pagination__item pagination__item--active`}>
-                  {/* key={pageIndex + 1} */}
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    {/* {pageIndex + 1} */}1
-                  </a>
-                </li>
-                {/* ))} */}
-
-                {/* Next Button */}
-                <li className={`pagination__item pagination__item--disabled"}`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    // onClick={handleNextPage}
-                  >
-                    <i className="bi-chevron-right pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Next Button (Double Right) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={
-                      () => {}
-                      // () => handlePageClick(totalPages)
-                    }
-                  >
-                    <i className="bi-chevron-double-right pagination__icon"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          )}
+          {viewAll && Pagination()}
         </div>
         <div
           className={`geo-dashboard__body ${(doneShow || canceledShow) && "d-none"} ${inProggressShow && "geo-dashboard__full-screen"}`}
@@ -342,7 +227,7 @@ const DashboardTest: React.FC = () => {
                 {!inProggressShow && (
                   <a
                     onClick={() => {
-                      setInProggressTableShow(!inProggressTableShow)
+                      setInProggressTableShow(prewState => !prewState)
                     }}
                     className="geo-dashboard__progress-icon"
                   >
@@ -365,161 +250,21 @@ const DashboardTest: React.FC = () => {
               </div>
             </div>
             <div className="geo-dashboard__body-content">
-              <table
-                className={`${inProggressTableShow && "d-none"} geo-dashboard__body-content__table table table-bordered`}
-              >
-                <thead>
-                  <tr>
-                    <th className="geo-dashboard__body-content__table-header">
-                      #
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-geo"></i>
-                        Place
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-clock"></i>
-                        Date
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-chat-square-text"></i>
-                        Reviews
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-hourglass-split"></i>
-                        Time
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-file-earmark-zip"></i>
-                        File format
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content"></div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table
+                showTable={inProggressTableShow}
+                tableHeader={tableHeader}
+                body={[
+                  {
+                    placeholder: "Selectum Colours Bodrum",
+                    date: "6 November 2024 - 03:01:05 PM",
+                    reviews: 1324,
+                    time: "46 seconds",
+                  },
+                ]}
+              />
             </div>
           </div>
-          {inProggressShow && (
-            <nav aria-label="scrap-pagination">
-              <ul className="pagination">
-                {/* Previous Button (Double Left) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-double-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Previous Button */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Page Numbers */}
-                {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
-                <li className={`pagination__item pagination__item--active`}>
-                  {/* key={pageIndex + 1} */}
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    {/* {pageIndex + 1} */}1
-                  </a>
-                </li>
-                {/* ))} */}
-
-                {/* Next Button */}
-                <li className={`pagination__item pagination__item--disabled"}`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    // onClick={handleNextPage}
-                  >
-                    <i className="bi-chevron-right pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Next Button (Double Right) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={
-                      () => {}
-                      // () => handlePageClick(totalPages)
-                    }
-                  >
-                    <i className="bi-chevron-double-right pagination__icon"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          )}
+          {inProggressShow && Pagination()}
         </div>
         <div
           className={`geo-dashboard__body ${(inProggressShow || canceledShow) && "d-none"} ${doneShow && "geo-dashboard__full-screen"}`}
@@ -536,7 +281,7 @@ const DashboardTest: React.FC = () => {
                 {!doneShow && (
                   <a
                     onClick={() => {
-                      setDoneTableShow(!doneTableShow)
+                      setDoneTableShow(prevState => !prevState)
                     }}
                     className="geo-dashboard__progress-icon"
                   >
@@ -559,235 +304,21 @@ const DashboardTest: React.FC = () => {
               </div>
             </div>
             <div className=" geo-dashboard__body-content">
-              <table
-                className={`${doneTableShow && "d-none"} geo-dashboard__body-content__table table table-bordered`}
-              >
-                <thead>
-                  <tr>
-                    <th className="geo-dashboard__body-content__table-header">
-                      #
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-geo"></i>
-                        Place
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-clock"></i>
-                        Date
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-chat-square-text"></i>
-                        Reviews
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-hourglass-split"></i>
-                        Time
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-file-earmark-zip"></i>
-                        File format
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content"></div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table
+                showTable={doneTableShow}
+                tableHeader={tableHeader}
+                body={[
+                  {
+                    placeholder: "Selectum Colours Bodrum",
+                    date: "6 November 2024 - 03:01:05 PM",
+                    reviews: 1324,
+                    time: "46 seconds",
+                  },
+                ]}
+              />
             </div>
           </div>
-          {doneShow && (
-            <nav aria-label="scrap-pagination">
-              <ul className="pagination">
-                {/* Previous Button (Double Left) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-double-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Previous Button */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Page Numbers */}
-                {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
-                <li className={`pagination__item pagination__item--active`}>
-                  {/* key={pageIndex + 1} */}
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    {/* {pageIndex + 1} */}1
-                  </a>
-                </li>
-                {/* ))} */}
-
-                {/* Next Button */}
-                <li className={`pagination__item pagination__item--disabled"}`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    // onClick={handleNextPage}
-                  >
-                    <i className="bi-chevron-right pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Next Button (Double Right) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={
-                      () => {}
-                      // () => handlePageClick(totalPages)
-                    }
-                  >
-                    <i className="bi-chevron-double-right pagination__icon"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          )}
+          {doneShow && Pagination()}
         </div>
         <div
           className={`geo-dashboard__body ${(inProggressShow || doneShow) && "d-none"} ${canceledShow && "geo-dashboard__full-screen"}`}
@@ -804,7 +335,7 @@ const DashboardTest: React.FC = () => {
                 {!canceledShow && (
                   <a
                     onClick={() => {
-                      setCanceledTableShow(!canceledTableShow)
+                      setCanceledTableShow(prevState => !prevState)
                     }}
                     className="geo-dashboard__progress-icon"
                   >
@@ -827,253 +358,21 @@ const DashboardTest: React.FC = () => {
               </div>
             </div>
             <div className="geo-dashboard__body-content">
-              <table
-                className={`${canceledTableShow && "d-none"} geo-dashboard__body-content__table table table-bordered`}
-              >
-                <thead>
-                  <tr>
-                    <th className="geo-dashboard__body-content__table-header">
-                      #
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-geo"></i>
-                        Place
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-clock"></i>
-                        Date
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-chat-square-text"></i>
-                        Reviews
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-hourglass-split"></i>
-                        Time
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content">
-                        <i className="bi bi-file-earmark-zip"></i>
-                        File format
-                      </div>
-                    </th>
-                    <th className="geo-dashboard__body-content__table-header">
-                      <div className="geo-dashboard__body-content__table-header__content"></div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="geo-dashboard__body-content__table__row">
-                    <th className="geo-dashboard__body-content__table__row-body">
-                      1
-                    </th>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <a href="#">Selectum colours Bodrum</a>
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        6 November 2024 - 03:01:51 PM
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        1438 - reviews
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        46 seconds
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <div className="geo-dashboard__body-content__table__row-body__content">
-                        <select className="geo-select">
-                          <option selected value="1">
-                            JSON
-                          </option>
-                          <option value="1">SCV</option>
-                        </select>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </div>
-                    </td>
-                    <td className="geo-dashboard__body-content__table__row-body">
-                      <a href="#">
-                        <i className="bi bi-cloud-download"></i>
-                        {/* <button className="btn geo-btn-white">
-                          <i className="bi bi-cloud-download"></i>
-                        </button> */}
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table
+                showTable={canceledTableShow}
+                tableHeader={tableHeader}
+                body={[
+                  {
+                    placeholder: "Selectum Colours Bodrum",
+                    date: "6 November 2024 - 03:01:05 PM",
+                    reviews: 1324,
+                    time: "6 seconds",
+                  },
+                ]}
+              />
             </div>
           </div>
-          {canceledShow && (
-            <nav aria-label="scrap-pagination">
-              <ul className="pagination">
-                {/* Previous Button (Double Left) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-double-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Previous Button */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    <i className="bi-chevron-left pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Page Numbers */}
-                {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
-                <li className={`pagination__item pagination__item--active`}>
-                  {/* key={pageIndex + 1} */}
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={() => {}}
-                  >
-                    {/* {pageIndex + 1} */}1
-                  </a>
-                </li>
-                {/* ))} */}
-
-                {/* Next Button */}
-                <li className={`pagination__item pagination__item--disabled"}`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    // onClick={handleNextPage}
-                  >
-                    <i className="bi-chevron-right pagination__icon"></i>
-                  </a>
-                </li>
-
-                {/* Next Button (Double Right) */}
-                <li className={`pagination__item pagination__item--disabled`}>
-                  <a
-                    className="pagination__item__button pagination__link"
-                    onClick={
-                      () => {}
-                      // () => handlePageClick(totalPages)
-                    }
-                  >
-                    <i className="bi-chevron-double-right pagination__icon"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          )}
+          {canceledShow && Pagination()}
         </div>
       </div>
     </div>
@@ -1081,3 +380,157 @@ const DashboardTest: React.FC = () => {
 }
 
 export default DashboardTest
+
+interface TableHeader {
+  icon?: string
+  text: string
+}
+interface TableBody {
+  placeholder: string
+  date: string
+  reviews: number
+  time: string
+}
+
+interface TableInterface {
+  showTable: boolean
+  tableHeader: TableHeader[]
+  body: TableBody[]
+}
+
+const Table: React.FC<TableInterface> = ({ showTable, tableHeader, body }) => {
+  console.log("showTable", showTable)
+  return (
+    <table
+      className={`${showTable && "d-none"} geo-dashboard__body-content__table table table-bordered`}
+    >
+      <thead>
+        <tr>
+          {tableHeader.map((header, index) => (
+            <th
+              key={header.text} // Use a unique key here if possible
+              className="geo-dashboard__body-content__table-header"
+            >
+              {header.icon ? (
+                <div className="geo-dashboard__body-content__table-header__content">
+                  <i className={`bi bi-${header.icon}`}></i>
+                  {header.text}
+                </div>
+              ) : (
+                header.text
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {body.map((row, index) => (
+          <tr key={index} className="geo-dashboard__body-content__table__row">
+            <th className="geo-dashboard__body-content__table__row-body">
+              {index + 1}
+            </th>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <div className="geo-dashboard__body-content__table__row-body__content">
+                <a href="#">{row.placeholder}</a>
+              </div>
+            </td>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <div className="geo-dashboard__body-content__table__row-body__content">
+                {row.date}
+              </div>
+            </td>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <div className="geo-dashboard__body-content__table__row-body__content">
+                {row.reviews} - reviews
+              </div>
+            </td>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <div className="geo-dashboard__body-content__table__row-body__content">
+                {row.time}
+              </div>
+            </td>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <div className="geo-dashboard__body-content__table__row-body__content">
+                <select className="geo-select">
+                  <option value="1" selected>
+                    JSON
+                  </option>
+                  <option value="2">CSV</option>
+                </select>
+              </div>
+            </td>
+            <td className="geo-dashboard__body-content__table__row-body">
+              <a href="#">
+                <i className="bi bi-cloud-download"></i>
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function Pagination() {
+  return (
+    <nav aria-label="scrap-pagination">
+      <ul className="pagination">
+        {/* Previous Button (Double Left) */}
+        <li className={`pagination__item pagination__item--disabled`}>
+          <a
+            className="pagination__item__button pagination__link"
+            onClick={() => {}}
+          >
+            <i className="bi-chevron-double-left pagination__icon"></i>
+          </a>
+        </li>
+
+        {/* Previous Button */}
+        <li className={`pagination__item pagination__item--disabled`}>
+          <a
+            className="pagination__item__button pagination__link"
+            onClick={() => {}}
+          >
+            <i className="bi-chevron-left pagination__icon"></i>
+          </a>
+        </li>
+
+        {/* Page Numbers */}
+        {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
+        <li className={`pagination__item pagination__item--active`}>
+          {/* key={pageIndex + 1} */}
+          <a
+            className="pagination__item__button pagination__link"
+            onClick={() => {}}
+          >
+            {/* {pageIndex + 1} */}1
+          </a>
+        </li>
+        {/* ))} */}
+
+        {/* Next Button */}
+        <li className={`pagination__item pagination__item--disabled"}`}>
+          <a
+            className="pagination__item__button pagination__link"
+            // onClick={handleNextPage}
+          >
+            <i className="bi-chevron-right pagination__icon"></i>
+          </a>
+        </li>
+
+        {/* Next Button (Double Right) */}
+        <li className={`pagination__item pagination__item--disabled`}>
+          <a
+            className="pagination__item__button pagination__link"
+            onClick={
+              () => {}
+              // () => handlePageClick(totalPages)
+            }
+          >
+            <i className="bi-chevron-double-right pagination__icon"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  )
+}
