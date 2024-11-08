@@ -15,12 +15,10 @@ const defaultScrap = {
 }
 
 function renderCount(review: any) {
-  if (!review || !review.extractedReviews)
+  if (!review || !review.totalReviews) {
     return <i className="bi-question-lg"></i>
-  let count = review.extractedReviews || 0
-  if (count < (review.totalReviews || 0)) {
-    count = review.totalReviews
   }
+  let count = review.totalReviews || 0
 
   return <span>{count} reviews</span>
 }
