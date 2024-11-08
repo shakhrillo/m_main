@@ -2,7 +2,7 @@ import { onSnapshot, Timestamp } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
-import { Table } from "../../components/Table/Table"
+import { Table } from "../../components/table"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
