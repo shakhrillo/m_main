@@ -113,7 +113,7 @@ const DashboardTest: React.FC = () => {
   
     const fetchReviews = (status: string, setData: any) => {
       return onSnapshot(
-        getReviewsQuery({ uid: user.uid, status, orderByField: "createdAt", loadLimit: 10 }),
+        getReviewsQuery({ uid: user.uid, status, orderByField: "createdAt", loadLimit: 5 }),
         querySnapshot => {
           const reviewsData = querySnapshot.docs.map(doc => ({
             ...doc.data(),
