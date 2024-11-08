@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
 import { Table } from "../../components/table"
+import ReviewsCard from "../../components/reviews-card"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -48,16 +49,6 @@ const DashboardTest: React.FC = () => {
   const { firestore, user } = useFirebase()
 
   const [scrap, setScrap] = useState(defaultScrap)
-
-  const [inProggressTableShow, setInProggressTableShow] = useState(false)
-  const [doneTableShow, setDoneTableShow] = useState(false)
-  const [canceledTableShow, setCanceledTableShow] = useState(false)
-
-  const [inProggressShow, setInProggressShow] = useState(false)
-  const [doneShow, setDoneShow] = useState(false)
-  const [canceledShow, setCanceledShow] = useState(false)
-
-  const [viewAll, setViewAll] = useState(false)
 
   const tableHeader = [
     {
@@ -322,270 +313,41 @@ const DashboardTest: React.FC = () => {
             View all
           </a>
         </div>
-        <div
-          className={`geo-dashboard__body ${!viewAll && "d-none"} ${inProggressShow && "geo-dashboard__full-screen"}`}
-        >
-          <div className="geo-dashboard__body-wrapper">
-            <div className="geo-dashboard__body-header">
-              <div className="geo-dashboard__progress">
-                <span className="geo-dashboard__progress-badge">
-                  <i className="bi bi-grid"></i>
-                  All
-                </span>
-                <span className="geo-dashboard__progress-count">211</span>
-              </div>
-              <div className="geo-dashboard__progress__btns">
-                {!inProggressShow && (
-                  <a
-                    onClick={() => {
-                      setInProggressTableShow(!inProggressTableShow)
-                    }}
-                    className="geo-dashboard__progress-icon"
-                  >
-                    <i
-                      className={`bi bi-chevron-${inProggressTableShow ? "down" : "up"}`}
-                    ></i>
-                  </a>
-                )}
-                <a
-                  onClick={() => {
-                    setViewAll(false)
-                    setInProggressShow(false)
-                    setDoneShow(false)
-                    setCanceledShow(false)
-                  }}
-                  className="geo-dashboard__progress-icon"
-                >
-                  <i className={"bi bi-x-lg"}></i>
-                </a>
-              </div>
-            </div>
-            <div className="geo-dashboard__body-content">
-              <Table
-                tableHeader={tableHeader}
-                body={canceledData.map((review: any) => review)}
-              />
-            </div>
-          </div>
-          {viewAll && Pagination()}
-        </div>
-        <div
-          className={`geo-dashboard__body ${(doneShow || canceledShow) && "d-none"} ${inProggressShow && "geo-dashboard__full-screen"}`}
-        >
-          <div className="geo-dashboard__body-wrapper">
-            <div className="geo-dashboard__body-header">
-              <div className="geo-dashboard__progress">
-                <span className="geo-dashboard__progress-badge geo-dashboard__progress-badge--warning">
-                  In Progress
-                </span>
-                <span className="geo-dashboard__progress-count">
-                  {inProgressData.length}
-                </span>
-              </div>
-              <div className="geo-dashboard__progress__btns">
-                {!inProggressShow && (
-                  <a
-                    onClick={() => {
-                      setInProggressTableShow(prewState => !prewState)
-                    }}
-                    className="geo-dashboard__progress-icon"
-                  >
-                    <i
-                      className={`bi bi-chevron-${inProggressTableShow ? "down" : "up"}`}
-                    ></i>
-                  </a>
-                )}
-                <a
-                  onClick={() => {
-                    setInProggressShow(!inProggressShow)
-                    setInProggressTableShow(false)
-                  }}
-                  className="geo-dashboard__progress-icon"
-                >
-                  <i
-                    className={`bi bi-fullscreen${inProggressShow ? "-exit" : ""}`}
-                  ></i>
-                </a>
-              </div>
-            </div>
-            <div className="geo-dashboard__body-content">
-              <Table
-                tableHeader={tableHeader}
-                body={inProgressData
-                  .map((review: any) => review)
-                  .slice(0, 5)}
-              />
-            </div>
-          </div>
-          {inProggressShow && Pagination()}
-        </div>
-        <div
-          className={`geo-dashboard__body ${(inProggressShow || canceledShow) && "d-none"} ${doneShow && "geo-dashboard__full-screen"}`}
-        >
-          <div className="geo-dashboard__body-wrapper">
-            <div className="geo-dashboard__body-header">
-              <div className="geo-dashboard__progress">
-                <span className="geo-dashboard__progress-badge geo-dashboard__progress-badge--success">
-                  Done
-                </span>
-                <span className="geo-dashboard__progress-count">
-                  {doneData.length}
-                </span>
-              </div>
-              <div className="geo-dashboard__progress__btns">
-                {!doneShow && (
-                  <a
-                    onClick={() => {
-                      setDoneTableShow(prevState => !prevState)
-                    }}
-                    className="geo-dashboard__progress-icon"
-                  >
-                    <i
-                      className={`bi bi-chevron-${doneTableShow ? "down" : "up"}`}
-                    ></i>
-                  </a>
-                )}
-                <a
-                  onClick={() => {
-                    setDoneShow(!doneShow)
-                    setDoneTableShow(false)
-                  }}
-                  className="geo-dashboard__progress-icon"
-                >
-                  <i
-                    className={`bi bi-fullscreen${doneShow ? "-exit" : ""}`}
-                  ></i>
-                </a>
-              </div>
-            </div>
-            <div className=" geo-dashboard__body-content">
-              <Table
-                tableHeader={tableHeader}
-                body={doneData
-                  .map((review: any) => review)
-                  .slice(0, 5)}
-              />
-            </div>
-          </div>
-          {doneShow && Pagination()}
-        </div>
-        <div
-          className={`geo-dashboard__body ${(inProggressShow || doneShow) && "d-none"} ${canceledShow && "geo-dashboard__full-screen"}`}
-        >
-          <div className="flex-grow-1 geo-dashboard__body-wrapper">
-            <div className="geo-dashboard__body-header">
-              <div className="geo-dashboard__progress">
-                <span className="geo-dashboard__progress-badge geo-dashboard__progress-badge--danger">
-                  Canceled
-                </span>
-                <span className="geo-dashboard__progress-count">
-                  {canceledData.length}
-                </span>
-              </div>
-              <div className="geo-dashboard__progress__btns">
-                {!canceledShow && (
-                  <a
-                    onClick={() => {
-                      setCanceledTableShow(prevState => !prevState)
-                    }}
-                    className="geo-dashboard__progress-icon"
-                  >
-                    <i
-                      className={`bi bi-chevron-${canceledTableShow ? "down" : "up"}`}
-                    ></i>
-                  </a>
-                )}
-                <a
-                  onClick={() => {
-                    setCanceledShow(!canceledShow)
-                    setCanceledTableShow(false)
-                  }}
-                  className="geo-dashboard__progress-icon"
-                >
-                  <i
-                    className={`bi bi-fullscreen${canceledShow ? "-exit" : ""}`}
-                  ></i>
-                </a>
-              </div>
-            </div>
-            <div className="geo-dashboard__body-content">
-              <Table
-                tableHeader={tableHeader}
-                body={canceledData
-                  .map((review: any) => review)
-                  .slice(0, 5)}
-              />
-            </div>
-          </div>
-          {canceledShow && Pagination()}
-        </div>
+        
+        {
+          [
+            {
+              data: inProgressData,
+              statusText: "In progress",
+              badgeType: "warning",
+            },
+            {
+              data: doneData,
+              statusText: "Done",
+              badgeType: "success",
+            },
+            {
+              data: canceledData,
+              statusText: "Canceled",
+              badgeType: "danger",
+            },
+          ].map(({
+            data,
+            statusText,
+            badgeType = "success",
+          }, index) => (
+            <ReviewsCard
+              key={index}
+              data={data}
+              statusText={statusText}
+              badgeType={badgeType as any}
+              tableHeader={tableHeader}
+            />
+          ))
+        }
       </div>
     </div>
   )
 }
 
 export default DashboardTest
-
-function Pagination() {
-  return (
-    <nav aria-label="scrap-pagination">
-      <ul className="pagination">
-        {/* Previous Button (Double Left) */}
-        <li className={`pagination__item pagination__item--disabled`}>
-          <a
-            className="pagination__item__button pagination__link"
-            onClick={() => {}}
-          >
-            <i className="bi-chevron-double-left pagination__icon"></i>
-          </a>
-        </li>
-
-        {/* Previous Button */}
-        <li className={`pagination__item pagination__item--disabled`}>
-          <a
-            className="pagination__item__button pagination__link"
-            onClick={() => {}}
-          >
-            <i className="bi-chevron-left pagination__icon"></i>
-          </a>
-        </li>
-
-        {/* Page Numbers */}
-        {/* {Array.from({ length: 1 }, (_, pageIndex) => ( */}
-        <li className={`pagination__item pagination__item--active`}>
-          {/* key={pageIndex + 1} */}
-          <a
-            className="pagination__item__button pagination__link"
-            onClick={() => {}}
-          >
-            {/* {pageIndex + 1} */}1
-          </a>
-        </li>
-        {/* ))} */}
-
-        {/* Next Button */}
-        <li className={`pagination__item pagination__item--disabled"}`}>
-          <a
-            className="pagination__item__button pagination__link"
-            // onClick={handleNextPage}
-          >
-            <i className="bi-chevron-right pagination__icon"></i>
-          </a>
-        </li>
-
-        {/* Next Button (Double Right) */}
-        <li className={`pagination__item pagination__item--disabled`}>
-          <a
-            className="pagination__item__button pagination__link"
-            onClick={
-              () => {}
-              // () => handlePageClick(totalPages)
-            }
-          >
-            <i className="bi-chevron-double-right pagination__icon"></i>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  )
-}
