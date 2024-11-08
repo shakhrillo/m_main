@@ -1,53 +1,35 @@
-import { doc, onSnapshot, Timestamp } from "firebase/firestore"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useFirebase } from "../contexts/FirebaseProvider"
+import { doc, onSnapshot, Timestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useFirebase } from "../contexts/FirebaseProvider";
 
 function ReviewInfo() {
-  let { place } = useParams()
-  const [placeInfo, setPlaceInfo] = useState({} as any)
-
-  const { firestore, user } = useFirebase()
+  const { place } = useParams();
+  const { firestore, user } = useFirebase();
+  const [placeInfo, setPlaceInfo] = useState<any>({});
 
   useEffect(() => {
-    if (!firestore || !place || !user) return
+    if (!firestore || !place || !user) return;
 
-    const collectionReviewInfo = doc(
-      firestore,
-      "users",
-      user.uid,
-      "reviews",
-      place,
-    )
+    const reviewInfoDoc = doc(firestore, "users", user.uid, "reviews", place);
 
-    const unsubscribe = onSnapshot(collectionReviewInfo, doc => {
+    const unsubscribe = onSnapshot(reviewInfoDoc, (doc) => {
       if (doc.exists()) {
-        setPlaceInfo({
-          ...doc.data(),
-          id: doc.id,
-        })
+        setPlaceInfo({ ...doc.data(), id: doc.id });
       }
-    })
+    });
 
-    return () => {
-      unsubscribe()
-    }
-  }, [firestore, user, place])
+    return () => unsubscribe();
+  }, [firestore, user, place]);
 
-  function renderCount(review: any) {
-    if (!review || !review.extractedReviews)
-      return <i className="bi-question-lg"></i>
-    let count = review.extractedReviews || 0
-    if (!count) {
-      count = review.totalReviews
-    }
-    return <span>{count} - reviews</span>
-  }
+  const renderCount = (review: any) => {
+    const count = review?.extractedReviews || review?.totalReviews || 0;
+    return <span>{count} - reviews</span>;
+  };
 
-  function formatTime(date: Timestamp) {
-    if (!date || !date.seconds) return ""
-
-    const d = new Date(date.seconds * 1000)
+  const formatTime = (date: Timestamp) => {
+    if (!date?.seconds) return "";
+    const d = new Date(date.seconds * 1000);
     return new Date(`${d.toLocaleDateString()} ${d.toLocaleTimeString()}`)
       .toLocaleString("en-US", {
         day: "numeric",
@@ -58,36 +40,23 @@ function ReviewInfo() {
         second: "2-digit",
         hour12: true,
       })
-      .replace(",", " -")
-  }
+      .replace(",", " -");
+  };
 
-  function spentTime(start: Timestamp, end: Timestamp) {
-    if (!start || !end) return ""
+  const spentTime = (start: Timestamp, end: Timestamp) => {
+    if (!start || !end) return "";
+    const diff = end.seconds - start.seconds;
 
-    const diff = end.seconds - start.seconds
-    if (diff < 60) {
-      return `${diff} seconds`
-    } else if (diff < 3600) {
-      return `${Math.floor(diff / 60)} minutes`
-    } else {
-      return `${Math.floor(diff / 3600)} hours`
-    }
-  }
-
-  function downloadFile(fileUrl: string) {}
-
-  function deleteReview(id: string) {}
+    if (diff < 60) return `${diff} seconds`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} minutes`;
+    return `${Math.floor(diff / 3600)} hours`;
+  };
 
   return (
     <div className="review-info">
       <div className="review-info__header">
         <h5 className="review-info__header__title">
           <i className="bi bi-geo"></i>
-          {/* <span
-            className={`review-info__header__title__status review-info__header__title__status--${placeInfo.status}`}
-          >
-            {renderStatus(placeInfo.status)}
-          </span> */}
           {placeInfo.title}
         </h5>
         <div className="review-info__header__details">
@@ -95,38 +64,36 @@ function ReviewInfo() {
             {placeInfo.status === "completed"
               ? "Done"
               : placeInfo.status === "failed"
-                ? "Canceled"
-                : "In proggress"}
+              ? "Canceled"
+              : "In progress"}
           </span>
           <a
             href={placeInfo.url}
             className="btn geo-btn-transparent geo-btn-outline"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="bi bi-google"></i>
-            Open in Google Maps
+            <i className="bi bi-google"></i> Open in Google Maps
           </a>
         </div>
       </div>
+
       <div className="review-info__description">
         <div className="review-info__description__item">
-          <i className="bi bi-play-circle-fill"></i>
-          {formatTime(placeInfo.createdAt)}
+          <i className="bi bi-play-circle-fill"></i> {formatTime(placeInfo.createdAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-stop-circle-fill"></i>
-          {formatTime(placeInfo.completedAt)}
+          <i className="bi bi-stop-circle-fill"></i> {formatTime(placeInfo.completedAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-hourglass-split"></i>
-          {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
+          <i className="bi bi-hourglass-split"></i> {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-chat-square-text-fill"></i>
-          {renderCount(placeInfo)}
+          <i className="bi bi-chat-square-text-fill"></i> {renderCount(placeInfo)}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ReviewInfo
+export default ReviewInfo;

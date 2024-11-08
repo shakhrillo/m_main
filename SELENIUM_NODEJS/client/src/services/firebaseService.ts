@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
 import { auth, firestore } from '../firebaseConfig';
-import { addDoc, collection, limit, orderBy, query, where } from "firebase/firestore";
+import { addDoc, collection, getDoc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 export const login = async (email: string, password: string) => {
@@ -129,4 +129,12 @@ export const getPaymentsQuery = (uid: string) => {
     `users/${uid}/payments`,
   )
   return query(collectionRef, orderBy("created", "desc"))
+}
+
+export const fetchReviews = async (uid: string, place: string | undefined) => {
+  if (!firestore || !place) return [];
+  const reviewsRef = collection(firestore, "users", uid, "reviews", place, "reviews");
+  const snapshot = await getDocs(reviewsRef);
+  const reviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return reviews;
 }
