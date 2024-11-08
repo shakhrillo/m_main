@@ -36,6 +36,8 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
     console.error('Reviews container not found');
     return [];
   }
+  
+  await scrollTopAndBottom(page);
 
   await wait(3000);
 
@@ -84,8 +86,6 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
     const observer = new MutationObserver(logNewNodes);
     observer.observe(document.querySelector('.vyucnb').parentElement.children[8], { childList: true });
   });
-
-  await scrollTopAndBottom(page);
 
   return allElements;
 }

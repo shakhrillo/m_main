@@ -103,8 +103,9 @@ async function main({
     ]);
 
     await clickReviewTab(page);
+    await wait(2000);
     await sortReviews(page, sortBy);
-
+    await wait(2000);
     await scrollAndCollectElements(page, userId, reviewId, limit);
 
     // await tillstorIdJson length exceeds limit
