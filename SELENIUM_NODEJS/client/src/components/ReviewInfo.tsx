@@ -41,28 +41,24 @@ function ReviewInfo() {
     if (!count) {
       count = review.totalReviews
     }
-
-    return <span>{count} reviews</span>
-  }
-
-  function renderStatus(status: string) {
-    switch (status) {
-      case "completed":
-        return <i className="bi-check-lg"></i>
-      case "failed":
-        return <i className="bi-x-lg"></i>
-      case "in-progress":
-        return <i className="bi-arrow-repeat"></i>
-      default:
-        return <i className="bi-question-lg"></i>
-    }
+    return <span>{count} - reviews</span>
   }
 
   function formatTime(date: Timestamp) {
     if (!date || !date.seconds) return ""
 
     const d = new Date(date.seconds * 1000)
-    return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+    return new Date(`${d.toLocaleDateString()} ${d.toLocaleTimeString()}`)
+      .toLocaleString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      })
+      .replace(",", " -")
   }
 
   function spentTime(start: Timestamp, end: Timestamp) {
@@ -86,42 +82,47 @@ function ReviewInfo() {
     <div className="review-info">
       <div className="review-info__header">
         <h5 className="review-info__header__title">
-          <span
+          <i className="bi bi-geo"></i>
+          {/* <span
             className={`review-info__header__title__status review-info__header__title__status--${placeInfo.status}`}
           >
             {renderStatus(placeInfo.status)}
-          </span>
+          </span> */}
           {placeInfo.title}
         </h5>
-        <a
-          href={placeInfo.url}
-          target="_blank"
-          className="btn btn-outline-secondary"
-        >
-          Open in Google Maps
-        </a>
+        <div className="review-info__header__details">
+          <span className={`geo-badge geo-badge--${placeInfo.status}`}>
+            {placeInfo.status === "completed"
+              ? "Done"
+              : placeInfo.status === "failed"
+                ? "Canceled"
+                : "In proggress"}
+          </span>
+          <a
+            href={placeInfo.url}
+            className="btn geo-btn-transparent geo-btn-outline"
+          >
+            <i className="bi bi-google"></i>
+            Open in Google Maps
+          </a>
+        </div>
       </div>
-      <hr />
-      <div className="review-info__details">
-        <div className="review-info__details__info">
-          Extracted reviews:{" "}
-          <span className="review-info__details__info__value">
-            {renderCount(placeInfo)}
-          </span>
+      <div className="review-info__description">
+        <div className="review-info__description__item">
+          <i className="bi bi-play-circle-fill"></i>
+          {formatTime(placeInfo.createdAt)}
         </div>
-        <div className="review-info__details__info">
-          Start time:
-          <span> {formatTime(placeInfo.createdAt)} </span>
+        <div className="review-info__description__item">
+          <i className="bi bi-stop-circle-fill"></i>
+          {formatTime(placeInfo.completedAt)}
         </div>
-        <div className="review-info__details__info">
-          End time:
-          <span> {formatTime(placeInfo.completedAt)} </span>
+        <div className="review-info__description__item">
+          <i className="bi bi-hourglass-split"></i>
+          {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
         </div>
-        <div className="review-info__details__info">
-          Spent time:{" "}
-          <span className="review-info__details__info__value">
-            {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
-          </span>
+        <div className="review-info__description__item">
+          <i className="bi bi-chat-square-text-fill"></i>
+          {renderCount(placeInfo)}
         </div>
       </div>
     </div>

@@ -16,6 +16,9 @@ function SingleReview() {
   const [show, setShow] = useState(false)
   const [placeInfo, setPlaceInfo] = useState({} as any)
 
+  const [reviewToggle, setReviewToggle] = useState(false)
+  const [replayToggle, setReplayToggle] = useState(false)
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -119,166 +122,261 @@ function SingleReview() {
   }
 
   return (
-    <div>
-      <Modal show={show} onHide={handleClose} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title className="view__all-images__carousel-title">
-            All images
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Carousel interval={null}>
-            {selectedImages.map((imageSrc: string, imageId: number) => (
-              <Carousel.Item key={imageId}>
-                <div className="view__all-images__carousel-item">
-                  <img src={imageSrc} alt={`Slide ${imageId}`} className="" />
-                </div>
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <div className="single-reviews">
-        <ReviewInfo />
-
-        {currentReviews.map((review, index) => (
-          <div className="single-reviews__item" key={index}>
-            <div className="single-reviews__item__header">
-              <div className="single-reviews__item__header__user">
-                <span className="single-reviews__item__header__user__icon">
+    <>
+      <div className="single-review">
+        <div className="single-review__wrapper">
+          <div className="single-review__wrapper__header">
+            <ReviewInfo />
+          </div>
+          <div className="single-review__wrapper__body">
+            <div className="single-review__wrapper__body__item">
+              <div className="single-review__wrapper__body__item__header">
+                <span className="single-review__wrapper__body__item__header__icon">
                   <i className="bi bi-person"></i>
                 </span>
-                <div className="single-reviews__item__header__user__info">
+                <div className="single-review__wrapper__body__item__header__user">
                   <a
-                    className="single-reviews__item__header__user__info__name"
-                    href={review.user.href}
+                    className="single-review__wrapper__body__item__header__user__name"
+                    // href={}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {review.user.name || "Anonymous"}
+                    Flower
                   </a>
-                  <span className="single-reviews__item__header__user__info__status">
-                    {review.user.info.length ? review.user.info[0] : ""}
+                  <span className="single-review__wrapper__body__item__header__user__reviews">
+                    1 rewiev
+                    {/*{review.user.info.length ? review.user.info[0] : ""} */}
                   </span>
                 </div>
+                {/* <span className="single-reviews__item__header__info">
+    //             {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
+    //             {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
+    //             {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
+    //             {review.user.info?.[1]?.split(" ")[0] || ""}
+    //           </span> */}
               </div>
-              <span className="single-reviews__item__header__info">
-                {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
-                {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
-                {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
-                {review.user.info?.[1]?.split(" ")[0] || ""}
-              </span>
-            </div>
-            <div className="single-reviews__item__status">
-              <StarRating
-                rating={(review.rating?.match(/(\d+)/)?.[0]
-                  ? parseInt(review.rating.match(/(\d+)/)[0], 10)
-                  : 0
-                ).toString()}
-              />
-              {"|"}
-              <span>
-                Created at: <b>{review.date}</b>
-              </span>
-            </div>
-            <div>
-              <p className="single-reviews__item__review">{review.review}</p>
-              {review.qa.length ? (
-                <ul className="single-reviews__item__qa">
-                  {review.qa.map((qa: string, index: number) => (
-                    <li className="single-reviews__item__qa__item" key={index}>
-                      {" - "}
-                      {qa}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-            <div className="single-reviews__item__photos">
-              {review.imageUrls.length
-                ? review.imageUrls.map((imageUrl: string, index: number) => (
-                    <img
-                      key={index}
-                      src={imageUrl}
-                      alt={`Review ${index}`}
-                      width="100"
-                      onClick={() => {
-                        setSelectedImages(review.imageUrls)
-                        handleShow()
-                      }}
-                      className="single-reviews__item__photos__item"
-                    />
-                  ))
-                : null}
-            </div>
-            {review.response.length ? (
-              <div>
-                <hr />
-                <h6>
-                  <strong>Owner response:</strong>
-                </h6>
-                <span>{review.response}</span>
-                <small>{review.responseTime}</small>
+              <div className="single-review__wrapper__body__item__rating">
+                <StarRating
+                  rating="4"
+                  //  rating={(review.rating?.match(/(\d+)/)?.[0]
+                  //    ? parseInt(review.rating.match(/(\d+)/)[0], 10)
+                  //    : 0
+                  //  ).toString()}
+                />
+                {"|"}
+                <span>
+                  Created at: <b>4 days ago on Google</b>
+                  {/* <b>{review.date}</b> */}
+                </span>
               </div>
-            ) : null}
+              <div className="single-review__wrapper__body__item__content">
+                <div className="single-review__wrapper__body__item__content__header">
+                  Review
+                  <button
+                    onClick={() => setReviewToggle(prev => !prev)}
+                    className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
+                  >
+                    <i className="bi bi-chevron-down"></i>
+                  </button>
+                </div>
+                {reviewToggle && (
+                  <span className="single-review__wrapper__body__item__content__body">
+                    Visualize your workload with an integrated calendar that
+                    syncs all your tasks, meetings, and deadlines. With a clear
+                    timeline, you can easily see what's ahead and adjust your
+                    plans accordingly, helping you manage your time efficiently
+                    and meet your deadlines with ease.
+                  </span>
+                )}
+              </div>
+              <div className="single-review__wrapper__body__item__content">
+                <div className="single-review__wrapper__body__item__content__header">
+                  Replay
+                  <button
+                    onClick={() => setReplayToggle(prev => !prev)}
+                    className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
+                  >
+                    <i className="bi bi-chevron-down"></i>
+                  </button>
+                </div>
+                {replayToggle && (
+                  <span className="single-review__wrapper__body__item__content__body">
+                    Visualize your workload with an integrated calendar that
+                    syncs all your tasks, meetings, and deadlines. With a clear
+                    timeline, you can easily see what's ahead and adjust your
+                    plans accordingly, helping you manage your time efficiently
+                    and meet your deadlines with ease.
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-        ))}
-
-        <Pagination>
-          <Pagination.Prev
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-          />
-
-          {/* Show first page and ellipsis if needed */}
-          <Pagination.Item
-            active={currentPage === 1}
-            onClick={() => paginate(1)}
-          >
-            1
-          </Pagination.Item>
-          {currentPage > 4 && <Pagination.Ellipsis />}
-
-          {/* Show pages around the current page */}
-          {Array.from({ length: 5 }, (_, i) => {
-            const page = currentPage - 2 + i
-            if (page > 1 && page < totalPages) {
-              return (
-                <Pagination.Item
-                  key={page}
-                  active={currentPage === page}
-                  onClick={() => paginate(page)}
-                >
-                  {page}
-                </Pagination.Item>
-              )
-            }
-            return null
-          })}
-
-          {/* Show ellipsis and last page if needed */}
-          {currentPage < totalPages - 3 && <Pagination.Ellipsis />}
-          {totalPages > 1 && (
-            <Pagination.Item
-              active={currentPage === totalPages}
-              onClick={() => paginate(totalPages)}
-            >
-              {totalPages}
-            </Pagination.Item>
-          )}
-
-          <Pagination.Next
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
+        </div>
       </div>
-    </div>
+    </>
+    // <div>
+    //   <Modal show={show} onHide={handleClose} size="lg" centered>
+    //     <Modal.Header closeButton>
+    //       <Modal.Title className="view__all-images__carousel-title">
+    //         All images
+    //       </Modal.Title>
+    //     </Modal.Header>
+    //     <Modal.Body>
+    //       <Carousel interval={null}>
+    //         {selectedImages.map((imageSrc: string, imageId: number) => (
+    //           <Carousel.Item key={imageId}>
+    //             <div className="view__all-images__carousel-item">
+    //               <img src={imageSrc} alt={`Slide ${imageId}`} className="" />
+    //             </div>
+    //           </Carousel.Item>
+    //         ))}
+    //       </Carousel>
+    //     </Modal.Body>
+    //     <Modal.Footer>
+    //       <Button variant="secondary" onClick={handleClose}>
+    //         Close
+    //       </Button>
+    //     </Modal.Footer>
+    //   </Modal>
+    //   <div className="single-reviews">
+    //     <ReviewInfo />
+
+    //     {currentReviews.map((review, index) => (
+    //       <div className="single-reviews__item" key={index}>
+    //         <div className="single-reviews__item__header">
+    //           <div className="single-reviews__item__header__user">
+    //             <span className="single-reviews__item__header__user__icon">
+    //               <i className="bi bi-person"></i>
+    //             </span>
+    //             <div className="single-reviews__item__header__user__info">
+    //               <a
+    //                 className="single-reviews__item__header__user__info__name"
+    //                 href={review.user.href}
+    //                 target="_blank"
+    //                 rel="noreferrer"
+    //               >
+    //                 {review.user.name || "Anonymous"}
+    //               </a>
+    //               <span className="single-reviews__item__header__user__info__status">
+    //                 {review.user.info.length ? review.user.info[0] : ""}
+    //               </span>
+    //             </div>
+    //           </div>
+    //           <span className="single-reviews__item__header__info">
+    //             {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
+    //             {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
+    //             {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
+    //             {review.user.info?.[1]?.split(" ")[0] || ""}
+    //           </span>
+    //         </div>
+    //         <div className="single-reviews__item__status">
+    //           <StarRating
+    //             rating={(review.rating?.match(/(\d+)/)?.[0]
+    //               ? parseInt(review.rating.match(/(\d+)/)[0], 10)
+    //               : 0
+    //             ).toString()}
+    //           />
+    //           {"|"}
+    //           <span>
+    //             Created at: <b>{review.date}</b>
+    //           </span>
+    //         </div>
+    //         <div>
+    //           <p className="single-reviews__item__review">{review.review}</p>
+    //           {review.qa.length ? (
+    //             <ul className="single-reviews__item__qa">
+    //               {review.qa.map((qa: string, index: number) => (
+    //                 <li
+    //                   className="single-reviews__item__qa__item"
+    //                   key={index}
+    //                 >
+    //                   {" - "}
+    //                   {qa}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           ) : null}
+    //         </div>
+    //         <div className="single-reviews__item__photos">
+    //           {review.imageUrls.length
+    //             ? review.imageUrls.map((imageUrl: string, index: number) => (
+    //                 <img
+    //                   key={index}
+    //                   src={imageUrl}
+    //                   alt={`Review ${index}`}
+    //                   width="100"
+    //                   onClick={() => {
+    //                     setSelectedImages(review.imageUrls)
+    //                     handleShow()
+    //                   }}
+    //                   className="single-reviews__item__photos__item"
+    //                 />
+    //               ))
+    //             : null}
+    //         </div>
+    //         {review.response.length ? (
+    //           <div>
+    //             <hr />
+    //             <h6>
+    //               <strong>Owner response:</strong>
+    //             </h6>
+    //             <span>{review.response}</span>
+    //             <small>{review.responseTime}</small>
+    //           </div>
+    //         ) : null}
+    //       </div>
+    //     ))}
+
+    //     <Pagination>
+    //       <Pagination.Prev
+    //         onClick={() => paginate(currentPage - 1)}
+    //         disabled={currentPage === 1}
+    //       />
+
+    //       {/* Show first page and ellipsis if needed */}
+    //       <Pagination.Item
+    //         active={currentPage === 1}
+    //         onClick={() => paginate(1)}
+    //       >
+    //         1
+    //       </Pagination.Item>
+    //       {currentPage > 4 && <Pagination.Ellipsis />}
+
+    //       {/* Show pages around the current page */}
+    //       {Array.from({ length: 5 }, (_, i) => {
+    //         const page = currentPage - 2 + i
+    //         if (page > 1 && page < totalPages) {
+    //           return (
+    //             <Pagination.Item
+    //               key={page}
+    //               active={currentPage === page}
+    //               onClick={() => paginate(page)}
+    //             >
+    //               {page}
+    //             </Pagination.Item>
+    //           )
+    //         }
+    //         return null
+    //       })}
+
+    //       {/* Show ellipsis and last page if needed */}
+    //       {currentPage < totalPages - 3 && <Pagination.Ellipsis />}
+    //       {totalPages > 1 && (
+    //         <Pagination.Item
+    //           active={currentPage === totalPages}
+    //           onClick={() => paginate(totalPages)}
+    //         >
+    //           {totalPages}
+    //         </Pagination.Item>
+    //       )}
+
+    //       <Pagination.Next
+    //         onClick={() => paginate(currentPage + 1)}
+    //         disabled={currentPage === totalPages}
+    //       />
+    //     </Pagination>
+    //   </div>
+    // </div>
   )
 }
 

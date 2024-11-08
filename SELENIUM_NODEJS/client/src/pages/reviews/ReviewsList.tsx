@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { onSnapshot, Timestamp } from "firebase/firestore"
-import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
+import {
+  getReviewsQuery,
+  startExtractGmapReviews,
+} from "../../services/firebaseService"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -11,7 +14,7 @@ const defaultScrap = {
   sortBy: sortBy[1],
   extractImageUrls: false,
   ownerResponse: true,
-  onlyGoogleReviews: false
+  onlyGoogleReviews: false,
 }
 
 function renderCount(review: any) {
@@ -131,27 +134,31 @@ const DashboardTest: React.FC = () => {
   const [canceledData, setCanceledData] = useState<TableBody[]>([])
 
   useEffect(() => {
-    if (!firestore || !user) return;
-  
+    if (!firestore || !user) return
+
     const unsubscribe = onSnapshot(getReviewsQuery(user.uid), querySnapshot => {
       const reviewsData = querySnapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id,
-      }));
-      
-      const inProgress = reviewsData.filter((review: any) => review.status === "in-progress") || [];
-      const done = reviewsData.filter((review: any) => review.status === "completed") || [];
-      const canceled = reviewsData.filter((review: any) => review.status === "failed") || [];
+      }))
+
+      const inProgress =
+        reviewsData.filter((review: any) => review.status === "in-progress") ||
+        []
+      const done =
+        reviewsData.filter((review: any) => review.status === "completed") || []
+      const canceled =
+        reviewsData.filter((review: any) => review.status === "failed") || []
 
       console.log("inProgress", inProgress)
 
-      setInProgressData(inProgress as any[]);
-      setDoneData(done as any[]);
-      setCanceledData(canceled as any[]);
-    });
-  
-    return () => unsubscribe();
-  }, [firestore, user]);
+      setInProgressData(inProgress as any[])
+      setDoneData(done as any[])
+      setCanceledData(canceled as any[])
+    })
+
+    return () => unsubscribe()
+  }, [firestore, user])
 
   async function startScraping(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -178,7 +185,9 @@ const DashboardTest: React.FC = () => {
                   <input
                     name="scrapURl"
                     value={scrap.url}
-                    onChange={(e) => setScrap(prev => ({ ...prev, url: e.target.value }))}
+                    onChange={e =>
+                      setScrap(prev => ({ ...prev, url: e.target.value }))
+                    }
                     placeholder="Place URL"
                     type="text"
                     className="geo-dashboard__input geo-input form-control"
@@ -197,7 +206,12 @@ const DashboardTest: React.FC = () => {
                   <input
                     name="extractLimit"
                     value={scrap.limit}
-                    onChange={(e) => setScrap(prev => ({ ...prev, limit: Number(e.target.value) }))}
+                    onChange={e =>
+                      setScrap(prev => ({
+                        ...prev,
+                        limit: Number(e.target.value),
+                      }))
+                    }
                     placeholder="Extract limit"
                     type="text"
                     className="geo-dashboard__input geo-input form-control"
@@ -216,7 +230,9 @@ const DashboardTest: React.FC = () => {
                   <select
                     name="sortBy"
                     value={scrap.sortBy}
-                    onChange={(e) => setScrap(prev => ({ ...prev, sortBy: e.target.value }))}
+                    onChange={e =>
+                      setScrap(prev => ({ ...prev, sortBy: e.target.value }))
+                    }
                     className="geo-dashboard__input geo-input form-select"
                     id="sortBy"
                   >
@@ -235,7 +251,12 @@ const DashboardTest: React.FC = () => {
                   <div className="geo-dashboard__checkbox-item">
                     <input
                       checked={scrap.extractImageUrls}
-                      onChange={() => setScrap(prev => ({ ...prev, extractImageUrls: !prev.extractImageUrls }))}
+                      onChange={() =>
+                        setScrap(prev => ({
+                          ...prev,
+                          extractImageUrls: !prev.extractImageUrls,
+                        }))
+                      }
                       type="checkbox"
                       className="geo-dashboard__checkbox-input btn-check"
                       id="extraImage"
@@ -251,7 +272,12 @@ const DashboardTest: React.FC = () => {
                   <div className="geo-dashboard__checkbox-item">
                     <input
                       checked={scrap.ownerResponse}
-                      onChange={() => setScrap(prev => ({ ...prev, ownerResponse: !prev.ownerResponse }))}
+                      onChange={() =>
+                        setScrap(prev => ({
+                          ...prev,
+                          ownerResponse: !prev.ownerResponse,
+                        }))
+                      }
                       type="checkbox"
                       className="geo-dashboard__checkbox-input btn-check"
                       id="ownerResponse"
@@ -267,7 +293,12 @@ const DashboardTest: React.FC = () => {
                   <div className="geo-dashboard__checkbox-item">
                     <input
                       checked={scrap.onlyGoogleReviews}
-                      onChange={() => setScrap(prev => ({ ...prev, onlyGoogleReviews: !prev.onlyGoogleReviews }))}
+                      onChange={() =>
+                        setScrap(prev => ({
+                          ...prev,
+                          onlyGoogleReviews: !prev.onlyGoogleReviews,
+                        }))
+                      }
                       type="checkbox"
                       className="geo-dashboard__checkbox-input btn-check"
                       id="onlyGoogleReviews"
@@ -282,7 +313,10 @@ const DashboardTest: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button className="geo-dashboard__start-btn geo-btn-primary btn btn-primary" onClick={startScraping}>
+              <button
+                className="geo-dashboard__start-btn geo-btn-primary btn btn-primary"
+                onClick={startScraping}
+              >
                 <i className="bi bi-play-fill"></i>
                 Start
               </button>
@@ -345,7 +379,7 @@ const DashboardTest: React.FC = () => {
               <Table
                 showTable={canceledTableShow}
                 tableHeader={tableHeader}
-                body={canceledData.map((review: any) => (review as TableBody))}
+                body={canceledData.map((review: any) => review as TableBody)}
               />
             </div>
           </div>
@@ -394,9 +428,9 @@ const DashboardTest: React.FC = () => {
               <Table
                 showTable={inProggressTableShow}
                 tableHeader={tableHeader}
-                body={
-                  inProgressData.map((review: any) => (review as TableBody)).slice(0, 5)
-                }
+                body={inProgressData
+                  .map((review: any) => review as TableBody)
+                  .slice(0, 5)}
               />
             </div>
           </div>
@@ -445,7 +479,9 @@ const DashboardTest: React.FC = () => {
               <Table
                 showTable={doneTableShow}
                 tableHeader={tableHeader}
-                body={doneData.map((review: any) => (review as TableBody)).slice(0, 5)}
+                body={doneData
+                  .map((review: any) => review as TableBody)
+                  .slice(0, 5)}
               />
             </div>
           </div>
@@ -494,9 +530,9 @@ const DashboardTest: React.FC = () => {
               <Table
                 showTable={canceledTableShow}
                 tableHeader={tableHeader}
-                body={
-                  canceledData.map((review: any) => (review as TableBody)).slice(0, 5)
-                }
+                body={canceledData
+                  .map((review: any) => review as TableBody)
+                  .slice(0, 5)}
               />
             </div>
           </div>
@@ -567,9 +603,7 @@ const Table: React.FC<TableInterface> = ({ showTable, tableHeader, body }) => {
             </th>
             <td className="geo-dashboard__body-content__table__row-body">
               <div className="geo-dashboard__body-content__table__row-body__content">
-                <a href="#">
-                  {row.title || row.url}
-                </a>
+                <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>
               </div>
             </td>
             <td className="geo-dashboard__body-content__table__row-body">
