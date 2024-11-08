@@ -510,7 +510,6 @@ const DashboardTest: React.FC = () => {
             </div>
             <div className="geo-dashboard__body-content">
               <Table
-                showTable={canceledTableShow}
                 tableHeader={tableHeader}
                 body={canceledData
                   .map((review: any) => review)
