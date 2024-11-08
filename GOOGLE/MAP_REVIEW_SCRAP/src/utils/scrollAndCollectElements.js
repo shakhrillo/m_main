@@ -84,7 +84,8 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
     }
     
     const observer = new MutationObserver(logNewNodes);
-    observer.observe(document.querySelector('.vyucnb').parentElement.children[8], { childList: true });
+    const parentEl = document.querySelector('.vyucnb').parentElement;
+    observer.observe(parentEl.children[parentEl.children.length - 2], { childList: true });
   });
 
   return allElements;

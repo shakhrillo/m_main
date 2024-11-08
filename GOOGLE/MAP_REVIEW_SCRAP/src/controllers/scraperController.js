@@ -32,11 +32,13 @@ async function puppeteerMutationListener(records, uid, pushId) {
   for (const record of records) {
     await fetchReviewDetails(page, record).then(async (result) => {
       allElements.push(result);
+    }).catch((error) => {
+      console.error('Error fetching review details:', error);
     })
   }
 }
 
-async function waitForArrayGrowth(array, targetLength, timeout = 10000) {
+async function waitForArrayGrowth(array, targetLength, timeout = 60000) {
   let initialLength = array.length;
   let stableDuration = 0;
   const checkInterval = 100; // Check every 100ms
