@@ -2,6 +2,7 @@ import { onSnapshot, Timestamp } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
+import { Table } from "../../components/Table/Table"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -59,18 +60,63 @@ const DashboardTest: React.FC = () => {
   const [viewAll, setViewAll] = useState(false)
 
   const tableHeader = [
-    { text: "#" },
-    { text: "Place", icon: "geo" },
-    { text: "Date", icon: "clock" },
-    { text: "Reviews", icon: "chat-square-text" },
-    { text: "Time", icon: "hourglass-split" },
-    { text: "File format", icon: "file-earmark-zip" },
-    { text: "", icon: "" },
-  ]
+    {
+      text: "#",
+      field: 'index',
+      render: (_: any, rowIndex: number) => rowIndex + 1,
+    },
+    {
+      text: "Place",
+      icon: "geo",
+      field: 'title',
+      render: (row: any) => {
+        return <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>
+      }
+    },
+    {
+      text: "Date",
+      icon: "clock",
+      field: 'createdAt',
+      render: (row: any) => <span>{formatTime(row.createdAt)}</span>,
+    },
+    {
+      text: "Reviews",
+      icon: "chat-square-text",
+      field: 'totalReviews',
+      render: (row: any) => renderCount(row),
+    },
+    {
+      text: "Time",
+      icon: "hourglass-split",
+      field: 'timeSpent',
+      render: (row: any) => spentTime(row.createdAt, row.completedAt),
+    },
+    {
+      text: "File format",
+      icon: "file-earmark-zip",
+      field: 'format',
+      render: () => (
+        <select className="geo-select">
+          <option value="1" selected>JSON</option>
+          <option value="2">CSV</option>
+        </select>
+      ),
+    },
+    {
+      text: "",
+      icon: "",
+      field: 'download',
+      render: () => (
+        <button className="btn btn-sm btn-primary">
+          <i className="bi bi-cloud-download"></i>
+        </button>
+      ),
+    },
+  ];
 
-  const [inProgressData, setInProgressData] = useState<TableBody[]>([])
-  const [doneData, setDoneData] = useState<TableBody[]>([])
-  const [canceledData, setCanceledData] = useState<TableBody[]>([])
+  const [inProgressData, setInProgressData] = useState<any[]>([])
+  const [doneData, setDoneData] = useState<any[]>([])
+  const [canceledData, setCanceledData] = useState<any[]>([])
 
   useEffect(() => {
     if (!firestore || !user) return
@@ -316,9 +362,8 @@ const DashboardTest: React.FC = () => {
             </div>
             <div className="geo-dashboard__body-content">
               <Table
-                showTable={canceledTableShow}
                 tableHeader={tableHeader}
-                body={canceledData.map((review: any) => review as TableBody)}
+                body={canceledData.map((review: any) => review)}
               />
             </div>
           </div>
@@ -365,10 +410,9 @@ const DashboardTest: React.FC = () => {
             </div>
             <div className="geo-dashboard__body-content">
               <Table
-                showTable={inProggressTableShow}
                 tableHeader={tableHeader}
                 body={inProgressData
-                  .map((review: any) => review as TableBody)
+                  .map((review: any) => review)
                   .slice(0, 5)}
               />
             </div>
@@ -416,10 +460,9 @@ const DashboardTest: React.FC = () => {
             </div>
             <div className=" geo-dashboard__body-content">
               <Table
-                showTable={doneTableShow}
                 tableHeader={tableHeader}
                 body={doneData
-                  .map((review: any) => review as TableBody)
+                  .map((review: any) => review)
                   .slice(0, 5)}
               />
             </div>
@@ -470,7 +513,7 @@ const DashboardTest: React.FC = () => {
                 showTable={canceledTableShow}
                 tableHeader={tableHeader}
                 body={canceledData
-                  .map((review: any) => review as TableBody)
+                  .map((review: any) => review)
                   .slice(0, 5)}
               />
             </div>
@@ -483,104 +526,6 @@ const DashboardTest: React.FC = () => {
 }
 
 export default DashboardTest
-
-interface TableHeader {
-  icon?: string
-  text: string
-}
-interface TableBody {
-  title: string
-  completedAt: Timestamp
-  createdAt: Timestamp
-  error: string
-  extractImageUrls: boolean
-  id: string
-  limit: number
-  onlyGoogleReviews: boolean
-  ownerResponse: boolean
-  sortBy: string
-  status: string
-  url: string
-}
-
-interface TableInterface {
-  showTable: boolean
-  tableHeader: TableHeader[]
-  body: TableBody[]
-}
-
-const Table: React.FC<TableInterface> = ({ showTable, tableHeader, body }) => {
-  console.log("showTable", showTable)
-  return (
-    <table
-      className={`${showTable && "d-none"} geo-dashboard__body-content__table table table-bordered`}
-    >
-      <thead>
-        <tr>
-          {tableHeader.map((header, index) => (
-            <th
-              key={header.text} // Use a unique key here if possible
-              className="geo-dashboard__body-content__table-header"
-            >
-              {header.icon ? (
-                <div className="geo-dashboard__body-content__table-header__content">
-                  <i className={`bi bi-${header.icon}`}></i>
-                  {header.text}
-                </div>
-              ) : (
-                header.text
-              )}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {body.map((row, index) => (
-          <tr key={index} className="geo-dashboard__body-content__table__row">
-            <th className="geo-dashboard__body-content__table__row-body">
-              {index + 1}
-            </th>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <div className="geo-dashboard__body-content__table__row-body__content">
-                <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>
-              </div>
-            </td>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <div className="geo-dashboard__body-content__table__row-body__content">
-                {formatTime(row.createdAt)}
-              </div>
-            </td>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <div className="geo-dashboard__body-content__table__row-body__content">
-                {renderCount(row)}
-              </div>
-            </td>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <div className="geo-dashboard__body-content__table__row-body__content">
-                {spentTime(row.createdAt, row.completedAt)}
-              </div>
-            </td>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <div className="geo-dashboard__body-content__table__row-body__content">
-                <select className="geo-select">
-                  <option value="1" selected>
-                    JSON
-                  </option>
-                  <option value="2">CSV</option>
-                </select>
-              </div>
-            </td>
-            <td className="geo-dashboard__body-content__table__row-body">
-              <a href="#">
-                <i className="bi bi-cloud-download"></i>
-              </a>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-}
 
 function Pagination() {
   return (
