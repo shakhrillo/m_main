@@ -410,10 +410,10 @@
 }
 
 .sidebar {
-  background-color: var(--primary-5);
+  // background-color: var(--primary-5);
   width: 100%;
   max-width: 250px;
-  border-right: 1px solid var(--indigo-10);
+  // border-right: 1px solid var(--indigo-10);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -423,38 +423,36 @@
   &__header {
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--indigo-10);
-
-    &__logo {
-      width: 160px;
-    }
   }
+
+  &__logo {
+    width: 160px;
+  }
+
   &__body {
     flex: 1;
+  }
 
-    &__menu {
-      display: flex;
-      flex-direction: column;
-      padding: 1rem 0.5rem;
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+  }
 
-      &__item {
-        display: flex;
-        padding: 4px 8px;
-        border-radius: 6px;
-        text-decoration: none;
-        gap: 1rem;
-        color: var(--primary-60);
-        border: 1px solid transparent;
+  &__menu-item {
+    display: flex;
+    text-decoration: none;
+    gap: 1rem;
+    color: var(--primary-60);
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: 14px;
 
-        &--active {
-          color: var(--primary-90);
-          border: 1px solid var(--indigo-20);
-          background-color: #fff;
-
-          > .sidebar__icon {
-            color: var(--indigo);
-          }
-        }
-      }
+    &--active {
+      color: var(--primary-90);
+      background-color: #fff;
+      font-weight: 600;
+      box-shadow: 0 0 0 1px var(--indigo-10);
     }
   }
 
@@ -465,10 +463,6 @@
 }
 
 .geo-dashboard {
-  border: 1px solid var(--primary-10);
-  border-radius: 14px;
-  background-color: #fff;
-  display: flex;
   flex: 1;
 
   &__view-all {
@@ -573,8 +567,7 @@
     &-wrapper {
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid var(--indigo-10);
-      flex: 1;
+      // border: 1px solid var(--indigo-10);
     }
 
     &-header {
@@ -650,65 +643,6 @@
   }
 
   &__body-content {
-    &__table {
-      margin: 0;
-      border-color: var(--indigo-10);
-
-      &-header {
-        &:not(caption) {
-          background-color: var(--primary-2);
-        }
-        &:first-child {
-          border-left-color: #fff;
-        }
-        &:last-child {
-          border-right-color: #fff;
-        }
-        &:last-child,
-        &:first-child {
-          width: 41px;
-          text-align: center;
-          color: var(--primary);
-          font-weight: 400;
-          font-size: 14px;
-        }
-        font-weight: 500;
-        color: var(--primary);
-        font-size: 12px;
-      }
-      &__row {
-        &:not(caption):last-child {
-          border-bottom-color: white;
-        }
-        &-body {
-          text-align: center;
-          font-weight: 400;
-          font-size: 12px;
-
-          &:not(caption):first-child {
-            border-left-color: #fff;
-          }
-          &:not(caption):last-child {
-            border-right-color: #fff;
-          }
-          &:not(caption),
-          a {
-            color: var(--primary);
-            text-decoration: none;
-          }
-
-          &__content {
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            color: var(--primary);
-            font-size: 12px;
-            display: flex;
-            font-weight: 500;
-          }
-        }
-      }
-    }
   }
 }
 

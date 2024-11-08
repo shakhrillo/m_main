@@ -12,10 +12,10 @@ interface TableBodyProps {
 export const TableBody: React.FC<TableBodyProps> = ({ body, columns }) => (
   <tbody>
     {body.map((row, rowIndex) => (
-      <tr key={rowIndex} className="geo-dashboard__body-content__table__row">
+      <tr key={rowIndex} className="table-custom__data-row">
         {columns.map((column, colIndex) => (
-          <td key={colIndex} className="geo-dashboard__body-content__table__row-body">
-            <div className="geo-dashboard__body-content__table__row-body__content">
+          <td key={colIndex} className="table-custom__data-row__body">
+            <div className="table-custom__data-row__body__cell-content">
               {
                 colIndex === 0 ? (
                   <span className="text-center w-100">

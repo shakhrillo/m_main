@@ -86,8 +86,8 @@ const Dashboard: React.FC = () => {
         </div>
 
         <StatusCard data={inProgressReviews} statusText="In Progress" badgeType="warning" />
-        <StatusCard data={completedReviews} statusText="Done" badgeType="success" />
-        <StatusCard data={failedReviews} statusText="Canceled" badgeType="danger" />
+        {/* <StatusCard data={completedReviews} statusText="Done" badgeType="success" />
+        <StatusCard data={failedReviews} statusText="Canceled" badgeType="danger" /> */}
       </div>
     </div>
   )

@@ -9,7 +9,7 @@ interface TableHeaderProps {
 
 // IconText Component for icon and text rendering
 const IconText: React.FC<{ icon: string; text: string }> = ({ icon, text }) => (
-  <div className="geo-dashboard__body-content__table-header__content">
+  <div className="table-custom__head__content">
     <i className={`bi bi-${icon}`}></i>
     {text}
   </div>
@@ -17,7 +17,7 @@ const IconText: React.FC<{ icon: string; text: string }> = ({ icon, text }) => (
 
 // TableHeaderCell Component for individual header cells
 const TableHeaderCell: React.FC<{ item: TableHeader }> = ({ item }) => (
-  <th className="geo-dashboard__body-content__table-header">
+  <th className="table-custom__head">
     {item.icon ? <IconText icon={item.icon} text={item.text} /> : item.text}
   </th>
 );
