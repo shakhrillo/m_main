@@ -63,9 +63,9 @@ export const ReviewsForm = () => {
   const [scrap, setScrap] = useState({
     url: '',
     limit: 5,
-    sortBy: 'newest',
+    sortBy: 'Most relevant',
     extractImageUrls: false,
-    ownerResponse: false,
+    ownerResponse: true,
     onlyGoogleReviews: false,
   });
 
