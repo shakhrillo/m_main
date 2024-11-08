@@ -160,7 +160,7 @@ const DashboardTest: React.FC = () => {
     if (!firestore || !user) return
     setScrap(defaultScrap)
     console.log("startScraping", scrap)
-    // await startExtractGmapReviews(user.uid, scrap)
+    await startExtractGmapReviews(user.uid, scrap)
   }
 
   return (

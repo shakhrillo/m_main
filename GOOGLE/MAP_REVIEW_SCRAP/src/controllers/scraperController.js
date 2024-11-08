@@ -117,36 +117,46 @@ async function main({
     await page.close();
     await browser.close();
 
-    const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-    const csvFileName = path.join(tempDir, `${reviewId}.csv`);
+    if (allElements.length > 0) {
+
+      const jsonFileName = path.join(tempDir, `${reviewId}.json`);
+      const csvFileName = path.join(tempDir, `${reviewId}.csv`);
+      
+      // Write the JSON file
+      fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
+  
+      // Define the CSV writer
+      const csvWriter = createCsvWriter({
+        path: csvFileName,
+        header: Object.keys(allElements[0]).map(key => ({ id: key, title: key })), // Adjust headers based on your data structure
+      });
+  
+      // Write the CSV file
+      await csvWriter.writeRecords(allElements);
+  
+      await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
+      await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
+  
+      fs.unlinkSync(jsonFileName);
+      fs.unlinkSync(csvFileName);
     
-    // Write the JSON file
-    fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
+      await batchWriteLargeArray(userId, reviewId, allElements);
 
-    // Define the CSV writer
-    const csvWriter = createCsvWriter({
-      path: csvFileName,
-      header: Object.keys(allElements[0]).map(key => ({ id: key, title: key })), // Adjust headers based on your data structure
-    });
-
-    // Write the CSV file
-    await csvWriter.writeRecords(allElements);
-
-    await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-    await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
-
-    fs.unlinkSync(jsonFileName);
-    fs.unlinkSync(csvFileName);
+      await updateReview(userId, reviewId, {
+        status: 'completed',
+        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
+        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
+        totalReviews: allElements.length,
+        completedAt: new Date()
+      });
+    } else {
+      await updateReview(userId, reviewId, {
+        status: 'failed',
+        error: 'No reviews found',
+        completedAt: new Date()
+      });
+    }
   
-    await batchWriteLargeArray(userId, reviewId, allElements);
-  
-    await updateReview(userId, reviewId, {
-      status: 'completed',
-      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
-      totalReviews: allElements.length,
-      completedAt: new Date()
-    });
 
     // const currentUser = await getUser(userId);
     // const currentUserData = currentUser.data();
@@ -161,13 +171,13 @@ async function main({
     //   coinBalance: newCoinBalance
     // });
 
-    await createUserUsage(userId, {
-      title,
-      reviewId,
-      url,
-      createdAt: new Date(),
-      spentCoins: allElements.length
-    });
+    // await createUserUsage(userId, {
+    //   title,
+    //   reviewId,
+    //   url,
+    //   createdAt: new Date(),
+    //   spentCoins: allElements.length
+    // });
 
     const statusDoc = firestore.doc(`status/app`);
     const statusSnapshot = await statusDoc.get();
