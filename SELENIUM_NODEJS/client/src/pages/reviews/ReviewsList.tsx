@@ -34,7 +34,7 @@ const tableColumns = [
       </select>
     )
   },
-  { text: "", field: 'download', render: () => <button className="btn btn-sm btn-primary"><i className="bi bi-cloud-download"></i></button> },
+  { text: "", field: 'download', render: () => <a><i className="bi bi-cloud-download"></i></a> },
 ]
 
 // Reusable StatusCard component
