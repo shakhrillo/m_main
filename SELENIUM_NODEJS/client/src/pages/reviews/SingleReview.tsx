@@ -128,89 +128,82 @@ function SingleReview() {
           <div className="single-review__wrapper__header">
             <ReviewInfo />
           </div>
-          <div className="single-review__wrapper__body">
-            <div className="single-review__wrapper__body__item">
-              <div className="single-review__wrapper__body__item__header">
-                <span className="single-review__wrapper__body__item__header__icon">
-                  <i className="bi bi-person"></i>
-                </span>
-                <div className="single-review__wrapper__body__item__header__user">
-                  <a
-                    className="single-review__wrapper__body__item__header__user__name"
-                    // href={}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Flower
-                  </a>
-                  <span className="single-review__wrapper__body__item__header__user__reviews">
-                    1 rewiev
-                    {/*{review.user.info.length ? review.user.info[0] : ""} */}
-                  </span>
+          {
+            reviews.map((review: any, index: number) => (
+              <div className="single-review__wrapper__body">
+                <div className="single-review__wrapper__body__item">
+                  <div className="single-review__wrapper__body__item__header">
+                    <span className="single-review__wrapper__body__item__header__icon">
+                      <i className="bi bi-person"></i>
+                    </span>
+                    <div className="single-review__wrapper__body__item__header__user">
+                      <a
+                        className="single-review__wrapper__body__item__header__user__name"
+                        // href={}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {review.user.name || "Anonymous"}
+                      </a>
+                      <span className="single-review__wrapper__body__item__header__user__reviews">
+                        {review.user.info.length ? review.user.info[0] : ""}
+                      </span>
+                    </div>
+                    {/* <span className="single-reviews__item__header__info">
+        //             {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
+        //             {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
+        //             {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
+        //             {review.user.info?.[1]?.split(" ")[0] || ""}
+        //           </span> */}
+                  </div>
+                  <div className="single-review__wrapper__body__item__rating">
+                    <StarRating
+                       rating={(review.rating?.match(/(\d+)/)?.[0]
+                         ? parseInt(review.rating.match(/(\d+)/)[0], 10)
+                         : 0
+                       ).toString()}
+                    />
+                    {"|"}
+                    <span>
+                      Created at: <b>{review.date}</b>
+                    </span>
+                  </div>
+                  <div className="single-review__wrapper__body__item__content">
+                    <div className="single-review__wrapper__body__item__content__header">
+                      Review
+                      <button
+                        onClick={() => setReviewToggle(prev => !prev)}
+                        className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
+                      >
+                        <i className="bi bi-chevron-down"></i>
+                      </button>
+                    </div>
+                    {reviewToggle && (
+                      <span className="single-review__wrapper__body__item__content__body">
+                        {review.review || "No review"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="single-review__wrapper__body__item__content">
+                    <div className="single-review__wrapper__body__item__content__header">
+                      Replay
+                      <button
+                        onClick={() => setReplayToggle(prev => !prev)}
+                        className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
+                      >
+                        <i className="bi bi-chevron-down"></i>
+                      </button>
+                    </div>
+                    {replayToggle && (
+                      <span className="single-review__wrapper__body__item__content__body">
+                        {review.response || "No response"}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                {/* <span className="single-reviews__item__header__info">
-    //             {review.user.info?.[2]?.split(" ")[1] || ""} -{" "}
-    //             {review.user.info?.[2]?.split(" ")[0] || ""} |{" "}
-    //             {review.user.info?.[1]?.split(" ")[1] || ""} -{" "}
-    //             {review.user.info?.[1]?.split(" ")[0] || ""}
-    //           </span> */}
               </div>
-              <div className="single-review__wrapper__body__item__rating">
-                <StarRating
-                  rating="4"
-                  //  rating={(review.rating?.match(/(\d+)/)?.[0]
-                  //    ? parseInt(review.rating.match(/(\d+)/)[0], 10)
-                  //    : 0
-                  //  ).toString()}
-                />
-                {"|"}
-                <span>
-                  Created at: <b>4 days ago on Google</b>
-                  {/* <b>{review.date}</b> */}
-                </span>
-              </div>
-              <div className="single-review__wrapper__body__item__content">
-                <div className="single-review__wrapper__body__item__content__header">
-                  Review
-                  <button
-                    onClick={() => setReviewToggle(prev => !prev)}
-                    className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
-                  >
-                    <i className="bi bi-chevron-down"></i>
-                  </button>
-                </div>
-                {reviewToggle && (
-                  <span className="single-review__wrapper__body__item__content__body">
-                    Visualize your workload with an integrated calendar that
-                    syncs all your tasks, meetings, and deadlines. With a clear
-                    timeline, you can easily see what's ahead and adjust your
-                    plans accordingly, helping you manage your time efficiently
-                    and meet your deadlines with ease.
-                  </span>
-                )}
-              </div>
-              <div className="single-review__wrapper__body__item__content">
-                <div className="single-review__wrapper__body__item__content__header">
-                  Replay
-                  <button
-                    onClick={() => setReplayToggle(prev => !prev)}
-                    className="btn single-review__wrapper__body__item__content__header__toggle geo-btn-transparent geo-btn-outline"
-                  >
-                    <i className="bi bi-chevron-down"></i>
-                  </button>
-                </div>
-                {replayToggle && (
-                  <span className="single-review__wrapper__body__item__content__body">
-                    Visualize your workload with an integrated calendar that
-                    syncs all your tasks, meetings, and deadlines. With a clear
-                    timeline, you can easily see what's ahead and adjust your
-                    plans accordingly, helping you manage your time efficiently
-                    and meet your deadlines with ease.
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
+            ))
+          }
         </div>
       </div>
     </>
