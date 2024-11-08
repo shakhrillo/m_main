@@ -6,6 +6,7 @@ const extractReviewText = require("./extractReviewText");
 const getOwnerResponse = require("./getOwnerResponse");
 const { getOwnerResponseTime } = require("./getOwnerResponseTime");
 const getReviewDate = require("./getReviewDate");
+const wait = require("./wait");
 
 const fetchReviewDetails = async (page, reviewId) => {
   try {
@@ -23,7 +24,7 @@ const fetchReviewDetails = async (page, reviewId) => {
         await button.scrollIntoView();
       }
       await button.click(); // Click to expand the review
-      // await wait(40); // Wait for any animations or loading
+      await wait(40); // Wait for any animations or loading
     }
 
     const result =  {

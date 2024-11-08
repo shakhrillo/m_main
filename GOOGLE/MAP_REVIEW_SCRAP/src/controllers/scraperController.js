@@ -4,7 +4,7 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const { uploadFile } = require('../services/storageService');
 const wait = require('../utils/wait');
 const { launchBrowser, openPage } = require('../utils/browser');
-const filterUniqueElements = require('../utils/filter');
+const filterallElements = require('../utils/filter');
 const { batchWriteLargeArray, updateReview } = require('./reviewController');
 const { getUser, updateUser, createUserUsage } = require('./userController');
 const clickReviewTab = require('../utils/clickReviewTab');
@@ -22,22 +22,41 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
 
-const storIdJson = [];
+let allElements = [];
 let page;
 
 async function puppeteerMutationListener(records, uid, pushId) {
   console.log('Record:', records.length);
-  console.log('Saved:', storIdJson.length);
+  console.log('Saved:', allElements.length);
 
   for (const record of records) {
     await fetchReviewDetails(page, record).then(async (result) => {
-      storIdJson.push(result);
-      await updateReview(uid, pushId, {
-        status: 'in-progress',
-        totalReviews: storIdJson.length
-      });
+      allElements.push(result);
     })
   }
+}
+
+async function waitForArrayGrowth(array, targetLength, timeout = 10000) {
+  let initialLength = array.length;
+  let stableDuration = 0;
+  const checkInterval = 100; // Check every 100ms
+  
+  while (array.length <= targetLength) {
+    if (array.length === initialLength) {
+      stableDuration += checkInterval;
+      if (stableDuration >= timeout) {
+        console.log("Timeout exceeded: Array length did not change for 10 seconds.");
+        return;
+      }
+    } else {
+      initialLength = array.length; // Update to new length if it changes
+      stableDuration = 0; // Reset stable duration counter
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, checkInterval));
+  }
+  
+  console.log(`Array length exceeded the target. Current length: ${array.length}`);
 }
 
 async function main({
@@ -85,12 +104,15 @@ async function main({
 
     await clickReviewTab(page);
     await sortReviews(page, sortBy);
-  
-    const allElements = await scrollAndCollectElements(page, userId, reviewId, limit) || [];
-    const uniqueElements = filterUniqueElements(allElements);
-  
-    console.log('Unique elements:', uniqueElements.length);
-    console.log('All elements:', allElements.length);
+
+    await scrollAndCollectElements(page, userId, reviewId, limit);
+
+    // await tillstorIdJson length exceeds limit
+    await waitForArrayGrowth(allElements, limit)
+    // Wait for scroll to finish
+    await wait(5000);
+
+    allElements = allElements.slice(0, limit);
   
     await page.close();
     await browser.close();
@@ -99,17 +121,16 @@ async function main({
     const csvFileName = path.join(tempDir, `${reviewId}.csv`);
     
     // Write the JSON file
-    fs.writeFileSync(jsonFileName, JSON.stringify(uniqueElements, null, 2));
+    fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
 
     // Define the CSV writer
     const csvWriter = createCsvWriter({
       path: csvFileName,
-      header: Object.keys(uniqueElements[0]).map(key => ({ id: key, title: key })), // Adjust headers based on your data structure
-      // Add any additional options if necessary
+      header: Object.keys(allElements[0]).map(key => ({ id: key, title: key })), // Adjust headers based on your data structure
     });
 
     // Write the CSV file
-    await csvWriter.writeRecords(uniqueElements);
+    await csvWriter.writeRecords(allElements);
 
     await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
     await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
@@ -117,28 +138,13 @@ async function main({
     fs.unlinkSync(jsonFileName);
     fs.unlinkSync(csvFileName);
   
-    const messages = uniqueElements.map((element) => {
-      return {
-        id: element.id || '',
-        review: element.review || '',
-        date: element.date || '',
-        response: element.response || '',
-        responseTime: element.responseTime || '',
-        imageUrls: element.imageUrls || [],
-        rating: element.rating || 0,
-        qa: element.qa || [],
-        user: element.user || {},
-        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`
-      };
-    });
-    await batchWriteLargeArray(userId, reviewId, messages);
+    await batchWriteLargeArray(userId, reviewId, allElements);
   
     await updateReview(userId, reviewId, {
       status: 'completed',
       csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
       jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
-      totalReviews: uniqueElements.length,
+      totalReviews: allElements.length,
       completedAt: new Date()
     });
 
@@ -148,7 +154,7 @@ async function main({
     // if (currentUserData && currentUserData.coinBalance) {
     //   coinBalance = currentUserData.coinBalance;
     // }
-    // const newCoinBalance = coinBalance - uniqueElements.length;
+    // const newCoinBalance = coinBalance - allElements.length;
 
     // await updateUser(userId, {
     //   lastScraped: new Date(),
@@ -160,7 +166,7 @@ async function main({
       reviewId,
       url,
       createdAt: new Date(),
-      spentCoins: uniqueElements.length
+      spentCoins: allElements.length
     });
 
     const statusDoc = firestore.doc(`status/app`);
@@ -175,7 +181,7 @@ async function main({
       });
     }
   
-    return uniqueElements;
+    return allElements;
   } catch (error) {
     console.error('Error occurred:', error);
     const statusDoc = firestore.doc(`status/app`);
