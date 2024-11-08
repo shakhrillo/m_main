@@ -16,7 +16,15 @@ export const TableBody: React.FC<TableBodyProps> = ({ body, columns }) => (
         {columns.map((column, colIndex) => (
           <td key={colIndex} className="geo-dashboard__body-content__table__row-body">
             <div className="geo-dashboard__body-content__table__row-body__content">
-              {column.render ? column.render(row) : row[column.field]}
+              {
+                colIndex === 0 ? (
+                  <span className="text-center w-100">
+                    {rowIndex + 1}
+                  </span>
+                ) : (
+                  column.render ? column.render(row) : row[column.field]
+                )
+              }
             </div>
           </td>
         ))}
