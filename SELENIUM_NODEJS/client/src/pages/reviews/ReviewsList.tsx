@@ -1,10 +1,7 @@
+import { onSnapshot, Timestamp } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
-import { onSnapshot, Timestamp } from "firebase/firestore"
-import {
-  getReviewsQuery,
-  startExtractGmapReviews,
-} from "../../services/firebaseService"
+import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -60,64 +57,6 @@ const DashboardTest: React.FC = () => {
   const [canceledShow, setCanceledShow] = useState(false)
 
   const [viewAll, setViewAll] = useState(false)
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target
-  //   setFormData(prev => ({ ...prev, [name]: value }))
-  // }
-
-  const headerInputs = [
-    {
-      label: "Sharable URL",
-      placeholder: "Place URL",
-      value: scrap.url,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-        setScrap(prev => ({ ...prev, url: e.target.value }))
-      },
-      name: "scrapURl",
-    },
-    {
-      label: "Extract limit",
-      placeholder: "Extract limit",
-      value: scrap.limit,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-        setScrap(prev => ({ ...prev, limit: Number(e.target.value) }))
-      },
-      name: "extractLimit",
-    },
-    {
-      label: "Sort by",
-      placeholder: "Sort by",
-      value: scrap.sortBy,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-        setScrap(prev => ({ ...prev, sortBy: e.target.value }))
-      },
-      name: "sortBy",
-    },
-  ]
-
-  // type FilterKey = keyof typeof filters
-
-  // const handleFilterChange = (name: FilterKey) => {
-  //   setFilters(prev => ({ ...prev, [name]: !prev[name] }))
-  // }
-  const headerFilters = [
-    {
-      icon: "bi-image",
-      label: "Extract image urls",
-      name: "extraImage",
-    },
-    {
-      icon: "bi-megaphone",
-      label: "Owner response",
-      name: "ownerResponse",
-    },
-    {
-      icon: "bi-google",
-      label: "Only Google reviews",
-      name: "onlyGoogleReviews",
-    },
-  ]
 
   const tableHeader = [
     { text: "#" },
