@@ -160,55 +160,8 @@ async function main({
       });
     }
   
-
-    // const currentUser = await getUser(userId);
-    // const currentUserData = currentUser.data();
-    // let coinBalance = 0;
-    // if (currentUserData && currentUserData.coinBalance) {
-    //   coinBalance = currentUserData.coinBalance;
-    // }
-    // const newCoinBalance = coinBalance - allElements.length;
-
-    // await updateUser(userId, {
-    //   lastScraped: new Date(),
-    //   coinBalance: newCoinBalance
-    // });
-
-    // await createUserUsage(userId, {
-    //   title,
-    //   reviewId,
-    //   url,
-    //   createdAt: new Date(),
-    //   spentCoins: allElements.length
-    // });
-
-    const statusDoc = firestore.doc(`status/app`);
-    const statusSnapshot = await statusDoc.get();
-    if (!statusSnapshot.exists) {
-      await statusDoc.set({
-        active: false,
-      });
-    } else {
-      statusDoc.update({
-        active: false,
-      });
-    }
-  
     return allElements;
   } catch (error) {
-    console.error('Error occurred:', error);
-    const statusDoc = firestore.doc(`status/app`);
-    const statusSnapshot = await statusDoc.get();
-    if (!statusSnapshot.exists) {
-      await statusDoc.set({
-        active: false,
-      });
-    } else {
-      statusDoc.update({
-        active: false,
-      });
-    }
-
     await updateReview(userId, reviewId, {
       status: 'failed',
       error: error.message,

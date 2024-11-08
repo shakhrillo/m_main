@@ -212,3 +212,67 @@ exports.stripeWebhook = functions.https.onRequest({ raw: true }, async (request,
     return response.sendStatus(500);
   }
 });
+
+// Trigger function on document update
+exports.onReviewCompleted = onDocumentUpdated('users/{userId}/reviews/{reviewId}', async (change, context) => {
+  const { userId, reviewId } = context.params;
+  const updatedReview = change.after.data();
+  const statusDoc = firestore().doc('status/app');
+
+  if (!updatedReview || updatedReview.status !== 'failed') {
+    await statusDoc.set({ active: false }, { merge: true });
+    return;
+  }
+
+  // Check if the document exists and the status is completed
+  if (!updatedReview || updatedReview.status !== 'completed') {
+    return;
+  }
+
+  // Reference to the user document
+  const userRef = firestore().collection('users').doc(userId);
+  const userSnapshot = await userRef.get();
+
+  // Default values for new user
+  let currentCoinBalance = 0;
+
+  // Check if user exists, otherwise set default values
+  if (userSnapshot.exists) {
+    const userData = userSnapshot.data();
+    currentCoinBalance = userData?.coinBalance || 0;
+  } else {
+    // Set default values for new user document
+    await userRef.set({
+      coinBalance: currentCoinBalance,
+      lastScraped: new Date()
+    });
+  }
+
+  // Start a batch operation
+  const batch = firestore().batch();
+
+  // Add a new document to the user's usage subcollection
+  const usageRef = firestore().collection(`users/${userId}/usage`).doc();
+  batch.set(usageRef, {
+    title: updatedReview.title || 'Untitled',      // Handle missing title
+    reviewId,
+    url: updatedReview.url || '',                  // Handle missing URL
+    createdAt: new Date(),
+    spentCoins: updatedReview.totalReviews || 0
+  });
+
+  // Update the user's coin balance and lastScraped timestamp, using set with merge to avoid overwriting other fields
+  batch.set(
+    userRef,
+    {
+      lastScraped: new Date(),
+      coinBalance: FieldValue.increment(-updatedReview.totalReviews || 0)
+    },
+    { merge: true }
+  );
+
+  await statusDoc.set({ active: false }, { merge: true });
+
+  // Commit the batch
+  await batch.commit();
+});
