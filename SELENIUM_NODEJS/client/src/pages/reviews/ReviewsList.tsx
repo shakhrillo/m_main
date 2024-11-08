@@ -1,9 +1,8 @@
 import { onSnapshot, Timestamp } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
+import ReviewsCard from "../../components/reviews-card"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
-import { Table } from "../../components/table"
-import ReviewsCard from "../../components/reviews-card"
 
 const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
 
@@ -110,31 +109,31 @@ const DashboardTest: React.FC = () => {
   const [canceledData, setCanceledData] = useState<any[]>([])
 
   useEffect(() => {
-    if (!firestore || !user) return
-
-    const unsubscribe = onSnapshot(getReviewsQuery(user.uid), querySnapshot => {
-      const reviewsData = querySnapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
-
-      const inProgress =
-        reviewsData.filter((review: any) => review.status === "in-progress") ||
-        []
-      const done =
-        reviewsData.filter((review: any) => review.status === "completed") || []
-      const canceled =
-        reviewsData.filter((review: any) => review.status === "failed") || []
-
-      console.log("inProgress", inProgress)
-
-      setInProgressData(inProgress as any[])
-      setDoneData(done as any[])
-      setCanceledData(canceled as any[])
-    })
-
-    return () => unsubscribe()
-  }, [firestore, user])
+    if (!firestore || !user) return;
+  
+    const fetchReviews = (status: string, setData: any) => {
+      return onSnapshot(
+        getReviewsQuery({ uid: user.uid, status, orderByField: "createdAt", loadLimit: 10 }),
+        querySnapshot => {
+          const reviewsData = querySnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setData(reviewsData);
+        }
+      );
+    };
+  
+    const unsubscribeCompleted = fetchReviews("completed", setDoneData);
+    const unsubscribeInProgress = fetchReviews("in-progress", setInProgressData);
+    const unsubscribeFailed = fetchReviews("failed", setCanceledData);
+  
+    return () => {
+      unsubscribeCompleted();
+      unsubscribeInProgress();
+      unsubscribeFailed();
+    };
+  }, [firestore, user]);  
 
   async function startScraping(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -300,7 +299,7 @@ const DashboardTest: React.FC = () => {
           </form>
         </div>
         <div className="geo-dashboard__view-all">
-          <a
+          {/* <a
             onClick={() => {
               setViewAll(true)
               setInProggressShow(true)
@@ -311,7 +310,7 @@ const DashboardTest: React.FC = () => {
           >
             <i className="bi bi-grid"></i>
             View all
-          </a>
+          </a> */}
         </div>
         
         {

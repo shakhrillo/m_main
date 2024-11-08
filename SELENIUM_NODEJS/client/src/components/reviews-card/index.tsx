@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Table } from "../table";
 
 interface ReviewsCardProps {
   data: any[];
   statusText?: string;
   badgeType?: "warning" | "success" | "error";
-  displayCount?: number;
   tableHeader: any;
 }
 
@@ -13,75 +12,35 @@ const ReviewsCard: React.FC<ReviewsCardProps> = ({
   data,
   statusText = "In Progress",
   badgeType = "warning",
-  displayCount = 5,
   tableHeader,
-}) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [isTableExpanded, setIsTableExpanded] = useState(false);
-
-  const toggleFullScreen = () => {
-    setIsFullScreen((prev) => !prev);
-    setIsTableExpanded(false); // Close expanded view when toggling fullscreen
-  };
-
-  const toggleTableExpanded = () => setIsTableExpanded((prev) => !prev);
-
-  const displayedData = data.slice(0, displayCount);
-
-  return (
-    <div className={`geo-dashboard__body ${isFullScreen ? "geo-dashboard__full-screen" : ""}`}>
-      <div className="geo-dashboard__body-wrapper">
-        <Header
-          dataCount={data.length}
-          statusText={statusText}
-          badgeType={badgeType}
-          isFullScreen={isFullScreen}
-          isTableExpanded={isTableExpanded}
-          onToggleFullScreen={toggleFullScreen}
-          onToggleTableExpanded={toggleTableExpanded}
-        />
-        <div className="geo-dashboard__body-content">
-          <Table tableHeader={tableHeader} body={displayedData} />
-        </div>
+}) => (
+  <div className="geo-dashboard__body">
+    <div className="geo-dashboard__body-wrapper">
+      <Header
+        dataCount={data.length}
+        statusText={statusText}
+        badgeType={badgeType}
+      />
+      <div className="geo-dashboard__body-content">
+        <Table tableHeader={tableHeader} body={data} />
       </div>
-      {/* {isFullScreen && <Pagination />} */}
     </div>
-  );
-};
+  </div>
+);
 
 // Header Component
 interface HeaderProps {
   dataCount: number;
   statusText: string;
   badgeType: "warning" | "success" | "error";
-  isFullScreen: boolean;
-  isTableExpanded: boolean;
-  onToggleFullScreen: () => void;
-  onToggleTableExpanded: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  dataCount,
-  statusText,
-  badgeType,
-  isFullScreen,
-  isTableExpanded,
-  onToggleFullScreen,
-  onToggleTableExpanded,
-}) => (
+const Header: React.FC<HeaderProps> = ({ dataCount, statusText, badgeType }) => (
   <div className="geo-dashboard__body-header">
     <StatusBadge text={statusText} type={badgeType} count={dataCount} />
     <div className="geo-dashboard__progress__btns">
-      {!isFullScreen && (
-        <IconButton
-          icon={`bi-chevron-${isTableExpanded ? "down" : "up"}`}
-          onClick={onToggleTableExpanded}
-        />
-      )}
-      <IconButton
-        icon={`bi-fullscreen${isFullScreen ? "-exit" : ""}`}
-        onClick={onToggleFullScreen}
-      />
+      <IconButton icon="bi-chevron-up" />
+      <IconButton icon="bi-fullscreen-exit" />
     </div>
   </div>
 );
@@ -105,11 +64,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ text, type, count }) => (
 // IconButton Component
 interface IconButtonProps {
   icon: string;
-  onClick: () => void;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon, onClick }) => (
-  <a onClick={onClick} className="geo-dashboard__progress-icon">
+const IconButton: React.FC<IconButtonProps> = ({ icon }) => (
+  <a className="geo-dashboard__progress-icon">
     <i className={`bi ${icon}`}></i>
   </a>
 );

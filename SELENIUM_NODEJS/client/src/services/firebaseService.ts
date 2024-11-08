@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
 import { auth, firestore } from '../firebaseConfig';
-import { addDoc, collection, orderBy, query } from "firebase/firestore";
+import { addDoc, collection, limit, orderBy, query, where } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 export const login = async (email: string, password: string) => {
@@ -90,12 +90,12 @@ export const startExtractGmapReviews = async (
   return docRef.id
 }
 
-export const getReviewsQuery = (uid: string) => {
+export const getReviewsQuery = ({ uid, status, orderByField, loadLimit } : { uid: string, status: string, orderByField: string, loadLimit: number }) => {
   const collectionReviews = collection(
     firestore,
     `users/${uid}/reviews`,
   )
-  const reviewsQuery = query(collectionReviews, orderBy("createdAt", "desc"))
+  const reviewsQuery = query(collectionReviews, where("status", "==", status), orderBy(orderByField, "desc"), limit(loadLimit))
   return reviewsQuery
 }
 
