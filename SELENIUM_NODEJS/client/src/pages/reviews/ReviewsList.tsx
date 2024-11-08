@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { onSnapshot, Timestamp } from "firebase/firestore"
-import { getReviewsQuery } from "../../services/firebaseService"
+import { getReviewsQuery, startExtractGmapReviews } from "../../services/firebaseService"
+
+const sortBy = ["Most Relevant", "Newest", "Lowest rating", "Highest rating"]
+
+const defaultScrap = {
+  url: "",
+  limit: 50,
+  sortBy: sortBy[1],
+  extractImageUrls: false,
+  ownerResponse: true,
+  onlyGoogleReviews: false
+}
 
 function renderCount(review: any) {
   if (!review || !review.extractedReviews)
@@ -37,18 +48,7 @@ function spentTime(start: Timestamp, end: Timestamp) {
 const DashboardTest: React.FC = () => {
   const { firestore, user } = useFirebase()
 
-  // inputs
-  const [formData, setFormData] = useState({
-    scrapURl: "",
-    extractLimit: "",
-    sortBy: "",
-  })
-
-  const [filters, setFilters] = useState({
-    extraImage: false,
-    ownerResponse: true,
-    onlyGoogleReviews: false,
-  })
+  const [scrap, setScrap] = useState(defaultScrap)
 
   const [inProggressTableShow, setInProggressTableShow] = useState(false)
   const [doneTableShow, setDoneTableShow] = useState(false)
@@ -60,55 +60,61 @@ const DashboardTest: React.FC = () => {
 
   const [viewAll, setViewAll] = useState(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target
+  //   setFormData(prev => ({ ...prev, [name]: value }))
+  // }
 
   const headerInputs = [
     {
       label: "Sharable URL",
       placeholder: "Place URL",
-      value: formData.scrapURl,
-      onChange: handleInputChange,
+      value: scrap.url,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setScrap(prev => ({ ...prev, url: e.target.value }))
+      },
       name: "scrapURl",
     },
     {
       label: "Extract limit",
       placeholder: "Extract limit",
-      value: formData.extractLimit,
-      onChange: handleInputChange,
+      value: scrap.limit,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setScrap(prev => ({ ...prev, limit: Number(e.target.value) }))
+      },
       name: "extractLimit",
     },
     {
       label: "Sort by",
       placeholder: "Sort by",
-      value: formData.sortBy,
-      onChange: handleInputChange,
+      value: scrap.sortBy,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setScrap(prev => ({ ...prev, sortBy: e.target.value }))
+      },
       name: "sortBy",
     },
   ]
 
-  type FilterKey = keyof typeof filters
+  // type FilterKey = keyof typeof filters
 
-  const handleFilterChange = (name: FilterKey) => {
-    setFilters(prev => ({ ...prev, [name]: !prev[name] }))
-  }
+  // const handleFilterChange = (name: FilterKey) => {
+  //   setFilters(prev => ({ ...prev, [name]: !prev[name] }))
+  // }
   const headerFilters = [
     {
       icon: "bi-image",
       label: "Extract image urls",
-      name: "extraImage" as FilterKey,
+      name: "extraImage",
     },
     {
       icon: "bi-megaphone",
       label: "Owner response",
-      name: "ownerResponse" as FilterKey,
+      name: "ownerResponse",
     },
     {
       icon: "bi-google",
       label: "Only Google reviews",
-      name: "onlyGoogleReviews" as FilterKey,
+      name: "onlyGoogleReviews",
     },
   ]
 
@@ -149,58 +155,136 @@ const DashboardTest: React.FC = () => {
     return () => unsubscribe();
   }, [firestore, user]);
 
+  async function startScraping(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    if (!firestore || !user) return
+    setScrap(defaultScrap)
+    console.log("startScraping", scrap)
+    // await startExtractGmapReviews(user.uid, scrap)
+  }
+
   return (
     <div className="geo-dashboard">
       <div className="geo-dashboard__wrapper">
         <div className="geo-dashboard__header">
           <form className="geo-dashboard__form">
             <div className="geo-dashboard__row row">
-              {headerInputs.map((input, index) => (
-                <div key={index} className="geo-dashboard__column col">
-                  <div className="geo-dashboard__form-group form-group">
-                    <label
-                      className="geo-dashboard__input-label"
-                      htmlFor={input.name}
-                    >
-                      {input.label}
-                    </label>
-                    <input
-                      name={input.name}
-                      value={input.value}
-                      onChange={input.onChange}
-                      placeholder={input.placeholder}
-                      type="text"
-                      className="geo-dashboard__input geo-input form-control"
-                      id={input.name}
-                    />
-                  </div>
+              <div className="geo-dashboard__column col">
+                <div className="geo-dashboard__form-group form-group">
+                  <label
+                    className="geo-dashboard__input-label"
+                    htmlFor="scrapURl"
+                  >
+                    Sharable URL
+                  </label>
+                  <input
+                    name="scrapURl"
+                    value={scrap.url}
+                    onChange={(e) => setScrap(prev => ({ ...prev, url: e.target.value }))}
+                    placeholder="Place URL"
+                    type="text"
+                    className="geo-dashboard__input geo-input form-control"
+                    id="scrapURl"
+                  />
                 </div>
-              ))}
+              </div>
+              <div className="geo-dashboard__column col">
+                <div className="geo-dashboard__form-group form-group">
+                  <label
+                    className="geo-dashboard__input-label"
+                    htmlFor="extractLimit"
+                  >
+                    Extract limit
+                  </label>
+                  <input
+                    name="extractLimit"
+                    value={scrap.limit}
+                    onChange={(e) => setScrap(prev => ({ ...prev, limit: Number(e.target.value) }))}
+                    placeholder="Extract limit"
+                    type="text"
+                    className="geo-dashboard__input geo-input form-control"
+                    id="extractLimit"
+                  />
+                </div>
+              </div>
+              <div className="geo-dashboard__column col">
+                <div className="geo-dashboard__form-group form-group">
+                  <label
+                    className="geo-dashboard__input-label"
+                    htmlFor="sortBy"
+                  >
+                    Sort by
+                  </label>
+                  <select
+                    name="sortBy"
+                    value={scrap.sortBy}
+                    onChange={(e) => setScrap(prev => ({ ...prev, sortBy: e.target.value }))}
+                    className="geo-dashboard__input geo-input form-select"
+                    id="sortBy"
+                  >
+                    {sortBy.map((sort, index) => (
+                      <option key={index} value={sort}>
+                        {sort}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
             <div className="geo-dashboard__filter">
               <div className="geo-dashboard__form-group form-group">
                 <div className="geo-dashboard__checkbox-group form-group">
-                  {headerFilters.map((filter, index) => (
-                    <div key={index} className="geo-dashboard__checkbox-item">
-                      <input
-                        checked={filters[filter.name]}
-                        onChange={() => handleFilterChange(filter.name)}
-                        type="checkbox"
-                        className="geo-dashboard__checkbox-input btn-check"
-                        id={filter.icon}
-                      />
-                      <label
-                        className="geo-dashboard__checkbox-label btn geo-btn-transparent"
-                        htmlFor={filter.icon}
-                      >
-                        <i className={`bi ${filter.icon}`}></i>
-                        {filter.label}
-                      </label>
-                    </div>
-                  ))}
+                  <div className="geo-dashboard__checkbox-item">
+                    <input
+                      checked={scrap.extractImageUrls}
+                      onChange={() => setScrap(prev => ({ ...prev, extractImageUrls: !prev.extractImageUrls }))}
+                      type="checkbox"
+                      className="geo-dashboard__checkbox-input btn-check"
+                      id="extraImage"
+                    />
+                    <label
+                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
+                      htmlFor="extraImage"
+                    >
+                      <i className="bi bi-image"></i>
+                      Extract image urls
+                    </label>
+                  </div>
+                  <div className="geo-dashboard__checkbox-item">
+                    <input
+                      checked={scrap.ownerResponse}
+                      onChange={() => setScrap(prev => ({ ...prev, ownerResponse: !prev.ownerResponse }))}
+                      type="checkbox"
+                      className="geo-dashboard__checkbox-input btn-check"
+                      id="ownerResponse"
+                    />
+                    <label
+                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
+                      htmlFor="ownerResponse"
+                    >
+                      <i className="bi bi-megaphone"></i>
+                      Owner response
+                    </label>
+                  </div>
+                  <div className="geo-dashboard__checkbox-item">
+                    <input
+                      checked={scrap.onlyGoogleReviews}
+                      onChange={() => setScrap(prev => ({ ...prev, onlyGoogleReviews: !prev.onlyGoogleReviews }))}
+                      type="checkbox"
+                      className="geo-dashboard__checkbox-input btn-check"
+                      id="onlyGoogleReviews"
+                    />
+                    <label
+                      className="geo-dashboard__checkbox-label btn geo-btn-transparent"
+                      htmlFor="onlyGoogleReviews"
+                    >
+                      <i className="bi bi-google"></i>
+                      Only Google reviews
+                    </label>
+                  </div>
                 </div>
               </div>
-              <button className="geo-dashboard__start-btn geo-btn-primary btn btn-primary">
+              <button className="geo-dashboard__start-btn geo-btn-primary btn btn-primary" onClick={startScraping}>
                 <i className="bi bi-play-fill"></i>
                 Start
               </button>
@@ -313,7 +397,7 @@ const DashboardTest: React.FC = () => {
                 showTable={inProggressTableShow}
                 tableHeader={tableHeader}
                 body={
-                  inProgressData.map((review: any) => (review as TableBody)).slice(0, 10)
+                  inProgressData.map((review: any) => (review as TableBody)).slice(0, 5)
                 }
               />
             </div>
@@ -363,7 +447,7 @@ const DashboardTest: React.FC = () => {
               <Table
                 showTable={doneTableShow}
                 tableHeader={tableHeader}
-                body={doneData.map((review: any) => (review as TableBody)).slice(0, 10)}
+                body={doneData.map((review: any) => (review as TableBody)).slice(0, 5)}
               />
             </div>
           </div>
@@ -413,7 +497,7 @@ const DashboardTest: React.FC = () => {
                 showTable={canceledTableShow}
                 tableHeader={tableHeader}
                 body={
-                  canceledData.map((review: any) => (review as TableBody)).slice(0, 10)
+                  canceledData.map((review: any) => (review as TableBody)).slice(0, 5)
                 }
               />
             </div>

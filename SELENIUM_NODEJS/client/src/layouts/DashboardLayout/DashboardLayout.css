@@ -6,12 +6,10 @@
 .dashboard__content {
   display: flex;
   width: 100%;
-  /* width: calc(100% - 250px); */
-  height: 100vh;
-  /* margin-left: 250px; */
+  min-height: 100vh;
   padding: 24px;
   background-color: #f6f6f6;
-  /* overflow-y: scroll; */
+  margin-left: 250px;
 }
 
 .dashboard__sidebar {

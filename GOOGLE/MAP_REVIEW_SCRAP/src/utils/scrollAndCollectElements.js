@@ -15,7 +15,14 @@ const filterUniqueElements = require('./filter');
  * @param {number} [limit=50] - The maximum number of review elements to collect.
  * @returns {Promise<Array>} - A promise that resolves to an array of collected review elements.
  */
+let stopScrol = false;
+function stopScrolling() {
+  console.log('Stop scrolling');
+  stopScrol = true;
+}
 async function scrollAndCollectElements(page, uid, pushId, limit) {
+  page.exposeFunction('stopScrolling', stopScrolling);
+
   const reviewsContainer = await getReviewsContainer(page);
   if (!reviewsContainer) {
     console.error('Reviews container not found');
@@ -46,7 +53,12 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
   await wait(3000);
 
   await page.evaluate(async () => {
+    // let count = 0;
     function logNewNodes(records) {
+      // if (count >= 10) {
+      //   stopScrolling();
+      // }
+
       for (const record of records) {
         // Check if the childlist of the target node has been mutated
         if (record.type === "childList") {
@@ -55,6 +67,8 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
           const addedNodeIds = addedNodes.map(node => node.getAttribute("data-review-id")).filter(Boolean);
           
           puppeteerMutationListener(addedNodeIds, uid, pushId);
+          // count++;
+          stopScrolling();
         }
       }
     }
@@ -71,7 +85,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit) {
       const updatedTimestamp = Date.now();
       const spentInMinutes = (updatedTimestamp - startTimestamp) / 1000 / 60;
 
-      if (completed) {
+      if (completed || stopScrol) {
         isScrollFinished = true;
         console.info('Scrolling completed, all elements collected');
         break;
