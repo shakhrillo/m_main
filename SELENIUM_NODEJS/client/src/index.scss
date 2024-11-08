@@ -1002,19 +1002,19 @@
     width: 100%;
     justify-content: space-between;
 
-    &__text {
-      &__title {
+    &-text {
+      &-title {
         color: var(--primary);
         font-size: 16px;
         font-weight: 600;
         margin: 0;
       }
-      &__subtitle {
+      &-subtitle {
         color: var(--primary-70);
         font-size: 12px;
       }
     }
-    &__btns {
+    &-btns {
       display: flex;
       gap: 0.5rem;
     }
@@ -1028,62 +1028,69 @@
     border-bottom: 1px solid var(--primary-10);
     width: 100%;
 
-    &__header {
+    &-header {
       display: flex;
       gap: 0.5rem;
       align-items: center;
       justify-content: space-between;
       width: 100%;
 
-      &__user {
+      &-user {
         display: flex;
         gap: 0.5rem;
         align-items: center;
 
-        &__avatar {
+        &-avatar {
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          border: 1px solid var(--primary-10);
           display: flex;
           justify-content: center;
           align-items: center;
           background-color: var(--primary-5);
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
         }
-        &__info {
+        &-info {
           display: flex;
           flex-direction: column;
-          &__name {
+          &-name {
             color: var(--primary);
             font-size: 14px;
             font-weight: 500;
           }
-          &__email {
+          &-email {
             color: var(--primary-70);
             font-size: 12px;
           }
         }
       }
     }
-    &__form {
+
+    &-form {
       padding: 1rem;
       width: 100%;
       border-bottom: 1px solid var(--primary-10);
+
       &:last-child {
         border-bottom: 0px;
       }
 
-      &__title {
+      &-title {
         color: var(--primary);
         font-size: 12px;
       }
 
-      &__item {
+      &-item {
         display: flex;
         gap: 1rem;
         width: 100%;
 
-        &__wrapper {
+        &-wrapper {
           display: flex;
           flex-direction: column;
           align-items: start;
@@ -1095,10 +1102,9 @@
   }
 
   &__save {
-    width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 1rem;
-    padding: 1rem;
   }
 }
+

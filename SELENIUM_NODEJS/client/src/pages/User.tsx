@@ -1,28 +1,41 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
 
 const User: React.FC = () => {
   const { user } = useFirebase()
 
-  const [firstName, setFirstName] = useState("Léane")
-  const [lastName, setLastName] = useState("Lejeune")
-  const [email, setEmail] = useState("leane_93@domain.tld")
-  const [password, setPassword] = useState("password123")
-  const [newPassword, setNewPassword] = useState("password1234")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
 
   const [canEdit, setCanEdit] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+
+    if (user.displayName) {
+      const [first, last] = user.displayName.split(" ")
+      setFirstName(first)
+      setLastName(last)
+    }
+
+    setEmail(user.email || "")
+
+  }, [])
 
   return (
     <div className="user">
       <div className="user__wrapper">
         <div className="user__header">
-          <div className="user__header__text">
-            <h5 className="user__header__text__title">Account</h5>
-            <span className="user__header__text__subtitle">
+          <div className="user__header-text">
+            <h5 className="user__header-title">Account</h5>
+            <span className="user__header-subtitle">
               Real-time information and activities of your property
             </span>
           </div>
-          <div className="user__header__btns">
+          <div className="user__header-btns">
             <button
               onClick={() => setCanEdit(prev => !prev)}
               className="btn geo-btn-transparent geo-btn-outline"
@@ -50,31 +63,36 @@ const User: React.FC = () => {
           </div>
         </div>
         <div className="user__body">
-          <div className="user__body__header">
-            <div className="user__body__header__user">
-              <div className="user__body__header__user__avatar">
-                <i className="bi bi-person"></i>
+          <div className="user__body-header">
+            <div className="user__body-header-user">
+              <div className="user__body-header-user-avatar">
+                {
+                  user?.photoURL ? (
+                    <img src={user.photoURL} alt="User avatar" />
+                  ) : (
+                    <i className="bi bi-person"></i>
+                  )
+                }
               </div>
-              <div className="user__body__header__user__info">
-                <span className="user__body__header__user__info__name">
-                  Léane Lejeune
+              <div className="user__body-header-user-info">
+                <span className="user__body-header-user-info-name">
+                  {user?.displayName}
                 </span>
-                <span className="user__body__header__user__info__email">
-                  leane_93@domain.tld
+                <span className="user__body-header-user-info-email">
+                  {user?.email}
                 </span>
               </div>
             </div>
             <button className="btn geo-btn-outline geo-btn-transparent">
               <i className="bi bi-plus-circle"></i>
-              Upload new pictire
+              Upload new picture
             </button>
           </div>
-          {/* <img src="" alt="" /> */}
         </div>
-        <div className="user__body__form">
-          <h6 className="user__body__form__title">Full name</h6>
-          <div className="user__body__form__item row">
-            <div className="user__body__form__item__wrapper col">
+        <div className="user__body-form">
+          <h6 className="user__body-form-title">Full name</h6>
+          <div className="user__body-form-item row">
+            <div className="user__body-form-item-wrapper col">
               <label className="geo-input-label" htmlFor={"firstName"}>
                 First name
               </label>
@@ -89,7 +107,7 @@ const User: React.FC = () => {
                 id={"firstName"}
               />
             </div>
-            <div className="user__body__form__item__wrapper col">
+            <div className="user__body-form-item-wrapper col">
               <label className="geo-input-label" htmlFor={"lastName"}>
                 Last name
               </label>
@@ -106,10 +124,10 @@ const User: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="user__body__form">
-          <h6 className="user__body__form__title">Contact email</h6>
-          <div className="user__body__form__item row">
-            <div className="user__body__form__item__wrapper col">
+        <div className="user__body-form">
+          <h6 className="user__body-form-title">Contact email</h6>
+          <div className="user__body-form-item row">
+            <div className="user__body-form-item-wrapper col">
               <label className="geo-input-label" htmlFor={"email"}>
                 Email
               </label>
@@ -124,7 +142,7 @@ const User: React.FC = () => {
                 id={"email"}
               />
             </div>
-            <div className="user__body__form__item__wrapper col">
+            <div className="user__body-form-item-wrapper col">
               <button className="btn geo-btn-outline geo-btn-transparent">
                 <i className="bi bi-plus-circle"></i>
                 Add another email
@@ -132,10 +150,10 @@ const User: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="user__body__form">
-          <h6 className="user__body__form__title">Password</h6>
-          <div className="user__body__form__item row">
-            <div className="user__body__form__item__wrapper col">
+        <div className="user__body-form">
+          <h6 className="user__body-form-title">Password</h6>
+          <div className="user__body-form-item row">
+            <div className="user__body-form-item-wrapper col">
               <label className="geo-input-label" htmlFor={"currentPassword"}>
                 Current Password
               </label>
@@ -150,7 +168,7 @@ const User: React.FC = () => {
                 id={"currentPassword"}
               />
             </div>
-            <div className="user__body__form__item__wrapper col">
+            <div className="user__body-form-item-wrapper col">
               <label className="geo-input-label" htmlFor={"newPassword"}>
                 New Password
               </label>
@@ -176,34 +194,6 @@ const User: React.FC = () => {
           Cancel
         </button>
       </div>
-      {/* <div className="card-body">
-        <h5 className="card-title">User information</h5>
-        <p>
-          <strong>{user?.email}</strong>
-        </p>
-        <div className="alert alert-info" role="alert">
-          This is a demo project. All the data is stored in a public database.
-        </div>
-        {!user?.emailVerified ? (
-          <div className="alert alert-warning" role="alert">
-            Email is not verified. Please verify your email address.
-          </div>
-        ) : null}
-        <div className="mt-4">
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              if (
-                window.confirm("Are you sure you want to delete your account?")
-              ) {
-                user?.delete()
-              }
-            }}
-          >
-            Delete profile
-          </button>
-        </div>
-      </div> */}
     </div>
   )
 }
