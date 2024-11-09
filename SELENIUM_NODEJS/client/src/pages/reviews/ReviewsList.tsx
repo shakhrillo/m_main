@@ -73,14 +73,18 @@ const Dashboard: React.FC = () => {
   }, [firestore, user])
 
   return (
-    <div className="geo-dashboard">
-      <div className="geo-dashboard__wrapper">
+    <>
+      <h2>
+        Reviews
+      </h2>
+      
+      <div className="card">
         <ReviewsCard
           data={completedReviews}
           tableHeader={tableColumns}
         />
       </div>
-    </div>
+    </>
   )
 }
 

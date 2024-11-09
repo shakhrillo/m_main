@@ -29,7 +29,7 @@ const TableHeaderCell: React.FC<{ item: TableHeader }> = ({ item }) => (
 
 // Main TableHeader Component
 export const TableHeader: React.FC<TableHeaderProps> = ({ header }) => (
-  <thead className="table-custom__head">
+  <thead>
     <tr>
       {header.map((item, index) => <TableHeaderCell key={index} item={item} />)}
     </tr>

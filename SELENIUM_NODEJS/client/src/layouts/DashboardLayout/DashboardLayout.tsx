@@ -1,13 +1,14 @@
 import React from "react"
+import { Outlet } from "react-router-dom"
 import Sidebar from "./Sidebar"
-import MainContent from "./MainContent"
-import "./DashboardLayout.css"
 
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="dashboard">
+    <div className="main">
       <Sidebar />
-      <MainContent />
+      <div className="content">
+        <Outlet />
+      </div>
     </div>
   )
 }

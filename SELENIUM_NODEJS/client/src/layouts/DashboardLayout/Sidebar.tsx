@@ -1,51 +1,42 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import logoImg from "../../assets/images/logo.svg";
+import searchIcon from "../../assets/icons/search.svg";
+import serverBoltIcon from "../../assets/icons/server-bolt.svg";
+import userIcon from "../../assets/icons/user.svg";
+import creditCardIcon from "../../assets/icons/credit-card.svg";
+import settingsIcon from "../../assets/icons/settings.svg";
+import helpIcon from "../../assets/icons/help.svg";
+import logoutIcon from "../../assets/icons/logout.svg";
 
 const navLinks = [
-  { path: "/scrap", icon: "bi-cloud-arrow-up-fill", label: "Scrap" },
-  { path: "/reviews", icon: "bi-search", label: "Scrap Reviews" },
-  { path: "/user", icon: "bi-person-fill", label: "User" },
-  { path: "/payments", icon: "bi-credit-card-fill", label: "Payments" },
-  { path: "/settings", icon: "bi-gear-fill", label: "Settings" },
-  { path: "/help", icon: "bi-question-circle-fill", label: "Help" },
-  // { path: "/auth/logout", icon: "bi-box-arrow-left", label: "Logout" },
+  { path: "/scrap", label: "Scrap", icon: searchIcon },
+  { path: "/reviews", label: "Scrap Reviews", icon: serverBoltIcon },
+  { path: "/user", label: "User", icon: userIcon },
+  { path: "/payments", label: "Payments", icon: creditCardIcon },
+  { path: "/settings", label: "Settings", icon: settingsIcon },
+  { path: "/help", label: "Help", icon: helpIcon },
+  { path: "/auth/logout", label: "Logout", icon: logoutIcon },
 ];
 
-const NavItem: React.FC<{ path: string, icon: string, label: string }> = ({ path, icon, label }) => {
-  return (
-    <NavLink
-      to={path}
-      className={({ isActive }) =>
-        `sidebar__menu-item ${isActive ? "sidebar__menu-item--active" : ""}`
-      }
-    >
-      <i className={`sidebar__icon ${icon}`}></i>
-      <span className="sidebar__label">{label}</span>
-    </NavLink>
-  );
-};
-
-const Sidebar: React.FC = () => {
+const Sidebar = () => {
   return (
     <div className="sidebar">
-      <div className="sidebar__header">
-        <NavLink to="/">
-          <img src={logoImg} alt="logo" className="sidebar__logo" />
-        </NavLink>
-      </div>
+      <NavLink to="/">
+        {/* <img src={logoImg} alt="logo" /> */}
+      </NavLink>
 
-      <div className="sidebar__body">
-        <div className="sidebar__menu">
-          {navLinks.map(({ path, icon, label }) => (
-            <NavItem key={path} path={path} icon={icon} label={label} />
-          ))}
-        </div>
-      </div>
-
-      <div className="sidebar__footer">
-        <NavItem path="/auth/logout" icon="bi-box-arrow-left" label="Logout" />
-      </div>
+      {
+        navLinks.map(({ path, icon, label }, index) => (
+          <NavLink
+            key={index}
+            to={path}
+            className={({ isActive }) => `${isActive ? "active" : ''}`}
+          >
+            {icon && <img src={icon} alt="icon" />}
+            {label}
+          </NavLink>
+        ))
+      }
     </div>
   );
 };

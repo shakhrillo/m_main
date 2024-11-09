@@ -12,12 +12,10 @@ interface TableBodyProps {
 export const TableBody: React.FC<TableBodyProps> = ({ body, columns }) => (
   <tbody>
     {body.map((row, rowIndex) => (
-      <tr key={rowIndex} className="table-custom__data-row">
+      <tr key={rowIndex}>
         {columns.map((column, colIndex) => (
-          <td key={colIndex} className="table-custom__data-row__body">
-            <div className="table-custom__data-row__body__cell-content">
-              { column.render ? column.render(row) : row[column.field] }
-            </div>
+          <td key={colIndex}>
+            { column.render ? column.render(row) : row[column.field] }
           </td>
         ))}
       </tr>

@@ -124,6 +124,23 @@ export const ReviewsForm = () => {
           </a>
         </div>
       </div>
+
+      <div className="step">
+        <small>
+          12 reviews found
+        </small>
+        <h4>Shefah Hotels - Google Maps</h4>
+        <p>Scrape reviews from Shefah Hotels on Google Maps.</p>
+        <div className="step__embed">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d24180.304936300618!2d-74.0045729!3d40.7501878!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25828391bcba1%3A0x7d256e53b0edb357!2sShefah%20Hotels!5e0!3m2!1sen!2s!4v1731183544913!5m2!1sen!2s" width="400" height="400" loading="lazy"></iframe>
+        </div>
+        <button className="btn btn-primary w-100" onClick={() => console.log("Validate URL")}>
+          Continue
+        </button>
+        <button className="btn btn-link w-100" onClick={() => console.log("Change URL")}>
+          Change URL
+        </button>
+      </div>
     </div>
   );
 };
