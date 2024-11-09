@@ -21,31 +21,31 @@ const calculateElapsedTime = (start: Timestamp, end: Timestamp) => {
 
 // Table configuration for Review Cards
 const tableColumns = [
-  { text: "#", field: 'index', render: (_: any, index: number) => index + 1 },
-  { text: "Place", field: 'title', render: (row: any) => <a href={`/reviews/${row.id}`}>{row.title || row.url}</a> },
-  { text: "Date", field: 'createdAt', render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span> },
-  { text: "Reviews", field: 'totalReviews', render: renderReviewCount },
-  { text: "Time", field: 'timeSpent', render: (row: any) => calculateElapsedTime(row.createdAt, row.completedAt) },
+  { 
+      textRender: () => <div className="form-check">
+        <input className="form-check-input" type="checkbox" />
+      </div>,
+      field: 'index', 
+      render: (_: any, index: number) => (
+        <div className="form-check">
+          <input className="form-check-input" type="checkbox" />
+        </div>
+      ),
+  },
+  { text: "Place", field: 'title', render: (row: any) => <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>, icon: "map" },
+  { text: "Date", field: 'createdAt', render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>, icon: "calendar" },
+  { text: "Reviews", field: 'totalReviews', render: renderReviewCount, icon: "list" },
+  { text: "Time", field: 'timeSpent', render: (row: any) => calculateElapsedTime(row.createdAt, row.completedAt), icon: "clock" },
   {
     text: "File Format", field: 'format', render: () => (
       <select className="geo-select">
         <option value="json">JSON</option>
         <option value="csv">CSV</option>
       </select>
-    )
+    ), icon: "file-earmark-text"
   },
-  { text: "", field: 'download', render: () => <a><i className="bi bi-cloud-download"></i></a> },
+  { text: "", field: 'download', render: () => <button className="btn btn-outline-primary"><i className="bi bi-download"></i></button>, icon: "download" },
 ]
-
-// Reusable StatusCard component
-const StatusCard = ({ data, statusText, badgeType }: any) => (
-  <ReviewsCard
-    data={data}
-    statusText={statusText}
-    badgeType={badgeType}
-    tableHeader={tableColumns}
-  />
-)
 
 const Dashboard: React.FC = () => {
   const { firestore, user } = useFirebase()
@@ -79,15 +79,11 @@ const Dashboard: React.FC = () => {
         <div className="geo-dashboard__header">
           <ReviewsForm />
         </div>
-        <div className="geo-dashboard__view-all">
-          <a className="geo-dashboard__view-all__btn">
-            <i className="bi bi-grid"></i> View All
-          </a>
-        </div>
-
-        <StatusCard data={inProgressReviews} statusText="In Progress" badgeType="warning" />
-        {/* <StatusCard data={completedReviews} statusText="Done" badgeType="success" />
-        <StatusCard data={failedReviews} statusText="Canceled" badgeType="danger" /> */}
+        
+        <ReviewsCard
+          data={completedReviews}
+          tableHeader={tableColumns}
+        />
       </div>
     </div>
   )

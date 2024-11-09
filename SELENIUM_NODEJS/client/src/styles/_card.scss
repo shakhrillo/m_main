@@ -1,0 +1,22 @@
+.custom-card {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .75rem 0;
+
+    &-action {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: .5rem;
+
+      button {
+        display: flex;
+        gap: .75rem;
+      }
+    }
+  }
+  &__body {
+  }
+}
