@@ -86,70 +86,133 @@ export const ReviewsForm = () => {
   };
 
   return (
-    <form className="geo-dashboard__form">
-      <div className="geo-dashboard__row row">
-        <div className="geo-dashboard__column col">
-          <TextInput
-            label="Sharable URL"
-            name="url"
-            value={scrap.url}
-            onChange={(e: any) => handleInputChange("url", e.target.value)}
-            placeholder="Place URL"
-          />
+    <div className="search">
+      <form className="search__form">
+        <div className="form-group">
+          <input type="text" placeholder="Search Google Maps" className="form-control" />
         </div>
-        <div className="geo-dashboard__column col">
-          <TextInput
-            label="Extract limit"
-            name="limit"
-            value={scrap.limit}
-            onChange={(e: any) => handleInputChange("limit", Number(e.target.value))}
-            placeholder="Extract limit"
-            type="number"
-          />
+      </form>
+      <div className="search-summary">
+        <div className="search-summary__name">
+          Shearwater Coffee Bar
         </div>
-        <div className="geo-dashboard__column col">
-          <SelectInput
-            label="Sort by"
-            name="sortBy"
-            value={scrap.sortBy}
-            onChange={(e: any) => handleInputChange("sortBy", e.target.value)}
-            options={sortByOptions}
-          />
+        <div className="search-summary__category">
+          <span>Coffee shop</span>
+          <span>·</span>
+          <span>Open</span>
         </div>
-      </div>
-      <div className="geo-dashboard__filter">
-        <div className="geo-dashboard__form-group form-group">
-          <div className="geo-dashboard__checkbox-group form-group">
-            <CheckboxInput
-              label="Extract image urls"
-              id="extractImageUrls"
-              checked={scrap.extractImageUrls}
-              onChange={() => handleCheckboxChange("extractImageUrls")}
-              iconClass="bi bi-image"
-            />
-            <CheckboxInput
-              label="Owner response"
-              id="ownerResponse"
-              checked={scrap.ownerResponse}
-              onChange={() => handleCheckboxChange("ownerResponse")}
-              iconClass="bi bi-megaphone"
-            />
-            <CheckboxInput
-              label="Only Google reviews"
-              id="onlyGoogleReviews"
-              checked={scrap.onlyGoogleReviews}
-              onChange={() => handleCheckboxChange("onlyGoogleReviews")}
-              iconClass="bi bi-google"
-            />
+        <div className="search-summary__location">
+          <span>
+            <i className="bi bi-geo-alt-fill"></i> 1215 Post Rd, Fairfield, CT 06824, United States
+          </span>
+        </div>
+        <div className="search-summary__details">
+          <div className="search-summary__stars">
+            <div className="search-summary__star">
+              <span style={{ width: "40%" }}></span>
+            </div>
+            <div className="search-summary__star">
+              <span style={{ width: "60%" }}></span>
+            </div>
+            <div className="search-summary__star">
+              <span style={{ width: "10%" }}></span>
+            </div>
+            <div className="search-summary__star">
+              <span style={{ width: "70%" }}></span>
+            </div>
+            <div className="search-summary__star">
+              <span style={{ width: "50%" }}></span>
+            </div>
+          </div>
+          <div className="search-summary__rating">
+            <span>4.0</span>
+            <small>1,137 reviews</small>
           </div>
         </div>
-        <button
-          className="geo-dashboard__start-btn geo-btn-primary btn btn-primary"
-          onClick={startScraping}
-        >
-          <i className="bi bi-play-fill"></i> Start
-        </button>
       </div>
-    </form>
+      <hr />
+      <button className="btn btn-primary" onClick={startScraping}>
+        Start Scraping
+      </button>
+
+      {/* <div className="search__logo"></div>
+      <div className="search__container">
+        <div className="form-group">
+          <input type="text" placeholder="Search Google Maps" className="form-control" />
+        </div>
+        <div className="form-group">
+          <input type="number" placeholder="Limit" className="form-control" />
+        </div>
+        <div className="search__buttons">
+          <button className="btn btn-primary">Validate</button>
+          <button className="btn btn-primary" disabled>Start Scraping</button>
+        </div>
+      </div> */}
+    </div>
+    // <form className="geo-dashboard__form">
+    //   <div className="geo-dashboard__row row">
+    //     <div className="geo-dashboard__column col">
+    //       <TextInput
+    //         label="Sharable URL"
+    //         name="url"
+    //         value={scrap.url}
+    //         onChange={(e: any) => handleInputChange("url", e.target.value)}
+    //         placeholder="Place URL"
+    //       />
+    //     </div>
+    //     <div className="geo-dashboard__column col">
+    //       <TextInput
+    //         label="Extract limit"
+    //         name="limit"
+    //         value={scrap.limit}
+    //         onChange={(e: any) => handleInputChange("limit", Number(e.target.value))}
+    //         placeholder="Extract limit"
+    //         type="number"
+    //       />
+    //     </div>
+    //     <div className="geo-dashboard__column col">
+    //       <SelectInput
+    //         label="Sort by"
+    //         name="sortBy"
+    //         value={scrap.sortBy}
+    //         onChange={(e: any) => handleInputChange("sortBy", e.target.value)}
+    //         options={sortByOptions}
+    //       />
+    //     </div>
+    //   </div>
+    //   <div className="geo-dashboard__filter">
+    //     <div className="geo-dashboard__form-group form-group">
+    //       <div className="geo-dashboard__checkbox-group form-group">
+    //         <CheckboxInput
+    //           label="Extract image urls"
+    //           id="extractImageUrls"
+    //           checked={scrap.extractImageUrls}
+    //           onChange={() => handleCheckboxChange("extractImageUrls")}
+    //           iconClass="bi bi-image"
+    //         />
+    //         <CheckboxInput
+    //           label="Owner response"
+    //           id="ownerResponse"
+    //           checked={scrap.ownerResponse}
+    //           onChange={() => handleCheckboxChange("ownerResponse")}
+    //           iconClass="bi bi-megaphone"
+    //         />
+    //         <CheckboxInput
+    //           label="Only Google reviews"
+    //           id="onlyGoogleReviews"
+    //           checked={scrap.onlyGoogleReviews}
+    //           onChange={() => handleCheckboxChange("onlyGoogleReviews")}
+    //           iconClass="bi bi-google"
+    //         />
+    //       </div>
+    //     </div>
+    //     <button
+    //       className="geo-dashboard__start-btn geo-btn-primary btn btn-primary"
+    //       onClick={startScraping}
+    //     >
+    //       <i className="bi bi-play-fill"></i> Start
+    //     </button>
+    //   </div>
+    // </form>
   );
 };

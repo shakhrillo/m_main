@@ -76,10 +76,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="geo-dashboard">
       <div className="geo-dashboard__wrapper">
-        <div className="geo-dashboard__header">
-          <ReviewsForm />
-        </div>
-        
+        <ReviewsForm />
         <ReviewsCard
           data={completedReviews}
           tableHeader={tableColumns}
