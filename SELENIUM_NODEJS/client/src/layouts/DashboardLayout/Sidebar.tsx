@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import logoImg from "../../assets/images/logo.svg";
 
 const navLinks = [
+  { path: "/scrap", icon: "bi-cloud-arrow-up-fill", label: "Scrap" },
   { path: "/reviews", icon: "bi-search", label: "Scrap Reviews" },
   { path: "/user", icon: "bi-person-fill", label: "User" },
   { path: "/payments", icon: "bi-credit-card-fill", label: "Payments" },
