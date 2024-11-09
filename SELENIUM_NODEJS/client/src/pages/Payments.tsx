@@ -109,46 +109,56 @@ function Payments() {
               Your transactions
             </span>
           </div>
-          <table className={"payments__history__table table table-bordered"}>
-            <thead>
-              <th className="payments__history__header">
-                <div className="payments__history__header__text">#</div>
-              </th>
-              <th className="payments__history__header">
-                <div className="payments__history__header__text">Price</div>
-              </th>
-              <th className="payments__history__header">
-                <div className="payments__history__header__text">Status</div>
-              </th>
-              <th className="payments__history__header">
-                <div className="payments__history__header__text">Date</div>
-              </th>
-            </thead>
-            <tbody>
-              <tr className="">
-                <th className="">1</th>
-                <td className="">
-                  <div className="">
-                    <a href="#">
-                      <b>20 USD</b>
-                    </a>
-                  </div>
-                </td>
-                <td className="">
-                  <div className="">
-                    <span className="geo-badge geo-badge--completed">
-                      <b>Success</b>
-                    </span>
-                  </div>
-                </td>
-                <td className="">
-                  <div className="">
-                    <b>4 November 2024 - 1:55:10 AM</b>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="payments__history__table__wrapper">
+            <table className={"payments__history__table table table-bordered"}>
+              <thead>
+                <th className="payments__history__header">#</th>
+                <th className="payments__history__header">Price</th>
+                <th className="payments__history__header">Status</th>
+                <th className="payments__history__header">Date</th>
+              </thead>
+              <tbody>
+                <tr className="payments__history__body__row">
+                  <th className="payments__history__body">1</th>
+                  <td className="payments__history__body">
+                    <b>20 USD</b>
+                  </td>
+                  <td className="payments__history__body">
+                    <div className="payments__history__body__wrapper">
+                      <span className="geo-badge geo-badge--completed">
+                        <b>Success</b>
+                      </span>
+                      {/* <span className="geo-badge geo-badge--in-progress">
+                        <b>In progress</b>
+                      </span>
+                      <span className="geo-badge geo-badge--failed">
+                        <b>Canceled</b>
+                      </span> */}
+                    </div>
+                  </td>
+                  <td className="payments__history__body">
+                    4 November 2024 - 1:55:10 AM
+                  </td>
+                </tr>
+                <tr className="payments__history__body__row">
+                  <th className="payments__history__body">1</th>
+                  <td className="payments__history__body">
+                    <b>20 USD</b>
+                  </td>
+                  <td className="payments__history__body">
+                    <div className="payments__history__body__wrapper">
+                      <span className="geo-badge geo-badge--completed">
+                        <b>Success</b>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="payments__history__body">
+                    4 November 2024 - 1:55:10 AM
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       {/* <div className="card">

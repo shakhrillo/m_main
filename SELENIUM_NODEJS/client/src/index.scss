@@ -1169,26 +1169,57 @@
         color: var(--primary);
       }
     }
-
-    &__table {
+    &__table__wrapper {
+      border-radius: 16px;
+      border: 1px solid var(--indigo-10);
+      overflow: hidden;
       margin-top: 20px;
-
-      &:not(caption) > * > * {
-        color: var(--primary);
-      }
+    }
+    &__table {
+      border-top-color: white;
+      margin-bottom: 0;
     }
 
     &__header {
       color: var(--primary-90);
+      align-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 6px 12px;
+
+      &:first-child {
+        width: 34px;
+        text-align: center;
+      }
       &__text {
         color: var(--primary-90);
         font-size: 14px;
         font-weight: 500;
       }
     }
+
+    &__body {
+      &:not(caption) {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--primary);
+      }
+      &:first-child {
+        text-align: center;
+        border-left-color: #fff;
+      }
+      &:last-child {
+        border-right-color: #fff;
+      }
+      &__wrapper {
+        display: flex;
+      }
+      &__row:last-child {
+        border-bottom-color: #fff;
+      }
+    }
   }
 }
-
 
 @import "./styles/card";
 @import "./styles/table";
