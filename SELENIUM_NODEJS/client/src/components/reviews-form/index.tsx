@@ -87,67 +87,48 @@ export const ReviewsForm = () => {
 
   return (
     <div className="search">
-      <form className="search__form">
-        <div className="form-group">
-          <input type="text" placeholder="Search Google Maps" className="form-control" />
-        </div>
-      </form>
-      <div className="search-summary">
-        <div className="search-summary__name">
-          Shearwater Coffee Bar
-        </div>
-        <div className="search-summary__category">
-          <span>Coffee shop</span>
-          <span>·</span>
-          <span>Open</span>
-        </div>
-        <div className="search-summary__location">
-          <span>
-            <i className="bi bi-geo-alt-fill"></i> 1215 Post Rd, Fairfield, CT 06824, United States
-          </span>
-        </div>
-        <div className="search-summary__details">
-          <div className="search-summary__stars">
-            <div className="search-summary__star">
-              <span style={{ width: "40%" }}></span>
-            </div>
-            <div className="search-summary__star">
-              <span style={{ width: "60%" }}></span>
-            </div>
-            <div className="search-summary__star">
-              <span style={{ width: "10%" }}></span>
-            </div>
-            <div className="search-summary__star">
-              <span style={{ width: "70%" }}></span>
-            </div>
-            <div className="search-summary__star">
-              <span style={{ width: "50%" }}></span>
-            </div>
+
+      <div className="steps">
+        <div className="step">
+          <div className="step__number">
+            1/3
           </div>
-          <div className="search-summary__rating">
-            <span>4.0</span>
-            <small>1,137 reviews</small>
+          <div className="step__text">
+            <h4>Google Maps Place sharable URL</h4>
+            <p>Enter the URL of the Google Maps place you want to scrape reviews from.</p>
+          </div>
+          <div className="step__form">
+            <div className="form-group">
+              <input type="text" className="form-control" placeholder="https://goo.gl/maps/..." />
+            </div>
+            <button className="btn btn-primary">
+              Validate
+            </button>
+          </div>
+          <div className="step__hint">
+            <i className="bi bi-info-circle-fill"></i>
+            You can find the sharable URL by clicking the "Share" button on the Google Maps place page.
+          </div>
+        </div>
+        <div className="step">
+          <div className="step__number">
+            2
+          </div>
+          <div className="step__text">
+            <h4>Extract reviews</h4>
+            <p>Click the button below to start extracting reviews from the Google Maps place.</p>
+          </div>
+        </div>
+        <div className="step">
+          <div className="step__number">
+            3
+          </div>
+          <div className="step__text">
+            <h4>Download reviews</h4>
+            <p>Download the extracted reviews in CSV format.</p>
           </div>
         </div>
       </div>
-      <hr />
-      <button className="btn btn-primary" onClick={startScraping}>
-        Start Scraping
-      </button>
-
-      {/* <div className="search__logo"></div>
-      <div className="search__container">
-        <div className="form-group">
-          <input type="text" placeholder="Search Google Maps" className="form-control" />
-        </div>
-        <div className="form-group">
-          <input type="number" placeholder="Limit" className="form-control" />
-        </div>
-        <div className="search__buttons">
-          <button className="btn btn-primary">Validate</button>
-          <button className="btn btn-primary" disabled>Start Scraping</button>
-        </div>
-      </div> */}
     </div>
     // <form className="geo-dashboard__form">
     //   <div className="geo-dashboard__row row">
