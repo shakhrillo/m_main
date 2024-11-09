@@ -1,7 +1,6 @@
 import { onSnapshot, Timestamp } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import ReviewsCard from "../../components/reviews-card"
-import { ReviewsForm } from "../../components/reviews-form"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery } from "../../services/firebaseService"
 
@@ -76,7 +75,6 @@ const Dashboard: React.FC = () => {
   return (
     <div className="geo-dashboard">
       <div className="geo-dashboard__wrapper">
-        <ReviewsForm />
         <ReviewsCard
           data={completedReviews}
           tableHeader={tableColumns}
