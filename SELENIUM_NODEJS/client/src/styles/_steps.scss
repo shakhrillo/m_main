@@ -76,11 +76,28 @@
         &:first-child::before {
           left: 0;
         }
-        &:last-child::after {
+        &:first-child.active::before {
+          width: 50%;
+        }
+        &:last-child::before {
+          width: 150%;
+        }
+
+        &.active::after {
           width: 15px;
           height: 15px;
           background-color: #fff;
           border: 1px solid var(--primary);
+        }
+
+        &.active ~ .step-progress__step {
+          color: var(--primary-10);
+          &::before {
+            background-color: var(--primary-10);
+          }
+          &::after {
+            background-color: var(--primary-10);
+          }
         }
       }
 

@@ -88,7 +88,7 @@ export const ReviewsForm = () => {
   return (
     <div className="steps">
       <div className="step-progress">
-        <div className="step-progress__step active">
+        <div className="step-progress__step">
           <div className="step-progress__text">
             Validate URL
           </div>
@@ -98,7 +98,7 @@ export const ReviewsForm = () => {
             Review scraping
           </div>
         </div>
-        <div className="step-progress__step active">
+        <div className="step-progress__step">
           <div className="step-progress__text">
             Start scraping
           </div>
