@@ -21,15 +21,9 @@ const calculateElapsedTime = (start: Timestamp, end: Timestamp) => {
 // Table configuration for Review Cards
 const tableColumns = [
   { 
-      textRender: () => <div className="form-check">
-        <input className="form-check-input" type="checkbox" />
-      </div>,
+      textRender: () => <input type="checkbox" />,
       field: 'index', 
-      render: (_: any, index: number) => (
-        <div className="form-check">
-          <input className="form-check-input" type="checkbox" />
-        </div>
-      ),
+      render: (_: any, index: number) => <input type="checkbox" />,
   },
   { text: "Place", field: 'title', render: (row: any) => <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>, icon: "map" },
   { text: "Date", field: 'createdAt', render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>, icon: "calendar" },
@@ -37,13 +31,13 @@ const tableColumns = [
   { text: "Time", field: 'timeSpent', render: (row: any) => calculateElapsedTime(row.createdAt, row.completedAt), icon: "clock" },
   {
     text: "File Format", field: 'format', render: () => (
-      <select className="geo-select">
+      <select>
         <option value="json">JSON</option>
         <option value="csv">CSV</option>
       </select>
     ), icon: "file-earmark-text"
   },
-  { text: "", field: 'download', render: () => <button className="btn btn-outline-primary"><i className="bi bi-download"></i></button>, icon: "download" },
+  { text: "", field: 'download', render: () => <button>Download</button>, icon: "download" },
 ]
 
 const Dashboard: React.FC = () => {

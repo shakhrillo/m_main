@@ -33,6 +33,28 @@ img, picture { max-width: 100%; display: block; }
 
 input, button, textarea, select { font: inherit; }
 
+button {
+  transition: .15s cubic-bezier(.4,0,.2,1);
+  font-weight: 600;
+  padding: .5rem 1rem;
+  font-size: .875rem;
+  background-color: #fff;
+  border-radius: 6px;
+  white-space: nowrap;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+}
+
+select {
+  padding: .5rem 1rem;
+  font-size: .875rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
 textarea:not([rows]) { min-height: 10em; }
 
 table {
@@ -46,6 +68,11 @@ th, td {
   padding: .75rem 1.25rem;
   font-size: .875rem;
   line-height: 1.25rem;
+  text-align: left;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e2e8f0;
+  text-transform: capitalize;
 }
 
 th {
@@ -56,5 +83,4 @@ th {
 
 td {
   text-overflow: ellipsis;
-  text-transform: capitalize;
 }
