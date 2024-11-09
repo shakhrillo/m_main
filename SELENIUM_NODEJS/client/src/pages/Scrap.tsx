@@ -74,8 +74,13 @@ const Scrap: React.FC = () => {
   }, [firestore, user])
 
   return (
-    <div className="page">
-      <ReviewsForm />
+    <div>
+      <h2>
+        Scrap
+      </h2>
+      <div className="card">
+        <ReviewsForm />
+      </div>
     </div>
   )
 }

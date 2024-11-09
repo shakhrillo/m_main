@@ -86,61 +86,39 @@ export const ReviewsForm = () => {
   };
 
   return (
-    <div className="steps">
-      <div className="step-progress">
-        <div className="step-progress__step">
-          <div className="step-progress__text">
+    <div>
+      <div className="progress">
+        <div className="progress__step">
+          <div className="progress__text">
             Validate URL
           </div>
         </div>
-        <div className="step-progress__step active">
-          <div className="step-progress__text">
+        <div className="progress__step active">
+          <div className="progress__text">
             Review scraping
           </div>
         </div>
-        <div className="step-progress__step">
-          <div className="step-progress__text">
+        <div className="progress__step">
+          <div className="progress__text">
             Start scraping
           </div>
         </div>
       </div>
+      <h3>Review Scraping</h3>
+      <p>
+        Enter the URL of the place you want to scrape reviews from.
+      </p>
+      <a href="https://www.google.com/maps" target="_blank" rel="noreferrer">
+        Learn more
+      </a>
+      <form action="">
+        <label htmlFor="url">URL</label>
+        <input type="text" id="url" name="url" value={scrap.url} onChange={(e) => handleInputChange("url", e.target.value)} placeholder="https://www.google.com/maps/place/..." />
 
-      <div className="step">
-        <h4>Google Maps Place sharable URL</h4>
-        <p>Enter the URL of the Google Maps place you want to scrape reviews from.</p>
-        <div className="step__form">
-          <div className="form-group">
-            <label>Place URL</label>
-            <input type="text" className="form-control" placeholder="https://goo.gl/maps/..." />
-          </div>
-          <button className="btn btn-primary">
-            Validate
-          </button>
-        </div>
-        <div className="step__hint">
-          <i className="bi bi-info-circle-fill"></i>
-          <a href="https://support.google.com/maps/answer/144361?co=GENIE.Platform%3DDesktop&hl=en" target="_blank" rel="noreferrer">
-            You can find the sharable URL by clicking the "Share" button on the Google Maps place page.
-          </a>
-        </div>
-      </div>
-
-      <div className="step">
-        <small>
-          12 reviews found
-        </small>
-        <h4>Shefah Hotels - Google Maps</h4>
-        <p>Scrape reviews from Shefah Hotels on Google Maps.</p>
-        <div className="step__embed">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d24180.304936300618!2d-74.0045729!3d40.7501878!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25828391bcba1%3A0x7d256e53b0edb357!2sShefah%20Hotels!5e0!3m2!1sen!2s!4v1731183544913!5m2!1sen!2s" width="400" height="400" loading="lazy"></iframe>
-        </div>
-        <button className="btn btn-primary w-100" onClick={() => console.log("Validate URL")}>
-          Continue
+        <button onClick={startScraping} className="primary">
+          Start Scraping
         </button>
-        <button className="btn btn-link w-100" onClick={() => console.log("Change URL")}>
-          Change URL
-        </button>
-      </div>
+      </form>
     </div>
   );
 };
