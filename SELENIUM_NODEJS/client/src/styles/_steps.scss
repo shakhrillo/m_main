@@ -1,43 +1,120 @@
 .steps {
   display: flex;
   flex-direction: column;
-  // border: 1px solid #e0e0e0;
-  // border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
 
   .step {
-    display: none;
+    width: 400px;
+
+    &-progress {
+      display: flex;
+      position: absolute;
+      width: 100%;
+      height: 80px;
+      top: 0;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        height: 5px;
+        width: 100%;
+        background-color: var(--primary-10);
+        border-radius: 4px;
+        transition: width 0.5s;
+      }
+      &__text {
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        top: calc(50% - 32px);
+        transform: translateX(-50%);
+        margin-left: 8px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      &__step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--primary);
+        position: relative;
+        width: 100%;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: -50%;
+          transform: translateY(-50%);
+          height: 2px;
+          width: 100%;
+          background-color: var(--primary);
+          z-index: 1;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 50%;
+          height: 10px;
+          width: 10px;
+          background-color: var(--primary);
+          border: 1px solid #fff;
+          border-radius: 50%;
+          z-index: 2;
+        }
+
+        &:first-child::before {
+          left: 0;
+        }
+        &:last-child::after {
+          width: 15px;
+          height: 15px;
+          background-color: #fff;
+          border: 1px solid var(--primary);
+        }
+      }
+
+      &__circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #999;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
 
     &:first-child {
       display: block;
     }
 
-    &__number {
-      font-size: 14px;
-      color: #999;
-    }
-
-    &__text {
-      color: #999;
-    }
-
     &__form {
-      max-width: 400px;
       display: flex;
       flex-direction: column;
       margin-top: 20px;
       gap: 10px;
+      background-color: #eee;
+      padding: 20px;
+      border-radius: 6px;
     }
 
     &__hint {
       display: flex;
       font-size: 12px;
-      color: #999;
       margin-top: 10px;
       gap: 5px;
-
-      &__icon {
-        color: #999;
-      }
     }
   }
 }

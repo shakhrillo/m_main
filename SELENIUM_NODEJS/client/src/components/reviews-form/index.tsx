@@ -86,114 +86,44 @@ export const ReviewsForm = () => {
   };
 
   return (
-    <div className="search">
-
-      <div className="steps">
-        <div className="step">
-          <div className="step__number">
-            1/3
-          </div>
-          <div className="step__text">
-            <h4>Google Maps Place sharable URL</h4>
-            <p>Enter the URL of the Google Maps place you want to scrape reviews from.</p>
-          </div>
-          <div className="step__form">
-            <div className="form-group">
-              <input type="text" className="form-control" placeholder="https://goo.gl/maps/..." />
-            </div>
-            <button className="btn btn-primary">
-              Validate
-            </button>
-          </div>
-          <div className="step__hint">
-            <i className="bi bi-info-circle-fill"></i>
-            You can find the sharable URL by clicking the "Share" button on the Google Maps place page.
+    <div className="steps">
+      <div className="step-progress">
+        <div className="step-progress__step active">
+          <div className="step-progress__text">
+            Validate URL
           </div>
         </div>
-        <div className="step">
-          <div className="step__number">
-            2
-          </div>
-          <div className="step__text">
-            <h4>Extract reviews</h4>
-            <p>Click the button below to start extracting reviews from the Google Maps place.</p>
+        <div className="step-progress__step active">
+          <div className="step-progress__text">
+            Review scraping
           </div>
         </div>
-        <div className="step">
-          <div className="step__number">
-            3
-          </div>
-          <div className="step__text">
-            <h4>Download reviews</h4>
-            <p>Download the extracted reviews in CSV format.</p>
+        <div className="step-progress__step active">
+          <div className="step-progress__text">
+            Start scraping
           </div>
         </div>
       </div>
+
+      <div className="step">
+        <h4>Google Maps Place sharable URL</h4>
+        <p>Enter the URL of the Google Maps place you want to scrape reviews from.</p>
+        <div className="step__form">
+          <div className="form-group">
+            <label>Place URL</label>
+            <input type="text" className="form-control" placeholder="https://goo.gl/maps/..." />
+          </div>
+          <button className="btn btn-primary">
+            Validate
+          </button>
+        </div>
+        <div className="step__hint">
+          <i className="bi bi-info-circle-fill"></i>
+          <a href="https://support.google.com/maps/answer/144361?co=GENIE.Platform%3DDesktop&hl=en" target="_blank" rel="noreferrer">
+            You can find the sharable URL by clicking the "Share" button on the Google Maps place page.
+          </a>
+        </div>
+      </div>
     </div>
-    // <form className="geo-dashboard__form">
-    //   <div className="geo-dashboard__row row">
-    //     <div className="geo-dashboard__column col">
-    //       <TextInput
-    //         label="Sharable URL"
-    //         name="url"
-    //         value={scrap.url}
-    //         onChange={(e: any) => handleInputChange("url", e.target.value)}
-    //         placeholder="Place URL"
-    //       />
-    //     </div>
-    //     <div className="geo-dashboard__column col">
-    //       <TextInput
-    //         label="Extract limit"
-    //         name="limit"
-    //         value={scrap.limit}
-    //         onChange={(e: any) => handleInputChange("limit", Number(e.target.value))}
-    //         placeholder="Extract limit"
-    //         type="number"
-    //       />
-    //     </div>
-    //     <div className="geo-dashboard__column col">
-    //       <SelectInput
-    //         label="Sort by"
-    //         name="sortBy"
-    //         value={scrap.sortBy}
-    //         onChange={(e: any) => handleInputChange("sortBy", e.target.value)}
-    //         options={sortByOptions}
-    //       />
-    //     </div>
-    //   </div>
-    //   <div className="geo-dashboard__filter">
-    //     <div className="geo-dashboard__form-group form-group">
-    //       <div className="geo-dashboard__checkbox-group form-group">
-    //         <CheckboxInput
-    //           label="Extract image urls"
-    //           id="extractImageUrls"
-    //           checked={scrap.extractImageUrls}
-    //           onChange={() => handleCheckboxChange("extractImageUrls")}
-    //           iconClass="bi bi-image"
-    //         />
-    //         <CheckboxInput
-    //           label="Owner response"
-    //           id="ownerResponse"
-    //           checked={scrap.ownerResponse}
-    //           onChange={() => handleCheckboxChange("ownerResponse")}
-    //           iconClass="bi bi-megaphone"
-    //         />
-    //         <CheckboxInput
-    //           label="Only Google reviews"
-    //           id="onlyGoogleReviews"
-    //           checked={scrap.onlyGoogleReviews}
-    //           onChange={() => handleCheckboxChange("onlyGoogleReviews")}
-    //           iconClass="bi bi-google"
-    //         />
-    //       </div>
-    //     </div>
-    //     <button
-    //       className="geo-dashboard__start-btn geo-btn-primary btn btn-primary"
-    //       onClick={startScraping}
-    //     >
-    //       <i className="bi bi-play-fill"></i> Start
-    //     </button>
-    //   </div>
-    // </form>
   );
 };

@@ -18,6 +18,7 @@ import ReviewsList from "../pages/reviews/ReviewsList"
 import SingleReview from "../pages/reviews/SingleReview"
 import Settings from "../pages/Settings"
 import User from "../pages/User"
+import Scrap from "../pages/Scrap"
 
 const reviewsRoutes = {
   path: "reviews",
@@ -34,6 +35,7 @@ const dashboardRoutes = {
   children: [
     { path: "", element: <Navigate to={"reviews"} replace /> },
     reviewsRoutes,
+    { path: "scrap", element: <Scrap /> },
     { path: "user", element: <User /> },
     { path: "settings", element: <Settings /> },
     { path: "help", element: <Help /> },
