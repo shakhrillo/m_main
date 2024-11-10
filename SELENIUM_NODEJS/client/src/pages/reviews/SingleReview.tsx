@@ -36,16 +36,29 @@ function SingleReview() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="single-review">
-      <div className="single-review__wrapper">
-        <div className="single-review__header">
-          <ReviewInfo />
-        </div>
+    <div>
+      <h2>
+        Single Review
+      </h2>
+      <div className="card">
+        <ReviewInfo />
+        <br />
+        
         {reviews.map((review) => (
           <ReviewCard review={review} key={review.id} />
         ))}
       </div>
     </div>
+    // <div className="single-review">
+    //   <div className="single-review__wrapper">
+    //     <div className="single-review__header">
+    //       <ReviewInfo />
+    //     </div>
+    //     {reviews.map((review) => (
+    //       <ReviewCard review={review} key={review.id} />
+    //     ))}
+    //   </div>
+    // </div>
   );
 }
 
