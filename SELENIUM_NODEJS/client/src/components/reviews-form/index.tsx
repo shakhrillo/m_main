@@ -111,48 +111,66 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <>
-            <h3>Review Scraping</h3>
-            <p>Enter the URL to scrape reviews from.</p>
-            <a
-              href="https://www.google.com/maps"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Learn more
-            </a>
-            <form onSubmit={handleGetInfo}>
-              <label htmlFor="url">URL</label>
+          <div className="review-form">
+            <h1>Which reviews would you like to scrape?</h1>
+            <p>
+              Enter the URL of the place from which you would like to scrape
+              reviews, or you can{" "}
+              <a
+                href="https://www.google.com/maps"
+                target="_blank"
+                rel="noreferrer"
+              >
+                search for a place
+              </a>{" "}
+              on Google Maps and copy the shareable link.
+            </p>
+
+            <form onSubmit={handleGetInfo} className="form">
+              <label htmlFor="url">
+                URL <span className="required">*</span>
+              </label>
               <input
                 type="text"
                 id="url"
                 value={scrap.url}
                 onChange={e => handleInputChange("url", e.target.value)}
-                placeholder="https://www.google.com/maps/place/..."
+                placeholder="https://maps.app.goo.gl/..."
                 disabled={loading}
               />
-              <button
-                className="primary"
-                type="submit"
-                disabled={loading || !isUrlValid}
-              >
-                Validate URL
-              </button>
-              <small>
-                Example URL:{" "}
-                <code style={{ display: "block" }}>
-                  https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
-                </code>
-              </small>
+              <div className="form__hint">
+                <small>
+                  Example URL:{" "}
+                  <code style={{ display: "block", marginTop: "0.5rem" }}>
+                    https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
+                  </code>
+                </small>
+              </div>
+              <div className="form__actions">
+                <button
+                  className="primary"
+                  type="submit"
+                  disabled={loading || !isUrlValid}
+                >
+                  Validate URL
+                </button>
+              </div>
             </form>
-          </>
+            <p>
+              Each review scraping process may take between 15 to 60 seconds.
+            </p>
+            <p>
+              Reviews are not chargeable. Charges will apply once the scraping
+              process begins.
+            </p>
+          </div>
         )
       case 1:
         return (
-          <>
+          <div className="review-form">
             {!info.title || loading ? (
               <>
-                <h3>Loading...</h3>
+                <h1>Loading...</h1>
                 <p>
                   The process may take between 15 to 60 seconds. If it takes too
                   long, please try again.
@@ -160,45 +178,65 @@ export const ReviewsForm = () => {
               </>
             ) : (
               <>
-                <h3>{info.title}</h3>
-                <p>
-                  {info.rating} - {info.reviews}
-                </p>
-                <p>{info.website}</p>
-                <p>{info.phone}</p>
-                <p>{info.address}</p>
-                <button
-                  className="primary"
-                  onClick={() => setStep(2)}
-                  disabled={loading || !info.title}
-                >
-                  Confirm
-                </button>
-                <button
-                  className="secondary"
-                  onClick={() => setStep(0)}
-                  disabled={loading || !info.title}
-                >
-                  Cancel
-                </button>
+                <h1>
+                  {info.title} ({info.rating})
+                </h1>
+                <ul>
+                  <li>{info.reviews}</li>
+                  <li>{info.address}</li>
+                  <li>{info.phone}</li>
+                  <li>{info.website}</li>
+                </ul>
+                <form className="form">
+                  <div className="form__actions">
+                    <button
+                      className="secondary"
+                      onClick={() => setStep(0)}
+                      disabled={loading || !info.title}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="primary"
+                      onClick={() => setStep(2)}
+                      disabled={loading || !info.title}
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </form>
               </>
             )}
-          </>
+          </div>
         )
       case 2:
         return (
-          <>
-            <h3>Configuration</h3>
-            <p>Ensure information is correct before starting.</p>
-            <form onSubmit={handleStartScraping}>
-              <label htmlFor="limit">Limit</label>
+          <div className="review-form">
+            <h1>
+              {info.title} ({info.rating})
+            </h1>
+            <p>
+              You can now start scraping reviews. Please select the options
+              below.
+            </p>
+            <form className="form" onSubmit={handleStartScraping}>
+              <label htmlFor="limit">
+                Limit
+                <span className="required">*</span>
+              </label>
               <input
-                disabled={loading}
+                disabled={true}
                 type="number"
                 id="limit"
                 value={scrap.limit}
                 onChange={e => handleInputChange("limit", e.target.value)}
               />
+              <small className="form__hint">
+                Available reviews: {info.reviews}
+                <br />
+                <strong>Limit</strong> is the number of reviews you would like
+                to scrape. The maximum limit is 1000.
+              </small>
 
               <label htmlFor="sortBy">Sort by</label>
               <select
@@ -247,18 +285,20 @@ export const ReviewsForm = () => {
                 Only Google reviews
               </label>
 
-              <button className="primary" type="submit" disabled={loading}>
-                Start Scraping
-              </button>
-              <button
-                className="secondary"
-                onClick={() => setStep(1)}
-                disabled={loading}
-              >
-                Back
-              </button>
+              <div className="form__actions">
+                <button
+                  className="secondary"
+                  onClick={() => setStep(0)}
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+                <button className="primary" type="submit" disabled={loading}>
+                  Start Scraping
+                </button>
+              </div>
             </form>
-          </>
+          </div>
         )
       default:
         return null

@@ -1,10 +1,9 @@
-import
-  {
-    createBrowserRouter,
-    Navigate,
-    Outlet,
-    RouterProvider,
-  } from "react-router-dom"
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom"
 import PrivateRoute from "../components/PrivateRoute"
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout"
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout"
@@ -51,7 +50,7 @@ const authRoutes = {
     { path: "login", element: <Login /> },
     { path: "logout", element: <Logout /> },
     { path: "reset-password", element: <ResetPassword /> },
-  ]
+  ],
 }
 
 const router = createBrowserRouter([
