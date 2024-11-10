@@ -55,6 +55,8 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     await page.close();
     await browser.close();
   } catch (error) {
+    await page.close();
+    await browser.close();
     console.error("Error in main:", error);
   }
 
