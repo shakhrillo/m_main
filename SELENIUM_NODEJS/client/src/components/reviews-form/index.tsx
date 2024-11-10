@@ -2,64 +2,25 @@ import { useState } from "react";
 import { startExtractGmapReviews } from "../../services/firebaseService";
 import { useFirebase } from "../../contexts/FirebaseProvider";
 
-// Reusable TextInput component
-const TextInput = ({ label, name, value, onChange, placeholder, type = "text" }: { label: string, name: string, value: string | number, onChange: any, placeholder: string, type?: string }) => (
-  <div className="geo-dashboard__form-group form-group">
-    <label className="geo-dashboard__input-label" htmlFor={name}>
-      {label}
-    </label>
-    <input
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      type={type}
-      className="geo-dashboard__input geo-input form-control"
-      id={name}
-    />
-  </div>
-);
-
-// Reusable SelectInput component
-const SelectInput = ({ label, name, value, onChange, options } : { label: string, name: string, value: string, onChange: any, options: string[] }) => (
-  <div className="geo-dashboard__form-group form-group">
-    <label className="geo-dashboard__input-label" htmlFor={name}>
-      {label}
-    </label>
-    <select
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="geo-dashboard__input geo-input form-select"
-      id={name}
-    >
-      {options.map((option, index) => (
-        <option key={index} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-);
-
-// Reusable CheckboxInput component
-const CheckboxInput = ({ label, id, checked, onChange, iconClass } : { label: string, id: string, checked: boolean, onChange: any, iconClass: string }) => (
-  <div className="geo-dashboard__checkbox-item">
-    <input
-      checked={checked}
-      onChange={onChange}
-      type="checkbox"
-      className="geo-dashboard__checkbox-input btn-check"
-      id={id}
-    />
-    <label className="geo-dashboard__checkbox-label btn geo-btn-transparent" htmlFor={id}>
-      <i className={iconClass}></i> {label}
-    </label>
-  </div>
-);
+const steps = [
+  {
+    title: "Validate URL",
+    description: "Enter the URL of the place you want to scrape reviews from.",
+  },
+  {
+    title: "Review scraping",
+    description: "Review scraping is in progress. Please wait.",
+  },
+  {
+    title: "Start scraping",
+    description: "Review scraping has been completed. You can now download the reviews.",
+  },
+];
 
 export const ReviewsForm = () => {
   const { user } = useFirebase()
+  const [step, setStep] = useState(1);
+
   const [scrap, setScrap] = useState({
     url: '',
     limit: 5,
@@ -88,37 +49,107 @@ export const ReviewsForm = () => {
   return (
     <div>
       <div className="progress">
-        <div className="progress__step">
-          <div className="progress__text">
-            Validate URL
-          </div>
-        </div>
-        <div className="progress__step active">
-          <div className="progress__text">
-            Review scraping
-          </div>
-        </div>
-        <div className="progress__step">
-          <div className="progress__text">
-            Start scraping
-          </div>
-        </div>
+        {
+          steps.map((s, i) => (
+            <div key={i} className={`progress__step ${i === step ? 'active' : ''}`} onClick={() => setStep(i)}>
+              <div className="progress__text">
+                {s.title}
+              </div>
+            </div>
+          ))
+        }
       </div>
-      <h3>Review Scraping</h3>
-      <p>
-        Enter the URL of the place you want to scrape reviews from.
-      </p>
-      <a href="https://www.google.com/maps" target="_blank" rel="noreferrer">
-        Learn more
-      </a>
-      <form action="">
-        <label htmlFor="url">URL</label>
-        <input type="text" id="url" name="url" value={scrap.url} onChange={(e) => handleInputChange("url", e.target.value)} placeholder="https://www.google.com/maps/place/..." />
+      {
+        step === 0 ? (
+          <div>
+            <h3>Review Scraping</h3>
+            <p>
+              Enter the URL of the place you want to scrape reviews from.
+            </p>
+            <a href="https://www.google.com/maps" target="_blank" rel="noreferrer">
+              Learn more
+            </a>
+            <form>
+              <label htmlFor="url">URL</label>
+              <input type="text" id="url" name="url" value={scrap.url} onChange={(e) => handleInputChange("url", e.target.value)} placeholder="https://www.google.com/maps/place/..." />
 
-        <button onClick={startScraping} className="primary">
-          Start Scraping
-        </button>
-      </form>
+              <button className="primary" onClick={(e) => setStep(1)} type="button">
+                Validate URL
+              </button>
+            </form>
+          </div>
+        ) : null
+      }
+      {
+        step === 1 ? (
+          <div>
+            <h3>
+              Shefah Hotels
+            </h3>
+            <p>
+              184 reviews and 89 photos
+            </p>
+            <p>
+              315 29th St, Union City, NJ 07087, United States
+            </p>
+            <br />
+            <button className="primary" onClick={(e) => setStep(2)} type="button">
+              Confirm
+            </button>
+            <button className="secondary" onClick={(e) => setStep(0)} type="button">
+              Cancel
+            </button>
+          </div>
+        ) : null
+      }
+      {
+        step === 2 ? (
+          <div>
+            <h3>
+              Configuration
+            </h3>
+            <p>
+              Make sure the following information is correct before starting the scraping process.
+            </p>
+
+            <form>
+              <label htmlFor="limit">Limit</label>
+              <input type="number" id="limit" name="limit" value={scrap.limit} onChange={(e) => handleInputChange("limit", e.target.value)} placeholder="5" />
+
+              <label htmlFor="sortBy">Sort by</label>
+              <select id="sortBy" name="sortBy" value={scrap.sortBy} onChange={(e) => handleInputChange("sortBy", e.target.value)}>
+                {
+                  sortByOptions.map((option, i) => (
+                    <option key={i} value={option}>{option}</option>
+                  ))
+                }
+              </select>
+
+              <label htmlFor="extractImageUrls">Extract image URLs</label>
+              <input type="checkbox" id="extractImageUrls" name="extractImageUrls" checked={scrap.extractImageUrls} onChange={() => handleCheckboxChange("extractImageUrls")} />
+
+              <label htmlFor="ownerResponse">Owner response</label>
+              <input type="checkbox" id="ownerResponse" name="ownerResponse" checked={scrap.ownerResponse} onChange={() => handleCheckboxChange("ownerResponse")} />
+
+              <label htmlFor="onlyGoogleReviews">Only Google reviews</label>
+              <input type="checkbox" id="onlyGoogleReviews" name="onlyGoogleReviews" checked={scrap.onlyGoogleReviews} onChange={() => handleCheckboxChange("onlyGoogleReviews")} />
+
+              <br />
+
+              <button className="primary" onClick={startScraping} type="button">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v16l13 -8z" /></svg>
+                Start Scraping
+              </button>
+
+              <br />
+
+              <button className="secondary" onClick={(e) => setStep(1)} type="button">
+                Back
+              </button>
+            </form>
+          </div>
+        ) : null
+      }
     </div>
   );
 };
