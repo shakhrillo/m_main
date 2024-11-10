@@ -1,7 +1,10 @@
-import { TableHeader } from "./TableHeader";
-import { TableBody } from "./Tablebody";
+import { TableHeader } from "./TableHeader"
+import { TableBody } from "./Tablebody"
 
-export const Table: React.FC<{ tableHeader: any; body: any[] }> = ({ tableHeader, body }) => {
+export const Table: React.FC<{ tableHeader: any; body: any[] }> = ({
+  tableHeader,
+  body,
+}) => {
   return (
     <table>
       <TableHeader header={tableHeader} />

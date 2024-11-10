@@ -1,35 +1,35 @@
-import { doc, onSnapshot, Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useFirebase } from "../contexts/FirebaseProvider";
+import { doc, onSnapshot, Timestamp } from "firebase/firestore"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { useFirebase } from "../contexts/FirebaseProvider"
 
 function ReviewInfo() {
-  const { place } = useParams();
-  const { firestore, user } = useFirebase();
-  const [placeInfo, setPlaceInfo] = useState<any>({});
+  const { place } = useParams()
+  const { firestore, user } = useFirebase()
+  const [placeInfo, setPlaceInfo] = useState<any>({})
 
   useEffect(() => {
-    if (!firestore || !place || !user) return;
+    if (!firestore || !place || !user) return
 
-    const reviewInfoDoc = doc(firestore, "users", user.uid, "reviews", place);
+    const reviewInfoDoc = doc(firestore, "users", user.uid, "reviews", place)
 
-    const unsubscribe = onSnapshot(reviewInfoDoc, (doc) => {
+    const unsubscribe = onSnapshot(reviewInfoDoc, doc => {
       if (doc.exists()) {
-        setPlaceInfo({ ...doc.data(), id: doc.id });
+        setPlaceInfo({ ...doc.data(), id: doc.id })
       }
-    });
+    })
 
-    return () => unsubscribe();
-  }, [firestore, user, place]);
+    return () => unsubscribe()
+  }, [firestore, user, place])
 
   const renderCount = (review: any) => {
-    const count = review?.extractedReviews || review?.totalReviews || 0;
-    return <span>{count} - reviews</span>;
-  };
+    const count = review?.extractedReviews || review?.totalReviews || 0
+    return <span>{count} - reviews</span>
+  }
 
   const formatTime = (date: Timestamp) => {
-    if (!date?.seconds) return "";
-    const d = new Date(date.seconds * 1000);
+    if (!date?.seconds) return ""
+    const d = new Date(date.seconds * 1000)
     return new Date(`${d.toLocaleDateString()} ${d.toLocaleTimeString()}`)
       .toLocaleString("en-US", {
         day: "numeric",
@@ -40,17 +40,17 @@ function ReviewInfo() {
         second: "2-digit",
         hour12: true,
       })
-      .replace(",", " -");
-  };
+      .replace(",", " -")
+  }
 
   const spentTime = (start: Timestamp, end: Timestamp) => {
-    if (!start || !end) return "";
-    const diff = end.seconds - start.seconds;
+    if (!start || !end) return ""
+    const diff = end.seconds - start.seconds
 
-    if (diff < 60) return `${diff} seconds`;
-    if (diff < 3600) return `${Math.floor(diff / 60)} minutes`;
-    return `${Math.floor(diff / 3600)} hours`;
-  };
+    if (diff < 60) return `${diff} seconds`
+    if (diff < 3600) return `${Math.floor(diff / 60)} minutes`
+    return `${Math.floor(diff / 3600)} hours`
+  }
 
   return (
     <div className="review-info">
@@ -64,8 +64,8 @@ function ReviewInfo() {
             {placeInfo.status === "completed"
               ? "Done"
               : placeInfo.status === "failed"
-              ? "Canceled"
-              : "In progress"}
+                ? "Canceled"
+                : "In progress"}
           </span>
           <a
             href={placeInfo.url}
@@ -80,20 +80,24 @@ function ReviewInfo() {
 
       <div className="review-info__description">
         <div className="review-info__description__item">
-          <i className="bi bi-play-circle-fill"></i> {formatTime(placeInfo.createdAt)}
+          <i className="bi bi-play-circle-fill"></i>{" "}
+          {formatTime(placeInfo.createdAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-stop-circle-fill"></i> {formatTime(placeInfo.completedAt)}
+          <i className="bi bi-stop-circle-fill"></i>{" "}
+          {formatTime(placeInfo.completedAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-hourglass-split"></i> {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
+          <i className="bi bi-hourglass-split"></i>{" "}
+          {spentTime(placeInfo.createdAt, placeInfo.completedAt)}
         </div>
         <div className="review-info__description__item">
-          <i className="bi bi-chat-square-text-fill"></i> {renderCount(placeInfo)}
+          <i className="bi bi-chat-square-text-fill"></i>{" "}
+          {renderCount(placeInfo)}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ReviewInfo;
+export default ReviewInfo

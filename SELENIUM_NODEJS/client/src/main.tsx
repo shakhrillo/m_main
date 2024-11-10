@@ -11,7 +11,7 @@ if (container) {
   root.render(
     <FirebaseProvider>
       <App />
-    </FirebaseProvider>
+    </FirebaseProvider>,
   )
 } else {
   throw new Error(

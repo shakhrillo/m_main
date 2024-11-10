@@ -10,7 +10,7 @@
   height: 80px;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
@@ -43,7 +43,7 @@
 
     &::before,
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
