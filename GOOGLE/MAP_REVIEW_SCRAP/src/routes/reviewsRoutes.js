@@ -10,7 +10,7 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/info", authenticateToken, async (req, res) => {
-  const data = scrapInfo(req.data);
+  const data = await scrapInfo(req.data);
   console.log("Data:", data);
   res.json(data);
 });
