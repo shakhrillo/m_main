@@ -10,6 +10,12 @@ const wait = require("./wait");
 
 const fetchReviewDetails = async (page, reviewId) => {
   try {
+    let isPageOpen = page.isClosed();
+    if (isPageOpen) {
+      console.log("The page has been closed, stopping further actions.");
+      return {};
+    }
+
     const reviewElement = await page.$(`.jftiEf[data-review-id="${reviewId}"]`);
     const buttons = await reviewElement.$$(`
       button[data-review-id="${reviewId}"][jsaction*="review.expandReview"],
@@ -27,7 +33,13 @@ const fetchReviewDetails = async (page, reviewId) => {
       await wait(40); // Wait for any animations or loading
     }
 
-    const result =  {
+    isPageOpen = page.isClosed();
+    if (isPageOpen) {
+      console.log("The page has been closed, stopping further actions.");
+      return {};
+    }
+
+    const result = {
       id: reviewId,
       // element: reviewElement,
       review: await extractReviewText(reviewElement),
@@ -37,12 +49,12 @@ const fetchReviewDetails = async (page, reviewId) => {
       imageUrls: await extractImageUrlsFromButtons(page, reviewId),
       rating: await extractReviewRating(reviewElement, reviewId),
       qa: await extractQuestions(reviewElement),
-      user: await extractReviewer(reviewElement, reviewId)
+      user: await extractReviewer(reviewElement, reviewId),
     };
 
     return result;
   } catch (error) {
-    console.error('Error in fetchReviewDetails:', error);
+    console.error("Error in fetchReviewDetails:", error);
     return null; // Return null or handle error as needed
   }
 };

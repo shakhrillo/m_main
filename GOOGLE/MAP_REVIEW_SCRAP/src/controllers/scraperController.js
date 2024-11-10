@@ -159,7 +159,7 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     // await tillstorIdJson length exceeds limit
     await waitForArrayGrowth(allElements, limit);
     // Wait for scroll to finish
-    await wait(5000);
+    // await wait(5000);
 
     allElements = allElements.slice(0, limit);
 

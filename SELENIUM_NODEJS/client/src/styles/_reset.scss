@@ -137,6 +137,11 @@ button {
     color: #fff;
     border-color: var(--primary);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 textarea:not([rows]) {

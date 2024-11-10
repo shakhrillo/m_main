@@ -10,11 +10,13 @@ import { auth, firestore } from "../firebaseConfig"
 import {
   addDoc,
   collection,
+  doc,
   getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  setDoc,
   where,
 } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
@@ -122,6 +124,7 @@ export const startExtractGmapReviewsOverview = async (
 
 export const startExtractGmapReviews = async (
   uid: string,
+  overviewId: string,
   data: {
     url: string
     limit: number
@@ -131,15 +134,21 @@ export const startExtractGmapReviews = async (
     onlyGoogleReviews: boolean
   },
 ) => {
-  const collectionReviews = collection(firestore, `users/${uid}/reviews`)
+  const docReview = doc(firestore, `users/${uid}/reviews/${overviewId}`)
 
-  const docRef = await addDoc(collectionReviews, {
+  await setDoc(docReview, {
     ...data,
     status: "in-progress",
     createdAt: new Date(),
   })
 
-  return docRef.id
+  // const docRef = await addDoc(collectionReviews, {
+  //   ...data,
+  //   status: "in-progress",
+  //   createdAt: new Date(),
+  // })
+
+  return overviewId
 }
 
 export const getReviewsQuery = ({

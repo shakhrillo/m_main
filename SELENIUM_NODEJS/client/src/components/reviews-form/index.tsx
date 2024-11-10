@@ -26,6 +26,7 @@ export const ReviewsForm = () => {
   const { user, firestore } = useFirebase()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [isUrlValid, setIsUrlValid] = useState(false)
   const [step, setStep] = useState(0)
   const [info, setInfo] = useState({
     url: "",
@@ -37,7 +38,7 @@ export const ReviewsForm = () => {
     reviews: "",
   })
   const [scrap, setScrap] = useState({
-    url: "https://maps.app.goo.gl/G7Q1P9FRq5PFwg2P7",
+    url: "",
     limit: 30,
     sortBy: "Most relevant",
     extractImageUrls: false,
@@ -71,7 +72,7 @@ export const ReviewsForm = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      const overviewId = await startExtractGmapReviews(user!.uid, {
+      await startExtractGmapReviews(user!.uid, overviewId, {
         ...info,
         ...scrap,
       })
@@ -95,6 +96,16 @@ export const ReviewsForm = () => {
     )
     return unsubscribe
   }, [firestore, user, overviewId])
+
+  useEffect(() => {
+    function validateUrl(url: string) {
+      if (!url) return false
+      const regex = new RegExp("^https://maps\\.app\\.goo\\.gl/[\\w-]+$")
+      return regex.test(url)
+    }
+
+    setIsUrlValid(validateUrl(scrap.url))
+  }, [scrap.url])
 
   const renderStepContent = () => {
     switch (step) {
@@ -120,9 +131,19 @@ export const ReviewsForm = () => {
                 placeholder="https://www.google.com/maps/place/..."
                 disabled={loading}
               />
-              <button className="primary" type="submit" disabled={loading}>
+              <button
+                className="primary"
+                type="submit"
+                disabled={loading || !isUrlValid}
+              >
                 Validate URL
               </button>
+              <small>
+                Example URL:{" "}
+                <code style={{ display: "block" }}>
+                  https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
+                </code>
+              </small>
             </form>
           </>
         )
@@ -130,7 +151,13 @@ export const ReviewsForm = () => {
         return (
           <>
             {!info.title || loading ? (
-              <h3>Loading...</h3>
+              <>
+                <h3>Loading...</h3>
+                <p>
+                  The process may take between 15 to 60 seconds. If it takes too
+                  long, please try again.
+                </p>
+              </>
             ) : (
               <>
                 <h3>{info.title}</h3>
