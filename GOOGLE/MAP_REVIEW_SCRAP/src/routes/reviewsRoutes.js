@@ -10,8 +10,9 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/info", authenticateToken, async (req, res) => {
-  scrapInfo(req.data);
-  res.json(req.data);
+  const data = scrapInfo(req.data);
+  console.log("Data:", data);
+  res.json(data);
 });
 
 module.exports = router;

@@ -1,5 +1,8 @@
-import { useState } from "react"
-import { startExtractGmapReviews } from "../../services/firebaseService"
+import { useEffect, useState } from "react"
+import {
+  startExtractGmapReviews,
+  startExtractGmapReviewsOverview,
+} from "../../services/firebaseService"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 
 const steps = [
@@ -20,15 +23,10 @@ const steps = [
 
 export const ReviewsForm = () => {
   const { user } = useFirebase()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(0)
 
   const [scrap, setScrap] = useState({
-    url: "",
-    limit: 5,
-    sortBy: "Most relevant",
-    extractImageUrls: false,
-    ownerResponse: true,
-    onlyGoogleReviews: false,
+    url: "https://maps.app.goo.gl/G7Q1P9FRq5PFwg2P7",
   })
 
   const sortByOptions = [
@@ -48,9 +46,13 @@ export const ReviewsForm = () => {
 
   const startScraping = async (e: any) => {
     e.preventDefault()
+    setStep(1)
     console.log("Scraping started with data:", scrap)
-    await startExtractGmapReviews(user!.uid, scrap)
+    const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
+    console.log("overviewId", overviewId)
   }
+
+  useEffect(() => {}, [])
 
   return (
     <div>
@@ -87,7 +89,7 @@ export const ReviewsForm = () => {
               placeholder="https://www.google.com/maps/place/..."
             />
             <br />
-            <button className="primary" onClick={e => setStep(1)} type="button">
+            <button className="primary" onClick={startScraping} type="button">
               Validate URL
             </button>
           </form>
@@ -122,7 +124,7 @@ export const ReviewsForm = () => {
               type="number"
               id="limit"
               name="limit"
-              value={scrap.limit}
+              // value={scrap.limit}
               onChange={e => handleInputChange("limit", e.target.value)}
               placeholder="5"
             />
@@ -131,7 +133,7 @@ export const ReviewsForm = () => {
             <select
               id="sortBy"
               name="sortBy"
-              value={scrap.sortBy}
+              // value={scrap.sortBy}
               onChange={e => handleInputChange("sortBy", e.target.value)}
             >
               {sortByOptions.map((option, i) => (
@@ -146,7 +148,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="extractImageUrls"
               name="extractImageUrls"
-              checked={scrap.extractImageUrls}
+              // checked={scrap.extractImageUrls}
               onChange={() => handleCheckboxChange("extractImageUrls")}
             />
 
@@ -155,7 +157,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="ownerResponse"
               name="ownerResponse"
-              checked={scrap.ownerResponse}
+              // checked={scrap.ownerResponse}
               onChange={() => handleCheckboxChange("ownerResponse")}
             />
 
@@ -164,7 +166,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="onlyGoogleReviews"
               name="onlyGoogleReviews"
-              checked={scrap.onlyGoogleReviews}
+              // checked={scrap.onlyGoogleReviews}
               onChange={() => handleCheckboxChange("onlyGoogleReviews")}
             />
 

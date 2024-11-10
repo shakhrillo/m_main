@@ -52,20 +52,13 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       data.reviews = innerText;
     }
 
-    console.log("Data:", data);
-
-    // await updateReview(userId, reviewId, {
-    //   title,
-    //   // createdAt: new Date(),
-    //   status: "in-progress",
-    //   token: "",
-    // });
-
     await page.close();
     await browser.close();
   } catch (error) {
     console.error("Error in main:", error);
   }
+
+  return data;
 }
 
 // Export the main function for Google Cloud Functions
