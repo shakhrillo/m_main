@@ -5,6 +5,7 @@ import {
 } from "../../services/firebaseService"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { doc, onSnapshot } from "firebase/firestore"
+import { useNavigate } from "react-router-dom"
 
 const steps = [
   {
@@ -24,6 +25,7 @@ const steps = [
 
 export const ReviewsForm = () => {
   const { user, firestore } = useFirebase()
+  const navigate = useNavigate()
   const sortByOptions = [
     "Most Relevant",
     "Newest",
@@ -32,11 +34,6 @@ export const ReviewsForm = () => {
   ]
   const [step, setStep] = useState(0)
   const [info, setInfo] = useState({
-    limit: 0,
-    sortBy: sortByOptions[0],
-    extractImageUrls: false,
-    ownerResponse: false,
-    onlyGoogleReviews: false,
     url: "",
     title: "",
     address: "",
@@ -47,6 +44,11 @@ export const ReviewsForm = () => {
   })
   const [scrap, setScrap] = useState({
     url: "https://maps.app.goo.gl/G7Q1P9FRq5PFwg2P7",
+    limit: 30,
+    sortBy: "Most Relevant",
+    extractImageUrls: false,
+    ownerResponse: !false,
+    onlyGoogleReviews: false,
   })
   const [overviewId, setOverviewId] = useState("")
 
@@ -58,11 +60,21 @@ export const ReviewsForm = () => {
     setScrap((prev: any) => ({ ...prev, [name]: !prev[name] }))
   }
 
+  const getInfo = async (e: any) => {
+    e.preventDefault()
+    setStep(1)
+    const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
+    setOverviewId(overviewId)
+  }
+
   const startScraping = async (e: any) => {
     e.preventDefault()
     setStep(1)
-    const overviewId = await startExtractGmapReviewsOverview(user!.uid, info)
-    setOverviewId(overviewId)
+    const overviewId = await startExtractGmapReviews(user!.uid, {
+      ...scrap,
+      ...info,
+    })
+    navigate(`/reviews/${overviewId}`)
   }
 
   useEffect(() => {
@@ -76,9 +88,7 @@ export const ReviewsForm = () => {
       if (doc.exists()) {
         const data = doc.data() as any
         console.log(data)
-        setInfo({
-          ...info,
-        })
+        setInfo(data)
       }
     })
 
@@ -120,7 +130,7 @@ export const ReviewsForm = () => {
               placeholder="https://www.google.com/maps/place/..."
             />
             <br />
-            <button className="primary" onClick={startScraping} type="button">
+            <button className="primary" onClick={getInfo} type="button">
               Validate URL
             </button>
           </form>
@@ -159,7 +169,7 @@ export const ReviewsForm = () => {
               type="number"
               id="limit"
               name="limit"
-              value={info.limit}
+              value={scrap.limit}
               onChange={e => handleInputChange("limit", e.target.value)}
               placeholder="5"
             />
@@ -168,7 +178,7 @@ export const ReviewsForm = () => {
             <select
               id="sortBy"
               name="sortBy"
-              value={info.sortBy}
+              value={scrap.sortBy}
               onChange={e => handleInputChange("sortBy", e.target.value)}
             >
               {sortByOptions.map((option, i) => (
@@ -183,7 +193,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="extractImageUrls"
               name="extractImageUrls"
-              checked={info.extractImageUrls}
+              checked={scrap.extractImageUrls}
               onChange={() => handleCheckboxChange("extractImageUrls")}
             />
 
@@ -192,7 +202,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="ownerResponse"
               name="ownerResponse"
-              checked={info.ownerResponse}
+              checked={scrap.ownerResponse}
               onChange={() => handleCheckboxChange("ownerResponse")}
             />
 
@@ -201,27 +211,13 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="onlyGoogleReviews"
               name="onlyGoogleReviews"
-              checked={info.onlyGoogleReviews}
+              checked={scrap.onlyGoogleReviews}
               onChange={() => handleCheckboxChange("onlyGoogleReviews")}
             />
 
             <br />
 
             <button className="primary" onClick={startScraping} type="button">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M7 4v16l13 -8z" />
-              </svg>
               Start Scraping
             </button>
 
