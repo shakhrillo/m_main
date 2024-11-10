@@ -4,6 +4,7 @@ import {
   startExtractGmapReviewsOverview,
 } from "../../services/firebaseService"
 import { useFirebase } from "../../contexts/FirebaseProvider"
+import { doc, onSnapshot } from "firebase/firestore"
 
 const steps = [
   {
@@ -22,12 +23,21 @@ const steps = [
 ]
 
 export const ReviewsForm = () => {
-  const { user } = useFirebase()
+  const { user, firestore } = useFirebase()
   const [step, setStep] = useState(0)
-
+  const [info, setInfo] = useState({
+    url: "",
+    title: "",
+    address: "",
+    phone: "",
+    website: "",
+    rating: "",
+    reviews: "",
+  })
   const [scrap, setScrap] = useState({
     url: "https://maps.app.goo.gl/G7Q1P9FRq5PFwg2P7",
   })
+  const [overviewId, setOverviewId] = useState("")
 
   const sortByOptions = [
     "Most Relevant",
@@ -47,12 +57,27 @@ export const ReviewsForm = () => {
   const startScraping = async (e: any) => {
     e.preventDefault()
     setStep(1)
-    console.log("Scraping started with data:", scrap)
     const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
-    console.log("overviewId", overviewId)
+    setOverviewId(overviewId)
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    if (!firestore || !user || !overviewId) return
+
+    const overviewRef = doc(
+      firestore,
+      `users/${user.uid}/reviewOverview/${overviewId}`,
+    )
+    const unsubscribe = onSnapshot(overviewRef, doc => {
+      if (doc.exists()) {
+        const data = doc.data() as any
+        console.log(data)
+        setInfo(data)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [firestore, user, overviewId])
 
   return (
     <div>
@@ -97,9 +122,13 @@ export const ReviewsForm = () => {
       ) : null}
       {step === 1 ? (
         <div>
-          <h3>Shefah Hotels</h3>
-          <p>184 reviews and 89 photos</p>
-          <p>315 29th St, Union City, NJ 07087, United States</p>
+          <h3>{info.title}</h3>
+          <p>
+            {info.rating} - {info.reviews}
+          </p>
+          <p>{info.website}</p>
+          <p>{info.phone}</p>
+          <p>{info.address}</p>
           <br />
           <button className="primary" onClick={e => setStep(2)} type="button">
             Confirm
