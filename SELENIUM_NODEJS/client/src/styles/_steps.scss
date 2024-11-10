@@ -30,6 +30,7 @@
     margin-left: 8px;
     font-size: 14px;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   &__step {
@@ -85,13 +86,19 @@
         border: 1px solid var(--primary);
       }
       & ~ .progress__step {
-        color: var(--primary-10);
+        &::after {
+          border-color: var(--primary);
+        }
 
         &::before,
         &::after {
           background-color: var(--primary-10);
         }
       }
+    }
+    &.disabled {
+      pointer-events: none;
+      cursor: not-allowed;
     }
   }
 }

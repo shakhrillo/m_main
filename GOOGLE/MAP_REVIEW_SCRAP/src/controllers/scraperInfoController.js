@@ -10,7 +10,7 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     page = await openPage(browser, url);
     data.url = url;
 
-    await page.setCacheEnabled(false);
+    // await page.setCacheEnabled(false);
 
     data.title = await page.title();
 

@@ -24,8 +24,19 @@ const steps = [
 
 export const ReviewsForm = () => {
   const { user, firestore } = useFirebase()
+  const sortByOptions = [
+    "Most Relevant",
+    "Newest",
+    "Lowest rating",
+    "Highest rating",
+  ]
   const [step, setStep] = useState(0)
   const [info, setInfo] = useState({
+    limit: 0,
+    sortBy: sortByOptions[0],
+    extractImageUrls: false,
+    ownerResponse: false,
+    onlyGoogleReviews: false,
     url: "",
     title: "",
     address: "",
@@ -39,13 +50,6 @@ export const ReviewsForm = () => {
   })
   const [overviewId, setOverviewId] = useState("")
 
-  const sortByOptions = [
-    "Most Relevant",
-    "Newest",
-    "Lowest rating",
-    "Highest rating",
-  ]
-
   const handleInputChange = (name: string, value: string | number) => {
     setScrap(prev => ({ ...prev, [name]: value }))
   }
@@ -57,7 +61,7 @@ export const ReviewsForm = () => {
   const startScraping = async (e: any) => {
     e.preventDefault()
     setStep(1)
-    const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
+    const overviewId = await startExtractGmapReviewsOverview(user!.uid, info)
     setOverviewId(overviewId)
   }
 
@@ -72,7 +76,9 @@ export const ReviewsForm = () => {
       if (doc.exists()) {
         const data = doc.data() as any
         console.log(data)
-        setInfo(data)
+        setInfo({
+          ...info,
+        })
       }
     })
 
@@ -85,7 +91,7 @@ export const ReviewsForm = () => {
         {steps.map((s, i) => (
           <div
             key={i}
-            className={`progress__step ${i === step ? "active" : ""}`}
+            className={`progress__step ${i === step ? "active" : ""} ${i > step ? "disabled" : ""}`}
             onClick={() => setStep(i)}
           >
             <div className="progress__text">{s.title}</div>
@@ -153,7 +159,7 @@ export const ReviewsForm = () => {
               type="number"
               id="limit"
               name="limit"
-              // value={scrap.limit}
+              value={info.limit}
               onChange={e => handleInputChange("limit", e.target.value)}
               placeholder="5"
             />
@@ -162,7 +168,7 @@ export const ReviewsForm = () => {
             <select
               id="sortBy"
               name="sortBy"
-              // value={scrap.sortBy}
+              value={info.sortBy}
               onChange={e => handleInputChange("sortBy", e.target.value)}
             >
               {sortByOptions.map((option, i) => (
@@ -177,7 +183,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="extractImageUrls"
               name="extractImageUrls"
-              // checked={scrap.extractImageUrls}
+              checked={info.extractImageUrls}
               onChange={() => handleCheckboxChange("extractImageUrls")}
             />
 
@@ -186,7 +192,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="ownerResponse"
               name="ownerResponse"
-              // checked={scrap.ownerResponse}
+              checked={info.ownerResponse}
               onChange={() => handleCheckboxChange("ownerResponse")}
             />
 
@@ -195,7 +201,7 @@ export const ReviewsForm = () => {
               type="checkbox"
               id="onlyGoogleReviews"
               name="onlyGoogleReviews"
-              // checked={scrap.onlyGoogleReviews}
+              checked={info.onlyGoogleReviews}
               onChange={() => handleCheckboxChange("onlyGoogleReviews")}
             />
 
