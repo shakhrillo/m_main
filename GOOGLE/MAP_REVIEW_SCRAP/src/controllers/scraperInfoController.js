@@ -89,6 +89,8 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     const title = await page.title();
     console.log("Title:", title);
 
+    await wait(900000000);
+
     await updateReview(userId, reviewId, {
       title,
       // createdAt: new Date(),
