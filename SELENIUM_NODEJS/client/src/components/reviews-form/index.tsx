@@ -72,7 +72,7 @@ export const ReviewsForm = () => {
             <form>
               <label htmlFor="url">URL</label>
               <input type="text" id="url" name="url" value={scrap.url} onChange={(e) => handleInputChange("url", e.target.value)} placeholder="https://www.google.com/maps/place/..." />
-
+              <br />
               <button className="primary" onClick={(e) => setStep(1)} type="button">
                 Validate URL
               </button>
@@ -96,6 +96,7 @@ export const ReviewsForm = () => {
             <button className="primary" onClick={(e) => setStep(2)} type="button">
               Confirm
             </button>
+            <br />
             <button className="secondary" onClick={(e) => setStep(0)} type="button">
               Cancel
             </button>
