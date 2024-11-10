@@ -5,19 +5,29 @@ const Help: React.FC = () => {
   const { user } = useFirebase()
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <h3 className="card-title">Help</h3>
-        <h5>FAQ</h5>
-        <p>How do I get started?</p>
-        <p>How do I get help?</p>
-        <p>How do I get support?</p>
-        <h5>Contact</h5>
-        <p>Email: </p>
-        <p>Phone: </p>
-        <h5>Feedback</h5>
-        <p>How can we improve?</p>
-        <p>What do you like?</p>
+    <div>
+      <h2>Help</h2>
+      <div className="card">
+        <h3>
+          FAQ
+        </h3>
+        <p>
+          Frequently asked questions
+        </p>
+        
+        <h4>
+          How to scrape reviews?
+        </h4>
+        <p>
+          To scrape reviews, go to the Scrap page and enter the URL of the place you want to scrape reviews from.
+        </p>
+
+        <h4>
+          How to download reviews?
+        </h4>
+        <p>
+          To download reviews, go to the Scrap page and click the download button.
+        </p>
       </div>
     </div>
   )
