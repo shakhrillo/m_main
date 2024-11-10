@@ -42,7 +42,7 @@ async function puppeteerMutationListener(records, uid, pushId) {
   }
 }
 
-async function waitForArrayGrowth(array, targetLength, timeout = 60000) {
+async function waitForArrayGrowth(array, targetLength, timeout = 90000) {
   let initialLength = array.length;
   let stableDuration = 0;
   const checkInterval = 100; // Check every 100ms
@@ -67,6 +67,50 @@ async function waitForArrayGrowth(array, targetLength, timeout = 60000) {
   console.log(
     `Array length exceeded the target. Current length: ${array.length}`
   );
+}
+
+async function setExtractedDate(userId, reviewId, allElements) {
+  if (allElements.length > 0) {
+    const jsonFileName = path.join(tempDir, `${reviewId}.json`);
+    const csvFileName = path.join(tempDir, `${reviewId}.csv`);
+
+    // Write the JSON file
+    fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
+
+    // Define the CSV writer
+    const csvWriter = createCsvWriter({
+      path: csvFileName,
+      header: Object.keys(allElements[0]).map((key) => ({
+        id: key,
+        title: key,
+      })), // Adjust headers based on your data structure
+    });
+
+    // Write the CSV file
+    await csvWriter.writeRecords(allElements);
+
+    await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
+    await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
+
+    fs.unlinkSync(jsonFileName);
+    fs.unlinkSync(csvFileName);
+
+    await batchWriteLargeArray(userId, reviewId, allElements);
+
+    await updateReview(userId, reviewId, {
+      status: "completed",
+      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
+      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
+      totalReviews: allElements.length,
+      completedAt: new Date(),
+    });
+  } else {
+    await updateReview(userId, reviewId, {
+      status: "failed",
+      error: "No reviews found",
+      completedAt: new Date(),
+    });
+  }
 }
 
 async function main({ url, userId, reviewId, limit, sortBy }) {
@@ -122,55 +166,19 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     await page.close();
     await browser.close();
 
-    if (allElements.length > 0) {
-      const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-      const csvFileName = path.join(tempDir, `${reviewId}.csv`);
-
-      // Write the JSON file
-      fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
-
-      // Define the CSV writer
-      const csvWriter = createCsvWriter({
-        path: csvFileName,
-        header: Object.keys(allElements[0]).map((key) => ({
-          id: key,
-          title: key,
-        })), // Adjust headers based on your data structure
-      });
-
-      // Write the CSV file
-      await csvWriter.writeRecords(allElements);
-
-      await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-      await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
-
-      fs.unlinkSync(jsonFileName);
-      fs.unlinkSync(csvFileName);
-
-      await batchWriteLargeArray(userId, reviewId, allElements);
-
-      await updateReview(userId, reviewId, {
-        status: "completed",
-        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
-        totalReviews: allElements.length,
-        completedAt: new Date(),
-      });
-    } else {
-      await updateReview(userId, reviewId, {
-        status: "failed",
-        error: "No reviews found",
-        completedAt: new Date(),
-      });
-    }
+    await setExtractedDate(userId, reviewId, allElements);
 
     return allElements;
   } catch (error) {
+    await setExtractedDate(userId, reviewId, allElements);
+
     await updateReview(userId, reviewId, {
       status: "failed",
       error: error.message,
       completedAt: new Date(),
     });
+
+    console.error("Error in main function:", error);
   }
 }
 

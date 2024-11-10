@@ -144,19 +144,16 @@ export const startExtractGmapReviews = async (
 
 export const getReviewsQuery = ({
   uid,
-  status,
   orderByField,
   loadLimit,
 }: {
   uid: string
-  status: string
   orderByField: string
   loadLimit: number
 }) => {
   const collectionReviews = collection(firestore, `users/${uid}/reviews`)
   const reviewsQuery = query(
     collectionReviews,
-    where("status", "==", status),
     orderBy(orderByField, "desc"),
     limit(loadLimit),
   )
