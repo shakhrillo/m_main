@@ -1,178 +1,70 @@
-const fs = require("fs");
-const path = require("path");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
-const { uploadFile } = require("../services/storageService");
-const wait = require("../utils/wait");
 const { launchBrowser, openPage } = require("../utils/browser");
-const filterallElements = require("../utils/filter");
-const { batchWriteLargeArray, updateReview } = require("./reviewController");
-const { getUser, updateUser, createUserUsage } = require("./userController");
-const clickReviewTab = require("../utils/clickReviewTab");
-const sortReviews = require("../utils/sortReviews");
-const enableRequestInterception = require("./enableRequestInterception");
-const {
-  scrollAndCollectElements,
-} = require("../utils/scrollAndCollectElements");
-const { firestore } = require("../services/firebaseAdmin");
-const fetchReviewDetails = require("../utils/fetchReviewDetails");
 
-// Define a temporary directory in your project (e.g., ./temp)
-const tempDir = path.join(__dirname, "temp");
+const data = {};
 
-// Ensure the directory exists
-if (!fs.existsSync(tempDir)) {
-  fs.mkdirSync(tempDir);
-}
-
-let allElements = [];
 let page;
-
-async function puppeteerMutationListener(records, uid, pushId) {
-  console.log("Record:", records.length);
-  console.log("Saved:", allElements.length);
-
-  for (const record of records) {
-    await fetchReviewDetails(page, record)
-      .then(async (result) => {
-        allElements.push(result);
-      })
-      .catch((error) => {
-        console.error("Error fetching review details:", error);
-      });
-  }
-}
-
-async function waitForArrayGrowth(array, targetLength, timeout = 60000) {
-  let initialLength = array.length;
-  let stableDuration = 0;
-  const checkInterval = 100; // Check every 100ms
-
-  while (array.length <= targetLength) {
-    if (array.length === initialLength) {
-      stableDuration += checkInterval;
-      if (stableDuration >= timeout) {
-        console.log(
-          "Timeout exceeded: Array length did not change for 10 seconds."
-        );
-        return;
-      }
-    } else {
-      initialLength = array.length; // Update to new length if it changes
-      stableDuration = 0; // Reset stable duration counter
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, checkInterval));
-  }
-
-  console.log(
-    `Array length exceeded the target. Current length: ${array.length}`
-  );
-}
 
 async function main({ url, userId, reviewId, limit, sortBy }) {
   try {
     const browser = await launchBrowser();
     page = await openPage(browser, url);
+    data.url = url;
 
     await page.setCacheEnabled(false);
 
-    page.exposeFunction("puppeteerMutationListener", puppeteerMutationListener);
+    data.title = await page.title();
 
-    await page.evaluate((variable) => {
-      window.uid = variable;
-    }, userId);
+    const address = await page.$$(`button[data-item-id*="address"]`);
+    if (address.length > 0) {
+      const ariaLabel = await address[0].evaluate((el) =>
+        el.getAttribute("aria-label")
+      );
+      data.address = ariaLabel;
+    }
 
-    await page.evaluate((variable) => {
-      window.pushId = variable;
-    }, reviewId);
+    const phone = await page.$$(`[data-item-id*="phone"]`);
+    if (phone.length > 0) {
+      const ariaLabel = await phone[0].evaluate((el) =>
+        el.getAttribute("aria-label")
+      );
+      data.phone = ariaLabel;
+    }
 
-    const title = await page.title();
-    console.log("Title:", title);
+    const website = await page.$$(`[data-item-id*="authority"]`);
+    if (website.length > 0) {
+      const ariaLabel = await website[0].evaluate((el) =>
+        el.getAttribute("aria-label")
+      );
+      data.website = ariaLabel;
+    }
 
-    await wait(900000000);
+    const rating = await page.$$(`[role="img"][aria-label*="stars"]`);
+    if (rating.length > 0) {
+      const ariaLabel = await rating[0].evaluate((el) =>
+        el.getAttribute("aria-label")
+      );
+      data.rating = ariaLabel;
+    }
 
-    await updateReview(userId, reviewId, {
-      title,
-      // createdAt: new Date(),
-      status: "in-progress",
-      token: "",
-    });
+    const reviews = await page.$$(`button[jsaction*="moreReviews"]`);
+    if (reviews.length > 0) {
+      const innerText = await reviews[0].evaluate((el) => el.innerText);
+      data.reviews = innerText;
+    }
 
-    await enableRequestInterception(page, [
-      ".css",
-      "googleusercontent",
-      "preview",
-      "analytics",
-      "ads",
-      "fonts",
-      "/maps/vt",
-    ]);
+    console.log("Data:", data);
 
-    await clickReviewTab(page);
-    await wait(2000);
-    await sortReviews(page, sortBy);
-    await wait(2000);
-    await scrollAndCollectElements(page, userId, reviewId, limit);
-
-    // await tillstorIdJson length exceeds limit
-    await waitForArrayGrowth(allElements, limit);
-    // Wait for scroll to finish
-    await wait(5000);
-
-    allElements = allElements.slice(0, limit);
+    // await updateReview(userId, reviewId, {
+    //   title,
+    //   // createdAt: new Date(),
+    //   status: "in-progress",
+    //   token: "",
+    // });
 
     await page.close();
     await browser.close();
-
-    if (allElements.length > 0) {
-      const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-      const csvFileName = path.join(tempDir, `${reviewId}.csv`);
-
-      // Write the JSON file
-      fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
-
-      // Define the CSV writer
-      const csvWriter = createCsvWriter({
-        path: csvFileName,
-        header: Object.keys(allElements[0]).map((key) => ({
-          id: key,
-          title: key,
-        })), // Adjust headers based on your data structure
-      });
-
-      // Write the CSV file
-      await csvWriter.writeRecords(allElements);
-
-      await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-      await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
-
-      fs.unlinkSync(jsonFileName);
-      fs.unlinkSync(csvFileName);
-
-      await batchWriteLargeArray(userId, reviewId, allElements);
-
-      await updateReview(userId, reviewId, {
-        status: "completed",
-        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
-        totalReviews: allElements.length,
-        completedAt: new Date(),
-      });
-    } else {
-      await updateReview(userId, reviewId, {
-        status: "failed",
-        error: "No reviews found",
-        completedAt: new Date(),
-      });
-    }
-
-    return allElements;
   } catch (error) {
-    await updateReview(userId, reviewId, {
-      status: "failed",
-      error: error.message,
-      completedAt: new Date(),
-    });
+    console.error("Error in main:", error);
   }
 }
 
