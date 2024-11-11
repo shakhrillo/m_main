@@ -71,39 +71,48 @@ async function waitForArrayGrowth(array, targetLength, timeout = 90000) {
 
 async function setExtractedDate(userId, reviewId, allElements) {
   if (allElements.length > 0) {
-    const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-    const csvFileName = path.join(tempDir, `${reviewId}.csv`);
+    try {
+      const jsonFileName = path.join(tempDir, `${reviewId}.json`);
+      const csvFileName = path.join(tempDir, `${reviewId}.csv`);
 
-    // Write the JSON file
-    fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
+      // Write the JSON file
+      fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
 
-    // Define the CSV writer
-    const csvWriter = createCsvWriter({
-      path: csvFileName,
-      header: Object.keys(allElements[0]).map((key) => ({
-        id: key,
-        title: key,
-      })), // Adjust headers based on your data structure
-    });
+      // Define the CSV writer
+      const csvWriter = createCsvWriter({
+        path: csvFileName,
+        header: Object.keys(allElements[0]).map((key) => ({
+          id: key,
+          title: key,
+        })), // Adjust headers based on your data structure
+      });
 
-    // Write the CSV file
-    await csvWriter.writeRecords(allElements);
+      // Write the CSV file
+      await csvWriter.writeRecords(allElements);
 
-    await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-    await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
+      await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
+      await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
 
-    fs.unlinkSync(jsonFileName);
-    fs.unlinkSync(csvFileName);
+      fs.unlinkSync(jsonFileName);
+      fs.unlinkSync(csvFileName);
 
-    await batchWriteLargeArray(userId, reviewId, allElements);
+      await batchWriteLargeArray(userId, reviewId, allElements);
 
-    await updateReview(userId, reviewId, {
-      status: "completed",
-      csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-      jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
-      totalReviews: allElements.length,
-      completedAt: new Date(),
-    });
+      await updateReview(userId, reviewId, {
+        status: "completed",
+        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
+        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
+        totalReviews: allElements.length,
+        completedAt: new Date(),
+      });
+    } catch (error) {
+      console.error("Error in setExtractedDate function:", error);
+      await updateReview(userId, reviewId, {
+        status: "failed",
+        error: error.message,
+        completedAt: new Date(),
+      });
+    }
   } else {
     await updateReview(userId, reviewId, {
       status: "failed",
