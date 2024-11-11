@@ -73,6 +73,8 @@ async function setExtractedDate(userId, reviewId, allElements) {
   if (allElements.length > 0) {
     allElements = filterallElements(allElements);
 
+    console.log("Total reviews:", allElements.length);
+
     try {
       const jsonFileName = path.join(tempDir, `${reviewId}.json`);
       const csvFileName = path.join(tempDir, `${reviewId}.csv`);

@@ -13,7 +13,7 @@ const fetchReviewDetails = async (page, reviewId) => {
     let isPageOpen = page.isClosed();
     if (isPageOpen) {
       console.log("The page has been closed, stopping further actions.");
-      return {};
+      return null;
     }
 
     const reviewElement = await page.$(`.jftiEf[data-review-id="${reviewId}"]`);
@@ -36,7 +36,7 @@ const fetchReviewDetails = async (page, reviewId) => {
     isPageOpen = page.isClosed();
     if (isPageOpen) {
       console.log("The page has been closed, stopping further actions.");
-      return {};
+      return null;
     }
 
     const result = {
