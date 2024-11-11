@@ -47,6 +47,27 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       }
     }
 
+    // jsaction="minimap.main;mousedown:minimap.main;mouseup:minimap.main;mouseover:minimap.main;mouseout:minimap.main;focus:minimap.main;blur:minimap.main;keydown:minimap.move;wheel:minimap.zoom;mousewheel:minimap.zoom;DOMMouseScroll:minimap.zoom"
+    const miniMap = await page.$$(`button[jsaction*="minimap.main"]`);
+    console.log("miniMap", miniMap.length);
+    if (miniMap.length > 0) {
+      // set style to display none
+      await page.evaluate((btn) => {
+        const parent = btn.parentElement;
+        parent.style.display = "none";
+      }, miniMap[0]);
+    }
+
+    // class="app-vertical-widget-holder Hk4XGb"
+    const verticalWidget = await page.$$(`.app-vertical-widget-holder`);
+    console.log("verticalWidget", verticalWidget.length);
+    if (verticalWidget.length > 0) {
+      // set style to display none
+      await page.evaluate((el) => {
+        el.style.display = "none";
+      }, verticalWidget[0]);
+    }
+
     await wait(1000);
 
     // take screenshot
