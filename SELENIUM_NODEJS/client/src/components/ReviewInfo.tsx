@@ -17,6 +17,7 @@ function ReviewInfo() {
 
     const unsubscribe = onSnapshot(reviewInfoDoc, doc => {
       if (doc.exists()) {
+        console.log("Document data:", doc.data())
         setPlaceInfo({ ...doc.data(), id: doc.id })
       }
     })
@@ -52,8 +53,12 @@ function ReviewInfo() {
           <h1>{placeInfo.title || "Anonymous"}</h1>
           <p>{placeInfo.address}</p>
           <div className="review-info__actions">
-            <button>Download CSV</button>
-            <button>Download JSON</button>
+            <button onClick={() => window.open(placeInfo.csvUrl, "_blank")}>
+              Download CSV
+            </button>
+            <button onClick={() => window.open(placeInfo.jsonUrl, "_blank")}>
+              Download JSON
+            </button>
           </div>
           <ul className="review-info__status">
             <li>

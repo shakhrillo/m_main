@@ -54,6 +54,13 @@ function SingleReview() {
     )
   }
 
+  function renderImagesCount(imageUrls: string[]) {
+    const count = imageUrls.length
+    if (count === 0) return "No images"
+
+    return count === 1 ? `${count} image` : `${count} images`
+  }
+
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
 
@@ -67,6 +74,7 @@ function SingleReview() {
         <table className="table">
           <thead>
             <tr>
+              <th>#</th>
               <th>Rating</th>
               <th>Images</th>
               <th>Review</th>
@@ -74,10 +82,11 @@ function SingleReview() {
             </tr>
           </thead>
           <tbody>
-            {reviews.map(review => (
+            {reviews.map((review, index) => (
               <tr key={review.id}>
+                <td>{index + 1}</td>
                 <td>{review.rating}</td>
-                <td>{review.imageUrls.length}</td>
+                <td>{renderImagesCount(review.imageUrls)}</td>
                 <td>{renderText(review.review)}</td>
                 <td>{renderText(review.response)}</td>
               </tr>
