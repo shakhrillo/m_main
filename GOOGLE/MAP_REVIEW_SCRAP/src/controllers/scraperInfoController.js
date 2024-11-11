@@ -34,11 +34,13 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
 
     // take screenshot
     const screenshot = await page.screenshot({ fullPage: true });
+    // https://maps.app.goo.gl/ugSM2JEXaFcxbTtq7
+    const uniqueId = url.split("/").pop();
     // Upload screenshot to Firebase Storage
     await wait(500);
     const img = await uploadFile(
       screenshot,
-      `${userId}/${reviewId}/screenshot.png`
+      `${userId}/${uniqueId}/screenshot.png`
     );
     data.screenshot = img;
     // Upload screenshot to Google Cloud Storage
