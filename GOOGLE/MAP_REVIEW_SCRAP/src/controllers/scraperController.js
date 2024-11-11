@@ -71,9 +71,7 @@ async function waitForArrayGrowth(array, targetLength, timeout = 90000) {
 
 async function setExtractedDate(userId, reviewId, allElements) {
   if (allElements.length > 0) {
-    for (let element of allElements) {
-      console.log("Element:", element);
-    }
+    allElements = filterallElements(allElements);
 
     try {
       const jsonFileName = path.join(tempDir, `${reviewId}.json`);
