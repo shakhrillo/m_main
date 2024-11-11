@@ -26,6 +26,7 @@ if (!fs.existsSync(tempDir)) {
 
 let allElements = [];
 let page;
+let browser;
 
 async function puppeteerMutationListener(records, uid, pushId) {
   console.log("Record:", records.length);
@@ -76,36 +77,50 @@ async function setExtractedDate(userId, reviewId, allElements) {
     console.log("Total reviews:", allElements.length);
 
     try {
-      const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-      const csvFileName = path.join(tempDir, `${reviewId}.csv`);
+      // const jsonFileName = path.join(tempDir, `${reviewId}.json`);
+      // const csvFileName = path.join(tempDir, `${reviewId}.csv`);
 
       // Write the JSON file
-      fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
+      // fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
 
       // Define the CSV writer
-      const csvWriter = createCsvWriter({
-        path: csvFileName,
-        header: Object.keys(allElements[0]).map((key) => ({
-          id: key,
-          title: key,
-        })), // Adjust headers based on your data structure
-      });
+      // const csvWriter = createCsvWriter({
+      //   path: csvFileName,
+      //   header: Object.keys(allElements[0]).map((key) => ({
+      //     id: key,
+      //     title: key,
+      //   })), // Adjust headers based on your data structure
+      // });
 
       // Write the CSV file
-      await csvWriter.writeRecords(allElements);
+      // await csvWriter.writeRecords(allElements);
 
-      await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-      await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
+      const jsonFile = JSON.stringify(allElements, null, 2);
+      const csvFile =
+        Object.keys(allElements[0]).join(",") +
+        "\n" +
+        allElements
+          .map((element) => Object.values(element).join(","))
+          .join("\n");
 
-      fs.unlinkSync(jsonFileName);
-      fs.unlinkSync(csvFileName);
+      const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
+      const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
+
+      console.log("JSON URL:", jsonUrl);
+      console.log("CSV URL:", csvUrl);
+
+      // await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
+      // await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
+
+      // fs.unlinkSync(jsonFileName);
+      // fs.unlinkSync(csvFileName);
 
       await batchWriteLargeArray(userId, reviewId, allElements);
 
       await updateReview(userId, reviewId, {
         status: "completed",
-        csvUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/csv/${reviewId}.csv`,
-        jsonUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/json/${reviewId}.json`,
+        csvUrl,
+        jsonUrl,
         totalReviews: allElements.length,
         completedAt: new Date(),
       });
@@ -129,7 +144,7 @@ async function setExtractedDate(userId, reviewId, allElements) {
 async function main({ url, userId, reviewId, limit, sortBy }) {
   try {
     allElements = [];
-    const browser = await launchBrowser();
+    browser = await launchBrowser();
     page = await openPage(browser, url);
 
     await page.setCacheEnabled(false);
@@ -165,25 +180,29 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     ]);
 
     await clickReviewTab(page);
-    await wait(2000);
+    await wait(500);
     await sortReviews(page, sortBy);
     await wait(2000);
     await scrollAndCollectElements(page, userId, reviewId, limit);
 
-    // await tillstorIdJson length exceeds limit
     await waitForArrayGrowth(allElements, limit);
-    // Wait for scroll to finish
-    // await wait(5000);
-
-    allElements = allElements.slice(0, limit);
 
     await page.close();
     await browser.close();
+
+    allElements = allElements.slice(0, limit);
 
     await setExtractedDate(userId, reviewId, allElements);
 
     return allElements;
   } catch (error) {
+    if (page) {
+      await page.close();
+    }
+    if (browser) {
+      await browser.close();
+    }
+
     await setExtractedDate(userId, reviewId, allElements);
 
     await updateReview(userId, reviewId, {
