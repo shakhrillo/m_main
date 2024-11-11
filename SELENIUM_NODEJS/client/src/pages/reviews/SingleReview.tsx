@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import { ReviewCard } from "../../components/review-card"
 import ReviewInfo from "../../components/ReviewInfo"
 import { useFirebase } from "../../contexts/FirebaseProvider"
-import { fetchReviews } from "../../services/firebaseService"
+import { collection, onSnapshot } from "firebase/firestore"
 
 function SingleReview() {
   const { place } = useParams()
@@ -16,21 +16,29 @@ function SingleReview() {
   useEffect(() => {
     if (!firestore || !place || !user) return
 
-    const fetchReviewData = async () => {
-      try {
-        setLoading(true)
-        const reviewsData = await fetchReviews(user.uid, place)
-        console.log("reviewsData", reviewsData)
-        setReviews(reviewsData)
-      } catch (error) {
-        console.error("Error fetching reviews:", error)
-        setError("Failed to load reviews.")
-      } finally {
-        setLoading(false)
-      }
-    }
+    const reviewsRef = collection(
+      firestore,
+      "users",
+      user.uid,
+      "reviews",
+      place,
+      "reviews",
+    )
 
-    fetchReviewData()
+    const unsubscribe = onSnapshot(reviewsRef, async snapshot => {
+      const reviewsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+
+      console.log(reviewsData)
+
+      setReviews(reviewsData)
+      setLoading(false)
+      setError(null)
+    })
+
+    return unsubscribe
   }, [firestore, user, place])
 
   if (loading) return <div>Loading...</div>
