@@ -41,9 +41,7 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     console.log("zoomOut", zoomOut.length);
     if (zoomOut.length > 0) {
       await page.evaluate((btn) => btn.scrollIntoView(), zoomOut[0]);
-      // await zoomOut[0].click();
-      // click 3 times
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 2; i++) {
         await zoomOut[0].click();
         await wait(500);
       }
