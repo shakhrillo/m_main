@@ -68,6 +68,26 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       }, verticalWidget[0]);
     }
 
+    // a[aria-label="Sign in"]
+    const signIn = await page.$$(`a[aria-label="Sign in"]`);
+    console.log("signIn", signIn.length);
+    if (signIn.length > 0) {
+      // set style to display none
+      await page.evaluate((el) => {
+        el.style.display = "none";
+      }, signIn[0]);
+    }
+
+    // app-horizontal-widget-holder
+    const horizontalWidget = await page.$$(`.app-horizontal-widget-holder`);
+    console.log("horizontalWidget", horizontalWidget.length);
+    if (horizontalWidget.length > 0) {
+      // set style to display none
+      await page.evaluate((el) => {
+        el.style.display = "none";
+      }, horizontalWidget[0]);
+    }
+
     await wait(1000);
 
     // take screenshot
