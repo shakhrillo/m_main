@@ -128,6 +128,7 @@ async function setExtractedDate(userId, reviewId, allElements) {
 
 async function main({ url, userId, reviewId, limit, sortBy }) {
   try {
+    allElements = [];
     const browser = await launchBrowser();
     page = await openPage(browser, url);
 

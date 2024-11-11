@@ -2,12 +2,13 @@ const { uploadFile } = require("../services/storageService");
 const { launchBrowser, openPage } = require("../utils/browser");
 const wait = require("../utils/wait");
 
-const data = {};
+let data = {};
 
 let browser;
 let page;
 
 async function main({ url, userId, reviewId, limit, sortBy }) {
+  data = {};
   try {
     browser = await launchBrowser();
     page = await openPage(browser, url);

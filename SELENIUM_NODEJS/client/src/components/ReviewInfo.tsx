@@ -68,10 +68,13 @@ function ReviewInfo() {
           {placeInfo.sortBy})
         </p>
       </div>
-      <div
+      <a
+        href={placeInfo.url}
         className="review-info__screenshot"
         style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
-      ></div>
+        target="_blank"
+        rel="noreferrer"
+      ></a>
     </div>
   )
 }
