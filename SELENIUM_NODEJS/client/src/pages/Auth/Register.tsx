@@ -121,7 +121,7 @@ const Register: React.FC = () => {
               onChange={e => setConfirmPassword(e.target.value)}
             />
           </div>
-          <button className="mt-2 w-100 " type="submit">
+          <button className="primary mt-2 w-100 " type="submit">
             Register
           </button>
           {error && <div className="alert alert-danger">{error}</div>}
@@ -132,7 +132,7 @@ const Register: React.FC = () => {
             Continue with Google
           </button>
         </div>
-        <div>
+        <div className="mt-2">
           <span>
             Already have an account?{" "}
             <Link className="registration__card__link" to="/auth/login">

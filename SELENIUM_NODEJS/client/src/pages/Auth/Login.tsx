@@ -77,7 +77,7 @@ const Login: React.FC = () => {
               placeholder="password"
             />
           </div>
-          <button className="btn btn-primary mt-2 w-100" type="submit">
+          <button className="primary mt-2 w-100" type="submit">
             Sign In
           </button>
           {error && <div className="alert alert-danger">{error}</div>}

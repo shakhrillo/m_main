@@ -63,13 +63,9 @@ function Payments() {
 
   return (
     <div>
-      <h2>
-        Payments
-      </h2>
+      <h2>Payments</h2>
       <div className="card">
-        <h3>
-          Buy coins
-        </h3>
+        <h3>Buy coins</h3>
         <p>
           Current Balance:{" "}
           <span>
@@ -80,15 +76,19 @@ function Payments() {
           </span>
         </p>
         <br />
-        <button onClick={async () => {
-          setIsLoading(true)
-          await buyCoins(user!.uid, 100)
-          setIsLoading(false)
-        }} disabled={isLoading} className="primary">
+        <button
+          onClick={async () => {
+            setIsLoading(true)
+            await buyCoins(user!.uid, 100)
+            setIsLoading(false)
+          }}
+          disabled={isLoading}
+          className="primary"
+        >
           Buy 100 coins
         </button>
         <br />
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>Price</th>
