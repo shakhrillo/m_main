@@ -179,18 +179,18 @@ export const ReviewsForm = () => {
               </>
             ) : (
               <>
+                <h1>
+                  {info.title} ({info.rating})
+                </h1>
                 <div
                   className="review-screenshot"
                   style={{ backgroundImage: `url(${info.screenshot})` }}
                 ></div>
-                <h1>
-                  {info.title} ({info.rating})
-                </h1>
                 <ul>
                   <li>{info.reviews}</li>
                   <li>{info.address}</li>
-                  <li>{info.phone}</li>
-                  <li>{info.website}</li>
+                  {info.phone && <li>{info.phone}</li>}
+                  {info.website && <li>{info.website}</li>}
                 </ul>
                 <form className="form">
                   <div className="form__actions">
