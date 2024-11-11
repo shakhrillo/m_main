@@ -71,6 +71,10 @@ async function waitForArrayGrowth(array, targetLength, timeout = 90000) {
 
 async function setExtractedDate(userId, reviewId, allElements) {
   if (allElements.length > 0) {
+    for (let element of allElements) {
+      console.log("Element:", element);
+    }
+
     try {
       const jsonFileName = path.join(tempDir, `${reviewId}.json`);
       const csvFileName = path.join(tempDir, `${reviewId}.csv`);
