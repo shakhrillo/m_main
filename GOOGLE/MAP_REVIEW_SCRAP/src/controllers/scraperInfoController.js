@@ -1,18 +1,55 @@
+const { uploadFile } = require("../services/storageService");
 const { launchBrowser, openPage } = require("../utils/browser");
+const wait = require("../utils/wait");
 
 const data = {};
 
+let browser;
 let page;
 
 async function main({ url, userId, reviewId, limit, sortBy }) {
   try {
-    const browser = await launchBrowser();
+    browser = await launchBrowser();
     page = await openPage(browser, url);
     data.url = url;
 
     // await page.setCacheEnabled(false);
 
     data.title = await page.title();
+
+    // await wait(5000);
+
+    // aria-label="Collapse side panel"
+    // drawer.close;mouseover:drawer.showToggleTooltip; mouseout:drawer.hideToggleTooltip;focus:drawer.showToggleTooltip;blur:drawer.hideToggleTooltip
+    const sidePanel = await page.$$(
+      `button[aria-label*="Collapse side panel"][jsaction*="mouseover:drawer.showToggleTooltip"]`
+    );
+    console.log("sidePanel", sidePanel.length);
+    if (sidePanel.length > 0) {
+      await page.evaluate((btn) => btn.scrollIntoView(), sidePanel[0]);
+      await sidePanel[0].click();
+    }
+
+    await wait(1000);
+
+    // take screenshot
+    const screenshot = await page.screenshot({ fullPage: true });
+    const img = await uploadFile(
+      screenshot,
+      `${userId}/${reviewId}/screenshot.png`
+    );
+    data.screenshot = img;
+    // Upload screenshot to Google Cloud Storage
+    // const storage = new Storage();
+    // const bucket = storage.bucket("map-review-scraper");
+    // const file = bucket.file(`${userId}/${reviewId}/screenshot.png`);
+    // await file.save(screenshot, {
+    //   metadata: {
+    //     contentType: "image/png",
+    //   },
+    // });
+    // data.screenshot = `https://storage.googleapis.com/map-review-scraper/${userId}/${reviewId}/screenshot.png`;
+    // data.screenshot = screenshot.toString("base64");
 
     const address = await page.$$(`button[data-item-id*="address"]`);
     if (address.length > 0) {

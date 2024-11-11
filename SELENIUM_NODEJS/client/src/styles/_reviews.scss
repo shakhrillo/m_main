@@ -60,3 +60,54 @@
     }
   }
 }
+
+.review-info {
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  display: flex;
+
+  .map {
+    position: relative;
+    margin-left: auto;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -10px;
+      width: 100%; /* Make it cover the full width */
+      height: 100%; /* Full height */
+      background: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 90%
+      ); /* Gradient from transparent to white */
+      filter: blur(1px); /* Apply blur effect */
+      pointer-events: none; /* Ensure it doesn't block interactions */
+      z-index: 1; /* Keep it on top of other content */
+    }
+
+    iframe {
+      width: 300px;
+      height: 300px;
+      border: none;
+
+      // deep selector
+      // /deep/ {
+      //   iframe {
+      //     width: 300px;
+      //     height: 300px;
+      //     border: none;
+      //   }
+      // }
+      // // button {
+      // //   display: none;
+      // // }
+    }
+  }
+}
+
+// iframe /deep/ button {
+//   display: none;
+// }
