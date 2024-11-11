@@ -75,6 +75,7 @@
   display: flex;
   min-height: 400px;
   position: relative;
+  margin-bottom: 30px;
   // border-bottom: 1px solid #e2e8f0;
 
   &__content {
@@ -106,14 +107,18 @@
     margin: 0;
     display: flex;
     width: 100%;
-    width: 400px;
-    // margin-top: 3rem;
-    border-bottom: 1px solid #e2e8f0;
 
     li {
       padding: 1rem;
       flex: 1;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
       border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100px;
 
       &:last-child {
         border-right: none;
@@ -128,6 +133,22 @@
       p {
         margin: 0;
         font-size: 1rem;
+      }
+
+      .loader,
+      .completed,
+      .error {
+        width: 34px;
+      }
+
+      .loader {
+        animation: spin 1s linear infinite;
+
+        @keyframes spin {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
       }
     }
   }
@@ -163,7 +184,7 @@
     right: -32px;
     height: calc(100% + 32px);
     bottom: 32px;
-    border-top-right-radius: 6px;
+    border-top-right-radius: 8px;
 
     &::after {
       content: "";

@@ -69,7 +69,6 @@ function SingleReview() {
       <h2>Single Review</h2>
       <div className="card">
         <ReviewInfo />
-        <br />
 
         <table className="table">
           <thead>
