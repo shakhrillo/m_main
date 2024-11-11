@@ -88,6 +88,16 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       }, horizontalWidget[0]);
     }
 
+    // a[title="Google apps"]
+    const googleApps = await page.$$(`a[title="Google apps"]`);
+    console.log("googleApps", googleApps.length);
+    if (googleApps.length > 0) {
+      // set style to display none
+      await page.evaluate((el) => {
+        el.style.display = "none";
+      }, googleApps[0]);
+    }
+
     await wait(1000);
 
     // take screenshot
