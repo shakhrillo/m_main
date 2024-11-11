@@ -20,6 +20,7 @@ function SingleReview() {
       try {
         setLoading(true)
         const reviewsData = await fetchReviews(user.uid, place)
+        console.log("reviewsData", reviewsData)
         setReviews(reviewsData)
       } catch (error) {
         console.error("Error fetching reviews:", error)

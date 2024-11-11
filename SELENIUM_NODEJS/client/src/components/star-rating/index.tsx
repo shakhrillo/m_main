@@ -1,4 +1,6 @@
 import React from "react"
+import starIcon from "../../assets/icons/star.svg"
+import starFiledIcon from "../../assets/icons/star-filled.svg"
 
 interface StarRatingProps {
   rating: string
@@ -12,12 +14,12 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   const floorNumber = Math.floor(extractedNumber)
 
   return (
-    <div className="star-rating d-flex small">
+    <div className="stars">
       {Array.from({ length: totalStars }, (v, i) =>
         i < floorNumber ? (
-          <i key={i} className="bi-star-fill" style={{ color: "#ffc107" }}></i> // Filled star
+          <img key={i} src={starFiledIcon} alt="star" /> // Filled star
         ) : (
-          <i key={i} className="bi-star" style={{ color: "#ffc107" }}></i> // Outlined star
+          <img key={i} src={starIcon} alt="star" /> // Filled star
         ),
       )}
     </div>
