@@ -34,6 +34,8 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
 
     // take screenshot
     const screenshot = await page.screenshot({ fullPage: true });
+    // Upload screenshot to Firebase Storage
+    await wait(500);
     const img = await uploadFile(
       screenshot,
       `${userId}/${reviewId}/screenshot.png`

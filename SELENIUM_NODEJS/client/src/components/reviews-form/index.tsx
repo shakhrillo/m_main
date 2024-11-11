@@ -36,6 +36,7 @@ export const ReviewsForm = () => {
     website: "",
     rating: "",
     reviews: "",
+    screenshot: "",
   })
   const [scrap, setScrap] = useState({
     url: "",
@@ -178,6 +179,10 @@ export const ReviewsForm = () => {
               </>
             ) : (
               <>
+                <div
+                  className="review-screenshot"
+                  style={{ backgroundImage: `url(${info.screenshot})` }}
+                ></div>
                 <h1>
                   {info.title} ({info.rating})
                 </h1>
