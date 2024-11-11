@@ -49,7 +49,6 @@ function ReviewInfo() {
     <>
       <div className="review-info">
         <div className="review-info__content">
-          {/* <StarRating rating={placeInfo.rating} /> */}
           <h1>{placeInfo.title || "Anonymous"}</h1>
           <p>{placeInfo.address}</p>
           <div className="review-info__actions">

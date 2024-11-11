@@ -15,6 +15,7 @@ interface Review {
 
 export const ReviewCard = ({ review }: { review: Review }) => (
   <div className="review-card">
+    {/* <img src={review.user.} */}
     <h3>
       <a href={review.user.href} target="_blank">
         {review.user.name || "Anonymous"}

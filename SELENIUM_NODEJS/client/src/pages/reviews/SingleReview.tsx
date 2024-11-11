@@ -41,6 +41,19 @@ function SingleReview() {
     return unsubscribe
   }, [firestore, user, place])
 
+  function renderText(text: string) {
+    const textLength = text.length
+    const renderTextLength = 60
+    if (textLength === 0) return "No review"
+    return (
+      <p title={text}>
+        {textLength > renderTextLength
+          ? text.slice(0, renderTextLength) + "..."
+          : text}
+      </p>
+    )
+  }
+
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
 
@@ -51,9 +64,26 @@ function SingleReview() {
         <ReviewInfo />
         <br />
 
-        {reviews.map(review => (
-          <ReviewCard review={review} key={review.id} />
-        ))}
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Rating</th>
+              <th>Images</th>
+              <th>Review</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reviews.map(review => (
+              <tr key={review.id}>
+                <td>{review.rating}</td>
+                <td>{review.imageUrls.length}</td>
+                <td>{renderText(review.review)}</td>
+                <td>{renderText(review.response)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )
