@@ -30,6 +30,24 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       await sidePanel[0].click();
     }
 
+    // await till visible `button[jsaction*="zoom.onZoomOutClick"]`
+    await page.waitForSelector(`button[jsaction*="zoom.onZoomOutClick"]`, {
+      visible: true,
+    });
+
+    // jsaction="mouseover:zoom.onZoomOutPointerIn;zoom.onZoomOutClick;keydown:zoom.keydownAndRipple;ptrdown:ripple.nested;mousedown:ripple.nested"
+    const zoomOut = await page.$$(`button[jsaction*="zoom.onZoomOutClick"]`);
+    console.log("zoomOut", zoomOut.length);
+    if (zoomOut.length > 0) {
+      await page.evaluate((btn) => btn.scrollIntoView(), zoomOut[0]);
+      // await zoomOut[0].click();
+      // click 3 times
+      for (let i = 0; i < 3; i++) {
+        await zoomOut[0].click();
+        await wait(500);
+      }
+    }
+
     await wait(1000);
 
     // take screenshot
