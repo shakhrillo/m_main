@@ -1,27 +1,38 @@
-import React from "react"
+import starFilledIcon from "../../assets/icons/star-filled.svg"
 import starIcon from "../../assets/icons/star.svg"
-import starFiledIcon from "../../assets/icons/star-filled.svg"
+import starHalfIcon from "../../assets/icons/star-half.svg"
 
 interface StarRatingProps {
   rating: string
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
-  const totalStars = 5
+const StarRating = ({ rating }: StarRatingProps) => {
+  if (!rating) return null
 
-  const matched = rating.match(/[\d.]+/)
-  const extractedNumber = matched ? parseFloat(matched[0]) : 0
-  const floorNumber = Math.floor(extractedNumber)
+  const filledStarsCount = Math.floor(
+    parseFloat(rating.match(/[\d.]+/)?.[0] || "0"),
+  )
+
+  const isHalfStar = () => {
+    const secondDigit = parseInt(rating[2], 10)
+    return secondDigit
+  }
 
   return (
     <div className="stars">
-      {Array.from({ length: totalStars }, (v, i) =>
-        i < floorNumber ? (
-          <img key={i} src={starFiledIcon} alt="star" /> // Filled star
-        ) : (
-          <img key={i} src={starIcon} alt="star" /> // Filled star
-        ),
-      )}
+      {Array.from({ length: 5 }).map((_, index) => (
+        <img
+          key={index}
+          src={
+            index < filledStarsCount
+              ? starFilledIcon
+              : index === filledStarsCount && isHalfStar()
+                ? starHalfIcon
+                : starIcon
+          }
+          alt="star"
+        />
+      ))}
     </div>
   )
 }

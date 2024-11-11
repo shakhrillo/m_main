@@ -1,9 +1,9 @@
-import { doc, onSnapshot, Timestamp } from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { spentTime } from "../utils/spentTime"
-import { formatTimestamp } from "../utils/formatTimestamp"
+import StarRating from "./star-rating"
 
 function ReviewInfo() {
   const { place } = useParams()
@@ -46,36 +46,61 @@ function ReviewInfo() {
   }, [])
 
   return (
-    <div className="review-info">
-      <div>
-        <h1>
-          {placeInfo.title || "Anonymous"} - {placeInfo.rating}
-        </h1>
-        <p>{placeInfo.reviews}</p>
+    <>
+      <div className="review-info">
+        <div className="review-info__content">
+          {/* <StarRating rating={placeInfo.rating} /> */}
+          <h1>{placeInfo.title || "Anonymous"}</h1>
+          <p>{placeInfo.address}</p>
+          <div className="review-info__actions">
+            <button>Download CSV</button>
+            <button>Download JSON</button>
+          </div>
+          <ul className="review-info__status">
+            <li>
+              <h4>~{placeInfo.totalReviews}</h4>
+              <p>Extracted reviews</p>
+            </li>
+            <li>
+              <h4>{spentTime(placeInfo.createdAt, placeInfo.completedAt)}</h4>
+              <p>Spent time</p>
+            </li>
+          </ul>
+          <div className="review-info__rate">
+            <StarRating rating={placeInfo.rating} />
+            <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
+            <small>Average user rating</small>
+          </div>
+          {/* <div className="review-info__chart">
+            <DoughnutChart />
+          </div> */}
+          {/* (Rating: {placeInfo.rating}) */}
+          {/* <p>{placeInfo.reviews}</p>
         <p>{placeInfo.address}</p>
         <p>{placeInfo.phone}</p>
-        <p>{placeInfo.website}</p>
-        <hr />
-        <p>
+        <p>{placeInfo.website}</p> */}
+          {/* <hr /> */}
+          {/* <p>
           Created at: <b>{formatTimestamp(placeInfo.createdAt)}</b>
-        </p>
-        <p>
+        </p> */}
+          {/* <p>
           Spent time: {spentTime(placeInfo.createdAt, placeInfo.completedAt)}{" "}
           (Machine running time)
         </p>
         <p>
           Extracted reviews: {placeInfo.totalReviews} (Sorted by:{" "}
           {placeInfo.sortBy})
-        </p>
+        </p> */}
+        </div>
+        <a
+          href={placeInfo.url}
+          className="review-info__screenshot"
+          style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
+          target="_blank"
+          rel="noreferrer"
+        ></a>
       </div>
-      <a
-        href={placeInfo.url}
-        className="review-info__screenshot"
-        style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
-        target="_blank"
-        rel="noreferrer"
-      ></a>
-    </div>
+    </>
   )
 }
 
