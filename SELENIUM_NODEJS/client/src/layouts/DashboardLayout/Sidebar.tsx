@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import logoImg from "../../assets/images/d3.png"
+import logoImg from "../../assets/images/logo.svg"
 import searchIcon from "../../assets/icons/search.svg"
 import serverBoltIcon from "../../assets/icons/server-bolt.svg"
 import userIcon from "../../assets/icons/user.svg"

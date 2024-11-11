@@ -22,71 +22,81 @@ const User: React.FC = () => {
     }
 
     setEmail(user.email || "")
-
   }, [])
 
   return (
     <div>
       <h2>User</h2>
-      <div className="card">
+      <div className="user card">
         <h3>Account</h3>
         <p>Real-time information and activities of your property</p>
 
         <form>
-          <label htmlFor="firstName">First name</label>
-          <input
-            name="firstName"
-            value={firstName}
-            onChange={e => setFirstName(e.target.value)}
-            disabled={!canEdit}
-            placeholder="First name"
-            type="text"
-            id="firstName"
-          />
-          <label htmlFor="lastName">Last name</label>
-          <input
-            name="lastName"
-            value={lastName}
-            onChange={e => setLastName(e.target.value)}
-            placeholder="Last name"
-            disabled={!canEdit}
-            type="text"
-            id="lastName"
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            name="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email"
-            disabled={true}
-            type="text"
-            id="email"
-          />
-          <label htmlFor="currentPassword">Current Password</label>
-          <input
-            name="currentPassword"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder="Email"
-            disabled={!canEdit}
-            type="password"
-            id="currentPassword"
-          />
-          <label htmlFor="newPassword">New Password</label>
-          <input
-            name="newPassword"
-            value={newPassword}
-            onChange={e => setNewPassword(e.target.value)}
-            placeholder="New Password"
-            disabled={!canEdit}
-            type="password"
-            id="newPassword"
-          />
-          <br />
-          <button disabled={!canEdit}>
-            Save
-          </button>
+          <div className="d-flex gap-2">
+            <div>
+              <label htmlFor="firstName">First name</label>
+              <input
+                name="firstName"
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+                disabled={!canEdit}
+                placeholder="First name"
+                type="text"
+                id="firstName"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName">Last name</label>
+              <input
+                name="lastName"
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+                placeholder="Last name"
+                disabled={!canEdit}
+                type="text"
+                id="lastName"
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              name="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Email"
+              disabled={true}
+              type="text"
+              id="email"
+            />
+          </div>
+          <div className="d-flex gap-2">
+            <div>
+              <label htmlFor="currentPassword">Current Password</label>
+              <input
+                name="currentPassword"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Email"
+                disabled={!canEdit}
+                type="password"
+                id="currentPassword"
+              />
+            </div>
+            <div>
+              <label htmlFor="newPassword">New Password</label>
+              <input
+                name="newPassword"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+                placeholder="New Password"
+                disabled={!canEdit}
+                type="password"
+                id="newPassword"
+              />
+            </div>
+          </div>
+          <button disabled={!canEdit}>Save</button>
         </form>
       </div>
     </div>

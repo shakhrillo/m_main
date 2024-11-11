@@ -40,7 +40,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      await register(email, password, firstName, lastName);
+      await register(email, password, firstName, lastName)
       navigate("/auth/login")
     } catch (error: any) {
       if (typeof error === "string") {
@@ -61,83 +61,78 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="registration container-fluid">
-      <nav className="registration__navbar">
-        <a href="#">
-          <img
-            className="registration__navbar-logo"
-            src={logo}
-            alt="GeoScraper logo"
-          />
+    <div className="auth">
+      <nav>
+        <a href="/">
+          <img className="logo" src={logo} alt="GeoScraper logo" />
         </a>
       </nav>
-      <div className="registration__card">
-        <div className="registration__card__header">
-          <h3 className="registration__card__header-title">Registration</h3>
-          <span className="registration__text">
-            Enter your details below to create your account.
-          </span>
-        </div>
-        <form className="registration__card__form" onSubmit={handleRegister}>
-          <div className="form-group">
+      <div className="card auth-card">
+        <h3>Registration</h3>
+        <span>Enter your details below to create your account.</span>
+        <form onSubmit={handleRegister}>
+          <div>
+            <label htmlFor="firstName">First name</label>
             <input
               type="text"
-              className="form-control"
               placeholder="First name"
-              onChange={(e) => setFirstName(e.target.value)}
+              id="firstName"
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div>
+            <label htmlFor="lastName">Last name</label>
             <input
               type="text"
               className="form-control"
+              id="lastName"
               placeholder="Last name"
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={e => setLastName(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               className="form-control"
+              id="email"
               placeholder="Enter email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               className="form-control"
+              id="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               type="password"
               className="form-control"
+              id="confirmPassword"
               placeholder="Confirm password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
             />
           </div>
-          <div className="registration__card__form-submit">
-            <button className="btn btn-primary" type="submit">
-              Register
-            </button>
-          </div>
+          <button className="mt-2 w-100 " type="submit">
+            Register
+          </button>
           {error && <div className="alert alert-danger">{error}</div>}
         </form>
-        <div className="registration__card__footer">
-          <span className="registration__text">Or register with</span>
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={handleGoogleLogin}
-          >
-            <i className="bi bi-google me-2"></i>
+        <div>
+          {/* <span className="registration__text">Or register with</span> */}
+          <button className="w-100" type="button" onClick={handleGoogleLogin}>
             Continue with Google
           </button>
         </div>
-        <div className="registration__text">
+        <div>
           <span>
             Already have an account?{" "}
             <Link className="registration__card__link" to="/auth/login">
