@@ -4,41 +4,13 @@ import { useParams } from "react-router-dom"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { spentTime } from "../utils/spentTime"
 import StarRating from "./star-rating"
+import { statusRender } from "../utils/statusRender"
 // import
-import loaderIcon from "../assets/icons/loader-2.svg"
-import circleCheckIcon from "../assets/icons/circle-check.svg"
-import xIcon from "../assets/icons/x.svg"
 
 function ReviewInfo() {
   const { place } = useParams()
   const { firestore, user } = useFirebase()
   const [placeInfo, setPlaceInfo] = useState<any>({})
-
-  function showStatus(status: string) {
-    switch (status) {
-      case "completed":
-        return (
-          <>
-            <img src={circleCheckIcon} alt="Completed" className="completed" />
-            <p>Completed</p>
-          </>
-        )
-      case "failed":
-        return (
-          <>
-            <img src={xIcon} alt="Failed" className="failed" />
-            <p>Failed</p>
-          </>
-        )
-      default:
-        return (
-          <>
-            <img src={loaderIcon} alt="In progress" className="loader" />
-            <p>In progress</p>
-          </>
-        )
-    }
-  }
 
   useEffect(() => {
     if (!firestore || !place || !user) return
@@ -97,7 +69,7 @@ function ReviewInfo() {
           </button>
         </div>
         <ul className="review-info__status">
-          <li>{showStatus(placeInfo.status)}</li>
+          <li>{statusRender(placeInfo.status)}</li>
           <li>
             <h4>~{placeInfo.totalReviews || 0}</h4>
             <p>Extracted reviews</p>

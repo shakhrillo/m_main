@@ -5,6 +5,8 @@ import { ReviewCard } from "../../components/review-card"
 import ReviewInfo from "../../components/ReviewInfo"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { collection, onSnapshot } from "firebase/firestore"
+import { imagesCountRender } from "../../utils/imagesCountRender"
+import { reviewTextRender } from "../../utils/reviewTextRender"
 
 function SingleReview() {
   const { place } = useParams()
@@ -41,26 +43,6 @@ function SingleReview() {
     return unsubscribe
   }, [firestore, user, place])
 
-  function renderText(text: string) {
-    const textLength = text.length
-    const renderTextLength = 60
-    if (textLength === 0) return "No review"
-    return (
-      <p title={text}>
-        {textLength > renderTextLength
-          ? text.slice(0, renderTextLength) + "..."
-          : text}
-      </p>
-    )
-  }
-
-  function renderImagesCount(imageUrls: string[]) {
-    const count = imageUrls.length
-    if (count === 0) return "No images"
-
-    return count === 1 ? `${count} image` : `${count} images`
-  }
-
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
 
@@ -85,9 +67,9 @@ function SingleReview() {
               <tr key={review.id}>
                 <td>{index + 1}</td>
                 <td>{review.rating}</td>
-                <td>{renderImagesCount(review.imageUrls)}</td>
-                <td>{renderText(review.review)}</td>
-                <td>{renderText(review.response)}</td>
+                <td>{imagesCountRender(review.imageUrls)}</td>
+                <td>{reviewTextRender(review.review)}</td>
+                <td>{reviewTextRender(review.response)}</td>
               </tr>
             ))}
           </tbody>

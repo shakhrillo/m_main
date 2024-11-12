@@ -1,34 +1,23 @@
-import { onSnapshot, Timestamp } from "firebase/firestore"
+import { onSnapshot } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
-import ReviewsCard from "../../components/reviews-card"
+import { Table } from "../../components/table"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery } from "../../services/firebaseService"
+import { formatTimestamp } from "../../utils/formatTimestamp"
+import { spentTime } from "../../utils/spentTime"
+import { statusRender } from "../../utils/statusRender"
+import { reviewsCountRender } from "../../utils/reviewsCountRender"
 
-// Utility functions
-const renderReviewCount = (review: any) => (
-  <span>
-    {review?.totalReviews || <i className="bi-question-lg"></i>} reviews
-  </span>
-)
-
-const formatTimestamp = (timestamp: Timestamp) =>
-  timestamp?.seconds ? new Date(timestamp.seconds * 1000).toLocaleString() : ""
-
-const calculateElapsedTime = (start: Timestamp, end: Timestamp) => {
-  const diffInSeconds = (end?.seconds || 0) - (start?.seconds || 0)
-  return diffInSeconds < 60
-    ? `${diffInSeconds} seconds`
-    : diffInSeconds < 3600
-      ? `${Math.floor(diffInSeconds / 60)} minutes`
-      : `${Math.floor(diffInSeconds / 3600)} hours`
-}
-
-// Table configuration for Review Cards
 const tableColumns = [
   {
     textRender: () => <input type="checkbox" />,
     field: "index",
-    render: (_: any, index: number) => <input type="checkbox" />,
+    render: () => <input type="checkbox" />,
+  },
+  {
+    text: "Status",
+    field: "status",
+    render: (row: any) => statusRender(row.status, false),
   },
   {
     text: "Place",
@@ -36,42 +25,31 @@ const tableColumns = [
     render: (row: any) => (
       <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>
     ),
-    icon: "map",
   },
   {
     text: "Date",
     field: "createdAt",
     render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>,
-    icon: "calendar",
   },
   {
     text: "Reviews",
     field: "totalReviews",
-    render: renderReviewCount,
-    icon: "list",
+    render: (row: any) => reviewsCountRender(row),
   },
   {
     text: "Time",
     field: "timeSpent",
-    render: (row: any) => calculateElapsedTime(row.createdAt, row.completedAt),
-    icon: "clock",
-  },
-  {
-    text: "File Format",
-    field: "format",
-    render: () => (
-      <select>
-        <option value="json">JSON</option>
-        <option value="csv">CSV</option>
-      </select>
-    ),
-    icon: "file-earmark-text",
+    render: (row: any) => spentTime(row),
   },
   {
     text: "",
-    field: "download",
-    render: () => <button>Download</button>,
-    icon: "download",
+    field: "csv",
+    render: (row: any) => <a href={row.csvUrl}>Csv</a>,
+  },
+  {
+    text: "",
+    field: "json",
+    render: (row: any) => <a href={row.jsonUrl}>JSON</a>,
   },
 ]
 
@@ -103,7 +81,7 @@ const Dashboard: React.FC = () => {
       <h2>Reviews</h2>
 
       <div className="card">
-        <ReviewsCard data={completedReviews} tableHeader={tableColumns} />
+        <Table tableHeader={tableColumns} body={completedReviews} />
       </div>
     </>
   )
