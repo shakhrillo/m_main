@@ -129,38 +129,38 @@ select {
   min-width: 200px;
 }
 
-button {
-  transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  font-size: var(--fs-14);
-  background-color: #fff;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border: 1px solid #e2e8f0;
-  align-self: flex-start;
-  gap: 0.5rem;
-  border-radius: 24px;
+// button {
+//   transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+//   font-weight: 600;
+//   padding: 0.5rem 1rem;
+//   font-size: var(--fs-14);
+//   background-color: #fff;
+//   white-space: nowrap;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   cursor: pointer;
+//   border: 1px solid #e2e8f0;
+//   align-self: flex-start;
+//   gap: 0.5rem;
+//   border-radius: 24px;
 
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
+//   svg {
+//     width: 1rem;
+//     height: 1rem;
+//   }
 
-  &.primary {
-    background-color: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-  }
+//   &.primary {
+//     background-color: var(--primary);
+//     color: #fff;
+//     border-color: var(--primary);
+//   }
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
+//   &:disabled {
+//     opacity: 0.5;
+//     cursor: not-allowed;
+//   }
+// }
 
 textarea:not([rows]) {
   min-height: 10em;

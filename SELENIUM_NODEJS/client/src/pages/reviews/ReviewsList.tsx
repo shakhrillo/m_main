@@ -154,7 +154,10 @@ const Dashboard: React.FC = () => {
         <div className="card-info">
           <h3>Completed Reviews ({completedReviews.length})</h3>
           <div className="card-actions">
-            <button onClick={deleteSelectedReviews}>
+            <button
+              className="button button-primary"
+              onClick={deleteSelectedReviews}
+            >
               Delete{" "}
               {selectedReviews.length > 0 ? `(${selectedReviews.length})` : ""}
             </button>

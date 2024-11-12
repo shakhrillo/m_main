@@ -12,13 +12,15 @@ body {
   color: #475569;
 }
 
-@import "./styles/reset";
-@import "./styles/main";
-@import "./styles/sidebar";
-@import "./styles/steps";
-@import "./styles/grid";
-@import "./styles/reviews";
-@import "./styles/user";
-@import "./styles/auth";
-@import "./styles/table";
-@import "./styles/status";
+// @import "./styles/reset";
+// @import "./styles/main";
+// @import "./styles/sidebar";
+// @import "./styles/steps";
+// @import "./styles/grid";
+// @import "./styles/reviews";
+// @import "./styles/user";
+// @import "./styles/auth";
+// @import "./styles/table";
+// @import "./styles/status";
+
+@import "./styles/index.scss";
