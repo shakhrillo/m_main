@@ -17,6 +17,10 @@ body {
     padding: 0;
 }
 
+button {
+    color: var(--color-primary);
+}
+
 ul,
 ol {
     list-style: none;
