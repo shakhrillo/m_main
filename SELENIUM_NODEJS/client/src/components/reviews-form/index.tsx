@@ -230,7 +230,6 @@ export const ReviewsForm = () => {
                 <span className="required">*</span>
               </label>
               <input
-                disabled={true}
                 type="number"
                 id="limit"
                 value={scrap.limit}

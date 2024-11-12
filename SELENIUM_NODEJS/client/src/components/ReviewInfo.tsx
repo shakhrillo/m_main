@@ -103,7 +103,7 @@ function ReviewInfo() {
             <p>Extracted reviews</p>
           </li>
           <li>
-            <h4>{spentTime(placeInfo.createdAt, placeInfo.completedAt)}</h4>
+            <h4>{spentTime(placeInfo)}</h4>
             <p>Spent time</p>
           </li>
         </ul>
