@@ -7,8 +7,10 @@ import { formatTimestamp } from "../../utils/formatTimestamp"
 import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
+import { useNavigate } from "react-router-dom"
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate()
   const { firestore, user } = useFirebase()
   const [completedReviews, setCompletedReviews] = useState<any[]>([])
   const [selectedReviews, setSelectedReviews] = useState<any[]>([])
@@ -31,7 +33,15 @@ const Dashboard: React.FC = () => {
       text: "Place",
       field: "title",
       render: (row: any) => (
-        <a href={`/reviews/${row.id}`}>{row.title || row.url}</a>
+        <a
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            navigate(`/reviews/${row.id}`)
+          }}
+        >
+          {row.title || row.url}
+        </a>
       ),
     },
     {
