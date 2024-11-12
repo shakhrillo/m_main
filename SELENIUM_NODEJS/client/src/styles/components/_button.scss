@@ -11,6 +11,11 @@
   border: 0;
   text-transform: capitalize;
 
+  &-lg {
+    font-size: $font-size-lg;
+    padding: $button-padding-lg;
+  }
+
   &-primary {
     background-color: $button-primary-bg;
     color: $button-primary-color;

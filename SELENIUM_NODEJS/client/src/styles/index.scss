@@ -1,15 +1,22 @@
-@import "./base/reset";
-@import "./abstracts/placeholders";
 @import "./abstracts/variables";
+
+@import "./base/reset";
+@import "./base/typography";
+
+@import "./abstracts/placeholders";
 @import "./components/button";
+@import "./components/table";
+@import "./components/image";
+
+@import "./utilities/utilities";
 
 // @import "./reset";
 @import "./main";
 @import "./sidebar";
 @import "./steps";
-@import "./grid";
+// @import "./grid";
 @import "./reviews";
 @import "./user";
 @import "./auth";
-@import "./table";
+// @import "./table";
 @import "./status";

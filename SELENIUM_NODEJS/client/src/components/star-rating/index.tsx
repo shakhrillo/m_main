@@ -19,7 +19,7 @@ const StarRating = ({ rating }: StarRatingProps) => {
   }
 
   return (
-    <div className="stars">
+    <div className="d-flex">
       {Array.from({ length: 5 }).map((_, index) => (
         <img
           key={index}

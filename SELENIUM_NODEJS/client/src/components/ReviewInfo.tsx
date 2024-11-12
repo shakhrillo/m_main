@@ -25,50 +25,101 @@ function ReviewInfo() {
   }, [firestore, user, place])
 
   return (
-    <div className="review-info">
-      <div className="review-info__content">
-        <h1>{placeInfo.title || "Anonymous"}</h1>
-        <p>{placeInfo.address}</p>
-        <div className="review-info__actions">
-          <button
-            onClick={() => window.open(placeInfo.csvUrl, "_blank")}
-            disabled={!placeInfo.csvUrl}
-            className="primary"
-          >
-            Download CSV
-          </button>
-          <button
-            onClick={() => window.open(placeInfo.jsonUrl, "_blank")}
-            disabled={!placeInfo.jsonUrl}
-          >
-            Download JSON
-          </button>
+    <>
+      <div className="d-flex mb-5">
+        <div className="d-flex-column">
+          <h1 className="my-0">{placeInfo.title || "Anonymous"}</h1>
+          <p>{placeInfo.address}</p>
+          <div className="d-flex gap-3 mt-auto">
+            <button
+              onClick={() => window.open(placeInfo.csvUrl, "_blank")}
+              disabled={!placeInfo.csvUrl}
+              className="button button-lg button-primary"
+            >
+              Download CSV
+            </button>
+            <button
+              onClick={() => window.open(placeInfo.jsonUrl, "_blank")}
+              disabled={!placeInfo.jsonUrl}
+              className="button button-lg"
+            >
+              Download JSON
+            </button>
+          </div>
+          <ul className="list-unstyled d-flex gap-2 mb-0 mt-3 border-bottom border-top">
+            <li className="d-flex-column gap-1 align-items-center justify-space-around p-5">
+              {statusRender(placeInfo.status, { width: 40, height: 40 })}
+              <p className="text-capitalize m-0">{placeInfo.status}</p>
+            </li>
+            <li className="d-flex-column gap-1 align-items-center justify-space-around p-5 border-left border-right">
+              <h2 className="my-0">{placeInfo.totalReviews || 0}</h2>
+              <p className="m-0">Extracted reviews</p>
+            </li>
+            <li className="d-flex-column gap-1 align-items-center justify-space-around p-5">
+              <h2 className="my-0">{spentTime(placeInfo)}</h2>
+              <p className="m-0">Spent time</p>
+            </li>
+          </ul>
+          <div className="d-flex gap-3 align-items-center py-3">
+            <StarRating rating={placeInfo.rating} />
+            <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
+            <small>Average user rating</small>
+          </div>
         </div>
-        <ul className="review-info__status">
-          <li>{statusRender(placeInfo.status)}</li>
-          <li>
-            <h4>{placeInfo.totalReviews || 0}</h4>
-            <p>Extracted reviews</p>
-          </li>
-          <li>
-            <h4>{spentTime(placeInfo)}</h4>
-            <p>Spent time</p>
-          </li>
-        </ul>
-        <div className="review-info__rate">
-          <StarRating rating={placeInfo.rating} />
-          <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
-          <small>Average user rating</small>
-        </div>
+        {placeInfo.screenshot && (
+          <a href={placeInfo.url} target="_blank" rel="noreferrer">
+            <div className="img-glass-left">
+              <img src={placeInfo.screenshot} alt="" />
+            </div>
+          </a>
+        )}
       </div>
-      <a
-        href={placeInfo.url}
-        className="review-info__screenshot"
-        style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
-        target="_blank"
-        rel="noreferrer"
-      ></a>
-    </div>
+      <div className="review-info d-none">
+        <div className="review-info__content">
+          <h1>{placeInfo.title || "Anonymous"}</h1>
+          <p>{placeInfo.address}</p>
+          <div className="review-info__actions">
+            <button
+              onClick={() => window.open(placeInfo.csvUrl, "_blank")}
+              disabled={!placeInfo.csvUrl}
+              className="button button-lg button-primary"
+            >
+              Download CSV
+            </button>
+            <button
+              onClick={() => window.open(placeInfo.jsonUrl, "_blank")}
+              disabled={!placeInfo.jsonUrl}
+              className="button button-lg"
+            >
+              Download JSON
+            </button>
+          </div>
+          <ul className="review-info__status">
+            <li>{statusRender(placeInfo.status)}</li>
+            <li>
+              <h4>{placeInfo.totalReviews || 0}</h4>
+              <p>Extracted reviews</p>
+            </li>
+            <li>
+              <h4>{spentTime(placeInfo)}</h4>
+              <p>Spent time</p>
+            </li>
+          </ul>
+          <div className="review-info__rate">
+            <StarRating rating={placeInfo.rating} />
+            <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
+            <small>Average user rating</small>
+          </div>
+        </div>
+        <a
+          href={placeInfo.url}
+          className="review-info__screenshot"
+          style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
+          target="_blank"
+          rel="noreferrer"
+        ></a>
+      </div>
+    </>
   )
 }
 

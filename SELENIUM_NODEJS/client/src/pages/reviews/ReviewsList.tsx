@@ -157,6 +157,7 @@ const Dashboard: React.FC = () => {
             <button
               className="button button-primary"
               onClick={deleteSelectedReviews}
+              disabled={selectedReviews.length === 0}
             >
               Delete{" "}
               {selectedReviews.length > 0 ? `(${selectedReviews.length})` : ""}
