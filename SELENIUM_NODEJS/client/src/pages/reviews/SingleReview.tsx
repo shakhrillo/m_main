@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
-import { ReviewCard } from "../../components/review-card"
-import ReviewInfo from "../../components/ReviewInfo"
-import { useFirebase } from "../../contexts/FirebaseProvider"
 import { collection, onSnapshot } from "firebase/firestore"
+import ReviewInfo from "../../components/review-info"
+import { useFirebase } from "../../contexts/FirebaseProvider"
 import { imagesCountRender } from "../../utils/imagesCountRender"
 import { reviewTextRender } from "../../utils/reviewTextRender"
 
@@ -33,8 +32,6 @@ function SingleReview() {
         ...doc.data(),
       }))
 
-      console.log(reviewsData)
-
       setReviews(reviewsData)
       setLoading(false)
       setError(null)
@@ -48,7 +45,7 @@ function SingleReview() {
 
   return (
     <div>
-      <h2>Single Review</h2>
+      <h3>Single Review</h3>
       <div className="card">
         <ReviewInfo />
 
