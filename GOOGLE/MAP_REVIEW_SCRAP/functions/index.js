@@ -273,7 +273,6 @@ exports.onReviewCompleted = onDocumentUpdated(
   "users/{userId}/reviews/{reviewId}",
   async (event) => {
     const statusDoc = admin.firestore().doc("status/app");
-
     const { userId, reviewId } = event.params;
     const updatedReview = event.data.after.data();
 
