@@ -7,6 +7,7 @@ import { useFirebase } from "../../contexts/FirebaseProvider"
 import { doc, onSnapshot } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import loadIcon from "../../assets/icons/loader-2.svg"
+import StarRating from "../star-rating"
 
 const steps = [
   {
@@ -182,148 +183,142 @@ export const ReviewsForm = () => {
                 </p>
               </>
             ) : (
-              <>
-                <h1>
-                  {info.title} ({info.rating})
-                </h1>
-                <img src={info.screenshot} alt="" width={250} />
-                <ul>
-                  <li>{info.reviews}</li>
-                  <li>{info.address}</li>
-                  {info.phone && <li>{info.phone}</li>}
-                  {info.website && <li>{info.website}</li>}
-                </ul>
-                <div className="d-flex gap-3">
-                  <button
-                    className="button"
-                    onClick={() => setStep(0)}
-                    disabled={loading || !info.title}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="button"
-                    onClick={() => setStep(2)}
-                    disabled={loading || !info.title}
-                  >
-                    Confirm
-                  </button>
+              <div className="d-flex">
+                <div className="d-flex-column w-100">
+                  <h3 className="m-0">{info.title}</h3>
+                  <div className="card w-100 my-5">
+                    <div className="card-body p-0">
+                      <ul className="list-unstyled m-0 p-0 d-flex">
+                        <li className="d-flex-column align-items-center justify-space-around p-5">
+                          {/* {statusRender(placeInfo.status, { width: 40, height: 40 })} */}
+                          {/* <p className="text-capitalize m-0">{info.status}</p> */}
+                        </li>
+                        <li className="d-flex-column align-items-center justify-space-around p-5 border-left border-right">
+                          <h2 className="my-0">{info.reviews}</h2>
+                          <p className="m-0">All reviews</p>
+                        </li>
+                        <li className="d-flex-column align-items-center justify-space-around p-5">
+                          <h2 className="my-0">12h</h2>
+                          <p className="m-0">Expected time</p>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="card-footer">
+                      <StarRating rating={info.rating} />
+                      <strong>{info.rating ? info.rating : "N/A"}</strong>
+                      <small>Average user rating</small>
+                    </div>
+                  </div>
+                  <div className="d-flex mb-5 gap-3">
+                    <button
+                      className="button button-lg"
+                      onClick={() => setStep(0)}
+                      disabled={loading || !info.title}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="button button-primary button-lg"
+                      onClick={() => setStep(2)}
+                      disabled={loading || !info.title}
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                  <p>
+                    If the information is incorrect, please try again by
+                    entering the correct URL.
+                  </p>
                 </div>
-              </>
+                <div className="w-100">
+                  <a
+                    href={info.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ml-auto"
+                  >
+                    <div
+                      className="img-glass-left"
+                      style={{ backgroundImage: `url(${info.screenshot})` }}
+                    ></div>
+                  </a>
+                </div>
+              </div>
             )}
           </div>
         )
       case 2:
         return (
           <div>
-            <h1>
-              {info.title} ({info.rating})
-            </h1>
-            <p>
-              You can now start scraping reviews. Please select the options
-              below.
-            </p>
-            <form onSubmit={handleStartScraping}>
-              <div className="form-wrap">
-                <label htmlFor="limit" className="form-label">
-                  Limit
-                  <span className="required">*</span>
-                </label>
-                <input
-                  className="form-input form-input-lg"
-                  type="number"
-                  id="limit"
-                  value={scrap.limit}
-                  onChange={e => handleInputChange("limit", e.target.value)}
-                />
-                <div className="form-hint">
-                  Available reviews: {info.reviews}
-                  <br />
-                  <strong>Limit</strong> is the number of reviews you would like
-                  to scrape. The maximum limit is 1000.
-                </div>
-              </div>
+            <h3>{info.title}</h3>
+            <div className="card">
+              <div className="card-body">
+                <form onSubmit={handleStartScraping}>
+                  <div className="form-wrap">
+                    <label htmlFor="limit" className="form-label">
+                      Limit
+                      <span className="required">*</span>
+                    </label>
+                    <input
+                      className="form-input form-input-lg"
+                      type="number"
+                      id="limit"
+                      value={scrap.limit}
+                      onChange={e => handleInputChange("limit", e.target.value)}
+                    />
+                    {/* <div className="form-hint">
+                      Available reviews: {info.reviews}
+                      <br />
+                      <strong>Limit</strong> is the number of reviews you would
+                      like to scrape. The maximum limit is 1000.
+                    </div> */}
+                  </div>
 
-              <div className="form-wrap">
-                <label htmlFor="sortBy" className="form-label">
-                  Sort by
-                </label>
-                <select
-                  disabled={loading}
-                  id="sortBy"
-                  value={scrap.sortBy}
-                  onChange={e => handleInputChange("sortBy", e.target.value)}
-                  className="form-select form-select-lg"
-                >
-                  {[
-                    "Most relevant",
-                    "Newest",
-                    "Lowest rating",
-                    "Highest rating",
-                  ].map((option, i) => (
-                    <option key={i} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="form-wrap">
+                    <label htmlFor="sortBy" className="form-label">
+                      Sort by
+                    </label>
+                    <select
+                      disabled={loading}
+                      id="sortBy"
+                      value={scrap.sortBy}
+                      onChange={e =>
+                        handleInputChange("sortBy", e.target.value)
+                      }
+                      className="form-select form-select-lg"
+                    >
+                      {[
+                        "Most relevant",
+                        "Newest",
+                        "Lowest rating",
+                        "Highest rating",
+                      ].map((option, i) => (
+                        <option key={i} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="form-wrap">
-                <label htmlFor="extractImageUrls" className="form-label">
-                  <input
-                    disabled={loading}
-                    type="checkbox"
-                    checked={scrap.extractImageUrls}
-                    onChange={() => handleCheckboxChange("extractImageUrls")}
-                    className="form-checkbox"
-                  />{" "}
-                  Extract image URLs
-                </label>
+                  <div className="d-flex gap-3">
+                    <button
+                      className="button button-lg"
+                      onClick={() => setStep(0)}
+                      disabled={loading}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="button button-lg button-primary"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      Start Scraping ({scrap.limit} coins)
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <div className="form-wrap">
-                <label htmlFor="ownerResponse" className="form-label">
-                  <input
-                    disabled={loading}
-                    type="checkbox"
-                    checked={scrap.ownerResponse}
-                    onChange={() => handleCheckboxChange("ownerResponse")}
-                    className="form-checkbox"
-                  />{" "}
-                  Owner response
-                </label>
-              </div>
-
-              <div className="form-wrap">
-                <label htmlFor="onlyGoogleReviews" className="form-label">
-                  <input
-                    disabled={loading}
-                    type="checkbox"
-                    checked={scrap.onlyGoogleReviews}
-                    onChange={() => handleCheckboxChange("onlyGoogleReviews")}
-                    className="form-checkbox"
-                  />{" "}
-                  Only Google reviews
-                </label>
-              </div>
-
-              <div className="d-flex gap-3">
-                <button
-                  className="button button-lg"
-                  onClick={() => setStep(0)}
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="button button-lg button-primary"
-                  type="submit"
-                  disabled={loading}
-                >
-                  Start Scraping
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         )
       default:
