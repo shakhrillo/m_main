@@ -25,11 +25,11 @@ function ReviewInfo() {
   }, [firestore, user, place])
 
   return (
-    <div className="d-flex mb-5">
-      <div className="d-flex-column">
-        <h1 className="my-0">{placeInfo.title || "Anonymous"}</h1>
+    <div className="d-flex">
+      <div className="w-100 d-flex-column">
+        <h3 className="my-0">{placeInfo.title || "Anonymous"}</h3>
         <p>{placeInfo.address}</p>
-        <div className="d-flex gap-3 mt-auto">
+        <div className="d-flex gap-3 mb-3">
           <button
             onClick={() => window.open(placeInfo.csvUrl, "_blank")}
             disabled={!placeInfo.csvUrl}
@@ -45,32 +45,44 @@ function ReviewInfo() {
             Download JSON
           </button>
         </div>
-        <ul className="list-unstyled d-flex gap-2 mb-0 mt-3 border-bottom border-top">
-          <li className="d-flex-column gap-1 align-items-center justify-space-around p-5">
-            {statusRender(placeInfo.status, { width: 40, height: 40 })}
-            <p className="text-capitalize m-0">{placeInfo.status}</p>
-          </li>
-          <li className="d-flex-column gap-1 align-items-center justify-space-around p-5 border-left border-right">
-            <h2 className="my-0">{placeInfo.totalReviews || 0}</h2>
-            <p className="m-0">Extracted reviews</p>
-          </li>
-          <li className="d-flex-column gap-1 align-items-center justify-space-around p-5">
-            <h2 className="my-0">{spentTime(placeInfo)}</h2>
-            <p className="m-0">Spent time</p>
-          </li>
-        </ul>
-        <div className="d-flex gap-3 align-items-center py-3">
-          <StarRating rating={placeInfo.rating} />
-          <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
-          <small>Average user rating</small>
+        <div className="card">
+          <div className="card-body p-0">
+            <ul className="list-unstyled m-0 p-0 d-flex">
+              <li className="d-flex-column align-items-center justify-space-around p-5">
+                {statusRender(placeInfo.status, { width: 40, height: 40 })}
+                <p className="text-capitalize m-0">{placeInfo.status}</p>
+              </li>
+              <li className="d-flex-column align-items-center justify-space-around p-5 border-left border-right">
+                <h2 className="my-0">{placeInfo.totalReviews || 0}</h2>
+                <p className="m-0">Extracted reviews</p>
+              </li>
+              <li className="d-flex-column align-items-center justify-space-around p-5">
+                <h2 className="my-0">{spentTime(placeInfo)}</h2>
+                <p className="m-0">Spent time</p>
+              </li>
+            </ul>
+          </div>
+          <div className="card-footer">
+            <StarRating rating={placeInfo.rating} />
+            <strong>{placeInfo.rating ? placeInfo.rating : "N/A"}</strong>
+            <small>Average user rating</small>
+          </div>
         </div>
       </div>
       {placeInfo.screenshot && (
-        <a href={placeInfo.url} target="_blank" rel="noreferrer">
-          <div className="img-glass-left">
-            <img src={placeInfo.screenshot} alt="" />
-          </div>
-        </a>
+        <div className="w-100">
+          <a
+            href={placeInfo.url}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-auto"
+          >
+            <div
+              className="img-glass-left"
+              style={{ backgroundImage: `url(${placeInfo.screenshot})` }}
+            ></div>
+          </a>
+        </div>
       )}
     </div>
   )

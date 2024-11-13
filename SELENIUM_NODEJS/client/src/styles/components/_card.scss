@@ -25,4 +25,12 @@
   .card-body {
     padding: $spacing-md;
   }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    padding: $spacing-md;
+    border-top: $border-width solid $border-color;
+    gap: $spacing-sm;
+  }
 }
