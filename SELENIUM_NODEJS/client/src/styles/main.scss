@@ -10,6 +10,7 @@
 @import "./components/form";
 @import "./components/table";
 @import "./components/image";
+@import "./components/card";
 
 @import "./utilities/utilities";
 
@@ -34,13 +35,4 @@
   @media (min-width: 1200px) {
     width: 90%;
   }
-}
-
-.card {
-  box-shadow:
-    0 1px 2px rgba(15, 22, 36, 0.06),
-    0 1px 3px rgba(15, 22, 36, 0.1);
-  background-color: #fff;
-  border-radius: 6px;
-  padding: 32px;
 }

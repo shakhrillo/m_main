@@ -39,4 +39,28 @@
       cursor: not-allowed;
     }
   }
+
+  &-danger {
+    background-color: $danger-color;
+    color: $light-color;
+
+    &:hover {
+      background-color: darken($danger-color, 10%);
+    }
+
+    &:active {
+      background-color: darken($danger-color, 20%);
+    }
+
+    &:focus {
+      border: $button-focus-border;
+    }
+
+    &:disabled {
+      background-color: $dark-color;
+      color: $light-color;
+      opacity: $button-disabled-opacity;
+      cursor: not-allowed;
+    }
+  }
 }

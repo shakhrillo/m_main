@@ -6,11 +6,11 @@
   flex-direction: column;
   background: #fff;
   height: 100vh;
-  border-right: $border-width solid $border-color;
   position: fixed;
   top: 0;
   left: 0;
   z-index: $z-index-medium;
+  box-shadow: $box-shadow-light;
 }
 
 .sidebar a:first-child {

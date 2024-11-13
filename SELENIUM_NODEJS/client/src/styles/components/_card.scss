@@ -1,0 +1,28 @@
+.card {
+  box-shadow: $box-shadow-light;
+  background-color: #fff;
+  border-radius: $border-radius-md;
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    padding: $spacing-lg;
+    border-bottom: $border-width solid $border-color;
+
+    h3 {
+      color: $primary-color;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: $spacing-sm;
+    }
+  }
+
+  .card-body {
+    padding: $spacing-lg;
+  }
+}

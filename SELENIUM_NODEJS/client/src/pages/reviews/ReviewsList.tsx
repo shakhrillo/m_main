@@ -150,11 +150,11 @@ const Dashboard: React.FC = () => {
     <>
       <h3>Reviews</h3>
       <div className="card">
-        <div className="d-flex align-items-center">
-          <h4>Completed Reviews ({completedReviews.length})</h4>
-          <div className="ml-auto">
+        <div className="card-header">
+          <h3>Reviews List ({completedReviews.length})</h3>
+          <div className="actions">
             <button
-              className="button button-primary"
+              className="button button-danger button-lg"
               onClick={deleteSelectedReviews}
               disabled={selectedReviews.length === 0}
             >
@@ -163,7 +163,9 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
         </div>
-        <Table tableHeader={tableColumns} body={completedReviews} />
+        <div className="card-body">
+          <Table tableHeader={tableColumns} body={completedReviews} />
+        </div>
       </div>
     </>
   )
