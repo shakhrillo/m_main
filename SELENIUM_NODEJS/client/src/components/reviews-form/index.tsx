@@ -6,6 +6,7 @@ import {
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { doc, onSnapshot } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
+import loadIcon from "../../assets/icons/loader-2.svg"
 
 const steps = [
   {
@@ -112,23 +113,22 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex-column">
-                <h3 className="m-0">Which reviews would you like to scrape?</h3>
-                <p>
-                  Enter the URL of the place from which you would like to scrape
-                  reviews, or you can{" "}
-                  <a
-                    href="https://www.google.com/maps"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    search for a place
-                  </a>{" "}
-                  on Google Maps and copy the shareable link.
-                </p>
-
+          <div className="d-flex-column">
+            <h3 className="m-0">Which reviews would you like to scrape?</h3>
+            <p className="m-0">
+              Enter the URL of the place from which you would like to scrape
+              reviews, or you can{" "}
+              <a
+                href="https://www.google.com/maps"
+                target="_blank"
+                rel="noreferrer"
+              >
+                search for a place
+              </a>{" "}
+              on Google Maps and copy the shareable link.
+            </p>
+            <div className="card my-5">
+              <div className="card-body">
                 <form onSubmit={handleGetInfo}>
                   <div className="form-wrap">
                     <label htmlFor="url" className="form-label">
@@ -144,8 +144,7 @@ export const ReviewsForm = () => {
                       className="form-input form-input-lg"
                     />
                     <div className="form-hint">
-                      Example URL:
-                      <code>https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8</code>
+                      Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
                     </div>
                   </div>
                   <button
@@ -156,16 +155,14 @@ export const ReviewsForm = () => {
                     Validate URL
                   </button>
                 </form>
-
-                <p>
-                  Each review scraping process may take between 15 to 60
-                  seconds.
-                  <br />
-                  Reviews are not chargeable. Charges will apply once the
-                  scraping process begins.
-                </p>
               </div>
             </div>
+            <p>
+              Each review scraping process may take between 15 to 60 seconds.
+              <br />
+              Reviews are not chargeable. Charges will apply once the scraping
+              process begins.
+            </p>
           </div>
         )
       case 1:
@@ -173,7 +170,12 @@ export const ReviewsForm = () => {
           <div>
             {!info.title || loading ? (
               <>
-                <h1>Loading...</h1>
+                <h3 className="m-0">Loading...</h3>
+                <div className="card my-5">
+                  <div className="card-body d-flex justify-content-center">
+                    <img src={loadIcon} alt="" width={70} />
+                  </div>
+                </div>
                 <p>
                   The process may take between 15 to 60 seconds. If it takes too
                   long, please try again.
