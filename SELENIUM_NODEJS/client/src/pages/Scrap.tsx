@@ -6,7 +6,9 @@ const Scrap: React.FC = () => {
     <div>
       <h2>Scrap</h2>
       <div className="card">
-        <ReviewsForm />
+        <div className="card-body">
+          <ReviewsForm />
+        </div>
       </div>
     </div>
   )
