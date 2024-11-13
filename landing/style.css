@@ -84,6 +84,11 @@ li {
     position: absolute;
 }
 
+.geo-navbar__brand {
+    display: flex;
+    align-items: center;
+}
+
 .geo-navbar__content {
     display: flex;
     justify-content: space-between;
@@ -249,6 +254,60 @@ li {
 }
 
 /* //-//-//-//-//-//-//-//-//-// */
+/* Testimonal Section */
+/* //-//-//-//-//-//-//-//-//-// */
+.testimonal-section__single {
+    background-color: var(--whiteColor);
+    padding: 30px;
+    border-radius: 7px;
+    transition: var(--transition);
+    margin-bottom: 25px;
+
+}
+
+.testimonal-section__single__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    color: var(--paragraphColor);
+    font-size: var(--fontSize);
+}
+
+.testimonal-section__single__subtitle {
+    font-size: var(--fontSize);
+    color: var(--paragraphColor);
+}
+
+.testimonal-section__single__details {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    gap: 16px;
+}
+
+.testimonal-section__single__details__title,
+.testimonal-section__single__details__subtitle {
+    margin: 0;
+}
+
+.testimonal-section__single__details__title {
+    color: var(--blackColor);
+    font-weight: 500;
+}
+
+.testimonal-section__single__details__subtitle {
+    color: var(--paragraphColor);
+    font-size: 16px;
+}
+
+.testimonal-section__single__details__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+/* //-//-//-//-//-//-//-//-//-// */
 /* Documentation Section */
 /* //-//-//-//-//-//-//-//-//-// */
 
@@ -303,4 +362,133 @@ li {
 .footer li {
     margin-right: 15px;
     margin-left: 15px;
+}
+
+/* //-//-//-//-//-//-//-//-//-// */
+/* Pricing Section */
+/* //-//-//-//-//-//-//-//-//-// */
+.pricing__single {
+    z-index: 1;
+    position: relative;
+    padding: 50px 35px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    border: 1px solid #e3e5ff;
+    background-color: var(--whiteColor);
+    box-shadow: 0 5.632px 70.394px #0000000d;
+}
+
+.pricing__single__most-popular::before {
+    inset: 0;
+    z-index: -1;
+    content: "";
+    position: absolute;
+    border-radius: 15px;
+    border: 2px solid var(--primaryColor);
+}
+
+.pricing__single--popular-text {
+    left: 35px;
+    top: -13px;
+    font-size: 14px;
+    padding: 3px 13px;
+    border-radius: 30px;
+    position: absolute;
+    color: var(--whiteColor);
+    background: var(--primaryColor);
+}
+
+.pricing__single__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--blackColor);
+    font-weight: 700;
+}
+
+.pricing__single__price {
+    font-size: 40px;
+    color: var(--blackColor);
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.pricing__single__subtitle {
+    color: var(--paragraphColor);
+    font-size: var(--fontSize);
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.pricing__single .geo-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    box-shadow: 0 5.632px 28.158px #00000026;
+}
+
+.pricing__single__span {
+    display: block;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.pricing__single__menu__item:last-child {
+    margin: 0;
+}
+
+.pricing__single__menu {
+    margin: 0;
+}
+
+.pricing__single__menu__item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 16px;
+    text-transform: capitalize;
+    color: var(--paragraphColor);
+}
+
+.pricing__single__img {
+    width: 100%;
+    margin-top: 87px;
+}
+
+.pricing__single__img img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* //-//-//-//-//-//-//-//-//-// */
+/* Integration Section */
+/* //-//-//-//-//-//-//-//-//-// */
+
+.integration__card {
+    background-color: #f7f6ff;
+    border: 1px solid #e3e5ff;
+    border-radius: 7px;
+    margin-bottom: 25px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.integration__card__icon {
+    width: 44px;
+    height: 44px;
+    background-color: var(--whiteColor);
+    border-radius: 5px;
+}
+
+.integration__card__title {
+    color: var(--blackColor);
+}
+
+.integration__card__subtitle {
+    color: var(--paragraphColor);
+    font-size: var(--fontSize);
 }
