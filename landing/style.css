@@ -34,6 +34,7 @@ li {
     transition: .5s;
     font-size: var(--fontSize);
     font-weight: 500;
+    text-decoration: none;
 }
 
 .geo-btn__style-two {
@@ -247,6 +248,31 @@ li {
     margin-bottom: 0;
 }
 
+/* //-//-//-//-//-//-//-//-//-// */
+/* Documentation Section */
+/* //-//-//-//-//-//-//-//-//-// */
+
+.documentation-image {
+    padding-left: 56px;
+}
+
+.documentation__content__title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: var(--blackColor);
+    font-weight: 700;
+}
+
+.documentation__content__subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: var(--paragraphColor);
+}
+
+.documentation__content .geo-btn {
+    margin-top: 15px;
+}
 
 /* //-//-//-//-//-//-//-//-//-// */
 /* Footer */
