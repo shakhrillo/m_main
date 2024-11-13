@@ -5,6 +5,7 @@ import { useFirebase } from "../../contexts/FirebaseProvider"
 import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
 import StarRating from "../star-rating"
+import dwonloadIcon from "../../assets/icons/download.svg"
 
 function ReviewInfo() {
   const { place } = useParams()
@@ -35,14 +36,16 @@ function ReviewInfo() {
             disabled={!placeInfo.csvUrl}
             className="button button-lg button-primary"
           >
-            Download CSV
+            <img src={dwonloadIcon} alt="Download CSV" />
+            CSV
           </button>
           <button
             onClick={() => window.open(placeInfo.jsonUrl, "_blank")}
             disabled={!placeInfo.jsonUrl}
             className="button button-lg"
           >
-            Download JSON
+            <img src={dwonloadIcon} alt="Download JSON" />
+            JSON
           </button>
         </div>
         <div className="card">

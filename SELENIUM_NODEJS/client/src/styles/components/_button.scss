@@ -19,6 +19,7 @@
   &-primary {
     background-color: $button-primary-bg;
     color: $button-primary-color;
+    gap: 0.5rem;
 
     &:hover {
       background-color: $button-hover-bg;
@@ -37,6 +38,10 @@
       color: $button-disabled-color;
       opacity: $button-disabled-opacity;
       cursor: not-allowed;
+    }
+
+    img {
+      filter: invert(1);
     }
   }
 
