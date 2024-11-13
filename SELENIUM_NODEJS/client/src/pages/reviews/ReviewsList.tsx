@@ -148,8 +148,13 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <h3>Reviews</h3>
-      <div className="card d-flex">
+      <div className="d-flex align-items-center gap-3 py-3 my-5">
+        <h3 className="m-0">Reviews</h3>
+        <button className="button button-primary ml-auto">
+          Extract new reviews
+        </button>
+      </div>
+      <div className="card d-flex my-5">
         <div className="d-flex-column w-100 border-right p-5">
           <p className="m-0">All comments</p>
           <h3 className="m-0">150k</h3>
@@ -159,12 +164,12 @@ const Dashboard: React.FC = () => {
           <h3 className="m-0">73k</h3>
         </div>
         <div className="d-flex-column w-100 border-right p-5">
-          <p className="m-0">Pending</p>
-          <h3 className="m-0">0</h3>
+          <p className="m-0">User comments</p>
+          <h3 className="m-0">99k</h3>
         </div>
         <div className="d-flex-column w-100 p-5">
-          <p className="m-0">Failed</p>
-          <h3 className="m-0">0</h3>
+          <p className="m-0">Images</p>
+          <h3 className="m-0">3k</h3>
         </div>
       </div>
       <div className="nav">
