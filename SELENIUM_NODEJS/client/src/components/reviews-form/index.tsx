@@ -112,55 +112,60 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="d-flex-column">
-            <h1>Which reviews would you like to scrape?</h1>
-            <p>
-              Enter the URL of the place from which you would like to scrape
-              reviews, or you can{" "}
-              <a
-                href="https://www.google.com/maps"
-                target="_blank"
-                rel="noreferrer"
-              >
-                search for a place
-              </a>{" "}
-              on Google Maps and copy the shareable link.
-            </p>
+          <div className="card">
+            <div className="card-body">
+              <div className="d-flex-column">
+                <h3 className="m-0">Which reviews would you like to scrape?</h3>
+                <p>
+                  Enter the URL of the place from which you would like to scrape
+                  reviews, or you can{" "}
+                  <a
+                    href="https://www.google.com/maps"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    search for a place
+                  </a>{" "}
+                  on Google Maps and copy the shareable link.
+                </p>
 
-            <form onSubmit={handleGetInfo}>
-              <div className="form-wrap">
-                <label htmlFor="url" className="form-label">
-                  URL <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="url"
-                  value={scrap.url}
-                  onChange={e => handleInputChange("url", e.target.value)}
-                  placeholder="https://maps.app.goo.gl/..."
-                  disabled={loading}
-                  className="form-input form-input-lg"
-                />
-                <div className="form-hint">
-                  Example URL:
-                  <code>https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8</code>
-                </div>
+                <form onSubmit={handleGetInfo}>
+                  <div className="form-wrap">
+                    <label htmlFor="url" className="form-label">
+                      URL <span className="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="url"
+                      value={scrap.url}
+                      onChange={e => handleInputChange("url", e.target.value)}
+                      placeholder="https://maps.app.goo.gl/..."
+                      disabled={loading}
+                      className="form-input form-input-lg"
+                    />
+                    <div className="form-hint">
+                      Example URL:
+                      <code>https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8</code>
+                    </div>
+                  </div>
+                  <button
+                    className="button button-lg button-primary"
+                    type="submit"
+                    disabled={loading || !isUrlValid}
+                  >
+                    Validate URL
+                  </button>
+                </form>
+
+                <p>
+                  Each review scraping process may take between 15 to 60
+                  seconds.
+                  <br />
+                  Reviews are not chargeable. Charges will apply once the
+                  scraping process begins.
+                </p>
               </div>
-              <button
-                className="button button-lg button-primary"
-                type="submit"
-                disabled={loading || !isUrlValid}
-              >
-                Validate URL
-              </button>
-            </form>
-
-            <p>
-              Each review scraping process may take between 15 to 60 seconds.
-              <br />
-              Reviews are not chargeable. Charges will apply once the scraping
-              process begins.
-            </p>
+            </div>
           </div>
         )
       case 1:

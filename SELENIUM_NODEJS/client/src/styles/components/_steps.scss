@@ -2,20 +2,10 @@
   position: relative;
   display: flex;
   width: 100%;
-  height: 80px;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background-color: $primary-lighter;
-    border-radius: $border-radius-md;
-    transform: translateY(-50%);
-    transition: width 0.5s;
-  }
+  height: 40px;
+  padding-top: 20px;
+  justify-content: flex-end;
+  margin-bottom: $spacing-lg;
 
   &__text {
     position: absolute;
@@ -26,6 +16,7 @@
     font-size: 14px;
     white-space: nowrap;
     cursor: pointer;
+    text-transform: capitalize;
   }
 
   &__step {
@@ -48,10 +39,11 @@
     &::before {
       left: -50%;
       width: 100%;
-      height: 4px;
+      height: 2px;
       background-color: $primary-color;
       z-index: 1;
-      border-radius: $border-radius-md;
+      border-top-left-radius: $border-radius-md;
+      border-bottom-left-radius: $border-radius-md;
     }
 
     &::after {
@@ -59,7 +51,6 @@
       width: 10px;
       height: 10px;
       background-color: $primary-color;
-      border: 1px solid $primary-color;
       border-radius: 50%;
       z-index: 2;
     }
@@ -72,12 +63,15 @@
     }
     &:last-child::before {
       width: 150%;
+      border-top-right-radius: $border-radius-md;
+      border-bottom-right-radius: $border-radius-md;
     }
 
     &.active {
       &::after {
-        width: 15px;
-        height: 15px;
+        content: "";
+        width: 20px;
+        height: 20px;
         background-color: $primary-color;
         border: 1px solid $primary-color;
       }
@@ -90,6 +84,11 @@
         &::after {
           background-color: $primary-lighter;
         }
+      }
+
+      .progress__text {
+        color: $primary-color;
+        font-weight: $font-weight-bold;
       }
     }
     &.disabled {
