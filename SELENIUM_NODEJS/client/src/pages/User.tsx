@@ -8,9 +8,6 @@ const User: React.FC = () => {
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [newPassword, setNewPassword] = useState("")
-
-  const [canEdit, setCanEdit] = useState(false)
 
   useEffect(() => {
     if (!user) return
@@ -26,78 +23,70 @@ const User: React.FC = () => {
 
   return (
     <div>
-      <h2>User</h2>
-      <div className="user card">
-        <h3>Account</h3>
-        <p>Real-time information and activities of your property</p>
-
-        <form>
-          <div className="d-flex gap-2">
-            <div>
-              <label htmlFor="firstName">First name</label>
+      <h2>Account</h2>
+      <div className="card">
+        <div className="card-body">
+          <form>
+            <div className="form-wrap">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                name="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                disabled={true}
+                placeholder="Email"
+                type="text"
+                id="email"
+                className="form-input"
+              />
+            </div>
+            <div className="form-wrap">
+              <label htmlFor="firstName" className="form-label">
+                First name
+              </label>
               <input
                 name="firstName"
                 value={firstName}
                 onChange={e => setFirstName(e.target.value)}
-                disabled={!canEdit}
                 placeholder="First name"
                 type="text"
                 id="firstName"
+                className="form-input"
               />
             </div>
-            <div>
-              <label htmlFor="lastName">Last name</label>
+            <div className="form-wrap">
+              <label htmlFor="lastName" className="form-label">
+                Last name
+              </label>
               <input
                 name="lastName"
                 value={lastName}
                 onChange={e => setLastName(e.target.value)}
                 placeholder="Last name"
-                disabled={!canEdit}
                 type="text"
                 id="lastName"
+                className="form-input"
               />
             </div>
-          </div>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              name="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email"
-              disabled={true}
-              type="text"
-              id="email"
-            />
-          </div>
-          <div className="d-flex gap-2">
-            <div>
-              <label htmlFor="currentPassword">Current Password</label>
+            <div className="form-wrap">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <input
-                name="currentPassword"
+                name="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="Email"
-                disabled={!canEdit}
+                placeholder="Password"
                 type="password"
-                id="currentPassword"
+                id="password"
+                className="form-input"
               />
             </div>
-            <div>
-              <label htmlFor="newPassword">New Password</label>
-              <input
-                name="newPassword"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                placeholder="New Password"
-                disabled={!canEdit}
-                type="password"
-                id="newPassword"
-              />
-            </div>
-          </div>
-          <button disabled={!canEdit}>Save</button>
-        </form>
+            <button className="button button-primary">Save</button>
+          </form>
+        </div>
       </div>
     </div>
   )
