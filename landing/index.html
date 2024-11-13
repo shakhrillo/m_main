@@ -9,553 +9,300 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-        rel="stylesheet">
+
     <title>GeoScrapper</title>
 </head>
 
 <body>
-    <div class="container-fluid p-0 m-0">
-        <nav class="geo-navbar hide navbar navbar-expand-lg sticky-top">
+    <div class="main">
+        <nav class="geo-navbar">
             <div class="container">
-                <a class="navbar__brand" href="#">
-                    <img class="geo-navbar__logo" src="./images/logo.svg" alt="GeoScrapper">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="geo-navbar__menu navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="geo-navbar__menu__item nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Demo</a>
-                        </li>
-                        <li class="geo-navbar__menu__item nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Features
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Google scrapers</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                        <li class="geo-navbar__menu__item nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Blog</a>
-                        </li>
-                        <li class="geo-navbar__menu__item nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Shop</a>
-                        </li>
-                        <li class="geo-navbar__menu__item nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Portfolio</a>
-                        </li>
+                <div class="geo-navbar__content">
+                    <a class="geo-navbar__brand" href="#"></a>
+                    <ul class="geo-navbar__content--menu">
+                        <li class="geo-navbar__content--menu__item">Demos</li>
+                        <li class="geo-navbar__content--menu__item">Features</li>
+                        <li class="geo-navbar__content--menu__item">FAQ</li>
+                        <li class="geo-navbar__content--menu__item">Documentations</li>
+                        <li class="geo-navbar__content--menu__item">Support</li>
                     </ul>
-                    <div class="navbar__actions d-flex gap-1">
-                        <button class="geo-btn geo-btn__primary-outline">Buy GeoScrapper</button>
-                    </div>
+                    <button class="geo-btn geo-btn__style-two">
+                        Start a free trial
+                    </button>
                 </div>
             </div>
         </nav>
-        <section>
-            <div class="geo-section container">
-                <div>
-                    <h2 class="geo-section__title">Google Maps Scraper</h2>
-                    <p class="geo-section__subtitle">
-                        An excellent Google Places API alternative to easily scrape data such as names, contact info,
-                        ratings, geolocation, images, reviews, prices, and more from Google Maps without a single line
-                        of
-                        code. You can scrape by keywords, URLs, location, and even language and export the data in CSV,
-                        Excel, or JSON formats.
-                    </p>
-                </div>
-                <div class="geo-section__video">
-                    <div class="geo-section__video__wrapper">
-                        <video class="geo-elementor-video"
-                            src="https://landpress.keydesign.xyz/images/LandPress-Video.mp4" autoplay="" loop=""
-                            muted="muted" playsinline="" controlslist="nodownload"></video>
-                    </div>
-                    <div class="geo-section__video__backside bg_black p-5">
-                        <button class="geo-btn geo-btn__light-outline">Purchase on GeoScrapper</button>
-                        <p>Lifetime license, free update & 6 months of free support with every purchase</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section>
-            <div class="geo-section container">
-                <h2 class="geo-section__title">Other Google Maps Scrapers That Meet Your Needs</h2>
-                <div class="row">
-                    <div class="col">
-                        <div class="geo-section__card">
-                            <h3 class="geo-section__card__title">Start your new busines with GeoScrapper</h3>
-                            <p class="geo-section__card__subtitle">Elementor is the only page builder you’ll need to
-                                create a high-converting professional
-                                WordPress website.</p>
+        <section id="home" class="home-section">
+            <div class="section__area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="home-section__content">
+                                <h1 class="home-section__content--title">Google Maps Scraper</h1>
+                                <p class="home-section__content--subtitle">An excellent Google Places API alternative to
+                                    easily scrape data such as names,
+                                    contact info, ratings, geolocation, images, reviews, prices, and more from Google
+                                    Maps without a single line of code. You can scrape by keywords, URLs, location, and
+                                    even language and export the data in CSV, Excel, or JSON formats.</p>
 
-                            <button class="geo-btn geo-btn__secondary-outline">
-                                Explore GeoScrapper
-                            </button>
-
-                            <div class="geo-section__card__img">
-
+                                <button class="geo-btn geo-btn__default">
+                                    Try for free
+                                </button>
                             </div>
                         </div>
-                        <div class="geo-section__card">
-                            <h3 class="geo-section__card__title">Start your new busines with GeoScrapper</h3>
-                            <p class="geo-section__card__subtitle">Elementor is the only page builder you’ll need to
-                                create a high-converting professional
-                                WordPress website.</p>
-
-                            <button class="geo-btn geo-btn__secondary-outline">
-                                Explore GeoScrapper
-                            </button>
-
-                            <div class="geo-section__card__img">
-
+                        <div class="col-lg-6 col-md-12">
+                            <div class="banner-image">
+                                <div class="image"></div>
+                                <div class="banner-image__content">
+                                    <span>
+                                        <img src="./images/globe.png" alt="Globe">
+                                        15M+ Emails
+                                    </span>
+                                    <span>
+                                        <img src="./images/phone.png" alt="Phone">
+                                        20M+ Phone Numbers
+                                    </span>
+                                    <span>
+                                        <img src="./images/review.png" alt="Reviews">
+                                        43M+ Reviews
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="geo-section__card col">
-                            <h3 class="geo-section__card__title">Start your new busines with GeoScrapper</h3>
-                            <p class="geo-section__card__subtitle">Elementor is the only page builder you’ll need to
-                                create a high-converting professional
-                                WordPress website.</p>
 
-                            <button class="geo-btn geo-btn__secondary-outline">
-                                Explore GeoScrapper
-                            </button>
-
-                            <div class="geo-section__card__img">
-
-                            </div>
-                            <h3 class="geo-section__card__title">Start your new busines with GeoScrapper</h3>
-                            <div class="geo-section__card__img">
-
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="section section--data">
-            <div class="container text-center section__wrapper">
-                <h1 class="section__title">Quick answer to your questions</h1>
-                <div class="geo-faq">
-                    <div class="row">
-                        <div class="col">
-                            <div class="geo-faq__accordion accordion accordion-flush" id="accordionFaq">
-                                <div class="geo-faq__accordion__item accordion-item">
-                                    <h2 class="accordion-header" id="faq-one">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseFaqOne"
-                                            aria-expanded="false" aria-controls="flush-collapseFaqOne">
-                                            1. What is include with my purchase?
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseFaqOne" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingFaqOne" data-bs-parent="#accordionFaq">
-                                        <div class="accordion-body">Placeholder content for this accordion, which is
-                                            intended to
-                                            demonstrate the <code>.accordion-flush</code> class. This is the first
-                                            item's
-                                            accordion
-                                            body.</div>
-                                    </div>
+        <section id="canGet" class="can-get-section">
+            <div class="section__area">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="section__content section-title text-center">
+                            <h1 class="home-section__content--title">What Type of Data You Can Get</h1>
+                            <p class="home-section__content--subtitle">This is just a tip of an iceberg...</p>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/setting.png" alt="setting">
                                 </div>
-                                <div class="geo-faq__accordion__item accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingFaqTwo">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseFaqTwo"
-                                            aria-expanded="false" aria-controls="flush-collapseFaqTwo">
-                                            2. Do I need additional plugins to create website?
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseFaqTwo" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingFaqTwo" data-bs-parent="#accordionFaq">
-                                        <div class="accordion-body">Placeholder content for this accordion, which is
-                                            intended to
-                                            demonstrate the <code>.accordion-flush</code> class. This is the second
-                                            item's
-                                            accordion
-                                            body. Let's imagine this being filled with some actual content.</div>
-                                    </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/addLink.png" alt="setting">
                                 </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/setting.png" alt="setting">
+                                </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/setting.png" alt="setting">
+                                </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/setting.png" alt="setting">
+                                </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-md-4">
+                            <div class="can-get-section__box">
+                                <div class="can-get-section__box__single__icon">
+                                    <img src="./images/setting.png" alt="setting">
+                                </div>
+
+                                <h3 class="can-get-section__box__single__title">
+                                    Clean Code Structure
+                                </h3>
+                                <p class="can-get-section__box__single__subtitle"> Understanding and implementing clean
+                                    code practices as a manager fosters team
+                                    efficiency and elevates software quality, resulting in exceptional outcomes.</p>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="geo-faq__accordion accordion accordion-flush" id="accordionFaq">
-                                <div class="geo-faq__accordion__item accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingFaqThree">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseFaqThree"
-                                            aria-expanded="false" aria-controls="flush-collapseFaqThree">
-                                            3. Where can I buy a licence of GeoScrapper?
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseFaqThree" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingFaqThree" data-bs-parent="#accordionFaq">
-                                        <div class="accordion-body">Placeholder content for this accordion, which is
-                                            intended to
-                                            demonstrate the <code>.accordion-flush</code> class. This is the third
-                                            item's
-                                            accordion
-                                            body. Nothing more exciting happening here in terms of content, but just
-                                            filling up
-                                            the
-                                            space to make it look, at least at first glance, a bit more representative
-                                            of how
-                                            this
-                                            would look in a real-world application.</div>
-                                    </div>
-                                </div>
-                                <div class="geo-faq__accordion__item accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingFaqFour">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseFaqFour"
-                                            aria-expanded="false" aria-controls="flush-collapseFaqFour">
-                                            4. Can I use the theme for multiple website?
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseFaqFour" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingFaqFour" data-bs-parent="#accordionFaq">
-                                        <div class="accordion-body">Placeholder content for this accordion, which is
-                                            intended to
-                                            demonstrate the <code>.accordion-flush</code> class. This is the third
-                                            item's
-                                            accordion
-                                            body. Nothing more exciting happening here in terms of content, but just
-                                            filling up
-                                            the
-                                            space to make it look, at least at first glance, a bit more representative
-                                            of how
-                                            this
-                                            would look in a real-world application.</div>
-                                    </div>
-                                </div>
+                            <div class="section__footer">
+                                <button class="geo-btn geo-btn__default">
+                                    Try for free
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <section>
-            <div class="geo-section container bg-second">
-                <div>
-                    <h2 class="geo-section__title">Featured reviews from our customers</h2>
-                    <p class="geo-section__subtitle">Discover the positive experience that others have had and join our
-                        community of happy customer</p>
-                </div>
-
-                <div class="reviews">
-                    <div class="row">
-                        <div class="col">
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/48.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Edwige Henry</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
-                                    </div>
-                                </div>
-
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
-                            </div>
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/50.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Joaquín Torres</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
-                                    </div>
-                                </div>
-
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful. This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
-                            </div>
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/52.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Lina Garcia</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
-                                    </div>
-                                </div>
-
-                                <p>This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
-                            </div>
+        <section id="canGet" class="can-get-section bg-indigo">
+            <div class="section__area">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="section__content section-title text-center">
+                            <h1 class="home-section__content--title">Frequently Asked Questions</h1>
+                            <p class="home-section__content--subtitle">Do you have a questions? We're here to help. If
+                                you need more information, feel free to contact us.</p>
                         </div>
-                        <div class="col">
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/56.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Rose Roger</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
+                        <div class="faq-accordion accordion mx-auto">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button
+                                        class="accordion-button collapsed text-start shadow-none bg-transparent fw-medium border-0"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                                        aria-expanded="false" aria-controls="flush-collapseOne">
+                                        Are all the frameworks and technologies listed above include in the purchase?
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingOne">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Placeholder content for this accordion, which is
+                                            intended to demonstrate the
+                                        </p>
                                     </div>
                                 </div>
-
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful. This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
                             </div>
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/58.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Gregory Herrera</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="flush-headingTwo">
+                                    <button
+                                        class="accordion-button collapsed text-start shadow-none bg-transparent fw-medium border-0"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
+                                        aria-expanded="false" aria-controls="flush-collapseTwo">
+                                        Are all the frameworks and technologies listed above include in the purchase?
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingTwo">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Placeholder content for this accordion, which is
+                                            intended to demonstrate the
+                                        </p>
                                     </div>
                                 </div>
-
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
                             </div>
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/44.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Sofia Cox</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="flush-headingThree">
+                                    <button
+                                        class="accordion-button collapsed text-start shadow-none bg-transparent fw-medium border-0"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
+                                        aria-expanded="false" aria-controls="flush-collapseThree">
+                                        Are all the frameworks and technologies listed above include in the purchase?
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingThree">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Placeholder content for this accordion, which is
+                                            intended to demonstrate the
+                                        </p>
                                     </div>
                                 </div>
-
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/12.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Robert Jäger</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="flush-headingFour">
+                                    <button
+                                        class="accordion-button collapsed text-start shadow-none bg-transparent fw-medium border-0"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour"
+                                        aria-expanded="false" aria-controls="flush-collapseFour">
+                                        Are all the frameworks and technologies listed above include in the purchase?
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseFour" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingFour">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Placeholder content for this accordion, which is
+                                            intended to demonstrate the
+                                        </p>
                                     </div>
                                 </div>
-
-                                <p>This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
                             </div>
-
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/77.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Nancy Garcia</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="flush-headingFive">
+                                    <button
+                                        class="accordion-button collapsed text-start shadow-none bg-transparent fw-medium border-0"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive"
+                                        aria-expanded="false" aria-controls="flush-collapseFive">
+                                        Are all the frameworks and technologies listed above include in the purchase?
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseFive" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingFive">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Placeholder content for this accordion, which is
+                                            intended to demonstrate the
+                                        </p>
                                     </div>
                                 </div>
-                                <p>This is truly a low code required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful. This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
-                            </div>
-                            <div class="geo-section__card bg-white">
-                                <div class="geo-section__card__details">
-                                    <img class="avatar"
-                                        src="https://mighty.tools/mockmind-api/content/human/69.jpg"></img>
-                                    <div>
-                                        <h5 class="geo-section__card__details__title">Terry Snyder</h5>
-                                        <img src="./images/five-star.png" alt="five-star">
-                                    </div>
-                                </div>
-
-                                <p>This is truly a low code
-                                    required tool and if things get complicated, the support is
-                                    there to guide you through what's needed to be successful.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <section>
-            <div class="geo-section container bg_black mt-5">
-                <div>
-                    <h2 class="geo-section__title">What Type of Data You Can Get</h2>
-                    <p class="geo-section__subtitle">This is just a tip of an iceberg...</p>
-                </div>
-
-                <div class="can-get">
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Keyword
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Title
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Review Count
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Rating
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Address
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Country
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        City
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        State
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Plus code
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Website
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Phone
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Opening hours
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Page URL
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Google ID
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Place ID
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Additional info
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Category
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Keyword
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Title
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Review Count
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Rating
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Address
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Country
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        City
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        State
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Plus code
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Website
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        Phone
-                    </div>
-                    <div class="can-get__item">
-                        <img src="./images/white-check.png" alt="check">
-                        ...
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- <section class="banner">
-            <div class="container row h-100">
-                <div class="banner__content col d-flex flex-column justify-content-center align-items-center">
-                    <img class="banner__logo" src="./images/logo_banner.png" alt="GeoScrapper">
-                    <h1 class="banner__title">GeoScrapper</h1>
-                    <span class="banner__subtitle">
-                        Easily extract location reviews from Google Maps
-                    </span>
-                    <button class="geo-btn geo-btn__light-outline mt-4">Try for free</button>
-                </div>
-                <div class="banner__image col d-flex justify-content-center align-items-center">
-                    <div class="banner__screenshot">
-                        <div class="banner__screenshot-item"></div>
-                    </div>
-                </div>
-            </div>
-        </section> -->
-
         <footer class="footer">
-            <div class="container footer__container">
-                <div class="row">
-                    <div class="footer__column col p-4 d-flex flex-column gap-4">
-                        <img src="./images/logo.svg" alt="GeoScrapper" class="navbar__logo">
-                        <small class="footer__copyright">© 2024 GeoScrapper. All rights reserved</small>
-                        <span class="footer__links">
-                            <a href="#">Privacy</a> | <a href="#">Terms</a>
-                        </span>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-6">
+                        <p> © <b>GeoScrapper</b>, All rights reserved.</p>
                     </div>
-                    <!-- Additional columns as needed -->
+                    <div class="col-lg-6 col-md-6">
+                        <ul class="ps-0 list-unstyled fw-medium mb-0 text-md-end">
+                            <li class="d-inline-block">Support</li>
+                            <li class="d-inline-block">Contact Us</li>
+                            <li class="d-inline-block">See Pricing</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </footer>
