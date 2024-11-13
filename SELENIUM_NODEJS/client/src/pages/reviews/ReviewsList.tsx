@@ -149,8 +149,51 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <h3>Reviews</h3>
+      <div className="card d-flex">
+        <div className="d-flex-column w-100 border-right p-5">
+          <p className="m-0">All comments</p>
+          <h3 className="m-0">150k</h3>
+        </div>
+        <div className="d-flex-column w-100 border-right p-5">
+          <p className="m-0">Owner responses</p>
+          <h3 className="m-0">73k</h3>
+        </div>
+        <div className="d-flex-column w-100 border-right p-5">
+          <p className="m-0">Pending</p>
+          <h3 className="m-0">0</h3>
+        </div>
+        <div className="d-flex-column w-100 p-5">
+          <p className="m-0">Failed</p>
+          <h3 className="m-0">0</h3>
+        </div>
+      </div>
+      <div className="nav">
+        <a href="#" className="active">
+          All
+        </a>
+        <a href="#">Completed</a>
+        <a href="#">Pending</a>
+        <a href="#">Failed</a>
+      </div>
+      <div className="d-flex justify-space-between py-3">
+        <form action="" className="d-flex align-items-center gap-3">
+          <div className="form-wrap mb-0">
+            <input
+              type="text"
+              id="search"
+              name="search"
+              placeholder="Search"
+              className="form-input"
+            />
+          </div>
+          <button className="button button-primary">Search</button>
+        </form>
+        <div className="d-flex">
+          <button className="button button-primary">Filter</button>
+        </div>
+      </div>
       <div className="card">
-        <div className="card-header">
+        <div className="card-header d-none">
           <h3>Reviews List ({completedReviews.length})</h3>
           <div className="actions">
             <button
