@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
     <>
       <div className="d-flex align-items-center gap-3 py-3 my-5">
         <h3 className="m-0">Reviews</h3>
-        <button className="button button-primary ml-auto">
+        <button className="button button-lg button-success ml-auto">
           Extract new reviews
         </button>
       </div>
