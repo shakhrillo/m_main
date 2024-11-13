@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
     {
       text: "Status",
       field: "status",
-      render: (row: any) => statusRender(row.status, false),
+      render: (row: any) => statusRender(row.status),
     },
     {
       text: "Place",
@@ -148,12 +148,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <h2>Reviews</h2>
-
+      <h3>Reviews</h3>
       <div className="card">
-        <div className="card-info">
-          <h3>Completed Reviews ({completedReviews.length})</h3>
-          <div className="card-actions">
+        <div className="d-flex align-items-center">
+          <h4>Completed Reviews ({completedReviews.length})</h4>
+          <div className="ml-auto">
             <button
               className="button button-primary"
               onClick={deleteSelectedReviews}

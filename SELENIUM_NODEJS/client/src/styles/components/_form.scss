@@ -1,0 +1,50 @@
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.form-label {
+  font-size: $font-size-base;
+}
+
+.form-input {
+  padding: $spacing-sm;
+  border: 1px solid #e2e8f0;
+  border-radius: $border-radius-sm;
+}
+
+.form-input-lg {
+  padding: $spacing-md;
+}
+
+.form-select {
+  padding: $spacing-sm;
+  border: 1px solid #e2e8f0;
+  border-radius: $border-radius-sm;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: $spacing-md;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid red;
+  }
+}
+
+.form-select-lg {
+  padding: $spacing-md;
+}
+
+.form-checkbox {
+}
+
+.form-hint {
+  font-size: $font-size-sm;
+}

@@ -1,4 +1,3 @@
-import { an } from "vitest/dist/chunks/reporters.C4ZHgdxQ.js"
 import { TableHeader } from "./TableHeader"
 import { TableBody } from "./Tablebody"
 

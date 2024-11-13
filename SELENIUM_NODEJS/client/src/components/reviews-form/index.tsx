@@ -112,7 +112,7 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="review-form">
+          <div className="d-flex-column">
             <h1>Which reviews would you like to scrape?</h1>
             <p>
               Enter the URL of the place from which you would like to scrape
@@ -127,40 +127,37 @@ export const ReviewsForm = () => {
               on Google Maps and copy the shareable link.
             </p>
 
-            <form onSubmit={handleGetInfo} className="form">
-              <label htmlFor="url">
-                URL <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                id="url"
-                value={scrap.url}
-                onChange={e => handleInputChange("url", e.target.value)}
-                placeholder="https://maps.app.goo.gl/..."
-                disabled={loading}
-              />
-              <div className="form__hint">
-                <small>
-                  Example URL:{" "}
-                  <code style={{ display: "block", marginTop: "0.5rem" }}>
-                    https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
-                  </code>
-                </small>
+            <form onSubmit={handleGetInfo}>
+              <div className="form-wrap">
+                <label htmlFor="url" className="form-label">
+                  URL <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="url"
+                  value={scrap.url}
+                  onChange={e => handleInputChange("url", e.target.value)}
+                  placeholder="https://maps.app.goo.gl/..."
+                  disabled={loading}
+                  className="form-input form-input-lg"
+                />
+                <div className="form-hint">
+                  Example URL:
+                  <code>https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8</code>
+                </div>
               </div>
-              <div className="form__actions">
-                <button
-                  className="primary"
-                  type="submit"
-                  disabled={loading || !isUrlValid}
-                >
-                  Validate URL
-                </button>
-              </div>
+              <button
+                className="button button-lg button-primary"
+                type="submit"
+                disabled={loading || !isUrlValid}
+              >
+                Validate URL
+              </button>
             </form>
+
             <p>
               Each review scraping process may take between 15 to 60 seconds.
-            </p>
-            <p>
+              <br />
               Reviews are not chargeable. Charges will apply once the scraping
               process begins.
             </p>
@@ -168,7 +165,7 @@ export const ReviewsForm = () => {
         )
       case 1:
         return (
-          <div className="review-form">
+          <div>
             {!info.title || loading ? (
               <>
                 <h1>Loading...</h1>
@@ -182,41 +179,36 @@ export const ReviewsForm = () => {
                 <h1>
                   {info.title} ({info.rating})
                 </h1>
-                <div
-                  className="review-screenshot"
-                  style={{ backgroundImage: `url(${info.screenshot})` }}
-                ></div>
+                <img src={info.screenshot} alt="" width={250} />
                 <ul>
                   <li>{info.reviews}</li>
                   <li>{info.address}</li>
                   {info.phone && <li>{info.phone}</li>}
                   {info.website && <li>{info.website}</li>}
                 </ul>
-                <form className="form">
-                  <div className="form__actions">
-                    <button
-                      className="secondary"
-                      onClick={() => setStep(0)}
-                      disabled={loading || !info.title}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="primary"
-                      onClick={() => setStep(2)}
-                      disabled={loading || !info.title}
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </form>
+                <div className="d-flex gap-3">
+                  <button
+                    className="button"
+                    onClick={() => setStep(0)}
+                    disabled={loading || !info.title}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="button"
+                    onClick={() => setStep(2)}
+                    disabled={loading || !info.title}
+                  >
+                    Confirm
+                  </button>
+                </div>
               </>
             )}
           </div>
         )
       case 2:
         return (
-          <div className="review-form">
+          <div>
             <h1>
               {info.title} ({info.rating})
             </h1>
@@ -224,80 +216,103 @@ export const ReviewsForm = () => {
               You can now start scraping reviews. Please select the options
               below.
             </p>
-            <form className="form" onSubmit={handleStartScraping}>
-              <label htmlFor="limit">
-                Limit
-                <span className="required">*</span>
-              </label>
-              <input
-                type="number"
-                id="limit"
-                value={scrap.limit}
-                onChange={e => handleInputChange("limit", e.target.value)}
-              />
-              <small className="form__hint">
-                Available reviews: {info.reviews}
-                <br />
-                <strong>Limit</strong> is the number of reviews you would like
-                to scrape. The maximum limit is 1000.
-              </small>
-
-              <label htmlFor="sortBy">Sort by</label>
-              <select
-                disabled={loading}
-                id="sortBy"
-                value={scrap.sortBy}
-                onChange={e => handleInputChange("sortBy", e.target.value)}
-              >
-                {[
-                  "Most relevant",
-                  "Newest",
-                  "Lowest rating",
-                  "Highest rating",
-                ].map((option, i) => (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-
-              <label htmlFor="extractImageUrls">
+            <form onSubmit={handleStartScraping}>
+              <div className="form-wrap">
+                <label htmlFor="limit" className="form-label">
+                  Limit
+                  <span className="required">*</span>
+                </label>
                 <input
-                  disabled={loading}
-                  type="checkbox"
-                  checked={scrap.extractImageUrls}
-                  onChange={() => handleCheckboxChange("extractImageUrls")}
-                />{" "}
-                Extract image URLs
-              </label>
-              <label htmlFor="ownerResponse">
-                <input
-                  disabled={loading}
-                  type="checkbox"
-                  checked={scrap.ownerResponse}
-                  onChange={() => handleCheckboxChange("ownerResponse")}
-                />{" "}
-                Owner response
-              </label>
-              <label htmlFor="onlyGoogleReviews">
-                <input
-                  disabled={loading}
-                  type="checkbox"
-                  checked={scrap.onlyGoogleReviews}
-                  onChange={() => handleCheckboxChange("onlyGoogleReviews")}
-                />{" "}
-                Only Google reviews
-              </label>
+                  className="form-input form-input-lg"
+                  type="number"
+                  id="limit"
+                  value={scrap.limit}
+                  onChange={e => handleInputChange("limit", e.target.value)}
+                />
+                <div className="form-hint">
+                  Available reviews: {info.reviews}
+                  <br />
+                  <strong>Limit</strong> is the number of reviews you would like
+                  to scrape. The maximum limit is 1000.
+                </div>
+              </div>
 
-              <div className="form__actions">
+              <div className="form-wrap">
+                <label htmlFor="sortBy" className="form-label">
+                  Sort by
+                </label>
+                <select
+                  disabled={loading}
+                  id="sortBy"
+                  value={scrap.sortBy}
+                  onChange={e => handleInputChange("sortBy", e.target.value)}
+                  className="form-select form-select-lg"
+                >
+                  {[
+                    "Most relevant",
+                    "Newest",
+                    "Lowest rating",
+                    "Highest rating",
+                  ].map((option, i) => (
+                    <option key={i} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-wrap">
+                <label htmlFor="extractImageUrls" className="form-label">
+                  <input
+                    disabled={loading}
+                    type="checkbox"
+                    checked={scrap.extractImageUrls}
+                    onChange={() => handleCheckboxChange("extractImageUrls")}
+                    className="form-checkbox"
+                  />{" "}
+                  Extract image URLs
+                </label>
+              </div>
+
+              <div className="form-wrap">
+                <label htmlFor="ownerResponse" className="form-label">
+                  <input
+                    disabled={loading}
+                    type="checkbox"
+                    checked={scrap.ownerResponse}
+                    onChange={() => handleCheckboxChange("ownerResponse")}
+                    className="form-checkbox"
+                  />{" "}
+                  Owner response
+                </label>
+              </div>
+
+              <div className="form-wrap">
+                <label htmlFor="onlyGoogleReviews" className="form-label">
+                  <input
+                    disabled={loading}
+                    type="checkbox"
+                    checked={scrap.onlyGoogleReviews}
+                    onChange={() => handleCheckboxChange("onlyGoogleReviews")}
+                    className="form-checkbox"
+                  />{" "}
+                  Only Google reviews
+                </label>
+              </div>
+
+              <div className="d-flex gap-3">
                 <button
-                  className="secondary"
+                  className="button button-lg"
                   onClick={() => setStep(0)}
                   disabled={loading}
                 >
                   Cancel
                 </button>
-                <button className="primary" type="submit" disabled={loading}>
+                <button
+                  className="button button-lg button-primary"
+                  type="submit"
+                  disabled={loading}
+                >
                   Start Scraping
                 </button>
               </div>
@@ -315,7 +330,9 @@ export const ReviewsForm = () => {
         {steps.map((s, i) => (
           <div
             key={i}
-            className={`progress__step ${i === step ? "active" : ""} ${i > step ? "disabled" : ""}`}
+            className={`progress__step ${i === step ? "active" : ""}`}
+            // className={`progress__step ${i === step ? "active" : ""} ${i > step ? "disabled" : ""}`}
+            onClick={() => setStep(i)}
           >
             <div className="progress__text">{s.title}</div>
           </div>
