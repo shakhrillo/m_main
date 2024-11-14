@@ -2,7 +2,7 @@
 
 // Colors
 // Primary color
-$primary-color: #797a1f;
+$primary-color: #c53923;
 
 // Light shades
 $primary-light: lighten($primary-color, 10%);
@@ -84,7 +84,7 @@ $breakpoint-xl: 1440px;
 // Button styles
 $button-padding: 0.5rem 1rem;
 $button-padding-lg: 0.75rem 1.5rem;
-$button-border-radius: $border-radius-md;
+$button-border-radius: 5rem;
 
 $button-primary-bg: $primary-color;
 $button-primary-color: $light-color;
