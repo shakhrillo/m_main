@@ -15,7 +15,12 @@ const navLinks = [
   { path: "/payments", label: "Payments", icon: creditCardIcon },
   { path: "/settings", label: "Settings", icon: settingsIcon },
   { path: "/help", label: "Help", icon: helpIcon },
-  { path: "/auth/logout", label: "Logout", icon: logoutIcon },
+  {
+    path: "/auth/logout",
+    label: "Logout",
+    icon: logoutIcon,
+    className: "mt-auto",
+  },
 ]
 
 const Sidebar = () => {
@@ -25,11 +30,13 @@ const Sidebar = () => {
         <img src={logoImg} alt="logo" className="logo" />
       </NavLink>
 
-      {navLinks.map(({ path, icon, label }, index) => (
+      {navLinks.map(({ path, icon, label, className }, index) => (
         <NavLink
           key={index}
           to={path}
-          className={({ isActive }) => `${isActive ? "active" : ""}`}
+          className={({ isActive }) =>
+            `${isActive ? "active" : ""} ${className}`
+          }
         >
           {icon && <img src={icon} alt="icon" />}
           {label}
