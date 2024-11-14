@@ -10,7 +10,7 @@ import logoutIcon from "../../assets/icons/logout.svg"
 
 const navLinks = [
   { path: "/scrap", label: "Scrap", icon: searchIcon },
-  { path: "/reviews", label: "Scrap Reviews", icon: serverBoltIcon },
+  { path: "/reviews", label: "Reviews", icon: serverBoltIcon },
   { path: "/user", label: "User", icon: userIcon },
   { path: "/payments", label: "Payments", icon: creditCardIcon },
   { path: "/settings", label: "Settings", icon: settingsIcon },

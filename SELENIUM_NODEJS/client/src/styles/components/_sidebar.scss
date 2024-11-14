@@ -11,6 +11,8 @@
   left: 0;
   z-index: $z-index-medium;
   box-shadow: $box-shadow-light;
+  padding: $spacing-md;
+  box-sizing: border-box;
 }
 
 .sidebar a:first-child {
@@ -31,13 +33,15 @@
 }
 
 .sidebar a:hover {
-  background: $primary-lighter;
+  opacity: 0.8;
 }
 
 .sidebar a.active {
   background: $primary-color;
   opacity: 1;
   color: $light-color;
+  position: relative;
+  border-radius: 30px;
 
   img {
     filter: invert(1);
