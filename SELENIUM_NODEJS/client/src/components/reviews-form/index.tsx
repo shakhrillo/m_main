@@ -115,20 +115,7 @@ export const ReviewsForm = () => {
       case 0:
         return (
           <div className="d-flex-column">
-            <h3 className="m-0">Which reviews would you like to scrape?</h3>
-            <p className="m-0">
-              Enter the URL of the place from which you would like to scrape
-              reviews, or you can{" "}
-              <a
-                href="https://www.google.com/maps"
-                target="_blank"
-                rel="noreferrer"
-              >
-                search for a place
-              </a>{" "}
-              on Google Maps and copy the shareable link.
-            </p>
-            <div className="card my-5">
+            <div className="card">
               <div className="card-body">
                 <form onSubmit={handleGetInfo}>
                   <div className="form-wrap">
@@ -158,12 +145,6 @@ export const ReviewsForm = () => {
                 </form>
               </div>
             </div>
-            <p>
-              Each review scraping process may take between 15 to 60 seconds.
-              <br />
-              Reviews are not chargeable. Charges will apply once the scraping
-              process begins.
-            </p>
           </div>
         )
       case 1:
@@ -171,7 +152,6 @@ export const ReviewsForm = () => {
           <div>
             {!info.title || loading ? (
               <>
-                <h3 className="m-0">Loading...</h3>
                 <div className="card my-5">
                   <div className="card-body d-flex justify-content-center">
                     <img src={loadIcon} alt="" width={70} />
@@ -185,50 +165,49 @@ export const ReviewsForm = () => {
             ) : (
               <div className="d-flex">
                 <div className="d-flex-column w-100">
-                  <h3 className="m-0">{info.title}</h3>
-                  <div className="card w-100 my-5">
-                    <div className="card-body p-0">
+                  <div className="card">
+                    <div className="card-header d-flex-column">
+                      <h3>{info.title}</h3>
+                      <p>{info.address}</p>
+                    </div>
+                    <div className="card-body">
                       <ul className="list-unstyled m-0 p-0 d-flex">
-                        <li className="d-flex-column align-items-center justify-space-around p-5">
-                          {/* {statusRender(placeInfo.status, { width: 40, height: 40 })} */}
-                          {/* <p className="text-capitalize m-0">{info.status}</p> */}
-                        </li>
-                        <li className="d-flex-column align-items-center justify-space-around p-5 border-left border-right">
+                        <li className="d-flex-column align-items-center justify-space-around p-5 border-right">
                           <h2 className="my-0">{info.reviews}</h2>
                           <p className="m-0">All reviews</p>
                         </li>
                         <li className="d-flex-column align-items-center justify-space-around p-5">
-                          <h2 className="my-0">12h</h2>
+                          <h2 className="my-0">
+                            + {Math.ceil((parseInt(info.reviews) * 3) / 60)} min
+                          </h2>
                           <p className="m-0">Expected time</p>
                         </li>
                       </ul>
                     </div>
-                    <div className="card-footer">
-                      <StarRating rating={info.rating} />
-                      <strong>{info.rating ? info.rating : "N/A"}</strong>
-                      <small>Average user rating</small>
+                    <div className="card-footer d-flex-column gap-3">
+                      <div className="d-flex align-items-center gap-3">
+                        <StarRating rating={info.rating} />
+                        <strong>{info.rating ? info.rating : "N/A"}</strong>
+                        <small>Average user rating</small>
+                      </div>
+                      <div className="d-flex gap-3">
+                        <button
+                          className="button button-lg"
+                          onClick={() => setStep(0)}
+                          disabled={loading || !info.title}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="button button-primary button-lg"
+                          onClick={() => setStep(2)}
+                          disabled={loading || !info.title}
+                        >
+                          Confirm
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="d-flex mb-5 gap-3">
-                    <button
-                      className="button button-lg"
-                      onClick={() => setStep(0)}
-                      disabled={loading || !info.title}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="button button-primary button-lg"
-                      onClick={() => setStep(2)}
-                      disabled={loading || !info.title}
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                  <p>
-                    If the information is incorrect, please try again by
-                    entering the correct URL.
-                  </p>
                 </div>
                 <div className="w-100">
                   <a
@@ -250,8 +229,10 @@ export const ReviewsForm = () => {
       case 2:
         return (
           <div>
-            <h3>{info.title}</h3>
             <div className="card">
+              <div className="card-header">
+                <h3>{info.title}</h3>
+              </div>
               <div className="card-body">
                 <form onSubmit={handleStartScraping}>
                   <div className="form-wrap">
@@ -264,14 +245,13 @@ export const ReviewsForm = () => {
                       type="number"
                       id="limit"
                       value={scrap.limit}
+                      disabled={true}
                       onChange={e => handleInputChange("limit", e.target.value)}
                     />
-                    {/* <div className="form-hint">
-                      Available reviews: {info.reviews}
-                      <br />
-                      <strong>Limit</strong> is the number of reviews you would
-                      like to scrape. The maximum limit is 1000.
-                    </div> */}
+                    <div className="form-hint">
+                      Maximum number of reviews to scrape (30 ~ 3000){" "}
+                      <strong>Demo limit is 30</strong>
+                    </div>
                   </div>
 
                   <div className="form-wrap">
