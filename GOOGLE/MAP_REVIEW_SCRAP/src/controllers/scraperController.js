@@ -145,7 +145,7 @@ async function removeDocer(port) {
   try {
     const { exec } = require("child_process");
     const dName = `browserlesschrome-${port}`;
-    exec(`docker rm -f ${dName}`, (error, stdout, stderr) => {
+    exec(`sudo docker rm -f ${dName}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;

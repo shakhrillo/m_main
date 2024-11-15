@@ -8,7 +8,7 @@ const runDocker = async (dName, port) => {
   try {
     const output = await new Promise((resolve, reject) => {
       exec(
-        `docker run -d --name ${dName} -e PORT=${port} -p ${port}:${port} browserless/chrome > /dev/null 2>&1`,
+        `sudo docker run -d --name ${dName} -e PORT=${port} -p ${port}:${port} browserless/chrome > /dev/null 2>&1`,
         (error, stdout, stderr) => {
           if (error) {
             reject(`exec error: ${error}`);
@@ -37,6 +37,7 @@ router.post("/", authenticateToken, async (req, res) => {
   console.log("Request Data:", req.data);
   // random port
   const port = Math.floor(Math.random() * 10000) + 3000;
+  console.log("Port:", port);
   const dName = `browserlesschrome-${port}`;
   const containerId = await runDocker(dName, port);
   console.log("Port:", containerId);
