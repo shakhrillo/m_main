@@ -8,7 +8,7 @@ const runDocker = async (dName, port) => {
   try {
     const output = await new Promise((resolve, reject) => {
       exec(
-        `docker run -d --name ${dName} -e PORT=${port} -p ${port}:${port} browserless/chrome > /dev/null 2>&1`,
+        `sudo docker run -d --name ${dName} -e PORT=${port} -p ${port}:${port} browserless/chrome > /dev/null 2>&1`,
         (error, stdout, stderr) => {
           if (error) {
             reject(`exec error: ${error}`);
@@ -37,7 +37,7 @@ async function removeDocer(port) {
   try {
     const { exec } = require("child_process");
     const dName = `browserlesschrome-${port}`;
-    exec(`docker rm -f ${dName}`, (error, stdout, stderr) => {
+    exec(`sudo docker rm -f ${dName}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
