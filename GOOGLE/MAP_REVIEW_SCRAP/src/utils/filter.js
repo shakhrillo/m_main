@@ -8,7 +8,13 @@ function filterUniqueElements(elements) {
     return (
       isObject &&
       !isEmptyObject &&
-      index === self.findIndex((t) => t.id === element.id)
+      index ===
+        self.findIndex((t) => {
+          if (t === null || typeof t !== "object") {
+            return false;
+          }
+          return t.id === element.id;
+        })
     );
   });
 }

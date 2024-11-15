@@ -141,10 +141,31 @@ async function setExtractedDate(userId, reviewId, allElements) {
   }
 }
 
-async function main({ url, userId, reviewId, limit, sortBy }) {
+async function removeDocer(port) {
+  try {
+    const { exec } = require("child_process");
+    const dName = `browserlesschrome-${port}`;
+    exec(`docker rm -f ${dName}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+      }
+
+      console.log(`Container removed with ID: ${stdout.trim()}`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function main({ url, userId, reviewId, limit, sortBy }, port) {
   try {
     allElements = [];
-    browser = await launchBrowser();
+    browser = await launchBrowser(port);
     page = await openPage(browser, url);
 
     await page.setCacheEnabled(false);
@@ -169,15 +190,15 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       token: "",
     });
 
-    await enableRequestInterception(page, [
-      ".css",
-      "googleusercontent",
-      "preview",
-      "analytics",
-      "ads",
-      "fonts",
-      "/maps/vt",
-    ]);
+    // await enableRequestInterception(page, [
+    //   ".css",
+    //   "googleusercontent",
+    //   "preview",
+    //   "analytics",
+    //   "ads",
+    //   "fonts",
+    //   "/maps/vt",
+    // ]);
 
     await clickReviewTab(page);
     await wait(500);
@@ -194,13 +215,20 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
 
     await setExtractedDate(userId, reviewId, allElements);
 
+    await removeDocer(port);
+
     return allElements;
   } catch (error) {
-    if (page) {
-      await page.close();
-    }
-    if (browser) {
+    if (browser && browser.isConnected()) {
       await browser.close();
+
+      if (page && !page.isClosed()) {
+        try {
+          await page.close();
+        } catch (error) {
+          console.error("Error closing page:", error);
+        }
+      }
     }
 
     await setExtractedDate(userId, reviewId, allElements);
@@ -210,6 +238,8 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
       error: error.message,
       completedAt: new Date(),
     });
+
+    await removeDocer(port);
 
     console.error("Error in main function:", error);
   }

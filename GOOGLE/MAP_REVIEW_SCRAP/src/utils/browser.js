@@ -2,9 +2,13 @@ const puppeteer = require("puppeteer");
 const config = require("../config/settings");
 const wait = require("./wait");
 
-async function launchBrowser() {
+async function launchBrowser(port) {
   try {
-    const browser = await puppeteer.launch(config.launch);
+    // console.log("Launching browser___");
+    // const browser = await puppeteer.launch(config.launch);
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: `ws://localhost:${port}`,
+    });
     console.log("Browser launched successfully");
     return browser;
   } catch (error) {
@@ -15,8 +19,9 @@ async function launchBrowser() {
 
 async function openPage(browser, url) {
   try {
-    let pages = await browser.pages();
-    const page = pages.length > 0 ? pages[0] : await browser.newPage();
+    // let pages = await browser.pages();
+    // const page = pages.length > 0 ? pages[0] : await browser.newPage();
+    const page = await browser.newPage();
 
     console.log(`Opening page: ${url}`);
 
