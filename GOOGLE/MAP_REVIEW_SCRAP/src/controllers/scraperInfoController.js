@@ -7,10 +7,11 @@ let data = {};
 let browser;
 let page;
 
-async function main({ url, userId, reviewId, limit, sortBy }) {
+async function main({ url, userId, reviewId, limit, sortBy }, port) {
   data = {};
   try {
-    browser = await launchBrowser();
+    // browser = await launchBrowser();
+    browser = await launchBrowser(port);
     page = await openPage(browser, url);
     data.url = url;
 
@@ -164,8 +165,17 @@ async function main({ url, userId, reviewId, limit, sortBy }) {
     await page.close();
     await browser.close();
   } catch (error) {
-    await page.close();
-    await browser.close();
+    if (browser && browser.isConnected()) {
+      await browser.close();
+
+      if (page && !page.isClosed()) {
+        try {
+          await page.close();
+        } catch (error) {
+          console.error("Error closing page:", error);
+        }
+      }
+    }
     console.error("Error in main:", error);
   }
 

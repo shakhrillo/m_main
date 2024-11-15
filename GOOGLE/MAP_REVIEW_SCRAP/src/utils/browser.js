@@ -19,11 +19,11 @@ async function launchBrowser(port) {
 
 async function openPage(browser, url) {
   try {
-    // let pages = await browser.pages();
-    // const page = pages.length > 0 ? pages[0] : await browser.newPage();
-    const page = await browser.newPage();
+    let pages = await browser.pages();
+    const page = pages.length > 0 ? pages[0] : await browser.newPage();
+    // const page = await browser.newPage();
 
-    console.log(`Opening page: ${url}`);
+    // console.log(`Opening page: ${url}`);
 
     const navigationTimeout = config?.goto?.timeout || 30000;
     await page.goto(url, { ...config.goto, timeout: 0 });
