@@ -38,8 +38,8 @@ router.post("/", authenticateToken, async (req, res) => {
   // random port
   const port = Math.floor(Math.random() * 10000) + 3000;
   console.log("Port:", port);
-  const dName = `browserlesschrome-${port}`;
-  const containerId = await runDocker(dName, port);
+  // const dName = `browserlesschrome-${port}`;
+  const containerId = await runDocker("dName", port);
   console.log("Port:", containerId);
   // wait 5sec
   await new Promise((resolve) => setTimeout(resolve, 5000));
