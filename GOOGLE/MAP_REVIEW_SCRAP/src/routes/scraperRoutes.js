@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const scraperController = require("../controllers/scraperController");
-const scraperInfoController = require("../controllers/scraperInfoController");
+const { scrapePageData } = require("../controllers/scrapePageDataController");
 const {
   runDocker,
   removeDocker,
@@ -34,7 +34,7 @@ router.post("/", authMiddleware, (req, res) => {
 
 router.post("/info", authMiddleware, (req, res) => {
   const { port, containerName } = generateDockerConfig();
-  executeScraping(containerName, port, scraperInfoController, req, res);
+  executeScraping(containerName, port, scrapePageData, req, res);
 });
 
 module.exports = router;

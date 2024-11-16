@@ -3,7 +3,6 @@ const path = require("path");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const { uploadFile } = require("../services/storageService");
 const wait = require("../utils/wait");
-const { launchBrowser, openPage } = require("../utils/browser");
 const filterallElements = require("../utils/filter");
 const { batchWriteLargeArray, updateReview } = require("./reviewController");
 const { getUser, updateUser, createUserUsage } = require("./userController");
@@ -15,6 +14,7 @@ const {
 } = require("../utils/scrollAndCollectElements");
 const { firestore } = require("../services/firebaseAdmin");
 const fetchReviewDetails = require("../utils/fetchReviewDetails");
+const { launchBrowser, openPage } = require("../services/browserService");
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, "temp");
@@ -141,27 +141,6 @@ async function setExtractedDate(userId, reviewId, allElements) {
   }
 }
 
-async function removeDocer(port) {
-  try {
-    const { exec } = require("child_process");
-    const dName = `browserlesschrome-${port}`;
-    exec(`sudo docker rm -f ${dName}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-      }
-
-      console.log(`Container removed with ID: ${stdout.trim()}`);
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function main({ url, userId, reviewId, limit, sortBy }, port) {
   try {
     allElements = [];
@@ -190,15 +169,15 @@ async function main({ url, userId, reviewId, limit, sortBy }, port) {
       token: "",
     });
 
-    // await enableRequestInterception(page, [
-    //   ".css",
-    //   "googleusercontent",
-    //   "preview",
-    //   "analytics",
-    //   "ads",
-    //   "fonts",
-    //   "/maps/vt",
-    // ]);
+    await enableRequestInterception(page, [
+      ".css",
+      "googleusercontent",
+      "preview",
+      "analytics",
+      "ads",
+      "fonts",
+      "/maps/vt",
+    ]);
 
     await clickReviewTab(page);
     await wait(500);
