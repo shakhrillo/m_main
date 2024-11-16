@@ -24,7 +24,7 @@ async function extractAriaLabel(page, selector) {
   return null;
 }
 
-async function scrapePageData({ url, userId }, port) {
+async function scrapePageData({ url, userId }, port, containerName) {
   const data = { url };
   let browser;
   let page;

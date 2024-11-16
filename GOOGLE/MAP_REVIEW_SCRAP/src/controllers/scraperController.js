@@ -15,6 +15,8 @@ const {
 const { firestore } = require("../services/firebaseAdmin");
 const fetchReviewDetails = require("../utils/fetchReviewDetails");
 const { launchBrowser, openPage } = require("../services/browserService");
+const logger = require("../config/logger");
+const { removeDocker } = require("./dockerController");
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, "temp");
@@ -141,7 +143,11 @@ async function setExtractedDate(userId, reviewId, allElements) {
   }
 }
 
-async function main({ url, userId, reviewId, limit, sortBy }, port) {
+async function main(
+  { url, userId, reviewId, limit, sortBy },
+  port,
+  containerName
+) {
   try {
     allElements = [];
     browser = await launchBrowser(port);
@@ -151,20 +157,19 @@ async function main({ url, userId, reviewId, limit, sortBy }, port) {
 
     page.exposeFunction("puppeteerMutationListener", puppeteerMutationListener);
 
-    await page.evaluate((variable) => {
-      window.uid = variable;
-    }, userId);
-
-    await page.evaluate((variable) => {
-      window.pushId = variable;
-    }, reviewId);
+    await page.evaluate(
+      ({ uid, pushId }) => {
+        window.uid = uid;
+        window.pushId = pushId;
+      },
+      { uid: userId, pushId: reviewId }
+    );
 
     const title = await page.title();
     console.log("Title:", title);
 
     await updateReview(userId, reviewId, {
       title,
-      // createdAt: new Date(),
       status: "in-progress",
       token: "",
     });
@@ -180,9 +185,7 @@ async function main({ url, userId, reviewId, limit, sortBy }, port) {
     ]);
 
     await clickReviewTab(page);
-    await wait(500);
     await sortReviews(page, sortBy);
-    await wait(2000);
     await scrollAndCollectElements(page, userId, reviewId, limit);
 
     await waitForArrayGrowth(allElements, limit);
@@ -194,7 +197,7 @@ async function main({ url, userId, reviewId, limit, sortBy }, port) {
 
     await setExtractedDate(userId, reviewId, allElements);
 
-    await removeDocer(port);
+    await removeDocker(containerName);
 
     return allElements;
   } catch (error) {
@@ -218,7 +221,7 @@ async function main({ url, userId, reviewId, limit, sortBy }, port) {
       completedAt: new Date(),
     });
 
-    await removeDocer(port);
+    await removeDocker(containerName);
 
     console.error("Error in main function:", error);
   }

@@ -1,4 +1,4 @@
-const logger = require("./logger");
+const logger = require("../config/logger");
 const wait = require("./wait");
 
 /**
@@ -16,7 +16,7 @@ async function sortReviews(page, sortBy = "Newest") {
     await page.waitForSelector(
       'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
     );
-    // Attempt to find the sort button
+
     const sortButton = await page.$(
       'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
     );

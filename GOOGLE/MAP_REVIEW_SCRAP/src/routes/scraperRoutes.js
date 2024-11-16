@@ -15,7 +15,7 @@ async function executeScraping(containerName, port, controller, req, res) {
     const data = await runDocker(
       containerName,
       port,
-      async () => await controller(req.data, port)
+      async () => await controller(req.data, port, containerName)
     );
     await removeDocker(containerName);
 
