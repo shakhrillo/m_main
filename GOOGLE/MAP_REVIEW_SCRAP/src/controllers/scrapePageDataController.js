@@ -161,7 +161,6 @@ async function scrapePageComments(
   );
   allElements.push(...elements);
 
-  // const reviewsContainer = await getReviewsContainer(page);
   page.evaluate(() => {
     let lastLogTime = Date.now();
 
