@@ -2,11 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const reviewsRoutes = require("./routes/reviewsRoutes");
+const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const logger = require("./config/logger");
-const authMiddleware = require("./middlewares/authMiddleware");
 
 dotenv.config();
 
@@ -17,10 +16,9 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(authMiddleware);
 
 // Routes
-app.use("/api/reviews", reviewsRoutes);
+app.use("/api/scrap", scraperRoutes);
 app.use("/api/stripe", stripeRoutes);
 
 // Default route

@@ -2,6 +2,18 @@ const { exec, spawn } = require("child_process");
 const logger = require("../config/logger");
 
 /**
+ * Generates a random port and container name for the Docker container.
+ * @returns {Object} - The generated port and container name.
+ * @property {number} port - The generated port.
+ * @property {string} containerName - The generated container name.
+ */
+const generateDockerConfig = () => {
+  const port = Math.floor(Math.random() * 10000) + 3000;
+  const containerName = `browserlesschrome-${port}`;
+  return { port, containerName };
+};
+
+/**
  * Runs a Docker container with the specified name and port.
  * @param {string} containerName - The name of the Docker container.
  * @param {number} port - The port to expose.
@@ -102,11 +114,11 @@ const monitorContainerLogs = (containerName, port, task, resolve, reject) => {
 const handleTask = (task, containerName, resolve, reject) => {
   if (task) {
     task()
-      .then(() => {
+      .then((result) => {
         logger.info(
           `Task completed successfully for container ${containerName}`
         );
-        resolve(containerName);
+        resolve(result);
       })
       .catch((taskError) => {
         logger.error(
@@ -120,13 +132,36 @@ const handleTask = (task, containerName, resolve, reject) => {
   }
 };
 
-/**
- * Removes a Docker container by its name, based on the provided port.
- * @param {number} port - The port associated with the Docker container.
- * @returns {Promise<void>} - Resolves when the container is removed.
- */
-async function removeDocker(port) {
-  const containerName = `browserlesschrome-${port}`;
+async function removeDocker(containerName) {
+  // Check if the container exists before attempting to remove it
+  let checkCommand = `sudo docker ps -a --filter "name=${containerName}" --format "{{.Names}}"`;
+  if (process.env.NODE_ENV === "development") {
+    checkCommand = checkCommand.replace("sudo ", "");
+  }
+
+  // Check if container exists
+  const containerExists = await new Promise((resolve, reject) => {
+    exec(checkCommand, (error, stdout, stderr) => {
+      if (error) {
+        logger.error(
+          `Error checking container existence: ${stderr || error.message}`
+        );
+        reject(
+          `Error checking container existence: ${stderr || error.message}`
+        );
+        return;
+      }
+      resolve(stdout.trim() === containerName);
+    });
+  });
+
+  if (!containerExists) {
+    logger.info(
+      `Container ${containerName} does not exist or is already removed.`
+    );
+    return;
+  }
+
   let dockerCommand = `sudo docker rm -f ${containerName}`;
 
   if (process.env.NODE_ENV === "development") {
@@ -134,17 +169,24 @@ async function removeDocker(port) {
   }
 
   return new Promise((resolve, reject) => {
-    exec(dockerCommand, (error, stdout) => {
+    exec(dockerCommand, (error, stdout, stderr) => {
       if (error) {
-        logger.error(`Failed to remove container: ${error.message}`);
-        reject(`Failed to remove container: ${error.message}`);
+        logger.error(`Failed to remove container: ${stderr || error.message}`);
+        reject(`Failed to remove container: ${stderr || error.message}`);
         return;
       }
 
-      logger.info(`Container removed with ID: ${stdout.trim()}`);
+      if (stdout.trim()) {
+        logger.info(`Container removed with ID: ${stdout.trim()}`);
+      } else {
+        logger.info(
+          "Container removal command executed, but no output returned."
+        );
+      }
+
       resolve();
     });
   });
 }
 
-module.exports = { runDocker, removeDocker };
+module.exports = { generateDockerConfig, runDocker, removeDocker };
