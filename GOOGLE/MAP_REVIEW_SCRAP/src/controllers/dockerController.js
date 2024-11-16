@@ -9,14 +9,7 @@ const logger = require("../config/logger");
  * @returns {Promise<string>} - Resolves with the container ID.
  */
 const runDocker = (containerName, port, task) => {
-  let dockerCommand = `sudo docker run -d --name ${containerName} \
-    -e PORT=${port} \
-    -p ${port}:${port} \
-    browserless/chrome`;
-
-  if (process.env.NODE_ENV === "development") {
-    dockerCommand = dockerCommand.replace("sudo ", "");
-  }
+  const dockerCommand = buildDockerCommand(containerName, port);
 
   return new Promise((resolve, reject) => {
     exec(dockerCommand, (error, stdout, stderr) => {
@@ -27,54 +20,104 @@ const runDocker = (containerName, port, task) => {
       }
 
       logger.info(`Container started with the name: ${containerName}`);
-
-      // Monitor logs for the specific text
-      const logStream = spawn("docker", ["logs", "-f", containerName]);
-      const handleLogStream = (
-        stream,
-        port,
-        containerName,
-        task,
-        resolve,
-        logger
-      ) => {
-        stream.on("data", (data) => {
-          const logOutput = data.toString();
-          logger.info(logOutput);
-
-          if (logOutput.includes(`Running on port ${port}`)) {
-            // Stop listening to logs with success
-            logStream.kill();
-            setTimeout(() => {
-              if (task) {
-                task().then(resolve).catch(reject);
-              } else {
-                resolve(containerName); // Resolve the promise
-              }
-            }, 5000);
-          }
-        });
-      };
-
-      // Usage
-      handleLogStream(
-        logStream.stdout,
-        port,
-        containerName,
-        task,
-        resolve,
-        logger
-      );
-      handleLogStream(
-        logStream.stderr,
-        port,
-        containerName,
-        task,
-        resolve,
-        logger
-      );
+      monitorContainerLogs(containerName, port, task, resolve, reject);
     });
   });
+};
+
+/**
+ * Builds the Docker run command based on the environment.
+ * @param {string} containerName - The name of the Docker container.
+ * @param {number} port - The port to expose.
+ * @returns {string} - The Docker command.
+ */
+const buildDockerCommand = (containerName, port) => {
+  let dockerCommand = `sudo docker run -d --name ${containerName} \
+    -e PORT=${port} \
+    -p ${port}:${port} \
+    browserless/chrome`;
+
+  if (process.env.NODE_ENV === "development") {
+    dockerCommand = dockerCommand.replace("sudo ", "");
+  }
+
+  return dockerCommand;
+};
+
+/**
+ * Monitors the container logs and resolves when the container is ready.
+ * @param {string} containerName - The name of the Docker container.
+ * @param {number} port - The port to check for readiness.
+ * @param {Function} task - The task to execute once the container is ready.
+ * @param {Function} resolve - The function to resolve the promise.
+ * @param {Function} reject - The function to reject the promise.
+ */
+const monitorContainerLogs = (containerName, port, task, resolve, reject) => {
+  const logStream = spawn("docker", ["logs", "-f", containerName]);
+
+  let isStreamKilled = false;
+
+  const handleLogStream = (stream) => {
+    stream.on("data", (data) => {
+      const logOutput = data.toString();
+      logger.info(logOutput);
+
+      if (logOutput.includes(`Running on port ${port}`)) {
+        isStreamKilled = true;
+        logStream.kill();
+        setTimeout(() => {
+          handleTask(task, containerName, resolve, reject);
+        }, 1000);
+      }
+    });
+
+    stream.on("error", (err) => {
+      logger.error(`Log stream error: ${err.message}`);
+      reject(`Log stream error: ${err.message}`);
+    });
+
+    stream.on("close", (code) => {
+      if (!isStreamKilled && code !== 0) {
+        logger.error(`Log stream exited with code ${code}`);
+        reject(`Log stream exited with code ${code}`);
+      } else {
+        logger.info(
+          `Log stream closed with code ${code} (stream killed intentionally)`
+        );
+      }
+    });
+  };
+
+  handleLogStream(logStream.stdout);
+  handleLogStream(logStream.stderr);
+};
+
+/**
+ * Handles the optional task to be executed after the container is ready.
+ * @param {Function} task - The task function to run.
+ * @param {string} containerName - The container name.
+ * @param {Function} resolve - The function to resolve the promise.
+ * @param {Function} reject - The function to reject the promise.
+ */
+const handleTask = (task, containerName, resolve, reject) => {
+  if (task) {
+    task()
+      .then(() => {
+        logger.info(
+          `Task completed successfully for container ${containerName}`
+        );
+        resolve(containerName);
+      })
+      .catch((taskError) => {
+        logger.error(
+          `Task failed for container ${containerName}: ${taskError.message}`
+        );
+        reject(`Task failed: ${taskError.message}`);
+      });
+  } else {
+    logger.info(`No task to run for container ${containerName}`);
+    resolve(containerName);
+  }
 };
 
 /**
