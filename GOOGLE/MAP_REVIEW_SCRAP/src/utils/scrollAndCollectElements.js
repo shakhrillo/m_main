@@ -110,8 +110,6 @@ async function scrollAndCollectElements(page, uid, pushId, limit = 50) {
   const visibleElements = await waitForReviewData(page, reviewsContainer);
   logger.info("Review data is ready");
 
-  const collectedReviews = new Set();
-
   await scrollToBottom(page);
   logger.info("Scrolled to the bottom");
 
@@ -122,7 +120,7 @@ async function scrollAndCollectElements(page, uid, pushId, limit = 50) {
   }
   logger.info(`Fetched details for ${allElements.length} reviews`);
 
-  return Array.from(collectedReviews);
+  return allElements;
 }
 
 module.exports = { scrollAndCollectElements };

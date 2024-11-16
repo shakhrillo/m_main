@@ -2,6 +2,14 @@ const { launchBrowser, openPage } = require("../services/browserService");
 const { uploadFile } = require("../services/storageService");
 const wait = require("../utils/wait");
 const logger = require("../config/logger");
+const clickReviewTab = require("../utils/clickReviewTab");
+const sortReviews = require("../utils/sortReviews");
+const {
+  scrollAndCollectElements,
+} = require("../utils/scrollAndCollectElements");
+const getReviewsContainer = require("../utils/getReviewsContainer");
+const fetchReviewDetails = require("../utils/fetchReviewDetails");
+const waitForArrayGrowth = require("../utils/waitForArrayGrowth");
 
 async function hideElements(page, selectors) {
   for (const selector of selectors) {
@@ -103,4 +111,104 @@ async function scrapePageData({ url, userId }, port, containerName) {
   return data;
 }
 
-module.exports = { scrapePageData };
+async function scrapePageComments(
+  { url, userId, reviewId, limit, sortBy },
+  port,
+  containerName
+) {
+  const allElements = [];
+  let limitIsReached = false;
+  const browser = await launchBrowser(port);
+  const page = await openPage(browser, url);
+  await page.setCacheEnabled(false);
+  page.exposeFunction(
+    "puppeteerMutationListener",
+    async function puppeteerMutationListener(records, uid, pushId) {
+      console.log("Record:", records.length);
+      console.log("Saved:", allElements.length);
+
+      if (limitIsReached) {
+        return;
+      }
+
+      for (const record of records) {
+        await fetchReviewDetails(page, record)
+          .then(async (result) => {
+            allElements.push(result);
+          })
+          .catch((error) => {
+            console.error("Error fetching review details:", error);
+          });
+      }
+    }
+  );
+  await page.evaluate(
+    ({ uid, pushId }) => {
+      window.uid = uid;
+      window.pushId = pushId;
+    },
+    { uid: userId, pushId: reviewId }
+  );
+
+  const title = await page.title();
+  await clickReviewTab(page);
+  await sortReviews(page, sortBy);
+  const elements = await scrollAndCollectElements(
+    page,
+    userId,
+    reviewId,
+    limit
+  );
+  allElements.push(...elements);
+
+  // const reviewsContainer = await getReviewsContainer(page);
+  page.evaluate(() => {
+    let lastLogTime = Date.now();
+
+    const observerCallback = (records) => {
+      for (const record of records) {
+        if (record.type === "childList") {
+          const addedNodeIds = Array.from(record.addedNodes)
+            .map((node) => node.getAttribute("data-review-id"))
+            .filter(Boolean);
+          puppeteerMutationListener(addedNodeIds);
+        }
+      }
+      lastLogTime = Date.now();
+    };
+
+    const logInterval = setInterval(() => {
+      if (Date.now() - lastLogTime > 5000) {
+        document
+          .querySelector(".vyucnb")
+          .parentElement.lastChild.scrollIntoView();
+      }
+    }, 5000);
+
+    const parentEl = document.querySelector(".vyucnb").parentElement;
+    new MutationObserver(observerCallback).observe(
+      parentEl.children[parentEl.children.length - 2],
+      {
+        childList: true,
+      }
+    );
+  });
+
+  await waitForArrayGrowth(allElements, limit);
+
+  limitIsReached = true;
+  await wait(1000);
+
+  await page.close();
+  await browser.close();
+
+  return {
+    ...{ url, userId, reviewId, limit, sortBy },
+    port,
+    containerName,
+    title,
+    allElements,
+  };
+}
+
+module.exports = { scrapePageData, scrapePageComments };

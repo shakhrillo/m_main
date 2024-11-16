@@ -31,14 +31,38 @@ const fetchReviewDetails = async (page, reviewId) => {
     `);
 
     for (const button of buttons) {
-      if (await button.evaluate((el) => el.isConnected)) {
-        const isButtonInViewport = await button.isIntersectingViewport();
-        if (!isButtonInViewport) {
-          await button.scrollIntoView();
-        }
-        await button.click(); // Click to expand the review
-        await wait(40); // Wait for any animations or loading
+      const isButtonInViewport = await button.isIntersectingViewport();
+      if (!isButtonInViewport) {
+        await button.scrollIntoView();
       }
+
+      let attempts = 3;
+      while (attempts > 0) {
+        if (await button.evaluate((el) => el.isConnected)) {
+          try {
+            await button.click();
+            break; // Exit loop if click succeeds
+          } catch (error) {
+            console.log("Retrying click...");
+            await wait(200);
+          }
+        } else {
+          console.log("Button is not connected to the DOM");
+          break; // Exit if button is detached
+        }
+        attempts--;
+      }
+
+      // if (await button.evaluate((el) => el.isConnected)) {
+      //   // check Node is either not clickable or not an Element
+      //   if (!button.click || !button.asElement()) {
+      //     console.log("Button is not clickable or not an Element");
+      //     // skip
+      //     continue;
+      //   }
+      //   await button.click(); // Click to expand the review
+      //   await wait(200); // Wait for any animations or loading
+      // }
     }
 
     isPageOpen = page.isClosed();
