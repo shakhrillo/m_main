@@ -12,6 +12,7 @@ async function hideElements(page, selectors) {
         elements[0]
       );
     }
+    await wait(500);
   }
 }
 
@@ -65,11 +66,10 @@ async function scrapePageData({ url, userId }, port) {
       `a[aria-label="Sign in"]`,
       `.app-horizontal-widget-holder`,
       `a[title="Google apps"]`,
+      `button[aria-label*="Expand side panel"]`,
+      `.scene-footer`,
     ]);
 
-    await wait(1000);
-
-    // Capture and upload screenshot
     const screenshot = await page.screenshot({ fullPage: true });
     const uniqueId = url.split("/").pop();
     data.screenshot = await uploadFile(
@@ -77,7 +77,6 @@ async function scrapePageData({ url, userId }, port) {
       `${userId}/${uniqueId}/screenshot.png`
     );
 
-    // Extract additional information
     data.address = await extractAriaLabel(
       page,
       `button[data-item-id*="address"]`
@@ -93,7 +92,6 @@ async function scrapePageData({ url, userId }, port) {
       `button[jsaction*="moreReviews"]`
     );
 
-    await page.close();
     await browser.close();
   } catch (error) {
     logger.error("Error in main:", error);
