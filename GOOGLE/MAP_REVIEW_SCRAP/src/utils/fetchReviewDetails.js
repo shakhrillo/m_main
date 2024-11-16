@@ -25,12 +25,14 @@ const fetchReviewDetails = async (page, reviewId) => {
     `);
 
     for (const button of buttons) {
-      const isButtonInViewport = await button.isIntersectingViewport();
-      if (!isButtonInViewport) {
-        await button.scrollIntoView();
+      if (await button.evaluate((el) => el.isConnected)) {
+        const isButtonInViewport = await button.isIntersectingViewport();
+        if (!isButtonInViewport) {
+          await button.scrollIntoView();
+        }
+        await button.click(); // Click to expand the review
+        await wait(40); // Wait for any animations or loading
       }
-      await button.click(); // Click to expand the review
-      await wait(40); // Wait for any animations or loading
     }
 
     isPageOpen = page.isClosed();

@@ -38,6 +38,7 @@ async function sortReviews(page, sortBy = "Newest") {
         logger.info(`Selecting ${sortBy} reviews`);
         await menuItem.click();
         foundNewest = true;
+        await wait(1000);
         break;
       }
     }

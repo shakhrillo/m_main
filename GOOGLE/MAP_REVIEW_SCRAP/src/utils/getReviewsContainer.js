@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer');
-const logger = require('./logger');
+const puppeteer = require("puppeteer");
+const logger = require("../config/logger");
 
 /**
  * Retrieves the parent element of the first reviews container from the specified page.
@@ -9,38 +9,58 @@ const logger = require('./logger');
  * returns its parent element.
  *
  * @param {puppeteer.Page} page - The Puppeteer page instance to interact with.
+ * @param {number} [timeout=5000] - The maximum time (in milliseconds) to wait for the reviews container.
+ * @param {number} [retries=3] - Number of retry attempts if the container is not found initially.
  * @returns {Promise<puppeteer.JSHandle | null>} - A Promise that resolves to the parent element of the reviews container,
- * or null if the container is not found or did not load in time.
+ * or null if the container is not found after retries.
  */
-async function getReviewsContainer(page) {
-  logger.info('Getting reviews container');
+async function getReviewsContainer(page, timeout = 5000, retries = 3) {
+  logger.info("Attempting to retrieve reviews container...");
 
-  // Define the selector for the reviews container
-  const reviewsSelector = '.vyucnb';
+  const reviewsSelector = ".vyucnb";
+  let attempt = 0;
 
-  try {
-    // Wait for the reviews container to load within the specified timeout
-    await page.waitForSelector(reviewsSelector, { timeout: 5000 });
-  } catch (error) {
-    // Log error if the container does not load in time
-    logger.error('Reviews container did not load in time: ' + error.message);
-    return null;
+  while (attempt < retries) {
+    attempt++;
+    try {
+      logger.info(`Attempt ${attempt} to locate reviews container...`);
+
+      // Wait for the reviews container to load
+      await page.waitForSelector(reviewsSelector, { timeout });
+      logger.info("Reviews container found");
+
+      // Retrieve all elements matching the reviews selector
+      const vyucnb = await page.$$(reviewsSelector);
+
+      if (vyucnb.length > 0) {
+        logger.info(
+          "Retrieving parent element of the first reviews container..."
+        );
+
+        // Get the parent element of the first reviews container
+        const parentElm = await page.evaluateHandle(
+          (el) => el.parentElement,
+          vyucnb[0]
+        );
+
+        if (parentElm) {
+          logger.info("Parent element successfully retrieved.");
+          return parentElm;
+        } else {
+          logger.error("Failed to retrieve the parent element.");
+        }
+      } else {
+        logger.warn("No reviews containers found.");
+      }
+    } catch (error) {
+      logger.error(`Attempt ${attempt} failed: ${error.message}. Retrying...`);
+    }
   }
 
-  // Retrieve all elements matching the reviews selector
-  const vyucnb = await page.$$(reviewsSelector);
-  let parentElm = null;
-
-  // Check if any reviews containers were found
-  if (vyucnb.length > 0) {
-    // Get the parent element of the first reviews container
-    parentElm = await page.evaluateHandle(el => el.parentElement, vyucnb[0]);
-  } else {
-    // Log error if no reviews container was found
-    logger.error('No reviews container found');
-  }
-
-  return parentElm; // Return the parent element or null if not found
+  logger.error(
+    `All ${retries} attempts to locate the reviews container have failed.`
+  );
+  return null;
 }
 
 module.exports = getReviewsContainer;

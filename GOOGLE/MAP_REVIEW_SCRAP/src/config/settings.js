@@ -1,9 +1,7 @@
-console.log("settings.js loaded", process.env.CHROME_PATH);
 module.exports = {
   launch: {
-    browserWSEndpoint: "ws://localhost:3000",
-    // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    headless: true,
+    // browserWSEndpoint: "ws://localhost:3000",
+    headless: !true,
     protocolTimeout: 60000, // Set this to a higher value (in milliseconds)
     args: [
       "--autoplay-policy=user-gesture-required",

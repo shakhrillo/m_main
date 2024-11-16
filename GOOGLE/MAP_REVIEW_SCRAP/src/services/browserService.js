@@ -10,9 +10,24 @@ const wait = require("../utils/wait");
  */
 async function launchBrowser(port) {
   try {
-    const browser = await puppeteer.connect({
-      browserWSEndpoint: `ws://localhost:${port}`,
-    });
+    let browser;
+    if (!config.launch.headless) {
+      browser = await puppeteer.launch(config.launch);
+      logger.info("Browser launched successfully");
+      return browser;
+    } else {
+      browser = await puppeteer.connect({
+        ...config.launch,
+        browserWSEndpoint: `ws://localhost:${port}`,
+      });
+    }
+
+    // const browser = await puppeteer.connect({
+    //   ...config.launch,
+    //   ...(config.launch.headless
+    //     ? { browserWSEndpoint: `ws://localhost:${port}` }
+    //     : {}),
+    // });
     logger.info("Browser launched successfully");
     return browser;
   } catch (error) {

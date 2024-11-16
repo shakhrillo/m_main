@@ -17,6 +17,7 @@ const fetchReviewDetails = require("../utils/fetchReviewDetails");
 const { launchBrowser, openPage } = require("../services/browserService");
 const logger = require("../config/logger");
 const { removeDocker } = require("./dockerController");
+// const puppeteerMutationListener = require("../utils/puppeteerMutationListener");
 
 // Define a temporary directory in your project (e.g., ./temp)
 const tempDir = path.join(__dirname, "temp");
@@ -79,24 +80,6 @@ async function setExtractedDate(userId, reviewId, allElements) {
     console.log("Total reviews:", allElements.length);
 
     try {
-      // const jsonFileName = path.join(tempDir, `${reviewId}.json`);
-      // const csvFileName = path.join(tempDir, `${reviewId}.csv`);
-
-      // Write the JSON file
-      // fs.writeFileSync(jsonFileName, JSON.stringify(allElements, null, 2));
-
-      // Define the CSV writer
-      // const csvWriter = createCsvWriter({
-      //   path: csvFileName,
-      //   header: Object.keys(allElements[0]).map((key) => ({
-      //     id: key,
-      //     title: key,
-      //   })), // Adjust headers based on your data structure
-      // });
-
-      // Write the CSV file
-      // await csvWriter.writeRecords(allElements);
-
       const jsonFile = JSON.stringify(allElements, null, 2);
       const csvFile =
         Object.keys(allElements[0]).join(",") +
@@ -107,15 +90,6 @@ async function setExtractedDate(userId, reviewId, allElements) {
 
       const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
       const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
-
-      console.log("JSON URL:", jsonUrl);
-      console.log("CSV URL:", csvUrl);
-
-      // await uploadFile(fs.readFileSync(jsonFileName), `json/${reviewId}.json`);
-      // await uploadFile(fs.readFileSync(csvFileName), `csv/${reviewId}.csv`);
-
-      // fs.unlinkSync(jsonFileName);
-      // fs.unlinkSync(csvFileName);
 
       await batchWriteLargeArray(userId, reviewId, allElements);
 
@@ -152,11 +126,8 @@ async function main(
     allElements = [];
     browser = await launchBrowser(port);
     page = await openPage(browser, url);
-
     await page.setCacheEnabled(false);
-
     page.exposeFunction("puppeteerMutationListener", puppeteerMutationListener);
-
     await page.evaluate(
       ({ uid, pushId }) => {
         window.uid = uid;
@@ -164,15 +135,8 @@ async function main(
       },
       { uid: userId, pushId: reviewId }
     );
-
     const title = await page.title();
-    console.log("Title:", title);
-
-    await updateReview(userId, reviewId, {
-      title,
-      status: "in-progress",
-      token: "",
-    });
+    logger.info(`Page title: ${title}`);
 
     await enableRequestInterception(page, [
       ".css",
@@ -186,6 +150,7 @@ async function main(
 
     await clickReviewTab(page);
     await sortReviews(page, sortBy);
+
     await scrollAndCollectElements(page, userId, reviewId, limit);
 
     await waitForArrayGrowth(allElements, limit);
