@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY || "";
 
 function createToken(payload) {
+  console.log("secretKey:", secretKey);
   return jwt.sign(payload, secretKey, { expiresIn: "12h" });
 }
 
 function verifyToken(token) {
   try {
-    const decoded = jwt.verify(token, "secretKey");
+    const decoded = jwt.verify(token, secretKey);
     return decoded; // If valid, returns the decoded payload
   } catch (err) {
     // Handle errors (e.g., token expired or invalid)

@@ -1,103 +1,58 @@
-const { exec } = require("child_process");
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middlewares/authMiddleware");
-const scrap = require("../controllers/scraperController");
-const scrapInfo = require("../controllers/scraperInfoController");
-const runDocker = async (dName, port) => {
+const authMiddleware = require("../middlewares/authMiddleware");
+const scraperController = require("../controllers/scraperController");
+const scraperInfoController = require("../controllers/scraperInfoController");
+const { runDocker, removeDocker } = require("../controllers/dockerController");
+const logger = require("../config/logger");
+
+// Constants
+const DELAY_MS = 5000; // Delay for container initialization
+
+// Helper function to manage Docker setup and teardown
+const withDocker = async (port, containerName, task) => {
+  const containerId = await runDocker(containerName, port);
   try {
-    const output = await new Promise((resolve, reject) => {
-      exec(
-        `sudo docker run -d --name ${dName} -e PORT=${port} -p ${port}:${port} browserless/chrome > /dev/null 2>&1`,
-        (error, stdout, stderr) => {
-          if (error) {
-            reject(`exec error: ${error}`);
-            return;
-          }
-
-          if (stderr) {
-            console.error(`stderr: ${stderr}`);
-          }
-
-          // The container ID is output when using -d (detached mode)
-          resolve(stdout.trim());
-        }
-      );
-    });
-
-    console.log(`Container started with ID: ${output}`);
-    return output;
-  } catch (error) {
-    console.error(error);
-    throw error;
+    await new Promise((resolve) => setTimeout(resolve, DELAY_MS)); // Wait for container initialization
+    return await task();
+  } finally {
+    await removeDocker(port);
   }
 };
 
-async function removeDocer(port) {
-  try {
-    const { exec } = require("child_process");
-    const dName = `browserlesschrome-${port}`;
-    exec(`sudo docker rm -f ${dName}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-      }
-
-      console.log(`Container removed with ID: ${stdout.trim()}`);
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-router.post("/", authenticateToken, async (req, res) => {
-  console.log("Request Data:", req.data);
-  // random port
+// Routes
+router.post("/", authMiddleware, async (req, res) => {
   const port = Math.floor(Math.random() * 10000) + 3000;
-  console.log("Port:", port);
-  // const dName = `browserlesschrome-${port}`;
-  const containerId = await runDocker("dName", port);
-  console.log("Port:", containerId);
-  // wait 5sec
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-  // stop docker
+  const containerName = `browserlesschrome-${port}`;
 
-  scrap(req.data, port);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  // scrap(req.data);
-  res.json(req.data);
+  try {
+    const result = await withDocker(port, containerName, async () => {
+      await scraperController(req.data, port);
+      return req.data;
+    });
+    res.json(result);
+  } catch (error) {
+    logger.error("Error in / route:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-router.post("/info", authenticateToken, async (req, res) => {
-  console.log("Request Data:", req.data);
-  // random port
+router.post("/info", authMiddleware, async (req, res) => {
   const port = Math.floor(Math.random() * 10000) + 3000;
-  console.log("Port:", port);
-  const dName = `browserlesschrome-${port}`;
-  const containerId = await runDocker(dName, port);
-  console.log("Port:", containerId);
-  // wait 5sec
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  const containerName = `browserlesschrome-${port}`;
+  logger.info("Received request to /info route");
 
-  const data = await scrapInfo(req.data, port);
-  // stop docker
-  await removeDocer(port);
-  console.log("Data:", data);
-  res.json(data);
+  try {
+    const data = await runDocker(
+      containerName,
+      port,
+      async () => await scraperInfoController(req.data, port)
+    );
+    res.json(data);
+  } catch (error) {
+    logger.error("Error in /info route:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 module.exports = router;

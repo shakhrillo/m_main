@@ -6,8 +6,8 @@
   "scripts": {
     "set-env": "dotenv -e .env firebase functions:config:set stripe.secret_key=$STRIPE_SECRET_KEY stripe.webhook_secret=$STRIPE_WEBHOOK_SECRET",
     "deploy": "npm run set-env && firebase deploy --only functions",
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "NODE_ENV=production node src/app.js",
+    "dev": "NODE_ENV=development nodemon src/app.js",
     "prestart": "node node_modules/puppeteer/install.mjs"
   },
   "author": "",
@@ -25,7 +25,8 @@
     "mutationobserver-shim": "^0.3.7",
     "pm2": "^5.4.2",
     "puppeteer": "^23.6.1",
-    "stripe": "^17.3.1"
+    "stripe": "^17.3.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

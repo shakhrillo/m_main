@@ -1,19 +1,26 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const secretKey = process.env.SECRET_KEY || "";
+const logger = require("../config/logger");
+const SECRET_KEY = process.env.SECRET_KEY;
 
-// Middleware to verify token
-module.exports = function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer token
+module.exports = function authMiddleware(req, res, next) {
+  const authorizationHeader = req.headers["authorization"];
+  const token = authorizationHeader && authorizationHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(403).json({ message: "No token provided" });
+    const message = "No token provided";
+    logger.error(message);
+    return res.status(403).json({ message });
   }
 
-  jwt.verify(token, secretKey, (err, data) => {
-    if (err)
-      return res.status(403).json({ message: "Invalid or expired token" });
-    req.data = data;
+  jwt.verify(token, SECRET_KEY, (error, decodedData) => {
+    if (error) {
+      logger.error(error);
+      const message = "Failed to authenticate token";
+      logger.error(message);
+      return res.status(403).json({ message });
+    }
+    req.data = decodedData;
     next();
   });
 };
