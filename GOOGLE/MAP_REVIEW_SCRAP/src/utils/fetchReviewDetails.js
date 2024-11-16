@@ -16,7 +16,13 @@ const fetchReviewDetails = async (page, reviewId) => {
       return null;
     }
 
-    const reviewElement = await page.$(`.jftiEf[data-review-id="${reviewId}"]`);
+    await page.waitForSelector(`.jftiEf[data-review-id="${reviewId}"]`);
+    let reviewElement = await page.$$(`.jftiEf[data-review-id="${reviewId}"]`);
+    if (reviewElement.length === 0) {
+      console.log(`Review with ID ${reviewId} not found`);
+      return null;
+    }
+    reviewElement = reviewElement[0];
     const buttons = await reviewElement.$$(`
       button[data-review-id="${reviewId}"][jsaction*="review.expandReview"],
       button[jsaction*="review.showReviewInOriginal"],
