@@ -29,8 +29,11 @@ async function executeScraping(containerName, port, controller, req, res) {
 }
 
 router.post("/", authMiddleware, async (req, res) => {
-  const { port, containerName } = generateDockerConfig();
-  executeScraping(containerName, port, scrapePageComments, req, res);
+  // save new file
+
+  res.json(req.data);
+  // const { port, containerName } = generateDockerConfig();
+  // executeScraping(containerName, port, scrapePageComments, req, res);
   // executeScraping(containerName, port, scraperController, req, res);
 });
 
