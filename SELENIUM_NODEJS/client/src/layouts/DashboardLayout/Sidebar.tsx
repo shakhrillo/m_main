@@ -7,6 +7,7 @@ import creditCardIcon from "../../assets/icons/credit-card.svg"
 import settingsIcon from "../../assets/icons/settings.svg"
 import helpIcon from "../../assets/icons/help.svg"
 import logoutIcon from "../../assets/icons/logout.svg"
+import { useMenu } from "../../context/MenuContext/MenuContext"
 
 const navLinks = [
   { path: "/scrap", label: "Scrap", icon: searchIcon },
@@ -24,8 +25,13 @@ const navLinks = [
 ]
 
 const Sidebar = () => {
+  const { isMenuOpen, toggleMenu } = useMenu()
   return (
-    <div className="sidebar">
+    <div className={`sidebar sidebar-is-${isMenuOpen ? "showed" : "hide"}`}>
+      <div
+        className={`w-md-vw h-md-vh p-absolute ${isMenuOpen ? "d-block" : "d-none"}`}
+        onClick={toggleMenu}
+      ></div>
       <NavLink to="/">
         <img src={logoImg} alt="logo" className="logo" />
       </NavLink>

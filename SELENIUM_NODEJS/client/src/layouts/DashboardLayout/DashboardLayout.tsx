@@ -6,7 +6,7 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="main">
       <Sidebar />
-      <div className="container">
+      <div className="container p-md-0">
         <div className="content">
           <Outlet />
         </div>

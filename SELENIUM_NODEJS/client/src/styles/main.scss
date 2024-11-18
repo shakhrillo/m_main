@@ -36,9 +36,54 @@ hr {
   margin: 0 auto;
   @media (min-width: 768px) {
     width: 100%;
+    // padding-right: 24px;
   }
 
   @media (min-width: 1200px) {
     width: 90%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .d-md-block {
+    display: block !important;
+  }
+  .sidebar-is-hide {
+    left: -230px;
+  }
+  .p-absolute {
+    position: absolute;
+    z-index: -1;
+  }
+  .h-md-vh {
+    height: 100vh;
+  }
+  .w-md-vw {
+    width: 100vw;
+  }
+  .d-md-none {
+    display: none;
+  }
+  .p-md-0 {
+    padding: 0;
+  }
+  .px-md-5 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  .px-md-4 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .mx-md-5 {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+  .mx-md-4 {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+  }
+  .shape-md-none {
+    border-radius: 0;
   }
 }

@@ -114,7 +114,7 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="d-flex-column">
+          <div className="d-flex-column px-md-4">
             <div className="card">
               <div className="card-body">
                 <form onSubmit={handleGetInfo}>
@@ -149,7 +149,7 @@ export const ReviewsForm = () => {
         )
       case 1:
         return (
-          <div>
+          <div className="px-md-4">
             {!info.title || loading ? (
               <>
                 <div className="card my-5">
@@ -228,7 +228,7 @@ export const ReviewsForm = () => {
         )
       case 2:
         return (
-          <div>
+          <div className="px-md-4">
             <div className="card">
               <div className="card-header">
                 <h3>{info.title}</h3>

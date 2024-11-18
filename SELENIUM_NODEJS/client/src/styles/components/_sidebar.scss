@@ -13,6 +13,7 @@
   box-shadow: $box-shadow-light;
   padding: $spacing-md;
   box-sizing: border-box;
+  transition: left 0.3s ease;
 }
 
 .sidebar a:first-child {
