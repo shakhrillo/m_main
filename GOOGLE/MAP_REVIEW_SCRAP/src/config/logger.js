@@ -10,7 +10,7 @@ if (!fs.existsSync(logDir)) {
 
 // Define log level based on environment
 const logLevel = process.env.LOG_LEVEL || "info";
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "production_";
 
 // Custom log formats
 const logFormat = format.combine(
