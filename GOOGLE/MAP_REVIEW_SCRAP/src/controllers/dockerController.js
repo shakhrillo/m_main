@@ -47,13 +47,16 @@ const buildDockerCommand = (containerName, port) => {
   let dockerCommand = `sudo docker run -d --name ${containerName} \
     -e PORT=${port} \
     -p ${port}:${port} \
-    --memory=8g \
-    --cpus=8 \
+    --memory="8g" \
+    --cpus="4" \
+    --platform="linux/amd64" \
     browserless/chrome`;
 
   if (process.env.NODE_ENV === "development") {
     dockerCommand = dockerCommand.replace("sudo ", "");
   }
+
+  console.log(dockerCommand);
 
   return dockerCommand;
 };

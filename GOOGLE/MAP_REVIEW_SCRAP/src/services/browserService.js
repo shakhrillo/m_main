@@ -17,7 +17,6 @@ async function launchBrowser(port) {
       return browser;
     } else {
       browser = await puppeteer.connect({
-        ...config.launch,
         browserWSEndpoint: `ws://localhost:${port}`,
       });
     }
@@ -45,7 +44,8 @@ async function launchBrowser(port) {
 async function openPage(browser, url) {
   try {
     const pages = await browser.pages();
-    const page = pages.length > 0 ? pages[0] : await browser.newPage();
+    // const page = pages.length > 0 ? pages[0] : await browser.newPage();
+    const page = await browser.newPage();
 
     logger.info("Page instance ready");
 

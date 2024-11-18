@@ -67,119 +67,125 @@ async function scrapePageComments(
     .subscribe(async (record) => {
       console.log("Record:", record);
       await page[containerName].evaluate(async (record) => {
-        const reviewElement = document.querySelector(
-          `div[data-review-id="${record}"]`
-        );
-        if (reviewElement) {
-          reviewElement.style.border = "2px solid red";
-          reviewElement.scrollIntoView();
-        }
-
-        const expandReviewButton = reviewElement.querySelector(
-          `button[data-review-id="${record}"][jsaction*="review.expandReview"]`
-        );
-        if (expandReviewButton) {
-          expandReviewButton.style.border = "2px solid blue";
-          expandReviewButton.click();
-        }
-
-        const showReviewInOriginalButton = reviewElement.querySelector(`
-          button[data-review-id="${record}"][jsaction*="review.showReviewInOriginal"]
-        `);
-
-        if (showReviewInOriginalButton) {
-          showReviewInOriginalButton.style.border = "2px solid green";
-          showReviewInOriginalButton.click();
-        }
-
-        const expandOwnerResponseButton = reviewElement.querySelector(`
-          button[data-review-id="${record}"][jsaction*="review.expandOwnerResponse"]
-        `);
-
-        if (expandOwnerResponseButton) {
-          expandOwnerResponseButton.style.border = "2px solid yellow";
-          expandOwnerResponseButton.click();
-        }
-
-        const showOwnerResponseInOriginalButton = reviewElement.querySelector(`
-          button[data-review-id="${record}"][jsaction*="review.showOwnerResponseInOriginal"]
-        `);
-
-        if (showOwnerResponseInOriginalButton) {
-          showOwnerResponseInOriginalButton.style.border = "2px solid orange";
-          showOwnerResponseInOriginalButton.click();
-        }
-
-        // wait 2 sec
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        let reviewText = "";
-        const reviewContainers = reviewElement.querySelectorAll(".MyEned");
-        for (const reviewContainer of reviewContainers) {
-          const lastSpan = reviewContainer.querySelector("span:last-of-type");
-          const lastSpanText = lastSpan?.textContent?.trim() || "";
-
-          // Check for "Read more" and fallback to the first span if needed
-          if (lastSpanText.includes("Read more")) {
-            const firstSpan =
-              reviewContainer.querySelector("span:first-of-type");
-            reviewText += firstSpan?.textContent?.trim() || "";
-          } else {
-            reviewText += lastSpanText;
-          }
-        }
-
-        let rateElementParentNextSiblingLastChildChildren = [];
-
-        if (reviewContainers.length) {
-          const MyEnedLastChildren =
-            reviewContainers[0].querySelectorAll(":scope > *");
-          if (MyEnedLastChildren.length >= 2) {
-            rateElementParentNextSiblingLastChildChildren =
-              MyEnedLastChildren[1].querySelectorAll(":scope > *");
-          }
-        } else {
-          const rateElement = reviewElement.querySelector(
-            'span[role="img"][aria-label*="stars"]'
+        try {
+          const reviewElement = document.querySelector(
+            `div[data-review-id="${record}"]`
           );
-          if (rateElement) {
-            const rateElementParent =
-              rateElement.parentElement?.nextElementSibling?.firstElementChild;
-            if (rateElementParent) {
-              rateElementParentNextSiblingLastChildChildren =
-                rateElementParent.querySelectorAll(":scope > *");
+          if (reviewElement) {
+            reviewElement.style.border = "2px solid red";
+            reviewElement.scrollIntoView();
+          }
+
+          const expandReviewButton = reviewElement.querySelector(
+            `button[data-review-id="${record}"][jsaction*="review.expandReview"]`
+          );
+          if (expandReviewButton) {
+            expandReviewButton.style.border = "2px solid blue";
+            expandReviewButton.click();
+          }
+
+          const showReviewInOriginalButton = reviewElement.querySelector(`
+            button[data-review-id="${record}"][jsaction*="review.showReviewInOriginal"]
+          `);
+
+          if (showReviewInOriginalButton) {
+            showReviewInOriginalButton.style.border = "2px solid green";
+            showReviewInOriginalButton.click();
+          }
+
+          const expandOwnerResponseButton = reviewElement.querySelector(`
+            button[data-review-id="${record}"][jsaction*="review.expandOwnerResponse"]
+          `);
+
+          if (expandOwnerResponseButton) {
+            expandOwnerResponseButton.style.border = "2px solid yellow";
+            expandOwnerResponseButton.click();
+          }
+
+          const showOwnerResponseInOriginalButton =
+            reviewElement.querySelector(`
+            button[data-review-id="${record}"][jsaction*="review.showOwnerResponseInOriginal"]
+          `);
+
+          if (showOwnerResponseInOriginalButton) {
+            showOwnerResponseInOriginalButton.style.border = "2px solid orange";
+            showOwnerResponseInOriginalButton.click();
+          }
+
+          // wait 2 sec
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          let reviewText = "";
+          const reviewContainers = reviewElement.querySelectorAll(".MyEned");
+          for (const reviewContainer of reviewContainers) {
+            const lastSpan = reviewContainer.querySelector("span:last-of-type");
+            const lastSpanText = lastSpan?.textContent?.trim() || "";
+
+            // Check for "Read more" and fallback to the first span if needed
+            if (lastSpanText.includes("Read more")) {
+              const firstSpan =
+                reviewContainer.querySelector("span:first-of-type");
+              reviewText += firstSpan?.textContent?.trim() || "";
+            } else {
+              reviewText += lastSpanText;
             }
           }
+
+          let rateElementParentNextSiblingLastChildChildren = [];
+
+          if (reviewContainers.length) {
+            const MyEnedLastChildren =
+              reviewContainers[0].querySelectorAll(":scope > *");
+            if (MyEnedLastChildren.length >= 2) {
+              rateElementParentNextSiblingLastChildChildren =
+                MyEnedLastChildren[1].querySelectorAll(":scope > *");
+            }
+          } else {
+            const rateElement = reviewElement.querySelector(
+              'span[role="img"][aria-label*="stars"]'
+            );
+            if (rateElement) {
+              const rateElementParent =
+                rateElement.parentElement?.nextElementSibling
+                  ?.firstElementChild;
+              if (rateElementParent) {
+                rateElementParentNextSiblingLastChildChildren =
+                  rateElementParent.querySelectorAll(":scope > *");
+              }
+            }
+          }
+
+          const extractedQA = Array.from(
+            rateElementParentNextSiblingLastChildChildren,
+            (questionContainer) => questionContainer.innerText
+          );
+
+          const result = {
+            id: record,
+            reviewText,
+            extractedQA,
+          };
+
+          // logger(`Result: ${JSON.stringify(result)}`);
+
+          // elements[containerName].push(result);
+          pushElm(result);
+
+          // const result = {
+          //   id: reviewId,
+          //   element: reviewElement,
+          //   review: await extractReviewText(reviewElement),
+          //   date: await getReviewDate(reviewElement, reviewId),
+          //   response: await getOwnerResponse(reviewElement),
+          //   responseTime: await getOwnerResponseTime(reviewElement),
+          //   imageUrls: await extractImageUrlsFromButtons(page, reviewId),
+          //   rating: await extractReviewRating(reviewElement, reviewId),
+          //   qa: await extractQuestions(reviewElement),
+          //   user: await extractReviewer(reviewElement, reviewId),
+          // };
+        } catch (error) {
+          logger(`Error evaluating record: ${error}`);
         }
-
-        const extractedQA = Array.from(
-          rateElementParentNextSiblingLastChildChildren,
-          (questionContainer) => questionContainer.innerText
-        );
-
-        const result = {
-          id: record,
-          reviewText,
-          extractedQA,
-        };
-
-        // logger(`Result: ${JSON.stringify(result)}`);
-
-        // elements[containerName].push(result);
-        pushElm(result);
-
-        // const result = {
-        //   id: reviewId,
-        //   element: reviewElement,
-        //   review: await extractReviewText(reviewElement),
-        //   date: await getReviewDate(reviewElement, reviewId),
-        //   response: await getOwnerResponse(reviewElement),
-        //   responseTime: await getOwnerResponseTime(reviewElement),
-        //   imageUrls: await extractImageUrlsFromButtons(page, reviewId),
-        //   rating: await extractReviewRating(reviewElement, reviewId),
-        //   qa: await extractQuestions(reviewElement),
-        //   user: await extractReviewer(reviewElement, reviewId),
-        // };
       }, record);
     });
 
