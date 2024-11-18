@@ -2,16 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const scraperController = require("../controllers/scraperController");
-const {
-  scrapePageData,
-  scrapePageComments,
-} = require("../controllers/scrapePageDataController");
+const { scrapePageData } = require("../controllers/scrapePageDataController");
 const {
   runDocker,
   removeDocker,
   generateDockerConfig,
 } = require("../controllers/dockerController");
 const logger = require("../config/logger");
+const scrapePageComments = require("../controllers/scrapePageCommentsController");
 
 async function executeScraping(containerName, port, controller, req, res) {
   try {
@@ -30,7 +28,7 @@ async function executeScraping(containerName, port, controller, req, res) {
   }
 }
 
-router.post("/", authMiddleware, (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   const { port, containerName } = generateDockerConfig();
   executeScraping(containerName, port, scrapePageComments, req, res);
   // executeScraping(containerName, port, scraperController, req, res);

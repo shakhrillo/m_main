@@ -1,6 +1,4 @@
-const logger = require("./logger");
-const wait = require("./wait");
-
+const logger = require("../config/logger");
 /**
  * Extracts the text of a review from a review element.
  *

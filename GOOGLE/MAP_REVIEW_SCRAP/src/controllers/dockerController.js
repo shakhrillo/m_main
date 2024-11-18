@@ -47,6 +47,8 @@ const buildDockerCommand = (containerName, port) => {
   let dockerCommand = `sudo docker run -d --name ${containerName} \
     -e PORT=${port} \
     -p ${port}:${port} \
+    --memory=8g \
+    --cpus=8 \
     browserless/chrome`;
 
   if (process.env.NODE_ENV === "development") {

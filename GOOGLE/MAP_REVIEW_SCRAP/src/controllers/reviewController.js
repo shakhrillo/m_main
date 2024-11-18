@@ -12,6 +12,13 @@ const updateReview = async (uid, reviewId, review) => {
   return reviewsRef.doc(reviewId).update(review);
 };
 
+const addComments = async (uid, reviewId, comments) => {
+  const reviewsRef = firestore.collection(
+    `users/${uid}/reviews/${reviewId}/reviews`
+  );
+  return reviewsRef.add(comments);
+};
+
 async function batchWriteLargeArray(uid, pushId, data) {
   let collectionRef = firestore.collection(
     `users/${uid}/reviews/${pushId}/reviews`
@@ -24,7 +31,7 @@ async function batchWriteLargeArray(uid, pushId, data) {
     const chunk = data.slice(i, i + chunkSize);
 
     chunk.forEach((doc) => {
-      if (doc.id) {
+      if (doc && doc.id) {
         const docRef = collectionRef.doc(doc.id);
         batch.set(docRef, doc);
       }
@@ -42,5 +49,6 @@ async function batchWriteLargeArray(uid, pushId, data) {
 module.exports = {
   createReview,
   updateReview,
+  addComments,
   batchWriteLargeArray,
 };
