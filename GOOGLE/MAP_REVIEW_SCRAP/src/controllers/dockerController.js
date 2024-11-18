@@ -49,7 +49,6 @@ const buildDockerCommand = (containerName, port) => {
     -p ${port}:${port} \
     --memory="8g" \
     --cpus="4" \
-    --platform="linux/amd64" \
     browserless/chrome`;
 
   if (process.env.NODE_ENV === "development") {

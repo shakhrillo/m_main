@@ -1,7 +1,7 @@
 module.exports = {
   launch: {
     // browserWSEndpoint: "ws://localhost:3000",
-    headless: !true,
+    headless: true,
     protocolTimeout: 60000, // Set this to a higher value (in milliseconds)
     args: [
       // "--autoplay-policy=user-gesture-required",
