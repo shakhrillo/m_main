@@ -21,12 +21,6 @@ async function launchBrowser(port) {
       });
     }
 
-    // const browser = await puppeteer.connect({
-    //   ...config.launch,
-    //   ...(config.launch.headless
-    //     ? { browserWSEndpoint: `ws://localhost:${port}` }
-    //     : {}),
-    // });
     logger.info("Browser launched successfully");
     return browser;
   } catch (error) {

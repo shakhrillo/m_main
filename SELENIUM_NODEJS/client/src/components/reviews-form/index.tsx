@@ -245,7 +245,7 @@ export const ReviewsForm = () => {
                       type="number"
                       id="limit"
                       value={scrap.limit}
-                      disabled={true}
+                      // disabled={true}
                       onChange={e => handleInputChange("limit", e.target.value)}
                     />
                     <div className="form-hint">
