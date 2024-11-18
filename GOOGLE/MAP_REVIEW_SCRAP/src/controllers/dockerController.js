@@ -69,7 +69,7 @@ const buildDockerCommand = (containerName, port) => {
  * @param {Function} reject - The function to reject the promise.
  */
 const monitorContainerLogs = (containerName, port, task, resolve, reject) => {
-  const logStream = spawn("sudo docker", ["logs", "-f", containerName]);
+  const logStream = spawn("docker", ["logs", "-f", containerName]);
 
   let isStreamKilled = false;
 
