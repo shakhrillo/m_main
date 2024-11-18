@@ -8,7 +8,7 @@ async function waitForArrayGrowth(array, targetLength, timeout = 90000) {
       stableDuration += checkInterval;
       if (stableDuration >= timeout) {
         console.log(
-          "Timeout exceeded: Array length did not change for 10 seconds."
+          `Timeout exceeded: Array length did not change for ${timeout}ms`
         );
         return;
       }
