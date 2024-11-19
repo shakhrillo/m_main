@@ -41,6 +41,14 @@
 
 .sidebar-toggle-btn,
 .sidebar-hide-btn {
+  border-radius: 6px;
+  background-color: #fff;
+  img {
+    width: 22px;
+  }
+}
+.sidebar-toggle-btn,
+.sidebar-hide-btn {
   display: none;
 
   @media (max-width: 1200px) {

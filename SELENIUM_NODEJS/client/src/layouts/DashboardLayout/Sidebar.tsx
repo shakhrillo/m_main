@@ -8,6 +8,7 @@ import settingsIcon from "../../assets/icons/settings.svg"
 import helpIcon from "../../assets/icons/help.svg"
 import logoutIcon from "../../assets/icons/logout.svg"
 import { useMenu } from "../../context/MenuContext/MenuContext"
+import hideMenuIcon from "../../assets/icons/x-lg.svg"
 
 const navLinks = [
   { path: "/scrap", label: "Scrap", icon: searchIcon },
@@ -32,8 +33,8 @@ const Sidebar = () => {
         <NavLink to="/">
           <img src={logoImg} alt="logo" className="logo" />
         </NavLink>
-        <button onClick={toggleMenu} className="sidebar-hide-btn">
-          X
+        <button onClick={toggleMenu} className="sidebar-hide-btn button">
+          <img src={hideMenuIcon} alt="Hide Menu" />
         </button>
       </div>
       {navLinks.map(({ path, icon, label, className }, index) => (
