@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
+
 const errorHandler = require("./middlewares/errorHandler");
 const logger = require("./config/logger");
 
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use("/api/machines", machinesRoutes);
 app.use("/api/scrap", scraperRoutes);
 app.use("/api/stripe", stripeRoutes);
 
