@@ -9,6 +9,7 @@ import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
 import { useNavigate } from "react-router-dom"
 import { useMenu } from "../../context/MenuContext/MenuContext"
+import menuIcon from "../../assets/icons/list.svg"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -152,8 +153,8 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <div className="d-flex align-items-center gap-3 py-3 my-5">
-        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
-          m
+        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
+          <img src={menuIcon} alt="menu-icon" />
         </button>
         <h3 className="m-0">Reviews</h3>
         <button className="button button-lg button-success ml-auto">

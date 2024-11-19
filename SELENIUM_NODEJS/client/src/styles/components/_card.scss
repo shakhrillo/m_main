@@ -24,6 +24,9 @@
 
   .card-body {
     padding: $spacing-md;
+    @media (max-width: 1200px) {
+      overflow-x: auto;
+    }
   }
 
   .card-footer {
