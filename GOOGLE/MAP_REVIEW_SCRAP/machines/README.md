@@ -1,3 +1,6 @@
-docker build --platform linux/amd64 -t map_review_scraperx .
+1. Need to change main.js file URL
+2. Build docker image
+3. Run docker image
+4. Check the output
 
-docker run -d --name mx map_review_scraperx --memory="8g" --cpus="4"
+docker build --platform linux/amd64 -t map_review_scraperx .
