@@ -8,6 +8,7 @@ import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
 import { useNavigate } from "react-router-dom"
+import { useMenu } from "../../context/MenuContext/MenuContext"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -146,9 +147,14 @@ const Dashboard: React.FC = () => {
     return unsubscribe()
   }, [firestore, user])
 
+  const { toggleMenu } = useMenu()
+
   return (
     <>
       <div className="d-flex align-items-center gap-3 py-3 my-5">
+        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
+          m
+        </button>
         <h3 className="m-0">Reviews</h3>
         <button className="button button-lg button-success ml-auto">
           Extract new reviews

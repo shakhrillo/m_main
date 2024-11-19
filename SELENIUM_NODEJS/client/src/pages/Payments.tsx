@@ -6,6 +6,7 @@ import {
   getBuyCoinsQuery,
   getPaymentsQuery,
 } from "../services/firebaseService"
+import { useMenu } from "../context/MenuContext/MenuContext"
 
 function Payments() {
   const { firestore, user } = useFirebase()
@@ -61,9 +62,14 @@ function Payments() {
     return () => unsubscribe()
   }, [firestore, user])
 
+  const { toggleMenu } = useMenu()
+
   return (
     <div>
       <div className="d-flex align-items-center gap-3 py-3 my-5">
+        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
+          m
+        </button>
         <h3 className="m-0">Payments</h3>
         <button className="button button-lg button-success ml-auto">
           {(userInformation?.coinBalance || 0)

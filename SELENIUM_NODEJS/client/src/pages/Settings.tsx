@@ -1,14 +1,22 @@
 import React, { useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
+import { useMenu } from "../context/MenuContext/MenuContext"
 
 const Settings: React.FC = () => {
   const { user } = useFirebase()
 
   const [language, setLanguage] = useState("en")
 
+  const { toggleMenu } = useMenu()
+
   return (
     <div>
-      <h2>Settings</h2>
+      <div className="d-flex align-items-center gap-3">
+        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
+          m
+        </button>
+        <h2>Settings</h2>
+      </div>
       <div className="card">
         <div className="card-body">
           <form action="">

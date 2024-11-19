@@ -27,15 +27,15 @@ const navLinks = [
 const Sidebar = () => {
   const { isMenuOpen, toggleMenu } = useMenu()
   return (
-    <div className={`sidebar sidebar-is-${isMenuOpen ? "showed" : "hide"}`}>
-      <div
-        className={`w-md-vw h-md-vh p-absolute ${isMenuOpen ? "d-block" : "d-none"}`}
-        onClick={toggleMenu}
-      ></div>
-      <NavLink to="/">
-        <img src={logoImg} alt="logo" className="logo" />
-      </NavLink>
-
+    <div className={`sidebar sidebar-${isMenuOpen ? "showed" : "hidden"}`}>
+      <div className="d-flex align-items-center justify-space-between">
+        <NavLink to="/">
+          <img src={logoImg} alt="logo" className="logo" />
+        </NavLink>
+        <button onClick={toggleMenu} className="sidebar-hide-btn">
+          X
+        </button>
+      </div>
       {navLinks.map(({ path, icon, label, className }, index) => (
         <NavLink
           key={index}

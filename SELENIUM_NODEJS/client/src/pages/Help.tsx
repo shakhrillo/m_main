@@ -1,12 +1,18 @@
 import React from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
+import { useMenu } from "../context/MenuContext/MenuContext"
 
 const Help: React.FC = () => {
   const { user } = useFirebase()
-
+  const { toggleMenu } = useMenu()
   return (
     <div>
-      <h2>Help</h2>
+      <div className="d-flex align-items-center gap-3">
+        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
+          m
+        </button>
+        <h2>Help</h2>
+      </div>
       <div className="card">
         <div className="card-body">
           <h4>How to scrape reviews?</h4>

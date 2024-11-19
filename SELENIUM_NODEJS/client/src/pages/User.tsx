@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
+import { useMenu } from "../context/MenuContext/MenuContext"
 
 const User: React.FC = () => {
   const { user } = useFirebase()
@@ -21,9 +22,16 @@ const User: React.FC = () => {
     setEmail(user.email || "")
   }, [])
 
+  const { toggleMenu } = useMenu()
+
   return (
     <div>
-      <h2>Account</h2>
+      <div className="d-flex align-items-center gap-3">
+        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
+          m
+        </button>
+        <h2>Account</h2>
+      </div>
       <div className="card">
         <div className="card-body">
           <form>
