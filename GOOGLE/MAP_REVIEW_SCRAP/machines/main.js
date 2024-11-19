@@ -26,7 +26,7 @@ async function init({ url, userId, reviewId, limit, sortBy }) {
   newNodes$
     .pipe(
       concatMap((record) =>
-        interval(1000).pipe(
+        interval(100).pipe(
           take(1),
           map(() => record)
         )

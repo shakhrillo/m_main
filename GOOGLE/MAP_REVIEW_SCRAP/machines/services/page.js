@@ -117,6 +117,9 @@ async function watchNewReviews(page) {
             const reviewId = node.getAttribute("data-review-id");
             if (reviewId) {
               newNodes(reviewId);
+            } else {
+              // scroll to view
+              node.scrollIntoView();
             }
           });
         }
