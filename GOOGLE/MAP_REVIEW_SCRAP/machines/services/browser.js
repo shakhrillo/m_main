@@ -3,9 +3,9 @@ const puppeteer = require("puppeteer");
 async function launchBrowser() {
   try {
     return await puppeteer.launch({
-      headless: true,
+      headless: !true,
       defaultViewport: null,
-      executablePath: "/usr/bin/google-chrome",
+      // executablePath: "/usr/bin/google-chrome",
       protocolTimeout: 60000,
       args: ["--no-sandbox"],
     });
@@ -17,7 +17,7 @@ async function launchBrowser() {
 async function openPage(browser, url) {
   const page = await browser.newPage();
   await page.goto(url, {
-    // waitUntil: "networkidle2",
+    waitUntil: "networkidle2",
     timeout: 60000,
   });
   await page.setViewport({ width: 1200, height: 800 });

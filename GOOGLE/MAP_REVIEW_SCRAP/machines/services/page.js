@@ -11,15 +11,145 @@ async function highLightElement(page, record) {
     }
   }, record);
 }
+
+async function copyReviewURL(page, record) {
+  return await page.evaluate(async (record) => {
+    let url = null;
+    const button = document.querySelector(
+      `button[data-review-id="${record}"][jsaction*="review.actionMenu"]`
+    );
+
+    if (button) {
+      button.click();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    const menuItem = document.querySelector(`
+      div[role="menuitemradio"][data-index="0"][aria-checked="false"]
+    `);
+
+    if (menuItem) {
+      menuItem.click();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    const input = document.querySelector(`input[jsaction*="clickInput"]`);
+    if (input) {
+      url = input.value;
+    }
+
+    const buttonClose = document.querySelector(
+      `button[jsaction*="modal.close"]`
+    );
+    if (buttonClose) {
+      buttonClose.click();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    return url;
+  }, record);
+}
+
+async function handleElementActions(page, record) {
+  await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    const buttonActions = [
+      {
+        selector: `button[data-review-id="${record}"][jsaction*="review.showReviewInOriginal"]`,
+      },
+      {
+        selector: `button[data-review-id="${record}"][jsaction*="review.showOwnerResponseInOriginal"]`,
+      },
+      {
+        selector: `button[data-review-id="${record}"][jsaction*="review.expandReview"]`,
+      },
+      {
+        selector: `button[data-review-id="${record}"][jsaction*="review.expandOwnerResponse"]`,
+      },
+    ];
+
+    for (const { selector } of buttonActions) {
+      const button = reviewElement.querySelector(selector);
+      if (button) {
+        button.scrollIntoView();
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        button.click();
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+  }, record);
+}
+
+async function elementReviewComment(page, record) {
+  return await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    let reviewText = "";
+    const reviewContainers = reviewElement.querySelectorAll(".MyEned");
+    for (const reviewContainer of reviewContainers) {
+      const lastSpan = reviewContainer.querySelector("span:last-of-type");
+      const lastSpanText = lastSpan?.textContent?.trim() || "";
+
+      if (lastSpanText.includes("Read more")) {
+        const firstSpan = reviewContainer.querySelector("span:first-of-type");
+        reviewText += firstSpan?.textContent?.trim() || "";
+      } else {
+        reviewText += lastSpanText;
+      }
+    }
+
+    return reviewText;
+  }, record);
+}
+
+async function elementReviewQA(page, record) {
+  return await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    const reviewContainers = reviewElement.querySelectorAll(".MyEned");
+
+    let rateElementParentNextSiblingLastChildChildren = [];
+
+    if (reviewContainers.length) {
+      const MyEnedLastChildren =
+        reviewContainers[0].querySelectorAll(":scope > *");
+      if (MyEnedLastChildren.length >= 2) {
+        rateElementParentNextSiblingLastChildChildren =
+          MyEnedLastChildren[1].querySelectorAll(":scope > *");
+      }
+    } else {
+      const rateElement = reviewElement.querySelector(
+        'span[role="img"][aria-label*="stars"]'
+      );
+      if (rateElement) {
+        const rateElementParent =
+          rateElement.parentElement?.nextElementSibling?.firstElementChild;
+        if (rateElementParent) {
+          rateElementParentNextSiblingLastChildChildren =
+            rateElementParent.querySelectorAll(":scope > *");
+        }
+      }
+    }
+
+    const extractedQA = Array.from(
+      rateElementParentNextSiblingLastChildChildren,
+      (questionContainer) => questionContainer.innerText
+    );
+
+    return extractedQA;
+  }, record);
+}
+
 async function waitTitle(page) {
   console.log("Waiting for title...");
   const title = await page.title();
-  console.log("Title:", title);
-  // await page.waitForFunction((title) => document.title !== title, {}, title);
-  // console.log("Title changed");
-  // const newTitle = await page.title();
-  // console.log("New title:", newTitle);
-
   return title;
 }
 
@@ -142,6 +272,10 @@ async function watchNewReviews(page) {
 
 module.exports = {
   highLightElement,
+  copyReviewURL,
+  handleElementActions,
+  elementReviewComment,
+  elementReviewQA,
   waitTitle,
   openReviewTab,
   sortReviews,
