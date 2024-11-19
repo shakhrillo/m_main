@@ -22,7 +22,7 @@ function verifyToken(token) {
   const token = createToken({
     url: "https://maps.app.goo.gl/mccerYhUvrcA8tdCA",
     reviewId: "xJuwdTi7mbb5lPWbj5sF",
-    userId: "MHKWy9QpFjfijMlKxeimUyOPYLt1",
+    userId: "83gDir7H21dnNXyk06BvGHN13v72",
     limit: 50000,
     sortBy: "Newest",
   });

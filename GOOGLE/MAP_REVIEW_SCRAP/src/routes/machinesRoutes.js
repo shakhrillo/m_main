@@ -1,4 +1,6 @@
 const fs = require("fs");
+require("dotenv").config();
+const FIREBASE_KEY_BASE64 = process.env.FIREBASE_KEY_BASE64;
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -25,6 +27,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     // Create `.env` file content
     const envContent = `
+      FIREBASE_KEY_BASE64=${FIREBASE_KEY_BASE64}
       URL=${url}
       USER_ID=${sanitizedUserId}
       REVIEW_ID=${sanitizedReviewId}
@@ -60,6 +63,8 @@ router.post("/", authMiddleware, async (req, res) => {
         // Container name
         const containerName = `machine_${sanitizedUserId}_${sanitizedReviewId}`;
 
+        console.log("containerName:", containerName);
+
         // First, check if the container already exists and remove it
         const dockerRemove = spawn("docker", [
           "ps",
@@ -68,8 +73,13 @@ router.post("/", authMiddleware, async (req, res) => {
           `name=${containerName}`,
         ]);
 
+        dockerRemove.stderr.on("data", (data) =>
+          logger.error(`Docker remove stderr: ${data}`)
+        );
+
         dockerRemove.stdout.on("data", (data) => {
           const existingContainerId = data.toString().trim();
+          console.log("existingContainerId:", existingContainerId);
           if (existingContainerId) {
             logger.info(
               `Removing existing container ${containerName} with ID: ${existingContainerId}`
@@ -93,9 +103,16 @@ router.post("/", authMiddleware, async (req, res) => {
           }
         });
 
-        dockerRemove.stderr.on("data", (data) =>
-          logger.error(`Error checking container: ${data}`)
-        );
+        dockerRemove.on("close", (code) => {
+          if (code !== 0) {
+            logger.error("Failed to check for existing containers.");
+            return res
+              .status(500)
+              .json({ message: "Failed to check existing containers" });
+          } else {
+            logger.info("Checked for existing containers.");
+          }
+        });
       } else {
         logger.error(`Docker build failed with code ${code}`);
         return res.status(500).json({ message: "Failed to build machine" });
