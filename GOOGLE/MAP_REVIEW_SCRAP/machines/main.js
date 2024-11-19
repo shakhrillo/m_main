@@ -1,5 +1,3 @@
-const puppeteer = require("puppeteer");
-const { setTimeout } = require("timers/promises");
 const { launchBrowser, openPage } = require("./services/browser");
 const {
   waitTitle,
@@ -13,11 +11,13 @@ const { Subject, concatMap, interval, take, map } = require("rxjs");
 const newNodes$ = new Subject();
 
 async function init({ url, userId, reviewId, limit, sortBy }) {
+  console.log("Initializing...");
   const browser = await launchBrowser();
   const page = await openPage(browser, url);
   page.exposeFunction("newNodes", function (record) {
     newNodes$.next(record);
   });
+  console.log(`Scraping reviews for ${url}...`);
 
   const title = await waitTitle(page);
   console.log("Title:", title);
@@ -38,9 +38,14 @@ async function init({ url, userId, reviewId, limit, sortBy }) {
       count++;
     });
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log("Opening review tab...");
   await openReviewTab(page);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log("Sorting reviews...");
   await sortReviews(page, sortBy);
 
+  console.log("Getting initial reviews...");
   const initialReviews = await getInitialReviews(page);
   initialReviews.forEach((review) => newNodes$.next(review));
 

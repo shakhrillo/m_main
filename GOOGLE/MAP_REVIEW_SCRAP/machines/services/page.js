@@ -12,11 +12,15 @@ async function highLightElement(page, record) {
   }, record);
 }
 async function waitTitle(page) {
+  console.log("Waiting for title...");
   const title = await page.title();
-  await page.waitForFunction((title) => document.title !== title, {}, title);
-  const newTitle = await page.title();
+  console.log("Title:", title);
+  // await page.waitForFunction((title) => document.title !== title, {}, title);
+  // console.log("Title changed");
+  // const newTitle = await page.title();
+  // console.log("New title:", newTitle);
 
-  return newTitle;
+  return title;
 }
 
 async function openReviewTab(page) {
