@@ -4,13 +4,26 @@ function buildImage(tag = "") {
   return new Promise(async (resolve, reject) => {
     await removeImage(tag);
 
+    // wait 2 sec
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const build = spawn(
       "docker",
-      ["build", "--platform", "linux/amd64", "-t", tag, "."],
+      // rm dangling images
+      ["build", "--platform", "linux/amd64", "-t", tag, ".", "--force-rm"],
+      // ["build", "--platform", "linux/amd64", "-t", tag, "."],
       {
         cwd: "machines",
       }
     );
+
+    build.stdout.on("data", (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    build.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
 
     build.on("close", (code) => {
       if (code === 0) {
@@ -49,31 +62,37 @@ function stopContainer(containerId) {
 function removeImage(tag = "") {
   return new Promise(async (resolve, reject) => {
     const containers = await listContainers(tag);
+    console.log("containers>>>", containers);
     await Promise.all(
       containers.map(async (containerId) => {
+        console.log("container", containerId);
         await stopContainer(containerId);
         await removeContainer(containerId);
       })
     );
-    const remove = spawn("docker", ["rmi", tag]);
+    if (!containers.length) {
+      resolve();
+    } else {
+      const remove = spawn("docker", ["rmi", tag]);
 
-    remove.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
-    });
+      remove.stdout.on("data", (data) => {
+        console.log(`stdout: ${data}`);
+      });
 
-    remove.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+      remove.stderr.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+      });
 
-    remove.on("close", (code) => {
-      if (code === 0) {
-        console.log(`Removed image with tag: ${tag}`);
-        resolve();
-      } else {
-        console.error(`Failed to remove image with tag: ${tag}`);
-        reject(new Error(`Failed to remove image with tag: ${tag}`));
-      }
-    });
+      remove.on("close", (code) => {
+        if (code === 0) {
+          console.log(`Removed image with tag: ${tag}`);
+          resolve();
+        } else {
+          console.error(`Failed to remove image with tag: ${tag}`);
+          reject(new Error(`Failed to remove image with tag: ${tag}`));
+        }
+      });
+    }
   });
 }
 
@@ -130,7 +149,7 @@ function startContainer(containerName, buildTag) {
     const args = [
       "run",
       "-d", // Detached mode (runs in the background)
-      // "--rm", // Automatically remove the container when it stops
+      "--rm", // Automatically remove the container when it stops
       "--env-file",
       ".env", // Pass environment variables
       "--name",

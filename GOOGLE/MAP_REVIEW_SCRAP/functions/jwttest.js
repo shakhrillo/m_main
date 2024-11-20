@@ -20,10 +20,10 @@ function verifyToken(token) {
 
 (async () => {
   const token = createToken({
-    url: "https://maps.app.goo.gl/mccerYhUvrcA8tdCA",
+    url: "https://maps.app.goo.gl/5uNP3xReQvj9FN7p7",
     reviewId: "xJuwdTi7mbb5lPWbj5sF",
     userId: "83gDir7H21dnNXyk06BvGHN13v72",
-    limit: 50000,
+    limit: 30,
     sortBy: "Newest",
   });
   // console.log('Token:', token);

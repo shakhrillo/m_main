@@ -38,8 +38,9 @@ router.post("/", authMiddleware, async (req, res) => {
 });
 
 router.post("/info", authMiddleware, (req, res) => {
-  const { port, containerName } = generateDockerConfig();
-  executeScraping(containerName, port, scrapePageData, req, res);
+  res.json({ message: "Scraping info" });
+  // const { port, containerName } = generateDockerConfig();
+  // executeScraping(containerName, port, scrapePageData, req, res);
 });
 
 module.exports = router;

@@ -37,6 +37,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     // Build Docker image
     const buildTag = `r_${sanitizedUserId}_${sanitizedReviewId}`;
+    console.log(`Building Docker image with tag: ${buildTag}`);
     await buildImage(buildTag);
     const lists = await listContainers();
     await Promise.all(
