@@ -169,7 +169,7 @@ export const ReviewsForm = () => {
                   <div className="card">
                     <div className="card-header d-flex-column">
                       <h3>{info.title}</h3>
-                      <p>{info.subtitle}</p>
+                      <p>{info.address}</p>
                     </div>
                     <div className="card-body">
                       <ul className="list-unstyled m-0 p-0 d-flex">
