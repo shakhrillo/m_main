@@ -39,9 +39,11 @@ async function init() {
     const title = h1.innerText;
     data.title = title;
 
-    const h2 = document.querySelector("h2");
-    const subtitle = h2.innerText;
-    data.subtitle = subtitle;
+    const address = document.querySelector("button[data-item-id='address']");
+    if (address) {
+      const addressText = address.getAttribute("aria-label");
+      data.address = addressText.replace("Address: ", "");
+    }
 
     const btnReviewChart = document.querySelector(
       `button[jsaction*="reviewChart.moreReviews"]`
@@ -77,6 +79,7 @@ async function init() {
   await new Promise((resolve) => setTimeout(resolve, 500));
   await page.evaluate(async () => {
     [
+      `button[aria-labelledby="widget-minimap-icon-overlay"]`,
       `button[jsaction*="minimap.main"]`,
       `.app-vertical-widget-holder`,
       `a[aria-label="Sign in"]`,
