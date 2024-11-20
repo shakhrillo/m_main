@@ -26,6 +26,8 @@ router.post("/info", authMiddleware, async (req, res) => {
   try {
     const { url, userId, reviewId, limit, sortBy } = req.data;
 
+    console.log("data", req.data);
+
     const sanitizedUserId = userId.toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const sanitizedReviewId = reviewId
       .toLowerCase()
