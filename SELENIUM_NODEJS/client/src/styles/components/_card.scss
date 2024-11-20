@@ -36,4 +36,8 @@
     border-top: $border-width solid $border-color;
     gap: $spacing-sm;
   }
+
+  @media (max-width: 576px) {
+    padding: 0;
+  }
 }

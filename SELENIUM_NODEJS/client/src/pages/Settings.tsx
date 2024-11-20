@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { useMenu } from "../context/MenuContext/MenuContext"
+import menuIcon from "../assets/icons/list.svg"
 
 const Settings: React.FC = () => {
   const { user } = useFirebase()
@@ -12,8 +13,8 @@ const Settings: React.FC = () => {
   return (
     <div>
       <div className="d-flex align-items-center gap-3">
-        <button className="sidebar-toggle-btn" onClick={toggleMenu}>
-          m
+        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
+          <img src={menuIcon} alt="menu-icon" />
         </button>
         <h2>Settings</h2>
       </div>

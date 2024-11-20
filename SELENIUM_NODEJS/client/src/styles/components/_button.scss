@@ -14,6 +14,9 @@
   &-lg {
     font-size: $font-size-lg;
     padding: $button-padding-lg;
+    @media (max-width: 576px) {
+      font-size: 1rem;
+    }
   }
 
   &-primary {
