@@ -1,32 +1,6 @@
 require("dotenv").config();
 const { launchBrowser, openPage } = require("./services/browser");
 const { firestore } = require("./services/firebase");
-
-async function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function hideElements(page, selectors) {
-  for (const selector of selectors) {
-    const elements = await page.$$(selector);
-    if (elements.length > 0) {
-      await page.evaluate(
-        (el) => (el.parentElement.style.display = "none"),
-        elements[0]
-      );
-    }
-    await wait(500);
-  }
-}
-
-async function extractAriaLabel(page, selector) {
-  const elements = await page.$$(selector);
-  if (elements.length > 0) {
-    return elements[0].evaluate((el) => el.getAttribute("aria-label"));
-  }
-  return null;
-}
-
 const { uploadFile } = require("./services/storage");
 
 async function init() {
@@ -55,41 +29,71 @@ async function init() {
   console.log("Initializing...");
   const browser = await launchBrowser();
   const page = await openPage(browser, url);
-  const data = {};
-  data.title = await page.title();
-  const sidePanel = await page.$$(
-    `button[aria-label*="Collapse side panel"][jsaction*="mouseover:drawer.showToggleTooltip"]`
-  );
-  for (const btn of sidePanel) {
-    await btn.scrollIntoView();
-    await btn.click();
-    console.info("Side panel collapsed");
-  }
-  await page.waitForSelector(`button[jsaction*="zoom.onZoomOutClick"]`, {
-    visible: true,
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const data = await page.evaluate(async () => {
+    const stringToNumber = (str) =>
+      parseInt(str.replace(/[^0-9,]/g, "").replace(/,/g, ""), 10);
+
+    const data = {};
+    const h1 = document.querySelector("h1");
+    const title = h1.innerText;
+    data.title = title;
+
+    const h2 = document.querySelector("h2");
+    const subtitle = h2.innerText;
+    data.subtitle = subtitle;
+
+    const btnReviewChart = document.querySelector(
+      `button[jsaction*="reviewChart.moreReviews"]`
+    );
+    if (btnReviewChart) {
+      const btnReviewChartText = btnReviewChart.innerText;
+      data.reviews = stringToNumber(btnReviewChartText);
+    }
+
+    const rating = document.querySelector(`[role="img"][aria-label*="stars"]`);
+    if (rating) {
+      const ratingText = rating.getAttribute("aria-label");
+      data.rating = parseFloat(ratingText);
+    }
+
+    return data;
   });
 
-  const zoomOutButton = await page.$$(
-    `button[jsaction*="zoom.onZoomOutClick"]`
-  );
-  for (const btn of zoomOutButton) {
-    for (let i = 0; i < 2; i++) {
-      await btn.click();
-      await wait(500);
-      console.info("Zoomed out");
+  await page.evaluate(async () => {
+    const sidePanel = document.querySelector(
+      'button[aria-label*="Collapse side panel"][jsaction*="mouseover:drawer.showToggleTooltip"]'
+    );
+    if (sidePanel) {
+      sidePanel.click();
     }
-  }
-
-  await hideElements(page, [
-    `button[jsaction*="minimap.main"]`,
-    `.app-vertical-widget-holder`,
-    `a[aria-label="Sign in"]`,
-    `.app-horizontal-widget-holder`,
-    `a[title="Google apps"]`,
-    `button[aria-label*="Expand side panel"]`,
-    `.scene-footer`,
-  ]);
-
+    const zoomOutButton = document.querySelector(
+      'button[jsaction*="zoom.onZoomOutClick"]'
+    );
+    if (zoomOutButton) {
+      zoomOutButton.click();
+    }
+  });
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  await page.evaluate(async () => {
+    [
+      `button[jsaction*="minimap.main"]`,
+      `.app-vertical-widget-holder`,
+      `a[aria-label="Sign in"]`,
+      `.app-horizontal-widget-holder`,
+      `a[title="Google apps"]`,
+      `button[aria-label*="Expand side panel"]`,
+      `.scene-footer`,
+    ].forEach((selector) => {
+      const elements = document.querySelectorAll(selector);
+      if (elements.length > 0) {
+        elements.forEach((el) => {
+          el.style.display = "none";
+        });
+      }
+    });
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const screenshot = await page.screenshot({ fullPage: true });
   const uniqueId = url.split("/").pop();
   data.screenshot = await uploadFile(
@@ -97,20 +101,6 @@ async function init() {
     `${userId}/${uniqueId}/screenshot.png`
   );
 
-  data.address = await extractAriaLabel(
-    page,
-    `button[data-item-id*="address"]`
-  );
-  data.phone = await extractAriaLabel(page, `[data-item-id*="phone"]`);
-  data.website = await extractAriaLabel(page, `[data-item-id*="authority"]`);
-  data.rating = await extractAriaLabel(
-    page,
-    `[role="img"][aria-label*="stars"]`
-  );
-  data.reviews = await extractAriaLabel(
-    page,
-    `button[jsaction*="moreReviews"]`
-  );
   console.log("Data:", data);
   await page.close();
   await browser.close();
