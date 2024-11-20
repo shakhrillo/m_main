@@ -40,6 +40,14 @@ async function init({ url, userId, reviewId, limit, sortBy }) {
   const title = await waitTitle(page);
   console.log("Title:", title);
 
+  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).set(
+    {
+      title,
+      updatedAt: new Date(),
+    },
+    { merge: true }
+  );
+
   let count = 0;
 
   newNodes$
@@ -92,9 +100,9 @@ async function init({ url, userId, reviewId, limit, sortBy }) {
 init({
   url: "https://maps.app.goo.gl/mccerYhUvrcA8tdCA",
   reviewId: "xJuwdTi7mbb5lPWbj5sF",
-  userId: "MHKWy9QpFjfijMlKxeimUyOPYLt1",
+  userId: "83gDir7H21dnNXyk06BvGHN13v72",
   limit: 50000,
   sortBy: "Newest",
-  iat: 1731987534,
-  exp: 1732030734,
+  iat: 1732062432,
+  exp: 1732105632,
 });

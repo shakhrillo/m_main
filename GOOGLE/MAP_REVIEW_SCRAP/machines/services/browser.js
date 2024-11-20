@@ -3,9 +3,9 @@ const puppeteer = require("puppeteer");
 async function launchBrowser() {
   try {
     return await puppeteer.launch({
-      headless: !true,
+      headless: true,
       defaultViewport: null,
-      // executablePath: "/usr/bin/google-chrome",
+      executablePath: "/usr/bin/google-chrome",
       protocolTimeout: 60000,
       args: ["--no-sandbox"],
     });
