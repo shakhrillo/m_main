@@ -37,8 +37,8 @@ router.post("/info", authMiddleware, async (req, res) => {
       `FIREBASE_KEY_BASE64=${FIREBASE_KEY_BASE64} 
       STORAGE_BUCKET=${process.env.STORAGE_BUCKET}
       URL=${url} 
-      USER_ID=${sanitizedUserId} 
-      REVIEW_ID=${sanitizedReviewId} 
+      USER_ID=${userId}
+      REVIEW_ID=${reviewId}
       LIMIT=${limit} 
       SORT_BY=${sortBy}`
     );

@@ -350,7 +350,11 @@ exports.watchReviewOverview = onDocumentCreated(
       return;
     }
     const review = snapshot.data();
-    const info = await postReviewInfo(review);
+    const info = await postReviewInfo({
+      ...review,
+      reviewId: event.params.reviewId,
+      userId: event.params.userId,
+    });
     await snapshot.ref.set(info, { merge: true });
     console.log("Info posted:", info);
   }
