@@ -3,19 +3,21 @@ import starIcon from "../../assets/icons/star.svg"
 import starHalfIcon from "../../assets/icons/star-half.svg"
 
 interface StarRatingProps {
-  rating: string
+  rating: number
 }
 
 const StarRating = ({ rating }: StarRatingProps) => {
-  if (!rating) return null
+  if (!rating || typeof rating !== "number") {
+    return null
+  }
 
-  const filledStarsCount = Math.floor(
-    parseFloat(rating.match(/[\d.]+/)?.[0] || "0"),
-  )
+  console.log("rating", rating)
+
+  const filledStarsCount = Math.floor(rating)
 
   const isHalfStar = () => {
-    const secondDigit = parseInt(rating[2], 10)
-    return secondDigit
+    const decimal = parseFloat(rating.toString().split(".")[1])
+    return decimal >= 5
   }
 
   return (

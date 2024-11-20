@@ -33,10 +33,11 @@ export const ReviewsForm = () => {
   const [info, setInfo] = useState({
     url: "",
     title: "",
+    subtitle: "",
     address: "",
     phone: "",
     website: "",
-    rating: "",
+    rating: 0,
     reviews: "",
     screenshot: "",
   })
@@ -168,7 +169,7 @@ export const ReviewsForm = () => {
                   <div className="card">
                     <div className="card-header d-flex-column">
                       <h3>{info.title}</h3>
-                      <p>{info.address}</p>
+                      <p>{info.subtitle}</p>
                     </div>
                     <div className="card-body">
                       <ul className="list-unstyled m-0 p-0 d-flex">
