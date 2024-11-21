@@ -315,7 +315,7 @@ exports.stripeWebhook = functions.https.onRequest(
 exports.onReviewCompleted = onDocumentUpdated(
   "users/{userId}/reviews/{reviewId}",
   async (event) => {
-    const statusDoc = admin.firestore().doc("status/app");
+    // const statusDoc = admin.firestore().doc("status/app");
     const { userId, reviewId } = event.params;
     const updatedReview = event.data.after.data();
 
@@ -329,6 +329,10 @@ exports.onReviewCompleted = onDocumentUpdated(
     if (updatedReview && updatedReview.status === "completed") {
       console.log("Status:", updatedReview.status);
       console.log("Review updated:", updatedReview);
+
+      await deleteMachine({
+        ...updatedReview,
+      });
 
       // Reference to the user document
       const userRef = admin.firestore().collection("users").doc(userId);
@@ -400,11 +404,6 @@ exports.watchReviewOverview = onDocumentCreated(
     });
     await snapshot.ref.update({
       ...info,
-    });
-    await deleteMachine({
-      ...review,
-      reviewId: event.params.reviewId,
-      userId: event.params.userId,
     });
     console.log("Info posted:", info);
   }

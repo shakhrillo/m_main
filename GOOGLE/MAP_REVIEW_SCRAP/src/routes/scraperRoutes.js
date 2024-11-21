@@ -10,9 +10,11 @@ const {
   listContainers,
   removeContainer,
   startContainer,
+  removeImage,
 } = require("../controllers/dockerController");
 
 router.post("/", authMiddleware, async (req, res) => {
+  let buildTag;
   try {
     const { url, userId, reviewId, limit, sortBy } = req.data;
 
@@ -35,26 +37,31 @@ router.post("/", authMiddleware, async (req, res) => {
     );
 
     // Build Docker image
-    const buildTag = `r_${sanitizedUserId}_${sanitizedReviewId}`;
+    buildTag = `r_${sanitizedUserId}_${sanitizedReviewId}`;
     console.log(`Building Docker image with tag: ${buildTag}`);
     await buildImage(buildTag);
-    const lists = await listContainers();
-    await Promise.all(
-      lists.map(async (containerId) => {
-        await removeContainer(containerId);
-      })
-    );
+    // const lists = await listContainers();
+    // await Promise.all(
+    //   lists.map(async (containerId) => {
+    //     await removeContainer(containerId);
+    //   })
+    // );
     const containerName = `r_${sanitizedUserId}_${sanitizedReviewId}`;
     const container = await startContainer(containerName, buildTag);
 
     res.json({ message: "Container started", ...container });
   } catch (error) {
-    logger.error(`Error: ${error.message}`);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("error is here", error);
+    logger.error(`Error>>>>>: ${error.message}`);
+    if (buildTag) {
+      await removeImage(buildTag);
+    }
+    res.status(500).json({ message: "Internal server errorsss" });
   }
 });
 
 router.post("/info", authMiddleware, async (req, res) => {
+  let buildTag;
   try {
     const { url, userId, reviewId, limit, sortBy } = req.data;
 
@@ -76,21 +83,24 @@ router.post("/info", authMiddleware, async (req, res) => {
     );
 
     // Build Docker image
-    const buildTag = `c_${sanitizedUserId}_${sanitizedReviewId}`;
+    buildTag = `c_${sanitizedUserId}_${sanitizedReviewId}`;
     console.log(`Building Docker image with tag: ${buildTag}`);
     await buildImage(buildTag, true);
-    const lists = await listContainers();
-    await Promise.all(
-      lists.map(async (containerId) => {
-        await removeContainer(containerId);
-      })
-    );
+    // const lists = await listContainers();
+    // await Promise.all(
+    //   lists.map(async (containerId) => {
+    //     await removeContainer(containerId);
+    //   })
+    // );
     const containerName = `c_${sanitizedUserId}_${sanitizedReviewId}`;
-    const container = await startContainer(containerName, buildTag);
+    const container = await startContainer(containerName, buildTag, false);
 
     res.json({ message: "Container started", ...container });
   } catch (error) {
     logger.error(`Error: ${error.message}`);
+    if (buildTag) {
+      await removeImage(buildTag);
+    }
     res.status(500).json({ message: "Internal server error" });
   }
 });
