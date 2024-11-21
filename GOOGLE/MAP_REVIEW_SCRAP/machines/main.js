@@ -24,16 +24,39 @@ const { Subject, concatMap, interval, take, map, defer } = require("rxjs");
 const { firestore, batchWriteLargeArray } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const newNodes$ = new Subject();
+const allElements = [];
+let lastRecordTime = new Date();
+const url = process.env.URL;
+const userId = process.env.USER_ID;
+const reviewId = process.env.REVIEW_ID;
+const limit = process.env.LIMIT;
+const sortBy = process.env.SORT_BY;
+
+async function complete() {
+  const jsonFile = JSON.stringify(allElements, null, 2);
+  const csvFile =
+    Object.keys(allElements[0]).join(",") +
+    "\n" +
+    allElements.map((element) => Object.values(element).join(",")).join("\n");
+
+  const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
+  const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
+
+  await batchWriteLargeArray(userId, reviewId, allElements);
+  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+    updatedAt: new Date(),
+    completedAt: new Date(),
+    status: "completed",
+    csvUrl,
+    jsonUrl,
+    totalReviews: allElements.length,
+  });
+  console.log("Completed...");
+  console.log(`CSV URL: ${csvUrl}`);
+  console.log(`JSON URL: ${jsonUrl}`);
+}
 
 async function init() {
-  let lastRecordTime = new Date();
-  const url = process.env.URL;
-  const userId = process.env.USER_ID;
-  const reviewId = process.env.REVIEW_ID;
-  const limit = process.env.LIMIT;
-  const sortBy = process.env.SORT_BY;
-  const allElements = [];
-
   await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
     url,
     userId,
@@ -92,32 +115,7 @@ async function init() {
       isFirstTime = true;
       if (limit && count >= limit) {
         console.log("Limit reached...");
-        const jsonFile = JSON.stringify(allElements, null, 2);
-        const csvFile =
-          Object.keys(allElements[0]).join(",") +
-          "\n" +
-          allElements
-            .map((element) => Object.values(element).join(","))
-            .join("\n");
-
-        const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
-        const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
-
-        await batchWriteLargeArray(userId, reviewId, allElements);
-        await firestore
-          .collection(`users/${userId}/reviews`)
-          .doc(reviewId)
-          .update({
-            updatedAt: new Date(),
-            completedAt: new Date(),
-            status: "completed",
-            csvUrl,
-            jsonUrl,
-            totalReviews: allElements.length,
-          });
-        console.log("Completed...");
-        console.log(`CSV URL: ${csvUrl}`);
-        console.log(`JSON URL: ${jsonUrl}`);
+        complete();
         await browser.close();
         subscription.unsubscribe();
       } else {
@@ -153,6 +151,16 @@ async function init() {
         });
       }
 
+      if (count % 10 === 0) {
+        await firestore
+          .collection(`users/${userId}/reviews`)
+          .doc(reviewId)
+          .update({
+            updatedAt: new Date(),
+            totalReviews: count,
+          });
+      }
+
       count++;
     });
 
@@ -170,4 +178,9 @@ async function init() {
   watchNewReviews(page);
 }
 
-init();
+try {
+  init();
+} catch (error) {
+  complete();
+  console.log("Error:", error);
+}

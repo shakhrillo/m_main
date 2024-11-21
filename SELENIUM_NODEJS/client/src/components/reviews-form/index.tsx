@@ -78,7 +78,6 @@ export const ReviewsForm = () => {
       ...info,
       ...scrap,
     })
-    return
     setLoading(true)
     try {
       await startExtractGmapReviews(user!.uid, overviewId, {
@@ -252,7 +251,9 @@ export const ReviewsForm = () => {
                       id="limit"
                       value={scrap.limit}
                       // disabled={true}
-                      onChange={e => handleInputChange("limit", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("limit", Number(e.target.value))
+                      }
                     />
                     <div className="form-hint">
                       Maximum number of reviews to scrape (30 ~ 3000){" "}
