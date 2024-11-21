@@ -11,7 +11,6 @@ const {
   removeContainer,
   startContainer,
 } = require("../controllers/dockerController");
-const { createReview } = require("../controllers/reviewController");
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
@@ -48,10 +47,6 @@ router.post("/", authMiddleware, async (req, res) => {
     const containerName = `r_${sanitizedUserId}_${sanitizedReviewId}`;
     const container = await startContainer(containerName, buildTag);
 
-    await createReview(userId, {
-      url,
-      ...container,
-    });
     res.json({ message: "Container started", ...container });
   } catch (error) {
     logger.error(`Error: ${error.message}`);
@@ -63,7 +58,7 @@ router.post("/info", authMiddleware, async (req, res) => {
   try {
     const { url, userId, reviewId, limit, sortBy } = req.data;
 
-    console.log("data", req.data);
+    console.log("data-->", req.data);
 
     const sanitizedUserId = userId.toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const sanitizedReviewId = reviewId
@@ -93,10 +88,6 @@ router.post("/info", authMiddleware, async (req, res) => {
     const containerName = `c_${sanitizedUserId}_${sanitizedReviewId}`;
     const container = await startContainer(containerName, buildTag);
 
-    await createReview(userId, {
-      url,
-      ...container,
-    });
     res.json({ message: "Container started", ...container });
   } catch (error) {
     logger.error(`Error: ${error.message}`);

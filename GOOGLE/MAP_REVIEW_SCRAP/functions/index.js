@@ -373,7 +373,9 @@ exports.watchReviewOverview = onDocumentCreated(
       reviewId: event.params.reviewId,
       userId: event.params.userId,
     });
-    await snapshot.ref.set(info, { merge: true });
+    await snapshot.ref.update({
+      ...info,
+    });
     console.log("Info posted:", info);
   }
 );
