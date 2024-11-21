@@ -14,18 +14,15 @@ async function init() {
   await firestore
     .collection(`users/${userId}/reviewOverview`)
     .doc(reviewId)
-    .set(
-      {
-        url,
-        userId,
-        reviewId,
-        limit,
-        sortBy,
-        createdAt: new Date(),
-        pending: true,
-      },
-      { merge: true }
-    );
+    .update({
+      url,
+      userId,
+      reviewId,
+      limit,
+      sortBy,
+      createdAt: new Date(),
+      pending: true,
+    });
   console.log("Initializing...");
   const browser = await launchBrowser();
   const page = await openPage(browser, url);
@@ -110,14 +107,11 @@ async function init() {
   await firestore
     .collection(`users/${userId}/reviewOverview`)
     .doc(reviewId)
-    .set(
-      {
-        ...data,
-        pending: false,
-        completedAt: new Date(),
-      },
-      { merge: true }
-    );
+    .update({
+      ...data,
+      pending: false,
+      completedAt: new Date(),
+    });
   console.log("Done");
 }
 

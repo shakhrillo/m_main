@@ -116,55 +116,57 @@ exports.watchBuyCoins = onDocumentCreated(
 );
 
 exports.watchStatus = onDocumentUpdated("status/app", async (event) => {
-  const statusDocRef = event.data.after.ref;
+  console.log("Status updated:", event.data.after.data());
+  // const statusDocRef = event.data.after.ref;
 
-  try {
-    await admin.firestore().runTransaction(async (transaction) => {
-      const statusSnapshot = await transaction.get(statusDocRef);
-      const newStatus = statusSnapshot.data();
+  // try {
+  //   await admin.firestore().runTransaction(async (transaction) => {
+  //     const statusSnapshot = await transaction.get(statusDocRef);
+  //     const newStatus = statusSnapshot.data();
 
-      if (newStatus.active) {
-        // If already active, exit the transaction
-        return;
-      }
+  //     if (newStatus.active) {
+  //       // If already active, exit the transaction
+  //       return;
+  //     }
 
-      // After the transaction completes, process the pending collection
-      const pendingCollection = admin.firestore().collection(`pending`);
-      const pendingSnapshot = await pendingCollection.get();
-      const pendingDocs = pendingSnapshot.docs;
+  //     // After the transaction completes, process the pending collection
+  //     const pendingCollection = admin.firestore().collection(`pending`);
+  //     const pendingSnapshot = await pendingCollection.get();
+  //     const pendingDocs = pendingSnapshot.docs;
 
-      if (pendingDocs.length === 0) {
-        return;
-      }
+  //     if (pendingDocs.length === 0) {
+  //       return;
+  //     }
 
-      const pendingDoc = pendingDocs[0];
-      const review = pendingDoc.data();
+  //     const pendingDoc = pendingDocs[0];
+  //     const review = pendingDoc.data();
 
-      await postReview(review); // This is outside of transaction since it involves external processing
-      await pendingDoc.ref.delete();
+  //     await postReview(review); // This is outside of transaction since it involves external processing
+  //     await pendingDoc.ref.delete();
 
-      // Set active to true within the transaction
-      transaction.update(statusDocRef, { active: true });
-    });
-  } catch (error) {
-    console.error("Error posting review:", error);
-  }
+  //     // Set active to true within the transaction
+  //     transaction.update(statusDocRef, { active: true });
+  //   });
+  // } catch (error) {
+  //   console.error("Error posting review:", error);
+  // }
 });
 
 exports.watchPending = onDocumentCreated(
   "pending/{pendingId}",
   async (event) => {
-    const statusDoc = admin.firestore().doc(`status/app`);
+    console.log("Pending review:", event.data.data());
+    // const statusDoc = admin.firestore().doc(`status/app`);
 
-    await admin.firestore().runTransaction(async (transaction) => {
-      const statusSnapshot = await transaction.get(statusDoc);
-      const status = statusSnapshot.data();
-      const statusCount = status?.count || 0;
+    // await admin.firestore().runTransaction(async (transaction) => {
+    //   const statusSnapshot = await transaction.get(statusDoc);
+    //   const status = statusSnapshot.data();
+    //   const statusCount = status?.count || 0;
 
-      transaction.update(statusDoc, {
-        count: statusCount + 1,
-      });
-    });
+    //   transaction.update(statusDoc, {
+    //     count: statusCount + 1,
+    //   });
+    // });
   }
 );
 
@@ -177,12 +179,28 @@ exports.watchNewReview = onDocumentCreated(
       console.log("No data associated with the event");
       return;
     }
+
     const review = snapshot.data();
-    const pendingCollection = admin.firestore().collection(`pending`);
-    await pendingCollection.add({
+
+    // Check if the review has already been processed
+    if (review.processed) {
+      console.log("Review already processed, skipping...");
+      return;
+    }
+
+    const reviewResponse = await postReview({
       ...review,
       reviewId: event.params.reviewId,
       userId: event.params.userId,
+    });
+
+    console.log("Review posted:", reviewResponse);
+
+    // Mark the document as processed to avoid re-triggering
+    const reviewRef = snapshot.ref;
+    await reviewRef.update({
+      ...reviewResponse,
+      processed: true,
     });
   }
 );

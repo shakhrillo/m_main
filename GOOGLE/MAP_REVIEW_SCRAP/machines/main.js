@@ -34,17 +34,14 @@ async function init() {
   const sortBy = process.env.SORT_BY;
   const allElements = [];
 
-  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).set(
-    {
-      url,
-      userId,
-      reviewId,
-      limit,
-      sortBy,
-      createdAt: new Date(),
-    },
-    { merge: true }
-  );
+  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+    url,
+    userId,
+    reviewId,
+    limit,
+    sortBy,
+    createdAt: new Date(),
+  });
 
   console.log("Initializing...");
   const browser = await launchBrowser();
@@ -57,13 +54,10 @@ async function init() {
   const title = await waitTitle(page);
   console.log("Title:", title);
 
-  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).set(
-    {
-      title,
-      updatedAt: new Date(),
-    },
-    { merge: true }
-  );
+  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+    title,
+    updatedAt: new Date(),
+  });
 
   let count = 0;
   let isFirstTime = true;
@@ -110,17 +104,17 @@ async function init() {
         const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
 
         await batchWriteLargeArray(userId, reviewId, allElements);
-        await firestore.collection(`users/${userId}/reviews`).doc(reviewId).set(
-          {
+        await firestore
+          .collection(`users/${userId}/reviews`)
+          .doc(reviewId)
+          .update({
             updatedAt: new Date(),
             completedAt: new Date(),
             status: "completed",
             csvUrl,
             jsonUrl,
             totalReviews: allElements.length,
-          },
-          { merge: true }
-        );
+          });
         console.log("Completed...");
         console.log(`CSV URL: ${csvUrl}`);
         console.log(`JSON URL: ${jsonUrl}`);
