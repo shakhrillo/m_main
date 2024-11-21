@@ -57,14 +57,14 @@ async function complete() {
 }
 
 async function init() {
-  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-    url,
-    userId,
-    reviewId,
-    limit,
-    sortBy,
-    createdAt: new Date(),
-  });
+  // await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+  //   url,
+  //   userId,
+  //   reviewId,
+  //   // limit,
+  //   sortBy,
+  //   createdAt: new Date(),
+  // });
 
   console.log("Initializing...");
   const browser = await launchBrowser();
