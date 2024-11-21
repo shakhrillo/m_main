@@ -149,6 +149,7 @@ function removeContainer(containerId) {
     });
   });
 }
+
 function startContainer(containerName, buildTag) {
   return new Promise((resolve, reject) => {
     const command = "docker";

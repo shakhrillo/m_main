@@ -47,9 +47,19 @@ const Dashboard: React.FC = () => {
       ),
     },
     {
+      text: "Limit",
+      field: "limit",
+      render: (row: any) => <span>{row.limit}</span>,
+    },
+    {
       text: "Date",
       field: "createdAt",
       render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>,
+    },
+    {
+      text: "Updated",
+      field: "updatedAt",
+      render: (row: any) => <span>{formatTimestamp(row.updatedAt)}</span>,
     },
     {
       text: "Reviews",

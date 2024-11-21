@@ -17,10 +17,35 @@ function createToken(payload) {
   return jwt.sign(payload, secretKey, { expiresIn: "12h" });
 }
 
+async function deleteMachine(data) {
+  const token = createToken(data);
+  try {
+    const response = await fetch(`${endPointURL}/machines`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Check if the response status is OK (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Parse and return the JSON response
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error deleting machine:", error);
+    throw error; // Re-throw the error to be handled by the caller if needed
+  }
+}
+
 async function postReview(data) {
   const token = createToken(data);
   try {
-    const response = await fetch(endPointURL, {
+    const response = await fetch(`${endPointURL}/scrap`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +70,7 @@ async function postReview(data) {
 async function postReviewInfo(data) {
   const token = createToken(data);
   try {
-    const response = await fetch(`${endPointURL}/info`, {
+    const response = await fetch(`${endPointURL}/scrap/info`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -375,6 +400,11 @@ exports.watchReviewOverview = onDocumentCreated(
     });
     await snapshot.ref.update({
       ...info,
+    });
+    await deleteMachine({
+      ...review,
+      reviewId: event.params.reviewId,
+      userId: event.params.userId,
     });
     console.log("Info posted:", info);
   }
