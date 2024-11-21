@@ -28,27 +28,33 @@ const navLinks = [
 const Sidebar = () => {
   const { isMenuOpen, toggleMenu } = useMenu()
   return (
-    <div className={`sidebar sidebar-${isMenuOpen ? "showed" : "hidden"}`}>
-      <div className="d-flex align-items-center justify-space-between">
-        <NavLink to="/">
-          <img src={logoImg} alt="logo" className="logo" />
-        </NavLink>
-        <button onClick={toggleMenu} className="sidebar-hide-btn button">
-          <img src={hideMenuIcon} alt="Hide Menu" />
-        </button>
+    <div className={`sidebar-container ${isMenuOpen ? "" : "sidebar-hidden"}`}>
+      <div className={`sidebar sidebar-${isMenuOpen ? "showed" : "hidden"}`}>
+        <div className="d-flex align-items-center justify-space-between">
+          <NavLink to="/">
+            <img src={logoImg} alt="logo" className="logo" />
+          </NavLink>
+          <button onClick={toggleMenu} className="sidebar-hide-btn button">
+            <img src={hideMenuIcon} alt="Hide Menu" />
+          </button>
+        </div>
+        {navLinks.map(({ path, icon, label, className }, index) => (
+          <NavLink
+            key={index}
+            to={path}
+            className={({ isActive }) =>
+              `${isActive ? "active" : ""} ${className}`
+            }
+          >
+            {icon && <img src={icon} alt="icon" />}
+            {label}
+          </NavLink>
+        ))}
       </div>
-      {navLinks.map(({ path, icon, label, className }, index) => (
-        <NavLink
-          key={index}
-          to={path}
-          className={({ isActive }) =>
-            `${isActive ? "active" : ""} ${className}`
-          }
-        >
-          {icon && <img src={icon} alt="icon" />}
-          {label}
-        </NavLink>
-      ))}
+      <div
+        className={`sidebar-overlay ${isMenuOpen ? "" : "sidebar-hidden"}`}
+        onClick={toggleMenu}
+      ></div>
     </div>
   )
 }
