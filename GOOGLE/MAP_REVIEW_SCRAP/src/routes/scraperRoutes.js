@@ -95,6 +95,8 @@ router.post("/info", authMiddleware, async (req, res) => {
     const containerName = `c_${sanitizedUserId}_${sanitizedReviewId}`;
     const container = await startContainer(containerName, buildTag, false);
 
+    await removeImage(buildTag);
+
     res.json({ message: "Container started", ...container });
   } catch (error) {
     logger.error(`Error: ${error.message}`);
