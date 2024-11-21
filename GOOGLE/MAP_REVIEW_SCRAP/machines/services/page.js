@@ -69,17 +69,39 @@ async function handleElementActions(page, record) {
       {
         selector: `button[data-review-id="${record}"][jsaction*="review.expandOwnerResponse"]`,
       },
+      {
+        selector: `button[data-review-id="${record}"][jsaction*="review.showMorePhotos"]`,
+      },
     ];
 
     for (const { selector } of buttonActions) {
       const button = reviewElement.querySelector(selector);
       if (button) {
-        button.scrollIntoView();
-        await new Promise((resolve) => setTimeout(resolve, 500));
         button.click();
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
+  }, record);
+}
+
+async function getUserDetails(page, record) {
+  return await page.evaluate(async (record) => {
+    const user = {};
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+    const reviewerButton = reviewElement.querySelectorAll(
+      `button[jsaction*="review.reviewerLink"]`
+    );
+    if (reviewerButton.length > 1) {
+      user.url = reviewerButton[1].getAttribute("data-href");
+      user.name = reviewerButton[1].firstChild.textContent;
+      user.info = reviewerButton[1].lastChild.textContent
+        .split("·")
+        .map((item) => item.trim());
+    }
+
+    return user;
   }, record);
 }
 
@@ -144,6 +166,86 @@ async function elementReviewQA(page, record) {
     );
 
     return extractedQA;
+  }, record);
+}
+
+async function getOwnerResponse(page, record) {
+  return await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    // span inner text includes "Response from the owner"
+    const reviewElementSpans = reviewElement.querySelectorAll("span");
+    const ownerResponseSpan = Array.from(reviewElementSpans).find((span) =>
+      span.innerText.includes("Response from the owner")
+    );
+
+    if (ownerResponseSpan) {
+      return (
+        ownerResponseSpan.parentElement?.nextElementSibling?.innerText || ""
+      );
+    }
+
+    return "";
+  }, record);
+}
+
+async function getImgURLs(page, record) {
+  return await page.evaluate(async (record) => {
+    const imageURLs = [];
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    const allButtons = reviewElement.querySelectorAll(
+      `button[data-review-id="${record}"][jsaction*="review.openPhoto"]`
+    );
+
+    for (const button of allButtons) {
+      const style = button.getAttribute("style");
+      if (style) {
+        const urlMatch = style.split('url("')[1]?.split('");')[0];
+        if (urlMatch) {
+          imageURLs.push(urlMatch.split("=")[0] + "=w1200");
+        }
+      }
+    }
+
+    return imageURLs;
+  }, record);
+}
+
+async function getReviewDate(page, record) {
+  return await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+
+    const match = reviewElement.innerText.match(/(\b.+?\b ago)/);
+
+    if (match) {
+      return match[0];
+    }
+
+    return "";
+  }, record);
+}
+
+async function getReviewRate(page, record) {
+  return await page.evaluate(async (record) => {
+    const reviewElement = document.querySelector(
+      `div[data-review-id="${record}"]`
+    );
+    const rateElement = reviewElement?.querySelector(
+      'span[role="img"][aria-label*="stars"]'
+    );
+
+    const rating =
+      rateElement?.getAttribute("aria-label")?.match(/(\d)/)?.[1] ||
+      reviewElement.innerText.match(/(\d)\/5/)?.[1];
+
+    return Number(rating) || 0;
   }, record);
 }
 
@@ -274,8 +376,13 @@ module.exports = {
   highLightElement,
   copyReviewURL,
   handleElementActions,
+  getReviewRate,
+  getReviewDate,
+  getUserDetails,
   elementReviewComment,
   elementReviewQA,
+  getOwnerResponse,
+  getImgURLs,
   waitTitle,
   openReviewTab,
   sortReviews,

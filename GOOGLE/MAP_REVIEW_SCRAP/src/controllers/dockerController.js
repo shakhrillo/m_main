@@ -1,21 +1,27 @@
 const { spawn } = require("child_process");
+const path = require("path");
 
-function buildImage(tag = "") {
+function buildImage(tag = "", isInfo = false) {
   return new Promise(async (resolve, reject) => {
     await removeImage(tag);
-
-    // wait 2 sec
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const build = spawn(
-      "docker",
-      // rm dangling images
-      ["build", "--platform", "linux/amd64", "-t", tag, ".", "--force-rm"],
-      // ["build", "--platform", "linux/amd64", "-t", tag, "."],
-      {
-        cwd: "machines",
-      }
-    );
+    const command = "docker";
+    const args = [
+      "build",
+      "-f",
+      isInfo ? "Dockerfile.info" : "Dockerfile",
+      "--platform",
+      "linux/amd64",
+      "-t",
+      tag,
+      ".",
+      "--force-rm",
+    ];
+
+    const build = spawn(command, args, {
+      cwd: "machines",
+    });
 
     build.stdout.on("data", (data) => {
       console.log(`stdout: ${data}`);
