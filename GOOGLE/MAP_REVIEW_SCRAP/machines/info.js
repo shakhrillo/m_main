@@ -7,8 +7,8 @@ async function init() {
   const url = process.env.URL;
   const userId = process.env.USER_ID;
   const reviewId = process.env.REVIEW_ID;
-  const limit = process.env.LIMIT;
-  const sortBy = process.env.SORT_BY;
+  // const limit = process.env.LIMIT;
+  // const sortBy = process.env.SORT_BY;
 
   console.log("Setting up...");
   await firestore
@@ -18,8 +18,8 @@ async function init() {
       url,
       userId,
       reviewId,
-      limit,
-      sortBy,
+      // limit,
+      // sortBy,
       createdAt: new Date(),
       pending: true,
     });

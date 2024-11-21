@@ -74,6 +74,11 @@ export const ReviewsForm = () => {
 
   const handleStartScraping = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("res", {
+      ...info,
+      ...scrap,
+    })
+    return
     setLoading(true)
     try {
       await startExtractGmapReviews(user!.uid, overviewId, {
