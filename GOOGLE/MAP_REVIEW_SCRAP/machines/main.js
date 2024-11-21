@@ -1,4 +1,6 @@
-const fs = require("fs");
+require("dotenv").config({
+  path: require("path").resolve(__dirname, ".env.main"),
+});
 const { launchBrowser, openPage } = require("./services/browser");
 const {
   waitTitle,

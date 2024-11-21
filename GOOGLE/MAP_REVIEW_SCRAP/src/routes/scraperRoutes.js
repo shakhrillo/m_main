@@ -31,7 +31,8 @@ router.post("/", authMiddleware, async (req, res) => {
       USER_ID=${userId}
       REVIEW_ID=${reviewId}
       LIMIT=${limit} 
-      SORT_BY=${sortBy}`
+      SORT_BY=${sortBy}`,
+      "./machines/.env.main"
     );
 
     // Build Docker image
