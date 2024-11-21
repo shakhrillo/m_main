@@ -65,6 +65,28 @@ function stopContainer(containerId) {
   });
 }
 
+function removeImageById(imageId) {
+  return new Promise((resolve, reject) => {
+    const command = "docker";
+    const args = ["rmi", "-f", imageId];
+
+    const remove = spawn(command, args);
+
+    remove.on("close", (code) => {
+      if (code === 0) {
+        console.log(`Removed image with ID: ${imageId}`);
+        resolve();
+      } else {
+        reject(new Error(`Failed to remove image with ID: ${imageId}`));
+      }
+    });
+
+    remove.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
 function removeImage(tag = "") {
   return new Promise(async (resolve, reject) => {
     const containers = await listContainers(tag);
@@ -76,29 +98,17 @@ function removeImage(tag = "") {
         await removeContainer(containerId);
       })
     );
-    if (!containers.length) {
-      resolve();
-    } else {
-      const remove = spawn("docker", ["rmi", tag]);
 
-      remove.stdout.on("data", (data) => {
-        console.log(`stdout: ${data}`);
-      });
+    const images = await listImages(tag);
+    console.log("images>>>", images);
+    await Promise.all(
+      images.map(async (imageId) => {
+        console.log("image", imageId);
+        await removeImageById(imageId);
+      })
+    );
 
-      remove.stderr.on("data", (data) => {
-        console.error(`stderr: ${data}`);
-      });
-
-      remove.on("close", (code) => {
-        if (code === 0) {
-          console.log(`Removed image with tag: ${tag}`);
-          resolve();
-        } else {
-          console.error(`Failed to remove image with tag: ${tag}`);
-          reject(new Error(`Failed to remove image with tag: ${tag}`));
-        }
-      });
-    }
+    resolve();
   });
 }
 
@@ -119,6 +129,32 @@ function listContainers(query = "") {
         resolve(data);
       } else {
         reject(new Error(`Failed to list containers with query: ${query}`));
+      }
+    });
+
+    list.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
+function listImages(query = "") {
+  return new Promise((resolve, reject) => {
+    const command = "docker";
+    const args = ["images", "-q", query];
+
+    const list = spawn(command, args);
+
+    let data = [];
+    list.stdout.on("data", (chunk) => {
+      data = data.concat(chunk.toString().trim().split("\n"));
+    });
+
+    list.on("close", (code) => {
+      if (code === 0) {
+        resolve(data);
+      } else {
+        reject(new Error(`Failed to list images with query: ${query}`));
       }
     });
 
