@@ -18,6 +18,7 @@ const {
   getOwnerResponse,
   getImgURLs,
   getUserDetails,
+  scrollToBottom,
 } = require("./services/page");
 const { Subject, concatMap, interval, take, map, defer } = require("rxjs");
 const { firestore, batchWriteLargeArray } = require("./services/firebase");
@@ -25,6 +26,7 @@ const { uploadFile } = require("./services/storage");
 const newNodes$ = new Subject();
 
 async function init() {
+  let lastRecordTime = new Date();
   const url = process.env.URL;
   const userId = process.env.USER_ID;
   const reviewId = process.env.REVIEW_ID;
@@ -64,6 +66,23 @@ async function init() {
   );
 
   let count = 0;
+  let isFirstTime = true;
+
+  const intervalRecordTime = setInterval(async () => {
+    if (new Date() - lastRecordTime > 25000) {
+      if (isFirstTime) {
+        console.log("Scrolling to bottom...");
+        isFirstTime = false;
+        await scrollToBottom(page);
+        lastRecordTime = new Date();
+      } else {
+        console.log("No new reviews...");
+        clearInterval(intervalRecordTime);
+        count = limit;
+        newNodes$.next("end");
+      }
+    }
+  }, 1000);
 
   const subscription = newNodes$
     .pipe(
@@ -75,6 +94,8 @@ async function init() {
       )
     )
     .subscribe(async (record) => {
+      lastRecordTime = new Date();
+      isFirstTime = true;
       if (limit && count >= limit) {
         console.log("Limit reached...");
         const jsonFile = JSON.stringify(allElements, null, 2);

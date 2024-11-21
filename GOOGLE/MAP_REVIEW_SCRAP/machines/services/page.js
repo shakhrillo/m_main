@@ -372,6 +372,14 @@ async function watchNewReviews(page) {
   });
 }
 
+async function scrollToBottom(page) {
+  await page.evaluate(async () => {
+    const scrollContainer =
+      document.querySelector(".vyucnb").parentElement.lastChild;
+    scrollContainer.scrollIntoView();
+  });
+}
+
 module.exports = {
   highLightElement,
   copyReviewURL,
@@ -388,4 +396,5 @@ module.exports = {
   sortReviews,
   getInitialReviews,
   watchNewReviews,
+  scrollToBottom,
 };
