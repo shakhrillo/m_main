@@ -1,13 +1,16 @@
 .sidebar-container {
   display: flex;
   height: 100%;
-  width: 100%;
+  width: 230px;
   position: fixed;
   z-index: $z-index-medium;
   top: 0;
   left: 0;
-  &.sidebar-hidden {
-    pointer-events: none;
+  @media (max-width: 230px) {
+    width: 100%;
+    &.sidebar-hidden {
+      pointer-events: none;
+    }
   }
 }
 
@@ -33,7 +36,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  // z-index: $z-index-medium;
+  z-index: $z-index-medium;
   box-shadow: $box-shadow-light;
   padding: $spacing-md;
   box-sizing: border-box;

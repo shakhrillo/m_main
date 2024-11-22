@@ -42,6 +42,7 @@ const Sidebar = () => {
           <NavLink
             key={index}
             to={path}
+            onClick={toggleMenu}
             className={({ isActive }) =>
               `${isActive ? "active" : ""} ${className}`
             }
