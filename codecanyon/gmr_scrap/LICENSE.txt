@@ -1,0 +1,20 @@
+LICENSE INFORMATION
+
+This product is sold under the Envato Market License.
+By purchasing this product, you agree to the terms and conditions of the following licenses:
+
+1. Regular License:
+  - Use in one end product for personal or client use.
+  - The end product cannot be distributed or sold to others.
+
+2. Extended License:
+  - Use in one end product that is sold to end users.
+  - Redistribution of the source code is not permitted.
+
+For full details, visit the Envato Market Licenses page:
+https://codecanyon.net/licenses/standard
+
+ADDITIONAL INFORMATION
+- Third-party libraries used in this project:
+  1. RXJS - MIT - https://rxjs.dev/license
+
