@@ -1,347 +1,354 @@
 /* Global Styles */
 * {
-    font-family: "Inter", sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Utility Classes */
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .flex-center {
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .flex-column {
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .flex-start {
-    align-items: start;
+  align-items: start;
 }
 
 .gap-12 {
-    gap: 12px;
+  gap: 12px;
 }
 
 .gap-16 {
-    gap: 16px;
+  gap: 16px;
 }
 
 .gap-20 {
-    gap: 20px;
+  gap: 20px;
 }
 
 .gap-24 {
-    gap: 24px;
+  gap: 24px;
 }
 
 .gap-36 {
-    gap: 36px;
+  gap: 36px;
 }
 
 .gap-40 {
-    gap: 40px;
+  gap: 40px;
 }
 
 .gap-48 {
-    gap: 48px;
+  gap: 48px;
 }
 
 .gap-76 {
-    gap: 76px;
+  gap: 76px;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .geo-text-primary {
-    color: rgba(0, 0, 0, 1);
+  color: rgba(0, 0, 0, 1);
 }
 
 .geo-text-secondary {
-    color: rgba(114, 114, 114, 1);
+  color: rgba(114, 114, 114, 1);
 }
 
 .text-light {
-    color: rgba(175, 175, 175, 1);
+  color: rgba(175, 175, 175, 1);
 }
 
 /* Buttons */
 .geo-btn {
-    height: 37px;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
+  height: 37px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
 }
 
 .geo-btn-light {
-    background-color: transparent;
-    border: none;
-    color: rgba(0, 0, 0, 1);
-    text-decoration: underline;
+  background-color: transparent;
+  border: none;
+  color: rgba(0, 0, 0, 1);
+  text-decoration: underline;
 }
 
 .geo-btn-primary {
-    background-color: rgba(0, 0, 0, 1);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
 }
 
 .geo-btn-outline {
-    background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 1);
-    color: rgba(0, 0, 0, 1);
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 1);
+  color: rgba(0, 0, 0, 1);
 }
 
 .geo-navbar {
-    height: 85px;
+  height: 85px;
 }
 
 .navbar-brand {
-    width: 115px;
-    height: 28px;
+  width: 115px;
+  height: 28px;
 }
 
 .geo-navbar-menu li a {
-    font-weight: 400;
-    line-height: 21px;
-    color: rgba(0, 0, 0, 1);
+  font-weight: 400;
+  line-height: 21px;
+  color: rgba(0, 0, 0, 1);
 }
 
 .geo-h1 {
-    font-size: 84px;
-    font-weight: 500;
+  font-size: 84px;
+  font-weight: 500;
 }
 
 .medium-subtitle {
-    font-size: 18px;
-    font-weight: 400;
-    margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
 }
 
 .small-bold-subtitle {
-    font-size: 14px;
-    font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .description-content {
-    width: 100%;
-    height: 680px;
-    border-radius: 6px;
+  width: 100%;
+  height: 680px;
+  border-radius: 6px;
 }
 
 .social-proof {
-    padding: 96px 0;
+  padding: 96px 0;
 }
 
 .geo-h2 {
-    font-size: 48px;
-    font-weight: 500;
+  font-size: 48px;
+  font-weight: 500;
 }
 
 .features-content {
-    height: 406px;
+  height: 406px;
 }
 
 .advantage {
-    padding: 148px 0;
+  padding: 148px 0;
 }
 
 .advantage-carousel-card {
-    background-color: rgba(249, 249, 249, 1);
-    border: 1px solid rgba(228, 228, 228, 1);
-    border-radius: 8px;
-    padding: 24px;
-    width: 515px;
-    height: 466px;
+  background-color: rgba(249, 249, 249, 1);
+  border: 1px solid rgba(228, 228, 228, 1);
+  border-radius: 8px;
+  padding: 24px;
+  width: 515px;
+  height: 466px;
 }
 
 .geo-h6 {
-    font-size: 20px !important;
-    font-weight: 500 !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
 }
 
 .small-subtitle {
-    font-size: 14px;
-    font-weight: 400;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .integration {
-    padding: 48px 0;
+  padding: 48px 0;
 }
 
 .integration-card {
-    border: 1px solid rgba(228, 228, 228, 1);
-    border-radius: 8px;
+  border: 1px solid rgba(228, 228, 228, 1);
+  border-radius: 8px;
 }
 
 .integration-card-headline {
-    padding: 36px 36px 0 36px;
+  padding: 36px 36px 0 36px;
 }
 
 .geo-h3 {
-    font-size: 32px !important;
-    font-weight: 500 !important;
+  font-size: 32px !important;
+  font-weight: 500 !important;
 }
 
 .integration-card-content {
-    height: 293px;
+  height: 293px;
 }
 
-
 .testimonal {
-    padding: 96px 0;
+  padding: 96px 0;
 }
 
 .testimonal-headline p {
-    font-size: 18px;
-    font-weight: 400;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .testimonal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .testimonal-content-single {
-    display: flex;
-    position: relative;
-    gap: 24px;
-    width: 100%;
-    justify-content: center;
-    overflow-x: hidden;
+  display: flex;
+  position: relative;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+  overflow-x: hidden;
 }
 
 .testimonal-content-single::before {
-    content: "";
-    height: 100%;
-    background-color: aqua;
-    width: 200px;
-    position: absolute;
-    left: 0;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  content: "";
+  height: 100%;
+  background-color: aqua;
+  width: 200px;
+  position: absolute;
+  left: 0;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 .testimonal-content-single::after {
-    content: "";
-    height: 100%;
-    background-color: aqua;
-    width: 200px;
-    position: absolute;
-    right: 0;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+  content: "";
+  height: 100%;
+  background-color: aqua;
+  width: 200px;
+  position: absolute;
+  right: 0;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }
 
 .testimonal-content-card {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: start;
-    padding: 40px;
-    border: 1px solid rgba(228, 228, 228, 1);
-    border-radius: 8px;
-    width: 410px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: start;
+  padding: 40px;
+  border: 1px solid rgba(228, 228, 228, 1);
+  border-radius: 8px;
+  width: 410px;
 }
 
 .testimonal-content-card p {
-    font-weight: 500;
-    font-size: 18px;
-    color: rgba(0, 0, 0, 1);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
+  font-weight: 500;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 1);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
 }
 
 .card-user-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .card-user {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .card-user-avatar {
-    height: 40px;
-    width: 40px;
-    border-radius: 100px;
+  height: 40px;
+  width: 40px;
+  border-radius: 100px;
 }
 
 .card-user-name {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .card-user-name h4 {
-    font-size: 16px;
-    font-weight: 500;
-    color: rgba(0, 0, 0, 1);
-    margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1);
+  margin: 0;
 }
 
 .card-user-name small {
-    font-size: 14;
-    font-weight: 400;
-    color: rgba(175, 175, 175, 1);
+  font-size: 14;
+  font-weight: 400;
+  color: rgba(175, 175, 175, 1);
 }
 
 .cta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    padding: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 80px;
 }
 
 .cta h2 {
-    font-size: 48px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 1);
+  font-size: 48px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
 }
 
 .geo-bg-primary {
-    background-color: rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 1);
 }
 
 .cta p {
-    font-size: 16px;
-    height: 400;
-    color: rgba(255, 255, 255, 1);
-    text-align: center;
+  font-size: 16px;
+  height: 400;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
 }
 
 /* Footer */
 .footer {
-    padding: 64px 0;
+  padding: 64px 0;
 }
 
 .social-icon-single {
-    width: 40px;
-    height: 40px;
-    background-color: rgba(242, 242, 242, 1);
-    border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 20px;
 }
 
 .copyright {
-    font-size: 14px;
-    margin-top: 56px;
-    text-align: center;
-    color: rgba(175, 175, 175, 1);
+  font-size: 14px;
+  margin-top: 56px;
+  text-align: center;
+  color: rgba(175, 175, 175, 1);
 }
