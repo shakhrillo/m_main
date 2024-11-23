@@ -20,3 +20,8 @@ Puppeteer based Google Map Reviews Scraping tool. This tool is used to scrap goo
 10. [License](#license)
 
 ---
+
+Packages Used:
+
+- jsonwebtoken (for token generation)
+- stripe (for payment gateway)
