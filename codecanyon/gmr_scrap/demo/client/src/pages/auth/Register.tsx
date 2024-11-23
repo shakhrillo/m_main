@@ -61,84 +61,98 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="auth">
-      <nav>
-        <a href="/">
-          <img className="logo" src={logo} alt="GeoScraper logo" />
-        </a>
-      </nav>
-      <div className="card auth-card">
-        <h3>Registration</h3>
-        <span>Enter your details below to create your account.</span>
-        <form onSubmit={handleRegister}>
-          <div>
-            <label htmlFor="firstName">First name</label>
-            <input
-              type="text"
-              placeholder="First name"
-              id="firstName"
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
-            />
+    <div className="main">
+      <div className="container">
+        <div className="content">
+          <h3>Register</h3>
+          <div className="card">
+            <div className="card-body">
+              <form onSubmit={handleRegister}>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="firstName">
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="First name"
+                    id="firstName"
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="lastName">
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    placeholder="Last name"
+                    onChange={e => setLastName(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter email"
+                    onChange={e => setEmail(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    onChange={e => setPassword(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="confirmPassword">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm password"
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+                <button className="button button-primary" type="submit">
+                  Register
+                </button>
+                {error && <div className="alert alert-danger">{error}</div>}
+              </form>
+              <div className="mt-2">
+                <button
+                  className="button button-google"
+                  type="button"
+                  onClick={handleGoogleLogin}
+                >
+                  Continue with Google
+                </button>
+              </div>
+              <div className="mt-2">
+                <span>
+                  Already have an account?{" "}
+                  <Link className="registration__card__link" to="/auth/login">
+                    Login
+                  </Link>
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            <label htmlFor="lastName">Last name</label>
-            <input
-              type="text"
-              className="form-control"
-              id="lastName"
-              placeholder="Last name"
-              onChange={e => setLastName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              placeholder="Enter email"
-              onChange={e => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              placeholder="Password"
-              onChange={e => setPassword(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="confirmPassword"
-              placeholder="Confirm password"
-              onChange={e => setConfirmPassword(e.target.value)}
-            />
-          </div>
-          <button className="primary mt-2 w-100 " type="submit">
-            Register
-          </button>
-          {error && <div className="alert alert-danger">{error}</div>}
-        </form>
-        <div>
-          {/* <span className="registration__text">Or register with</span> */}
-          <button className="w-100" type="button" onClick={handleGoogleLogin}>
-            Continue with Google
-          </button>
-        </div>
-        <div className="mt-2">
-          <span>
-            Already have an account?{" "}
-            <Link className="registration__card__link" to="/auth/login">
-              Login
-            </Link>
-          </span>
         </div>
       </div>
     </div>

@@ -1,7 +1,11 @@
 // src/firebaseConfig.ts
 import { initializeApp } from "firebase/app"
-import { getAuth, Auth } from "firebase/auth"
-import { getFirestore, Firestore } from "firebase/firestore"
+import { getAuth, Auth, connectAuthEmulator } from "firebase/auth"
+import {
+  getFirestore,
+  Firestore,
+  connectFirestoreEmulator,
+} from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyCVMAJ7QdZYcUZ2G8zyBrHP5q7iZvbmM8o",
@@ -15,5 +19,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth: Auth = getAuth(app)
 const firestore: Firestore = getFirestore(app)
+
+connectFirestoreEmulator(firestore, "localhost", 8080)
+connectAuthEmulator(auth, "http://localhost:9099")
 
 export { auth, firestore, app }

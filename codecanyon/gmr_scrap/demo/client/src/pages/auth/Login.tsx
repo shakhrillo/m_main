@@ -41,66 +41,63 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="auth">
-      <nav>
-        <a href="/">
-          <img className="logo" src={logo} alt="GeoScraper logo" />
-        </a>
-      </nav>
-      <div className="card auth-card">
-        <div>
+    <div className="main">
+      <div className="container">
+        <div className="content">
           <h3>Login</h3>
-          <span>Enter your details to get sign in to your account</span>
-        </div>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label htmlFor="email">
-              Email <span className="required">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="email"
-            />
+          <div className="card">
+            <div className="card-body">
+              <form onSubmit={handleLogin}>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="email">
+                    Email <span className="required">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="email"
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-wrap">
+                  <label className="form-label" htmlFor="password">
+                    Password <span className="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="password"
+                    className="form-input"
+                  />
+                </div>
+                <button className="button button-primary" type="submit">
+                  Sign In
+                </button>
+                {error && <div className="text-danger py-3">{error}</div>}
+                <div className="py-3">
+                  <Link to="/auth/reset-password">
+                    <button className="button button-link">
+                      Forgot password?
+                    </button>
+                  </Link>
+                </div>
+              </form>
+              <button className="button" onClick={handleGoogleLogin}>
+                <i className="bi bi-google me-2"></i>
+                Login with Google
+              </button>
+              <span>
+                Don't have an account?{" "}
+                <Link className="login__card__link" to="/auth/register">
+                  Register
+                </Link>
+              </span>
+            </div>
           </div>
-          <div>
-            <label htmlFor="password">
-              Password <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="email"
-              value={password}
-              onChange={e => e.target.value}
-              placeholder="password"
-            />
-          </div>
-          <button className="primary mt-2 w-100" type="submit">
-            Sign In
-          </button>
-          {error && <div className="alert alert-danger">{error}</div>}
-          <a href="/auth/reset-password">Forgot password?</a>
-        </form>
-        <div>
-          {/* <span>Or Sign in with</span> */}
-          <button
-            className="btn w-100"
-            type="button"
-            onClick={handleGoogleLogin}
-          >
-            <i className="bi bi-google me-2"></i>
-            Login with Google
-          </button>
-        </div>
-        <div className="mt-2">
-          <span>
-            Don't have an account?{" "}
-            <Link className="login__card__link" to="/auth/register">
-              Register
-            </Link>
-          </span>
         </div>
       </div>
     </div>
