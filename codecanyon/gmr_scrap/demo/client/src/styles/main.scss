@@ -1,0 +1,49 @@
+@import "./abstracts/variables";
+
+@import "./base/reset";
+@import "./base/typography";
+
+@import "./abstracts/placeholders";
+@import "./components/button";
+@import "./components/nav";
+@import "./components/sidebar";
+@import "./components/steps";
+@import "./components/form";
+@import "./components/table";
+@import "./components/image";
+@import "./components/card";
+
+@import "./utilities/utilities";
+
+hr {
+  border: 0;
+  border-top: 1px solid $border-color;
+  margin: $spacing-lg 0;
+}
+
+.main {
+  display: flex;
+}
+
+.container {
+  flex: 1;
+  padding-left: 230px;
+  @media (max-width: 1200px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    width: -webkit-fill-available;
+  }
+}
+
+.content {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  @media (min-width: 768px) {
+    width: 100%;
+  }
+
+  @media (min-width: 1200px) {
+    width: 90%;
+  }
+}
