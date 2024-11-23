@@ -172,8 +172,12 @@ export const downloadFile = async (url: string) => {
 
 export const buyCoins = async (uid: string, amount: number) => {
   if (!firestore || !uid) return
-  const collectionRef = collection(firestore, `users/${uid}/buyCoins`)
-  await addDoc(collectionRef, { amount })
+  try {
+    const collectionRef = collection(firestore, `users/${uid}/buyCoins`)
+    return (await addDoc(collectionRef, { amount })).id
+  } catch (error) {
+    console.error("Failed to buy coins", error)
+  }
 }
 
 export const getBuyCoinsQuery = (uid: string) => {

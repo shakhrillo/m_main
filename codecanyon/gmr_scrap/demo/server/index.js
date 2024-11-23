@@ -16,13 +16,13 @@ const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+app.use("/api/stripe", stripeRoutes);
+app.use(express.json());
+
 app.use("/api/machines", machinesRoutes);
 app.use("/api/scrap", scraperRoutes);
-app.use("/api/stripe", stripeRoutes);
 
 // Default route
 app.get("/", (req, res) => {

@@ -1,10 +1,10 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const admin = require("firebase-admin");
+const { db } = require("../firebase");
 const successUrl = process.env.SUCCESS_URL;
 const cancelUrl = process.env.CANCEL_URL;
 
 exports.createCheckoutSession = async (req, res) => {
-  const { amount, userId } = req.body;
+  const { amount, userId } = req.data;
 
   try {
     const { url } = await stripe.checkout.sessions.create({
@@ -32,16 +32,7 @@ exports.createCheckoutSession = async (req, res) => {
 };
 
 exports.webhookHandler = async (req, res) => {
-  const userId = req.body.data.object.metadata.userId;
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const userPaymentsRef = admin
-    .firestore()
-    .collection(`users/${userId}/payments`);
-  const userRef = admin.firestore().doc(`users/${userId}`);
-
-  // Create a Firestore batch
-  const batch = admin.firestore().batch();
-
   let event;
   try {
     const signature = req.headers["stripe-signature"];
@@ -51,6 +42,16 @@ exports.webhookHandler = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  console.log(event.data.object.metadata);
+  console.log(`Received event with type: ${event.type}`);
+
+  const userId = event.data.object.metadata.userId;
+  const userPaymentsRef = db.collection(`users/${userId}/payments`);
+  const userRef = db.doc(`users/${userId}`);
+
+  // Create a Firestore batch
+  const batch = db.batch();
+
   // Handle the event
   switch (event.type) {
     case "payment_intent.succeeded":
@@ -58,7 +59,7 @@ exports.webhookHandler = async (req, res) => {
       const paymentDocRef = userPaymentsRef.doc();
       batch.set(paymentDocRef, {
         amount: paymentIntent.amount,
-        created: admin.firestore.Timestamp.now(),
+        created: new Date(paymentIntent.created * 1000),
         payment_method: paymentIntent.payment_method,
         status: paymentIntent.status,
       });

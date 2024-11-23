@@ -1,5 +1,5 @@
 const { createToken } = require("./jwtUtils");
-const endPointURL = "https://us-central1-gmr-scrap.cloudfunctions.net/api";
+const endPointURL = process.env.ENDPOINT_URL;
 
 const createAuthHeader = (data) => ({
   "Content-Type": "application/json",
@@ -26,9 +26,11 @@ const makeRequest = async (url, method, data) => {
 
 module.exports = {
   deleteMachine: (data) =>
-    makeRequest(`${endPointURL}/machines`, "DELETE", data),
+    makeRequest(`${endPointURL}/api/machines`, "DELETE", data),
   submitScrapRequest: (data) =>
-    makeRequest(`${endPointURL}/scrap`, "POST", data),
+    makeRequest(`${endPointURL}/api/scrap`, "POST", data),
   submitScrapInfo: (data) =>
-    makeRequest(`${endPointURL}/scrap/info`, "POST", data),
+    makeRequest(`${endPointURL}/api/scrap/info`, "POST", data),
+  getCheckoutSession: (data) =>
+    makeRequest(`${endPointURL}/api/stripe`, "POST", data),
 };

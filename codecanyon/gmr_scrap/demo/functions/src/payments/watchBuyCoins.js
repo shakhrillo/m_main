@@ -1,21 +1,15 @@
-const admin = require("firebase-admin");
-const { getCheckoutSessionUrl } = require("../utils/stripeUtils");
+const { getCheckoutSession } = require("../utils/apiUtils");
 
 async function watchBuyCoins(event) {
-  const { userId } = event.params;
-  const { amount } = event.data.data();
-  console.log(`User ${userId} is buying ${amount} coins`);
-  // const batch = admin.firestore().batch();
-
-  // try {
-  //   const url = await getCheckoutSessionUrl(amount, userId);
-  //   await batch.set(admin.firestore().collection(`users/${userId}/buy`).doc(), {
-  //     url,
-  //   });
-  //   await batch.commit();
-  // } catch (error) {
-  //   console.error("Error creating Stripe session:", error);
-  // }
+  try {
+    const { userId } = event.params;
+    const { amount } = event.data.data();
+    const ref = event.data.ref;
+    const { url } = await getCheckoutSession({ userId, amount });
+    await ref.update({ url });
+  } catch (error) {
+    console.error("Error in watchBuyCoins:", error);
+  }
 }
 
 module.exports = watchBuyCoins;

@@ -16,6 +16,7 @@ function Payments() {
   const [history, setHistory] = useState([] as any[])
   const [amount, setAmount] = useState(0)
   const [userInformation, setUserInformation] = useState({} as any)
+  const [coinId, setCoinId] = useState("")
 
   useEffect(() => {
     if (!user || !firestore) return
@@ -42,26 +43,21 @@ function Payments() {
   }, [firestore, user])
 
   useEffect(() => {
-    if (!user || !firestore) return
+    if (!coinId) return
 
-    let initial = true
-
-    const unsubscribe = onSnapshot(getBuyCoinsQuery(user.uid), snapshot => {
-      if (initial) {
-        initial = false
-        return
-      }
-
-      snapshot.docChanges().forEach(change => {
-        if (change.type === "added") {
-          const { url } = change.doc.data()
-          window.open(url, "_self")
+    const unsubscribe = onSnapshot(
+      doc(firestore, `users/${user?.uid}/buyCoins`, coinId),
+      doc => {
+        const data = doc.data()
+        const url = data?.url
+        if (url) {
+          window.open(url, "_blank")
         }
-      })
-    })
+      },
+    )
 
     return () => unsubscribe()
-  }, [firestore, user])
+  }, [coinId])
 
   const { toggleMenu } = useMenu()
 
@@ -84,7 +80,8 @@ function Payments() {
           <button
             onClick={async () => {
               setIsLoading(true)
-              await buyCoins(user!.uid, 100)
+              const coindId = (await buyCoins(user!.uid, 100)) || ""
+              setCoinId(coindId)
               setIsLoading(false)
             }}
             disabled={isLoading}
