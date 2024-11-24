@@ -21,7 +21,7 @@ const firestore = admin.firestore();
 // ssl: false,
 // });
 const auth = admin.auth();
-const storage = getStorage(app);
+// const storage = getStorage(app);
 // auth.useEmulator("http://localhost:9099");
 // const storage = admin.storage();
 
@@ -68,6 +68,6 @@ module.exports = {
   firestore,
   auth,
   // bucket,
-  storage,
+  // storage,
   batchWriteLargeArray,
 };
