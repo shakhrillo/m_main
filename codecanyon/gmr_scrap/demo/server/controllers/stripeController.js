@@ -1,10 +1,28 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { db } = require("../firebase");
+
 const successUrl = process.env.SUCCESS_URL;
 const cancelUrl = process.env.CANCEL_URL;
 
 exports.createCheckoutSession = async (req, res) => {
   const { amount, userId } = req.data;
+  let currency = "usd";
+  let costs = 1;
+  let unit_amount = amount;
+  console.log("--".repeat(20));
+  const settings = await db.doc("app/settings").get();
+
+  if (settings.exists) {
+    const data = settings.data();
+    currency = data.currency || "usd";
+    costs = Number(data.costs || 1);
+  }
+
+  unit_amount = unit_amount * costs;
+
+  console.log("currency", currency);
+  console.log("costs", costs);
+  console.log("unit_amount", unit_amount);
 
   try {
     const { url } = await stripe.checkout.sessions.create({
@@ -12,9 +30,9 @@ exports.createCheckoutSession = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency,
             product_data: { name: "Custom Amount" },
-            unit_amount: amount,
+            unit_amount,
           },
           quantity: 1,
         },
@@ -27,35 +45,31 @@ exports.createCheckoutSession = async (req, res) => {
 
     res.status(200).json({ url });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.webhookHandler = async (req, res) => {
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  let event;
+  const signature = req.headers["stripe-signature"];
+
   try {
-    const signature = req.headers["stripe-signature"];
-    event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-  } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      endpointSecret
+    );
+    const {
+      type,
+      data: { object: paymentIntent },
+    } = event;
+    const userId = paymentIntent.metadata.userId;
+    const userPaymentsRef = db.collection(`users/${userId}/payments`);
+    const userRef = db.doc(`users/${userId}`);
+    const batch = db.batch();
 
-  console.log(event.data.object.metadata);
-  console.log(`Received event with type: ${event.type}`);
-
-  const userId = event.data.object.metadata.userId;
-  const userPaymentsRef = db.collection(`users/${userId}/payments`);
-  const userRef = db.doc(`users/${userId}`);
-
-  // Create a Firestore batch
-  const batch = db.batch();
-
-  // Handle the event
-  switch (event.type) {
-    case "payment_intent.succeeded":
-      const paymentIntent = event.data.object;
+    if (type === "payment_intent.succeeded") {
       const paymentDocRef = userPaymentsRef.doc();
       batch.set(paymentDocRef, {
         amount: paymentIntent.amount,
@@ -74,12 +88,14 @@ exports.webhookHandler = async (req, res) => {
         { coinBalance: currentBalance + paymentIntent.amount },
         { merge: true }
       );
-      break;
-    // Add more cases for other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+    } else {
+      console.log(`Unhandled event type ${type}`);
+    }
 
-  await batch.commit();
-  res.status(200).send("Received!");
+    await batch.commit();
+    res.status(200).send("Received!");
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 };

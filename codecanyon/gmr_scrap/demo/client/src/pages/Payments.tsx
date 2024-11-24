@@ -1,20 +1,18 @@
 import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
-import { useFirebase } from "../contexts/FirebaseProvider"
-import {
-  buyCoins,
-  getBuyCoinsQuery,
-  getPaymentsQuery,
-} from "../services/firebaseService"
-import { useMenu } from "../context/MenuContext/MenuContext"
 import menuIcon from "../assets/icons/list.svg"
+import { useMenu } from "../context/MenuContext/MenuContext"
+import { useFirebase } from "../contexts/FirebaseProvider"
+import { buyCoins, getPaymentsQuery } from "../services/firebaseService"
 
 function Payments() {
   const { firestore, user } = useFirebase()
 
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState([] as any[])
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState("100")
+  const [currency, setCurrency] = useState("usd")
+  const [totalPrice, setTotalPrice] = useState("0")
   const [userInformation, setUserInformation] = useState({} as any)
   const [coinId, setCoinId] = useState("")
 
@@ -59,6 +57,32 @@ function Payments() {
     return () => unsubscribe()
   }, [coinId])
 
+  useEffect(() => {
+    if (!firestore) return
+    const settingsRef = doc(firestore, `app/settings`)
+    const unsubscribe = onSnapshot(settingsRef, doc => {
+      if (doc.exists()) {
+        const data = doc.data()
+        const costs = Number(data.costs)
+        const currency = data.currency
+        const minimumCount = 99
+
+        const minimumCost = currency === "gbp" ? 0.3 : 0.5
+        if (["usd", "eur", "cad", "gbp"].includes(currency)) {
+          const amount = Math.max(minimumCount, Math.ceil(minimumCost / costs))
+          setAmount(amount.toString())
+          setTotalPrice((amount * costs).toFixed(2))
+        }
+        setCurrency(currency)
+        console.log(data)
+      }
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [firestore])
+
   const { toggleMenu } = useMenu()
 
   return (
@@ -80,14 +104,15 @@ function Payments() {
           <button
             onClick={async () => {
               setIsLoading(true)
-              const coindId = (await buyCoins(user!.uid, 100)) || ""
+              const coindId =
+                (await buyCoins(user!.uid, Number(amount) * 100)) || ""
               setCoinId(coindId)
               setIsLoading(false)
             }}
             disabled={isLoading}
             className="button"
           >
-            Buy 100 coins
+            Buy {amount} coins ({totalPrice} {currency})
           </button>
           <br />
           <table className="table">

@@ -180,11 +180,6 @@ export const buyCoins = async (uid: string, amount: number) => {
   }
 }
 
-export const getBuyCoinsQuery = (uid: string) => {
-  const collectionRef = collection(firestore, `users/${uid}/buy`)
-  return collectionRef
-}
-
 export const getPaymentsQuery = (uid: string) => {
   const collectionRef = collection(firestore, `users/${uid}/payments`)
   return query(collectionRef, orderBy("created", "desc"))
