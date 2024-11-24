@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 const { onDocumentCreated } = require("firebase-functions/firestore");
 const watchBuyCoins = require("./src/payments/watchBuyCoins");
 const userCreate = require("./src/user/userCreate");
+const getPlaceOverview = require("./src/machines/getPlaceOverview");
 
 admin.initializeApp();
 
@@ -11,4 +12,8 @@ exports.userCreate = functions.auth.user().onCreate(userCreate);
 exports.watchBuyCoins = onDocumentCreated(
   "users/{userId}/buyCoins/{coinId}",
   watchBuyCoins
+);
+exports.watchReviewOverview = onDocumentCreated(
+  "users/{userId}/reviewOverview/{reviewId}",
+  getPlaceOverview
 );

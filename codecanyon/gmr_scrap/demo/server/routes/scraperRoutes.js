@@ -79,23 +79,26 @@ router.post("/info", authMiddleware, async (req, res) => {
       USER_ID=${userId}
       REVIEW_ID=${reviewId}
       LIMIT=${limit} 
-      SORT_BY=${sortBy}`
+      SORT_BY=${sortBy}
+      GCLOUD_PROJECT=fir-scrapp
+      FIRESTORE_EMULATOR_HOST=host.docker.internal:9100
+      FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
+      STORAGE_EMULATOR_HOST=host.docker.internal:9199
+      FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199
+      `
     );
 
     // Build Docker image
     buildTag = `c_${sanitizedUserId}_${sanitizedReviewId}`;
     console.log(`Building Docker image with tag: ${buildTag}`);
     await buildImage(buildTag, true);
-    // const lists = await listContainers();
-    // await Promise.all(
-    //   lists.map(async (containerId) => {
-    //     await removeContainer(containerId);
-    //   })
-    // );
+
     const containerName = `c_${sanitizedUserId}_${sanitizedReviewId}`;
     const container = await startContainer(containerName, buildTag, false);
 
     await removeImage(buildTag);
+
+    console.log(containerName);
 
     res.json({ message: "Container started", ...container });
   } catch (error) {

@@ -6,40 +6,48 @@ function buildImage(tag = "", isInfo = false) {
     await removeImage(tag);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const command = "docker";
-    const args = [
-      "build",
-      "-f",
-      isInfo ? "Dockerfile.info" : "Dockerfile",
-      "--platform",
-      "linux/amd64",
-      "-t",
-      tag,
-      ".",
-      "--force-rm",
-    ];
+    try {
+      const command = "docker";
+      const args = [
+        "build",
+        "-f",
+        isInfo ? "Dockerfile.info" : "Dockerfile",
+        "--platform",
+        "linux/amd64",
+        "-t",
+        tag,
+        ".",
+        "--force-rm",
+      ];
 
-    const build = spawn(command, args, {
-      cwd: "machines",
-    });
+      console.log("args", args.join(" "));
 
-    build.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
-    });
+      const build = spawn(command, args, {
+        cwd: "../machines",
+      });
 
-    build.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+      build.stdout.on("data", (data) => {
+        console.log(`stdout: ${data}`);
+      });
 
-    build.on("close", (code) => {
-      if (code === 0) {
-        console.log(`Docker build completed successfully for tag: ${tag}`);
-        resolve();
-      } else {
-        console.error(`Docker build failed for tag: ${tag}`);
-        reject(new Error(`Docker build failed for tag: ${tag}`));
-      }
-    });
+      build.stderr.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+      });
+
+      build.on("close", (code) => {
+        if (code === 0) {
+          console.log(`Docker build completed successfully for tag: ${tag}`);
+          resolve();
+        } else {
+          console.error(`Docker build failed for tag: ${tag}`);
+          reject(new Error(`Docker build failed for tag: ${tag}`));
+        }
+      });
+    } catch (error) {
+      console.log("--".repeat(50));
+      console.log("error", error);
+      reject(error);
+    }
   });
 }
 
@@ -121,10 +129,12 @@ function listContainers(query = "") {
 
     let data = [];
     list.stdout.on("data", (chunk) => {
+      console.log("chunk", chunk.toString());
       data = data.concat(chunk.toString().trim().split("\n"));
     });
 
     list.on("close", (code) => {
+      console.log("code", code);
       if (code === 0) {
         resolve(data);
       } else {
@@ -133,6 +143,7 @@ function listContainers(query = "") {
     });
 
     list.on("error", (err) => {
+      console.log("err", err);
       reject(err);
     });
   });
@@ -192,7 +203,7 @@ function startContainer(containerName, buildTag, isRunBackground = true) {
     const args = [
       "run",
       ...(isRunBackground ? ["-d"] : []), // Detached mode (runs in the background)
-      "--rm", // Automatically remove the container when it stops
+      // "--rm", // Automatically remove the container when it stops
       "--env-file",
       ".env", // Pass environment variables
       "--name",
@@ -201,7 +212,15 @@ function startContainer(containerName, buildTag, isRunBackground = true) {
     ];
 
     const start = spawn(command, args, {
-      cwd: "machines",
+      cwd: "../machines",
+    });
+
+    start.stdout.on("data", (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    start.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
     });
 
     start.on("close", (code) => {

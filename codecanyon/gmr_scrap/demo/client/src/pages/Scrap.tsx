@@ -12,9 +12,6 @@ const Scrap: React.FC = () => {
           <img src={menuIcon} alt="menu-icon" />
         </button>
         <h3 className="m-0">Scrap</h3>
-        <button className="button button-lg button-success ml-auto">
-          Coins 12 989
-        </button>
       </div>
       <ReviewsForm />
     </div>

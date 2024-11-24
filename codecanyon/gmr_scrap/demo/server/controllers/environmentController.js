@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-function createEnvironment(content = "", path = "./machines/.env") {
+function createEnvironment(content = "", path = "../machines/.env") {
   fs.writeFileSync(path, content, "utf8");
 }
 
