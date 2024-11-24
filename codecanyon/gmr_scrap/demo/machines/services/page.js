@@ -373,6 +373,10 @@ async function watchNewReviews(page) {
 }
 
 async function scrollToBottom(page) {
+  // check page is not close
+  if (!page || page.isClosed()) {
+    return;
+  }
   await page.evaluate(async () => {
     const scrollContainer =
       document.querySelector(".vyucnb").parentElement.lastChild;

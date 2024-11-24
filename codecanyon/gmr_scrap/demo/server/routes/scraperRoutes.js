@@ -25,19 +25,21 @@ router.post("/", authMiddleware, async (req, res) => {
       .toLowerCase()
       .replace(/[^a-z0-9_-]/g, "");
 
+    buildTag = `r_${sanitizedUserId}_${sanitizedReviewId}`;
+
     createEnvironment(
-      `FIREBASE_KEY_BASE64=${FIREBASE_KEY_BASE64} 
+      `FIREBASE_KEY_BASE64=${FIREBASE_KEY_BASE64}
+      HOSTNAME=${buildTag}
       STORAGE_BUCKET=${process.env.STORAGE_BUCKET}
-      URL=${url} 
+      URL=${url}
       USER_ID=${userId}
       REVIEW_ID=${reviewId}
-      LIMIT=${limit} 
+      LIMIT=${limit}
       SORT_BY=${sortBy}`,
       "../machines/.env.main"
     );
 
     // Build Docker image
-    buildTag = `r_${sanitizedUserId}_${sanitizedReviewId}`;
     console.log(`Building Docker image with tag: ${buildTag}`);
     await buildImage(buildTag);
     // const lists = await listContainers();
@@ -47,7 +49,12 @@ router.post("/", authMiddleware, async (req, res) => {
     //   })
     // );
     const containerName = `r_${sanitizedUserId}_${sanitizedReviewId}`;
-    const container = await startContainer(containerName, buildTag);
+    const container = await startContainer(
+      containerName,
+      buildTag,
+      true,
+      ".env.main"
+    );
 
     res.json({ message: "Container started", ...container });
   } catch (error) {

@@ -1,6 +1,7 @@
 require("dotenv").config({
   path: require("path").resolve(__dirname, ".env.main"),
 });
+const { exec } = require("child_process");
 const { launchBrowser, openPage } = require("./services/browser");
 const {
   waitTitle,
@@ -42,15 +43,25 @@ async function complete() {
   const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
   const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
 
+  console.log(`CSV URL: ${csvUrl}`);
+  console.log(`JSON URL: ${jsonUrl}`);
+
   await batchWriteLargeArray(userId, reviewId, allElements);
-  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-    updatedAt: new Date(),
-    completedAt: new Date(),
-    status: "completed",
-    csvUrl,
-    jsonUrl,
-    totalReviews: allElements.length,
-  });
+
+  console.log("Uploading to Firestore...");
+
+  try {
+    await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+      updatedAt: new Date(),
+      completedAt: new Date(),
+      status: "completed",
+      csvUrl,
+      jsonUrl,
+      totalReviews: allElements.length,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+  }
   console.log("Completed...");
   console.log(`CSV URL: ${csvUrl}`);
   console.log(`JSON URL: ${jsonUrl}`);
@@ -115,10 +126,14 @@ async function init() {
       isFirstTime = true;
       if (limit && count >= limit) {
         console.log("Limit reached...");
-        clearInterval(intervalRecordTime);
+        // if (intervalRecordTime) {
+        //   clearInterval(intervalRecordTime);
+        // }
         complete();
-        await browser.close();
+        // await browser.close();
         subscription.unsubscribe();
+        console.log("Unsubscribed...");
+        exec(`docker stop ${process.env.HOSTNAME}`);
       } else {
         console.log(`Checked ${count} reviews`);
         await highLightElement(page, record);

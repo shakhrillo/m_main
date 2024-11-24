@@ -197,15 +197,21 @@ function removeContainer(containerId) {
   });
 }
 
-function startContainer(containerName, buildTag, isRunBackground = true) {
+function startContainer(
+  containerName,
+  buildTag,
+  isRunBackground = true,
+  envFile = ".env"
+) {
   return new Promise((resolve, reject) => {
     const command = "docker";
     const args = [
       "run",
       ...(isRunBackground ? ["-d"] : []), // Detached mode (runs in the background)
-      "--rm", // Automatically remove the container when it stops
+      // "--rm", // Automatically remove the container when it stops
       "--env-file",
-      ".env", // Pass environment variables
+      // ".env", // Pass environment variables
+      envFile,
       "--name",
       containerName,
       buildTag,
