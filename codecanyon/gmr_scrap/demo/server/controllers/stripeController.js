@@ -20,10 +20,6 @@ exports.createCheckoutSession = async (req, res) => {
 
   unit_amount = unit_amount * costs;
 
-  console.log("currency", currency);
-  console.log("costs", costs);
-  console.log("unit_amount", unit_amount);
-
   try {
     const { url } = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

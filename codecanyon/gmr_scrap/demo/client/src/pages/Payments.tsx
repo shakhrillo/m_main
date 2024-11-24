@@ -67,8 +67,8 @@ function Payments() {
         const currency = data.currency
         const minimumCount = 99
 
-        const minimumCost = currency === "gbp" ? 0.3 : 0.5
-        if (["usd", "eur", "cad", "gbp"].includes(currency)) {
+        const minimumCost = 0.5
+        if (["usd", "eur", "cad"].includes(currency)) {
           const amount = Math.max(minimumCount, Math.ceil(minimumCost / costs))
           setAmount(amount.toString())
           setTotalPrice((amount * costs).toFixed(2))

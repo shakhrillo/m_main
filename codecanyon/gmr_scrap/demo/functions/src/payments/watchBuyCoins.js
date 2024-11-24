@@ -1,15 +1,13 @@
 const { getCheckoutSession } = require("../utils/apiUtils");
 
-async function watchBuyCoins(event) {
+const watchBuyCoins = async ({ params: { userId }, data }) => {
   try {
-    const { userId } = event.params;
-    const { amount } = event.data.data();
-    const ref = event.data.ref;
+    const { amount } = data.data();
     const { url } = await getCheckoutSession({ userId, amount });
-    await ref.update({ url });
+    await data.ref.update({ url });
   } catch (error) {
     console.error("Error in watchBuyCoins:", error);
   }
-}
+};
 
 module.exports = watchBuyCoins;

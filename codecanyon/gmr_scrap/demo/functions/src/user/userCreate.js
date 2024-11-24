@@ -1,15 +1,15 @@
 const admin = require("firebase-admin");
 
-async function userCreate(user) {
-  const db = admin.firestore();
-  const batch = db.batch();
-  const userRef = db.collection("users").doc(user.uid);
-  batch.set(userRef, {
-    email: user.email,
-    displayName: user.displayName,
-    coins: 0,
-  });
-  await batch.commit();
-}
+const userCreate = async ({ uid, email, displayName }) => {
+  await admin
+    .firestore()
+    .batch()
+    .set(admin.firestore().collection("users").doc(uid), {
+      email,
+      displayName,
+      coins: 0,
+    })
+    .commit();
+};
 
 module.exports = userCreate;
