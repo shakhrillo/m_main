@@ -10,6 +10,7 @@ function Payments() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState([] as any[])
+  const [minAmount, setMinAmount] = useState("100")
   const [amount, setAmount] = useState("100")
   const [currency, setCurrency] = useState("usd")
   const [totalPrice, setTotalPrice] = useState("0")
@@ -74,7 +75,7 @@ function Payments() {
           setTotalPrice((amount * costs).toFixed(2))
         }
         setCurrency(currency)
-        console.log(data)
+        setMinAmount(minimumCount.toString())
       }
     })
 
@@ -101,20 +102,41 @@ function Payments() {
       </div>
       <div className="card">
         <div className="card-body">
-          <button
-            onClick={async () => {
-              setIsLoading(true)
-              const coindId =
-                (await buyCoins(user!.uid, Number(amount) * 100)) || ""
-              setCoinId(coindId)
-              setIsLoading(false)
-            }}
-            disabled={isLoading}
-            className="button"
-          >
-            Buy {amount} coins ({totalPrice} {currency})
-          </button>
-          <br />
+          <form>
+            <div className="form-wrap">
+              <label htmlFor="amount" className="form-label">
+                Amount
+              </label>
+              <input
+                type="number"
+                id="amount"
+                value={amount}
+                onChange={e => {
+                  const value = e.target.value
+                  setAmount(value)
+                }}
+                className="form-select"
+                min={minAmount}
+              />
+              <p>
+                Min: {minAmount} coins, Total: {totalPrice} {currency}
+              </p>
+            </div>
+            <button
+              onClick={async () => {
+                setIsLoading(true)
+                const coindId =
+                  (await buyCoins(user!.uid, Number(amount) * 100)) || ""
+                setCoinId(coindId)
+                setIsLoading(false)
+              }}
+              disabled={isLoading}
+              className="button"
+            >
+              Buy {amount} coins ({totalPrice} {currency})
+            </button>
+          </form>
+          <hr />
           <table className="table">
             <thead>
               <tr>

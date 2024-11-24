@@ -16,16 +16,12 @@ const Users: React.FC = () => {
   useEffect(() => {
     if (!firestore) return
     const usersRef = collection(firestore, "users")
-    console.log(firestore)
 
     const unsubscribe = onSnapshot(usersRef, snapshot => {
       const usersData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }))
-
-      console.log(usersData)
-
       setUsers(usersData as User[])
     })
 
