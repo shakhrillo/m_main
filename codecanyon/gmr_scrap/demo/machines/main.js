@@ -115,6 +115,7 @@ async function init() {
       isFirstTime = true;
       if (limit && count >= limit) {
         console.log("Limit reached...");
+        clearInterval(intervalRecordTime);
         complete();
         await browser.close();
         subscription.unsubscribe();
