@@ -3,24 +3,8 @@ const { getStorage } = require("firebase-admin/storage");
 const { Storage } = require("@google-cloud/storage");
 
 const uploadFile = async (fileBuffer, destination) => {
-  // const file = new File([fileBuffer], destination);
-  // const templateContent = readFileSync(file);
-
-  // http://127.0.0.1:9199/v0/b/fir-scrapp.firebasestorage.app/o?name=migzant-365.png
-  // const img = await fetch(
-  //   `http://host.docker.internal:9199/v0/b/fir-scrapp.firebasestorage.app/o?name=${destination}`,
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/octet-stream",
-  //     },
-  //     body: fileBuffer,
-  //   }
-  // );
-
-  // const storage = getStorage();
   const storage = new Storage({
-    apiEndpoint: "http://host.docker.internal:9199", // Use HTTP for local emulator
+    apiEndpoint: "http://host.docker.internal:9199",
   });
   const bucket = storage.bucket("fir-scrapp.appspot.com");
   const file = bucket.file(destination);
@@ -30,10 +14,7 @@ const uploadFile = async (fileBuffer, destination) => {
     public: "yes",
   });
 
-  // http://127.0.0.1:4000/storage/fir-scrapp.appspot.com/lBrPfDyEPUmpdl1ObfJtWKiQZxhy/8NEJHzFFmWV6Yb7c9#:~:text=Name-,screenshot,-.png
   const publicUrl = file.publicUrl();
-
-  console.log(`publicUrl: ${publicUrl}`);
 
   return publicUrl.replace("host.docker.internal", "localhost");
 
