@@ -17,15 +17,15 @@ import {
 // }
 
 const app = initializeApp({
-  apiKey: "fake-api-key", // This can be any string when using the emulator
-  authDomain: "localhost", // Optional for emulator
-  projectId: "demo-project-id", // Required for Firestore emulator
+  apiKey: "fake-api-key",
+  authDomain: "localhost",
+  projectId: "fir-scrapp",
   storageBucket: "map-review-scrap.appspot.com",
 })
 const auth: Auth = getAuth()
 const firestore: Firestore = getFirestore()
 
-connectFirestoreEmulator(firestore, "localhost", 9100)
-connectAuthEmulator(auth, "http://localhost:9099")
+connectFirestoreEmulator(firestore, "127.0.0.1", 9100)
+connectAuthEmulator(auth, "http://127.0.0.1:9099")
 
 export { auth, firestore, app }

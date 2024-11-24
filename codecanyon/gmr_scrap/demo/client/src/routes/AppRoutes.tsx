@@ -15,9 +15,10 @@ import Help from "../pages/Help"
 import Payments from "../pages/Payments"
 import ReviewsList from "../pages/reviews/ReviewsList"
 import SingleReview from "../pages/reviews/SingleReview"
+import Scrap from "../pages/Scrap"
 import Settings from "../pages/Settings"
 import User from "../pages/User"
-import Scrap from "../pages/Scrap"
+import Users from "../pages/Users"
 
 const reviewsRoutes = {
   path: "reviews",
@@ -36,6 +37,7 @@ const dashboardRoutes = {
     reviewsRoutes,
     { path: "scrap", element: <Scrap /> },
     { path: "user", element: <User /> },
+    { path: "users", element: <Users /> },
     { path: "settings", element: <Settings /> },
     { path: "help", element: <Help /> },
     { path: "payments", element: <Payments /> },

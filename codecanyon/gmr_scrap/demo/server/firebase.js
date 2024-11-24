@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
-  projectId: "demo-project-id",
+  projectId: "fir-scrapp",
 });
 
 // Connect Firestore to the Emulator

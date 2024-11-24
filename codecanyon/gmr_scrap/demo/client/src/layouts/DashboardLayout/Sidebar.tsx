@@ -3,6 +3,7 @@ import logoImg from "../../assets/images/logo.svg"
 import searchIcon from "../../assets/icons/search.svg"
 import serverBoltIcon from "../../assets/icons/server-bolt.svg"
 import userIcon from "../../assets/icons/user.svg"
+import usersIcon from "../../assets/icons/users.svg"
 import creditCardIcon from "../../assets/icons/credit-card.svg"
 import settingsIcon from "../../assets/icons/settings.svg"
 import helpIcon from "../../assets/icons/help.svg"
@@ -14,6 +15,7 @@ const navLinks = [
   { path: "/scrap", label: "Scrap", icon: searchIcon },
   { path: "/reviews", label: "Reviews", icon: serverBoltIcon },
   { path: "/user", label: "User", icon: userIcon },
+  { path: "/users", label: "Users", icon: usersIcon },
   { path: "/payments", label: "Payments", icon: creditCardIcon },
   { path: "/settings", label: "Settings", icon: settingsIcon },
   { path: "/help", label: "Help", icon: helpIcon },
