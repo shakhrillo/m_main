@@ -10,6 +10,7 @@ import helpIcon from "../../assets/icons/help.svg"
 import logoutIcon from "../../assets/icons/logout.svg"
 import { useMenu } from "../../context/MenuContext/MenuContext"
 import hideMenuIcon from "../../assets/icons/x-lg.svg"
+import cloudIcon from "../../assets/icons/cloud.svg"
 
 const navLinks = [
   { path: "/scrap", label: "Scrap", icon: searchIcon },
@@ -17,6 +18,7 @@ const navLinks = [
   { path: "/user", label: "User", icon: userIcon },
   { path: "/users", label: "Users", icon: usersIcon },
   { path: "/payments", label: "Payments", icon: creditCardIcon },
+  { path: "/machines", label: "Machines", icon: cloudIcon },
   { path: "/settings", label: "Settings", icon: settingsIcon },
   { path: "/help", label: "Help", icon: helpIcon },
   {

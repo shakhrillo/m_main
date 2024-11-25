@@ -19,6 +19,7 @@ import Scrap from "../pages/Scrap"
 import Settings from "../pages/Settings"
 import User from "../pages/User"
 import Users from "../pages/Users"
+import Machines from "../pages/Machines"
 
 const reviewsRoutes = {
   path: "reviews",
@@ -38,6 +39,7 @@ const dashboardRoutes = {
     { path: "scrap", element: <Scrap /> },
     { path: "user", element: <User /> },
     { path: "users", element: <Users /> },
+    { path: "machines", element: <Machines /> },
     { path: "settings", element: <Settings /> },
     { path: "help", element: <Help /> },
     { path: "payments", element: <Payments /> },
