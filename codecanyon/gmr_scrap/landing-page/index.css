@@ -343,7 +343,7 @@
     color: rgba(175, 175, 175, 1);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .heading-lg {
         font-size: 48px !important;
     }
