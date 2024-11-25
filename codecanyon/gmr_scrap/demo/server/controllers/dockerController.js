@@ -10,12 +10,12 @@ function dockerInfo() {
   return new Promise((resolve, reject) => {
     let result = "";
     const command = "docker";
-    const args = ["info"];
+    const args = ["info", "--format", "{{json .}}"];
 
     const info = spawn(command, args);
 
     info.stdout.on("data", (data) => {
-      result += data.toString();
+      result = data.toString();
       console.log(`stdout: ${data}`);
     });
 
@@ -23,10 +23,9 @@ function dockerInfo() {
       console.error(`stderr: ${data}`);
     });
 
-    info.on("close", (code) => {
+    info.on("close", async (code) => {
       if (code === 0) {
-        console.log("Docker info");
-        setDockerInfo(result);
+        await setDockerInfo(result);
         resolve(result);
       } else {
         reject(new Error("Failed to get Docker info"));
