@@ -28,6 +28,8 @@ module.exports = {
   deleteMachine: (data) =>
     makeRequest(`${endPointURL}/api/machines`, "DELETE", data),
   dockerInfo: () => makeRequest(`${endPointURL}/api/docker`, "GET", {}),
+  dockerUsageInfo: () =>
+    makeRequest(`${endPointURL}/api/docker/usage`, "GET", {}),
   submitScrapRequest: (data) =>
     makeRequest(`${endPointURL}/api/scrap`, "POST", data),
   submitScrapInfo: (data) =>

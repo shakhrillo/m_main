@@ -4,7 +4,7 @@ const {
   addMachineStatus,
   updateMachineStatus,
 } = require("../services/machinesService");
-const { setDockerInfo } = require("../services/dockerService");
+const { setDockerInfo, setDockerUsage } = require("../services/dockerService");
 
 function dockerInfo() {
   return new Promise((resolve, reject) => {
@@ -40,12 +40,14 @@ function dockerInfo() {
 
 function analyzeSystem() {
   return new Promise((resolve, reject) => {
+    let result = [];
     const command = "docker";
-    const args = ["system", "df"];
+    const args = ["system", "df", "--format", "{{json .}}"];
 
     const analyze = spawn(command, args);
 
     analyze.stdout.on("data", (data) => {
+      result = data.toString();
       console.log(`stdout: ${data}`);
     });
 
@@ -56,6 +58,7 @@ function analyzeSystem() {
     analyze.on("close", (code) => {
       if (code === 0) {
         console.log("Analyzed system");
+        setDockerUsage(result);
         resolve();
       } else {
         reject(new Error("Failed to analyze system"));

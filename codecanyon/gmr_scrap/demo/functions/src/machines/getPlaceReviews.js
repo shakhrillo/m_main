@@ -1,4 +1,4 @@
-const { submitScrapRequest } = require("../utils/apiUtils");
+const { submitScrapRequest, dockerUsageInfo } = require("../utils/apiUtils");
 
 const getPlaceReview = async (event) => {
   const snapshot = event.data;
@@ -16,6 +16,7 @@ const getPlaceReview = async (event) => {
 
   console.log("Review posted:", reviewResponse);
 
+  await dockerUsageInfo();
   await snapshot.ref.update({ ...reviewResponse, processed: true });
 };
 

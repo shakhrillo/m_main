@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 const {
   onDocumentCreated,
   onDocumentWritten,
+  onDocumentUpdated,
 } = require("firebase-functions/firestore");
 const watchBuyCoins = require("./src/payments/watchBuyCoins");
 const userCreate = require("./src/user/userCreate");
@@ -13,7 +14,7 @@ const watchSettings = require("./src/settings/watchSettings");
 
 admin.initializeApp();
 
-exports.appInit = onDocumentWritten("app/{appId}", watchSettings);
+exports.appInit = onDocumentUpdated("app/{appId}", watchSettings);
 exports.userCreate = functions.auth.user().onCreate(userCreate);
 exports.watchBuyCoins = onDocumentCreated(
   "users/{userId}/buyCoins/{coinId}",

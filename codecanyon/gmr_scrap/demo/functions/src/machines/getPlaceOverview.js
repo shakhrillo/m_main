@@ -1,4 +1,4 @@
-const { submitScrapInfo } = require("../utils/apiUtils");
+const { submitScrapInfo, dockerUsageInfo } = require("../utils/apiUtils");
 
 const getPlaceOverview = async (event) => {
   const snapshot = event.data;
@@ -15,6 +15,7 @@ const getPlaceOverview = async (event) => {
     userId: event.params.userId,
   });
 
+  await dockerUsageInfo();
   await snapshot.ref.update(info);
   console.log("Info posted:", info);
 };

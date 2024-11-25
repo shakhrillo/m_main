@@ -1,12 +1,17 @@
-const { dockerInfo } = require("../utils/apiUtils");
+const { dockerInfo, dockerUsageInfo } = require("../utils/apiUtils");
 
 const watchSettings = async (event) => {
-  console.log("App init", event.params.appId);
   const appId = event.params.appId;
   const document = event.data.after.data();
-  if (appId === "settings") {
-    const info = await dockerInfo();
-    console.log("Docker info", info);
+  console.log("calling...");
+  if (document.refresh) {
+    console.log("Refreshing app", appId);
+    dockerInfo();
+    dockerUsageInfo();
+    const ref = event.data.after.ref;
+    await ref.update({
+      refresh: false,
+    });
   }
 };
 

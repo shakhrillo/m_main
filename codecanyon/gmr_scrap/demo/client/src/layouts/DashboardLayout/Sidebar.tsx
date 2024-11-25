@@ -8,6 +8,7 @@ import creditCardIcon from "../../assets/icons/credit-card.svg"
 import settingsIcon from "../../assets/icons/settings.svg"
 import helpIcon from "../../assets/icons/help.svg"
 import infoIcon from "../../assets/icons/info-circle.svg"
+import usageIcon from "../../assets/icons/device-cd-card.svg"
 import logoutIcon from "../../assets/icons/logout.svg"
 import { useMenu } from "../../context/MenuContext/MenuContext"
 import hideMenuIcon from "../../assets/icons/x-lg.svg"
@@ -23,6 +24,7 @@ const navLinks = [
   { path: "/settings", label: "Settings", icon: settingsIcon },
   { path: "/help", label: "Help", icon: helpIcon },
   { path: "/info", label: "Info", icon: infoIcon },
+  { path: "/usage", label: "Usage", icon: usageIcon },
   {
     path: "/auth/logout",
     label: "Logout",

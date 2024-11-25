@@ -21,6 +21,7 @@ import User from "../pages/User"
 import Users from "../pages/Users"
 import Machines from "../pages/Machines"
 import Info from "../pages/Info"
+import Usage from "../pages/Usage"
 
 const reviewsRoutes = {
   path: "reviews",
@@ -44,6 +45,7 @@ const dashboardRoutes = {
     { path: "settings", element: <Settings /> },
     { path: "help", element: <Help /> },
     { path: "info", element: <Info /> },
+    { path: "usage", element: <Usage /> },
     { path: "payments", element: <Payments /> },
   ],
 }
