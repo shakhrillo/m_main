@@ -7,23 +7,6 @@
 }
 
 /* Utility Classes */
-.flex {
-    display: flex;
-}
-
-.flex-center {
-    justify-content: center;
-    align-items: center;
-}
-
-.flex-column {
-    flex-direction: column;
-}
-
-.flex-start {
-    align-items: start;
-}
-
 .spacing-12 {
     gap: 12px;
 }
@@ -123,42 +106,6 @@
 .heading-lg {
     font-size: 84px;
     font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    .heading-lg {
-        font-size: 48px !important;
-    }
-
-    .geo-h2 {
-        font-size: 36px !important;
-    }
-
-    .description-content {
-        display: none;
-    }
-
-    .trusted-img {
-        width: 100px;
-        height: 40px;
-    }
-
-    .gap-md-24 {
-        gap: 24px;
-    }
-
-    .testimonal-content-single {
-        justify-content: left !important;
-    }
-
-    .testimonal-content-card {
-        width: 405px !important;
-    }
-
-    .testimonal-content-single::before,
-    .testimonal-content-single::after {
-        display: none;
-    }
 }
 
 .medium-subtitle {
@@ -372,4 +319,63 @@
     margin-top: 56px;
     text-align: center;
     color: rgba(175, 175, 175, 1);
+}
+
+@media (max-width: 768px) {
+    .heading-lg {
+        font-size: 48px !important;
+    }
+
+    .geo-h2 {
+        font-size: 36px !important;
+    }
+
+    .description-content {
+        display: none;
+    }
+
+    .trusted-img {
+        width: 100px;
+        height: 40px;
+    }
+
+    .spacing-md-24 {
+        gap: 24px;
+    }
+
+    .testimonal-content-single {
+        justify-content: left !important;
+    }
+
+    .testimonal-content-card {
+        width: 405px !important;
+    }
+
+    .testimonal-content-single::before,
+    .testimonal-content-single::after {
+        display: none;
+    }
+}
+
+.geo-carousel {
+    overflow-x: hidden;
+    white-space: nowrap;
+    padding: 10px;
+    width: 100%;
+}
+
+.geo-carousel-content {
+    display: inline-flex;
+    gap: 10px;
+}
+
+.geo-carousel-content-item {
+    min-width: 500px;
+    height: 150px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
