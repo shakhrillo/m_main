@@ -6,8 +6,9 @@ import {
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { doc, onSnapshot } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
-import loadIcon from "../../assets/icons/loader-2.svg"
+// import loadIcon from "../../assets/icons/loader-2.svg"
 import StarRating from "../star-rating"
+import Loader from "../loader"
 
 const steps = [
   {
@@ -159,7 +160,7 @@ export const ReviewsForm = () => {
               <>
                 <div className="card my-5">
                   <div className="card-body d-flex justify-content-center">
-                    <img src={loadIcon} alt="" width={70} />
+                    <Loader size="lg" />
                   </div>
                 </div>
                 <p>
