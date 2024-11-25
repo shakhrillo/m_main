@@ -123,6 +123,9 @@
     width: 100%;
     height: 680px;
     border-radius: 6px;
+    background-image: url("./icons/banner-1.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .social-proof {
@@ -136,19 +139,28 @@
 
 .features-content {
     height: 406px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.effortless-customer {
+    background-image: url("./icons/banner-2.png");
+}
+
+.dynamic-email {
+    background-image: url("./icons/banner-3.png");
+}
+
+.enhanced-team {
+    background-image: url("./icons/banner-4.png");
+}
+
+.data-driven {
+    background-image: url("./icons/banner-5.png");
 }
 
 .advantage {
     padding: 148px 0;
-}
-
-.advantage-carousel-card {
-    background-color: rgba(249, 249, 249, 1);
-    border: 1px solid rgba(228, 228, 228, 1);
-    border-radius: 8px;
-    padding: 24px;
-    width: 515px;
-    height: 466px;
 }
 
 .geo-h6 {
@@ -181,6 +193,16 @@
 
 .integration-card-content {
     height: 293px;
+    background-size: contain;
+    background-position: center;
+}
+
+.integrated-apps {
+    background-image: url("./icons/banner-9.png");
+}
+
+.security {
+    background-image: url("./icons/banner-10.png");
 }
 
 .testimonal {
@@ -359,23 +381,32 @@
 
 .geo-carousel {
     overflow-x: hidden;
-    white-space: nowrap;
     padding: 10px;
     width: 100%;
 }
 
 .geo-carousel-content {
     display: inline-flex;
-    gap: 10px;
+    gap: 20px;
 }
 
 .geo-carousel-content-item {
-    min-width: 500px;
-    height: 150px;
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    text-align: center;
+    width: 515px;
+    background-color: rgba(249, 249, 249, 1);
+    border: 1px solid rgba(228, 228, 228, 1);
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.geo-carousel-content-item-content {
+    width: 467px;
+    height: 320px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.efforless {
+    background-image: url("./icons/banner-6.png");
 }
