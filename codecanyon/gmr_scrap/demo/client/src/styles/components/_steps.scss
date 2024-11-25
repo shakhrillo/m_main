@@ -77,12 +77,12 @@
       }
       & ~ .progress__step {
         &::after {
-          border-color: $primary-color;
+          border-color: #eee;
         }
 
         &::before,
         &::after {
-          background-color: $primary-lighter;
+          background-color: #ccc;
         }
       }
 
