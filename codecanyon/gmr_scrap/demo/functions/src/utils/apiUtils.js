@@ -27,7 +27,7 @@ const makeRequest = async (url, method, data) => {
 module.exports = {
   deleteMachine: (data) =>
     makeRequest(`${endPointURL}/api/machines`, "DELETE", data),
-  dockerInfo: () => makeRequest(`${endPointURL}/api/docker`, "GET"),
+  dockerInfo: () => makeRequest(`${endPointURL}/api/docker`, "GET", {}),
   submitScrapRequest: (data) =>
     makeRequest(`${endPointURL}/api/scrap`, "POST", data),
   submitScrapInfo: (data) =>

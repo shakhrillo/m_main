@@ -4,6 +4,7 @@ const {
   addMachineStatus,
   updateMachineStatus,
 } = require("../services/machinesService");
+const { setDockerInfo } = require("../services/dockerService");
 
 function dockerInfo() {
   return new Promise((resolve, reject) => {
@@ -25,7 +26,8 @@ function dockerInfo() {
     info.on("close", (code) => {
       if (code === 0) {
         console.log("Docker info");
-        resolve();
+        setDockerInfo(result);
+        resolve(result);
       } else {
         reject(new Error("Failed to get Docker info"));
       }
