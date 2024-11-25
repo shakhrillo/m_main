@@ -28,8 +28,6 @@ COPY . .
 # Expose the app's port
 EXPOSE 3000
 
-# node node_modules/puppeteer/install.mjs
-# Run the command before starting the app
 RUN node node_modules/puppeteer/install.mjs
 
 # Default command

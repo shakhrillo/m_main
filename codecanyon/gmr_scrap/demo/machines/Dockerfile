@@ -1,30 +1,34 @@
+# Use a lightweight Node.js base image
 FROM node:slim
 
-# We don't need the standalone Chromium
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-# No need -+
+# Install required tools, dependencies for Chromium, and fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget gnupg ca-certificates \
+    fonts-liberation \
+    libasound2 libatk1.0-0 libcups2 libdbus-1-3 libx11-xcb1 \
+    libxcomposite1 libxdamage1 libxrandr2 \
+    libgbm-dev libgtk-3-0 libpango-1.0-0 libcairo2 \
+    libnss3 libxtst6 xdg-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome Stable and fonts
-# Note: this installs the necessary libs to make the browser work with Puppeteer.
-RUN apt-get update && apt-get install gnupg wget -y && \
-  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-  apt-get update && \
-  apt-get install google-chrome-stable -y --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
+# Optional: Set environment variable to skip Chromium download if already present in `node_modules`
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Set the working directory
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
+# Copy package.json and package-lock.json, then install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy application code
+# Copy the application code
 COPY . .
 
 # Expose the app's port
-EXPOSE 4000
+EXPOSE 3000
+
+RUN node node_modules/puppeteer/install.mjs
 
 # Default command
-CMD ["npm", "start"]
+CMD ["node", "main.js"]

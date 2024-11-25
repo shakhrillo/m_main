@@ -45,7 +45,6 @@ function buildImage(tag = "", isInfo = false) {
         "linux/amd64",
         "-t",
         tag,
-        "--no-cache",
         ".",
       ];
 
