@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const dockerRoutes = require("./routes/dockerRoutes");
 const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/stripe", stripeRoutes);
 app.use(express.json());
 
+app.use("/api/docker", dockerRoutes);
 app.use("/api/machines", machinesRoutes);
 app.use("/api/scrap", scraperRoutes);
 

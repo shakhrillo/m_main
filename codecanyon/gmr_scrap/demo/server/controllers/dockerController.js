@@ -5,6 +5,68 @@ const {
   updateMachineStatus,
 } = require("../services/machinesService");
 
+function dockerInfo() {
+  return new Promise((resolve, reject) => {
+    let result = "";
+    const command = "docker";
+    const args = ["info"];
+
+    const info = spawn(command, args);
+
+    info.stdout.on("data", (data) => {
+      result += data.toString();
+      console.log(`stdout: ${data}`);
+    });
+
+    info.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    info.on("close", (code) => {
+      if (code === 0) {
+        console.log("Docker info");
+        resolve();
+      } else {
+        reject(new Error("Failed to get Docker info"));
+      }
+    });
+
+    info.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
+function analyzeSystem() {
+  return new Promise((resolve, reject) => {
+    const command = "docker";
+    const args = ["system", "df"];
+
+    const analyze = spawn(command, args);
+
+    analyze.stdout.on("data", (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    analyze.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    analyze.on("close", (code) => {
+      if (code === 0) {
+        console.log("Analyzed system");
+        resolve();
+      } else {
+        reject(new Error("Failed to analyze system"));
+      }
+    });
+
+    analyze.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
 function removeUnusedImages() {
   return new Promise((resolve, reject) => {
     const command = "docker";
@@ -286,6 +348,8 @@ function startContainer(
 }
 
 module.exports = {
+  dockerInfo,
+  analyzeSystem,
   buildImage,
   removeImage,
   listContainers,
