@@ -8,6 +8,7 @@ const {
   buildImage,
   startContainer,
   removeImage,
+  removeUnusedImages,
 } = require("../controllers/dockerController");
 
 // Helper function for sanitization
@@ -56,6 +57,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     );
     if (isInfo) await removeImage(buildTag);
 
+    // await removeUnusedImages();
     res.json({ message: "Container started", ...container });
   } catch (error) {
     logger.error(`Error: ${error.message}`);

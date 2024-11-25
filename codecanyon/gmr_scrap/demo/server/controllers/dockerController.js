@@ -5,6 +5,30 @@ const {
   updateMachineStatus,
 } = require("../services/machinesService");
 
+function removeUnusedImages() {
+  return new Promise((resolve, reject) => {
+    const command = "docker";
+    const args = ["system", "prune", "-a", "-f"];
+
+    const prune = spawn(command, args);
+
+    prune.on("close", (code) => {
+      if (code === 0) {
+        console.log("--".repeat(50));
+        console.log("Removed unused images");
+        console.log("--".repeat(50));
+        resolve();
+      } else {
+        reject(new Error("Failed to remove unused images"));
+      }
+    });
+
+    prune.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
 function buildImage(tag = "", isInfo = false) {
   return new Promise(async (resolve, reject) => {
     await addMachineStatus(tag, { status: "building" });
@@ -21,8 +45,8 @@ function buildImage(tag = "", isInfo = false) {
         "linux/amd64",
         "-t",
         tag,
+        "--no-cache",
         ".",
-        "--force-rm",
       ];
 
       const build = spawn(command, args, {
@@ -30,12 +54,18 @@ function buildImage(tag = "", isInfo = false) {
       });
 
       build.stdout.on("data", (data) => {
-        updateMachineStatus(tag, { status: "building", message: data });
+        updateMachineStatus(tag, {
+          status: "building",
+          message: data.toString(),
+        });
         console.log(`stdout: ${data}`);
       });
 
       build.stderr.on("data", (data) => {
-        updateMachineStatus(tag, { status: "building", message: data });
+        updateMachineStatus(tag, {
+          status: "building",
+          message: data.toString(),
+        });
         console.error(`stderr: ${data}`);
       });
 
@@ -53,7 +83,10 @@ function buildImage(tag = "", isInfo = false) {
     } catch (error) {
       console.log("--".repeat(50));
       console.log("error", error);
-      updateMachineStatus(tag, { status: "failed" });
+      updateMachineStatus(tag, {
+        status: "failed",
+        message: JSON.stringify(error),
+      });
       reject(error);
     }
   });
@@ -259,4 +292,5 @@ module.exports = {
   listContainers,
   removeContainer,
   startContainer,
+  removeUnusedImages,
 };

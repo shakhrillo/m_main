@@ -5,9 +5,9 @@ async function launchBrowser() {
     return await puppeteer.launch({
       headless: true,
       defaultViewport: null,
-      executablePath: "/usr/bin/google-chrome",
+      // executablePath: "/usr/bin/google-chrome-stable",
       protocolTimeout: 60000,
-      args: ["--no-sandbox"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
   } catch (error) {
     console.error("Error launching browser:", error);

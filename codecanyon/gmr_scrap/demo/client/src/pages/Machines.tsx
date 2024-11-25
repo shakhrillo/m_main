@@ -37,20 +37,26 @@ const Machines: React.FC = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>Message</th>
+                <th>Name</th>
+                <th>Last Message</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {machines.map(machine => (
                 <tr key={machine.id}>
-                  <td>-</td>
+                  <td>{machine.id.slice(0, 8)}...</td>
+                  <td>{machine.message.slice(0, 30)}...</td>
                   <td>{machine.status}</td>
                   <td>{machine.createdAt.toDate().toLocaleString()}</td>
                   <td>{machine.updatedAt.toDate().toLocaleString()}</td>
+                  <td>
+                    <button className="button">Remove</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
