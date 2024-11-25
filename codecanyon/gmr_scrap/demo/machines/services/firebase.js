@@ -5,7 +5,7 @@ require("dotenv").config();
 //   Buffer.from(process.env.FIREBASE_KEY_BASE64, "base64").toString("utf-8")
 // );
 
-console.log("--->", process.env["FIRESTORE_EMULATOR_HOST"]);
+console.log("--+->", process.env["FIRESTORE_EMULATOR_HOST"]);
 
 const app = admin.initializeApp();
 // ({

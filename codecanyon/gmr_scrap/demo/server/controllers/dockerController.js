@@ -1,8 +1,13 @@
 const { spawn } = require("child_process");
 const path = require("path");
+const {
+  addMachineStatus,
+  updateMachineStatus,
+} = require("../services/machinesService");
 
 function buildImage(tag = "", isInfo = false) {
   return new Promise(async (resolve, reject) => {
+    await addMachineStatus(tag, { status: "building" });
     await removeImage(tag);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -20,25 +25,27 @@ function buildImage(tag = "", isInfo = false) {
         "--force-rm",
       ];
 
-      console.log("args", args.join(" "));
-
       const build = spawn(command, args, {
         cwd: "../machines",
       });
 
       build.stdout.on("data", (data) => {
+        updateMachineStatus(tag, { status: "building", message: data });
         console.log(`stdout: ${data}`);
       });
 
       build.stderr.on("data", (data) => {
+        updateMachineStatus(tag, { status: "building", message: data });
         console.error(`stderr: ${data}`);
       });
 
       build.on("close", (code) => {
         if (code === 0) {
+          updateMachineStatus(tag, { status: "built" });
           console.log(`Docker build completed successfully for tag: ${tag}`);
           resolve();
         } else {
+          updateMachineStatus(tag, { status: "failed" });
           console.error(`Docker build failed for tag: ${tag}`);
           reject(new Error(`Docker build failed for tag: ${tag}`));
         }
@@ -46,6 +53,7 @@ function buildImage(tag = "", isInfo = false) {
     } catch (error) {
       console.log("--".repeat(50));
       console.log("error", error);
+      updateMachineStatus(tag, { status: "failed" });
       reject(error);
     }
   });
@@ -97,6 +105,7 @@ function removeImageById(imageId) {
 
 function removeImage(tag = "") {
   return new Promise(async (resolve, reject) => {
+    updateMachineStatus(tag, { status: "removing" });
     const containers = await listContainers(tag);
     console.log("containers>>>", containers);
     await Promise.all(
@@ -115,6 +124,8 @@ function removeImage(tag = "") {
         await removeImageById(imageId);
       })
     );
+
+    updateMachineStatus(tag, { status: "removed" });
 
     resolve();
   });
