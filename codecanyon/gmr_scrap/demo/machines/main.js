@@ -68,9 +68,9 @@ async function complete() {
   console.log(`CSV URL: ${csvUrl}`);
   console.log(`JSON URL: ${jsonUrl}`);
 
-  if (browser) {
-    await browser.close();
-  }
+  // if (browser) {
+  //   await browser.close();
+  // }
 }
 
 async function init() {

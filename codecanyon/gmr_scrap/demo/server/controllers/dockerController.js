@@ -320,7 +320,7 @@ function startContainer(
     const args = [
       "run",
       ...(isRunBackground ? ["-d"] : []), // Detached mode (runs in the background)
-      "--rm", // Automatically remove the container when it stops
+      // "--rm", // Automatically remove the container when it stops
       "--env-file",
       // ".env", // Pass environment variables
       envFile,

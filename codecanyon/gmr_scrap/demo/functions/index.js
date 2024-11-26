@@ -12,6 +12,7 @@ const getPlaceOverview = require("./src/machines/getPlaceOverview");
 const getPlaceReview = require("./src/machines/getPlaceReviews");
 const watchSettings = require("./src/settings/watchSettings");
 const watchMachine = require("./src/machines/watchMachine");
+const watchReview = require("./src/machines/watchReview");
 
 admin.initializeApp();
 
@@ -26,6 +27,11 @@ exports.watchNewReview = onDocumentCreated(
   "users/{userId}/reviews/{reviewId}",
   getPlaceReview
 );
+exports.watchNewReview = onDocumentUpdated(
+  "users/{userId}/reviews/{reviewId}",
+  watchReview
+);
+
 exports.watchReviewOverview = onDocumentCreated(
   "users/{userId}/reviewOverview/{reviewId}",
   getPlaceOverview
