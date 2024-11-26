@@ -7,10 +7,10 @@ const {
 const { setDockerInfo, setDockerUsage } = require("../services/dockerService");
 
 function dockerInfo() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let result = "";
     const command = "docker";
-    const args = ["info", "--format", "{{json .}}"];
+    const args = ["system", "info"];
 
     const info = spawn(command, args);
 
@@ -40,7 +40,7 @@ function dockerInfo() {
 
 function analyzeSystem() {
   return new Promise((resolve, reject) => {
-    let result = [];
+    let result = "";
     const command = "docker";
     const args = ["system", "df", "--format", "{{json .}}"];
 
@@ -57,7 +57,6 @@ function analyzeSystem() {
 
     analyze.on("close", (code) => {
       if (code === 0) {
-        console.log("Analyzed system");
         setDockerUsage(result);
         resolve();
       } else {

@@ -27,6 +27,10 @@ hr {
   display: flex;
 }
 
+.text-wrap {
+  white-space: pre-wrap;
+}
+
 .container {
   flex: 1;
   padding-left: 230px;
