@@ -4,11 +4,19 @@ import {
   startExtractGmapReviewsOverview,
 } from "../../services/firebaseService"
 import { useFirebase } from "../../contexts/FirebaseProvider"
-import { doc, onSnapshot } from "firebase/firestore"
+import {
+  collection,
+  doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 // import loadIcon from "../../assets/icons/loader-2.svg"
 import StarRating from "../star-rating"
 import Loader from "../loader"
+import { CodeBlock, dracula } from "react-code-blocks"
 
 const steps = [
   {
@@ -51,6 +59,7 @@ export const ReviewsForm = () => {
     onlyGoogleReviews: false,
   })
   const [overviewId, setOverviewId] = useState("")
+  const [pendingMessages, setPendingMessages] = useState([])
 
   const handleInputChange = (name: string, value: string | number) =>
     setScrap(prev => ({ ...prev, [name]: value }))
@@ -107,6 +116,26 @@ export const ReviewsForm = () => {
   }, [firestore, user, overviewId])
 
   useEffect(() => {
+    if (!firestore || !user || !overviewId) return
+    setPendingMessages([])
+    const collectionRef = query(
+      collection(
+        firestore,
+        `users/${user.uid}/reviewOverview/${overviewId}/status`,
+      ),
+      orderBy("createdAt", "desc"),
+      limit(15),
+    )
+    const unsubscribe = onSnapshot(collectionRef, snapshot => {
+      const messages = snapshot.docs.map(doc => doc.data())
+      console.log("messages", messages)
+      setPendingMessages(messages as any)
+    })
+
+    return unsubscribe
+  }, [firestore, user, overviewId])
+
+  useEffect(() => {
     function validateUrl(url: string) {
       if (!url) return false
       const regex = new RegExp("^https://maps\\.app\\.goo\\.gl/[\\w-]+$")
@@ -159,8 +188,21 @@ export const ReviewsForm = () => {
             {!info.title || loading ? (
               <>
                 <div className="card my-5">
-                  <div className="card-body d-flex justify-content-center">
-                    <Loader size="lg" />
+                  <div className="card-body d-flex-column align-items-center">
+                    <Loader />
+                    <CodeBlock
+                      customStyle={{
+                        width: "100%",
+                      }}
+                      text={pendingMessages
+                        .map((e: any) => e.message.slice(0, 50))
+                        .join("\n")}
+                    />
+                    {/* <ul>
+                      {pendingMessages.map(({ message }, i) => (
+                        <li key={i}>{message}</li>
+                      ))}
+                    </ul> */}
                   </div>
                 </div>
                 <p>

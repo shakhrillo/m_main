@@ -5,6 +5,7 @@ const {
   updateMachineStatus,
 } = require("../services/machinesService");
 const { setDockerInfo, setDockerUsage } = require("../services/dockerService");
+const { db } = require("../firebase");
 
 function dockerInfo() {
   return new Promise(async (resolve, reject) => {
@@ -93,7 +94,7 @@ function removeUnusedImages() {
   });
 }
 
-function buildImage(tag = "", isInfo = false) {
+function buildImage(tag = "", isInfo = false, ref) {
   return new Promise(async (resolve, reject) => {
     await addMachineStatus(tag, { status: "building" });
     await removeImage(tag);
@@ -116,12 +117,22 @@ function buildImage(tag = "", isInfo = false) {
         cwd: "../machines",
       });
 
-      build.stdout.on("data", (data) => {
+      build.stdout.on("data", async (data) => {
         console.log(`stdout: ${data}`);
+        await db.collection(ref).add({
+          status: "building",
+          createdAt: new Date(),
+          message: data.toString(),
+        });
       });
 
-      build.stderr.on("data", (data) => {
+      build.stderr.on("data", async (data) => {
         console.error(`stderr: ${data}`);
+        await db.collection(ref).add({
+          status: "building",
+          createdAt: new Date(),
+          message: data.toString(),
+        });
       });
 
       build.on("close", (code) => {
@@ -286,7 +297,9 @@ function removeContainer(containerId) {
         console.log(`Removed container with ID: ${containerId}`);
         resolve();
       } else {
-        reject(new Error(`Failed to remove container with ID: ${containerId}`));
+        // reject(new Error(`Failed to remove container with ID: ${containerId}`));
+        console.error(`Failed to remove container with ID: ${containerId}`);
+        resolve();
       }
     });
 

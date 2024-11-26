@@ -2,18 +2,26 @@ require("dotenv").config();
 const { launchBrowser, openPage } = require("./services/browser");
 const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
-
+const { Subject } = require("rxjs");
 async function init() {
+  const messages$ = new Subject();
+  messages$.subscribe(async (msg) => {
+    console.log(msg);
+    await firestore
+      .collection(`users/${userId}/reviewOverview/${reviewId}/status`)
+      .add({
+        status: "pending",
+        createdAt: new Date(),
+        message: msg,
+      });
+  });
   const url = process.env.URL;
   const userId = process.env.USER_ID;
   const reviewId = process.env.REVIEW_ID;
   // const limit = process.env.LIMIT;
   // const sortBy = process.env.SORT_BY;
 
-  console.log("Setting up...");
-  console.log("URL:", url);
-  console.log("User ID:", userId);
-  console.log("Review ID:", reviewId);
+  messages$.next(`Setting up...`);
 
   await firestore
     .collection(`users/${userId}/reviewOverview`)
@@ -27,11 +35,12 @@ async function init() {
       createdAt: new Date(),
       pending: true,
     });
+
   console.log("Initializing...");
   const browser = await launchBrowser();
-  console.log("Browser launched");
+  messages$.next(`Browser launched`);
   const page = await openPage(browser, url);
-  console.log("Page opened");
+  messages$.next(`Page opened`);
   await new Promise((resolve) => setTimeout(resolve, 500));
   const data = await page.evaluate(async () => {
     const stringToNumber = (str) =>
@@ -65,7 +74,7 @@ async function init() {
     return data;
   });
 
-  console.log("Data:", data);
+  messages$.next(`Extracted data`);
 
   await page.evaluate(async () => {
     const sidePanel = document.querySelector(
@@ -109,7 +118,7 @@ async function init() {
     `${userId}/${uniqueId}/screenshot.png`
   );
 
-  console.log("Data:", data);
+  messages$.next(`Screenshot uploaded`);
   await page.close();
   await browser.close();
   await firestore

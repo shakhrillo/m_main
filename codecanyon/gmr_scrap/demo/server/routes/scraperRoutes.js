@@ -47,7 +47,8 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     createEnvironment(envContent.trim(), "../machines/.env.main");
 
     console.log(`Building Docker image with tag: ${buildTag}`);
-    await buildImage(buildTag, isInfo);
+    const ref = `users/${userId}/reviewOverview/${reviewId}/status`;
+    await buildImage(buildTag, isInfo, ref);
 
     const container = await startContainer(
       containerName,
