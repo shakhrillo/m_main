@@ -22,7 +22,6 @@ const Usage: React.FC = () => {
       const data = snapshot.data()
       if (!data || !data.usage) return
       const dataArray = data.usage.split("\n").filter((item: any) => item)
-      console.log("dataArray", dataArray)
       const objects = dataArray.map((item: any) => JSON.parse(item))
       console.log(objects)
       setUsage(objects)
