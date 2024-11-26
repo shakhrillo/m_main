@@ -33,6 +33,8 @@ const reviewId = process.env.REVIEW_ID;
 const limit = process.env.LIMIT;
 const sortBy = process.env.SORT_BY;
 
+let browser;
+
 async function complete() {
   const jsonFile = JSON.stringify(allElements, null, 2);
   const csvFile =
@@ -65,20 +67,15 @@ async function complete() {
   console.log("Completed...");
   console.log(`CSV URL: ${csvUrl}`);
   console.log(`JSON URL: ${jsonUrl}`);
+
+  if (browser) {
+    await browser.close();
+  }
 }
 
 async function init() {
-  // await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-  //   url,
-  //   userId,
-  //   reviewId,
-  //   // limit,
-  //   sortBy,
-  //   createdAt: new Date(),
-  // });
-
   console.log("Initializing...");
-  const browser = await launchBrowser();
+  browser = await launchBrowser();
   const page = await openPage(browser, url);
   page.exposeFunction("newNodes", function (record) {
     newNodes$.next(record);
@@ -130,7 +127,7 @@ async function init() {
         // if (intervalRecordTime) {
         //   clearInterval(intervalRecordTime);
         // }
-        complete();
+        await complete();
         // await browser.close();
         subscription.unsubscribe();
         console.log("Unsubscribed...");

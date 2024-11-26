@@ -69,8 +69,10 @@ const Machines: React.FC = () => {
             <tbody>
               {machines.map(machine => (
                 <tr key={machine.id}>
-                  <td>{machine.id.slice(0, 8)}...</td>
-                  <td>{machine.message.slice(0, 30)}...</td>
+                  <td>{machine.id ? machine.id.slice(0, 8) : ""}...</td>
+                  <td>
+                    {machine.message ? machine.message.slice(0, 30) : ""}...
+                  </td>
                   <td>{machine.status}</td>
                   <td>{machine.createdAt.toDate().toLocaleString()}</td>
                   <td>{machine.updatedAt.toDate().toLocaleString()}</td>
