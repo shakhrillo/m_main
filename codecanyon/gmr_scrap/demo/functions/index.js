@@ -11,6 +11,7 @@ const userCreate = require("./src/user/userCreate");
 const getPlaceOverview = require("./src/machines/getPlaceOverview");
 const getPlaceReview = require("./src/machines/getPlaceReviews");
 const watchSettings = require("./src/settings/watchSettings");
+const watchMachine = require("./src/machines/watchMachine");
 
 admin.initializeApp();
 
@@ -29,3 +30,5 @@ exports.watchReviewOverview = onDocumentCreated(
   "users/{userId}/reviewOverview/{reviewId}",
   getPlaceOverview
 );
+
+exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);

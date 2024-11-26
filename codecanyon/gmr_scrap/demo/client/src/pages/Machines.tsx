@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
-import { collection, onSnapshot, Timestamp } from "firebase/firestore"
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore"
 
 interface Machine {
   id: string
@@ -16,7 +24,12 @@ const Machines: React.FC = () => {
 
   useEffect(() => {
     if (!firestore) return
-    const machinesRef = collection(firestore, "machines")
+    // const machinesRef = collection(firestore, "machines")
+    // oreder by createdAt
+    const machinesRef = query(
+      collection(firestore, "machines"),
+      orderBy("createdAt", "desc"),
+    )
 
     const unsubscribe = onSnapshot(machinesRef, snapshot => {
       const machinesData = snapshot.docs.map(doc => ({
@@ -28,6 +41,13 @@ const Machines: React.FC = () => {
 
     return () => unsubscribe()
   }, [firestore])
+
+  function removeMachine(id: string) {
+    const machineRef = doc(firestore, "machines", id)
+    updateDoc(machineRef, {
+      status: "remove",
+    })
+  }
 
   return (
     <div>
@@ -55,7 +75,13 @@ const Machines: React.FC = () => {
                   <td>{machine.createdAt.toDate().toLocaleString()}</td>
                   <td>{machine.updatedAt.toDate().toLocaleString()}</td>
                   <td>
-                    <button className="button">Remove</button>
+                    <button
+                      className="button button-danger"
+                      disabled={machine.status === "removed"}
+                      onClick={() => removeMachine(machine.id)}
+                    >
+                      Remove
+                    </button>
                   </td>
                 </tr>
               ))}

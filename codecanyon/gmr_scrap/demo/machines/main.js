@@ -107,6 +107,7 @@ async function init() {
         console.log("No new reviews...");
         clearInterval(intervalRecordTime);
         count = limit;
+        console.log("Limit reached...");
         newNodes$.next("end");
       }
     }
@@ -133,7 +134,7 @@ async function init() {
         // await browser.close();
         subscription.unsubscribe();
         console.log("Unsubscribed...");
-        exec(`docker stop ${process.env.HOSTNAME}`);
+        // exec(`docker stop ${process.env.HOSTNAME}`);
       } else {
         console.log(`Checked ${count} reviews`);
         await highLightElement(page, record);

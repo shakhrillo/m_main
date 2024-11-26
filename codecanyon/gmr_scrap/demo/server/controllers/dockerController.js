@@ -118,18 +118,10 @@ function buildImage(tag = "", isInfo = false) {
       });
 
       build.stdout.on("data", (data) => {
-        updateMachineStatus(tag, {
-          status: "building",
-          message: data.toString(),
-        });
         console.log(`stdout: ${data}`);
       });
 
       build.stderr.on("data", (data) => {
-        updateMachineStatus(tag, {
-          status: "building",
-          message: data.toString(),
-        });
         console.error(`stderr: ${data}`);
       });
 
@@ -316,7 +308,7 @@ function startContainer(
     const args = [
       "run",
       ...(isRunBackground ? ["-d"] : []), // Detached mode (runs in the background)
-      // "--rm", // Automatically remove the container when it stops
+      "--rm", // Automatically remove the container when it stops
       "--env-file",
       // ".env", // Pass environment variables
       envFile,
