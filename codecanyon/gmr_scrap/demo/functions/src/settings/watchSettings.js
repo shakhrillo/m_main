@@ -1,4 +1,8 @@
-const { dockerInfo, dockerUsageInfo } = require("../utils/apiUtils");
+const {
+  dockerInfo,
+  dockerUsageInfo,
+  clearCache,
+} = require("../utils/apiUtils");
 
 const watchSettings = async (event) => {
   const appId = event.params.appId;
@@ -11,6 +15,15 @@ const watchSettings = async (event) => {
     const ref = event.data.after.ref;
     await ref.update({
       refresh: false,
+    });
+  }
+
+  if (document.clearCache) {
+    console.log("Clearing cache for app", appId);
+    const ref = event.data.after.ref;
+    await clearCache({});
+    await ref.update({
+      clearCache: false,
     });
   }
 };

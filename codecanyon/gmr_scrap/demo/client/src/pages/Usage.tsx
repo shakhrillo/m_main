@@ -35,7 +35,13 @@ const Usage: React.FC = () => {
     await updateDoc(docAppInfo, {
       refresh: true,
     })
-    console.log("refresh")
+  }
+
+  async function clearCache() {
+    const docAppInfo = doc(firestore, "app", "usage")
+    await updateDoc(docAppInfo, {
+      clearCache: true,
+    })
   }
 
   return (
@@ -43,6 +49,9 @@ const Usage: React.FC = () => {
       <h2>Usage</h2>
       <div className="card">
         <div className="card-header">
+          <button className="button" onClick={clearCache}>
+            Clear cache
+          </button>
           <button className="button button-primary" onClick={refresh}>
             Refresh
           </button>

@@ -25,6 +25,8 @@ const makeRequest = async (url, method, data) => {
 };
 
 module.exports = {
+  clearCache: (data) =>
+    makeRequest(`${endPointURL}/api/machines/clear-cache`, "POST", data),
   deleteMachine: (data) =>
     makeRequest(`${endPointURL}/api/machines`, "DELETE", data),
   dockerInfo: () => makeRequest(`${endPointURL}/api/docker`, "GET", {}),

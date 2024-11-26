@@ -79,9 +79,8 @@ function removeUnusedImages() {
 
     prune.on("close", (code) => {
       if (code === 0) {
-        console.log("--".repeat(50));
         console.log("Removed unused images");
-        console.log("--".repeat(50));
+        analyzeSystem();
         resolve();
       } else {
         reject(new Error("Failed to remove unused images"));
