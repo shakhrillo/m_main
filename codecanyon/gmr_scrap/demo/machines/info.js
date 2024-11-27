@@ -92,8 +92,6 @@ async function init() {
   const data = await scrapePageData(page);
   messages$.next("Extracted data");
 
-  await new Promise((r) => setTimeout(r, 10000));
-
   messages$.next("Cleaning page");
   await cleanPage(page);
 

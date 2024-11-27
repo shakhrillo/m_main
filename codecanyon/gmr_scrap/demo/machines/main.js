@@ -180,7 +180,16 @@ async function init() {
 
   await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log("Opening review tab...");
-  await openReviewTab(page);
+  try {
+    await openReviewTab(page);
+  } catch (error) {
+    console.log("Error:", error);
+    await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
+      updatedAt: new Date(),
+      completedAt: new Date(),
+      status: "completed",
+    });
+  }
   await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log("Sorting reviews...");
   await sortReviews(page, sortBy);

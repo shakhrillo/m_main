@@ -27,7 +27,7 @@ exports.watchNewReview = onDocumentCreated(
   "users/{userId}/reviews/{reviewId}",
   getPlaceReview
 );
-exports.watchNewReview = onDocumentUpdated(
+exports.watchReviewUpdates = onDocumentUpdated(
   "users/{userId}/reviews/{reviewId}",
   watchReview
 );
