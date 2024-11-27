@@ -3,96 +3,59 @@ const { launchBrowser, openPage } = require("./services/browser");
 const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const { Subject } = require("rxjs");
-async function init() {
-  const messages$ = new Subject();
-  messages$.subscribe(async (msg) => {
-    console.log(msg);
-    await firestore
-      .collection(`users/${userId}/reviewOverview/${reviewId}/status`)
-      .add({
-        status: "pending",
-        createdAt: new Date(),
-        message: msg,
-      });
+
+const { URL: url, USER_ID: userId, REVIEW_ID: reviewId } = process.env;
+
+const firestorePath = `users/${userId}/reviewOverview/${reviewId}`;
+
+const updateFirestore = (collection, data) =>
+  firestore.collection(collection).doc(reviewId).update(data);
+
+const addStatus = (status, message) =>
+  firestore
+    .collection(`${firestorePath}/status`)
+    .add({ status, createdAt: new Date(), message });
+
+const messages$ = new Subject();
+messages$.subscribe((msg) => addStatus("info", msg));
+
+const scrapePageData = async (page) => {
+  return page.evaluate(() => {
+    const stringToNumber = (str) => {
+      if (!str) return 0;
+      return parseInt(str.replace(/[^0-9,]/g, "").replace(/,/g, ""), 10);
+    };
+
+    const getData = (selector, attr = "innerText") =>
+      document.querySelector(selector)?.[attr]?.replace(/Address: /, "");
+
+    return {
+      title: getData("h1"),
+      address: getData("button[data-item-id='address']", "ariaLabel"),
+      reviews: stringToNumber(
+        getData(`button[jsaction*="reviewChart.moreReviews"]`)
+      ),
+      rating: parseFloat(
+        getData(`[role="img"][aria-label*="stars"]`, "ariaLabel")
+      ),
+    };
   });
-  const url = process.env.URL;
-  const userId = process.env.USER_ID;
-  const reviewId = process.env.REVIEW_ID;
-  // const limit = process.env.LIMIT;
-  // const sortBy = process.env.SORT_BY;
+};
 
-  messages$.next(`Setting up...`);
-
-  await firestore
-    .collection(`users/${userId}/reviewOverview`)
-    .doc(reviewId)
-    .update({
-      url,
-      userId,
-      reviewId,
-      // limit,
-      // sortBy,
-      createdAt: new Date(),
-      pending: true,
-    });
-
-  console.log("Initializing...");
-  const browser = await launchBrowser();
-  messages$.next(`Browser launched`);
-  const page = await openPage(browser, url);
-  messages$.next(`Page opened`);
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const data = await page.evaluate(async () => {
-    const stringToNumber = (str) =>
-      parseInt(str.replace(/[^0-9,]/g, "").replace(/,/g, ""), 10);
-
-    const data = {};
-    const h1 = document.querySelector("h1");
-    const title = h1.innerText;
-    data.title = title;
-
-    const address = document.querySelector("button[data-item-id='address']");
-    if (address) {
-      const addressText = address.getAttribute("aria-label");
-      data.address = addressText.replace("Address: ", "");
-    }
-
-    const btnReviewChart = document.querySelector(
-      `button[jsaction*="reviewChart.moreReviews"]`
-    );
-    if (btnReviewChart) {
-      const btnReviewChartText = btnReviewChart.innerText;
-      data.reviews = stringToNumber(btnReviewChartText);
-    }
-
-    const rating = document.querySelector(`[role="img"][aria-label*="stars"]`);
-    if (rating) {
-      const ratingText = rating.getAttribute("aria-label");
-      data.rating = parseFloat(ratingText);
-    }
-
-    return data;
-  });
-
-  messages$.next(`Extracted data`);
-
+const cleanPage = async (page) => {
   await page.evaluate(async () => {
-    const sidePanel = document.querySelector(
-      'button[aria-label*="Collapse side panel"][jsaction*="mouseover:drawer.showToggleTooltip"]'
-    );
-    if (sidePanel) {
-      sidePanel.click();
-    }
-    const zoomOutButton = document.querySelector(
-      'button[jsaction*="zoom.onZoomOutClick"]'
-    );
-    if (zoomOutButton) {
-      zoomOutButton.click();
-    }
-  });
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  await page.evaluate(async () => {
-    [
+    const hideElements = (selectors) =>
+      selectors.forEach((s) =>
+        document.querySelectorAll(s).forEach((el) => {
+          if (s.includes("widget-minimap-icon-overlay")) {
+            el.parentElement.style.display = "none";
+          } else {
+            el.style.display = "none";
+          }
+        })
+      );
+
+    const selectors = [
       `button[aria-labelledby="widget-minimap-icon-overlay"]`,
       `button[jsaction*="minimap.main"]`,
       `.app-vertical-widget-holder`,
@@ -101,35 +64,55 @@ async function init() {
       `a[title="Google apps"]`,
       `button[aria-label*="Expand side panel"]`,
       `.scene-footer`,
-    ].forEach((selector) => {
-      const elements = document.querySelectorAll(selector);
-      if (elements.length > 0) {
-        elements.forEach((el) => {
-          el.style.display = "none";
-        });
-      }
-    });
+      '[role="button"]',
+    ];
+    hideElements(selectors);
+
+    document.querySelector(`button[jsaction*="drawer.close"]`)?.click();
+    document.querySelector(`button[jsaction*="zoom.onZoomOutClick"]`)?.click();
   });
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+};
+
+async function init() {
+  messages$.next("Starting process");
+  await updateFirestore(`users/${userId}/reviewOverview`, {
+    createdAt: new Date(),
+    pending: true,
+    url,
+    userId,
+    reviewId,
+  });
+  messages$.next("Updated firestore");
+
+  const browser = await launchBrowser();
+  messages$.next("Browser launched");
+  const page = await openPage(browser, url);
+  messages$.next("Page opened");
+
+  const data = await scrapePageData(page);
+  messages$.next("Extracted data");
+
+  await new Promise((r) => setTimeout(r, 10000));
+
+  messages$.next("Cleaning page");
+  await cleanPage(page);
+
   const screenshot = await page.screenshot({ fullPage: true });
   const uniqueId = url.split("/").pop();
   data.screenshot = await uploadFile(
     screenshot,
     `${userId}/${uniqueId}/screenshot.png`
   );
+  messages$.next("Screenshot uploaded");
 
-  messages$.next(`Screenshot uploaded`);
   await page.close();
   await browser.close();
-  await firestore
-    .collection(`users/${userId}/reviewOverview`)
-    .doc(reviewId)
-    .update({
-      ...data,
-      pending: false,
-      completedAt: new Date(),
-    });
-  console.log("Done");
+  await updateFirestore(`users/${userId}/reviewOverview`, {
+    createdAt: new Date(),
+    pending: false,
+    ...data,
+  });
 }
 
+console.log("Starting process");
 init();
