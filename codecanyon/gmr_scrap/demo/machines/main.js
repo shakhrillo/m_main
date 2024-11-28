@@ -23,7 +23,7 @@ const {
 } = require("./services/page");
 const { Subject, concatMap, interval, take, map, defer } = require("rxjs");
 const { firestore, batchWriteLargeArray } = require("./services/firebase");
-const { uploadFile } = require("./services/storage");
+const { uploadFile, uploadReviewsAsFile } = require("./services/storage");
 const newNodes$ = new Subject();
 const allElements = [];
 let lastRecordTime = new Date();
@@ -36,18 +36,7 @@ const sortBy = process.env.SORT_BY;
 let browser;
 
 async function complete() {
-  const jsonFile = JSON.stringify(allElements, null, 2);
-  const csvFile =
-    Object.keys(allElements[0]).join(",") +
-    "\n" +
-    allElements.map((element) => Object.values(element).join(",")).join("\n");
-
-  const csvUrl = await uploadFile(jsonFile, `json/${reviewId}.json`);
-  const jsonUrl = await uploadFile(csvFile, `csv/${reviewId}.csv`);
-
-  console.log(`CSV URL: ${csvUrl}`);
-  console.log(`JSON URL: ${jsonUrl}`);
-
+  const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, reviewId);
   await batchWriteLargeArray(userId, reviewId, allElements);
 
   console.log("Uploading to Firestore...");
@@ -67,10 +56,6 @@ async function complete() {
   console.log("Completed...");
   console.log(`CSV URL: ${csvUrl}`);
   console.log(`JSON URL: ${jsonUrl}`);
-
-  // if (browser) {
-  //   await browser.close();
-  // }
 }
 
 async function init() {

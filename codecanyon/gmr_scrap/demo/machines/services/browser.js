@@ -15,4 +15,10 @@ const openPage = async (browser, url) => {
   return page;
 };
 
-module.exports = { launchBrowser, openPage };
+const closeBrowser = async (browser) => {
+  if (browser) {
+    await browser.close();
+  }
+};
+
+module.exports = { launchBrowser, openPage, closeBrowser };
