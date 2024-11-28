@@ -7,6 +7,13 @@ const {
 const { setDockerInfo, setDockerUsage } = require("../services/dockerService");
 const { db } = require("../firebase");
 
+const fs = require("fs");
+const tar = require("tar-fs");
+const Docker = require("dockerode");
+
+const docker = new Docker();
+// const { docker, dockerBuildImage } = require("../../machines/dcoker");
+
 function dockerInfo() {
   return new Promise(async (resolve, reject) => {
     let result = "";
@@ -17,12 +24,9 @@ function dockerInfo() {
 
     info.stdout.on("data", (data) => {
       result = data.toString();
-      console.log(`stdout: ${data}`);
     });
 
-    info.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+    info.stderr.on("data", (data) => {});
 
     info.on("close", async (code) => {
       if (code === 0) {
@@ -49,12 +53,9 @@ function analyzeSystem() {
 
     analyze.stdout.on("data", (data) => {
       result = data.toString();
-      console.log(`stdout: ${data}`);
     });
 
-    analyze.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+    analyze.stderr.on("data", (data) => {});
 
     analyze.on("close", (code) => {
       if (code === 0) {
@@ -80,7 +81,6 @@ function removeUnusedImages() {
 
     prune.on("close", (code) => {
       if (code === 0) {
-        console.log("Removed unused images");
         analyzeSystem();
         resolve();
       } else {
@@ -94,67 +94,150 @@ function removeUnusedImages() {
   });
 }
 
-function buildImage(tag = "", isInfo = false, ref) {
+async function buildImage(tag = "", isInfo = false, ref) {
   return new Promise(async (resolve, reject) => {
     await addMachineStatus(tag, { status: "building" });
     await removeImage(tag);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    try {
-      const command = "docker";
-      const args = [
-        "build",
-        "-f",
-        isInfo ? "Dockerfile.info" : "Dockerfile",
-        "--platform",
-        "linux/amd64",
-        "-t",
-        tag,
-        ".",
-      ];
+    console.log("Building Docker image with tag:", tag);
+    console.log("Is info:", isInfo);
 
-      const build = spawn(command, args, {
-        cwd: "../machines",
-      });
+    // const zipPath = path.resolve(__dirname, "../../machines/Archive.zip");
 
-      build.stdout.on("data", async (data) => {
-        console.log(`stdout: ${data}`);
-        await db.collection(ref).add({
-          status: "building",
-          createdAt: new Date(),
-          message: data.toString(),
+    const buildContextPath = path.resolve(__dirname, "../../machines");
+    const tarStream = tar.pack(buildContextPath);
+
+    // save the tar stream to a file
+    // const saveStream = fs.createWriteStream(
+    //   path.resolve(__dirname, "../../machines", "archive.tar")
+    // );
+    // tarStream.pipe(saveStream);
+
+    // const tarStream = tar.pack(buildContextPath, {
+
+    // const saveStream = tar.extract(buildContextPath);
+
+    // saveStream.on("finish", () => {
+    //   console.log("Finished extracting");
+    // });
+
+    docker.buildImage(
+      tarStream,
+      {
+        dockerfile: "Dockerfile",
+        t: tag,
+      },
+      function (err, stream) {
+        stream.setEncoding("utf8");
+        stream.on("data", async (data) => {
+          console.log(data);
         });
-      });
 
-      build.stderr.on("data", async (data) => {
-        console.error(`stderr: ${data}`);
-        await db.collection(ref).add({
-          status: "building",
-          createdAt: new Date(),
-          message: data.toString(),
-        });
-      });
-
-      build.on("close", (code) => {
-        if (code === 0) {
-          updateMachineStatus(tag, { status: "built" });
-          console.log(`Docker build completed successfully for tag: ${tag}`);
+        stream.on("end", async () => {
+          console.log("Image built");
           resolve();
-        } else {
-          updateMachineStatus(tag, { status: "failed" });
-          console.error(`Docker build failed for tag: ${tag}`);
-          reject(new Error(`Docker build failed for tag: ${tag}`));
-        }
-      });
-    } catch (error) {
-      console.log("--".repeat(50));
-      console.log("error", error);
-      updateMachineStatus(tag, {
-        status: "failed",
-        message: JSON.stringify(error),
-      });
-      reject(error);
-    }
+        });
+      }
+    );
+
+    // await dockerBuildImage(tag, isInfo);
+
+    // const relativePath =
+
+    // console.log("Context Path:", path.resolve(__dirname, "../machines"));
+    // console.log("Dockerfile:", isInfo ? "Dockerfile.info" : "Dockerfile");
+
+    // await docker.buildImage(
+    //   {
+    //     context: path.resolve(__dirname, "../../machines"),
+    //     src: ["Dockerfile"],
+    //   },
+    //   {
+    //     dockerfile: "Dockerfile",
+    //     platform: "linux/amd64",
+    //     t: tag,
+    //     forcerm: true,
+    //   },
+    //   (err, stream) => {
+    //     if (err) {
+    //       console.log("err", err);
+    //       // updateMachineStatus(tag, {
+    //       //   status: "failed",
+    //       //   message: JSON.stringify(err),
+    //       // });
+    //       // reject(err);
+    //     }
+
+    //     // console.log("err", err);
+    //     // console.log("stream", stream);
+
+    //     stream.setEncoding("utf8");
+    //     stream.on("data", async (data) => {
+    //       console.log("data", data);
+    //       // await db.collection(ref).add({
+    //       //   status: "building",
+    //       //   createdAt: new Date(),
+    //       //   message: "data",
+    //       // });
+    //     });
+
+    //     stream.on("end", () => {
+    //       updateMachineStatus(tag, { status: "built" });
+    //       resolve();
+    //     });
+    //   }
+    // );
+
+    // try {
+    //   const command = "docker";
+    //   const args = [
+    //     "build",
+    //     "-f",
+    //     isInfo ? "Dockerfile.info" : "Dockerfile",
+    //     "--platform",
+    //     "linux/amd64",
+    //     "-t",
+    //     tag,
+    //     ".",
+    //   ];
+
+    //   const build = spawn(command, args, {
+    //     cwd: "../machines",
+    //   });
+
+    //   build.stdout.on("data", async (data) => {
+    //     await db.collection(ref).add({
+    //       status: "building",
+    //       createdAt: new Date(),
+    //       message: data.toString(),
+    //     });
+    //   });
+
+    //   build.stderr.on("data", async (data) => {
+    //     await db.collection(ref).add({
+    //       status: "building",
+    //       createdAt: new Date(),
+    //       message: data.toString(),
+    //     });
+    //   });
+
+    //   build.on("close", (code) => {
+    //     if (code === 0) {
+    //       updateMachineStatus(tag, { status: "built" });
+    //       resolve();
+    //     } else {
+    //       updateMachineStatus(tag, { status: "failed" });
+    //       reject(new Error(`Docker build failed for tag: ${tag}`));
+    //     }
+    //   });
+    // } catch (error) {
+    //   updateMachineStatus(tag, {
+    //     status: "failed",
+    //     message: JSON.stringify(error),
+    //   });
+    //   reject(error);
+    // }
   });
 }
 
@@ -167,7 +250,6 @@ function stopContainer(containerId) {
 
     stop.on("close", (code) => {
       if (code === 0) {
-        console.log(`Stopped container with ID: ${containerId}`);
         resolve();
       } else {
         reject(new Error(`Failed to stop container with ID: ${containerId}`));
@@ -189,7 +271,6 @@ function removeImageById(imageId) {
 
     remove.on("close", (code) => {
       if (code === 0) {
-        console.log(`Removed image with ID: ${imageId}`);
         resolve();
       } else {
         reject(new Error(`Failed to remove image with ID: ${imageId}`));
@@ -206,20 +287,16 @@ function removeImage(tag = "") {
   return new Promise(async (resolve, reject) => {
     updateMachineStatus(tag, { status: "removing" });
     const containers = await listContainers(tag);
-    console.log("containers>>>", containers);
     await Promise.all(
       containers.map(async (containerId) => {
-        console.log("container", containerId);
         await stopContainer(containerId);
         await removeContainer(containerId);
       })
     );
 
     const images = await listImages(tag);
-    console.log("images>>>", images);
     await Promise.all(
       images.map(async (imageId) => {
-        console.log("image", imageId);
         await removeImageById(imageId);
       })
     );
@@ -239,12 +316,10 @@ function listContainers(query = "") {
 
     let data = [];
     list.stdout.on("data", (chunk) => {
-      console.log("chunk", chunk.toString());
       data = data.concat(chunk.toString().trim().split("\n"));
     });
 
     list.on("close", (code) => {
-      console.log("code", code);
       if (code === 0) {
         resolve(data);
       } else {
@@ -253,7 +328,6 @@ function listContainers(query = "") {
     });
 
     list.on("error", (err) => {
-      console.log("err", err);
       reject(err);
     });
   });
@@ -294,11 +368,9 @@ function removeContainer(containerId) {
 
     remove.on("close", (code) => {
       if (code === 0) {
-        console.log(`Removed container with ID: ${containerId}`);
         resolve();
       } else {
         // reject(new Error(`Failed to remove container with ID: ${containerId}`));
-        console.error(`Failed to remove container with ID: ${containerId}`);
         resolve();
       }
     });
@@ -333,17 +405,12 @@ function startContainer(
       cwd: "../machines",
     });
 
-    start.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
-    });
+    start.stdout.on("data", (data) => {});
 
-    start.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+    start.stderr.on("data", (data) => {});
 
     start.on("close", (code) => {
       if (code === 0) {
-        console.log(`Started container with name: ${containerName}`);
         resolve({ containerName, buildTag });
       } else {
         reject(

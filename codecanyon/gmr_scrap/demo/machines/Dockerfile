@@ -12,13 +12,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Optional: Set environment variable to skip Chromium download if already present in `node_modules`
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json, then install dependencies
+# log current directory
+RUN pwd
+
 COPY package*.json ./
 RUN npm install
 
@@ -31,4 +30,4 @@ EXPOSE 3000
 RUN node node_modules/puppeteer/install.mjs
 
 # Default command
-CMD ["node", "main.js"]
+CMD ["node", "index.js"]

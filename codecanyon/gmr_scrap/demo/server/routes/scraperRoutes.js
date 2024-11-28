@@ -29,6 +29,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
 
     // Environment variables
     const envContent = `
+      IS_INFO=${isInfo}
       FIREBASE_KEY_BASE64=${process.env.FIREBASE_KEY_BASE64}
       HOSTNAME=${buildTag}
       STORAGE_BUCKET=${process.env.STORAGE_BUCKET}

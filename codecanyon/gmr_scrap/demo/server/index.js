@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+// const Docker = require("dockerode");
+
+// const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
 const dockerRoutes = require("./routes/dockerRoutes");
 const machinesRoutes = require("./routes/machinesRoutes");
@@ -47,6 +50,16 @@ app.use((req, res, next) => {
 
 // Error-handling middleware
 app.use(errorHandler);
+
+// Watch docker events
+// docker.getEvents().then((stream) => {
+//   stream.on("data", (chunk) => {
+//     const data = JSON.parse(chunk.toString());
+//     console.log(
+//       `Docker event: ${data.Type} ${data.Action} ${data.Actor.Attributes.name}`
+//     );
+//   });
+// });
 
 // Start the server
 app.listen(PORT, () => {

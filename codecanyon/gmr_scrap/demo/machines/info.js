@@ -112,5 +112,4 @@ async function init() {
   });
 }
 
-console.log("Starting process");
-init();
+exports.init = init;
