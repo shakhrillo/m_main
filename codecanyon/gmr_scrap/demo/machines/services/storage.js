@@ -61,25 +61,7 @@ const uploadFile = async (fileBuffer, destination) => {
   // });
 };
 
-const uploadReviewsAsFile = async (allElements, reviewId = "reviewId") => {
-  if (!allElements?.length) return { csvUrl: "", jsonUrl: "" };
-
-  const jsonContent = JSON.stringify(allElements, null, 2);
-  const csvContent = [
-    Object.keys(allElements[0]).join(","),
-    ...allElements.map((el) => Object.values(el).join(",")),
-  ].join("\n");
-
-  const [csvUrl, jsonUrl] = await Promise.all([
-    uploadFile(csvContent, `csv/${reviewId}.csv`),
-    uploadFile(jsonContent, `json/${reviewId}.json`),
-  ]);
-
-  return { csvUrl, jsonUrl };
-};
-
 // Export the upload function
 module.exports = {
   uploadFile,
-  uploadReviewsAsFile,
 };

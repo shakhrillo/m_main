@@ -1,7 +1,7 @@
+const path = require("path");
 require("dotenv").config({
-  path: require("path").resolve(__dirname, ".env.main"),
+  path: path.resolve(__dirname, ".env.main"),
 });
-const { exec } = require("child_process");
 const { launchBrowser, openPage } = require("./services/browser");
 const {
   waitTitle,
@@ -13,7 +13,6 @@ const {
   handleElementActions,
   elementReviewComment,
   elementReviewQA,
-  copyReviewURL,
   getReviewDate,
   getReviewRate,
   getOwnerResponse,
@@ -21,9 +20,9 @@ const {
   getUserDetails,
   scrollToBottom,
 } = require("./services/page");
-const { Subject, concatMap, interval, take, map, defer } = require("rxjs");
-const { firestore, batchWriteLargeArray } = require("./services/firebase");
-const { uploadFile, uploadReviewsAsFile } = require("./services/storage");
+const { Subject, concatMap, interval, take, map } = require("rxjs");
+const { firestore } = require("./services/firebase");
+const { uploadFile } = require("./services/storage");
 const newNodes$ = new Subject();
 const allElements = [];
 let lastRecordTime = new Date();
@@ -34,161 +33,159 @@ const limit = process.env.LIMIT;
 const sortBy = process.env.SORT_BY;
 
 let browser;
+let page;
+let count = 0;
+let isFirstTime = true;
+
+const intervalRecordTime = setInterval(async () => {
+  if (new Date() - lastRecordTime > 25000) {
+    if (isFirstTime) {
+      isFirstTime = false;
+      await scrollToBottom(page);
+      lastRecordTime = new Date();
+    } else {
+      clearInterval(intervalRecordTime);
+      count = limit;
+      newNodes$.next("end");
+    }
+  }
+}, 1000);
+
+const uploadReviewsAsFile = async () => {
+  if (!allElements?.length) return { csvUrl: "", jsonUrl: "" };
+
+  const jsonContent = JSON.stringify(allElements, null, 2);
+  const csvContent = [
+    Object.keys(allElements[0]).join(","),
+    ...allElements.map((el) => Object.values(el).join(",")),
+  ].join("\n");
+
+  const [csvUrl, jsonUrl] = await Promise.all([
+    uploadFile(csvContent, `csv/${reviewId}.csv`),
+    uploadFile(jsonContent, `json/${reviewId}.json`),
+  ]);
+
+  return { csvUrl, jsonUrl };
+};
+
+async function addReviews() {
+  if (!allElements.length) return;
+
+  const collectionRef = firestore.collection(
+    `users/${userId}/reviews/${reviewId}/reviews`
+  );
+  const chunkSize = 500;
+
+  await Promise.all(
+    allElements.reduce((batches, _, i) => {
+      if (i % chunkSize === 0) {
+        const chunk = allElements.slice(i, i + chunkSize);
+        const batch = firestore.batch();
+
+        chunk.forEach((doc) => {
+          if (doc?.id) batch.set(collectionRef.doc(doc.id), doc);
+        });
+
+        batches.push(batch.commit());
+      }
+      return batches;
+    }, [])
+  );
+}
+
+async function reviewUpdate(data = {}) {
+  console.log(`Updated - ${JSON.stringify(data)}`);
+  return await firestore.doc(`users/${userId}/reviews/${reviewId}`).update({
+    updatedAt: new Date(),
+    ...data,
+  });
+}
+
+const subscription = newNodes$
+  .pipe(
+    concatMap((record) =>
+      interval(2000).pipe(
+        take(1),
+        map(() => record)
+      )
+    )
+  )
+  .subscribe(async (record) => {
+    lastRecordTime = new Date();
+    isFirstTime = true;
+    if (limit && count >= limit) {
+      await complete();
+    } else {
+      await highLightElement(page, record);
+      await handleElementActions(page, record);
+
+      const user = await getUserDetails(page, record);
+      const timeComment = await getReviewDate(page, record);
+      const rateComment = await getReviewRate(page, record);
+      const reviewComment = await elementReviewComment(page, record);
+      const reviewQA = await elementReviewQA(page, record);
+      const ownerResponse = await getOwnerResponse(page, record);
+      const imgURLs = await getImgURLs(page, record);
+
+      allElements.push({
+        id: record,
+        review: reviewComment,
+        date: timeComment,
+        response: ownerResponse,
+        responseTime: "",
+        imageUrls: imgURLs,
+        rating: rateComment,
+        qa: reviewQA,
+        user: user,
+      });
+    }
+
+    if (count % 10 === 0) {
+      await reviewUpdate({ totalReviews: count });
+    }
+
+    count++;
+  });
 
 async function complete() {
   const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, reviewId);
-  await batchWriteLargeArray(userId, reviewId, allElements);
-
-  console.log("Uploading to Firestore...");
-
-  try {
-    await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-      updatedAt: new Date(),
-      completedAt: new Date(),
-      status: "completed",
-      csvUrl,
-      jsonUrl,
-      totalReviews: allElements.length,
-    });
-  } catch (error) {
-    console.log("Error:", error);
-  }
-  console.log("Completed...");
-  console.log(`CSV URL: ${csvUrl}`);
-  console.log(`JSON URL: ${jsonUrl}`);
+  await addReviews();
+  await reviewUpdate({
+    completedAt: new Date(),
+    status: "completed",
+    csvUrl,
+    jsonUrl,
+    totalReviews: allElements.length,
+  });
+  console.log("DONE!");
 }
 
 async function init() {
-  console.log("Initializing...");
-  browser = await launchBrowser();
-  const page = await openPage(browser, url);
-  page.exposeFunction("newNodes", function (record) {
-    newNodes$.next(record);
-  });
-  console.log(`Scraping reviews for ${url}...`);
-
-  const title = await waitTitle(page);
-  console.log("Title:", title);
-
-  await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-    title,
-    updatedAt: new Date(),
-  });
-
-  let count = 0;
-  let isFirstTime = true;
-
-  const intervalRecordTime = setInterval(async () => {
-    if (new Date() - lastRecordTime > 25000) {
-      if (isFirstTime) {
-        console.log("Scrolling to bottom...");
-        isFirstTime = false;
-        await scrollToBottom(page);
-        lastRecordTime = new Date();
-      } else {
-        console.log("No new reviews...");
-        clearInterval(intervalRecordTime);
-        count = limit;
-        console.log("Limit reached...");
-        newNodes$.next("end");
-      }
-    }
-  }, 1000);
-
-  const subscription = newNodes$
-    .pipe(
-      concatMap((record) =>
-        interval(2000).pipe(
-          take(1),
-          map(() => record)
-        )
-      )
-    )
-    .subscribe(async (record) => {
-      lastRecordTime = new Date();
-      isFirstTime = true;
-      if (limit && count >= limit) {
-        console.log("Limit reached...");
-        // if (intervalRecordTime) {
-        //   clearInterval(intervalRecordTime);
-        // }
-        await complete();
-        // await browser.close();
-        subscription.unsubscribe();
-        console.log("Unsubscribed...");
-        // exec(`docker stop ${process.env.HOSTNAME}`);
-      } else {
-        console.log(`Checked ${count} reviews`);
-        await highLightElement(page, record);
-        await handleElementActions(page, record);
-
-        const user = await getUserDetails(page, record);
-        console.log("User:", user);
-        const timeComment = await getReviewDate(page, record);
-        console.log("Time Comment:", timeComment);
-        const rateComment = await getReviewRate(page, record);
-        console.log("rateComment", rateComment);
-        const reviewComment = await elementReviewComment(page, record);
-        console.log("Review Comment:", reviewComment);
-        const reviewQA = await elementReviewQA(page, record);
-        console.log("Review QA:", reviewQA);
-        const ownerResponse = await getOwnerResponse(page, record);
-        console.log("Owner Response:", ownerResponse);
-        const imgURLs = await getImgURLs(page, record);
-        console.log("Img URLs:", imgURLs);
-
-        allElements.push({
-          id: record,
-          review: reviewComment,
-          date: timeComment,
-          response: ownerResponse,
-          responseTime: "",
-          imageUrls: imgURLs,
-          rating: rateComment,
-          qa: reviewQA,
-          user: user,
-        });
-      }
-
-      if (count % 10 === 0) {
-        await firestore
-          .collection(`users/${userId}/reviews`)
-          .doc(reviewId)
-          .update({
-            updatedAt: new Date(),
-            totalReviews: count,
-          });
-      }
-
-      count++;
-    });
-
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  console.log("Opening review tab...");
   try {
-    await openReviewTab(page);
-  } catch (error) {
-    console.log("Error:", error);
-    await firestore.collection(`users/${userId}/reviews`).doc(reviewId).update({
-      updatedAt: new Date(),
-      completedAt: new Date(),
-      status: "completed",
+    browser = await launchBrowser();
+
+    page = await openPage(browser, url);
+    page.exposeFunction("newNodes", function (record) {
+      newNodes$.next(record);
     });
+
+    const title = await waitTitle(page);
+    await reviewUpdate({ title });
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await openReviewTab(page);
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await sortReviews(page, sortBy);
+
+    const initialReviews = await getInitialReviews(page);
+    initialReviews.forEach((review) => newNodes$.next(review));
+
+    watchNewReviews(page);
+  } catch (error) {
+    console.log("Error: ->", error);
+    complete();
   }
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  console.log("Sorting reviews...");
-  await sortReviews(page, sortBy);
-
-  console.log("Getting initial reviews...");
-  const initialReviews = await getInitialReviews(page);
-  initialReviews.forEach((review) => newNodes$.next(review));
-
-  watchNewReviews(page);
 }
 
-try {
-  init();
-} catch (error) {
-  complete();
-  console.log("Error:", error);
-}
+init();
