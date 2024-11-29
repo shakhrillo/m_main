@@ -10,6 +10,7 @@ const stripeRoutes = require("./routes/stripeRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 const logger = require("./config/logger");
+const { db } = require("./firebase");
 
 dotenv.config();
 
@@ -54,29 +55,56 @@ docker.getEvents().then((stream) => {
   stream.setEncoding("utf8");
   stream.on("data", (data) => {
     const str = data.toString();
-    // const event = JSON.parse(data.toString());
-    // const status = event.status;
     let status = str.match(/"status":"([^"]+)"/);
     status = status ? status[1] : "";
     if (
-      status === "destroy" ||
-      status === "tag" ||
-      status === "untag" ||
-      status === "start" ||
-      status === "die"
+      ["destroy", "tag", "untag", "start", "die"].includes(status) &&
+      /info_|comments_/.test(str)
     ) {
-      console.log("Build event:", status);
+      console.log("Docker event:", str);
+      const from = str.match(/"from":"([^"]+)"/);
+      if (from) {
+        try {
+          console.log("From:", from[1]);
+          const id = from[1];
+          const lines = str.trim().split("\n");
+          const parsedData = lines.map((line) => JSON.parse(line));
+          for (const data of parsedData) {
+            console.log("Data:", data);
+            db.collection("machines").doc(id).set(data, { merge: true });
+          }
+        } catch (error) {
+          console.log("Error saving machine data:", error);
+        }
+      }
 
       if (status === "destroy") {
-        console.log("Destroy event:", str);
         try {
           let image = str.match(/"image":"([^"]+)"/);
           image = image ? image[1] : "";
           if (image.includes("info") || image.includes("comments")) {
-            docker.getImage(image).remove({ force: true });
+            const dockerImage = docker.getImage(image);
+            if (dockerImage) {
+              dockerImage.remove({ force: true });
+            }
           }
         } catch (error) {
           console.log("Error removing image:", error);
+        }
+      }
+
+      if (status === "die") {
+        // delete the container
+        const id = str.match(/"id":"([^"]+)"/);
+        if (id) {
+          try {
+            const container = docker.getContainer(id[1]);
+            if (container) {
+              container.remove({ force: true });
+            }
+          } catch (error) {
+            console.log("Error removing container:", error);
+          }
         }
       }
     }

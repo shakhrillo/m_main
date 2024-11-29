@@ -12,10 +12,11 @@ import {
 
 interface Machine {
   id: string
-  createdAt: Timestamp
-  message: string
+  time: Timestamp
+  Action: string
   status: string
-  updatedAt: Timestamp
+  Type: string
+  from: string
 }
 
 const Machines: React.FC = () => {
@@ -28,7 +29,7 @@ const Machines: React.FC = () => {
     // oreder by createdAt
     const machinesRef = query(
       collection(firestore, "machines"),
-      orderBy("createdAt", "desc"),
+      orderBy("time", "desc"),
     )
 
     const unsubscribe = onSnapshot(machinesRef, snapshot => {
@@ -58,33 +59,19 @@ const Machines: React.FC = () => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Last Message</th>
+                <th>Machine Type</th>
+                <th>From</th>
                 <th>Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {machines.map(machine => (
                 <tr key={machine.id}>
-                  <td>{machine.id ? machine.id.slice(0, 8) : ""}...</td>
-                  <td>
-                    {machine.message ? machine.message.slice(0, 30) : ""}...
-                  </td>
+                  <td>{machine.Type}</td>
+                  <td>{machine.Type}</td>
+                  <td>{machine.from}</td>
                   <td>{machine.status}</td>
-                  <td>{machine.createdAt.toDate().toLocaleString()}</td>
-                  <td>{machine.updatedAt.toDate().toLocaleString()}</td>
-                  <td>
-                    <button
-                      className="button button-danger"
-                      disabled={machine.status === "removed"}
-                      onClick={() => removeMachine(machine.id)}
-                    >
-                      Remove
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>

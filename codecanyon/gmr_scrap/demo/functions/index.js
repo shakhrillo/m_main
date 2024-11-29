@@ -37,4 +37,4 @@ exports.watchReviewOverview = onDocumentCreated(
   getPlaceOverview
 );
 
-exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);
+// exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);
