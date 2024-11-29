@@ -7,7 +7,7 @@ const initMain = require("./main");
 console.log(`Running ${isInfo ? "info" : "main"} script`);
 
 if (isInfo) {
-  initInfo();
+  initInfo.init();
 } else {
-  initMain();
+  initMain.init();
 }

@@ -30,4 +30,4 @@ EXPOSE 3000
 RUN node node_modules/puppeteer/install.mjs
 
 # Default command
-CMD ["node", "index.js"]
+# CMD ["node", "info.js"]

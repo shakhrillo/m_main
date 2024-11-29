@@ -17,7 +17,10 @@ const addStatus = (status, message) =>
     .add({ status, createdAt: new Date(), message });
 
 const messages$ = new Subject();
-messages$.subscribe((msg) => addStatus("info", msg));
+messages$.subscribe((msg) => {
+  console.log(msg);
+  addStatus("info", msg);
+});
 
 const scrapePageData = async (page) => {
   return page.evaluate(() => {
@@ -74,42 +77,49 @@ const cleanPage = async (page) => {
 };
 
 async function init() {
-  messages$.next("Starting process");
-  await updateFirestore(`users/${userId}/reviewOverview`, {
-    createdAt: new Date(),
-    pending: true,
-    url,
-    userId,
-    reviewId,
-  });
-  messages$.next("Updated firestore");
+  try {
+    messages$.next("Starting process");
+    await updateFirestore(`users/${userId}/reviewOverview`, {
+      createdAt: new Date(),
+      pending: true,
+      url,
+      userId,
+      reviewId,
+    });
+    messages$.next("Updated firestore");
 
-  const browser = await launchBrowser();
-  messages$.next("Browser launched");
-  const page = await openPage(browser, url);
-  messages$.next("Page opened");
+    const browser = await launchBrowser();
+    messages$.next("Browser launched");
+    const page = await openPage(browser, url);
+    messages$.next("Page opened");
 
-  const data = await scrapePageData(page);
-  messages$.next("Extracted data");
+    const data = await scrapePageData(page);
+    messages$.next("Extracted data");
 
-  messages$.next("Cleaning page");
-  await cleanPage(page);
+    messages$.next("Cleaning page");
+    await cleanPage(page);
 
-  const screenshot = await page.screenshot({ fullPage: true });
-  const uniqueId = url.split("/").pop();
-  data.screenshot = await uploadFile(
-    screenshot,
-    `${userId}/${uniqueId}/screenshot.png`
-  );
-  messages$.next("Screenshot uploaded");
+    const screenshot = await page.screenshot({ fullPage: true });
+    const uniqueId = url.split("/").pop();
+    data.screenshot = await uploadFile(
+      screenshot,
+      `${userId}/${uniqueId}/screenshot.png`
+    );
+    messages$.next("Screenshot uploaded");
 
-  await page.close();
-  await browser.close();
-  await updateFirestore(`users/${userId}/reviewOverview`, {
-    createdAt: new Date(),
-    pending: false,
-    ...data,
-  });
+    await page.close();
+    await browser.close();
+    await updateFirestore(`users/${userId}/reviewOverview`, {
+      createdAt: new Date(),
+      pending: false,
+      ...data,
+    });
+  } catch (error) {
+    console.error(error);
+    messages$.next(error.message);
+  }
 }
 
-exports.init = init;
+// exports.init = init;
+
+init();

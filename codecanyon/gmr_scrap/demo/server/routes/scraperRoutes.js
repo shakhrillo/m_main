@@ -28,36 +28,57 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     buildTag = containerName;
 
     // Environment variables
-    const envContent = `
-      IS_INFO=${isInfo}
-      FIREBASE_KEY_BASE64=${process.env.FIREBASE_KEY_BASE64}
-      HOSTNAME=${buildTag}
-      STORAGE_BUCKET=${process.env.STORAGE_BUCKET}
-      URL=${url}
-      USER_ID=${userId}
-      REVIEW_ID=${reviewId}
-      LIMIT=${limit}
-      SORT_BY=${sortBy}
-      GCLOUD_PROJECT=fir-scrapp
-      FIRESTORE_EMULATOR_HOST=host.docker.internal:9100
-      FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
-      STORAGE_EMULATOR_HOST=host.docker.internal:9199
-      FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199
-    `;
+    // const envContent = `
+    //   IS_INFO=${isInfo}
+    //   FIREBASE_KEY_BASE64=${process.env.FIREBASE_KEY_BASE64}
+    //   HOSTNAME=${buildTag}
+    //   STORAGE_BUCKET=${process.env.STORAGE_BUCKET}
+    //   URL=${url}
+    //   USER_ID=${userId}
+    //   REVIEW_ID=${reviewId}
+    //   LIMIT=${limit}
+    //   SORT_BY=${sortBy}
+    //   GCLOUD_PROJECT=fir-scrapp
+    //   FIRESTORE_EMULATOR_HOST=host.docker.internal:9100
+    //   FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
+    //   STORAGE_EMULATOR_HOST=host.docker.internal:9199
+    //   FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199
+    // `;
 
-    createEnvironment(envContent.trim(), "../machines/.env.main");
+    const envArray = [
+      `IS_INFO=${isInfo}`,
+      `FIREBASE_KEY_BASE64=${process.env.FIREBASE_KEY_BASE64}`,
+      `HOSTNAME=${buildTag}`,
+      `STORAGE_BUCKET=${process.env.STORAGE_BUCKET}`,
+      `URL=${url}`,
+      `USER_ID=${userId}`,
+      `REVIEW_ID=${reviewId}`,
+      `LIMIT=${limit}`,
+      `SORT_BY=${sortBy}`,
+      `GCLOUD_PROJECT=fir-scrapp`,
+      `FIRESTORE_EMULATOR_HOST=host.docker.internal:9100`,
+      `FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099`,
+      `STORAGE_EMULATOR_HOST=host.docker.internal:9199`,
+      `FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199`,
+    ];
 
-    console.log(`Building Docker image with tag: ${buildTag}`);
+    // createEnvironment(envContent.trim(), "../machines/.env");
+
+    // console.log(`Building Docker image with tag: ${buildTag}`);
     const ref = `users/${userId}/reviewOverview/${reviewId}/status`;
+
     await buildImage(buildTag, isInfo, ref);
 
     const container = await startContainer(
       containerName,
       buildTag,
       !isInfo,
-      ".env.main"
+      envArray
+      // ".env.main"
     );
-    if (isInfo) await removeImage(buildTag);
+
+    console.log("All done!!!");
+    // if (isInfo) await removeImage(buildTag);
 
     // await removeUnusedImages();
     res.json({ message: "Container started", ...container });
