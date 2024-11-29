@@ -388,84 +388,18 @@ function startContainer(
       },
       function (err, container) {
         if (err) {
-          console.log("err___", err);
-          // reject(err);
+          reject(err);
         }
-
-        console.log("--".repeat(10));
-        console.log(
-          JSON.stringify({
-            Image: buildTag,
-            name: containerName,
-            Env: envArray,
-            Cmd: ["node", "info.js"],
-          })
-        );
-        console.log("--".repeat(10));
-
-        console.log("container", container.id);
 
         container.start(function (err, data) {
           if (err) {
-            console.log("err___", err);
-            // reject(err);
-          }
-
-          if (data) {
-            console.log("data___", data);
+            reject(err);
           }
 
           resolve({ containerName, buildTag });
         });
-
-        // docker.startContainer(containerName, function (err, data) {
-        //   if (err) {
-        //     reject(err);
-        //   }
-
-        //   resolve({ containerName, buildTag });
-        // });
-
-        // container.start(function (err, data) {
-        //   if (err) {
-        //     reject(err);
-        //   }
-
-        //   resolve({ containerName, buildTag });
-        // });
       }
     );
-
-    // const command = "docker";
-    // const args = [
-    //   "run",
-    //   ...(isRunBackground ? ["-d"] : []), // Detached mode (runs in the background)
-    //   // "--rm", // Automatically remove the container when it stops
-    //   "--env-file",
-    //   // ".env", // Pass environment variables
-    //   envFile,
-    //   "--name",
-    //   containerName,
-    //   buildTag,
-    // ];
-
-    // const start = spawn(command, args, {
-    //   cwd: "../machines",
-    // });
-
-    // start.stdout.on("data", (data) => {});
-
-    // start.stderr.on("data", (data) => {});
-
-    // start.on("close", (code) => {
-    //   if (code === 0) {
-    //     resolve({ containerName, buildTag });
-    //   } else {
-    //     reject(
-    //       new Error(`Failed to start container with name: ${containerName}`)
-    //     );
-    //   }
-    // });
   });
 }
 

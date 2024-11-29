@@ -52,16 +52,34 @@ app.use(errorHandler);
 // Watch docker events
 docker.getEvents().then((stream) => {
   stream.setEncoding("utf8");
-  stream.on("data", (chunk) => {
-    console.log("-+-?>", chunk.toString());
-    // try {
-    //   const data = JSON.parse(chunk.toString());
-    //   console.log(
-    //     `Docker event: ${data.Type} ${data.Action} ${data.Actor.Attributes.name}`
-    //   );
-    // } catch (error) {
-    //   console.log("Error parsing data", error);
-    // }
+  stream.on("data", (data) => {
+    const str = data.toString();
+    // const event = JSON.parse(data.toString());
+    // const status = event.status;
+    let status = str.match(/"status":"([^"]+)"/);
+    status = status ? status[1] : "";
+    if (
+      status === "destroy" ||
+      status === "tag" ||
+      status === "untag" ||
+      status === "start" ||
+      status === "die"
+    ) {
+      console.log("Build event:", status);
+
+      if (status === "destroy") {
+        console.log("Destroy event:", str);
+        try {
+          let image = str.match(/"image":"([^"]+)"/);
+          image = image ? image[1] : "";
+          if (image.includes("info") || image.includes("comments")) {
+            docker.getImage(image).remove({ force: true });
+          }
+        } catch (error) {
+          console.log("Error removing image:", error);
+        }
+      }
+    }
   });
 });
 
