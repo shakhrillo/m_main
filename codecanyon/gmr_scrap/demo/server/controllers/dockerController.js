@@ -92,143 +92,40 @@ function removeUnusedImages() {
   });
 }
 
-function buildImage(tag = "", isInfo = false, ref) {
+function buildImage(tag = "") {
   return new Promise(async (resolve, reject) => {
     const buildContextPath = path.resolve(__dirname, "../../machines");
     const tarStream = tar.pack(buildContextPath, {
       ignore: function (name) {
-        // ignore node_modules
         if (name.match(/node_modules/g)) {
           return true;
         }
       },
     });
 
-    console.log("--->", tag);
-
-    docker.buildImage(
+    await docker.buildImage(
       tarStream,
       {
         dockerfile: "Dockerfile",
         t: tag,
         platform: "linux/amd64",
         forcerm: true,
-      },
-      function (err, stream) {
-        stream.setEncoding("utf8");
-        stream.on("data", async (data) => {
-          console.log("ooooooo>", data);
-        });
-
-        stream.on("end", async () => {
-          console.log("Image built");
-          resolve();
-        });
-
-        stream.on("error", async (err) => {
-          console.log("->>>", err);
-          // reject(err);
-        });
       }
+      // function (err, stream) {
+      //   stream.setEncoding("utf8");
+
+      //   stream.on("end", async () => {
+      //     console.log(">>>Image built<<<<<");
+      //     resolve();
+      //   });
+
+      //   stream.on("error", async (err) => {
+      //     reject(err);
+      //   });
+      // }
     );
-
-    // await dockerBuildImage(tag, isInfo);
-
-    // const relativePath =
-
-    // console.log("Context Path:", path.resolve(__dirname, "../machines"));
-    // console.log("Dockerfile:", isInfo ? "Dockerfile.info" : "Dockerfile");
-
-    // await docker.buildImage(
-    //   {
-    //     context: path.resolve(__dirname, "../../machines"),
-    //     src: ["Dockerfile"],
-    //   },
-    //   {
-    //     dockerfile: "Dockerfile",
-    //     platform: "linux/amd64",
-    //     t: tag,
-    //     forcerm: true,
-    //   },
-    //   (err, stream) => {
-    //     if (err) {
-    //       console.log("err", err);
-    //       // updateMachineStatus(tag, {
-    //       //   status: "failed",
-    //       //   message: JSON.stringify(err),
-    //       // });
-    //       // reject(err);
-    //     }
-
-    //     // console.log("err", err);
-    //     // console.log("stream", stream);
-
-    //     stream.setEncoding("utf8");
-    //     stream.on("data", async (data) => {
-    //       console.log("data", data);
-    //       // await db.collection(ref).add({
-    //       //   status: "building",
-    //       //   createdAt: new Date(),
-    //       //   message: "data",
-    //       // });
-    //     });
-
-    //     stream.on("end", () => {
-    //       updateMachineStatus(tag, { status: "built" });
-    //       resolve();
-    //     });
-    //   }
-    // );
-
-    // try {
-    //   const command = "docker";
-    //   const args = [
-    //     "build",
-    //     "-f",
-    //     isInfo ? "Dockerfile.info" : "Dockerfile",
-    //     "--platform",
-    //     "linux/amd64",
-    //     "-t",
-    //     tag,
-    //     ".",
-    //   ];
-
-    //   const build = spawn(command, args, {
-    //     cwd: "../machines",
-    //   });
-
-    //   build.stdout.on("data", async (data) => {
-    //     await db.collection(ref).add({
-    //       status: "building",
-    //       createdAt: new Date(),
-    //       message: data.toString(),
-    //     });
-    //   });
-
-    //   build.stderr.on("data", async (data) => {
-    //     await db.collection(ref).add({
-    //       status: "building",
-    //       createdAt: new Date(),
-    //       message: data.toString(),
-    //     });
-    //   });
-
-    //   build.on("close", (code) => {
-    //     if (code === 0) {
-    //       updateMachineStatus(tag, { status: "built" });
-    //       resolve();
-    //     } else {
-    //       updateMachineStatus(tag, { status: "failed" });
-    //       reject(new Error(`Docker build failed for tag: ${tag}`));
-    //     }
-    //   });
-    // } catch (error) {
-    //   updateMachineStatus(tag, {
-    //     status: "failed",
-    //     message: JSON.stringify(error),
-    //   });
-    //   reject(error);
-    // }
+    console.log(">>>Image built<<<<<");
+    resolve();
   });
 }
 
@@ -372,12 +269,7 @@ function removeContainer(containerId) {
   });
 }
 
-function startContainer(
-  containerName,
-  buildTag,
-  isRunBackground = true,
-  envArray
-) {
+function startContainer(containerName, buildTag, envArray) {
   return new Promise((resolve, reject) => {
     docker.createContainer(
       {

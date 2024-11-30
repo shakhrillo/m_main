@@ -10,6 +10,7 @@ const {
   removeImage,
   removeUnusedImages,
 } = require("../controllers/dockerController");
+const { db } = require("../firebase");
 
 // Helper function for sanitization
 const sanitize = (str) => str.toLowerCase().replace(/[^a-z0-9_-]/g, "");
@@ -26,6 +27,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
       isInfo ? "info" : "comments"
     }_${sanitizedUserId}_${sanitizedReviewId}`;
     buildTag = containerName;
+    console.log("buildTag", buildTag);
 
     const envArray = [
       `IS_INFO=${isInfo}`,
@@ -45,21 +47,21 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     ];
 
     const ref = `users/${userId}/reviewOverview/${reviewId}/status`;
+    // tag: buildTag,
+    //   url,
+    //   userId,
+    //   reviewId,
+    db.doc(`machines/${buildTag}`).set({
+      url,
+      userId,
+      reviewId,
+      limit,
+      sortBy,
+    });
+    await buildImage(buildTag);
+    // await startContainer(containerName, buildTag, envArray);
 
-    await buildImage(buildTag, isInfo, ref);
-
-    const container = await startContainer(
-      containerName,
-      buildTag,
-      !isInfo,
-      envArray
-    );
-
-    console.log("All done!!!");
-    // if (isInfo) await removeImage(buildTag);
-
-    // await removeUnusedImages();
-    res.json({ message: "Container started", ...container });
+    res.json({ message: "Started" });
   } catch (error) {
     logger.error(`Error: ${error.message}`);
     if (buildTag) await removeImage(buildTag);

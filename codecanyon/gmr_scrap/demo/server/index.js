@@ -57,6 +57,9 @@ docker.getEvents().then((stream) => {
     const str = data.toString();
     let status = str.match(/"status":"([^"]+)"/);
     status = status ? status[1] : "";
+
+    // console.log(`Stream data: ${str}`);
+
     if (
       ["destroy", "tag", "untag", "start", "die"].includes(status) &&
       /info_|comments_/.test(str)
@@ -75,6 +78,45 @@ docker.getEvents().then((stream) => {
           }
         } catch (error) {
           console.log("Error saving machine data:", error);
+        }
+      }
+
+      if (status === "tag") {
+        const image = str.match(/"name":"([^"]+)"/);
+        if (image) {
+          try {
+            console.log("Image:", image[1]);
+            const id = image[1];
+            const lines = str.trim().split("\n");
+            const parsedData = lines.map((line) => JSON.parse(line));
+            for (const data of parsedData) {
+              console.log("Start -> Data:", data);
+              console.log("Start -> ID:", id);
+              const imgName = id.replace(":latest", "");
+              docker.createContainer(
+                {
+                  Image: imgName,
+                  name: imgName.replace("info_", "comments_"),
+                  Env: [`TAG=${imgName}`],
+                  Cmd: ["npm", "run", "info"],
+                },
+                function (err, container) {
+                  if (err) {
+                    console.log("Error creating container:", err);
+                  }
+
+                  container.start(function (err, data) {
+                    if (err) {
+                      console.log("Error starting container:", err);
+                    }
+                  });
+                }
+              );
+              // db.collection("machines").doc(id).set(data, { merge: true });
+            }
+          } catch (error) {
+            console.log("Error saving machine data:", error);
+          }
         }
       }
 
