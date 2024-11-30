@@ -53,6 +53,8 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
       reviewId,
       limit,
       sortBy,
+      from: buildTag,
+      time: Math.floor(Date.now() / 1000),
     });
     await buildImage(buildTag);
 
