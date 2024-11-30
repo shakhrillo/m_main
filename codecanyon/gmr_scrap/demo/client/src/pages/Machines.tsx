@@ -12,7 +12,7 @@ import {
 
 interface Machine {
   id: string
-  time: Timestamp
+  time: number
   Action: string
   status: string
   Type: string
@@ -37,6 +37,7 @@ const Machines: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       }))
+      console.log(machinesData)
       setMachines(machinesData as Machine[])
     })
 
@@ -58,7 +59,7 @@ const Machines: React.FC = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Time</th>
                 <th>Machine Type</th>
                 <th>From</th>
                 <th>Status</th>
@@ -68,7 +69,7 @@ const Machines: React.FC = () => {
             <tbody>
               {machines.map(machine => (
                 <tr key={machine.id}>
-                  <td>{machine.Type}</td>
+                  <td>{new Date(machine.time * 1000).toLocaleString()}</td>
                   <td>{machine.Type}</td>
                   <td>{machine.from}</td>
                   <td>{machine.status}</td>

@@ -20,8 +20,8 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
   let buildTag;
   try {
     const { url, userId, reviewId, limit, sortBy } = req.data;
-    const sanitizedUserId = sanitize(userId);
-    const sanitizedReviewId = sanitize(reviewId);
+    const sanitizedUserId = userId.toLowerCase();
+    const sanitizedReviewId = reviewId.toLowerCase();
 
     const containerName = `${
       isInfo ? "info" : "comments"

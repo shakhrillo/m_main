@@ -115,23 +115,45 @@ export const ReviewsForm = () => {
     return unsubscribe
   }, [firestore, user, overviewId])
 
+  // useEffect(() => {
+  //   if (!firestore || !user || !overviewId) return
+  //   setPendingMessages([])
+  //   const collectionRef = query(
+  //     collection(
+  //       firestore,
+  //       `users/${user.uid}/reviewOverview/${overviewId}/status`,
+  //     ),
+  //     orderBy("createdAt", "desc"),
+  //     limit(15),
+  //   )
+  //   const unsubscribe = onSnapshot(collectionRef, snapshot => {
+  //     const messages = snapshot.docs.map(doc => doc.data())
+  //     console.log("messages", messages)
+  //     setPendingMessages(messages as any)
+  //   })
+
+  //   return unsubscribe
+  // }, [firestore, user, overviewId])
+
+  // userId, reviewId,
   useEffect(() => {
     if (!firestore || !user || !overviewId) return
-    setPendingMessages([])
-    const collectionRef = query(
-      collection(
+    console.log("____", `machines/info_${user.uid}_${overviewId}`)
+    const unsubscribe = onSnapshot(
+      doc(
         firestore,
-        `users/${user.uid}/reviewOverview/${overviewId}/status`,
+        `machines/info_${user.uid.toLowerCase()}_${overviewId.toLowerCase()}`,
       ),
-      orderBy("createdAt", "desc"),
-      limit(15),
+      doc => {
+        console.log("doc>>", doc.data())
+        setPendingMessages([
+          ...pendingMessages,
+          {
+            ...doc.data(),
+          },
+        ] as any)
+      },
     )
-    const unsubscribe = onSnapshot(collectionRef, snapshot => {
-      const messages = snapshot.docs.map(doc => doc.data())
-      console.log("messages", messages)
-      setPendingMessages(messages as any)
-    })
-
     return unsubscribe
   }, [firestore, user, overviewId])
 
@@ -190,19 +212,19 @@ export const ReviewsForm = () => {
                 <div className="card my-5">
                   <div className="card-body d-flex-column align-items-center">
                     <Loader />
-                    <CodeBlock
+                    {/* <CodeBlock
                       customStyle={{
                         width: "100%",
                       }}
                       text={pendingMessages
                         .map((e: any) => e.message.slice(0, 50))
                         .join("\n")}
-                    />
-                    {/* <ul>
-                      {pendingMessages.map(({ message }, i) => (
-                        <li key={i}>{message}</li>
+                    /> */}
+                    <ul>
+                      {pendingMessages.map((message: any, i) => (
+                        <li key={i}>{message.status}</li>
                       ))}
-                    </ul> */}
+                    </ul>
                   </div>
                 </div>
                 <p>
