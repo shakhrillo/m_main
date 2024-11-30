@@ -2,7 +2,7 @@ const path = require("path");
 require("dotenv").config({
   path: path.resolve(__dirname, ".env.main"),
 });
-const { launchBrowser, openPage } = require("./services/browser");
+const { launchBrowser, openPage, closeBrowser } = require("./services/browser");
 const {
   waitTitle,
   openReviewTab,
@@ -26,7 +26,7 @@ const { uploadFile } = require("./services/storage");
 
 async function scrap() {
   const tag = process.env.TAG;
-  console.log("TAG", tag);
+  console.log(">_TAG", tag);
   const machine = await firestore.doc(`machines/${tag}`).get();
 
   if (!machine.exists) {
@@ -60,6 +60,7 @@ async function scrap() {
         await scrollToBottom(page);
         lastRecordTime = new Date();
       } else {
+        console.log("No new records for 25 seconds");
         clearInterval(intervalRecordTime);
         count = limit;
         newNodes$.next("end");
@@ -131,6 +132,7 @@ async function scrap() {
       isFirstTime = true;
       if (limit && count >= limit) {
         await complete();
+        subscription.unsubscribe();
       } else {
         await highLightElement(page, record);
         await handleElementActions(page, record);
@@ -176,7 +178,8 @@ async function scrap() {
       jsonUrl,
       totalReviews: allElements.length,
     });
-    console.log("DONE!");
+    console.log("DONE>!");
+    closeBrowser(browser);
   }
 
   async function init() {

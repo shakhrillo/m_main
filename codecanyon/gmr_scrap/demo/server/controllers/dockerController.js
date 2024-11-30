@@ -10,6 +10,7 @@ const { db } = require("../firebase");
 const fs = require("fs");
 const tar = require("tar-fs");
 const { docker } = require("../docker");
+const logger = require("../config/logger");
 // const { docker, dockerBuildImage } = require("../../machines/dcoker");
 
 function dockerInfo() {
@@ -94,6 +95,18 @@ function removeUnusedImages() {
 
 function buildImage(tag = "") {
   return new Promise(async (resolve, reject) => {
+    const images = await docker.listImages();
+    const image = images.find(
+      (image) =>
+        Array.isArray(image.RepoTags) &&
+        image.RepoTags.some((tag) => tag.includes("gmr_scrap"))
+    );
+
+    // if (image) {
+    //   resolve();
+    //   return;
+    // }
+
     const buildContextPath = path.resolve(__dirname, "../../machines");
     const tarStream = tar.pack(buildContextPath, {
       ignore: function (name) {
@@ -103,14 +116,33 @@ function buildImage(tag = "") {
       },
     });
 
-    await docker.buildImage(tarStream, {
-      dockerfile: "Dockerfile",
-      t: tag,
-      platform: "linux/amd64",
-      forcerm: true,
-    });
-    console.log(">>>Image built<<<<<");
-    resolve();
+    await docker.buildImage(
+      tarStream,
+      {
+        dockerfile: "Dockerfile",
+        t: "gmr_scrap",
+        platform: "linux/amd64",
+        forcerm: true,
+      },
+      function (err, stream) {
+        if (err) {
+          reject(err);
+        }
+
+        stream.setEncoding("utf8");
+        stream.on("data", (data) => {
+          logger.info(data);
+        });
+
+        stream.on("error", (err) => {
+          reject(err);
+        });
+
+        stream.on("end", () => {
+          resolve();
+        });
+      }
+    );
   });
 }
 
@@ -261,14 +293,17 @@ function removeContainer(containerId) {
   });
 }
 
-function startContainer(containerName, buildTag, envArray) {
+function startContainer(containerName, envArray, cmd) {
   return new Promise((resolve, reject) => {
     docker.createContainer(
       {
-        Image: buildTag,
+        Image: "gmr_scrap",
         name: containerName,
         Env: envArray,
-        Cmd: ["npm", "run", "info"],
+        Cmd: cmd,
+        HostConfig: {
+          AutoRemove: true,
+        },
       },
       function (err, container) {
         if (err) {
@@ -280,7 +315,7 @@ function startContainer(containerName, buildTag, envArray) {
             reject(err);
           }
 
-          resolve({ containerName, buildTag });
+          resolve({ containerName });
         });
       }
     );

@@ -56,8 +56,13 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
       from: buildTag,
       time: Math.floor(Date.now() / 1000),
     });
-    await buildImage(buildTag);
 
+    let cmd = ["npm", "run"];
+    cmd.push(isInfo ? "info" : "start");
+
+    await startContainer(containerName, [`TAG=${buildTag}`], cmd);
+
+    logger.info(`Container started: ${containerName}`);
     res.json({ message: "Started" });
   } catch (error) {
     logger.error(`Error: ${error.message}`);

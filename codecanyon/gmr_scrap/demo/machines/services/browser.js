@@ -16,8 +16,10 @@ const openPage = async (browser, url) => {
 };
 
 const closeBrowser = async (browser) => {
+  console.log("Closing browser...");
   if (browser) {
     await browser.close();
+    console.log("Browser closed");
   }
 };
 
