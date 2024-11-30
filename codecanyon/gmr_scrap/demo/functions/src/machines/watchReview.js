@@ -6,11 +6,14 @@ const watchReview = async (event) => {
   const status = document.status;
 
   if (status === "completed" && previousDocument.status !== "completed") {
-    const buildTag = document.buildTag;
+    const reviewId = event.params.reviewId;
+    const userId = event.params.userId;
+    const buildTag = `comments_${userId}_${reviewId}`.toLowerCase();
+    // const buildTag = document.buildTag;
     console.log("Removing machine", buildTag);
-    await deleteMachine({
-      buildTag: buildTag,
-    });
+    // await deleteMachine({
+    //   buildTag: buildTag,
+    // });
   }
 };
 

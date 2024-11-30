@@ -158,25 +158,32 @@ function removeImageById(imageId) {
 
 function removeImage(tag = "") {
   return new Promise(async (resolve, reject) => {
-    updateMachineStatus(tag, { status: "removing" });
-    const containers = await listContainers(tag);
-    await Promise.all(
-      containers.map(async (containerId) => {
-        await stopContainer(containerId);
-        await removeContainer(containerId);
-      })
-    );
+    docker.getImage(tag).remove({ force: true }, function (err, data) {
+      if (err) {
+        reject(err);
+      }
 
-    const images = await listImages(tag);
-    await Promise.all(
-      images.map(async (imageId) => {
-        await removeImageById(imageId);
-      })
-    );
+      resolve(data);
+    });
+    // updateMachineStatus(tag, { status: "removing" });
+    // const containers = await listContainers(tag);
+    // await Promise.all(
+    //   containers.map(async (containerId) => {
+    //     await stopContainer(containerId);
+    //     await removeContainer(containerId);
+    //   })
+    // );
 
-    updateMachineStatus(tag, { status: "removed" });
+    // const images = await listImages(tag);
+    // await Promise.all(
+    //   images.map(async (imageId) => {
+    //     await removeImageById(imageId);
+    //   })
+    // );
 
-    resolve();
+    // updateMachineStatus(tag, { status: "removed" });
+
+    // resolve();
   });
 }
 
@@ -280,6 +287,11 @@ function startContainer(containerName, buildTag, envArray) {
   });
 }
 
+async function removeContainerByName(containerName) {
+  console.log("Removing container", containerName);
+  await Promise.all(docker.getContainer(containerName).remove({ force: true }));
+}
+
 module.exports = {
   dockerInfo,
   analyzeSystem,
@@ -289,4 +301,5 @@ module.exports = {
   removeContainer,
   startContainer,
   removeUnusedImages,
+  removeContainerByName,
 };

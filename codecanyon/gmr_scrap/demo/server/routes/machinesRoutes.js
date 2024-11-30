@@ -5,6 +5,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const {
   removeImage,
   removeUnusedImages,
+  removeContainerByName,
 } = require("../controllers/dockerController");
 
 router.post("/clear-cache", authMiddleware, async (req, res) => {
@@ -14,7 +15,7 @@ router.post("/clear-cache", authMiddleware, async (req, res) => {
 
 router.delete("/", authMiddleware, async (req, res) => {
   const { buildTag } = req.data;
-  await removeImage(buildTag);
+  await removeContainerByName(buildTag);
   res.json({ message: "Image removed" });
 });
 

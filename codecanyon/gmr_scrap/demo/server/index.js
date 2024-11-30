@@ -58,6 +58,8 @@ docker.getEvents().then((stream) => {
     let status = str.match(/"status":"([^"]+)"/);
     status = status ? status[1] : "";
 
+    console.log("-->", str);
+
     // console.log(`Stream data: ${str}`);
 
     if (
@@ -93,12 +95,25 @@ docker.getEvents().then((stream) => {
               console.log("Start -> Data:", data);
               console.log("Start -> ID:", id);
               const imgName = id.replace(":latest", "");
+
+              replaceFrom = "";
+              replaceTo = "";
+              let isInfo = false;
+              if (imgName.includes("info")) {
+                isInfo = true;
+                replaceFrom = "info_";
+                replaceTo = "comments_";
+              } else {
+                replaceFrom = "comments_";
+                replaceTo = "info_";
+              }
+
               docker.createContainer(
                 {
                   Image: imgName,
-                  name: imgName.replace("info_", "comments_"),
+                  name: imgName.replace(replaceFrom, replaceTo),
                   Env: [`TAG=${imgName}`],
-                  Cmd: ["npm", "run", "info"],
+                  Cmd: ["npm", "run", isInfo ? "info" : "start"],
                 },
                 function (err, container) {
                   if (err) {
@@ -126,8 +141,18 @@ docker.getEvents().then((stream) => {
           image = image ? image[1] : "";
           if (image.includes("info") || image.includes("comments")) {
             const dockerImage = docker.getImage(image);
+            console.log("Removing image:", dockerImage);
+            const containers = docker
+              .listContainers((filters = { ancestor: [image] }))
+              .then((containers) => {
+                console.log("Containers:", containers);
+              });
             if (dockerImage) {
-              dockerImage.remove({ force: true });
+              try {
+                dockerImage.remove({ force: true });
+              } catch (e) {
+                console.log("__e", e);
+              }
             }
           }
         } catch (error) {
@@ -141,6 +166,7 @@ docker.getEvents().then((stream) => {
         if (id) {
           try {
             const container = docker.getContainer(id[1]);
+            console.log("Removing container:", container);
             if (container) {
               container.remove({ force: true });
             }
