@@ -23,14 +23,14 @@ exports.watchBuyCoins = onDocumentCreated(
   watchBuyCoins
 );
 
-exports.watchNewReview = onDocumentCreated(
-  "users/{userId}/reviews/{reviewId}",
-  getPlaceReview
-);
-exports.watchReviewUpdates = onDocumentUpdated(
-  "users/{userId}/reviews/{reviewId}",
-  watchReview
-);
+// exports.watchNewReview = onDocumentCreated(
+//   "users/{userId}/reviews/{reviewId}",
+//   getPlaceReview
+// );
+// exports.watchReviewUpdates = onDocumentUpdated(
+//   "users/{userId}/reviews/{reviewId}",
+//   watchReview
+// );
 
 exports.watchReviewOverview = onDocumentCreated(
   "users/{userId}/reviewOverview/{reviewId}",
