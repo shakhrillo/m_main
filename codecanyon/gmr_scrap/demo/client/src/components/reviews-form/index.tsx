@@ -58,7 +58,9 @@ export const ReviewsForm = () => {
     ownerResponse: true,
     onlyGoogleReviews: false,
   })
-  const [overviewId, setOverviewId] = useState("")
+  const [overviewId, setOverviewId] = useState(
+    localStorage.getItem("overviewId") || "",
+  )
   const [pendingMessages, setPendingMessages] = useState([])
 
   const handleInputChange = (name: string, value: string | number) =>
@@ -74,6 +76,7 @@ export const ReviewsForm = () => {
       setStep(1)
       const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
       setOverviewId(overviewId)
+      localStorage.setItem("overviewId", overviewId)
     } catch (error) {
       console.error(error)
       alert("Something went wrong. Please try again.")
@@ -109,7 +112,14 @@ export const ReviewsForm = () => {
       doc(firestore, `users/${user.uid}/reviewOverview/${overviewId}`),
       doc => {
         setLoading(false)
-        if (doc.exists()) setInfo(doc.data() as typeof info)
+        if (doc.exists()) {
+          const info = doc.data() as any
+          if (info.title) {
+            console.log("rm", info)
+            localStorage.removeItem("overviewId")
+          }
+          setInfo(info)
+        }
       },
     )
     return unsubscribe

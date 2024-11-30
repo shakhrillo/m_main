@@ -103,27 +103,12 @@ function buildImage(tag = "") {
       },
     });
 
-    await docker.buildImage(
-      tarStream,
-      {
-        dockerfile: "Dockerfile",
-        t: tag,
-        platform: "linux/amd64",
-        forcerm: true,
-      }
-      // function (err, stream) {
-      //   stream.setEncoding("utf8");
-
-      //   stream.on("end", async () => {
-      //     console.log(">>>Image built<<<<<");
-      //     resolve();
-      //   });
-
-      //   stream.on("error", async (err) => {
-      //     reject(err);
-      //   });
-      // }
-    );
+    await docker.buildImage(tarStream, {
+      dockerfile: "Dockerfile",
+      t: tag,
+      platform: "linux/amd64",
+      forcerm: true,
+    });
     console.log(">>>Image built<<<<<");
     resolve();
   });

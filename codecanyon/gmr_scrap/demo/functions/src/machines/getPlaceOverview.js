@@ -15,8 +15,8 @@ const getPlaceOverview = async (event) => {
     userId: event.params.userId,
   });
 
-  await dockerUsageInfo();
-  await snapshot.ref.update(info);
+  // await dockerUsageInfo();
+  // await snapshot.ref.update(info);
   console.log("Info posted:", info);
 };
 

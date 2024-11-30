@@ -46,12 +46,8 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
       `FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199`,
     ];
 
-    const ref = `users/${userId}/reviewOverview/${reviewId}/status`;
-    // tag: buildTag,
-    //   url,
-    //   userId,
-    //   reviewId,
     db.doc(`machines/${buildTag}`).set({
+      status: "pending",
       url,
       userId,
       reviewId,
@@ -59,7 +55,6 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
       sortBy,
     });
     await buildImage(buildTag);
-    // await startContainer(containerName, buildTag, envArray);
 
     res.json({ message: "Started" });
   } catch (error) {
