@@ -13,76 +13,159 @@ async function scrap() {
     return;
   }
 
+  console.log("Scraping machine", machine.data());
+
   const { url, userId, reviewId } = machine.data();
+
+  // const { url, userId, reviewId } = {
+  //   status: "pending",
+  //   url: "https://maps.app.goo.gl/azYJTCw997bWC4NTA",
+  //   userId: "Gj7HkV86vD1SpOfmSqWjD6TR3sF5",
+  //   reviewId: "f0DGir6qLHyXx72Ua8Xg",
+  //   limit: 30,
+  //   sortBy: "Most relevant",
+  //   from: "info_gj7hkv86vd1spofmsqwjd6tr3sf5_f0dgir6qlhyxx72ua8xg",
+  //   time: 1733030178,
+  // };
 
   const scrapePageData = async (page) => {
     return page.evaluate(() => {
       const stringToNumber = (str) => {
-        if (!str) return 0;
-        return parseInt(str.replace(/[^0-9,]/g, "").replace(/,/g, ""), 10);
+        if (!str || typeof str !== "string") {
+          return 0;
+        }
+        const cleanedString = str.replace(/[^0-9,]/g, "").replace(/,/g, "");
+        const number = parseInt(cleanedString, 10);
+        return isNaN(number) ? 0 : number;
       };
 
-      const getData = (selector, attr = "innerText") =>
-        document.querySelector(selector)?.[attr]?.replace(/Address: /, "");
+      const getData = (selector, attr = "innerText") => {
+        const element = document.querySelector(selector);
+        if (!element || !element[attr]) {
+          return "";
+        }
+        const rawData = element[attr];
+        if (typeof rawData !== "string") {
+          return "";
+        }
+        return rawData.replace(/Address: /, "");
+      };
+
+      const getTitle = () => {
+        const title = getData("h1");
+        return title ? title : "";
+      };
+
+      const getAddress = () => {
+        const address = getData("button[data-item-id='address']", "ariaLabel");
+        return address ? address : "";
+      };
+
+      const getReviews = () => {
+        const reviewsText = getData(
+          `button[jsaction*="reviewChart.moreReviews"]`
+        );
+        const reviewsNumber = stringToNumber(reviewsText);
+        return reviewsNumber ? reviewsNumber : 0;
+      };
+
+      const getRating = () => {
+        const ratingText = getData(
+          `[role="img"][aria-label*="stars"]`,
+          "ariaLabel"
+        );
+        const rating = parseFloat(ratingText);
+        return isNaN(rating) ? 0 : rating;
+      };
 
       return {
-        title: getData("h1"),
-        address: getData("button[data-item-id='address']", "ariaLabel"),
-        reviews: stringToNumber(
-          getData(`button[jsaction*="reviewChart.moreReviews"]`)
-        ),
-        rating: parseFloat(
-          getData(`[role="img"][aria-label*="stars"]`, "ariaLabel")
-        ),
+        title: getTitle(),
+        address: getAddress(),
+        reviews: getReviews(),
+        rating: getRating(),
       };
     });
   };
 
-  const cleanPage = async (page) => {
-    await page.evaluate(async () => {
-      const hideElements = (selectors) =>
-        selectors.forEach((s) =>
-          document.querySelectorAll(s).forEach((el) => {
-            if (s.includes("widget-minimap-icon-overlay")) {
-              el.parentElement.style.display = "none";
-            } else {
-              el.style.display = "none";
-            }
-          })
-        );
+  try {
+    const browser = await launchBrowser();
+    console.log("Browser launched");
+    const page = await openPage(browser, url);
+    console.log("Page opened");
+    await page.waitForSelector("h1");
+    console.log("Page loaded");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const data = await scrapePageData(page);
+    console.log("Data scraped", data);
+    // wait for drawer close
+    await page.waitForSelector(`button[jsaction*="drawer.close"]`);
 
-      const selectors = [
-        `button[aria-labelledby="widget-minimap-icon-overlay"]`,
-        `button[jsaction*="minimap.main"]`,
-        `.app-vertical-widget-holder`,
-        `a[aria-label="Sign in"]`,
-        `.app-horizontal-widget-holder`,
-        `a[title="Google apps"]`,
-        `button[aria-label*="Expand side panel"]`,
-        `.scene-footer`,
-        '[role="button"]',
-      ];
-      document.querySelector(`button[jsaction*="drawer.close"]`).click();
-      document.querySelector(`button[jsaction*="zoom.onZoomOutClick"]`).click();
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      hideElements(selectors);
+    let closeDrawerButton = await page.$(`button[jsaction*="drawer.close"]`);
+    while (closeDrawerButton) {
+      if (closeDrawerButton) {
+        await closeDrawerButton.click();
+        await new Promise((resolve) => setTimeout(resolve, 400));
+      }
+      closeDrawerButton = await page.$(`button[jsaction*="drawer.close"]`);
+      console.log("Retrying to close drawer");
+    }
+
+    await page.waitForSelector(`button[jsaction*="drawer.open"]`, {
+      timeout: 5000,
+      visible: true,
     });
-  };
+    console.log("Drawer open button found");
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log("Waiting for drawer to open 2 seconds");
 
-  const browser = await launchBrowser();
-  const page = await openPage(browser, url);
-  const data = await scrapePageData(page);
-  await cleanPage(page);
-  const screenshot = await page.screenshot({ fullPage: true });
-  const uniqueId = new Date().getTime();
-  data.screenshot = await uploadFile(
-    screenshot,
-    `${userId}/${uniqueId}/screenshot.png`
-  );
+    const selectors = [
+      `button[aria-labelledby="widget-minimap-icon-overlay"]`,
+      `button[jsaction*="minimap.main"]`,
+      `.app-vertical-widget-holder`,
+      `a[aria-label="Sign in"]`,
+      `.app-horizontal-widget-holder`,
+      `a[title="Google apps"]`,
+      `button[aria-label*="Expand side panel"]`,
+      `.scene-footer`,
+      '[role="button"]',
+    ];
 
-  await page.close();
-  await browser.close();
-  firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
+    for (const selector of selectors) {
+      const exists = await page.$(selector);
+      if (exists) {
+        await page.evaluate((selector) => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((element) => {
+            if (selector.includes("widget-minimap-icon-overlay")) {
+              const parent = element.parentElement;
+              if (parent) {
+                parent.style.display = "none";
+              }
+            } else {
+              element.style.display = "none";
+            }
+          });
+        }, selector);
+      }
+    }
+
+    console.log("Page cleaned");
+
+    const screenshot = await page.screenshot({ fullPage: true });
+    console.log("Screenshot taken");
+    const uniqueId = new Date().getTime();
+    data.screenshot = await uploadFile(
+      screenshot,
+      `${userId}/${uniqueId}/screenshot.png`
+    );
+
+    await page.close();
+    await browser.close();
+    console.log("Data scraped", data);
+    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
+  } catch (error) {
+    console.error("Error scraping data", error);
+  }
 }
 
 try {

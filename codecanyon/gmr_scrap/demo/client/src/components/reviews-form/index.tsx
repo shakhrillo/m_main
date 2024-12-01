@@ -181,36 +181,34 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="d-flex-column">
-            <div className="card">
-              <div className="card-body">
-                <form onSubmit={handleGetInfo}>
-                  <div className="form-wrap">
-                    <label htmlFor="url" className="form-label">
-                      URL <span className="required">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="url"
-                      value={scrap.url}
-                      onChange={e => handleInputChange("url", e.target.value)}
-                      placeholder="https://maps.app.goo.gl/..."
-                      disabled={loading}
-                      className="form-input form-input-lg"
-                    />
-                    <div className="form-hint">
-                      Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
-                    </div>
+          <div className="card">
+            <div className="card-body">
+              <form onSubmit={handleGetInfo}>
+                <div className="mb-3">
+                  <label htmlFor="url" className="form-label">
+                    URL <span className="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="url"
+                    value={scrap.url}
+                    onChange={e => handleInputChange("url", e.target.value)}
+                    placeholder="https://maps.app.goo.gl/..."
+                    disabled={loading}
+                    className="form-control"
+                  />
+                  <div className="form-text" id="urlHelp">
+                    Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
                   </div>
-                  <button
-                    className="button button-lg button-primary"
-                    type="submit"
-                    disabled={loading || !isUrlValid}
-                  >
-                    Validate URL
-                  </button>
-                </form>
-              </div>
+                </div>
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={loading || !isUrlValid}
+                >
+                  Validate URL
+                </button>
+              </form>
             </div>
           </div>
         )
@@ -219,88 +217,75 @@ export const ReviewsForm = () => {
           <div>
             {!info.title || loading ? (
               <>
-                <div className="card my-5">
-                  <div className="card-body d-flex-column align-items-center">
+                <div className="card">
+                  <div className="card-body text-center">
                     <Loader />
-                    {/* <CodeBlock
-                      customStyle={{
-                        width: "100%",
-                      }}
-                      text={pendingMessages
-                        .map((e: any) => e.message.slice(0, 50))
-                        .join("\n")}
-                    /> */}
-                    <ul>
-                      {pendingMessages.map((message: any, i) => (
-                        <li key={i}>{message.status}</li>
-                      ))}
-                    </ul>
+                    <small className="text-muted">
+                      The process may take between 15 to 60 seconds. <br />
+                      If it takes too long, please try again.
+                    </small>
                   </div>
                 </div>
-                <p>
-                  The process may take between 15 to 60 seconds. If it takes too
-                  long, please try again.
-                </p>
               </>
             ) : (
               <div className="d-flex">
                 <div className="d-flex-column w-100">
                   <div className="card">
-                    <div className="card-header d-flex-column">
-                      <h3>{info.title}</h3>
-                      <p>{info.address}</p>
-                    </div>
-                    <div className="card-body">
-                      <ul className="list-unstyled m-0 p-0 d-flex">
-                        <li className="d-flex-column align-items-center justify-space-around p-5 border-right">
-                          <h2 className="my-0">{info.reviews}</h2>
-                          <p className="m-0">All reviews</p>
-                        </li>
-                        <li className="d-flex-column align-items-center justify-space-around p-5">
-                          <h2 className="my-0">
-                            + {Math.ceil((parseInt(info.reviews) * 3) / 60)} min
-                          </h2>
-                          <p className="m-0">Expected time</p>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="card-footer d-flex-column gap-3">
-                      <div className="d-flex align-items-center gap-3">
-                        <StarRating rating={info.rating} />
-                        <strong>{info.rating ? info.rating : "N/A"}</strong>
-                        <small>Average user rating</small>
+                    <div className="row g-0">
+                      <div className="col-md-5">
+                        <div className="card-body d-flex flex-column h-100">
+                          <h5 className="card-title">{info.title}</h5>
+                          <p className="card-text text-muted">{info.address}</p>
+                          <div className="d-flex align-items-center gap-3">
+                            <StarRating rating={info.rating} />
+                            <strong>{info.rating ? info.rating : "N/A"}</strong>
+                            <small>Average user rating</small>
+                          </div>
+                          <ul className="list-unstyled d-flex gap-5 mt-auto">
+                            <li>
+                              <h3 className="my-0">
+                                {info.reviews.toLocaleString()}
+                              </h3>
+                              <p>Reviews</p>
+                            </li>
+                            <li>
+                              <h3 className="my-0">
+                                +{" "}
+                                {Math.ceil(
+                                  (parseInt(info.reviews) * 3) / 60,
+                                ).toLocaleString()}{" "}
+                                min
+                              </h3>
+                              <p>Expected time</p>
+                            </li>
+                          </ul>
+                          <div className="d-flex">
+                            <button
+                              className="btn btn-outline-danger"
+                              onClick={() => setStep(0)}
+                              disabled={loading || !info.title}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              className="btn btn-primary ms-auto"
+                              onClick={() => setStep(2)}
+                              disabled={loading || !info.title}
+                            >
+                              Confirm
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="d-flex gap-3">
-                        <button
-                          className="button button-lg"
-                          onClick={() => setStep(0)}
-                          disabled={loading || !info.title}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="button button-primary button-lg"
-                          onClick={() => setStep(2)}
-                          disabled={loading || !info.title}
-                        >
-                          Confirm
-                        </button>
+                      <div className="col-md-7">
+                        <img
+                          src={info.screenshot}
+                          alt="screenshot"
+                          className="img-fluid rounded-end"
+                        />
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="w-100">
-                  <a
-                    href={info.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="ml-auto"
-                  >
-                    <div
-                      className="img-glass-left"
-                      style={{ backgroundImage: `url(${info.screenshot})` }}
-                    ></div>
-                  </a>
                 </div>
               </div>
             )}
@@ -310,18 +295,24 @@ export const ReviewsForm = () => {
         return (
           <div>
             <div className="card">
-              <div className="card-header">
-                <h3>{info.title}</h3>
-              </div>
               <div className="card-body">
+                <h5 className="card-title">{info.title}</h5>
+                <p className="card-text text-muted">
+                  {info.address}
+                  <br />
+                  <small>
+                    <a href={info.url} target="_blank" rel="noreferrer">
+                      {info.url}
+                    </a>
+                  </small>
+                </p>
                 <form onSubmit={handleStartScraping}>
-                  <div className="form-wrap">
+                  <div className="mb-3">
                     <label htmlFor="limit" className="form-label">
                       Limit
-                      <span className="required">*</span>
                     </label>
                     <input
-                      className="form-input form-input-lg"
+                      className="form-control"
                       type="number"
                       id="limit"
                       value={scrap.limit}
@@ -330,13 +321,14 @@ export const ReviewsForm = () => {
                         handleInputChange("limit", Number(e.target.value))
                       }
                     />
-                    <div className="form-hint">
-                      Maximum number of reviews to scrape (30 ~ 3000){" "}
-                      <strong>Demo limit is 30</strong>
+                    <div className="form-text" id="limitHelp">
+                      Available reviews: {info.reviews.toLocaleString()} <br />
+                      Maximum reviews that can be scraped depends on the
+                      Machine's memory
                     </div>
                   </div>
 
-                  <div className="form-wrap">
+                  <div className="mb-3">
                     <label htmlFor="sortBy" className="form-label">
                       Sort by
                     </label>
@@ -347,7 +339,7 @@ export const ReviewsForm = () => {
                       onChange={e =>
                         handleInputChange("sortBy", e.target.value)
                       }
-                      className="form-select form-select-lg"
+                      className="form-select"
                     >
                       {[
                         "Most relevant",
@@ -360,18 +352,22 @@ export const ReviewsForm = () => {
                         </option>
                       ))}
                     </select>
+                    <div className="form-text" id="sortByHelp">
+                      By default, reviews are sorted by relevance. And the
+                      number of reviews is limited to less than 1000.
+                    </div>
                   </div>
 
-                  <div className="d-flex gap-3">
+                  <div className="d-flex">
                     <button
-                      className="button button-lg"
+                      className="btn btn-outline-danger"
                       onClick={() => setStep(0)}
                       disabled={loading}
                     >
                       Cancel
                     </button>
                     <button
-                      className="button button-lg button-primary"
+                      className="btn btn-primary ms-auto"
                       type="submit"
                       disabled={loading}
                     >

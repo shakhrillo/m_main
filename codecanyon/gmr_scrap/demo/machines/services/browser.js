@@ -3,16 +3,27 @@ const puppeteer = require("puppeteer");
 const launchBrowser = async () =>
   puppeteer.launch({
     headless: true,
-    defaultViewport: null,
     protocolTimeout: 60000,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
-const openPage = async (browser, url) => {
-  const page = await browser.newPage();
-  await page.goto(url, { waitUntil: "networkidle2" });
-  await page.setViewport({ width: 1200, height: 800 });
-  return page;
+const openPage = async (
+  browser,
+  url,
+  viewport = { width: 1200, height: 800 }
+) => {
+  if (!browser) throw new Error("Browser instance is required.");
+  const pages = await browser.pages();
+  const page = pages.length > 0 ? pages[0] : await browser.newPage();
+
+  try {
+    await page.goto(url);
+    await page.setViewport(viewport);
+    return page;
+  } catch (error) {
+    console.error(`Failed to open page: ${error.message}`);
+    throw error;
+  }
 };
 
 const closeBrowser = async (browser) => {
