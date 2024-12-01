@@ -301,9 +301,16 @@ function startContainer(containerName, envArray, cmd) {
         name: containerName,
         Env: envArray,
         Cmd: cmd,
-        // HostConfig: {
-        //   AutoRemove: true,
-        // },
+        HostConfig: {
+          AutoRemove: true,
+          // Memory: 1024 * 1024 * 1024,
+          // MemorySwap: -1,
+          // CpuQuota: 50000,
+          // CpuPeriod: 100000,
+          // CpuShares: 1024,
+          // PidsLimit: 100,
+          // NetworkMode: "host",
+        },
       },
       function (err, container) {
         if (err) {

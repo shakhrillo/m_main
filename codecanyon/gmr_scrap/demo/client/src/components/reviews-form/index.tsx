@@ -40,6 +40,7 @@ export const ReviewsForm = () => {
   const [isUrlValid, setIsUrlValid] = useState(false)
   const [step, setStep] = useState(0)
   const [info, setInfo] = useState({
+    error: "",
     url: "",
     title: "",
     subtitle: "",
@@ -216,7 +217,27 @@ export const ReviewsForm = () => {
         return (
           <div>
             {!info.title || loading ? (
-              <>
+              info.error ? (
+                <div className="card">
+                  <div className="card-body">
+                    <div className="alert alert-danger">
+                      <strong>Error:</strong> {info.error} <br />
+                      Please try again. Make sure the URL is correct and the
+                      place is available on Google Maps.
+                    </div>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setOverviewId("")
+                        localStorage.removeItem("overviewId")
+                        setStep(0)
+                      }}
+                    >
+                      Try again
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <div className="card">
                   <div className="card-body text-center">
                     <Loader />
@@ -226,7 +247,7 @@ export const ReviewsForm = () => {
                     </small>
                   </div>
                 </div>
-              </>
+              )
             ) : (
               <div className="d-flex">
                 <div className="d-flex-column w-100">

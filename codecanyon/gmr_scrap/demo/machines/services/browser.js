@@ -4,23 +4,22 @@ const launchBrowser = async () =>
   puppeteer.launch({
     headless: true,
     protocolTimeout: 90000,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--no-zygote",
+    ],
   });
 
 const openPage = async (browser, url) => {
   const page = await browser.newPage();
-  try {
-    await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
-  } catch (error) {
-    console.warn(`Error during page navigation: ${error.message}`);
-  }
+  await page.goto(url, { waitUntil: "load", timeout: 30000 });
+  await page.waitForFunction(`window.location.href !== "${url}"`, {
+    timeout: 30000,
+  });
   await page.setViewport({ width: 1200, height: 800 });
-
-  try {
-    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
-  } catch (error) {
-    console.warn(`Error during wait for navigation: ${error.message}`);
-  }
 
   return page;
 };

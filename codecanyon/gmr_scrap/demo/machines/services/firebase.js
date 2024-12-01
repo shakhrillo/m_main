@@ -1,41 +1,18 @@
 const admin = require("firebase-admin");
-const { getStorage } = require("firebase-admin/storage");
 require("dotenv").config();
-// const firebaseKey = JSON.parse(
-//   Buffer.from(process.env.FIREBASE_KEY_BASE64, "base64").toString("utf-8")
-// );
 
-console.log("--+->", process.env["FIRESTORE_EMULATOR_HOST"]);
-
-const app = admin.initializeApp();
-// ({
-//   // projectId: "fir-scrapp",
-//   // credential: admin.credential.cert(firebaseKey),
-//   // storageBucket: "gs://fir-scrapp.firebasestorage.app",
-// });
+admin.initializeApp({
+  projectId: "fir-scrapp",
+});
 
 const firestore = admin.firestore();
-// firestore.settings({
-// ""
-// host: "host.docker.internal:9100",
-// ssl: false,
-// });
+firestore.settings({
+  host: "host.docker.internal:9100",
+  // host: "localhost:9100",
+  ssl: false,
+});
+
 const auth = admin.auth();
-// const storage = getStorage(app);
-// auth.useEmulator("http://localhost:9099");
-// const storage = admin.storage();
-
-// const storage = getStorage();
-// const bucket = storage.bucket("fir-scrapp.appspot.com");
-
-// storage.useEmulator("host.docker.internal", 9199);
-// const bucket = storage.bucket("fir-scrapp.appspot.com");
-// const bucket = admin.storage().bucket("fir-scrapp.appspot.com");
-
-// check bucket emulator
-
-// bucket;
-// bucket.useEmulator("host.docker.internal", 9199);
 
 async function batchWriteLargeArray(uid, pushId, data) {
   let collectionRef = firestore.collection(

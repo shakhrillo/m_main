@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     // Detect docker image
-    await buildImage();
+    // await buildImage();
 
     console.log("---".repeat(20));
     console.log("---".repeat(20));
