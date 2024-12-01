@@ -270,7 +270,7 @@ export const ReviewsForm = () => {
                             <button
                               className="btn btn-primary ms-auto"
                               onClick={() => setStep(2)}
-                              disabled={loading || !info.title}
+                              disabled={loading || !info.title || !info.reviews}
                             >
                               Confirm
                             </button>
