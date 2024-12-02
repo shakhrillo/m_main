@@ -3,7 +3,7 @@ const { launchBrowser, openPage } = require("./services/browser");
 const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const tag =
-  process.env.TAG || "info_u7lhhvogwity1rbqwvqoc6nueqm2_fngyfqjlfay5q5eyucer";
+  process.env.TAG || "info_u7lhhvogwity1rbqwvqoc6nueqm2_nlwzdzcvecj6pwyjevhl";
 
 async function getMachineData() {
   console.log("Getting machine data for", tag);
@@ -21,6 +21,8 @@ async function getMachineData() {
   return machine.data();
 }
 
+let browser;
+let page;
 async function scrap() {
   let data = await getMachineData();
   if (!data) {
@@ -34,8 +36,9 @@ async function scrap() {
   const { url, userId, reviewId } = data;
   console.log("Scraping data for", url);
 
-  const browser = await launchBrowser();
-  const page = await openPage(browser, url);
+  browser = await launchBrowser();
+  page = await openPage(browser, url);
+
   console.log("Page loaded");
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.log("after 3 seconds");
