@@ -8,18 +8,16 @@
     "info": "node info.js",
     "start": "node main.js"
   },
-  "puppeteer": {
-    "product": "chrome",
-    "platform": "linux-arm64"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",
+    "atomic-sleep": "^1.0.0",
+    "delay": "^6.0.0",
     "dockerode": "^4.0.2",
     "dotenv": "^16.4.5",
     "firebase-admin": "^13.0.0",
-    "puppeteer": "^23.8.0",
+    "puppeteer": "^23.9.0",
     "rxjs": "^7.8.1"
   }
 }

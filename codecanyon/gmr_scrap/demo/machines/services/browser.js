@@ -4,13 +4,16 @@ const launchBrowser = async () =>
   puppeteer.launch({
     headless: true,
     protocolTimeout: 90000,
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
+      "--disable-dev-shm-usage", // Helps with limited shared memory
       "--disable-gpu",
-      "--no-zygote",
+      "--disable-accelerated-2d-canvas",
+      "--disable-software-rasterizer",
     ],
+    dumpio: true,
   });
 
 const openPage = async (browser, url) => {

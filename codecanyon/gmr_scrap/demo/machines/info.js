@@ -4,6 +4,7 @@ const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const tag =
   process.env.TAG || "info_u7lhhvogwity1rbqwvqoc6nueqm2_nlwzdzcvecj6pwyjevhl";
+const sleep = require("atomic-sleep");
 
 async function getMachineData() {
   console.log("Getting machine data for", tag);
@@ -37,10 +38,12 @@ async function scrap() {
   console.log("Scraping data for", url);
 
   browser = await launchBrowser();
+  console.log("Browser launched");
   page = await openPage(browser, url);
 
   console.log("Page loaded");
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await sleep(1000);
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
   console.log("after 3 seconds");
 
   try {
@@ -49,31 +52,6 @@ async function scrap() {
     console.log("Title", title);
   } catch (error) {
     console.info("Error getting title", error);
-  }
-
-  try {
-    await page.waitForSelector("button[aria-label='Collapse side panel']", {
-      timeout: 30000,
-    });
-    const sidePanelBtns = await page.$$(
-      "button[aria-label='Collapse side panel']"
-    );
-    console.log("sidePanelBtns", sidePanelBtns.length);
-    for (const btn of sidePanelBtns) {
-      if (!(await btn.isIntersectingViewport())) {
-        continue;
-      }
-      await btn.click();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-  } catch (error) {
-    console.info("Error collapsing side panel", error);
-    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
-      status: "error",
-      error: "Not found required element",
-    });
-    browser.close();
-    return;
   }
 
   try {
@@ -123,6 +101,35 @@ async function scrap() {
   }
 
   try {
+    await page.waitForSelector("button[aria-label='Collapse side panel']", {
+      timeout: 30000,
+    });
+    const sidePanelBtns = await page.$$(
+      "button[aria-label='Collapse side panel']"
+    );
+    console.log("sidePanelBtns", sidePanelBtns.length);
+    for (const btn of sidePanelBtns) {
+      if (!(await btn.isIntersectingViewport())) {
+        continue;
+      }
+      await btn.click();
+      await sleep(1000);
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  } catch (error) {
+    console.info("Error collapsing side panel", error);
+    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
+      status: "error",
+      error: "Not found required element",
+    });
+    browser.close();
+    return;
+  }
+
+  console.log("Taking screenshot");
+
+  await sleep(3000);
+  try {
     const screenshot = await page.screenshot({ fullPage: true });
     const uniqueId = new Date().getTime();
     data.screenshot = await uploadFile(
@@ -136,7 +143,10 @@ async function scrap() {
   await page.close();
   await browser.close();
   console.log("Data scraped", data);
-  firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
+  firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
+    status: "completed",
+    ...data,
+  });
 }
 
 try {
