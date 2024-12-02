@@ -255,6 +255,25 @@ async function waitTitle(page) {
   return title;
 }
 
+async function openOverviewTab(page) {
+  await page.evaluate(() => {
+    const allButtons = document.querySelectorAll('button[role="tab"]');
+    if (!allButtons.length) {
+      throw new Error("No tab buttons found");
+    }
+
+    for (const button of allButtons) {
+      const tabText = button.textContent?.trim().toLowerCase() || "";
+      if (tabText.includes("overview")) {
+        button.click();
+        return;
+      }
+    }
+
+    throw new Error("Review tab not found");
+  });
+}
+
 async function openReviewTab(page) {
   await page.evaluate(() => {
     const allButtons = document.querySelectorAll('button[role="tab"]');
@@ -401,4 +420,5 @@ module.exports = {
   getInitialReviews,
   watchNewReviews,
   scrollToBottom,
+  openOverviewTab,
 };

@@ -1,10 +1,15 @@
 require("dotenv").config();
 const { launchBrowser, openPage } = require("./services/browser");
 const { firestore } = require("./services/firebase");
-const { uploadFile } = require("./services/storage");
+const {
+  openReviewTab,
+  waitTitle,
+  openOverviewTab,
+} = require("./services/page");
+// const { uploadFile } = require("./services/storage");
 const tag =
   process.env.TAG || "info_u7lhhvogwity1rbqwvqoc6nueqm2_nlwzdzcvecj6pwyjevhl";
-const sleep = require("atomic-sleep");
+// const sleep = require("atomic-sleep");
 
 async function getMachineData() {
   console.log("Getting machine data for", tag);
@@ -42,17 +47,28 @@ async function scrap() {
   page = await openPage(browser, url);
 
   console.log("Page loaded");
-  await sleep(1000);
+  // await sleep(1000);
   // await new Promise((resolve) => setTimeout(resolve, 3000));
   console.log("after 3 seconds");
 
-  try {
-    const title = await page.title();
-    data.title = title;
-    console.log("Title", title);
-  } catch (error) {
-    console.info("Error getting title", error);
-  }
+  data.title = await waitTitle(page);
+  console.log("Title", data.title);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await openReviewTab(page);
+  console.log("Review tab opened");
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await openOverviewTab(page);
+  console.log("Overview tab opened");
+
+  console.log("Review tab opened");
+
+  // try {
+  //   const title = await page.title();
+  //   data.title = title;
+  //   console.log("Title", title);
+  // } catch (error) {
+  //   console.info("Error getting title", error);
+  // }
 
   try {
     const address = await page.$eval("button[data-item-id='address']", (el) =>
@@ -113,7 +129,7 @@ async function scrap() {
         continue;
       }
       await btn.click();
-      await sleep(1000);
+      // await sleep(1000);
       // await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   } catch (error) {
@@ -128,17 +144,17 @@ async function scrap() {
 
   console.log("Taking screenshot");
 
-  await sleep(3000);
-  try {
-    const screenshot = await page.screenshot({ fullPage: true });
-    const uniqueId = new Date().getTime();
-    data.screenshot = await uploadFile(
-      screenshot,
-      `${userId}/${uniqueId}/screenshot.png`
-    );
-  } catch (error) {
-    console.info("Error taking screenshot", error);
-  }
+  // await sleep(3000);
+  // try {
+  //   const screenshot = await page.screenshot({ fullPage: true });
+  //   const uniqueId = new Date().getTime();
+  //   data.screenshot = await uploadFile(
+  //     screenshot,
+  //     `${userId}/${uniqueId}/screenshot.png`
+  //   );
+  // } catch (error) {
+  //   console.info("Error taking screenshot", error);
+  // }
 
   await page.close();
   await browser.close();
