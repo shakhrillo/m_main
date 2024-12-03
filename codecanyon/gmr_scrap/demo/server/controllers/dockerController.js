@@ -297,12 +297,12 @@ function startContainer(containerName, envArray, cmd) {
   return new Promise((resolve, reject) => {
     docker.createContainer(
       {
-        Image: "gmr_scrap",
+        Image: "gmr_scrap_selenium",
         name: containerName,
         Env: envArray,
         Cmd: cmd,
         HostConfig: {
-          // AutoRemove: true,
+          AutoRemove: true,
         },
       },
       function (err, container) {

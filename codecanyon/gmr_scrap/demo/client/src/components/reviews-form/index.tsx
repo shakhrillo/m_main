@@ -119,6 +119,7 @@ export const ReviewsForm = () => {
             console.log("rm", info)
             localStorage.removeItem("overviewId")
           }
+          console.log("info", info)
           setInfo(info)
         }
       },

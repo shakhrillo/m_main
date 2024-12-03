@@ -6,7 +6,7 @@ const {
   waitTitle,
   openOverviewTab,
 } = require("./services/page");
-// const { uploadFile } = require("./services/storage");
+const { uploadFile } = require("./services/storage");
 const tag =
   process.env.TAG || "info_u7lhhvogwity1rbqwvqoc6nueqm2_nlwzdzcvecj6pwyjevhl";
 // const sleep = require("atomic-sleep");
@@ -144,17 +144,17 @@ async function scrap() {
 
   console.log("Taking screenshot");
 
-  // await sleep(3000);
-  // try {
-  //   const screenshot = await page.screenshot({ fullPage: true });
-  //   const uniqueId = new Date().getTime();
-  //   data.screenshot = await uploadFile(
-  //     screenshot,
-  //     `${userId}/${uniqueId}/screenshot.png`
-  //   );
-  // } catch (error) {
-  //   console.info("Error taking screenshot", error);
-  // }
+  await sleep(3000);
+  try {
+    const screenshot = await page.screenshot({ fullPage: true });
+    const uniqueId = new Date().getTime();
+    data.screenshot = await uploadFile(
+      screenshot,
+      `${userId}/${uniqueId}/screenshot.png`
+    );
+  } catch (error) {
+    console.info("Error taking screenshot", error);
+  }
 
   await page.close();
   await browser.close();
