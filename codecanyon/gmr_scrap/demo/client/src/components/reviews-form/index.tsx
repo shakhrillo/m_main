@@ -254,7 +254,7 @@ export const ReviewsForm = () => {
                 <div className="d-flex-column w-100">
                   <div className="card">
                     <div className="row g-0">
-                      <div className="col-md-5">
+                      <div className="col-md-6">
                         <div className="card-body d-flex flex-column h-100">
                           <h5 className="card-title">{info.title}</h5>
                           <p className="card-text text-muted">{info.address}</p>
@@ -299,12 +299,15 @@ export const ReviewsForm = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-7">
-                        <img
-                          src={info.screenshot}
-                          alt="screenshot"
-                          className="img-fluid rounded-end"
-                        />
+                      <div className="col-md-6">
+                        <div
+                          style={{
+                            height: 400,
+                            backgroundImage: `url(${info.screenshot})`,
+                            backgroundPosition: "center",
+                            backgroundSize: "cover",
+                          }}
+                        ></div>
                       </div>
                     </div>
                   </div>
