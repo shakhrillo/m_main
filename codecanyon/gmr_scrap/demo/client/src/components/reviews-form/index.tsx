@@ -266,7 +266,7 @@ export const ReviewsForm = () => {
                           <ul className="list-unstyled d-flex gap-5 mt-auto">
                             <li>
                               <h3 className="my-0">
-                                {info.reviews.toLocaleString()}
+                                {(info.reviews || "0").toLocaleString()}
                               </h3>
                               <p>Reviews</p>
                             </li>
@@ -274,7 +274,7 @@ export const ReviewsForm = () => {
                               <h3 className="my-0">
                                 +{" "}
                                 {Math.ceil(
-                                  (parseInt(info.reviews) * 3) / 60,
+                                  (parseInt(info.reviews || "0") * 3) / 60,
                                 ).toLocaleString()}{" "}
                                 min
                               </h3>
@@ -347,7 +347,8 @@ export const ReviewsForm = () => {
                       }
                     />
                     <div className="form-text" id="limitHelp">
-                      Available reviews: {info.reviews.toLocaleString()} <br />
+                      Available reviews:{" "}
+                      {(info.reviews || "0").toLocaleString()} <br />
                       Maximum reviews that can be scraped depends on the
                       Machine's memory
                     </div>
