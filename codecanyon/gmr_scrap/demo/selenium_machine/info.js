@@ -43,9 +43,22 @@ const tag =
   let driver = await new Builder()
     .forBrowser("chrome")
     .setChromeOptions(
-      new chrome.Options().addArguments("--headless=new", "--no-sandbox")
+      new chrome.Options().addArguments(
+        "--headless",
+        "--no-sandbox",
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-popup-blocking",
+        "--window-size=1200,800"
+      )
     )
     .build();
+
+  driver.manage().setTimeouts({
+    implicit: 60000, // Wait for elements
+    pageLoad: 60000, // Wait for page to load
+    script: 60000, // Wait for async scripts
+  });
 
   async function getElementBySelector(selector) {
     const elements = await driver.findElements(By.css(selector));

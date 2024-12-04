@@ -60,9 +60,9 @@ const tag =
     .build();
 
   driver.manage().setTimeouts({
-    implicit: 10000, // Wait for elements
-    pageLoad: 10000, // Wait for page to load
-    script: 10000, // Wait for async scripts
+    implicit: 60000, // Wait for elements
+    pageLoad: 60000, // Wait for page to load
+    script: 60000, // Wait for async scripts
   });
 
   let startTimestamp = new Date().getTime();
@@ -122,5 +122,5 @@ const tag =
   }
 
   console.log("Watching reviews");
-  watchReviews(driver);
+  watchReviews(driver, data);
 })();

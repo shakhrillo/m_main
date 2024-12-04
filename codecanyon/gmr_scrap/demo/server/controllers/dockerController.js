@@ -302,7 +302,7 @@ function startContainer(containerName, envArray, cmd) {
         Env: envArray,
         Cmd: cmd,
         HostConfig: {
-          // AutoRemove: true,
+          AutoRemove: true,
         },
       },
       function (err, container) {

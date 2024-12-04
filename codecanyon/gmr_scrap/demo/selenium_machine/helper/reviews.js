@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { Builder, By, until, WebDriver } = require("selenium-webdriver");
+const { firestore } = require("../services/firebase");
+const { uploadFile } = require("../services/storage");
 
 /**
  * Get the initial reviews
@@ -57,7 +59,7 @@ const getInitialReviews = async (driver) => {
  * Get the initial reviews
  * @param {WebDriver} driver
  */
-const watchReviews = async (driver) => {
+const watchReviews = async (driver, data) => {
   // load extracter js file and convert it to string
   const extracterString = fs.readFileSync(
     path.join(__dirname, "extracter.js"),
@@ -75,16 +77,34 @@ const watchReviews = async (driver) => {
     }
   };
 
-  setInterval(async () => {
+  async function quitDriver() {
+    if (isDriverActive(driver)) {
+      console.log("Quitting driver");
+      await driver.quit();
+    }
+  }
+
+  const interval = setInterval(async () => {
+    const allElements = await driver.executeScript(`return window["ids"]`);
     if (!(await isDriverActive(driver))) {
       console.error("Driver session is invalid. Terminating interval.");
-      driver.quit();
+      clearInterval(interval);
+      await complete(allElements, data);
+      await quitDriver();
       return; // Exit if the session is no longer valid
     }
 
     try {
       const ids = await driver.executeScript(`return window["ids"]`);
       console.log("Review IDs:", ids?.length || 0);
+
+      if (ids?.length > data.limit) {
+        console.log("Reached limit. Terminating interval.");
+        clearInterval(interval);
+        await complete(allElements, data);
+        await quitDriver();
+        return;
+      }
     } catch (error) {
       console.error("Error fetching IDs:", error);
     }
@@ -102,6 +122,64 @@ const watchReviews = async (driver) => {
     }
   }, 5000);
 };
+
+const uploadReviewsAsFile = async (allElements, { reviewId }) => {
+  if (!allElements?.length) return { csvUrl: "", jsonUrl: "" };
+
+  const jsonContent = JSON.stringify(allElements, null, 2);
+  const csvContent = [
+    Object.keys(allElements[0]).join(","),
+    ...allElements.map((el) => Object.values(el).join(",")),
+  ].join("\n");
+
+  const [csvUrl, jsonUrl] = await Promise.all([
+    uploadFile(csvContent, `csv/${reviewId}.csv`),
+    uploadFile(jsonContent, `json/${reviewId}.json`),
+  ]);
+
+  return { csvUrl, jsonUrl };
+};
+
+async function addReviews(allElements, { userId, reviewId }) {
+  if (!allElements.length) return;
+
+  const collectionRef = firestore.collection(
+    `users/${userId}/reviews/${reviewId}/reviews`
+  );
+  const chunkSize = 500;
+
+  await Promise.all(
+    allElements.reduce((batches, _, i) => {
+      if (i % chunkSize === 0) {
+        const chunk = allElements.slice(i, i + chunkSize);
+        const batch = firestore.batch();
+
+        chunk.forEach((doc) => {
+          if (doc?.id) batch.set(collectionRef.doc(doc.id), doc);
+        });
+
+        batches.push(batch.commit());
+      }
+      return batches;
+    }, [])
+  );
+}
+
+async function complete(allElements, { reviewId, userId }) {
+  const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, {
+    reviewId,
+  });
+  await addReviews(allElements, { userId, reviewId });
+  await firestore.doc(`users/${userId}/reviews/${reviewId}`).update({
+    updatedAt: new Date(),
+    completedAt: new Date(),
+    status: "completed",
+    csvUrl,
+    jsonUrl,
+    totalReviews: allElements.length,
+  });
+  console.log("Review completed");
+}
 
 module.exports = {
   sortReviews,
