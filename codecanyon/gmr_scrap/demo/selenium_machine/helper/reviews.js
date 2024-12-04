@@ -78,6 +78,7 @@ const watchReviews = async (driver) => {
   setInterval(async () => {
     if (!(await isDriverActive(driver))) {
       console.error("Driver session is invalid. Terminating interval.");
+      driver.quit();
       return; // Exit if the session is no longer valid
     }
 
