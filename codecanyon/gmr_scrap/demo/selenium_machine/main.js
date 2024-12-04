@@ -74,15 +74,6 @@ const tag =
   let spentTimeInSeconds = (new Date().getTime() - startTimestamp) / 1000;
   console.log("Spent time:", spentTimeInSeconds, "seconds");
 
-  // const allButtons = document.querySelectorAll('button[role="tab"]');
-  // for (const button of allButtons) {
-  //   const tabText = button.textContent?.trim().toLowerCase() || "";
-  //   if (tabText.includes("reviews")) {
-  //     button.click();
-  //     return;
-  //   }
-  // }
-
   const reviewsTabs = await driver.findElements(By.css('button[role="tab"]'));
   for (const tab of reviewsTabs) {
     const tabText = await tab.getText();
@@ -91,19 +82,6 @@ const tag =
       break;
     }
   }
-
-  // reload the page
-  // await driver.navigate().refresh();
-
-  // page.exposeFunction("newNodes", function (record) {
-  //   newNodes$.next(record);
-  // });
-  // const loggs = (message) => {
-  //   console.log("Loggs:", message);
-  // };
-  // add global function to the page which calls the loggs function
-  // await driver.executeScript(`window.newNodes = function (record) {
-  //   window.loggs(record
 
   await driver.sleep(2000);
   await sortReviews(driver, "Newest");
@@ -114,9 +92,6 @@ const tag =
     reviews = await getInitialReviews(driver);
     console.log("Initial reviews", reviews);
 
-    // take a screenshot and upload to firebase
-    // const parentEl = document.querySelector(".vyucnb").parentElement;
-    // const scrollContainer = parentEl.children[parentEl.children.length - 2];
     await driver.executeScript(`
       const parentEl = document.querySelector(".vyucnb").parentElement;
       const loaderEl = parentEl.children[parentEl.children.length - 1];
@@ -144,20 +119,8 @@ const tag =
       const lastChild = scrollContainer.children[scrollContainer.children.length - 1];
       lastChild.scrollIntoView();
     `);
-    // const node = await driver.findElement(
-    //   By.css(`div[data-review-id="${reviews[reviews.length - 1]}"]`)
-    // );
-    // // scrollIntoView
-    // if (node) {
-    //   await driver.executeScript("arguments[0].scrollIntoView();", node);
-    // }
   }
 
   console.log("Watching reviews");
   watchReviews(driver);
-
-  // quit the driver
-  // wait 5 sec
-  // await driver.sleep(10000000);
-  // await driver.quit();
 })();
