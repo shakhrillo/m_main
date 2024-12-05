@@ -114,18 +114,6 @@ const watchReviews = async (driver, data) => {
       } catch (error) {
         console.error("Error fetching IDs:", error);
       }
-
-      try {
-        const scrollContainerChilds = await driver.executeScript(
-          `return window["scrollContainerChilds"]`
-        );
-        console.log(
-          "Scroll container childs:",
-          scrollContainerChilds?.length || 0
-        );
-      } catch (error) {
-        console.error("Error fetching scroll container children:", error);
-      }
     } catch (err) {
       console.error("Error fetching reviews:", err);
       stopInterval = true;
