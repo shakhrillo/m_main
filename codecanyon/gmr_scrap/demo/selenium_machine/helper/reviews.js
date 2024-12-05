@@ -104,8 +104,7 @@ const watchReviews = async (driver, data) => {
       }
 
       try {
-        // if (allElements?.length > data.limit) {
-        if (allElements?.length > 30000) {
+        if (allElements?.length > data.limit) {
           console.log("Reached limit. Terminating interval.");
           stopInterval = true;
           await complete(allElements, data);
@@ -136,9 +135,6 @@ const watchReviews = async (driver, data) => {
       // Re-schedule after execution
       if (!stopInterval) {
         setTimeout(fetchIds, 5000);
-      } else {
-        console.log("Stopped fetching");
-        await quitDriver();
       }
     }
   }

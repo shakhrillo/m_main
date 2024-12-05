@@ -104,7 +104,7 @@ const tag =
   }
 
   await driver.sleep(2000);
-  await sortReviews(driver, "Newest");
+  await sortReviews(driver, data.sortBy);
   console.log("Sorted reviews");
 
   let reviews = [];
