@@ -162,31 +162,30 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <div className="d-flex align-items-center gap-3 py-3 my-5">
+      <div className="d-flex align-items-center gap-3">
         <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
           <img src={menuIcon} alt="menu-icon" />
         </button>
-        <h3 className="m-0">Reviews</h3>
-        <button className="button button-lg button-success ml-auto">
-          Extract new reviews
-        </button>
+        <h3>Reviews</h3>
       </div>
-      <div className="card d-flex my-5">
-        <div className="d-flex-column w-100 border-right p-5">
-          <p className="m-0">All comments</p>
-          <h3 className="m-0">150k</h3>
-        </div>
-        <div className="d-flex-column w-100 border-right p-5">
-          <p className="m-0">Owner responses</p>
-          <h3 className="m-0">73k</h3>
-        </div>
-        <div className="d-flex-column w-100 border-right p-5">
-          <p className="m-0">User comments</p>
-          <h3 className="m-0">99k</h3>
-        </div>
-        <div className="d-flex-column w-100 p-5">
-          <p className="m-0">Images</p>
-          <h3 className="m-0">3k</h3>
+      <div className="card">
+        <div className="card-body d-flex gap-3">
+          <div>
+            <p className="m-0">All comments</p>
+            <h3 className="m-0">150k</h3>
+          </div>
+          <div>
+            <p className="m-0">Owner responses</p>
+            <h3 className="m-0">73k</h3>
+          </div>
+          <div>
+            <p className="m-0">User comments</p>
+            <h3 className="m-0">99k</h3>
+          </div>
+          <div>
+            <p className="m-0">Images</p>
+            <h3 className="m-0">3k</h3>
+          </div>
         </div>
       </div>
       <div className="nav">
