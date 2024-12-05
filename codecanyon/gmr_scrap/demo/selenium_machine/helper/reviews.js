@@ -84,43 +84,66 @@ const watchReviews = async (driver, data) => {
     }
   }
 
-  const interval = setInterval(async () => {
-    const allElements = await driver.executeScript(`return window["ids"]`);
-    if (!(await isDriverActive(driver))) {
-      console.error("Driver session is invalid. Terminating interval.");
-      clearInterval(interval);
-      await complete(allElements, data);
-      await quitDriver();
-      return; // Exit if the session is no longer valid
-    }
+  let allElements = [];
+  let stopInterval = false;
 
+  async function fetchIds() {
     try {
-      const ids = await driver.executeScript(`return window["ids"]`);
-      console.log("Review IDs:", ids?.length || 0);
+      const allElements = await driver.executeScript(
+        `return window["ids"] || []`
+      );
 
-      if (ids?.length > data.limit) {
-        console.log("Reached limit. Terminating interval.");
-        clearInterval(interval);
+      console.log("Total reviews:", allElements.length);
+
+      if (!(await isDriverActive(driver))) {
+        console.error("Driver session is invalid. Terminating interval.");
+        stopInterval = true;
         await complete(allElements, data);
         await quitDriver();
-        return;
+        return; // Exit if the session is no longer valid
       }
-    } catch (error) {
-      console.error("Error fetching IDs:", error);
-    }
 
-    try {
-      const scrollContainerChilds = await driver.executeScript(
-        `return window["scrollContainerChilds"]`
-      );
-      console.log(
-        "Scroll container childs:",
-        scrollContainerChilds?.length || 0
-      );
-    } catch (error) {
-      console.error("Error fetching scroll container children:", error);
+      try {
+        // if (allElements?.length > data.limit) {
+        if (allElements?.length > 30000) {
+          console.log("Reached limit. Terminating interval.");
+          stopInterval = true;
+          await complete(allElements, data);
+          await quitDriver();
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching IDs:", error);
+      }
+
+      try {
+        const scrollContainerChilds = await driver.executeScript(
+          `return window["scrollContainerChilds"]`
+        );
+        console.log(
+          "Scroll container childs:",
+          scrollContainerChilds?.length || 0
+        );
+      } catch (error) {
+        console.error("Error fetching scroll container children:", error);
+      }
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      stopInterval = true;
+      await complete(allElements, data);
+      await quitDriver();
+    } finally {
+      // Re-schedule after execution
+      if (!stopInterval) {
+        setTimeout(fetchIds, 5000);
+      } else {
+        console.log("Stopped fetching");
+        await quitDriver();
+      }
     }
-  }, 5000);
+  }
+
+  fetchIds();
 };
 
 const uploadReviewsAsFile = async (allElements, { reviewId }) => {

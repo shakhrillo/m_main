@@ -130,33 +130,35 @@
   }
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
-  const lastCheckedReviewsLength = 0;
+  // const lastCheckedReviewsLength = 0;
   const observerCallback = (records) => {
     if (window.ids === undefined) {
       window.ids = [];
       window.scrollContainerChilds = [];
     }
     const scrollContainer = parentEl.children[parentEl.children.length - 2];
-    window.scrollContainerChilds = Array.from(scrollContainer.children);
+    // window.scrollContainerChilds = Array.from(scrollContainer.children);
 
-    if (window.scrollContainerChilds.length > 300) {
-      const middle = window.scrollContainerChilds.slice(10, 200);
-      for (const elm of middle) {
-        elm.remove();
-      }
-    }
+    // if (window.scrollContainerChilds.length > 300) {
+    //   const middle = window.scrollContainerChilds.slice(10, 200);
+    //   for (const elm of middle) {
+    //     elm.remove();
+    //   }
+    // }
 
     // scroll to scrollContainer top
     // scrollContainer.scrollTop = 0;
-    const firstChild = scrollContainer.children[0];
-    firstChild.scrollIntoView();
+    // const firstChild = scrollContainer.children[0];
+    // const lastChild = scrollContainer.children[scrollContainer.children.length - 1];
+    // lastChild.scrollIntoView();
+    // firstChild.scrollIntoView();
 
     let waitTime = 100;
-    if (lastCheckedReviewsLength === window.ids.length) {
-      waitTime = 5000;
-    } else {
-      waitTime = 100;
-    }
+    // if (lastCheckedReviewsLength === window.ids.length) {
+    //   waitTime = 5000;
+    // } else {
+    //   waitTime = 100;
+    // }
 
     setTimeout(() => {
       for (const record of records) {
@@ -165,16 +167,16 @@
           Array.from(record.addedNodes).map((node, i) => {
             const id = node.getAttribute("data-review-id");
             // if latest review
-            if (Array.from(record.addedNodes).length - 1 === i) {
-              node.scrollIntoView();
-            }
+            // if (Array.from(record.addedNodes).length - 1 === i) {
+            //   node.scrollIntoView();
+            // }
 
             if (id) {
-              node.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "center",
-              });
+              // node.scrollIntoView({
+              //   behavior: "smooth",
+              //   block: "center",
+              //   inline: "center",
+              // });
               node.scrollIntoView();
               ids.push({
                 id,
@@ -187,10 +189,16 @@
                 imageUrls: getImgURLs(node),
               });
             }
+
+            // node.remove();
           });
         }
       }
-      lastCheckedReviewsLength = window.ids.length;
+
+      // remove all reviews
+      parentEl.children[parentEl.children.length - 2].innerHTML = "";
+
+      // lastCheckedReviewsLength = window.ids.length;
     }, waitTime);
   };
   new MutationObserver(observerCallback).observe(

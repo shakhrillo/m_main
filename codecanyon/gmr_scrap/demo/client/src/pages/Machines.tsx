@@ -14,6 +14,12 @@ interface Machine {
   id: string
   time: number
   Action: string
+  Actor: {
+    ID: string
+    Attributes: {
+      name: string
+    }
+  }
   status: string
   Type: string
   from: string
@@ -71,7 +77,7 @@ const Machines: React.FC = () => {
                 <tr key={machine.id}>
                   <td>{new Date(machine.time * 1000).toLocaleString()}</td>
                   <td>{machine.Type}</td>
-                  <td>{machine.from}</td>
+                  <td>{machine?.Actor?.Attributes?.name}</td>
                   <td>{machine.status}</td>
                 </tr>
               ))}

@@ -1,5 +1,6 @@
 const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
+// const { PageLoadStrategy } = require("selenium-webdriver");
 const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const {
@@ -45,21 +46,40 @@ const tag =
   }
 
   let options = new chrome.Options();
-  options.addArguments(
-    "--headless",
-    "--no-sandbox",
-    "--disable-gpu",
-    "--disable-dev-shm-usage",
-    "--disable-popup-blocking",
-    "--window-size=1200,800"
-  );
+  // options.addArguments(
+  //   "--headless",
+  //   "--no-sandbox",
+  //   "--disable-gpu",
+  //   "--disable-dev-shm-usage",
+  //   "--disable-popup-blocking",
+  //   "--disable-browser-side-navigation",
+  //   "--window-size=1200,800"
+  // );
+  options.addArguments("--headless");
+  options.addArguments("--no-sandbox");
+  options.addArguments("--disable-dev-shm-usage");
+  options.addArguments("--aggressive-cache-discard");
+  options.addArguments("--disable-cache");
+  options.addArguments("--disable-application-cache");
+  options.addArguments("--disable-offline-load-stale-cache");
+  options.addArguments("--disk-cache-size=0");
+  options.addArguments("--disable-gpu");
+  options.addArguments("--dns-prefetch-disable");
+  options.addArguments("--no-proxy-server");
+  options.addArguments("--log-level=3");
+  options.addArguments("--silent");
+  options.addArguments("--disable-browser-side-navigation");
+  // options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+  options.setProxy(null);
+
   options.setLoggingPrefs({ browser: "ALL" });
+
   let driver = await new Builder()
     .forBrowser("chrome")
     .setChromeOptions(options)
     .build();
 
-  driver.manage().setTimeouts({
+  await driver.manage().setTimeouts({
     implicit: 60000, // Wait for elements
     pageLoad: 60000, // Wait for page to load
     script: 60000, // Wait for async scripts

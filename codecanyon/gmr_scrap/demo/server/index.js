@@ -71,6 +71,17 @@ const startServer = async () => {
 
         if (/info_|comments_/.test(str)) {
           console.log("Docker event:", str);
+
+          try {
+            const lines = str.trim().split("\n");
+            const parsedData = lines.map((line) => JSON.parse(line));
+            for (const data of parsedData) {
+              const name = data.Actor.Attributes.name;
+              db.collection("machines").doc(name).set(data, { merge: true });
+            }
+          } catch (error) {
+            console.log("Error saving machine data:", error);
+          }
         }
 
         return;
