@@ -130,75 +130,65 @@
   }
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
-  // const lastCheckedReviewsLength = 0;
   const observerCallback = (records) => {
     if (window.ids === undefined) {
       window.ids = [];
-      window.scrollContainerChilds = [];
     }
-    const scrollContainer = parentEl.children[parentEl.children.length - 2];
-    // window.scrollContainerChilds = Array.from(scrollContainer.children);
-
-    // if (window.scrollContainerChilds.length > 300) {
-    //   const middle = window.scrollContainerChilds.slice(10, 200);
-    //   for (const elm of middle) {
-    //     elm.remove();
-    //   }
-    // }
-
-    // scroll to scrollContainer top
-    // scrollContainer.scrollTop = 0;
-    // const firstChild = scrollContainer.children[0];
-    // const lastChild = scrollContainer.children[scrollContainer.children.length - 1];
-    // lastChild.scrollIntoView();
-    // firstChild.scrollIntoView();
 
     let waitTime = 100;
-    // if (lastCheckedReviewsLength === window.ids.length) {
-    //   waitTime = 5000;
-    // } else {
-    //   waitTime = 100;
-    // }
+    setTimeout(async () => {
+      try {
+        for (const record of records) {
+          if (record.type === "childList") {
+            await Promise.all(
+              Array.from(record.addedNodes).map(async (node) => {
+                const id = node.getAttribute("data-review-id");
+                if (id) {
+                  node.scrollIntoView();
 
-    setTimeout(() => {
-      for (const record of records) {
-        console.log("Record:", record);
-        if (record.type === "childList") {
-          Array.from(record.addedNodes).map((node, i) => {
-            const id = node.getAttribute("data-review-id");
-            // if latest review
-            // if (Array.from(record.addedNodes).length - 1 === i) {
-            //   node.scrollIntoView();
-            // }
+                  const buttonActions = [
+                    `button[jsaction*="review.showReviewInOriginal"]`,
+                    `button[jsaction*="review.showOwnerResponseInOriginal"]`,
+                    `button[jsaction*="review.expandReview"]`,
+                    `button[jsaction*="review.expandOwnerResponse"]`,
+                    `button[jsaction*="review.showMorePhotos"]`,
+                  ];
 
-            if (id) {
-              // node.scrollIntoView({
-              //   behavior: "smooth",
-              //   block: "center",
-              //   inline: "center",
-              // });
-              node.scrollIntoView();
-              ids.push({
-                id,
-                review: elementReviewComment(node),
-                user: extractUser(node),
-                date: getReviewDate(node),
-                rating: getReviewRate(node),
-                qa: elementReviewQA(node),
-                response: getOwnerResponse(node),
-                imageUrls: getImgURLs(node),
-              });
-            }
+                  for (const selector of buttonActions) {
+                    const button = node.querySelector(selector);
+                    if (button) {
+                      button.click();
+                    }
+                  }
 
-            // node.remove();
-          });
+                  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                  ids.push({
+                    id,
+                    review: elementReviewComment(node),
+                    user: extractUser(node),
+                    date: getReviewDate(node),
+                    rating: getReviewRate(node),
+                    qa: elementReviewQA(node),
+                    response: getOwnerResponse(node),
+                    imageUrls: getImgURLs(node),
+                  });
+                }
+              })
+            );
+          }
         }
+
+        // Remove all reviews
+        if (parentEl && parentEl.children.length > 1) {
+          parentEl.children[parentEl.children.length - 2].innerHTML = "";
+        }
+
+        // Optional: Update the length of last checked reviews
+        // lastCheckedReviewsLength = ids.length;
+      } catch (error) {
+        console.error("Error processing records:", error);
       }
-
-      // remove all reviews
-      parentEl.children[parentEl.children.length - 2].innerHTML = "";
-
-      // lastCheckedReviewsLength = window.ids.length;
     }, waitTime);
   };
   new MutationObserver(observerCallback).observe(

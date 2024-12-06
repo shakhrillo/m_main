@@ -71,7 +71,7 @@ const tag =
     let startTimestamp = new Date().getTime();
     // Navigate to a website
     await driver.get(url);
-    await driver.sleep(2000);
+    await driver.sleep(400);
     let currentUrl = await driver.getCurrentUrl();
     console.log("Current URL:", currentUrl);
     await driver.wait(until.urlContains(currentUrl), 10000);
