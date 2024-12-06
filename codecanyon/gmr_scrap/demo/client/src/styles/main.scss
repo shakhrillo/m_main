@@ -1,21 +1,21 @@
 @import "./abstracts/variables";
 
-@import "./base/reset";
-@import "./base/typography";
+// @import "./base/reset";
+// @import "./base/typography";
 
-@import "./abstracts/placeholders";
-@import "./components/button";
-@import "./components/nav";
+// @import "./abstracts/placeholders";
+// @import "./components/button";
+// @import "./components/nav";
 @import "./components/sidebar";
 @import "./components/steps";
-@import "./components/form";
+// @import "./components/form";
 @import "./components/table";
-@import "./components/image";
-@import "./components/card";
-@import "./components/loader";
-@import "./components/list";
+// @import "./components/image";
+// @import "./components/card";
+// @import "./components/loader";
+// @import "./components/list";
 
-@import "./utilities/utilities";
+// @import "./utilities/utilities";
 
 // hr {
 //   border: 0;
@@ -24,7 +24,8 @@
 // }
 
 .main {
-  display: flex;
+  // display: flex;
+  padding-left: 180px;
 }
 
 .text-wrap {
@@ -38,18 +39,5 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     width: -webkit-fill-available;
-  }
-}
-
-.content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  @media (min-width: 768px) {
-    width: 100%;
-  }
-
-  @media (min-width: 1200px) {
-    width: 90%;
   }
 }

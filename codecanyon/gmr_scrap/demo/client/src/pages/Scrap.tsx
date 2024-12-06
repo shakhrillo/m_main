@@ -6,12 +6,9 @@ import menuIcon from "../assets/icons/list.svg"
 const Scrap: React.FC = () => {
   const { toggleMenu } = useMenu()
   return (
-    <div>
-      <div className="d-flex align-items-center mt-3">
-        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
-          <img src={menuIcon} alt="menu-icon" />
-        </button>
-        <h3>Scrap</h3>
+    <div className="col">
+      <div className="row">
+        <h1>Scrap</h1>
       </div>
       <ReviewsForm />
     </div>

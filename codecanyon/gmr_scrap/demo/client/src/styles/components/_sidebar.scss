@@ -39,6 +39,7 @@
   left: 0;
   z-index: $z-index-medium;
   // box-shadow: $box-shadow-light;
+  border-right: 1px solid $border-color;
   padding: $spacing-md;
   box-sizing: border-box;
   transition: left 0.3s ease;

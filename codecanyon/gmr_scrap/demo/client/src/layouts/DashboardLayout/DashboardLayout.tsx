@@ -6,8 +6,8 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="main">
       <Sidebar />
-      <div className="container">
-        <div className="content">
+      <div className="container-fluid">
+        <div className="row">
           <Outlet />
         </div>
       </div>
