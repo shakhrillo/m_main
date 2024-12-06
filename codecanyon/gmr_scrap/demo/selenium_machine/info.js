@@ -40,18 +40,27 @@ const tag =
   }
 
   // Create a new instance of the browser driver with headless options
+  let options = new chrome.Options();
+  options.addArguments("--headless");
+  options.addArguments("--no-sandbox");
+  options.addArguments("--disable-dev-shm-usage");
+  options.addArguments("--aggressive-cache-discard");
+  options.addArguments("--disable-cache");
+  options.addArguments("--disable-application-cache");
+  options.addArguments("--disable-offline-load-stale-cache");
+  options.addArguments("--disk-cache-size=0");
+  options.addArguments("--disable-gpu");
+  options.addArguments("--dns-prefetch-disable");
+  options.addArguments("--no-proxy-server");
+  options.addArguments("--log-level=3");
+  options.addArguments("--silent");
+  options.addArguments("--disable-browser-side-navigation");
+  options.setProxy(null);
+  options.setLoggingPrefs({ browser: "ALL" });
+
   let driver = await new Builder()
     .forBrowser("chrome")
-    .setChromeOptions(
-      new chrome.Options().addArguments(
-        "--headless",
-        "--no-sandbox",
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-popup-blocking",
-        "--window-size=1200,800"
-      )
-    )
+    .setChromeOptions(options)
     .build();
 
   driver.manage().setTimeouts({
@@ -59,6 +68,22 @@ const tag =
     pageLoad: 60000, // Wait for page to load
     script: 60000, // Wait for async scripts
   });
+
+  const isDriverActive = async (driver) => {
+    try {
+      await driver.getTitle();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  async function quitDriver() {
+    if (isDriverActive(driver)) {
+      console.log("Quitting driver");
+      await driver.quit();
+    }
+  }
 
   async function getElementBySelector(selector) {
     const elements = await driver.findElements(By.css(selector));
@@ -173,8 +198,12 @@ const tag =
     });
 
     console.log("Data:", data);
+  } catch (err) {
+    console.error("Error:", err);
+    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
+      status: "error",
+    });
   } finally {
-    // Quit the driver
-    await driver.quit();
+    await quitDriver();
   }
 })();

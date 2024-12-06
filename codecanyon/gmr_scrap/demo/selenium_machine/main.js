@@ -46,15 +46,6 @@ const tag =
   }
 
   let options = new chrome.Options();
-  // options.addArguments(
-  //   "--headless",
-  //   "--no-sandbox",
-  //   "--disable-gpu",
-  //   "--disable-dev-shm-usage",
-  //   "--disable-popup-blocking",
-  //   "--disable-browser-side-navigation",
-  //   "--window-size=1200,800"
-  // );
   options.addArguments("--headless");
   options.addArguments("--no-sandbox");
   options.addArguments("--disable-dev-shm-usage");
@@ -69,9 +60,7 @@ const tag =
   options.addArguments("--log-level=3");
   options.addArguments("--silent");
   options.addArguments("--disable-browser-side-navigation");
-  // options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
   options.setProxy(null);
-
   options.setLoggingPrefs({ browser: "ALL" });
 
   let driver = await new Builder()

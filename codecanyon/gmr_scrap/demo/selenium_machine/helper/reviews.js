@@ -89,9 +89,7 @@ const watchReviews = async (driver, data) => {
 
   async function fetchIds() {
     try {
-      const allElements = await driver.executeScript(
-        `return window["ids"] || []`
-      );
+      allElements = await driver.executeScript(`return window["ids"] || []`);
 
       console.log("Total reviews:", allElements.length);
 
@@ -122,7 +120,7 @@ const watchReviews = async (driver, data) => {
     } finally {
       // Re-schedule after execution
       if (!stopInterval) {
-        setTimeout(fetchIds, 5000);
+        setTimeout(fetchIds, 400);
       }
     }
   }
@@ -172,10 +170,12 @@ async function addReviews(allElements, { userId, reviewId }) {
   );
 }
 
-async function complete(allElements, { reviewId, userId }) {
+async function complete(allElements, { limit, reviewId, userId }) {
   const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, {
     reviewId,
   });
+  let totalReviews = allElements.length;
+  allElements = allElements.slice(0, limit);
   await addReviews(allElements, { userId, reviewId });
   await firestore.doc(`users/${userId}/reviews/${reviewId}`).update({
     updatedAt: new Date(),
@@ -184,6 +184,7 @@ async function complete(allElements, { reviewId, userId }) {
     csvUrl,
     jsonUrl,
     totalReviews: allElements.length,
+    totalReviewsScraped: totalReviews,
   });
   console.log("Review completed");
 }
