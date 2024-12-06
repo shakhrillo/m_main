@@ -1,6 +1,6 @@
 export const reviewTextRender = (text: string) => {
   const textLength = text.length
-  const renderTextLength = 60
+  const renderTextLength = 260
   if (textLength === 0) return "No review"
   return (
     <p title={text}>

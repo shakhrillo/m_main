@@ -58,7 +58,19 @@ function ReviewComments() {
           <tr key={review.id}>
             <td>{index + 1}</td>
             <td>{review.rating}</td>
-            <td>{imagesCountRender(review.imageUrls)}</td>
+            <td>
+              {review.imageUrls.length > 0
+                ? review.imageUrls.map((imageUrl: string, index: number) => (
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={`Review ${index + 1}`}
+                      style={{ width: 40 }}
+                      className="img-thumbnail"
+                    />
+                  ))
+                : "No images"}
+            </td>
             <td>{reviewTextRender(review.review)}</td>
             <td>{reviewTextRender(review.response)}</td>
           </tr>
