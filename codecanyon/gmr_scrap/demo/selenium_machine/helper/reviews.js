@@ -120,7 +120,7 @@ const watchReviews = async (driver, data) => {
     } finally {
       // Re-schedule after execution
       if (!stopInterval) {
-        setTimeout(fetchIds, 400);
+        setTimeout(fetchIds, 5000);
       }
     }
   }

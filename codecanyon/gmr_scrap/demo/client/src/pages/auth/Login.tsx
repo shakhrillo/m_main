@@ -41,9 +41,9 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="main">
-      <div className="container">
-        <div className="content">
+    <div className="container">
+      <div className="row">
+        <div className="col">
           <h3>Login</h3>
           <div className="card">
             <div className="card-body">
@@ -86,15 +86,13 @@ const Login: React.FC = () => {
                   </Link>
                 </div>
               </form>
-              <button className="button" onClick={handleGoogleLogin}>
+              <hr />
+              <button className="btn btn-primary" onClick={handleGoogleLogin}>
                 <i className="bi bi-google me-2"></i>
                 Login with Google
               </button>
-              <span>
-                Don't have an account?{" "}
-                <Link className="login__card__link" to="/auth/register">
-                  Register
-                </Link>
+              <span className="d-block">
+                Don't have an account? <Link to="/auth/register">Register</Link>
               </span>
             </div>
           </div>
