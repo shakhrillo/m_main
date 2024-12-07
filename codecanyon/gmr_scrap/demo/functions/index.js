@@ -17,7 +17,9 @@ const watchReview = require("./src/machines/watchReview");
 admin.initializeApp();
 
 exports.appInit = onDocumentUpdated("app/{appId}", watchSettings);
+
 exports.userCreate = functions.auth.user().onCreate(userCreate);
+
 exports.watchBuyCoins = onDocumentCreated(
   "users/{userId}/buyCoins/{coinId}",
   watchBuyCoins
@@ -37,4 +39,4 @@ exports.watchReviewOverview = onDocumentCreated(
   getPlaceOverview
 );
 
-// exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);
+exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);

@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom"
 import StarRating from "../star-rating"
 import Loader from "../loader"
 import { CodeBlock, dracula } from "react-code-blocks"
+import { spentTime } from "../../utils/spentTime"
 
 const steps = [
   {
@@ -50,6 +51,9 @@ export const ReviewsForm = () => {
     rating: 0,
     reviews: "",
     screenshot: "",
+    status: "",
+    createdAt: "",
+    updatedAt: "",
   })
   const [scrap, setScrap] = useState({
     url: "",
@@ -217,6 +221,10 @@ export const ReviewsForm = () => {
       case 1:
         return (
           <div>
+            <div className="d-flex alert alert-primary">
+              <span className="me-auto">{info.status}</span>
+              Spend time: {spentTime(info)}
+            </div>
             {!info.title || loading ? (
               info.error ? (
                 <div className="card">

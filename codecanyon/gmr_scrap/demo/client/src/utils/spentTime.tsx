@@ -2,7 +2,7 @@ import { Timestamp } from "firebase/firestore"
 
 export const spentTime = (placeInfo: any): string => {
   const start = placeInfo.createdAt as Timestamp
-  const end = placeInfo.completedAt as Timestamp
+  const end = placeInfo.updatedAt as Timestamp
   let diff = 0
   if (!start || !end) {
     return "N/A"
