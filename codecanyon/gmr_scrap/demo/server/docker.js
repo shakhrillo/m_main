@@ -1,4 +1,5 @@
 const Docker = require("dockerode");
+const { updateMachine } = require("./services/machinesService");
 const docker = new Docker();
 
 async function watchEvents() {
@@ -22,7 +23,7 @@ async function watchEvents() {
         const parsedData = lines.map((line) => JSON.parse(line));
         for (const data of parsedData) {
           const name = data.Actor.Attributes.name;
-          db.collection("machines").doc(name).set(data, { merge: true });
+          updateMachine(name, data);
 
           if (status !== "destroy") {
             const container = docker.getContainer(name);

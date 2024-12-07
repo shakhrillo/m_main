@@ -1,16 +1,13 @@
 const { db } = require("../firebase");
 
-function addMachineStatus(machineId, details) {
-  // const doc = db.collection("machines").doc(machineId);
-  // return doc.set({ ...details, createdAt: new Date() });
-}
-
-function updateMachineStatus(machineId, details) {
-  // const doc = db.collection("machines").doc(machineId);
-  // return doc.update({ ...details, updatedAt: new Date() });
+async function updateMachine(docId, data) {
+  try {
+    await db.collection("machines").doc(docId).update(data);
+  } catch (error) {
+    console.error("Error updating machine:", error);
+  }
 }
 
 module.exports = {
-  addMachineStatus,
-  updateMachineStatus,
+  updateMachine,
 };
