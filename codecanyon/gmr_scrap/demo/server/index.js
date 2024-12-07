@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const dockerRoutes = require("./routes/dockerRoutes");
 const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
@@ -11,7 +10,6 @@ const stripeRoutes = require("./routes/stripeRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const logger = require("./config/logger");
 const { db } = require("./firebase");
-const { buildImage } = require("./controllers/dockerController");
 
 dotenv.config();
 
@@ -20,12 +18,6 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    // Detect docker image
-    // await buildImage();
-
-    console.log("---".repeat(20));
-    console.log("---".repeat(20));
-
     // Middlewares
     app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
     app.use(express.urlencoded({ extended: true }));
@@ -33,7 +25,6 @@ const startServer = async () => {
     app.use("/api/stripe", stripeRoutes);
     app.use(express.json());
 
-    app.use("/api/docker", dockerRoutes);
     app.use("/api/machines", machinesRoutes);
     app.use("/api/scrap", scraperRoutes);
 
