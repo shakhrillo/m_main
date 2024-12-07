@@ -86,6 +86,15 @@ const Sidebar = () => {
               Usage
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to={"/info"}
+              className={({ isActive }) => ` ${isActive ? "active" : ""}`}
+            >
+              <img src={infoIcon} alt="icon" />
+              Info
+            </NavLink>
+          </li>
         </ul>
         <hr />
         <ul className="list-unstyled m-0">

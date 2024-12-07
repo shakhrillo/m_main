@@ -4,29 +4,35 @@ import { useFirebase } from "../contexts/FirebaseProvider"
 
 const Info: React.FC = () => {
   const { firestore } = useFirebase()
-  const [info, setInfo] = useState(null)
+  const [info, setInfo] = useState(null as any)
 
   useEffect(() => {
     if (!firestore) return
-    const docAppInfo = doc(firestore, "app", "info")
+    const docAppInfo = doc(firestore, "docker", "info")
 
     const unsubscribe = onSnapshot(docAppInfo, snapshot => {
       const data = snapshot.data()
       if (!data || !data.info) return
-      setInfo(data.info)
+      console.log(JSON.parse(data.info))
+      setInfo(JSON.parse(data.info))
     })
 
     return () => unsubscribe()
   }, [firestore])
 
   return (
-    <div>
+    <div className="row">
       <h2>Info</h2>
-      <div className="card">
-        <div className="card-body">
-          <div className="text-wrap">{info}</div>
-        </div>
-      </div>
+      {info && (
+        <ol className="list-group list-group-numbered">
+          {Object.entries(info).map(([key, value]: [string, any]) => (
+            <li key={key} className="list-group-item">
+              <strong className="me-1">{key}</strong>
+              {JSON.stringify(value)}
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   )
 }

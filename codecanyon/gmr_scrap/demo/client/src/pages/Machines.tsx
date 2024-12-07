@@ -50,16 +50,9 @@ const Machines: React.FC = () => {
     return () => unsubscribe()
   }, [firestore])
 
-  function removeMachine(id: string) {
-    const machineRef = doc(firestore, "machines", id)
-    updateDoc(machineRef, {
-      status: "remove",
-    })
-  }
-
   return (
     <div>
-      <h2>Users</h2>
+      <h2>Machines</h2>
       <div className="card">
         <div className="card-body">
           <table className="table">

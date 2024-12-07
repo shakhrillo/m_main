@@ -59,6 +59,8 @@ const startServer = async () => {
     // Error-handling middleware
     app.use(errorHandler);
 
+    const activeStreams = new Map(); // Keep track of active streams
+
     // Watch docker events
     docker.getEvents().then((stream) => {
       stream.setEncoding("utf8");
@@ -83,7 +85,14 @@ const startServer = async () => {
                 const container = docker.getContainer(name);
                 if (status === "die") {
                   container.remove();
+                  if (activeStreams.has(name)) {
+                    const stream = activeStreams.get(name);
+                    stream.removeAllListeners(); // Unsubscribe from the stream
+                    activeStreams.delete(name); // Remove from active streams
+                    console.log(`Unsubscribed from container: ${name}`);
+                  }
                 }
+
                 if (container) {
                   container.stats((err, stream) => {
                     if (err) {
@@ -99,9 +108,29 @@ const startServer = async () => {
                         .doc(name)
                         .set({ stats }, { merge: true });
                     });
+
+                    activeStreams.set(name, stream); // Keep track of the stream
                   });
                 }
               }
+            }
+
+            if (status === "destroy") {
+              docker.info(async (err, info) => {
+                if (err) {
+                  console.error("Error fetching Docker info:", err);
+                } else {
+                  console.log("Docker Engine Info:");
+                  try {
+                    await db
+                      .collection("docker")
+                      .doc("info")
+                      .set({ info: JSON.stringify(info) }, { merge: true });
+                  } catch (error) {
+                    console.error("Error saving Docker info:", error);
+                  }
+                }
+              });
             }
           } catch (error) {
             console.log("Error saving machine data:", error);
