@@ -29,17 +29,7 @@ const startServer = async () => {
     app.use("/api/scrap", scraperRoutes);
 
     // Default route
-    app.get("/", (req, res) => {
-      const uptime = process.uptime();
-      const hours = Math.floor(uptime / 3600);
-      const minutes = Math.floor((uptime % 3600) / 60);
-      const seconds = Math.floor(uptime % 60);
-
-      res.send(`
-        <p>The server has been running for:</p>
-        <p><strong>${hours}h ${minutes}m ${seconds}s</strong></p>
-      `);
-    });
+    app.get("/", (req, res) => res.send("Server is running"));
 
     app.use((req, res, next) => {
       const error = new Error("Invalid route");
