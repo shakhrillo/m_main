@@ -2,10 +2,6 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
-if (process.env.NODE_ENV === "development") {
-  require("dotenv").config();
-}
-
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 if (!FIREBASE_PROJECT_ID) {
   throw new Error("FIREBASE_PROJECT_ID not found in environment variables");
