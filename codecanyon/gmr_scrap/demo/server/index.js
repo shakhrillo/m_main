@@ -78,6 +78,30 @@ const startServer = async () => {
             for (const data of parsedData) {
               const name = data.Actor.Attributes.name;
               db.collection("machines").doc(name).set(data, { merge: true });
+
+              if (status !== "destroy") {
+                const container = docker.getContainer(name);
+                if (status === "die") {
+                  container.remove();
+                }
+                if (container) {
+                  container.stats((err, stream) => {
+                    if (err) {
+                      console.error(err);
+                      return;
+                    }
+                    stream.setEncoding("utf8");
+                    stream.on("data", (data) => {
+                      const stats = JSON.parse(data);
+                      // console.log("Stats:", stats);
+
+                      db.collection("machines")
+                        .doc(name)
+                        .set({ stats }, { merge: true });
+                    });
+                  });
+                }
+              }
             }
           } catch (error) {
             console.log("Error saving machine data:", error);

@@ -18,6 +18,7 @@ import StarRating from "../star-rating"
 import Loader from "../loader"
 import { CodeBlock, dracula } from "react-code-blocks"
 import { spentTime } from "../../utils/spentTime"
+import { formatStats } from "../../utils/formatStats"
 
 const steps = [
   {
@@ -54,6 +55,7 @@ export const ReviewsForm = () => {
     status: "",
     createdAt: "",
     updatedAt: "",
+    stats: {},
   })
   const [scrap, setScrap] = useState({
     url: "",
@@ -221,6 +223,14 @@ export const ReviewsForm = () => {
       case 1:
         return (
           <div>
+            <div className="d-flex alert alert-info gap-3">
+              {formatStats(info.stats)}
+              {/* <strong>
+                CPU: {info.cpuPercent}% | Memory: {info.memoryPercent}% | Memory
+                Usage: {info.memoryUsage} | Disk Read/Write:{" "}
+                {info.diskReadWrite}
+              </strong> */}
+            </div>
             <div className="d-flex alert alert-primary">
               <span className="me-auto">{info.status}</span>
               Spend time: {spentTime(info)}
