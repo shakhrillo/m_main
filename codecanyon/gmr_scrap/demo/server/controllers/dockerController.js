@@ -22,32 +22,21 @@ function removeUnusedImages() {
   });
 }
 
-function startContainer(containerName, envArray, cmd) {
+function startContainer(options) {
   return new Promise((resolve, reject) => {
-    docker.createContainer(
-      {
-        Image: "gmr_scrap_selenium",
-        name: containerName,
-        Env: envArray,
-        Cmd: cmd,
-        HostConfig: {
-          // AutoRemove: true,
-        },
-      },
-      function (err, container) {
+    docker.createContainer(options, function (err, container) {
+      if (err) {
+        reject(err);
+      }
+
+      container.start(function (err, data) {
         if (err) {
           reject(err);
         }
 
-        container.start(function (err, data) {
-          if (err) {
-            reject(err);
-          }
-
-          resolve({ containerName });
-        });
-      }
-    );
+        resolve(data);
+      });
+    });
   });
 }
 

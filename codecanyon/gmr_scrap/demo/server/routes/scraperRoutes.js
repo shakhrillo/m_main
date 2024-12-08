@@ -3,70 +3,33 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const logger = require("../config/logger");
-const { createEnvironment } = require("../controllers/environmentController");
-const {
-  buildImage,
-  startContainer,
-  removeImage,
-  removeUnusedImages,
-} = require("../controllers/dockerController");
+const { startContainer } = require("../controllers/dockerController");
 const { db } = require("../firebase");
-
-// Helper function for sanitization
-const sanitize = (str) => str.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+const overviewPrefix = process.env.MACHINES_OVERVIEW_PREFIX || "info";
+const reviewsPrefix = process.env.MACHINES_REVIEWS_PREFIX || "comments";
 
 // Function to handle container operations
 const handleContainerOperations = async (req, res, isInfo = false) => {
-  let buildTag;
   try {
-    const { url, userId, reviewId, limit, sortBy } = req.data;
-    const sanitizedUserId = userId.toLowerCase();
-    const sanitizedReviewId = reviewId.toLowerCase();
-
-    const containerName = `${
-      isInfo ? "info" : "comments"
-    }_${sanitizedUserId}_${sanitizedReviewId}`;
-    buildTag = containerName;
-    console.log("buildTag", buildTag);
-
-    const envArray = [
-      `IS_INFO=${isInfo}`,
-      `FIREBASE_KEY_BASE64=${process.env.FIREBASE_KEY_BASE64}`,
-      `HOSTNAME=${buildTag}`,
-      `STORAGE_BUCKET=${process.env.STORAGE_BUCKET}`,
-      `URL=${url}`,
-      `USER_ID=${userId}`,
-      `REVIEW_ID=${reviewId}`,
-      `LIMIT=${limit}`,
-      `SORT_BY=${sortBy}`,
-      `GCLOUD_PROJECT=fir-scrapp`,
-      `FIRESTORE_EMULATOR_HOST=host.docker.internal:9100`,
-      `FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099`,
-      `STORAGE_EMULATOR_HOST=host.docker.internal:9199`,
-      `FIREBASE_STORAGE_EMULATOR_HOST=host.docker.internal:9199`,
-    ];
+    const { userId, reviewId } = req.data;
+    const prefix = isInfo ? overviewPrefix : reviewsPrefix;
+    const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
 
     db.doc(`machines/${buildTag}`).set({
+      ...req.data,
       status: "pending",
-      url,
-      userId,
-      reviewId,
-      limit,
-      sortBy,
-      from: buildTag,
-      time: Math.floor(Date.now() / 1000),
     });
 
-    let cmd = ["npm", "run"];
-    cmd.push(isInfo ? "info" : "start");
+    await startContainer({
+      Image: "gmr_scrap_selenium",
+      name: buildTag,
+      Env: [`TAG=${buildTag}`],
+      Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
+    });
 
-    await startContainer(containerName, [`TAG=${buildTag}`], cmd);
-
-    logger.info(`Container started: ${containerName}`);
     res.json({ message: "Started" });
   } catch (error) {
-    logger.error(`Error: ${error.message}`);
-    if (buildTag) await removeImage(buildTag);
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
