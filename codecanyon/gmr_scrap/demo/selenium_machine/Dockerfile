@@ -50,25 +50,12 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the path to the Chromium executable
-ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
-
 # Set working directory
 WORKDIR /usr/src/app
 
-# log current directory
-RUN pwd
-
+# Copy package.json and package-lock.json
 COPY package*.json ./
 RUN npm install
 
 # Copy the application code
 COPY . .
-
-# Expose the app's port
-# EXPOSE 3000
-
-# RUN node node_modules/puppeteer/install.mjs
-
-# Default command
-# CMD ["node", "index.js"]

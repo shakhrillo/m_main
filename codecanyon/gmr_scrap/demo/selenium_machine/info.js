@@ -2,44 +2,24 @@ const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const { firestore } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
-const tag =
-  process.env.TAG || "info_iigecj14ivrk37rmzdsefu1pufat_guiauzsmjqutgip3cqf9";
+const tag = process.env.TAG;
+
+if (!tag) {
+  console.error("Tag not found");
+  return;
+}
+
+async function getMachineData() {
+  const snapshot = await firestore.doc(`machines/${tag}`).get();
+  const data = snapshot.data();
+
+  return data;
+}
 
 (async function init() {
-  async function getMachineData() {
-    console.log("Getting machine data for", tag);
-    if (!tag) {
-      console.error("Tag not found");
-      return;
-    }
-    try {
-      await firestore.doc(`machines/${tag}`).get();
-    } catch (error) {
-      console.error("Error getting machine data", error);
-    }
-    const machine = await firestore.doc(`machines/${tag}`).get();
-    console.log("Machine data", machine.data());
-    if (!machine.exists) {
-      console.error("Machine not found");
-      return;
-    }
-
-    return machine.data();
-  }
-
   let data = await getMachineData();
   const { url, userId, reviewId } = data;
-  console.log("Scraping data for", url);
 
-  if (!data) {
-    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
-      status: "error",
-      error: "Machine not found",
-    });
-    return;
-  }
-
-  // Create a new instance of the browser driver with headless options
   let options = new chrome.Options();
   options.addArguments("--headless");
   options.addArguments("--no-sandbox");
@@ -55,8 +35,8 @@ const tag =
   options.addArguments("--log-level=3");
   options.addArguments("--silent");
   options.addArguments("--disable-browser-side-navigation");
-  options.setProxy(null);
-  options.setLoggingPrefs({ browser: "ALL" });
+  options.setProxy(null); // Disable proxy
+  options.setLoggingPrefs({ browser: "ALL" }); // Log everything
 
   let driver = await new Builder()
     .forBrowser("chrome")
@@ -64,9 +44,9 @@ const tag =
     .build();
 
   driver.manage().setTimeouts({
-    implicit: 60000, // Wait for elements
-    pageLoad: 60000, // Wait for page to load
-    script: 60000, // Wait for async scripts
+    implicit: 60000,
+    pageLoad: 60000,
+    script: 60000,
   });
 
   const isDriverActive = async (driver) => {
@@ -80,65 +60,65 @@ const tag =
 
   async function quitDriver() {
     if (isDriverActive(driver)) {
-      console.log("Quitting driver");
       await driver.quit();
     }
   }
 
   async function getElementBySelector(selector) {
-    const elements = await driver.findElements(By.css(selector));
-    return elements.length > 0 ? elements[0] : null;
+    const [element] = await driver.findElements(By.css(selector));
+    return element || null;
   }
 
-  try {
-    console.log("Starting driver");
-    console.log("Navigating to", url);
-    let startTimestamp = new Date().getTime();
-    // Navigate to a website
-    await driver.get(url);
-    await driver.sleep(400);
-    let currentUrl = await driver.getCurrentUrl();
-    console.log("Current URL:", currentUrl);
-    await driver.wait(until.urlContains(currentUrl), 10000);
-    let spentTimeInSeconds = (new Date().getTime() - startTimestamp) / 1000;
-    console.log("Spent time:", spentTimeInSeconds, "seconds");
-
-    // Wait for the page to load and display the title
-    const title = await driver.getTitle();
-    console.log("Page title:", title);
-    data.title = title;
-
+  async function getAddress() {
     const addressElement = await getElementBySelector(
       "button[data-item-id='address']"
     );
-    if (addressElement) {
-      data.address = await addressElement.getAttribute("aria-label");
-    }
 
+    if (!addressElement) return;
+    return await addressElement.getAttribute("aria-label");
+  }
+
+  async function getReviews() {
     const moreReviewsElement = await getElementBySelector(
       "button[jsaction*='reviewChart.moreReviews']"
     );
-    if (moreReviewsElement) {
-      const reviewsText =
-        (await moreReviewsElement.getAttribute("innerText")) || "0";
-      data.reviews = parseInt(
-        reviewsText.replace(/[^0-9,]/g, "").replace(/,/g, ""),
-        10
-      );
-    }
+    if (!moreReviewsElement) return 0;
+    const reviewsText =
+      (await moreReviewsElement.getAttribute("innerText")) || "0";
+    return parseInt(reviewsText.replace(/[^0-9,]/g, "").replace(/,/g, ""), 10);
+  }
 
+  async function getRating() {
     const ratingElement = await getElementBySelector(
       "[role='img'][aria-label*='stars']"
     );
-    if (ratingElement) {
-      data.rating = parseFloat(
-        (await ratingElement.getAttribute("aria-label")) || 0
-      );
-    }
+    if (!ratingElement) return 0;
+    return parseFloat(await ratingElement.getAttribute("aria-label")) || 0;
+  }
 
+  try {
+    // -----------------
+    // Start scraping
+    // ----------------
+    await driver.get(url);
+    await driver.sleep(400); // Wait url changes
+    let currentUrl = await driver.getCurrentUrl();
+    await driver.wait(until.urlContains(currentUrl), 10000); // Wait for the page to load
+
+    // -----------------
+    // Get data
+    // -----------------
+    data.title = await driver.getTitle();
+    data.address = await getAddress();
+    data.reviews = await getReviews();
+    data.rating = await getRating();
+
+    // -----------------
+    // Prepare for screenshot
+    // -----------------
     const minimapElement = await getElementBySelector("#minimap");
     if (minimapElement) {
-      await driver.executeScript("arguments[0].remove();", minimapElement);
+      await driver.executeScript("arguments[0].remove();", minimapElement); // Remove basemap layer
     }
 
     const viewcardStripElement = await getElementBySelector(
@@ -148,7 +128,7 @@ const tag =
       await driver.executeScript(
         "arguments[0].remove();",
         viewcardStripElement
-      );
+      ); //Remove bottom toolbar
     }
 
     const sidePanelBtns = await driver.findElements(
@@ -158,52 +138,44 @@ const tag =
       if (!(await btn.isDisplayed())) {
         continue;
       }
-      await btn.click();
+      await btn.click(); // Collapse side panel
     }
 
     const sidePanel = await getElementBySelector(
       "button[jsaction*='drawer.open']"
     );
     if (sidePanel) {
-      await driver.executeScript("arguments[0].remove();", sidePanel);
+      await driver.executeScript("arguments[0].remove();", sidePanel); // Remove side panel expand button
     }
 
     const googleBar = await getElementBySelector("#gb");
     if (googleBar) {
-      await driver.executeScript("arguments[0].remove();", googleBar);
+      await driver.executeScript("arguments[0].remove();", googleBar); // Remove google bar
     }
 
-    // .scene-footer-container
     const sceneFooter = await getElementBySelector(".scene-footer-container");
     if (sceneFooter) {
-      await driver.executeScript("arguments[0].remove();", sceneFooter);
+      await driver.executeScript("arguments[0].remove();", sceneFooter); // Remove scene footer
     }
 
     await driver.sleep(2000);
 
+    // -----------------
+    // Take screenshot
+    // -----------------
     const screenshot = await driver.takeScreenshot();
     const screenshotBuffer = Buffer.from(screenshot, "base64");
-    console.log("Screenshot taken");
-    console.log(`screenshotBuffer: ${screenshotBuffer.length} bytes`);
-
     const uniqueId = new Date().getTime();
     data.screenshot = await uploadFile(
       screenshotBuffer,
       `${userId}/${uniqueId}/screenshot.png`
     );
-
-    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
-      status: "completed",
-      ...data,
-    });
-
-    console.log("Data:", data);
   } catch (err) {
     console.error("Error:", err);
-    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
-      status: "error",
-    });
   } finally {
+    await firestore
+      .doc(`users/${userId}/reviewOverview/${reviewId}`)
+      .update(data);
     await quitDriver();
   }
 })();
