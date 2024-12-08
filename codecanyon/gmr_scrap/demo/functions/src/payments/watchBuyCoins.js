@@ -1,10 +1,34 @@
-const { getCheckoutSession } = require("../utils/apiUtils");
+const axios = require("axios");
+const { createToken } = require("../utils/jwtUtils");
+const endPointURL = process.env.ENDPOINT_URL;
 
 const watchBuyCoins = async ({ params: { userId }, data }) => {
   try {
     const { amount } = data.data();
-    const { url } = await getCheckoutSession({ userId, amount });
-    await data.ref.update({ url });
+
+    console.log("---".repeat(40));
+    console.log("watchBuyCoins:", userId, amount);
+    console.log("---".repeat(40));
+
+    const token = createToken({
+      userId,
+      amount,
+    });
+
+    const { url } = await axios.post(
+      `${endPointURL}/api/stripe`,
+      { amount },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("url", url);
+
+    // await data.ref.update({ url });
   } catch (error) {
     console.error("Error in watchBuyCoins:", error);
   }
