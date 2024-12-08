@@ -54,6 +54,7 @@ async function watchEvents() {
               stream.destroy();
               activeStreams.delete(name);
               console.log("Stream destroyed for", name);
+              updateMachine(name, { stats: null });
             }
 
             docker.info(async (err, info) => {
