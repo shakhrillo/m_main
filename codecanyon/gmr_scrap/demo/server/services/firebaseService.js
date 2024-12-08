@@ -10,7 +10,13 @@ async function createMachine(docId, data) {
 
 async function updateMachine(docId, data) {
   try {
-    await db.collection("machines").doc(docId).update(data);
+    await db
+      .collection("machines")
+      .doc(docId)
+      .update({
+        ...data,
+        updatedAt: new Date(),
+      });
   } catch (error) {
     console.error("Error updating machine:", error);
   }
