@@ -24,7 +24,10 @@ async function watchEvents() {
         for (const data of parsedData) {
           let status = data.status;
           const name = data.Actor.Attributes.name;
-          updateMachine(name, data);
+          updateMachine(name, {
+            status,
+            docker: data,
+          });
 
           if (status !== "destroy") {
             const container = docker.getContainer(name);
@@ -54,7 +57,10 @@ async function watchEvents() {
               stream.destroy();
               activeStreams.delete(name);
               console.log("Stream destroyed for", name);
-              updateMachine(name, { stats: null });
+              updateMachine(name, {
+                stats: null,
+                docker: null,
+              });
             }
 
             docker.info(async (err, info) => {

@@ -1,23 +1,27 @@
-const { submitScrapRequest, dockerUsageInfo } = require("../utils/apiUtils");
+const axios = require("axios");
+const { createToken } = require("../utils/jwtUtils");
+const endPointURL = process.env.ENDPOINT_URL;
 
 const getPlaceReview = async (event) => {
   const snapshot = event.data;
-  if (!snapshot) return console.log("No data associated with the event");
+
+  if (!snapshot) {
+    console.log("No data associated with the event");
+    return;
+  }
 
   const review = snapshot.data();
-  if (review.processed)
-    return console.log("Review already processed, skipping...");
-
-  const reviewResponse = await submitScrapRequest({
+  const token = createToken({
     ...review,
-    reviewId: event.params.reviewId,
-    userId: event.params.userId,
+    ...event.params,
   });
 
-  console.log("Review posted:", reviewResponse);
-
-  await dockerUsageInfo();
-  await snapshot.ref.update({ ...reviewResponse, processed: true });
+  await axios.post(`${endPointURL}/api/scrap`, review, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 module.exports = getPlaceReview;

@@ -1,4 +1,6 @@
-const { submitScrapInfo } = require("../utils/apiUtils");
+const axios = require("axios");
+const { createToken } = require("../utils/jwtUtils");
+const endPointURL = process.env.ENDPOINT_URL;
 
 const getPlaceOverview = async (event) => {
   const snapshot = event.data;
@@ -9,13 +11,17 @@ const getPlaceOverview = async (event) => {
   }
 
   const review = snapshot.data();
-  const info = await submitScrapInfo({
+  const token = createToken({
     ...review,
-    reviewId: event.params.reviewId,
-    userId: event.params.userId,
+    ...event.params,
   });
 
-  console.log("Info posted:", info);
+  await axios.post(`${endPointURL}/api/scrap/info`, review, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 module.exports = getPlaceOverview;

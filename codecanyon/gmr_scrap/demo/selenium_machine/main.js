@@ -7,31 +7,22 @@ const {
   watchReviews,
   sortReviews,
 } = require("./helper/reviews");
-const tag =
-  process.env.TAG || "info_iigecj14ivrk37rmzdsefu1pufat_guiauzsmjqutgip3cqf9";
+
+const tag = process.env.TAG;
+
+if (!tag) {
+  console.error("Tag not found");
+  return;
+}
+
+async function getMachineData() {
+  const snapshot = await db.doc(`machines/${tag}`).get();
+  const data = snapshot.data();
+
+  return data;
+}
 
 (async function init() {
-  async function getMachineData() {
-    console.log("Getting machine data for", tag);
-    if (!tag) {
-      console.error("Tag not found");
-      return;
-    }
-    try {
-      await db.doc(`machines/${tag}`).get();
-    } catch (error) {
-      console.error("Error getting machine data", error);
-    }
-    const machine = await db.doc(`machines/${tag}`).get();
-    console.log("Machine data", machine.data());
-    if (!machine.exists) {
-      console.error("Machine not found");
-      return;
-    }
-
-    return machine.data();
-  }
-
   let data = await getMachineData();
   const { url, userId, reviewId } = data;
   console.log("Scraping data for", url);
