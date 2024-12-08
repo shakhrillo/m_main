@@ -1,54 +1,43 @@
-const { docker, watchEvents } = require("./docker");
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
+require("dotenv").config();
 
+const { watchEvents } = require("./docker");
 const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
-const logger = require("./config/logger");
-const { db } = require("./firebase");
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-  try {
-    // Middlewares
-    app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
-    app.use(express.urlencoded({ extended: true }));
+// Middlewares
+app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
+app.use(express.urlencoded({ extended: true }));
 
-    app.use("/api/stripe", stripeRoutes);
-    app.use(express.json());
+app.use("/api/stripe", stripeRoutes);
 
-    app.use("/api/machines", machinesRoutes);
-    app.use("/api/scrap", scraperRoutes);
+app.use(express.json());
 
-    // Default route
-    app.get("/", (req, res) => res.send("Server is running"));
+app.use("/api/scrap", scraperRoutes);
+app.use("/api/machines", machinesRoutes);
 
-    app.use((req, res, next) => {
-      const error = new Error("Invalid route");
-      error.status = 404;
-      next(error);
-    });
+// Default route
+app.get("/", (req, res) => res.send("Server is running"));
 
-    // Error-handling middleware
-    app.use(errorHandler);
+app.use((req, res, next) => {
+  const error = new Error("Invalid route");
+  error.status = 404;
+  next(error);
+});
 
-    watchEvents();
+// Error-handling middleware
+app.use(errorHandler);
 
-    // Start the server
-    app.listen(PORT, () => {
-      logger.info(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    logger.error("Error connecting to Firestore:", error);
-  }
-};
+watchEvents();
 
-startServer();
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running: http://localhost:${PORT}`);
+});

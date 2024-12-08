@@ -1,5 +1,8 @@
 const Docker = require("dockerode");
-const { updateMachine } = require("./services/machinesService");
+const {
+  updateMachine,
+  updateDockerInfo,
+} = require("./services/firebaseService");
 const docker = new Docker();
 
 async function watchEvents() {
@@ -26,18 +29,20 @@ async function watchEvents() {
           updateMachine(name, data);
 
           if (status !== "destroy") {
+            if (activeStreams.has(name)) {
+              console.log("---".repeat(100));
+              console.log(`Container: ${name} is already being watched`);
+              console.log("---".repeat(100));
+              const stream = activeStreams.get(name);
+              stream.removeAllListeners(); // Unsubscribe from the stream
+              activeStreams.delete(name); // Remove from active streams
+              console.log(`Unsubscribed from container: ${name}`);
+            }
+
             const container = docker.getContainer(name);
             if (status === "die") {
               container.remove();
-              if (activeStreams.has(name)) {
-                const stream = activeStreams.get(name);
-                stream.removeAllListeners(); // Unsubscribe from the stream
-                activeStreams.delete(name); // Remove from active streams
-                console.log(`Unsubscribed from container: ${name}`);
-              }
-            }
-
-            if (container) {
+            } else if (container) {
               container.stats((err, stream) => {
                 if (err) {
                   console.error(err);
@@ -47,10 +52,7 @@ async function watchEvents() {
                 stream.on("data", (data) => {
                   const stats = JSON.parse(data);
                   // console.log("Stats:", stats);
-
-                  db.collection("machines")
-                    .doc(name)
-                    .set({ stats }, { merge: true });
+                  updateMachine(name, { stats });
                 });
 
                 activeStreams.set(name, stream); // Keep track of the stream
@@ -66,10 +68,7 @@ async function watchEvents() {
             } else {
               console.log("Docker Engine Info:");
               try {
-                await db
-                  .collection("docker")
-                  .doc("info")
-                  .set({ info: JSON.stringify(info) }, { merge: true });
+                updateDockerInfo(info);
               } catch (error) {
                 console.error("Error saving Docker info:", error);
               }
