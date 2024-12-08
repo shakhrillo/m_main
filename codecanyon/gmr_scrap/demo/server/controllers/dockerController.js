@@ -24,12 +24,12 @@ function removeUnusedImages() {
 
 function startContainer(options) {
   return new Promise((resolve, reject) => {
-    docker.createContainer(options, function (err, container) {
+    docker.createContainer(options, (err, container) => {
       if (err) {
         reject(err);
       }
 
-      container.start(function (err, data) {
+      container.start((err, data) => {
         if (err) {
           reject(err);
         }

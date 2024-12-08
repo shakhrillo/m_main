@@ -1,27 +1,26 @@
-require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
-const logger = require("../config/logger");
+const { createMachine } = require("../services/firebaseService");
 const { startContainer } = require("../controllers/dockerController");
-const { db } = require("../firebase");
+
+const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
 const overviewPrefix = process.env.MACHINES_OVERVIEW_PREFIX || "info";
 const reviewsPrefix = process.env.MACHINES_REVIEWS_PREFIX || "comments";
 
-// Function to handle container operations
 const handleContainerOperations = async (req, res, isInfo = false) => {
   try {
     const { userId, reviewId } = req.data;
     const prefix = isInfo ? overviewPrefix : reviewsPrefix;
     const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
 
-    db.doc(`machines/${buildTag}`).set({
+    await createMachine(buildTag, {
       ...req.data,
       status: "pending",
     });
 
     await startContainer({
-      Image: "gmr_scrap_selenium",
+      Image: machineBuildImageName,
       name: buildTag,
       Env: [`TAG=${buildTag}`],
       Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
@@ -34,7 +33,6 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
   }
 };
 
-// Routes
 router.post("/", authMiddleware, (req, res) =>
   handleContainerOperations(req, res)
 );

@@ -1,5 +1,13 @@
 const { db } = require("../firebase");
 
+async function createMachine(docId, data) {
+  try {
+    await db.collection("machines").doc(docId).set(data);
+  } catch (error) {
+    console.error("Error creating machine:", error);
+  }
+}
+
 async function updateMachine(docId, data) {
   try {
     await db.collection("machines").doc(docId).update(data);
@@ -20,6 +28,7 @@ async function updateDockerInfo(info) {
 }
 
 module.exports = {
+  createMachine,
   updateMachine,
   updateDockerInfo,
 };
