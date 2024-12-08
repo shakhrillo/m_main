@@ -7,13 +7,6 @@ const uploadFile = async (fileBuffer, destination) => {
     apiEndpoint: "http://host.docker.internal:9199",
   });
   const bucket = storage.bucket("fir-scrapp.appspot.com");
-
-  // const storage = new Storage({
-  //   // apiEndpoint: "http://localhost:9199",
-  //   apiEndpoint: "http://host.docker.internal:9199",
-  // });
-  // console.log("storage", storage);
-  // const bucket = storage.bucket("fir-scrapp.firebasestorage.app");
   const file = bucket.file(destination);
 
   try {

@@ -22,7 +22,11 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     await startContainer({
       Image: machineBuildImageName,
       name: buildTag,
-      Env: [`TAG=${buildTag}`],
+      Env: [
+        `TAG=${buildTag}`,
+        `NODE_ENV=${process.env.NODE_ENV}`,
+        `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
+      ],
       Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
     });
 

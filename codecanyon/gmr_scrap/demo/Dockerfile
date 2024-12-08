@@ -53,9 +53,12 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install dependencies
+COPY selenium_machine/package*.json ./
 RUN npm install
 
+# Copy the Firebase configuration files
+COPY firebase.json firebasekeys.json ./
+
 # Copy the application code
-COPY . .
+COPY selenium_machine .

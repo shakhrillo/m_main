@@ -1,6 +1,7 @@
+require("dotenv").config();
 const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
-const { firestore } = require("./services/firebase");
+const { db } = require("./services/firebase");
 const { uploadFile } = require("./services/storage");
 const tag = process.env.TAG;
 
@@ -10,7 +11,7 @@ if (!tag) {
 }
 
 async function getMachineData() {
-  const snapshot = await firestore.doc(`machines/${tag}`).get();
+  const snapshot = await db.doc(`machines/${tag}`).get();
   const data = snapshot.data();
 
   return data;
@@ -173,9 +174,7 @@ async function getMachineData() {
   } catch (err) {
     console.error("Error:", err);
   } finally {
-    await firestore
-      .doc(`users/${userId}/reviewOverview/${reviewId}`)
-      .update(data);
+    await db.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
     await quitDriver();
   }
 })();
