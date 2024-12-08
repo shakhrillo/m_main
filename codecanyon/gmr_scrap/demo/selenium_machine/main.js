@@ -1,8 +1,7 @@
 const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
-// const { PageLoadStrategy } = require("selenium-webdriver");
-const { firestore } = require("./services/firebase");
-const { uploadFile } = require("./services/storage");
+const { db, uploadFile } = require("./services/firebase");
+
 const {
   getInitialReviews,
   watchReviews,
@@ -19,11 +18,11 @@ const tag =
       return;
     }
     try {
-      await firestore.doc(`machines/${tag}`).get();
+      await db.doc(`machines/${tag}`).get();
     } catch (error) {
       console.error("Error getting machine data", error);
     }
-    const machine = await firestore.doc(`machines/${tag}`).get();
+    const machine = await db.doc(`machines/${tag}`).get();
     console.log("Machine data", machine.data());
     if (!machine.exists) {
       console.error("Machine not found");
@@ -38,7 +37,7 @@ const tag =
   console.log("Scraping data for", url);
 
   if (!data) {
-    firestore.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
+    db.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
       status: "error",
       error: "Machine not found",
     });
