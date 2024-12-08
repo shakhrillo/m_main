@@ -1,8 +1,7 @@
 require("dotenv").config();
 const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
-const { db } = require("./services/firebase");
-const { uploadFile } = require("./services/storage");
+const { db, uploadFile } = require("./services/firebase");
 const tag = process.env.TAG;
 
 if (!tag) {

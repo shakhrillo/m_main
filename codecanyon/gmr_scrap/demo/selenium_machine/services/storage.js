@@ -3,9 +3,11 @@ const { getStorage } = require("firebase-admin/storage");
 const { Storage } = require("@google-cloud/storage");
 
 const uploadFile = async (fileBuffer, destination) => {
-  const storage = new Storage({
-    apiEndpoint: "http://host.docker.internal:9199",
-  });
+  if (process.env.NODE_ENV === "development") {
+    const storage = new Storage({
+      apiEndpoint: "http://host.docker.internal:9199",
+    });
+  }
   const bucket = storage.bucket("fir-scrapp.appspot.com");
   const file = bucket.file(destination);
 

@@ -1,3 +1,4 @@
+const { Storage } = require("@google-cloud/storage");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
@@ -44,6 +45,33 @@ if (process.env.NODE_ENV === "development") {
   }
 }
 
+const uploadFile = async (fileBuffer, destination) => {
+  if (process.env.NODE_ENV === "development") {
+    const serviceAccountJson = JSON.parse(
+      fs.readFileSync(serviceAccountPath, "utf8")
+    );
+    const storagePort = serviceAccountJson.emulators?.storage?.port;
+    const storage = new Storage({
+      apiEndpoint: `http://host.docker.internal:${storagePort}`,
+    });
+
+    const bucket = storage.bucket(`${FIREBASE_PROJECT_ID}.appspot.com`);
+    const file = bucket.file(destination);
+
+    try {
+      await file.save(fileBuffer, {
+        resumable: false,
+        public: "yes",
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+
+    const publicUrl = file.publicUrl();
+    return publicUrl.replace(`host.docker.internal`, `localhost`);
+  }
+};
+
 async function batchWriteLargeArray(uid, pushId, data) {
   let collectionRef = firestore.collection(
     `users/${uid}/reviews/${pushId}/reviews`
@@ -71,4 +99,4 @@ async function batchWriteLargeArray(uid, pushId, data) {
   }
 }
 
-module.exports = { admin, db, batchWriteLargeArray };
+module.exports = { admin, db, uploadFile, batchWriteLargeArray };
