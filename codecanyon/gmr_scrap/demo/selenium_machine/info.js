@@ -1,6 +1,6 @@
 require("dotenv").config();
 const fs = require("fs");
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By, until, WebDriver } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const { db, uploadFile } = require("./services/firebase");
 const tag = process.env.TAG;
@@ -45,6 +45,7 @@ async function getMachineData() {
   options.addArguments("--window-size=1920,1080");
   options.setProxy(null); // Disable proxy
   options.setLoggingPrefs({ browser: "ALL" }); // Log everything
+  options.setChromeBinaryPath("/usr/bin/google-chrome");
 
   console.log("Starting driver");
   console.log(`CHROME_DRIVER_VERSION: ${process.env.CHROME_DRIVER_VERSION}`);
@@ -53,6 +54,19 @@ async function getMachineData() {
     .forBrowser("chrome")
     .setChromeOptions(options)
     .build();
+  // let driver = await WebDriver.createSession({
+  //   browserName: "chrome",
+  //   "goog:chromeOptions": {
+  //     binary: "/usr/bin/google-chrome",
+  //     args: [
+  //       "--headless",
+  //       "--no-sandbox",
+  //       "--disable-gpu",
+  //       "--disable-dev-shm-usage",
+  //       "--window-size=1920,1080",
+  //     ],
+  //   },
+  // });
 
   driver.manage().setTimeouts({
     implicit: 3000,
