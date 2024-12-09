@@ -33,7 +33,12 @@ async function watchEvents() {
             const container = docker.getContainer(name);
 
             if (status === "die") {
-              container.remove();
+              // container.remove();
+              const stream = activeStreams.get(name);
+              if (stream) {
+                stream.destroy();
+                activeStreams.delete(name);
+              }
               return;
             }
 
