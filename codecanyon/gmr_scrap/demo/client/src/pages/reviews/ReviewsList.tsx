@@ -149,10 +149,15 @@ const Dashboard: React.FC = () => {
           orderByField: "createdAt",
           loadLimit: 1000,
         }),
-        snapshot =>
+        snapshot => {
+          console.log(
+            "snapshot.docs",
+            snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
+          )
           setCompletedReviews(
             snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
-          ),
+          )
+        },
       )
 
     return unsubscribe()
@@ -188,7 +193,15 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="nav">
+      <div
+        className="
+        d-flex
+        gap-3
+        py-3
+        border-bottom
+        border-primary
+      "
+      >
         <a href="#" className="active">
           All
         </a>

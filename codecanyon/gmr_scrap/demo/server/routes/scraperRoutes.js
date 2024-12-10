@@ -17,7 +17,6 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     await createMachine(buildTag, {
       ...req.data,
       createdAt: +new Date(),
-      status: "pending",
     });
 
     await startContainer({

@@ -15,7 +15,7 @@ const watchMachine = async (event) => {
       .collection(`machines/${machineId}/stats`)
       .add({
         ...document.stats,
-        createdAt: Date.now(),
+        createdAt: +Date.now(),
       });
   }
 
@@ -25,7 +25,7 @@ const watchMachine = async (event) => {
       .doc(`users/${userId}/reviewOverview/${reviewId}`)
       .update({
         ...document,
-        updatedAt: Date.now(),
+        updatedAt: +Date.now(),
       });
   } else {
     await admin
@@ -33,7 +33,7 @@ const watchMachine = async (event) => {
       .doc(`users/${userId}/reviews/${reviewId}`)
       .update({
         ...document,
-        updatedAt: Date.now(),
+        updatedAt: +Date.now(),
       });
   }
 
