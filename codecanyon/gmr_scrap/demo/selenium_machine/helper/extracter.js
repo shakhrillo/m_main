@@ -133,6 +133,9 @@
   const observerCallback = (records) => {
     if (window.ids === undefined) {
       window.ids = [];
+      window.extractedImages = [];
+      window.extractedOwnerReviewCount = 0;
+      window.extractedUserReviewCount = 0;
     }
 
     let waitTime = 100;
@@ -171,15 +174,29 @@
 
                   await new Promise((resolve) => setTimeout(resolve, 500));
 
+                  const images = getImgURLs(node);
+                  extractedImages.push(...images);
+
+                  const review = elementReviewComment(node);
+                  if (!!review) {
+                    extractedUserReviewCount += 1;
+                  }
+
+                  const response = getOwnerResponse(node);
+                  if (!!response) {
+                    extractedOwnerReviewCount += 1;
+                  }
+
                   ids.push({
                     id,
-                    review: elementReviewComment(node),
+                    review,
                     user: extractUser(node),
                     date: getReviewDate(node),
                     rating: getReviewRate(node),
                     qa: elementReviewQA(node),
                     response: getOwnerResponse(node),
-                    imageUrls: getImgURLs(node),
+                    imageUrls: images,
+                    time: +Date.now(),
                   });
                 }
               })

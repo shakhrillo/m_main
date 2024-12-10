@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { Builder, By, until, WebDriver } = require("selenium-webdriver");
 const { db, uploadFile } = require("../services/firebase");
+const tag = process.env.TAG;
 
 /**
  * Get the initial reviews
@@ -84,6 +85,9 @@ const watchReviews = async (driver, data) => {
   }
 
   let allElements = [];
+  let extractedImages = [];
+  let extractedOwnerReviewCount = 0;
+  let extractedUserReviewCount = 0;
   let stopInterval = false;
   let extracted = 0;
   let reTries = 0;
@@ -91,12 +95,29 @@ const watchReviews = async (driver, data) => {
   async function fetchIds() {
     try {
       allElements = await driver.executeScript(`return window["ids"] || []`);
+      extractedImages = await driver.executeScript(
+        `return window["extractedImages"] || []`
+      );
+      extractedOwnerReviewCount = await driver.executeScript(
+        `return window["extractedOwnerReviewCount"] || 0`
+      );
+      extractedUserReviewCount = await driver.executeScript(
+        `return window["extractedUserReviewCount"] || 0`
+      );
 
       console.log("Total reviews:", allElements.length);
       if (extracted === allElements.length && reTries >= 10) {
         console.log("No new reviews found. Terminating interval.");
         stopInterval = true;
-        await complete(allElements, data);
+        await complete(
+          {
+            allElements,
+            extractedImages,
+            extractedOwnerReviewCount,
+            extractedUserReviewCount,
+          },
+          data
+        );
         await quitDriver();
         return;
       }
@@ -105,7 +126,15 @@ const watchReviews = async (driver, data) => {
         console.log("Scrolling to load more reviews");
         if (data.limit >= data.reviews && allElements.length > 0) {
           stopInterval = true;
-          await complete(allElements, data);
+          await complete(
+            {
+              allElements,
+              extractedImages,
+              extractedOwnerReviewCount,
+              extractedUserReviewCount,
+            },
+            data
+          );
           await quitDriver();
           return;
         }
@@ -130,14 +159,24 @@ const watchReviews = async (driver, data) => {
 
       await db.doc(`users/${data.userId}/reviews/${data.reviewId}`).update({
         updatedAt: +new Date(),
-        completedAt: +new Date(),
         totalReviews: allElements.length,
+        totalImages: extractedImages.length,
+        totalOwnerReviews: extractedOwnerReviewCount,
+        totalUserReviews: extractedUserReviewCount,
       });
 
       if (!(await isDriverActive(driver))) {
         console.error("Driver session is invalid. Terminating interval.");
         stopInterval = true;
-        await complete(allElements, data);
+        await complete(
+          {
+            allElements,
+            extractedImages,
+            extractedOwnerReviewCount,
+            extractedUserReviewCount,
+          },
+          data
+        );
         await quitDriver();
         return; // Exit if the session is no longer valid
       }
@@ -146,7 +185,15 @@ const watchReviews = async (driver, data) => {
         if (allElements?.length > data.limit) {
           console.log("Reached limit. Terminating interval.");
           stopInterval = true;
-          await complete(allElements, data);
+          await complete(
+            {
+              allElements,
+              extractedImages,
+              extractedOwnerReviewCount,
+              extractedUserReviewCount,
+            },
+            data
+          );
           await quitDriver();
           return;
         }
@@ -156,7 +203,15 @@ const watchReviews = async (driver, data) => {
     } catch (err) {
       console.error("Error fetching reviews:", err);
       stopInterval = true;
-      await complete(allElements, data);
+      await complete(
+        {
+          allElements,
+          extractedImages,
+          extractedOwnerReviewCount,
+          extractedUserReviewCount,
+        },
+        data
+      );
       await quitDriver();
     } finally {
       // Re-schedule after execution
@@ -186,12 +241,10 @@ const uploadReviewsAsFile = async (allElements, { reviewId }) => {
   return { csvUrl, jsonUrl };
 };
 
-async function addReviews(allElements, { userId, reviewId }) {
+async function addReviews(allElements, refCollection) {
   if (!allElements.length) return;
 
-  const collectionRef = db.collection(
-    `users/${userId}/reviews/${reviewId}/reviews`
-  );
+  const collectionRef = db.collection(refCollection);
   const chunkSize = 500;
 
   await Promise.all(
@@ -211,13 +264,25 @@ async function addReviews(allElements, { userId, reviewId }) {
   );
 }
 
-async function complete(allElements, { limit, reviewId, userId }) {
+async function complete(
+  {
+    allElements,
+    extractedImages,
+    extractedOwnerReviewCount,
+    extractedUserReviewCount,
+  },
+  { limit, reviewId, userId }
+) {
   const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, {
     reviewId,
   });
   let totalReviews = allElements.length;
   allElements = allElements.slice(0, limit);
-  await addReviews(allElements, { userId, reviewId });
+  await addReviews(allElements, `users/${userId}/reviews/${reviewId}/reviews`);
+  await addReviews(
+    extractedImages,
+    `users/${userId}/reviews/${reviewId}/images`
+  );
   await db.doc(`users/${userId}/reviews/${reviewId}`).update({
     updatedAt: +new Date(),
     completedAt: +new Date(),
@@ -225,7 +290,18 @@ async function complete(allElements, { limit, reviewId, userId }) {
     jsonUrl,
     totalReviews: allElements.length,
     totalReviewsScraped: totalReviews,
+    totalImages: extractedImages.length,
+    totalOwnerReviews: extractedOwnerReviewCount,
+    totalUserReviews: extractedUserReviewCount,
   });
+
+  await db.doc(`machines/${tag}`).update({
+    totalReviews: allElements.length,
+    totalImages: extractedImages.length,
+    totalOwnerReviews: extractedOwnerReviewCount,
+    totalUserReviews: extractedUserReviewCount,
+  });
+
   console.log("Review completed");
 }
 

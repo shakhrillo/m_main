@@ -1,4 +1,4 @@
-import { doc, onSnapshot, writeBatch } from "firebase/firestore"
+import { collection, doc, onSnapshot, writeBatch } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { Table } from "../../components/table"
 import { useFirebase } from "../../contexts/FirebaseProvider"
@@ -14,6 +14,7 @@ import menuIcon from "../../assets/icons/list.svg"
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
   const { firestore, user } = useFirebase()
+  const [info, setInfo] = useState<any>({})
   const [completedReviews, setCompletedReviews] = useState<any[]>([])
   const [selectedReviews, setSelectedReviews] = useState<any[]>([])
   const tableColumns = [
@@ -163,6 +164,18 @@ const Dashboard: React.FC = () => {
     return unsubscribe()
   }, [firestore, user])
 
+  useEffect(() => {
+    if (!firestore || !user) return
+
+    const docRef = doc(firestore, `app/info`)
+    const unsubscribe = onSnapshot(docRef, doc => {
+      console.log("doc.data()", doc.data())
+      setInfo(doc.data())
+    })
+
+    return unsubscribe
+  }, [firestore, user])
+
   const { toggleMenu } = useMenu()
 
   return (
@@ -177,19 +190,25 @@ const Dashboard: React.FC = () => {
         <div className="card-body d-flex gap-3">
           <div>
             <p className="m-0">All comments</p>
-            <h3 className="m-0">150k</h3>
+            <h3 className="m-0">
+              {info.totalReviews ? info.totalReviews : "0"}
+            </h3>
           </div>
           <div>
             <p className="m-0">Owner responses</p>
-            <h3 className="m-0">73k</h3>
+            <h3 className="m-0">
+              {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
+            </h3>
           </div>
           <div>
             <p className="m-0">User comments</p>
-            <h3 className="m-0">99k</h3>
+            <h3 className="m-0">
+              {info.totalUserReviews ? info.totalUserReviews : "0"}
+            </h3>
           </div>
           <div>
             <p className="m-0">Images</p>
-            <h3 className="m-0">3k</h3>
+            <h3 className="m-0">{info.totalImages ? info.totalImages : "0"}</h3>
           </div>
         </div>
       </div>

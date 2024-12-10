@@ -12,12 +12,24 @@ const watchMachine = async (event) => {
   const status = document.status;
   const totalReviews = document.totalReviews || 0;
 
+  const totalImages = document.totalImages || 0;
+  const totalOwnerReviews = document.totalOwnerReviews || 0;
+  const totalUserReviews = document.totalUserReviews || 0;
+
   if (status === "destroy") {
+    console.log(`totalReviews: ${totalReviews}`);
+    console.log(`totalImages: ${totalImages}`);
+    console.log(`totalOwnerReviews: ${totalOwnerReviews}`);
+    console.log(`totalUserReviews: ${totalUserReviews}`);
+
     const docRef = admin.firestore().doc(`app/info`);
     try {
       await docRef.update({
         extractedReviews: FieldValue.increment(1),
-        totalReviews: admin.firestore.FieldValue.increment(totalReviews),
+        totalReviews: FieldValue.increment(totalReviews),
+        totalImages: FieldValue.increment(totalImages),
+        totalOwnerReviews: FieldValue.increment(totalOwnerReviews),
+        totalUserReviews: FieldValue.increment(totalUserReviews),
       });
     } catch (error) {
       const doc = await docRef.get();
@@ -25,6 +37,9 @@ const watchMachine = async (event) => {
         await docRef.set({
           extractedReviews: 1, // Starting count
           totalReviews: totalReviews, // Initial value
+          totalImages: totalImages, // Initial value
+          totalOwnerReviews: totalOwnerReviews, // Initial value
+          totalUserReviews: totalUserReviews, // Initial value
         });
       }
     }
