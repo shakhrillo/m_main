@@ -116,7 +116,7 @@ export const startExtractGmapReviewsOverview = async (
 
   const docRef = await addDoc(collectionReviews, {
     ...data,
-    createdAt: new Date(),
+    createdAt: +new Date(),
   })
 
   return docRef.id
@@ -139,7 +139,7 @@ export const startExtractGmapReviews = async (
   await setDoc(docReview, {
     ...data,
     status: "in-progress",
-    createdAt: new Date(),
+    createdAt: +new Date(),
   })
 
   return overviewId

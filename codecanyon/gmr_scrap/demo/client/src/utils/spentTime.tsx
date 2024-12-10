@@ -1,19 +1,17 @@
-import { Timestamp } from "firebase/firestore"
-
-type PlaceInfo = {
-  createdAt?: { _seconds: number; _nanoseconds: number }
-  updatedAt?: { _seconds: number; _nanoseconds: number }
-}
-
 export const spentTime = (placeInfo: any): string => {
   if (!placeInfo?.createdAt || !placeInfo?.updatedAt) {
     return "N/A"
   }
 
-  const startSeconds = placeInfo.createdAt._seconds
-  const endSeconds = placeInfo.updatedAt._seconds
+  const startMilliseconds = Number(placeInfo.createdAt)
+  const endMilliseconds = Number(placeInfo.updatedAt)
 
-  const diffInSeconds = endSeconds - startSeconds
+  // Ensure both values are valid numbers
+  if (isNaN(startMilliseconds) || isNaN(endMilliseconds)) {
+    return "Invalid timestamps"
+  }
+
+  const diffInSeconds = Math.floor((endMilliseconds - startMilliseconds) / 1000)
 
   if (diffInSeconds < 0) {
     return "Invalid time range"

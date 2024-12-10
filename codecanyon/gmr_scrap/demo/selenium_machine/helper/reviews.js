@@ -92,6 +92,12 @@ const watchReviews = async (driver, data) => {
 
       console.log("Total reviews:", allElements.length);
 
+      await db.doc(`users/${data.userId}/reviews/${data.reviewId}`).update({
+        updatedAt: +new Date(),
+        completedAt: +new Date(),
+        totalReviews: allElements.length,
+      });
+
       if (!(await isDriverActive(driver))) {
         console.error("Driver session is invalid. Terminating interval.");
         stopInterval = true;
@@ -177,9 +183,8 @@ async function complete(allElements, { limit, reviewId, userId }) {
   allElements = allElements.slice(0, limit);
   await addReviews(allElements, { userId, reviewId });
   await db.doc(`users/${userId}/reviews/${reviewId}`).update({
-    updatedAt: new Date(),
-    completedAt: new Date(),
-    status: "completed",
+    updatedAt: +new Date(),
+    completedAt: +new Date(),
     csvUrl,
     jsonUrl,
     totalReviews: allElements.length,
