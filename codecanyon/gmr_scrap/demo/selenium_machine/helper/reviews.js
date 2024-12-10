@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { Builder, By, until, WebDriver } = require("selenium-webdriver");
-const { firestore } = require("../services/firebase");
-const { uploadFile } = require("../services/storage");
+const { db, uploadFile } = require("../services/firebase");
 
 /**
  * Get the initial reviews
@@ -148,7 +147,7 @@ const uploadReviewsAsFile = async (allElements, { reviewId }) => {
 async function addReviews(allElements, { userId, reviewId }) {
   if (!allElements.length) return;
 
-  const collectionRef = firestore.collection(
+  const collectionRef = db.collection(
     `users/${userId}/reviews/${reviewId}/reviews`
   );
   const chunkSize = 500;
@@ -157,7 +156,7 @@ async function addReviews(allElements, { userId, reviewId }) {
     allElements.reduce((batches, _, i) => {
       if (i % chunkSize === 0) {
         const chunk = allElements.slice(i, i + chunkSize);
-        const batch = firestore.batch();
+        const batch = db.batch();
 
         chunk.forEach((doc) => {
           if (doc?.id) batch.set(collectionRef.doc(doc.id), doc);
@@ -177,7 +176,7 @@ async function complete(allElements, { limit, reviewId, userId }) {
   let totalReviews = allElements.length;
   allElements = allElements.slice(0, limit);
   await addReviews(allElements, { userId, reviewId });
-  await firestore.doc(`users/${userId}/reviews/${reviewId}`).update({
+  await db.doc(`users/${userId}/reviews/${reviewId}`).update({
     updatedAt: new Date(),
     completedAt: new Date(),
     status: "completed",

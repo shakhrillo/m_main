@@ -1,4 +1,4 @@
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By, until, Browser } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const { db, uploadFile } = require("./services/firebase");
 
@@ -35,43 +35,28 @@ async function getMachineData() {
     return;
   }
 
-  let options = new chrome.Options();
-  options.addArguments("--headless");
-  options.addArguments("--no-sandbox");
-  options.addArguments("--disable-dev-shm-usage");
-  options.addArguments("--aggressive-cache-discard");
-  options.addArguments("--disable-cache");
-  options.addArguments("--disable-application-cache");
-  options.addArguments("--disable-offline-load-stale-cache");
-  options.addArguments("--disk-cache-size=0");
-  options.addArguments("--disable-gpu");
-  options.addArguments("--dns-prefetch-disable");
-  options.addArguments("--no-proxy-server");
-  options.addArguments("--log-level=3");
-  options.addArguments("--silent");
-  options.addArguments("--disable-browser-side-navigation");
-  options.setProxy(null);
+  const options = new chrome.Options();
+  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   options.setLoggingPrefs({ browser: "ALL" });
+  options.setChromeBinaryPath("/usr/bin/chromium");
+  options.excludeSwitches("enable-automation");
 
   let driver = await new Builder()
-    .forBrowser("chrome")
+    .forBrowser(Browser.CHROME)
     .setChromeOptions(options)
     .build();
 
   await driver.manage().setTimeouts({
-    implicit: 60000, // Wait for elements
-    pageLoad: 60000, // Wait for page to load
-    script: 60000, // Wait for async scripts
+    implicit: 3000,
+    pageLoad: 180000,
+    script: 180000,
   });
 
-  let startTimestamp = new Date().getTime();
+  // -----------------
+  // Start scraping
+  // ----------------
   await driver.get(url);
   await driver.sleep(2000);
-  let currentUrl = await driver.getCurrentUrl();
-  console.log("Current URL:", currentUrl);
-  await driver.wait(until.urlContains(currentUrl), 10000);
-  let spentTimeInSeconds = (new Date().getTime() - startTimestamp) / 1000;
-  console.log("Spent time:", spentTimeInSeconds, "seconds");
 
   const reviewsTabs = await driver.findElements(By.css('button[role="tab"]'));
   for (const tab of reviewsTabs) {
