@@ -22,11 +22,11 @@ async function updateMachine(docId, data) {
   }
 }
 
-async function updateDockerInfo(info) {
+async function updateDockerImageInfo(info) {
   try {
     await db
       .collection("docker")
-      .doc("info")
+      .doc("image")
       .set({ info: JSON.stringify(info) }, { merge: true });
   } catch (error) {
     console.error("Error saving Docker info:", error);
@@ -37,4 +37,5 @@ module.exports = {
   createMachine,
   updateMachine,
   updateDockerInfo,
+  updateDockerImageInfo,
 };

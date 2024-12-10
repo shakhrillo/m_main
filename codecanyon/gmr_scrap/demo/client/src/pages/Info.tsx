@@ -8,7 +8,7 @@ const Info: React.FC = () => {
 
   useEffect(() => {
     if (!firestore) return
-    const docAppInfo = doc(firestore, "docker", "info")
+    const docAppInfo = doc(firestore, "docker", "image")
 
     const unsubscribe = onSnapshot(docAppInfo, snapshot => {
       const data = snapshot.data()

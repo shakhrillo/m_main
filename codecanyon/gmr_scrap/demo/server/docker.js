@@ -1,9 +1,19 @@
 const Docker = require("dockerode");
 const {
   updateMachine,
-  updateDockerInfo,
+  updateDockerImageInfo,
 } = require("./services/firebaseService");
 const docker = new Docker();
+
+// docker get image info
+docker.getImage("gmr_scrap_selenium:latest").inspect((err, data) => {
+  if (err) {
+    console.error("Error fetching image info:", err);
+  } else {
+    console.log("Image info:", data);
+    updateDockerImageInfo(data);
+  }
+});
 
 async function watchEvents() {
   const activeStreams = new Map();
@@ -58,29 +68,6 @@ async function watchEvents() {
                 activeStreams.set(name, stream);
               });
             }
-          } else {
-            const stream = activeStreams.get(name);
-            if (stream) {
-              stream.destroy();
-              activeStreams.delete(name);
-              console.log("Stream destroyed for", name);
-              updateMachine(name, {
-                stats: null,
-                docker: null,
-              });
-            }
-
-            docker.info(async (err, info) => {
-              if (err) {
-                console.error("Error fetching Docker info:", err);
-              } else {
-                try {
-                  updateDockerInfo(info);
-                } catch (error) {
-                  console.error("Error saving Docker info:", error);
-                }
-              }
-            });
           }
         }
       } catch (error) {
