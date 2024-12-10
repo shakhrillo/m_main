@@ -94,10 +94,6 @@ export const ReviewsForm = () => {
 
   const handleStartScraping = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("res", {
-      ...info,
-      ...scrap,
-    })
     setLoading(true)
     try {
       await startExtractGmapReviews(user!.uid, overviewId, {
@@ -122,10 +118,8 @@ export const ReviewsForm = () => {
         if (doc.exists()) {
           const info = doc.data() as any
           if (info.title) {
-            console.log("rm", info)
             localStorage.removeItem("overviewId")
           }
-          console.log("info", info)
           setInfo(info)
         }
       },
@@ -156,14 +150,12 @@ export const ReviewsForm = () => {
   // userId, reviewId,
   useEffect(() => {
     if (!firestore || !user || !overviewId) return
-    console.log("____", `machines/info_${user.uid}_${overviewId}`)
     const unsubscribe = onSnapshot(
       doc(
         firestore,
         `machines/info_${user.uid.toLowerCase()}_${overviewId.toLowerCase()}`,
       ),
       doc => {
-        console.log("doc>>", doc.data())
         setPendingMessages([
           ...pendingMessages,
           {

@@ -13,7 +13,6 @@ const Info: React.FC = () => {
     const unsubscribe = onSnapshot(docAppInfo, snapshot => {
       const data = snapshot.data()
       if (!data || !data.info) return
-      console.log(JSON.parse(data.info))
       setInfo(JSON.parse(data.info))
     })
 
