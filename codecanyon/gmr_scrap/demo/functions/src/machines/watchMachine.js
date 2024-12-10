@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { FieldValue } = require("firebase-admin/firestore");
 
 const watchMachine = async (event) => {
   const machineId = event.params.machineId;
@@ -8,6 +9,26 @@ const watchMachine = async (event) => {
 
   const userId = document.userId;
   const reviewId = document.reviewId;
+  const status = document.status;
+  const totalReviews = document.totalReviews || 0;
+
+  if (status === "destroy") {
+    const docRef = admin.firestore().doc(`app/info`);
+    try {
+      await docRef.update({
+        extractedReviews: FieldValue.increment(1),
+        totalReviews: admin.firestore.FieldValue.increment(totalReviews),
+      });
+    } catch (error) {
+      const doc = await docRef.get();
+      if (!doc.exists) {
+        await docRef.set({
+          extractedReviews: 1, // Starting count
+          totalReviews: totalReviews, // Initial value
+        });
+      }
+    }
+  }
 
   if (stats) {
     await admin
