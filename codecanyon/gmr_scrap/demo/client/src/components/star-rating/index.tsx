@@ -11,8 +11,6 @@ const StarRating = ({ rating }: StarRatingProps) => {
     return null
   }
 
-  console.log("rating", rating)
-
   const filledStarsCount = Math.floor(rating)
 
   const isHalfStar = () => {

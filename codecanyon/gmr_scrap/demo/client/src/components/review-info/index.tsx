@@ -6,6 +6,7 @@ import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
 import StarRating from "../star-rating"
 import dwonloadIcon from "../../assets/icons/download.svg"
+import { formatStats } from "../../utils/formatStats"
 
 function ReviewInfo() {
   const { place } = useParams()
@@ -80,6 +81,12 @@ function ReviewInfo() {
               backgroundSize: "cover",
             }}
           ></div>
+        </div>
+      </div>
+      <hr />
+      <div className="row g-0">
+        <div className="d-flex alert alert-info gap-3">
+          {formatStats(info.stats)}
         </div>
       </div>
     </div>
