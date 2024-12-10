@@ -28,12 +28,6 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
         `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
       ],
       Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
-      Resources: {
-        Memory: 8 * 1024 * 1024 * 1024, // 8 GB of memory (adjust as needed)
-        CpuShares: 2048, // Higher CPU share (default is 1024, adjust based on requirements)
-        CpuQuota: 200000, // CPU limit in microseconds (e.g., 200000 means 2 CPU cores, adjust as needed)
-        CpuPeriod: 100000, // CPU period in microseconds (default 100000)
-      },
     });
 
     res.json({ message: "Started" });

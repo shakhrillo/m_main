@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dockerode": "^4.0.2",
     "dotenv": "^16.4.6",
     "firebase-admin": "^13.0.1",
     "rxjs": "^7.8.1",
