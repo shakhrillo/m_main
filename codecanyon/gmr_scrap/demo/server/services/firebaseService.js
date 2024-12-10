@@ -15,7 +15,7 @@ async function updateMachine(docId, data) {
       .doc(docId)
       .update({
         ...data,
-        updatedAt: new Date(),
+        updatedAt: +new Date(),
       });
   } catch (error) {
     console.error("Error updating machine:", error);
@@ -36,6 +36,5 @@ async function updateDockerImageInfo(info) {
 module.exports = {
   createMachine,
   updateMachine,
-  updateDockerInfo,
   updateDockerImageInfo,
 };

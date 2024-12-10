@@ -3,12 +3,16 @@ import { useFirebase } from "../contexts/FirebaseProvider"
 import {
   collection,
   doc,
+  limit,
   onSnapshot,
   orderBy,
   query,
   Timestamp,
   updateDoc,
 } from "firebase/firestore"
+import { formatStats } from "../utils/formatStats"
+import { formatTimestamp } from "../utils/formatTimestamp"
+import { spentTime } from "../utils/spentTime"
 
 interface Machine {
   id: string
@@ -35,7 +39,8 @@ const Machines: React.FC = () => {
     // oreder by createdAt
     const machinesRef = query(
       collection(firestore, "machines"),
-      orderBy("time", "desc"),
+      orderBy("createdAt", "desc"),
+      limit(20),
     )
 
     const unsubscribe = onSnapshot(machinesRef, snapshot => {
@@ -59,18 +64,18 @@ const Machines: React.FC = () => {
             <thead>
               <tr>
                 <th>Time</th>
-                <th>Machine Type</th>
-                <th>From</th>
+                <th>Stats</th>
+                <th>Spent Time</th>
                 <th>Status</th>
               </tr>
             </thead>
 
             <tbody>
-              {machines.map(machine => (
+              {machines.map((machine: any) => (
                 <tr key={machine.id}>
-                  <td>{new Date(machine.time * 1000).toLocaleString()}</td>
-                  <td>{machine.Type}</td>
-                  <td>{machine?.Actor?.Attributes?.name}</td>
+                  <td>{formatTimestamp(machine.createdAt)}</td>
+                  <td>{formatStats(machine.stats)}</td>
+                  <td>{spentTime(machine)}</td>
                   <td>{machine.status}</td>
                 </tr>
               ))}

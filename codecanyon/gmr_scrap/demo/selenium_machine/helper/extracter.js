@@ -146,7 +146,7 @@
                 if (id) {
                   node.scrollIntoView();
 
-                  const buttonActions = [
+                  const buttonSelectors = [
                     `button[jsaction*="review.showReviewInOriginal"]`,
                     `button[jsaction*="review.showOwnerResponseInOriginal"]`,
                     `button[jsaction*="review.expandReview"]`,
@@ -154,14 +154,22 @@
                     `button[jsaction*="review.showMorePhotos"]`,
                   ];
 
-                  for (const selector of buttonActions) {
-                    const button = node.querySelector(selector);
+                  for (const selector of buttonSelectors) {
+                    let button = node.querySelector(selector);
+
                     if (button) {
                       button.click();
+
+                      // Wait until the button is removed from the DOM
+                      while (node.querySelector(selector)) {
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 100)
+                        ); // Polling interval
+                      }
                     }
                   }
 
-                  await new Promise((resolve) => setTimeout(resolve, 3500));
+                  await new Promise((resolve) => setTimeout(resolve, 500));
 
                   ids.push({
                     id,

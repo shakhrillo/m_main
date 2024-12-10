@@ -85,12 +85,42 @@ const watchReviews = async (driver, data) => {
 
   let allElements = [];
   let stopInterval = false;
+  let extracted = 0;
+  let reTries = 0;
 
   async function fetchIds() {
     try {
       allElements = await driver.executeScript(`return window["ids"] || []`);
 
       console.log("Total reviews:", allElements.length);
+      if (extracted === allElements.length && reTries >= 10) {
+        console.log("No new reviews found. Terminating interval.");
+        stopInterval = true;
+        await complete(allElements, data);
+        await quitDriver();
+        return;
+      }
+
+      if (extracted === allElements.length) {
+        console.log("Scrolling to load more reviews");
+        await driver.executeScript(`
+          const parentEl = document.querySelector(".vyucnb").parentElement;
+          const initEl = parentEl.children[0];
+          initEl.scrollIntoView();
+        `);
+        await driver.sleep(1000);
+        await driver.executeScript(`
+          const parentEl = document.querySelector(".vyucnb").parentElement;
+          const loaderEl = parentEl.children[parentEl.children.length - 1];
+          loaderEl.scrollIntoView();
+        `);
+        await driver.sleep(1000);
+        reTries++;
+      } else {
+        reTries = 0;
+      }
+
+      extracted = allElements.length;
 
       await db.doc(`users/${data.userId}/reviews/${data.reviewId}`).update({
         updatedAt: +new Date(),

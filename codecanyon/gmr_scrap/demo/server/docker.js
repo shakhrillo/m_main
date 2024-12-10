@@ -5,12 +5,10 @@ const {
 } = require("./services/firebaseService");
 const docker = new Docker();
 
-// docker get image info
 docker.getImage("gmr_scrap_selenium:latest").inspect((err, data) => {
   if (err) {
     console.error("Error fetching image info:", err);
   } else {
-    console.log("Image info:", data);
     updateDockerImageInfo(data);
   }
 });
@@ -45,6 +43,7 @@ async function watchEvents() {
             if (status === "die") {
               if (container) {
                 container.remove();
+                updateMachine(name, { stats: null });
               }
               // const stream = activeStreams.get(name);
               // if (stream) {

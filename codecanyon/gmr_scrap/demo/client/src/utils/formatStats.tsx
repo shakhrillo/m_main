@@ -8,7 +8,7 @@ export function formatStats(stats: any) {
     !stats.networks ||
     !stats.pids_stats
   ) {
-    return "Invalid stats object"
+    return "Completed!"
   }
   const formatBytes = (bytes: number) => {
     if (bytes === 0 || bytes === undefined || bytes === null || isNaN(bytes))

@@ -1,15 +1,10 @@
-import { Timestamp } from "firebase/firestore"
+export const formatTimestamp = (date: string) => {
+  if (!date) return ""
 
-export const formatTimestamp = (timestamp: Timestamp): string =>
-  timestamp?.seconds
-    ? new Date(timestamp.seconds * 1000)
-        .toLocaleString("en-US", {
-          day: "numeric",
-          month: "numeric",
-          year: "2-digit",
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: false,
-        })
-        .replace(",", " ")
-    : ""
+  const d = new Date(date) // Convert the string to a Date object
+  if (isNaN(d.getTime())) return "" // Check if the date is valid
+
+  // Format the date (e.g., "YYYY-MM-DD HH:mm:ss")
+  const formattedDate = d.toISOString().replace("T", " ").split(".")[0]
+  return formattedDate
+}
