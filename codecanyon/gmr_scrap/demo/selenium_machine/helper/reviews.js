@@ -103,6 +103,12 @@ const watchReviews = async (driver, data) => {
 
       if (extracted === allElements.length) {
         console.log("Scrolling to load more reviews");
+        if (data.limit >= data.reviews && allElements.length > 0) {
+          stopInterval = true;
+          await complete(allElements, data);
+          await quitDriver();
+          return;
+        }
         await driver.executeScript(`
           const parentEl = document.querySelector(".vyucnb").parentElement;
           const initEl = parentEl.children[0];

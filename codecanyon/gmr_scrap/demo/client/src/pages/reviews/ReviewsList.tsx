@@ -150,6 +150,10 @@ const Dashboard: React.FC = () => {
           loadLimit: 1000,
         }),
         snapshot => {
+          console.log(
+            "snapshot.docs",
+            snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
+          )
           setCompletedReviews(
             snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
           )
