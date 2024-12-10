@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
     {
       text: "Status",
       field: "status",
-      render: (row: any) => statusRender(row.status),
+      render: (row: any) => row.status,
     },
     {
       text: "Place",
@@ -150,10 +150,6 @@ const Dashboard: React.FC = () => {
           loadLimit: 1000,
         }),
         snapshot => {
-          console.log(
-            "snapshot.docs",
-            snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
-          )
           setCompletedReviews(
             snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
           )
