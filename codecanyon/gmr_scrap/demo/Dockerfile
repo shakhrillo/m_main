@@ -1,8 +1,3 @@
-# Use a lightweight Node.js base image
-# FROM selenium/standalone-chrome:latest
-# FROM node:14.15.4
-# FROM zenika/alpine-chrome
-
 FROM alpine:3.19
 
 # Installs latest Chromium package.
