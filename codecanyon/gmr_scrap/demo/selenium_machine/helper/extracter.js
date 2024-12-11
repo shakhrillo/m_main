@@ -20,7 +20,7 @@
   }
 
   function getReviewDate(node) {
-    const match = node.innerText.match(/(\b.+?\b ago)/);
+    const match = node.innerText.match(/\b(\d+\s\w+\sago)\b/);
     if (match) {
       return match[0];
     }
@@ -131,11 +131,16 @@
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
   const observerCallback = (records) => {
+    const initialNodes = [];
     if (window.ids === undefined) {
       window.ids = [];
       window.extractedImages = [];
       window.extractedOwnerReviewCount = 0;
       window.extractedUserReviewCount = 0;
+
+      window.initialReviewIds.forEach((id) => {
+        initialNodes.push(parentEl.querySelector(`[data-review-id="${id}"]`));
+      });
     }
 
     let waitTime = 100;
@@ -144,62 +149,64 @@
         for (const record of records) {
           if (record.type === "childList") {
             await Promise.all(
-              Array.from(record.addedNodes).map(async (node) => {
-                const id = node.getAttribute("data-review-id");
-                if (id) {
-                  node.scrollIntoView();
+              [...initialNodes, ...Array.from(record.addedNodes)].map(
+                async (node) => {
+                  const id = node.getAttribute("data-review-id");
+                  if (id) {
+                    node.scrollIntoView();
 
-                  const buttonSelectors = [
-                    `button[jsaction*="review.showReviewInOriginal"]`,
-                    `button[jsaction*="review.showOwnerResponseInOriginal"]`,
-                    `button[jsaction*="review.expandReview"]`,
-                    `button[jsaction*="review.expandOwnerResponse"]`,
-                    `button[jsaction*="review.showMorePhotos"]`,
-                  ];
+                    const buttonSelectors = [
+                      `button[jsaction*="review.showReviewInOriginal"]`,
+                      `button[jsaction*="review.showOwnerResponseInOriginal"]`,
+                      `button[jsaction*="review.expandReview"]`,
+                      `button[jsaction*="review.expandOwnerResponse"]`,
+                      `button[jsaction*="review.showMorePhotos"]`,
+                    ];
 
-                  for (const selector of buttonSelectors) {
-                    let button = node.querySelector(selector);
+                    for (const selector of buttonSelectors) {
+                      let button = node.querySelector(selector);
 
-                    if (button) {
-                      button.click();
+                      if (button) {
+                        button.click();
 
-                      // Wait until the button is removed from the DOM
-                      while (node.querySelector(selector)) {
-                        await new Promise((resolve) =>
-                          setTimeout(resolve, 100)
-                        ); // Polling interval
+                        // Wait until the button is removed from the DOM
+                        while (node.querySelector(selector)) {
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 100)
+                          ); // Polling interval
+                        }
                       }
                     }
+
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+
+                    const images = getImgURLs(node);
+                    extractedImages.push(...images);
+
+                    const review = elementReviewComment(node);
+                    if (!!review) {
+                      extractedUserReviewCount += 1;
+                    }
+
+                    const response = getOwnerResponse(node);
+                    if (!!response) {
+                      extractedOwnerReviewCount += 1;
+                    }
+
+                    ids.push({
+                      id,
+                      review,
+                      user: extractUser(node),
+                      date: getReviewDate(node),
+                      rating: getReviewRate(node),
+                      qa: elementReviewQA(node),
+                      response: getOwnerResponse(node),
+                      imageUrls: images,
+                      time: +Date.now(),
+                    });
                   }
-
-                  await new Promise((resolve) => setTimeout(resolve, 500));
-
-                  const images = getImgURLs(node);
-                  extractedImages.push(...images);
-
-                  const review = elementReviewComment(node);
-                  if (!!review) {
-                    extractedUserReviewCount += 1;
-                  }
-
-                  const response = getOwnerResponse(node);
-                  if (!!response) {
-                    extractedOwnerReviewCount += 1;
-                  }
-
-                  ids.push({
-                    id,
-                    review,
-                    user: extractUser(node),
-                    date: getReviewDate(node),
-                    rating: getReviewRate(node),
-                    qa: elementReviewQA(node),
-                    response: getOwnerResponse(node),
-                    imageUrls: images,
-                    time: +Date.now(),
-                  });
                 }
-              })
+              )
             );
           }
         }

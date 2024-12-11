@@ -73,14 +73,17 @@ function ReviewInfo() {
           </div>
         </div>
         <div className="col-md-6">
-          <div
+          <a
+            href={info.url}
+            target="_blank"
             style={{
+              display: "block",
               height: 400,
               backgroundImage: `url(${info.screenshot})`,
               backgroundPosition: "center",
               backgroundSize: "cover",
             }}
-          ></div>
+          ></a>
         </div>
       </div>
       <hr />

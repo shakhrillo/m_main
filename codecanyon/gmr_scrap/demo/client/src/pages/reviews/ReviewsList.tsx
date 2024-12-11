@@ -169,7 +169,6 @@ const Dashboard: React.FC = () => {
 
     const docRef = doc(firestore, `app/info`)
     const unsubscribe = onSnapshot(docRef, doc => {
-      console.log("doc.data()", doc.data())
       setInfo(doc.data())
     })
 

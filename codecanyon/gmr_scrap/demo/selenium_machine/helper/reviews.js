@@ -50,6 +50,8 @@ const getInitialReviews = async (driver) => {
         reviewIds.push(reviewId);
       }
     }
+      
+    window["initialReviewIds"] = reviewIds;
 
     return reviewIds;
   `);

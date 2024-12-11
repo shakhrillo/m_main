@@ -72,7 +72,8 @@ async function getMachineData() {
   console.log("Sorted reviews");
 
   let reviews = [];
-  while (reviews.length === 0) {
+  let retryCount = 0;
+  while (reviews.length === 0 && retryCount < 5) {
     reviews = await getInitialReviews(driver);
     console.log("Initial reviews", reviews);
 
@@ -93,6 +94,7 @@ async function getMachineData() {
       const initEl = parentEl.children[0];
       initEl.scrollIntoView();
     `);
+    retryCount++;
   }
   console.log("Done watching reviews");
 

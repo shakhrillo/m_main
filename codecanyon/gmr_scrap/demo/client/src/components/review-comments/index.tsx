@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore"
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useFirebase } from "../../contexts/FirebaseProvider"
@@ -24,7 +24,13 @@ function ReviewComments() {
       "reviews",
     )
 
-    const unsubscribe = onSnapshot(reviewsRef, async snapshot => {
+    const q = query(reviewsRef, orderBy("time", "asc"))
+
+    const unsubscribe = onSnapshot(q, async snapshot => {
+      console.log(
+        "data",
+        snapshot.docs.map(doc => doc.data()),
+      )
       const reviewsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -46,32 +52,49 @@ function ReviewComments() {
     <table className="table">
       <thead>
         <tr>
-          <th>#</th>
+          <th>Date</th>
           <th>Rating</th>
           <th>Images</th>
           <th>Review</th>
+          <th>QA</th>
           <th>Response</th>
         </tr>
       </thead>
       <tbody>
         {reviews.map((review, index) => (
           <tr key={review.id}>
-            <td>{index + 1}</td>
+            <td>{review.date}</td>
             <td>{review.rating}</td>
             <td>
-              {review.imageUrls.length > 0
-                ? review.imageUrls.map((imageUrl: string, index: number) => (
-                    <img
-                      key={index}
-                      src={imageUrl}
-                      alt={`Review ${index + 1}`}
-                      style={{ width: 40 }}
-                      className="img-thumbnail"
-                    />
-                  ))
-                : "No images"}
+              {review.imageUrls.length > 0 ? (
+                <div className="row g-2">
+                  {review.imageUrls.map((imageUrl: string, index: number) => (
+                    <div key={index} className="col-3">
+                      <a href={imageUrl} target="_blank" rel="noreferrer">
+                        <img
+                          key={index}
+                          src={imageUrl}
+                          alt={`Review ${index + 1}`}
+                          className="img-thumbnail"
+                        />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                "No images"
+              )}
             </td>
             <td>{reviewTextRender(review.review)}</td>
+            <td>
+              <ul className="list-group">
+                {review.qa.map((qa: any, index: number) => (
+                  <li key={index} className="list-group-item">
+                    <small className="text-nowrap">{qa}</small>
+                  </li>
+                ))}
+              </ul>
+            </td>
             <td>{reviewTextRender(review.response)}</td>
           </tr>
         ))}
