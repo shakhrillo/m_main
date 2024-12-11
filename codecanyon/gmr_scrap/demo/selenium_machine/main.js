@@ -1,12 +1,16 @@
-const { Builder, By, until, Browser } = require("selenium-webdriver");
-const chrome = require("selenium-webdriver/chrome");
-const { db, uploadFile } = require("./services/firebase");
+const fs = require("fs");
+const path = require("path");
 
-const {
-  getInitialReviews,
-  watchReviews,
-  sortReviews,
-} = require("./helper/reviews");
+const { By } = require("selenium-webdriver");
+const { getMachineData } = require("./services/firebase");
+
+const { watchReviews } = require("./helper/reviews");
+const { getDriver } = require("./services/selenium");
+
+const scriptsDirectory = path.join(__dirname, "scripts");
+const getScriptContent = (filename) => {
+  return fs.readFileSync(path.join(scriptsDirectory, filename), "utf8");
+};
 
 const tag = process.env.TAG;
 
@@ -15,50 +19,17 @@ if (!tag) {
   return;
 }
 
-async function getMachineData() {
-  const snapshot = await db.doc(`machines/${tag}`).get();
-  const data = snapshot.data();
+async function init() {
+  const data = await getMachineData(tag);
+  const driver = await getDriver();
 
-  return data;
-}
-
-(async function init() {
-  let data = await getMachineData();
-  const { url, userId, reviewId } = data;
-  console.log("Scraping data for", url);
-
-  if (!data) {
-    db.doc(`users/${userId}/reviewOverview/${reviewId}`).update({
-      status: "error",
-      error: "Machine not found",
-    });
-    return;
-  }
-
-  const options = new chrome.Options();
-  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
-  options.setLoggingPrefs({ browser: "ALL" });
-  options.setChromeBinaryPath("/usr/bin/chromium");
-  options.excludeSwitches("enable-automation");
-
-  let driver = await new Builder()
-    .forBrowser(Browser.CHROME)
-    .setChromeOptions(options)
-    .build();
-
-  await driver.manage().setTimeouts({
-    implicit: 3000,
-    pageLoad: 180000,
-    script: 180000,
-  });
-
-  // -----------------
-  // Start scraping
-  // ----------------
-  await driver.get(url);
+  // ----------------- Start the process -----------------
+  await driver.get(data.url);
   await driver.sleep(2000);
 
-  const reviewsTabs = await driver.findElements(By.css('button[role="tab"]'));
+  // ----------------- Click on the reviews tab -----------------
+  const reviewsTabs =
+    (await driver.findElements(By.css('button[role="tab"]'))) || [];
   for (const tab of reviewsTabs) {
     const tabText = await tab.getText();
     if (tabText.toLowerCase().includes("reviews")) {
@@ -66,47 +37,64 @@ async function getMachineData() {
       break;
     }
   }
-
   await driver.sleep(2000);
-  await sortReviews(driver, data.sortBy);
-  console.log("Sorted reviews");
 
-  let reviews = [];
-  let retryCount = 0;
-  while (reviews.length === 0 && retryCount < 5) {
-    reviews = await getInitialReviews(driver);
-    console.log("Initial reviews", reviews);
+  // ----------------- Sort the reviews -----------------
+  const sortButton = await driver.findElement(
+    By.css(
+      'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
+    )
+  );
+  if (sortButton) {
+    await sortButton.click();
+    await driver.sleep(400);
 
-    await driver.executeScript(`
-      const parentEl = document.querySelector(".vyucnb").parentElement;
-      const loaderEl = parentEl.children[parentEl.children.length - 1];
-      loaderEl.scrollIntoView();
-    `);
-    const screenshot = await driver.takeScreenshot();
-    const screenshotBuffer = Buffer.from(screenshot, "base64");
-    await uploadFile(
-      screenshotBuffer,
-      `test/${tag}/screenshot-${new Date().getTime()}.png`
+    const menuItems = await driver.findElements(
+      By.css('[role="menuitemradio"]')
     );
-    await driver.sleep(2000);
-    await driver.executeScript(`
-      const parentEl = document.querySelector(".vyucnb").parentElement;
-      const initEl = parentEl.children[0];
-      initEl.scrollIntoView();
-    `);
+    for (const item of menuItems) {
+      const text = await item.getText();
+
+      if (text === data.sortBy) {
+        await item.click();
+        console.log("Sorting by:", data.sortBy);
+        break;
+      }
+    }
+  }
+  await driver.sleep(2000);
+
+  // ----------------- Wait for the reviews to load -----------------
+  let reviewIds = [];
+  let retryCount = 0;
+  const getReviewIds = getScriptContent("getReviewIds.js");
+  const scrollToLoader = getScriptContent("scrollToLoader.js");
+  const scrollToContainer = getScriptContent("scrollToContainer.js");
+
+  while (reviewIds.length === 0 && retryCount < 10) {
+    reviewIds = await driver.executeScript(getReviewIds);
+    await driver.executeScript(scrollToLoader);
+    await driver.sleep(1000);
+    await driver.executeScript(scrollToContainer);
     retryCount++;
   }
-  console.log("Done watching reviews");
 
-  if (reviews.length) {
-    await driver.executeScript(`
-      const parentEl = document.querySelector(".vyucnb").parentElement;
-      const scrollContainer = parentEl.children[parentEl.children.length - 2];
-      const lastChild = scrollContainer.children[scrollContainer.children.length - 1];
-      lastChild.scrollIntoView();
-    `);
+  if (reviewIds.length === 0) {
+    console.log("No reviews found");
+    driver.quit();
+    return;
   }
 
-  console.log("Watching reviews");
+  console.log("Initial reviewIds:", reviewIds);
+
+  // ----------------- Watch the reviews -----------------
   watchReviews(driver, data);
-})();
+
+  // ----------------- Scroll to the loader -----------------
+  await driver.executeScript(scrollToLoader);
+}
+try {
+  init();
+} catch (error) {
+  console.error("Error in main.js", error);
+}

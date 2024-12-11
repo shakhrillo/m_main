@@ -3,17 +3,29 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
+const isTest = process.env.NODE_ENV === "test";
+let firebaseUrl = "localhost";
+if (!isTest) {
+  firebaseUrl = "host.docker.internal";
+}
+
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 if (!FIREBASE_PROJECT_ID) {
   throw new Error("FIREBASE_PROJECT_ID not found in environment variables");
 }
 
-const serviceAccountPath = path.resolve(__dirname, "../firebase.json");
+const serviceAccountPath = path.resolve(
+  __dirname,
+  isTest ? "../../firebase.json" : "../firebase.json"
+);
 if (!fs.existsSync(serviceAccountPath)) {
   throw new Error("firebase.json not found");
 }
 
-const firebasekeysPath = path.resolve(__dirname, "../firebasekeys.json");
+const firebasekeysPath = path.resolve(
+  __dirname,
+  isTest ? "../../firebasekeys.json" : "../firebasekeys.json"
+);
 if (
   process.env.NODE_ENV !== "development" &&
   !fs.existsSync(firebasekeysPath)
@@ -22,7 +34,7 @@ if (
 }
 
 admin.initializeApp(
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV === "development" || isTest
     ? { projectId: FIREBASE_PROJECT_ID }
     : {
         credential: admin.credential.cert(firebasekeysPath),
@@ -33,13 +45,13 @@ admin.initializeApp(
 
 const db = admin.firestore();
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development" || isTest) {
   const serviceAccountJson = JSON.parse(
     fs.readFileSync(serviceAccountPath, "utf8")
   );
   const firestorePort = serviceAccountJson.emulators?.firestore?.port;
   if (firestorePort) {
-    db.settings({ host: `host.docker.internal:${firestorePort}`, ssl: false });
+    db.settings({ host: `${firebaseUrl}:${firestorePort}`, ssl: false });
   } else {
     console.warn("Firestore emulator port not found in firebase.json");
   }
@@ -52,7 +64,7 @@ const uploadFile = async (fileBuffer, destination) => {
     );
     const storagePort = serviceAccountJson.emulators?.storage?.port;
     const storage = new Storage({
-      apiEndpoint: `http://host.docker.internal:${storagePort}`,
+      apiEndpoint: `http://${firebaseUrl}:${storagePort}`,
     });
 
     const bucket = storage.bucket(`${FIREBASE_PROJECT_ID}.appspot.com`);
@@ -68,7 +80,7 @@ const uploadFile = async (fileBuffer, destination) => {
     }
 
     const publicUrl = file.publicUrl();
-    return publicUrl.replace(`host.docker.internal`, `localhost`);
+    return publicUrl.replace(`${firebaseUrl}`, `localhost`);
   }
 };
 
@@ -99,4 +111,18 @@ async function batchWriteLargeArray(uid, pushId, data) {
   }
 }
 
-module.exports = { admin, db, uploadFile, batchWriteLargeArray };
+async function getMachineData(tag) {
+  const ref = db.collection("machines").doc(tag);
+  const snapshot = await ref.get();
+  const data = snapshot.data();
+
+  return data;
+}
+
+module.exports = {
+  admin,
+  db,
+  getMachineData,
+  uploadFile,
+  batchWriteLargeArray,
+};

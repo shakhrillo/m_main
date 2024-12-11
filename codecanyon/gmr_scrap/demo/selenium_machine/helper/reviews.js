@@ -1,61 +1,9 @@
 const fs = require("fs");
 const path = require("path");
-const { Builder, By, until, WebDriver } = require("selenium-webdriver");
+const { WebDriver } = require("selenium-webdriver");
 const { db, uploadFile } = require("../services/firebase");
+const { isDriverActive } = require("../services/selenium");
 const tag = process.env.TAG;
-
-/**
- * Get the initial reviews
- * @param {WebDriver} driver
- */
-const sortReviews = async (driver, sortBy = "Newest") => {
-  const sortButton = await driver.findElement(
-    By.css(
-      'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
-    )
-  );
-
-  await sortButton.click();
-  await driver.sleep(1000);
-
-  const menuItems = await driver.findElements(By.css('[role="menuitemradio"]'));
-  // console.log("Menu items:", menuItems);
-  for (const item of menuItems) {
-    const text = await item.getText();
-    console.log("Item text:", text);
-
-    if (text === sortBy) {
-      await item.click();
-      await driver.sleep(1000);
-      return;
-    }
-  }
-
-  console.log("Sort by not found");
-};
-
-/**
- * Get the initial reviews
- * @param {WebDriver} driver
- */
-const getInitialReviews = async (driver) => {
-  return await driver.executeScript(`
-    const reviewsContainer = document.querySelector(".vyucnb")?.parentElement?.lastChild?.previousSibling;
-
-    const reviewIds = [];
-    const reviewsContainerChildren = reviewsContainer.children;
-    for (const reviewElm of reviewsContainerChildren) {
-      const reviewId = reviewElm.getAttribute("data-review-id");
-      if (reviewId) {
-        reviewIds.push(reviewId);
-      }
-    }
-      
-    window["initialReviewIds"] = reviewIds;
-
-    return reviewIds;
-  `);
-};
 
 /**
  * Get the initial reviews
@@ -69,15 +17,6 @@ const watchReviews = async (driver, data) => {
   );
 
   await driver.executeScript(extracterString);
-
-  const isDriverActive = async (driver) => {
-    try {
-      await driver.getTitle(); // Simple command to test if the session is valid
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
 
   async function quitDriver() {
     if (isDriverActive(driver)) {
@@ -308,7 +247,5 @@ async function complete(
 }
 
 module.exports = {
-  sortReviews,
-  getInitialReviews,
   watchReviews,
 };
