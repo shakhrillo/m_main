@@ -27,10 +27,6 @@ function ReviewComments() {
     const q = query(reviewsRef, orderBy("time", "asc"))
 
     const unsubscribe = onSnapshot(q, async snapshot => {
-      console.log(
-        "data",
-        snapshot.docs.map(doc => doc.data()),
-      )
       const reviewsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -62,20 +58,21 @@ function ReviewComments() {
       </thead>
       <tbody>
         {reviews.map((review, index) => (
-          <tr key={review.id}>
+          <tr key={index}>
             <td>{review.date}</td>
             <td>{review.rating}</td>
             <td>
               {review.imageUrls.length > 0 ? (
                 <div className="row g-2">
                   {review.imageUrls.map((imageUrl: string, index: number) => (
-                    <div key={index} className="col-3">
+                    <div key={index} className="col-6">
                       <a href={imageUrl} target="_blank" rel="noreferrer">
                         <img
                           key={index}
                           src={imageUrl}
                           alt={`Review ${index + 1}`}
                           className="img-thumbnail"
+                          style={{ minWidth: "60px" }}
                         />
                       </a>
                     </div>

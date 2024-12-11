@@ -181,7 +181,9 @@
                     await new Promise((resolve) => setTimeout(resolve, 500));
 
                     const images = getImgURLs(node);
-                    extractedImages.push(...images);
+                    extractedImages.push(
+                      ...images.map((url) => ({ id, url, time: +Date.now() }))
+                    );
 
                     const review = elementReviewComment(node);
                     if (!!review) {

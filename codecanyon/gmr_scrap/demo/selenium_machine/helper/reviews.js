@@ -256,7 +256,7 @@ async function addReviews(allElements, refCollection) {
         const batch = db.batch();
 
         chunk.forEach((doc) => {
-          if (doc?.id) batch.set(collectionRef.doc(doc.id), doc);
+          batch.set(collectionRef.doc(), doc);
         });
 
         batches.push(batch.commit());
