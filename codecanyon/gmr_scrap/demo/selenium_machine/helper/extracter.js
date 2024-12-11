@@ -1,8 +1,16 @@
-(function () {
-  if (typeof window === "undefined") {
-    return;
-  }
+if (typeof window === "undefined") {
+  console.log("Window is undefined");
+  return;
+}
 
+let waitTime = 100;
+window.checkedIds = new Set();
+window.ids = [];
+window.extractedImages = [];
+window.extractedOwnerReviewCount = 0;
+window.extractedUserReviewCount = 0;
+
+async function init() {
   function extractUser(node) {
     const user = {};
     const reviewerButton = node.querySelectorAll(
@@ -129,86 +137,82 @@
     return imageURLs;
   }
 
-  const parentEl = document.querySelector(".vyucnb").parentElement;
-  const observerCallback = (records) => {
-    const initialNodes = [];
-    if (window.ids === undefined) {
-      window.ids = [];
-      window.extractedImages = [];
-      window.extractedOwnerReviewCount = 0;
-      window.extractedUserReviewCount = 0;
+  async function checkNode(node) {
+    const id = node.getAttribute("data-review-id");
+    if (id && !checkedIds.has(id)) {
+      checkedIds.add(id);
+      node.scrollIntoView();
 
-      window.initialReviewIds.forEach((id) => {
-        initialNodes.push(parentEl.querySelector(`[data-review-id="${id}"]`));
+      const buttonSelectors = [
+        `button[jsaction*="review.showReviewInOriginal"]`,
+        `button[jsaction*="review.showOwnerResponseInOriginal"]`,
+        `button[jsaction*="review.expandReview"]`,
+        `button[jsaction*="review.expandOwnerResponse"]`,
+        `button[jsaction*="review.showMorePhotos"]`,
+      ];
+
+      for (const selector of buttonSelectors) {
+        let button = node.querySelector(selector);
+
+        if (button) {
+          button.click();
+
+          // Wait until the button is removed from the DOM
+          while (node.querySelector(selector)) {
+            await new Promise((resolve) => setTimeout(resolve, 100)); // Polling interval
+          }
+        }
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const images = getImgURLs(node);
+      extractedImages.push(
+        ...images.map((url) => ({ id, url, time: +Date.now() }))
+      );
+
+      const review = elementReviewComment(node);
+      if (!!review) {
+        extractedUserReviewCount += 1;
+      }
+
+      const response = getOwnerResponse(node);
+      if (!!response) {
+        extractedOwnerReviewCount += 1;
+      }
+
+      ids.push({
+        id,
+        review,
+        user: extractUser(node),
+        date: getReviewDate(node),
+        rating: getReviewRate(node),
+        qa: elementReviewQA(node),
+        response: getOwnerResponse(node),
+        imageUrls: images,
+        time: +Date.now(),
       });
     }
+  }
 
-    let waitTime = 100;
+  const reviewsContainer =
+    document.querySelector(".vyucnb")?.parentElement?.lastChild
+      ?.previousSibling;
+  const reviewsContainerChildren = reviewsContainer.children;
+  for (const reviewElm of reviewsContainerChildren) {
+    await checkNode(reviewElm);
+  }
+
+  const parentEl = document.querySelector(".vyucnb").parentElement;
+  const observerCallback = (records) => {
     setTimeout(async () => {
       try {
         for (const record of records) {
           if (record.type === "childList") {
             await Promise.all(
-              [...initialNodes, ...Array.from(record.addedNodes)].map(
-                async (node) => {
-                  const id = node.getAttribute("data-review-id");
-                  if (id) {
-                    node.scrollIntoView();
-
-                    const buttonSelectors = [
-                      `button[jsaction*="review.showReviewInOriginal"]`,
-                      `button[jsaction*="review.showOwnerResponseInOriginal"]`,
-                      `button[jsaction*="review.expandReview"]`,
-                      `button[jsaction*="review.expandOwnerResponse"]`,
-                      `button[jsaction*="review.showMorePhotos"]`,
-                    ];
-
-                    for (const selector of buttonSelectors) {
-                      let button = node.querySelector(selector);
-
-                      if (button) {
-                        button.click();
-
-                        // Wait until the button is removed from the DOM
-                        while (node.querySelector(selector)) {
-                          await new Promise((resolve) =>
-                            setTimeout(resolve, 100)
-                          ); // Polling interval
-                        }
-                      }
-                    }
-
-                    await new Promise((resolve) => setTimeout(resolve, 500));
-
-                    const images = getImgURLs(node);
-                    extractedImages.push(
-                      ...images.map((url) => ({ id, url, time: +Date.now() }))
-                    );
-
-                    const review = elementReviewComment(node);
-                    if (!!review) {
-                      extractedUserReviewCount += 1;
-                    }
-
-                    const response = getOwnerResponse(node);
-                    if (!!response) {
-                      extractedOwnerReviewCount += 1;
-                    }
-
-                    ids.push({
-                      id,
-                      review,
-                      user: extractUser(node),
-                      date: getReviewDate(node),
-                      rating: getReviewRate(node),
-                      qa: elementReviewQA(node),
-                      response: getOwnerResponse(node),
-                      imageUrls: images,
-                      time: +Date.now(),
-                    });
-                  }
-                }
-              )
+              Array.from(record.addedNodes).map(async (node) => {
+                await checkNode(node);
+              })
             );
           }
         }
@@ -231,4 +235,6 @@
       childList: true,
     }
   );
-})();
+}
+
+init();

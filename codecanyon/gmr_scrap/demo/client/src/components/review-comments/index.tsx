@@ -48,6 +48,7 @@ function ReviewComments() {
     <table className="table">
       <thead>
         <tr>
+          <th>#</th>
           <th>Date</th>
           <th>Rating</th>
           <th>Images</th>
@@ -59,6 +60,7 @@ function ReviewComments() {
       <tbody>
         {reviews.map((review, index) => (
           <tr key={index}>
+            <td>{index}</td>
             <td>{review.date}</td>
             <td>{review.rating}</td>
             <td>
