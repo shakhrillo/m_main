@@ -56,7 +56,11 @@ function ReviewImages() {
           target="_blank"
           rel="noreferrer"
         >
-          <img src={img.thumb} className="img-fluid" alt={`Review ${index}`} />
+          <img
+            src={img.thumb}
+            className={`img-fluid ${img.videoUrl ? "rounded border border-5 border-danger" : ""}`}
+            alt={`Review ${index}`}
+          />
         </a>
       ))}
     </div>
