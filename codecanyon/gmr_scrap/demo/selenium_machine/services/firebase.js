@@ -115,10 +115,16 @@ async function getMachineData(tag) {
   return data;
 }
 
+async function updateMachineData(tag, data) {
+  const ref = db.collection("machines").doc(tag);
+  await ref.update(data);
+}
+
 module.exports = {
   admin,
   db,
   getMachineData,
+  updateMachineData,
   uploadFile,
   batchWriteLargeArray,
 };

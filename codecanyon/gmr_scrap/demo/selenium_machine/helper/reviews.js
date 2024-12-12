@@ -1,7 +1,5 @@
-const fs = require("fs");
-const path = require("path");
 const { WebDriver } = require("selenium-webdriver");
-const { db, uploadFile } = require("../services/firebase");
+const { db, uploadFile, updateMachineData } = require("../services/firebase");
 const { isDriverActive } = require("../services/selenium");
 const { quitDriver } = require("../services/selenium");
 const { batchWriteLargeArray } = require("../services/firebase");
@@ -133,20 +131,11 @@ const watchReviews = async (driver, data) => {
       extractedImages
     );
 
-    await db.doc(`users/${data.userId}/reviews/${data.reviewId}`).update({
-      updatedAt: +new Date(),
-      completedAt: +new Date(),
+    updateMachineData(tag, {
       csvUrl,
       jsonUrl,
       totalReviews: allElements.length,
       totalReviewsScraped: totalReviews,
-      totalImages: extractedImages.length,
-      totalOwnerReviews: extractedOwnerReviewCount,
-      totalUserReviews: extractedUserReviewCount,
-    });
-
-    await db.doc(`machines/${tag}`).update({
-      totalReviews: allElements.length,
       totalImages: extractedImages.length,
       totalOwnerReviews: extractedOwnerReviewCount,
       totalUserReviews: extractedUserReviewCount,
