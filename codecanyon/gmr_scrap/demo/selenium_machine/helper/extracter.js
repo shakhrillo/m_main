@@ -10,160 +10,174 @@ window.extractedImages = [];
 window.extractedOwnerReviewCount = 0;
 window.extractedUserReviewCount = 0;
 
-async function init() {
-  function extractUser(node) {
-    const user = {};
-    const reviewerButton = node.querySelectorAll(
-      'button[jsaction*="review.reviewerLink"]'
-    );
-    if (reviewerButton.length > 1) {
-      user.url = reviewerButton[1].getAttribute("data-href");
-      user.name = reviewerButton[1].firstChild.textContent;
-      user.info = reviewerButton[1].lastChild.textContent
-        .split("·")
-        .map((item) => item.trim());
-    }
+/**
+ * Extracts the user information from the review node
+ * @param {HTMLElement} node
+ * @returns {{url: string, name: string, info: string[]}}
+ */
+function getReviewUser(node) {
+  const btnEl = node.querySelector('button[jsaction*="review.reviewerLink"]');
 
-    return user;
+  if (btnEl) {
+    return {
+      url: btnEl.getAttribute("data-href"),
+      name: btnEl.firstChild.textContent,
+      info: btnEl.lastChild.textContent.split("·").map((item) => item.trim()),
+    };
   }
 
-  function getReviewDate(node) {
-    const match = node.innerText.match(/\b(\d+\s\w+\sago)\b/);
-    if (match) {
-      return match[0];
-    }
-    return "";
+  return {
+    url: "",
+    name: "",
+    info: [],
+  };
+}
+
+/**
+ * Extracts the review date from the review node
+ * @param {HTMLElement} node
+ * @returns {string}
+ * @example "2 days ago"
+ */
+function getReviewDate(node) {
+  const match = node.innerText.match(/.*?(\d+\s\w+\sago)\b/);
+
+  if (match) {
+    return match[0] || "";
   }
 
-  function getReviewRate(node) {
-    const rateElement = node.querySelector(
-      'span[role="img"][aria-label*="stars"]'
-    );
+  return "";
+}
 
-    if (!rateElement) {
-      return 0;
-    }
+/**
+ * Extracts the review rate from the review node
+ * @param {HTMLElement} node
+ * @returns {number}
+ * @example 4
+ * @example 3.5
+ */
+function getReviewRate(node) {
+  const spanEl = node.querySelector('span[role="img"][aria-label*="stars"]');
 
+  if (spanEl) {
     const rating =
-      rateElement?.getAttribute("aria-label")?.match(/(\d)/)?.[1] ||
+      spanEl?.getAttribute("aria-label")?.match(/(\d)/)?.[1] ||
       node.innerText.match(/(\d)\/5/)?.[1];
 
     return Number(rating) || 0;
   }
 
-  function elementReviewComment(node) {
-    let reviewText = "";
-    const reviewContainers = node.querySelectorAll(".MyEned");
-    for (const reviewContainer of reviewContainers) {
-      const lastSpan = reviewContainer.querySelector("span:last-of-type");
-      const lastSpanText = lastSpan?.textContent?.trim() || "";
+  return 0;
+}
 
-      if (lastSpanText.includes("Read more")) {
-        const firstSpan = reviewContainer.querySelector("span:first-of-type");
-        reviewText += firstSpan?.textContent?.trim() || "";
-      } else {
-        reviewText += lastSpanText;
-      }
-    }
+/**
+ * Extracts the review comment from the review node
+ * @param {HTMLElement} node
+ * @returns {string}
+ */
+function getReviewComment(node) {
+  let text = "";
+  const divEls = node.querySelectorAll(".MyEned");
+  for (const divEl of divEls) {
+    const lastSpan = divEl.querySelector("span:last-of-type");
+    const lastSpanText = lastSpan?.textContent?.trim() || "";
 
-    return reviewText;
-  }
-
-  function elementReviewQA(node) {
-    const reviewContainers = node.querySelectorAll(".MyEned");
-
-    let rateElementParentNextSiblingLastChildChildren = [];
-
-    if (reviewContainers.length) {
-      const MyEnedLastChildren =
-        reviewContainers[0].querySelectorAll(":scope > *");
-      if (MyEnedLastChildren.length >= 2) {
-        rateElementParentNextSiblingLastChildChildren =
-          MyEnedLastChildren[1].querySelectorAll(":scope > *");
-      }
+    if (lastSpanText.includes("Read more")) {
+      const firstSpan = divEl.querySelector("span:first-of-type");
+      text += firstSpan?.textContent?.trim() || "";
     } else {
-      const rateElement = node.querySelector(
-        'span[role="img"][aria-label*="stars"]'
-      );
-      if (rateElement) {
-        const rateElementParent =
-          rateElement.parentElement?.nextElementSibling?.firstElementChild;
-        if (rateElementParent) {
-          rateElementParentNextSiblingLastChildChildren =
-            rateElementParent.querySelectorAll(":scope > *");
-        }
-      }
+      text += lastSpanText;
     }
-
-    const extractedQA = Array.from(
-      rateElementParentNextSiblingLastChildChildren,
-      (questionContainer) => questionContainer.innerText
-    );
-
-    return extractedQA;
   }
 
-  function getOwnerResponse(node) {
-    const reviewElementSpans = node.querySelectorAll("span");
-    const ownerResponseSpan = Array.from(reviewElementSpans).find((span) =>
-      span.innerText.includes("Response from the owner")
-    );
+  return text;
+}
 
-    if (ownerResponseSpan) {
-      return (
-        ownerResponseSpan.parentElement?.nextElementSibling?.innerText || ""
-      );
+/**
+ * Extracts the review question and answer from the review node
+ * @param {HTMLElement} node
+ * @returns {string[]}
+ * @example ["Q: Question 1", "A: Answer 1", "Q: Question 2", "A: Answer 2"]
+ */
+function getReviewQA(node) {
+  const divEls = node.querySelectorAll(".MyEned");
+  let qaEls = [];
+
+  if (divEls.length) {
+    const divElChildren = divEls[0].querySelectorAll(":scope > *");
+    if (divElChildren.length >= 2) {
+      qaEls = divElChildren[1].querySelectorAll(":scope > *");
     }
-
-    return "";
-  }
-
-  function getImgURLs(node) {
-    const imageURLs = [];
-    const allButtons = node.querySelectorAll(
-      `button[jsaction*="review.openPhoto"]`
-    );
-
-    for (const button of allButtons) {
-      const style = button.getAttribute("style");
-      if (style) {
-        const urlMatch = style.split('url("')[1]?.split('");')[0];
-        if (urlMatch) {
-          imageURLs.push(urlMatch.split("=")[0] + "=w1200");
-        }
+  } else {
+    const rateEl = node.querySelector('span[role="img"][aria-label*="stars"]');
+    if (rateEl) {
+      const rateElParent =
+        rateEl.parentElement?.nextElementSibling?.firstElementChild;
+      if (rateElParent) {
+        qaEls = rateElParent.querySelectorAll(":scope > *");
       }
     }
-
-    return imageURLs;
   }
 
-  function getNodeMedia(node) {
-    const nodes = [];
-    const allButtons = node.querySelectorAll(
-      `button[jsaction*="review.openPhoto"]`
-    );
+  const extractedQA = Array.from(
+    qaEls,
+    (questionContainer) => questionContainer.innerText
+  );
 
-    for (const button of allButtons) {
-      let data = {};
-      const style = button.getAttribute("style");
-      const textContent = button.textContent;
-      if (!!textContent) {
-        data["button"] = button;
-      }
-      if (style) {
-        const urlMatch = style.split('url("')[1]?.split('");')[0];
-        if (urlMatch) {
-          data["thumb"] = urlMatch.split("=")[0] + "=w1200";
-        }
-      }
-      if (Object.keys(data).length) {
-        nodes.push(data);
+  return extractedQA;
+}
+
+/**
+ * Extracts the review response from the review node
+ * @param {HTMLElement} node
+ * @returns {string}
+ */
+function getReviewResponse(node) {
+  const spanEls = node.querySelectorAll("span");
+  const spanEl = Array.from(spanEls).find((span) =>
+    span.innerText.includes("Response from the owner")
+  );
+
+  if (spanEl) {
+    return spanEl.parentElement?.nextElementSibling?.innerText || "";
+  }
+
+  return "";
+}
+
+/**
+ * Extracts the review media from the review node
+ * @param {HTMLElement} node
+ * @returns {{thumb: string, videoUrl: string}[]}
+ */
+function getReviewMedia(node) {
+  const nodes = [];
+  const allButtons = node.querySelectorAll(
+    `button[jsaction*="review.openPhoto"]`
+  );
+
+  for (const button of allButtons) {
+    let data = {};
+    const style = button.getAttribute("style");
+    const textContent = button.textContent;
+    if (!!textContent) {
+      data["button"] = button;
+    }
+    if (style) {
+      const urlMatch = style.split('url("')[1]?.split('");')[0];
+      if (urlMatch) {
+        data["thumb"] = urlMatch.split("=")[0] + "=w1200";
       }
     }
-
-    return nodes;
+    if (Object.keys(data).length) {
+      nodes.push(data);
+    }
   }
 
+  return nodes;
+}
+
+async function init() {
   async function checkNode(node) {
     const id = node.getAttribute("data-review-id");
     if (id && !checkedIds.has(id)) {
@@ -193,23 +207,18 @@ async function init() {
 
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // const images = getImgURLs(node);
-      // extractedImages.push(
-      //   ...images.map((url) => ({ id, url, time: +Date.now() }))
-      // );
-
-      const review = elementReviewComment(node);
+      const review = getReviewComment(node);
       if (!!review) {
         extractedUserReviewCount += 1;
       }
 
-      const response = getOwnerResponse(node);
+      const response = getReviewResponse(node);
       if (!!response) {
         extractedOwnerReviewCount += 1;
       }
 
       const media = [];
-      const nodeMedia = getNodeMedia(node);
+      const nodeMedia = getReviewMedia(node);
 
       if (nodeMedia.length) {
         for (const { thumb, button } of nodeMedia) {
@@ -240,12 +249,11 @@ async function init() {
       ids.push({
         id,
         review,
-        user: extractUser(node),
+        user: getReviewUser(node),
         date: getReviewDate(node),
         rating: getReviewRate(node),
-        qa: elementReviewQA(node),
-        response: getOwnerResponse(node),
-        // imageUrls: images,
+        qa: getReviewQA(node),
+        response,
         media,
         time: +Date.now(),
       });

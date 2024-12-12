@@ -32,6 +32,8 @@ function ReviewComments() {
         ...doc.data(),
       }))
 
+      console.log(reviewsData)
+
       setReviews(reviewsData)
       setLoading(false)
       setError(null)
