@@ -177,97 +177,102 @@ function getReviewMedia(node) {
   return nodes;
 }
 
-async function init() {
-  async function checkNode(node) {
-    const id = node.getAttribute("data-review-id");
-    if (id && !checkedIds.has(id)) {
-      checkedIds.add(id);
-      node.scrollIntoView();
+/**
+ * Checks the node for review data and extracts it
+ * @param {HTMLElement} node
+ * @returns {Promise<void>}
+ */
+async function checkNode(node) {
+  const id = node.getAttribute("data-review-id");
+  if (id && !checkedIds.has(id)) {
+    checkedIds.add(id);
+    node.scrollIntoView();
 
-      const buttonSelectors = [
-        `button[jsaction*="review.showReviewInOriginal"]`,
-        `button[jsaction*="review.showOwnerResponseInOriginal"]`,
-        `button[jsaction*="review.expandReview"]`,
-        `button[jsaction*="review.expandOwnerResponse"]`,
-        `button[jsaction*="review.showMorePhotos"]`,
-      ];
+    const buttonSelectors = [
+      `button[jsaction*="review.showReviewInOriginal"]`,
+      `button[jsaction*="review.showOwnerResponseInOriginal"]`,
+      `button[jsaction*="review.expandReview"]`,
+      `button[jsaction*="review.expandOwnerResponse"]`,
+      `button[jsaction*="review.showMorePhotos"]`,
+    ];
 
-      for (const selector of buttonSelectors) {
-        let button = node.querySelector(selector);
+    for (const selector of buttonSelectors) {
+      let button = node.querySelector(selector);
 
+      if (button) {
+        button.click();
+
+        // Wait until the button is removed from the DOM
+        while (node.querySelector(selector)) {
+          await new Promise((resolve) => setTimeout(resolve, 100)); // Polling interval
+        }
+      }
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const review = getReviewComment(node);
+    if (!!review) {
+      extractedUserReviewCount += 1;
+    }
+
+    const response = getReviewResponse(node);
+    if (!!response) {
+      extractedOwnerReviewCount += 1;
+    }
+
+    const media = [];
+    const nodeMedia = getReviewMedia(node);
+
+    if (nodeMedia.length) {
+      for (const { thumb, button } of nodeMedia) {
+        let videoUrl = "";
         if (button) {
           button.click();
 
-          // Wait until the button is removed from the DOM
-          while (node.querySelector(selector)) {
-            await new Promise((resolve) => setTimeout(resolve, 100)); // Polling interval
-          }
-        }
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const review = getReviewComment(node);
-      if (!!review) {
-        extractedUserReviewCount += 1;
-      }
-
-      const response = getReviewResponse(node);
-      if (!!response) {
-        extractedOwnerReviewCount += 1;
-      }
-
-      const media = [];
-      const nodeMedia = getReviewMedia(node);
-
-      if (nodeMedia.length) {
-        for (const { thumb, button } of nodeMedia) {
-          let videoUrl = "";
-          if (button) {
-            button.click();
-
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            const iframe = document.querySelector("iframe");
-            if (iframe) {
-              const iframeDoc = iframe.contentWindow?.document;
-              if (iframeDoc) {
-                const video = iframeDoc.querySelector("video");
-                if (video) {
-                  videoUrl = video.src;
-                }
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          const iframe = document.querySelector("iframe");
+          if (iframe) {
+            const iframeDoc = iframe.contentWindow?.document;
+            if (iframeDoc) {
+              const video = iframeDoc.querySelector("video");
+              if (video) {
+                videoUrl = video.src;
               }
             }
           }
-
-          media.push({
-            thumb,
-            videoUrl,
-          });
         }
+
+        media.push({
+          thumb,
+          videoUrl,
+        });
       }
-
-      extractedImages.push(...media);
-
-      ids.push({
-        id,
-        review,
-        user: getReviewUser(node),
-        date: getReviewDate(node),
-        rating: getReviewRate(node),
-        qa: getReviewQA(node),
-        response,
-        media,
-        time: +Date.now(),
-      });
     }
-  }
 
-  const reviewsContainer =
+    extractedImages.push(...media);
+
+    ids.push({
+      id,
+      review,
+      user: getReviewUser(node),
+      date: getReviewDate(node),
+      rating: getReviewRate(node),
+      qa: getReviewQA(node),
+      response,
+      media,
+      time: +Date.now(),
+    });
+  }
+}
+
+async function init() {
+  const scrollEl =
     document.querySelector(".vyucnb")?.parentElement?.lastChild
       ?.previousSibling;
-  const reviewsContainerChildren = reviewsContainer.children;
-  for (const reviewElm of reviewsContainerChildren) {
-    await checkNode(reviewElm);
+  const scrollElChildren = scrollEl.children;
+  for (const node of scrollElChildren) {
+    await checkNode(node);
   }
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
@@ -288,14 +293,12 @@ async function init() {
         if (parentEl && parentEl.children.length > 1) {
           parentEl.children[parentEl.children.length - 2].innerHTML = "";
         }
-
-        // Optional: Update the length of last checked reviews
-        // lastCheckedReviewsLength = ids.length;
       } catch (error) {
         console.error("Error processing records:", error);
       }
     }, waitTime);
   };
+
   new MutationObserver(observerCallback).observe(
     parentEl.children[parentEl.children.length - 2],
     {

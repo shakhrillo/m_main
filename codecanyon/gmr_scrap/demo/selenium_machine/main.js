@@ -112,7 +112,7 @@ async function init() {
       extractedUserReviewCount = extractedValues.extractedUserReviewCount;
 
       console.log("Total reviews:", allElements.length);
-      if (extracted === allElements.length && reTries >= 10) {
+      if (extracted === allElements.length && reTries >= 20) {
         console.log("No new reviews found. Terminating interval.");
         stopInterval = true;
         await complete();
