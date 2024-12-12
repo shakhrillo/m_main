@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const isTest = process.env.NODE_ENV === "test";
-let firebaseUrl = "localhost";
+let firebaseUrl = "127.0.0.1";
 if (!isTest) {
   firebaseUrl = "host.docker.internal";
 }
@@ -58,7 +58,7 @@ if (process.env.NODE_ENV === "development" || isTest) {
 }
 
 const uploadFile = async (fileBuffer, destination) => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" || isTest) {
     const serviceAccountJson = JSON.parse(
       fs.readFileSync(serviceAccountPath, "utf8")
     );
@@ -84,22 +84,18 @@ const uploadFile = async (fileBuffer, destination) => {
   }
 };
 
-async function batchWriteLargeArray(uid, pushId, data) {
-  let collectionRef = firestore.collection(
-    `users/${uid}/reviews/${pushId}/reviews`
-  );
+async function batchWriteLargeArray(collectionPath, data) {
+  let collectionRef = db.collection(collectionPath);
   const chunkSize = 500;
   const batches = [];
 
   for (let i = 0; i < data.length; i += chunkSize) {
-    const batch = firestore.batch();
+    const batch = db.batch();
     const chunk = data.slice(i, i + chunkSize);
 
     chunk.forEach((doc) => {
-      if (doc && doc.id) {
-        const docRef = collectionRef.doc(doc.id);
-        batch.set(docRef, doc);
-      }
+      const docRef = collectionRef.doc();
+      batch.set(docRef, doc);
     });
 
     batches.push(batch.commit()); // store each batch commit promise

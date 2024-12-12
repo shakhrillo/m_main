@@ -1,16 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-
 const { By } = require("selenium-webdriver");
 const { getMachineData } = require("./services/firebase");
 
 const { watchReviews } = require("./helper/reviews");
 const { getDriver } = require("./services/selenium");
-
-const scriptsDirectory = path.join(__dirname, "scripts");
-const getScriptContent = (filename) => {
-  return fs.readFileSync(path.join(scriptsDirectory, filename), "utf8");
-};
+const { getScriptContent } = require("./services/scripts");
 
 const tag = process.env.TAG;
 
@@ -67,9 +60,9 @@ async function init() {
   // ----------------- Wait for the reviews to load -----------------
   let reviewIds = [];
   let retryCount = 0;
-  const getReviewIds = getScriptContent("getReviewIds.js");
-  const scrollToLoader = getScriptContent("scrollToLoader.js");
-  const scrollToContainer = getScriptContent("scrollToContainer.js");
+  const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
+  const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
+  const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
 
   while (reviewIds.length === 0 && retryCount < 10) {
     reviewIds = await driver.executeScript(getReviewIds);

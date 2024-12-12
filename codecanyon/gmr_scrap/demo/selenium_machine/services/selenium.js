@@ -33,7 +33,14 @@ async function isDriverActive(driver) {
   }
 }
 
+async function quitDriver(driver) {
+  if (isDriverActive(driver)) {
+    await driver.quit();
+  }
+}
+
 module.exports = {
   getDriver,
   isDriverActive,
+  quitDriver,
 };

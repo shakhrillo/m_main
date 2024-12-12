@@ -3,6 +3,8 @@ const path = require("path");
 const { WebDriver } = require("selenium-webdriver");
 const { db, uploadFile } = require("../services/firebase");
 const { isDriverActive } = require("../services/selenium");
+const { quitDriver } = require("../services/selenium");
+const { batchWriteLargeArray } = require("../services/firebase");
 const tag = process.env.TAG;
 
 /**
@@ -17,13 +19,6 @@ const watchReviews = async (driver, data) => {
   );
 
   await driver.executeScript(extracterString);
-
-  async function quitDriver() {
-    if (isDriverActive(driver)) {
-      console.log("Quitting driver");
-      await driver.quit();
-    }
-  }
 
   let allElements = [];
   let extractedImages = [];
@@ -59,7 +54,7 @@ const watchReviews = async (driver, data) => {
           },
           data
         );
-        await quitDriver();
+        await quitDriver(driver);
         return;
       }
 
@@ -76,7 +71,7 @@ const watchReviews = async (driver, data) => {
             },
             data
           );
-          await quitDriver();
+          await quitDriver(driver);
           return;
         }
         await driver.executeScript(`
@@ -118,7 +113,7 @@ const watchReviews = async (driver, data) => {
           },
           data
         );
-        await quitDriver();
+        await quitDriver(driver);
         return; // Exit if the session is no longer valid
       }
 
@@ -135,7 +130,7 @@ const watchReviews = async (driver, data) => {
             },
             data
           );
-          await quitDriver();
+          await quitDriver(driver);
           return;
         }
       } catch (error) {
@@ -153,7 +148,7 @@ const watchReviews = async (driver, data) => {
         },
         data
       );
-      await quitDriver();
+      await quitDriver(driver);
     } finally {
       // Re-schedule after execution
       if (!stopInterval) {
@@ -165,46 +160,6 @@ const watchReviews = async (driver, data) => {
   fetchIds();
 };
 
-const uploadReviewsAsFile = async (allElements, { reviewId }) => {
-  if (!allElements?.length) return { csvUrl: "", jsonUrl: "" };
-
-  const jsonContent = JSON.stringify(allElements, null, 2);
-  const csvContent = [
-    Object.keys(allElements[0]).join(","),
-    ...allElements.map((el) => Object.values(el).join(",")),
-  ].join("\n");
-
-  const [csvUrl, jsonUrl] = await Promise.all([
-    uploadFile(csvContent, `csv/${reviewId}.csv`),
-    uploadFile(jsonContent, `json/${reviewId}.json`),
-  ]);
-
-  return { csvUrl, jsonUrl };
-};
-
-async function addReviews(allElements, refCollection) {
-  if (!allElements.length) return;
-
-  const collectionRef = db.collection(refCollection);
-  const chunkSize = 500;
-
-  await Promise.all(
-    allElements.reduce((batches, _, i) => {
-      if (i % chunkSize === 0) {
-        const chunk = allElements.slice(i, i + chunkSize);
-        const batch = db.batch();
-
-        chunk.forEach((doc) => {
-          batch.set(collectionRef.doc(), doc);
-        });
-
-        batches.push(batch.commit());
-      }
-      return batches;
-    }, [])
-  );
-}
-
 async function complete(
   {
     allElements,
@@ -214,16 +169,30 @@ async function complete(
   },
   { limit, reviewId, userId }
 ) {
-  const { csvUrl, jsonUrl } = await uploadReviewsAsFile(allElements, {
-    reviewId,
-  });
+  let csvUrl = "";
+  let jsonUrl = "";
+  if (allElements?.length) {
+    const jsonContent = JSON.stringify(allElements, null, 2);
+    const csvContent = [
+      Object.keys(allElements[0]).join(","),
+      ...allElements.map((el) => Object.values(el).join(",")),
+    ].join("\n");
+    csvUrl = await uploadFile(csvContent, `csv/${reviewId}.csv`);
+    jsonUrl = await uploadFile(jsonContent, `json/${reviewId}.json`);
+  }
+
   let totalReviews = allElements.length;
   allElements = allElements.slice(0, limit);
-  await addReviews(allElements, `users/${userId}/reviews/${reviewId}/reviews`);
-  await addReviews(
-    extractedImages,
-    `users/${userId}/reviews/${reviewId}/images`
+
+  await batchWriteLargeArray(
+    `users/${userId}/reviews/${reviewId}/reviews`,
+    allElements
   );
+  await batchWriteLargeArray(
+    `users/${userId}/reviews/${reviewId}/images`,
+    extractedImages
+  );
+
   await db.doc(`users/${userId}/reviews/${reviewId}`).update({
     updatedAt: +new Date(),
     completedAt: +new Date(),
