@@ -40,7 +40,7 @@ function getReviewUser(node) {
  * @example "2 days ago"
  */
 function getReviewDate(node) {
-  const match = node.innerText.match(/.*?(\d+\s\w+\sago)\b/);
+  const match = node.innerText.match(/\b\d*\s?\w+\sago\b/g);
 
   if (match) {
     return match[0] || "";
@@ -245,6 +245,8 @@ async function init() {
           });
         }
       }
+
+      extractedImages.push(...media);
 
       ids.push({
         id,

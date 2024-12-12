@@ -22,7 +22,8 @@ function ReviewImages() {
       "images",
     )
 
-    const q = query(reviewsImgRef, orderBy("time", "asc"))
+    const q = query(reviewsImgRef)
+    // const q = query(reviewsImgRef, orderBy("time", "asc"))
 
     const unsubscribe = onSnapshot(q, async snapshot => {
       const reviewsData = snapshot.docs.map(doc => ({
@@ -48,9 +49,15 @@ function ReviewImages() {
         <h3>Images ({reviewImgs.length})</h3>
       </div>
       {reviewImgs.map((img, index) => (
-        <div className="col-sm-12 col-md-6 col-lg-2 mb-3" key={index}>
-          <img src={img.url} className="img-fluid" alt={`Review ${index}`} />
-        </div>
+        <a
+          className="col-sm-12 col-md-6 col-lg-2 mb-3"
+          key={index}
+          href={img.videoUrl || img.thumb}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img src={img.thumb} className="img-fluid" alt={`Review ${index}`} />
+        </a>
       ))}
     </div>
   )

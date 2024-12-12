@@ -186,30 +186,34 @@ const Dashboard: React.FC = () => {
         <h3>Reviews</h3>
       </div>
       <div className="card">
-        <div className="card-body d-flex gap-3">
-          <div>
-            <p className="m-0">All comments</p>
-            <h3 className="m-0">
-              {info.totalReviews ? info.totalReviews : "0"}
-            </h3>
+        {info ? (
+          <div className="card-body d-flex gap-3">
+            <div>
+              <p className="m-0">All comments</p>
+              <h3 className="m-0">
+                {info.totalReviews ? info.totalReviews : "0"}
+              </h3>
+            </div>
+            <div>
+              <p className="m-0">Owner responses</p>
+              <h3 className="m-0">
+                {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
+              </h3>
+            </div>
+            <div>
+              <p className="m-0">User comments</p>
+              <h3 className="m-0">
+                {info.totalUserReviews ? info.totalUserReviews : "0"}
+              </h3>
+            </div>
+            <div>
+              <p className="m-0">Images</p>
+              <h3 className="m-0">
+                {info.totalImages ? info.totalImages : "0"}
+              </h3>
+            </div>
           </div>
-          <div>
-            <p className="m-0">Owner responses</p>
-            <h3 className="m-0">
-              {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
-            </h3>
-          </div>
-          <div>
-            <p className="m-0">User comments</p>
-            <h3 className="m-0">
-              {info.totalUserReviews ? info.totalUserReviews : "0"}
-            </h3>
-          </div>
-          <div>
-            <p className="m-0">Images</p>
-            <h3 className="m-0">{info.totalImages ? info.totalImages : "0"}</h3>
-          </div>
-        </div>
+        ) : null}
       </div>
       <div
         className="
