@@ -1,9 +1,14 @@
 const { By } = require("selenium-webdriver");
 const { getMachineData } = require("./services/firebase");
 
-const { watchReviews } = require("./helper/reviews");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
+const { quitDriver, isDriverActive } = require("./services/selenium");
+const {
+  uploadFile,
+  batchWriteLargeArray,
+  updateMachineData,
+} = require("./services/firebase");
 
 const tag = process.env.TAG;
 
@@ -13,6 +18,24 @@ if (!tag) {
 }
 
 async function init() {
+  const extracterString = await getScriptContent("extracter.js", "helper");
+  const getExtractedValues = await getScriptContent(
+    "getExtractedValues.js",
+    "scripts"
+  );
+  const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
+  const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
+  const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
+
+  let allElements = [];
+  let extractedImages = [];
+  let extractedOwnerReviewCount = 0;
+  let extractedUserReviewCount = 0;
+
+  let stopInterval = false;
+  let extracted = 0;
+  let reTries = 0;
+
   const data = await getMachineData(tag);
   const driver = await getDriver();
 
@@ -60,9 +83,6 @@ async function init() {
   // ----------------- Wait for the reviews to load -----------------
   let reviewIds = [];
   let retryCount = 0;
-  const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
-  const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
-  const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
 
   while (reviewIds.length === 0 && retryCount < 10) {
     reviewIds = await driver.executeScript(getReviewIds);
@@ -81,10 +101,125 @@ async function init() {
   console.log("Initial reviewIds:", reviewIds);
 
   // ----------------- Watch the reviews -----------------
-  watchReviews(driver, data);
+  await driver.executeScript(extracterString);
+
+  async function fetchIds() {
+    try {
+      const extractedValues = await driver.executeScript(getExtractedValues);
+      allElements = extractedValues.allElements;
+      extractedImages = extractedValues.extractedImages;
+      extractedOwnerReviewCount = extractedValues.extractedOwnerReviewCount;
+      extractedUserReviewCount = extractedValues.extractedUserReviewCount;
+
+      console.log("Total reviews:", allElements.length);
+      if (extracted === allElements.length && reTries >= 10) {
+        console.log("No new reviews found. Terminating interval.");
+        stopInterval = true;
+        await complete();
+        await quitDriver(driver);
+        return;
+      }
+
+      if (extracted === allElements.length) {
+        console.log("Scrolling to load more reviews");
+        if (data.limit >= data.reviews && allElements.length > 0) {
+          stopInterval = true;
+          await complete();
+          await quitDriver(driver);
+          return;
+        }
+        await driver.executeScript(scrollToLoader);
+        await driver.sleep(1000);
+        await driver.executeScript(scrollToContainer);
+        await driver.sleep(1000);
+        reTries++;
+      } else {
+        reTries = 0;
+      }
+
+      extracted = allElements.length;
+
+      await updateMachineData(tag, {
+        totalReviews: allElements.length,
+        totalImages: extractedImages.length,
+        totalOwnerReviews: extractedOwnerReviewCount,
+        totalUserReviews: extractedUserReviewCount,
+      });
+
+      if (!(await isDriverActive(driver))) {
+        console.error("Driver session is invalid. Terminating interval.");
+        stopInterval = true;
+        await complete();
+        await quitDriver(driver);
+        return; // Exit if the session is no longer valid
+      }
+
+      try {
+        if (allElements?.length > data.limit) {
+          console.log("Reached limit. Terminating interval.");
+          stopInterval = true;
+          await complete();
+          await quitDriver(driver);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching IDs:", error);
+      }
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      stopInterval = true;
+      await complete();
+      await quitDriver(driver);
+    } finally {
+      if (!stopInterval) {
+        setTimeout(fetchIds, 5000);
+      }
+    }
+  }
+
+  fetchIds();
 
   // ----------------- Scroll to the loader -----------------
   await driver.executeScript(scrollToLoader);
+
+  // ----------------- Complete -----------------
+  async function complete() {
+    let csvUrl = "";
+    let jsonUrl = "";
+    if (allElements?.length) {
+      const jsonContent = JSON.stringify(allElements, null, 2);
+      const csvContent = [
+        Object.keys(allElements[0]).join(","),
+        ...allElements.map((el) => Object.values(el).join(",")),
+      ].join("\n");
+      csvUrl = await uploadFile(csvContent, `csv/${data.reviewId}.csv`);
+      jsonUrl = await uploadFile(jsonContent, `json/${data.reviewId}.json`);
+    }
+
+    let totalReviews = allElements.length;
+    allElements = allElements.slice(0, data.limit);
+
+    await batchWriteLargeArray(
+      `users/${data.userId}/reviews/${data.reviewId}/reviews`,
+      allElements
+    );
+    await batchWriteLargeArray(
+      `users/${data.userId}/reviews/${data.reviewId}/images`,
+      extractedImages
+    );
+
+    updateMachineData(tag, {
+      csvUrl,
+      jsonUrl,
+      totalReviews: allElements.length,
+      totalReviewsScraped: totalReviews,
+      totalImages: extractedImages.length,
+      totalOwnerReviews: extractedOwnerReviewCount,
+      totalUserReviews: extractedUserReviewCount,
+    });
+
+    console.log("Review completed");
+  }
 }
 try {
   init();
