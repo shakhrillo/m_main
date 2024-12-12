@@ -64,16 +64,23 @@ function ReviewComments() {
             <td>{review.date}</td>
             <td>{review.rating}</td>
             <td>
-              {review.imageUrls.length > 0 ? (
+              {review.media.length > 0 ? (
                 <div className="row g-2">
-                  {review.imageUrls.map((imageUrl: string, index: number) => (
+                  {review.media.map((media: any, index: number) => (
                     <div key={index} className="col-6">
-                      <a href={imageUrl} target="_blank" rel="noreferrer">
+                      <a
+                        href={media.videoUrl || media.thumb}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <img
                           key={index}
-                          src={imageUrl}
+                          src={media.thumb}
                           alt={`Review ${index + 1}`}
-                          className="img-thumbnail"
+                          className={
+                            "img-thumbnail" +
+                            (media.videoUrl ? " border border-danger" : "")
+                          }
                           style={{ minWidth: "60px" }}
                         />
                       </a>

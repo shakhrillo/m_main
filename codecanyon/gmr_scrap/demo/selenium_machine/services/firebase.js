@@ -86,6 +86,13 @@ const uploadFile = async (fileBuffer, destination) => {
 
 async function batchWriteLargeArray(collectionPath, data) {
   let collectionRef = db.collection(collectionPath);
+  // empty collection
+  const query = await collectionRef.get();
+  for (const doc of query.docs) {
+    await doc.ref.delete();
+  }
+  console.log("Collection emptied");
+
   const chunkSize = 500;
   const batches = [];
 

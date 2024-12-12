@@ -6,7 +6,7 @@
   "scripts": {
     "info": "node info.js",
     "start": "node main.js",
-    "test": "TAG=comments_0vrwoq5m1oudyhgkwzeqywywua8v_30w6hvbbbxhnrbztdldx FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=test node main.js"
+    "test": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=test node main.js"
   },
   "keywords": [],
   "author": "",

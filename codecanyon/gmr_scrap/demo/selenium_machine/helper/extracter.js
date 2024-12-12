@@ -137,6 +137,33 @@ async function init() {
     return imageURLs;
   }
 
+  function getNodeMedia(node) {
+    const nodes = [];
+    const allButtons = node.querySelectorAll(
+      `button[jsaction*="review.openPhoto"]`
+    );
+
+    for (const button of allButtons) {
+      let data = {};
+      const style = button.getAttribute("style");
+      const textContent = button.textContent;
+      if (!!textContent) {
+        data["button"] = button;
+      }
+      if (style) {
+        const urlMatch = style.split('url("')[1]?.split('");')[0];
+        if (urlMatch) {
+          data["thumb"] = urlMatch.split("=")[0] + "=w1200";
+        }
+      }
+      if (Object.keys(data).length) {
+        nodes.push(data);
+      }
+    }
+
+    return nodes;
+  }
+
   async function checkNode(node) {
     const id = node.getAttribute("data-review-id");
     if (id && !checkedIds.has(id)) {
@@ -166,10 +193,10 @@ async function init() {
 
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const images = getImgURLs(node);
-      extractedImages.push(
-        ...images.map((url) => ({ id, url, time: +Date.now() }))
-      );
+      // const images = getImgURLs(node);
+      // extractedImages.push(
+      //   ...images.map((url) => ({ id, url, time: +Date.now() }))
+      // );
 
       const review = elementReviewComment(node);
       if (!!review) {
@@ -181,6 +208,35 @@ async function init() {
         extractedOwnerReviewCount += 1;
       }
 
+      const media = [];
+      const nodeMedia = getNodeMedia(node);
+
+      if (nodeMedia.length) {
+        for (const { thumb, button } of nodeMedia) {
+          let videoUrl = "";
+          if (button) {
+            button.click();
+
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            const iframe = document.querySelector("iframe");
+            if (iframe) {
+              const iframeDoc = iframe.contentWindow?.document;
+              if (iframeDoc) {
+                const video = iframeDoc.querySelector("video");
+                if (video) {
+                  videoUrl = video.src;
+                }
+              }
+            }
+          }
+
+          media.push({
+            thumb,
+            videoUrl,
+          });
+        }
+      }
+
       ids.push({
         id,
         review,
@@ -189,7 +245,8 @@ async function init() {
         rating: getReviewRate(node),
         qa: elementReviewQA(node),
         response: getOwnerResponse(node),
-        imageUrls: images,
+        // imageUrls: images,
+        media,
         time: +Date.now(),
       });
     }
