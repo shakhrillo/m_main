@@ -26,6 +26,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
         `TAG=${buildTag}`,
         `NODE_ENV=${process.env.NODE_ENV}`,
         `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
+        `STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app`,
       ],
       Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
     });
