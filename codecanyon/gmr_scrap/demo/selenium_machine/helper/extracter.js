@@ -297,9 +297,9 @@ async function init() {
       }
 
       // Remove all reviews
-      if (parentEl && parentEl.children.length > 1) {
-        parentEl.children[parentEl.children.length - 2].innerHTML = "";
-      }
+      // if (parentEl && parentEl.children.length > 1) {
+      //   parentEl.children[parentEl.children.length - 2].innerHTML = "";
+      // }
     } catch (error) {
       console.error("Error processing records:", error);
     }
