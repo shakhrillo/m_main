@@ -101,6 +101,18 @@ async function init() {
   console.log("Initial reviewIds:", reviewIds);
   await driver.sleep(5000);
 
+  await driver.executeScript(scrollToLoader);
+  const screenshot = await driver.takeScreenshot();
+  const screenshotBuffer = Buffer.from(screenshot, "base64");
+  const uniqueId = new Date().getTime();
+  const _screenshot = await uploadFile(
+    screenshotBuffer,
+    `${data.userId}/${uniqueId}/screenshot.png`
+  );
+  await updateMachineData(tag, {
+    screenshot: _screenshot,
+  });
+
   // ----------------- Watch the reviews -----------------
   await driver.executeScript(extracterString);
 

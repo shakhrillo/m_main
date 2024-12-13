@@ -281,7 +281,7 @@ async function init() {
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
   const observerCallback = (records) => {
-    setTimeout(async () => {
+    // setTimeout(async () => {
       try {
         for (const record of records) {
           if (record.type === "childList") {
@@ -304,7 +304,7 @@ async function init() {
       } catch (error) {
         console.error("Error processing records:", error);
       }
-    }, waitTime);
+    // }, waitTime);
   };
 
   new MutationObserver(observerCallback).observe(
