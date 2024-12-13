@@ -1,7 +1,12 @@
 require("dotenv").config();
 const { Builder, By, Browser } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
-const { db, uploadFile, getMachineData } = require("./services/firebase");
+const {
+  db,
+  uploadFile,
+  getMachineData,
+  updateMachineData,
+} = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 
 const tag = process.env.TAG;
@@ -13,7 +18,7 @@ if (!tag) {
 
 getDriver()
   .then(async (driver) => {
-    const data = await getMachineData();
+    const data = await getMachineData(tag);
     const { url, userId, reviewId } = data;
 
     // -----------------
