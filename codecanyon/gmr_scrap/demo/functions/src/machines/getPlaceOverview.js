@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { createToken } = require("../utils/jwtUtils");
-const endPointURL = process.env.ENDPOINT_URL;
+// const endPointURL = process.env.ENDPOINT_URL;
 
 const getPlaceOverview = async (event) => {
   const snapshot = event.data;
@@ -16,7 +16,7 @@ const getPlaceOverview = async (event) => {
     ...event.params,
   });
 
-  await axios.post(`${endPointURL}/api/scrap/info`, review, {
+  await axios.post(`http://34.133.161.235/api/scrap/info`, review, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

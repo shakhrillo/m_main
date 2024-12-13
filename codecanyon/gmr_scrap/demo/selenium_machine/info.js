@@ -2,6 +2,7 @@ require("dotenv").config();
 const { Builder, By, Browser } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const { db, uploadFile } = require("./services/firebase");
+const { getDriver } = require("./services/selenium");
 
 const tag = process.env.TAG;
 
@@ -10,23 +11,8 @@ if (!tag) {
   return;
 }
 
-const options = new chrome.Options();
-options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
-options.setLoggingPrefs({ browser: "ALL" });
-options.setChromeBinaryPath("/usr/bin/chromium");
-options.excludeSwitches("enable-automation");
-
-new Builder()
-  .forBrowser(Browser.CHROME)
-  .setChromeOptions(options)
-  .build()
+getDriver()
   .then(async (driver) => {
-    driver.manage().setTimeouts({
-      implicit: 3000,
-      pageLoad: 180000,
-      script: 180000,
-    });
-
     async function getMachineData() {
       const snapshot = await db.doc(`machines/${tag}`).get();
       const data = snapshot.data();
