@@ -280,31 +280,29 @@ async function init() {
   }
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
-  const observerCallback = (records) => {
-    // setTimeout(async () => {
-      try {
-        for (const record of records) {
-          if (record.type === "childList") {
-            await Promise.all(
-              Array.from(record.addedNodes).map(async (node) => {
-                try {
-                  await checkNode(node);
-                } catch (error) {
-                  console.error("Error processing node:", error);
-                }
-              })
-            );
-          }
+  const observerCallback = async (records) => {
+    try {
+      for (const record of records) {
+        if (record.type === "childList") {
+          await Promise.all(
+            Array.from(record.addedNodes).map(async (node) => {
+              try {
+                await checkNode(node);
+              } catch (error) {
+                console.error("Error processing node:", error);
+              }
+            })
+          );
         }
-
-        // Remove all reviews
-        if (parentEl && parentEl.children.length > 1) {
-          parentEl.children[parentEl.children.length - 2].innerHTML = "";
-        }
-      } catch (error) {
-        console.error("Error processing records:", error);
       }
-    // }, waitTime);
+
+      // Remove all reviews
+      if (parentEl && parentEl.children.length > 1) {
+        parentEl.children[parentEl.children.length - 2].innerHTML = "";
+      }
+    } catch (error) {
+      console.error("Error processing records:", error);
+    }
   };
 
   new MutationObserver(observerCallback).observe(
