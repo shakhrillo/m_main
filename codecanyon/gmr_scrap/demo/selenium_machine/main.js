@@ -108,18 +108,6 @@ async function init() {
 
   async function fetchIds() {
     try {
-      const screenshot = await driver.takeScreenshot();
-      const screenshotBuffer = Buffer.from(screenshot, "base64");
-      const uniqueId = new Date().getTime();
-      const _screenshot = await uploadFile(
-        screenshotBuffer,
-        `${data.userId}/${uniqueId}/screenshot.png`
-      );
-
-      await updateMachineData(tag, {
-        screenshot: _screenshot,
-      });
-
       const extractedValues = await driver.executeScript(getExtractedValues);
       allElements = extractedValues.allElements;
       extractedImages = extractedValues.extractedImages;
@@ -144,6 +132,17 @@ async function init() {
           return;
         }
         await driver.executeScript(scrollToLoader);
+        const screenshot = await driver.takeScreenshot();
+        const screenshotBuffer = Buffer.from(screenshot, "base64");
+        const uniqueId = new Date().getTime();
+        const _screenshot = await uploadFile(
+          screenshotBuffer,
+          `${data.userId}/${uniqueId}/screenshot.png`
+        );
+
+        await updateMachineData(tag, {
+          screenshot: _screenshot,
+        });
         await driver.sleep(1000);
         await driver.executeScript(scrollToContainer);
         await driver.sleep(1000);
