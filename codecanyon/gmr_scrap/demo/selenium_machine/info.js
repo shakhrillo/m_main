@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Builder, By, Browser } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
-const { db, uploadFile } = require("./services/firebase");
+const { db, uploadFile, getMachineData } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 
 const tag = process.env.TAG;
@@ -13,13 +13,6 @@ if (!tag) {
 
 getDriver()
   .then(async (driver) => {
-    async function getMachineData() {
-      const snapshot = await db.doc(`machines/${tag}`).get();
-      const data = snapshot.data();
-
-      return data;
-    }
-
     const data = await getMachineData();
     const { url, userId, reviewId } = data;
 
@@ -134,9 +127,11 @@ getDriver()
         `${userId}/${uniqueId}/screenshot.png`
       );
     } catch (err) {
+      await updateMachineData(tag, { error: JSON.stringify(err) });
       console.error("Error:", err);
     } finally {
-      await db.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
+      await updateMachineData(tag, data);
+      // await db.doc(`users/${userId}/reviewOverview/${reviewId}`).update(data);
       await driver.quit();
     }
   })
