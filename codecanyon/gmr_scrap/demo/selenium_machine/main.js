@@ -127,6 +127,10 @@ async function init() {
       extractedUserReviewCount = extractedValues.extractedUserReviewCount;
 
       console.log("Total reviews:", allElements.length);
+
+      const logs = await driver.manage().logs().get("browser");
+      logs.forEach((log) => console.log(log));
+
       if (extracted === allElements.length && reTries >= 20) {
         console.log("No new reviews found. Terminating interval.");
         stopInterval = true;
