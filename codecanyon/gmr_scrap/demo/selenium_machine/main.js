@@ -113,7 +113,7 @@ async function init() {
       const uniqueId = new Date().getTime();
       const _screenshot = await uploadFile(
         screenshotBuffer,
-        `${userId}/${uniqueId}/screenshot.png`
+        `${data.userId}/${uniqueId}/screenshot.png`
       );
 
       await updateMachineData(tag, {
