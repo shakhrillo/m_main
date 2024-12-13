@@ -16,12 +16,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/stripe", stripeRoutes);
+app.use("/stripe", stripeRoutes);
 
 app.use(express.json());
 
-app.use("/api/scrap", scraperRoutes);
-app.use("/api/machines", machinesRoutes);
+app.use("/scrap", scraperRoutes);
+app.use("/machines", machinesRoutes);
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
