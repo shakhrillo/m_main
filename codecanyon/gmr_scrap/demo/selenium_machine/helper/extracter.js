@@ -272,7 +272,11 @@ async function init() {
       ?.previousSibling;
   const scrollElChildren = scrollEl.children;
   for (const node of scrollElChildren) {
-    await checkNode(node);
+    try {
+      await checkNode(node);
+    } catch (error) {
+      console.error("Error processing node:", error);
+    }
   }
 
   const parentEl = document.querySelector(".vyucnb").parentElement;
@@ -283,7 +287,11 @@ async function init() {
           if (record.type === "childList") {
             await Promise.all(
               Array.from(record.addedNodes).map(async (node) => {
-                await checkNode(node);
+                try {
+                  await checkNode(node);
+                } catch (error) {
+                  console.error("Error processing node:", error);
+                }
               })
             );
           }
