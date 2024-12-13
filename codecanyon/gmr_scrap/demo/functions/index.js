@@ -5,7 +5,7 @@ const {
   onDocumentCreated,
   onDocumentWritten,
   onDocumentUpdated,
-} = require("firebase-functions/firestore");
+} = require("firebase-functions/v2/firestore");
 const watchBuyCoins = require("./src/payments/watchBuyCoins");
 const userCreate = require("./src/user/userCreate");
 const getPlaceOverview = require("./src/machines/getPlaceOverview");

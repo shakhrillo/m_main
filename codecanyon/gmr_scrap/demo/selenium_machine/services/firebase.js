@@ -44,6 +44,7 @@ admin.initializeApp(
 );
 
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
 
 if (process.env.NODE_ENV === "development" || isTest) {
   const serviceAccountJson = JSON.parse(
@@ -81,6 +82,37 @@ const uploadFile = async (fileBuffer, destination) => {
 
     const publicUrl = file.publicUrl();
     return publicUrl.replace(`${firebaseUrl}`, `localhost`);
+  } else {
+    return new Promise((resolve, reject) => {
+      const file = bucket.file(destination);
+      const stream = file.createWriteStream({
+        metadata: {
+          contentType: "application/octet-stream",
+        },
+      });
+
+      stream.on("error", (error) => {
+        console.error("Error uploading file:", error);
+        reject(error);
+      });
+
+      stream.on("finish", async () => {
+        console.log(`${destination} uploaded to Firebase Storage`);
+
+        try {
+          const [url] = await file.getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          });
+          resolve(url);
+        } catch (error) {
+          console.error("Error generating signed URL:", error);
+          reject(error);
+        }
+      });
+
+      stream.end(fileBuffer);
+    });
   }
 };
 
