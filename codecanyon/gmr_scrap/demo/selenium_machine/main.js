@@ -129,6 +129,7 @@ async function init() {
       console.log("Total reviews:", allElements.length);
 
       const logs = await driver.manage().logs().get("browser");
+      console.lg("Logs:", logs.length);
       logs.forEach((log) => console.log(log));
 
       if (extracted === allElements.length && reTries >= 20) {
