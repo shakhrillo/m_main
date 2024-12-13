@@ -99,9 +99,12 @@ async function init() {
   }
 
   console.log("Initial reviewIds:", reviewIds);
+  await driver.sleep(5000);
 
   // ----------------- Watch the reviews -----------------
   await driver.executeScript(extracterString);
+
+  await driver.sleep(2000);
 
   async function fetchIds() {
     try {
