@@ -6,6 +6,8 @@ import { MenuProvider } from "./context"
 
 const container = document.getElementById("root")
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+
 if (container) {
   const root = createRoot(container)
 
