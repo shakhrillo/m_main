@@ -205,8 +205,30 @@ router.post("/", authMiddleware, async (req, res) =>
     res.json({ message: machn });
   }
 );
-router.post("/info", authMiddleware, (req, res) =>
-  handleContainerOperations(req, res, true)
+router.post("/info", authMiddleware, async (req, res) =>
+  // handleContainerOperations(req, res, true)
+  {
+    const { userId, reviewId } = req.data;
+    const prefix = isInfo ? overviewPrefix : reviewsPrefix;
+    const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
+
+    await createMachine(buildTag, {
+      ...req.data,
+      createdAt: +new Date(),
+    });
+
+    console.log("buildTag", buildTag);
+
+    console.log("handleContainerOperations");
+    // comments_xhee0nn4t9wmmepm3h3yu3jaxcb3_jqiplauiye69frh1ps9n
+    const machn = await callInsert({
+      tag: buildTag,
+    });
+
+    console.log("machn", machn);
+
+    res.json({ message: machn });
+  }
 );
 
 module.exports = router;
