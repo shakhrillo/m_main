@@ -184,7 +184,7 @@ router.post("/", authMiddleware, async (req, res) =>
   // handleContainerOperations(req, res)
   {
     const { userId, reviewId } = req.data;
-    const prefix = isInfo ? overviewPrefix : reviewsPrefix;
+    const prefix = reviewsPrefix;
     const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
 
     await createMachine(buildTag, {
@@ -209,7 +209,7 @@ router.post("/info", authMiddleware, async (req, res) =>
   // handleContainerOperations(req, res, true)
   {
     const { userId, reviewId } = req.data;
-    const prefix = isInfo ? overviewPrefix : reviewsPrefix;
+    const prefix = overviewPrefix;
     const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
 
     await createMachine(buildTag, {
