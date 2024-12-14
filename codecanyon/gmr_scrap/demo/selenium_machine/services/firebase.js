@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
-const isTest = process.env.NODE_ENV === "test";
+const isTest = process.env.NODE_ENV === "production";
 let firebaseUrl = "127.0.0.1";
 if (!isTest) {
   firebaseUrl = "host.docker.internal";
@@ -14,12 +14,15 @@ if (!FIREBASE_PROJECT_ID) {
   throw new Error("FIREBASE_PROJECT_ID not found in environment variables");
 }
 
-const serviceAccountPath = path.resolve(
-  __dirname,
-  isTest ? "../../firebase.json" : "../firebase.json"
-);
-if (!fs.existsSync(serviceAccountPath)) {
-  throw new Error("firebase.json not found");
+let serviceAccountPath;
+if (process.env.NODE_ENV === "development") {
+  serviceAccountPath = path.resolve(
+    __dirname,
+    isTest ? "../../firebase.json" : "../firebase.json"
+  );
+  if (!fs.existsSync(serviceAccountPath)) {
+    throw new Error("firebase.json not found");
+  }
 }
 
 const firebasekeysPath = path.resolve(
@@ -34,7 +37,7 @@ if (
 }
 
 admin.initializeApp(
-  process.env.NODE_ENV === "development" || isTest
+  process.env.NODE_ENV === "development"
     ? { projectId: FIREBASE_PROJECT_ID }
     : {
         credential: admin.credential.cert(firebasekeysPath),
@@ -46,7 +49,7 @@ admin.initializeApp(
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
 
-if (process.env.NODE_ENV === "development" || isTest) {
+if (process.env.NODE_ENV === "development") {
   const serviceAccountJson = JSON.parse(
     fs.readFileSync(serviceAccountPath, "utf8")
   );
@@ -59,7 +62,7 @@ if (process.env.NODE_ENV === "development" || isTest) {
 }
 
 const uploadFile = async (fileBuffer, destination) => {
-  if (process.env.NODE_ENV === "development" || isTest) {
+  if (process.env.NODE_ENV === "development") {
     const serviceAccountJson = JSON.parse(
       fs.readFileSync(serviceAccountPath, "utf8")
     );

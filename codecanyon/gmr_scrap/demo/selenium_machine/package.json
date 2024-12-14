@@ -6,8 +6,8 @@
   "scripts": {
     "info": "node info.js",
     "start": "node main.js",
-    "test": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node info.js",
-    "testin": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node main.js"
+    "testfoo": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node info.js",
+    "test": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node main.js"
   },
   "keywords": [],
   "author": "",
