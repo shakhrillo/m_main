@@ -114,10 +114,6 @@ async function callInsert(config) {
 
               # Run the tests
               npm run test
-
-              # Remove the vm after 5min
-              sleep 300
-              gcloud compute instances delete instance-20241214-093452 --zone=us-central1-a --quiet
             `,
           },
         ],
@@ -149,7 +145,7 @@ async function callInsert(config) {
       },
       serviceAccounts: [
         {
-          email: "gmrscrap@map-review-scrap.iam.gserviceaccount.com",
+          email: "348810635690-compute@developer.gserviceaccount.com",
           scopes: [
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
@@ -186,13 +182,14 @@ router.post("/", authMiddleware, async (req, res) =>
     const { userId, reviewId } = req.data;
     const prefix = reviewsPrefix;
     const buildTag = `${prefix}_${userId}_${reviewId}`.toLowerCase();
+    console.log("buildTag", buildTag);
 
     await createMachine(buildTag, {
       ...req.data,
       createdAt: +new Date(),
     });
 
-    console.log("buildTag", buildTag);
+    console.log("buildTag>", buildTag);
 
     console.log("handleContainerOperations");
     // comments_xhee0nn4t9wmmepm3h3yu3jaxcb3_jqiplauiye69frh1ps9n
