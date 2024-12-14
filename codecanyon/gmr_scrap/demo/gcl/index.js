@@ -1,5 +1,5 @@
 const project = "map-review-scrap";
-const zone = "us-central1-a";
+const zone = "us-central1-c";
 // const instance = "2406995406324394108";
 
 // Imports the Compute library
@@ -22,7 +22,7 @@ async function callInsert() {
         {
           autoDelete: true,
           boot: true,
-          deviceName: "instance-20241214-093452",
+          deviceName: "instance-20241214-180306",
           initializeParams: {
             diskSizeGb: "10",
             diskType:
@@ -45,7 +45,7 @@ async function callInsert() {
         "goog-ec-src": "vm_add-rest",
       },
       machineType:
-        "projects/map-review-scrap/zones/us-central1-a/machineTypes/e2-micro",
+        "projects/map-review-scrap/zones/us-central1-c/machineTypes/e2-standard-2",
       metadata: {
         items: [
           {
@@ -85,7 +85,7 @@ async function callInsert() {
           },
         ],
       },
-      name: "instance-20241214-093452",
+      name: "instance-20241214-180306",
       networkInterfaces: [
         {
           accessConfigs: [
@@ -131,7 +131,7 @@ async function callInsert() {
       tags: {
         items: [],
       },
-      zone: "projects/map-review-scrap/zones/us-central1-a",
+      zone: "projects/map-review-scrap/zones/us-central1-c",
     },
     project,
     zone,
@@ -146,12 +146,25 @@ async function deleteInstance() {
   const request = {
     project,
     zone,
-    instance: "instance-20241214-093452",
+    instance: "instance-20241214-180306",
   };
 
   const [response] = await computeClient.delete(request);
   console.log(response);
 }
 
+async function watchInstance() {
+  // gcloud compute --project=map-review-scrap instances get-serial-port-output instance-20241214-180306 --zone=us-central1-a --port=1
+  const request = {
+    project,
+    zone,
+    instance: "instance-20241214-180306",
+  };
+
+  const [response] = await computeClient.get(request);
+  console.log(response);
+}
+
 // deleteInstance().catch(console.error);
 callInsert().catch(console.error);
+// watchInstance().catch(console.error);
