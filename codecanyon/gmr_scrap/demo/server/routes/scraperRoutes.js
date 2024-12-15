@@ -111,7 +111,13 @@ async function callInsert(config) {
               # npm install
 
               # Run the tests
-              cd /home/st/gmrs
+              cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
+
+              # Git get the latest
+              git pull
+
+              # Install the dependencies
+              npm install
 
               # Remov .env file
               rm -rf .env

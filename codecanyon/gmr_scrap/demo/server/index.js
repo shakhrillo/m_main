@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const { watchEvents } = require("./docker");
+// const { watchEvents } = require("./docker");
 const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 // Error-handling middleware
 app.use(errorHandler);
 
-watchEvents();
+// watchEvents();
 
 // Start the server
 app.listen(PORT, () => {
