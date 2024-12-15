@@ -66,7 +66,7 @@ async function callInsert(config) {
           initializeParams: {
             diskSizeGb: "10",
             diskType:
-              "projects/map-review-scrap/zones/us-central1-f/diskTypes/pd-balanced",
+              "projects/map-review-scrap/zones/us-central1-f/diskTypes/pd-standard",
             labels: {},
             sourceImage:
               "projects/debian-cloud/global/images/debian-12-bookworm-v20241210",
@@ -85,7 +85,7 @@ async function callInsert(config) {
         "goog-ec-src": "vm_add-rest",
       },
       machineType:
-        "projects/map-review-scrap/zones/us-central1-c/machineTypes/e2-standard-2",
+        "projects/map-review-scrap/zones/us-central1-f/machineTypes/n2-standard-8",
       metadata: {
         items: [
           {
@@ -187,7 +187,7 @@ async function callInsert(config) {
       tags: {
         items: [],
       },
-      zone: "projects/map-review-scrap/zones/us-central1-c",
+      zone: "projects/map-review-scrap/zones/us-central1-f",
     },
     project,
     zone,
