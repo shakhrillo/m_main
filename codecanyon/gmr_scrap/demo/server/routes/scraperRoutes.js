@@ -156,19 +156,19 @@ async function callInsert(config) {
         onHostMaintenance: "MIGRATE",
         provisioningModel: "STANDARD",
       },
-      // serviceAccounts: [
-      //   {
-      //     email: "gmrscrap@map-review-scrap.iam.gserviceaccount.com",
-      //     scopes: [
-      //       "https://www.googleapis.com/auth/devstorage.read_only",
-      //       "https://www.googleapis.com/auth/logging.write",
-      //       "https://www.googleapis.com/auth/monitoring.write",
-      //       "https://www.googleapis.com/auth/service.management.readonly",
-      //       "https://www.googleapis.com/auth/servicecontrol",
-      //       "https://www.googleapis.com/auth/trace.append",
-      //     ],
-      //   },
-      // ],
+      serviceAccounts: [
+        {
+          email: "gmrscrap@map-review-scrap.iam.gserviceaccount.com",
+          // scopes: [
+          //   "https://www.googleapis.com/auth/devstorage.read_only",
+          //   "https://www.googleapis.com/auth/logging.write",
+          //   "https://www.googleapis.com/auth/monitoring.write",
+          //   "https://www.googleapis.com/auth/service.management.readonly",
+          //   "https://www.googleapis.com/auth/servicecontrol",
+          //   "https://www.googleapis.com/auth/trace.append",
+          // ],
+        },
+      ],
       shieldedInstanceConfig: {
         enableIntegrityMonitoring: true,
         enableSecureBoot: false,
