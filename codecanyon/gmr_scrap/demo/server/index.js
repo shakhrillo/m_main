@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 // const { watchEvents } = require("./docker");
-const machinesRoutes = require("./routes/machinesRoutes");
+// const machinesRoutes = require("./routes/machinesRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 
@@ -21,7 +21,7 @@ app.use("/stripe", stripeRoutes);
 app.use(express.json());
 
 app.use("/scrap", scraperRoutes);
-app.use("/machines", machinesRoutes);
+// app.use("/machines", machinesRoutes);
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
