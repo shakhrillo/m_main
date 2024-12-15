@@ -139,10 +139,10 @@ async function callInsert(config) {
               #echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
 
               # Run the tests
-              ${config.command}
+              # ${config.command}
 
               # Remove the instance
-              gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-a --project=map-review-scrap --quiet
+              # gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-a --project=map-review-scrap --quiet
             `,
           },
         ],
