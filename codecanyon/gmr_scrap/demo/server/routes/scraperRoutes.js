@@ -111,23 +111,32 @@ async function callInsert(config) {
               # npm install
 
               # Run the tests
-              cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
+              cd /home/st/m_main/codecanyon/gmr_scrap/demo
+
+              docker run \
+                --name ${config.tag} \
+                -e TAG=${config.tag} \
+                -e NODE_ENV=production \
+                -e FIREBASE_PROJECT_ID=fir-scrapp \
+                -e STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app \
+                gmr_scrap_selenium \
+                ${config.command}
 
               # Git get the latest
-              git config --global --add safe.directory /home/st/m_main
-              git pull
+              # git config --global --add safe.directory /home/st/m_main
+              # git pull
 
               # Install the dependencies
-              npm install
+              # npm install
 
               # Remov .env file
-              rm -rf .env
+              # rm -rf .env
 
               # Create the .env file
-              echo "TAG=${config.tag}" > .env
-              echo "NODE_ENV=production" >> .env
-              echo "FIREBASE_PROJECT_ID=fir-scrapp" >> .env
-              echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
+              # echo "TAG=${config.tag}" > .env
+              # echo "NODE_ENV=production" >> .env
+              #echo "FIREBASE_PROJECT_ID=fir-scrapp" >> .env
+              #echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
 
               # Run the tests
               ${config.command}
