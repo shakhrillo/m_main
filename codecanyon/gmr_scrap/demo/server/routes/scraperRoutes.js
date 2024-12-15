@@ -5,7 +5,7 @@ const { createMachine } = require("../services/firebaseService");
 // const { startContainer } = require("../controllers/dockerController");
 
 const project = "map-review-scrap";
-const zone = "us-central1-c";
+const zone = "us-central1-a";
 
 // Imports the Compute library
 const { InstancesClient } = require("@google-cloud/compute").v1;
@@ -85,7 +85,7 @@ async function callInsert(config) {
         "goog-ec-src": "vm_add-rest",
       },
       machineType:
-        "projects/map-review-scrap/zones/us-central1-f/machineTypes/n2-standard-8",
+        "projects/map-review-scrap/zones/us-central1-a/machineTypes/e2-highcpu-8",
       metadata: {
         items: [
           {
@@ -187,7 +187,7 @@ async function callInsert(config) {
       tags: {
         items: [],
       },
-      zone: "projects/map-review-scrap/zones/us-central1-f",
+      zone: "projects/map-review-scrap/zones/us-central1-a",
     },
     project,
     zone,
