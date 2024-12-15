@@ -85,7 +85,7 @@ async function callInsert(config) {
         "goog-ec-src": "vm_add-rest",
       },
       machineType:
-        "projects/map-review-scrap/zones/us-central1-a/machineTypes/e2-highcpu-8",
+        "projects/map-review-scrap/zones/us-central1-a/machineTypes/e2-small",
       metadata: {
         items: [
           {
