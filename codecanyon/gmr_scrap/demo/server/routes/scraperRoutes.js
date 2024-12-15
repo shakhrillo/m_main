@@ -112,11 +112,13 @@ async function callInsert(config) {
               # Create the .env file
               echo "TAG=${config.tag}" > .env
               echo "NODE_ENV=production" >> .env
-              echo "FIREBASE_PROJECT_ID=map-review-scrap" >> .env
+              echo "FIREBASE_PROJECT_ID=fir-scrapp" >> .env
               echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
 
               # Run the tests
               npm run info
+
+              # Remove the instance
             `,
           },
         ],
