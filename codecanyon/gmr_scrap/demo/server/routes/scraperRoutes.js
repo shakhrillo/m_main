@@ -48,7 +48,7 @@ const reviewsPrefix = process.env.MACHINES_REVIEWS_PREFIX || "comments";
 // };
 
 async function callInsert(config) {
-  const uniqueInstanceName = config.tag;
+  const uniqueInstanceName = config.tag.replace(/_/g, "-");
   // Construct request
   const request = {
     instanceResource: {
