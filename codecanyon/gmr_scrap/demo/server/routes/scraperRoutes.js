@@ -93,22 +93,25 @@ async function callInsert(config) {
             value: `
               #! /bin/bash
               # Update package list and install required tools
-              apt update && apt install -y unzip wget chromium nodejs npm
+              # apt update && apt install -y unzip wget chromium nodejs npm
 
               # Download the archive
-              gsutil cp gs://machine_gmr_scrap/mch.zip /tmp/gmrscrap.zip
+              # gsutil cp gs://machine_gmr_scrap/mch.zip /tmp/gmrscrap.zip
 
               # Ensure the directory exists and unzip the archive
-              mkdir -p /tmp/gmrs
-              unzip /tmp/gmrscrap.zip -d /tmp/gmrs
+              # mkdir -p /tmp/gmrs
+              # unzip /tmp/gmrscrap.zip -d /tmp/gmrs
 
-              gsutil cp gs://machine_gmr_scrap/firebasekeys.json /tmp 
+              # gsutil cp gs://machine_gmr_scrap/firebasekeys.json /tmp 
 
               # Move to the directory
-              cd /tmp/gmrs
+              # cd /tmp/gmrs
 
               # Install the dependencies
-              npm install
+              # npm install
+
+              # Remov .env file
+              rm -rf .env
 
               # Create the .env file
               echo "TAG=${config.tag}" > .env
@@ -168,6 +171,8 @@ async function callInsert(config) {
         enableSecureBoot: false,
         enableVtpm: true,
       },
+      sourceMachineImage:
+        "projects/map-review-scrap/global/machineImages/gmrscrap",
       tags: {
         items: [],
       },
