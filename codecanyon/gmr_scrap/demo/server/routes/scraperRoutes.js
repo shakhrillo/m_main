@@ -48,6 +48,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
 };
 
 async function callInsert(config) {
+  const uniqueInstanceName = `instance-${+new Date()}`;
   // Construct request
   const request = {
     instanceResource: {
@@ -61,7 +62,7 @@ async function callInsert(config) {
         {
           autoDelete: true,
           boot: true,
-          deviceName: "instance-20241214-180306",
+          deviceName: uniqueInstanceName,
           initializeParams: {
             diskSizeGb: "10",
             diskType:
@@ -119,11 +120,12 @@ async function callInsert(config) {
               npm run info
 
               # Remove the instance
+              gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-c --project=map-review-scrap --quiet
             `,
           },
         ],
       },
-      name: "instance-20241214-180306",
+      name: uniqueInstanceName,
       networkInterfaces: [
         {
           accessConfigs: [
