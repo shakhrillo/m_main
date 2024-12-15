@@ -5,9 +5,9 @@ const path = require("path");
 
 const isTest = process.env.NODE_ENV === "production";
 let firebaseUrl = "127.0.0.1";
-if (!isTest) {
-  firebaseUrl = "host.docker.internal";
-}
+// if (!isTest) {
+firebaseUrl = "host.docker.internal";
+// }
 
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 if (!FIREBASE_PROJECT_ID) {
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "development") {
 
 const firebasekeysPath = path.resolve(
   __dirname,
-  isTest ? "../../firebasekeys.json" : "../firebasekeys.json"
+  isTest ? "../firebasekeys.json" : "../firebasekeys.json"
 );
 if (
   process.env.NODE_ENV !== "development" &&
