@@ -114,6 +114,7 @@ async function callInsert(config) {
               cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
 
               # Git get the latest
+              git config --global --add safe.directory /home/st/m_main
               git pull
 
               # Install the dependencies
