@@ -111,7 +111,7 @@ async function callInsert(config) {
               # npm install
 
               # Run the tests
-              cd gmrs
+              cd /home/st/gmrs
 
               # Remov .env file
               rm -rf .env
