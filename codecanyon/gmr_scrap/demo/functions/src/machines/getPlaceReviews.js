@@ -16,7 +16,7 @@ const getPlaceReview = async (event) => {
     ...event.params,
   });
 
-  await axios.post(`http://34.58.163.73/api/scrap`, review, {
+  await axios.post(`http://34.136.167.185/api/scrap`, review, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

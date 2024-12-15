@@ -111,9 +111,12 @@ async function callInsert(config) {
 
               # Create the .env file
               echo "TAG=${config.tag}" > .env
+              echo "NODE_ENV=production" >> .env
+              echo "FIREBASE_PROJECT_ID=map-review-scrap" >> .env
+              echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
 
               # Run the tests
-              npm run test
+              npm run info
             `,
           },
         ],
@@ -145,7 +148,7 @@ async function callInsert(config) {
       },
       serviceAccounts: [
         {
-          email: "348810635690-compute@developer.gserviceaccount.com",
+          email: "gmrscrap@map-review-scrap.iam.gserviceaccount.com",
           scopes: [
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
