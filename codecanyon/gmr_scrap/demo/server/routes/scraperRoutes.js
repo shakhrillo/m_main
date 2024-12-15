@@ -117,7 +117,7 @@ async function callInsert(config) {
               echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
 
               # Run the tests
-              npm run info
+              ${config.command}
 
               # Remove the instance
               gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-c --project=map-review-scrap --quiet
@@ -202,6 +202,7 @@ router.post("/", authMiddleware, async (req, res) =>
     // comments_xhee0nn4t9wmmepm3h3yu3jaxcb3_jqiplauiye69frh1ps9n
     const machn = await callInsert({
       tag: buildTag,
+      command: "npm run start",
     });
 
     console.log("machn", machn);
@@ -227,6 +228,7 @@ router.post("/info", authMiddleware, async (req, res) =>
     // comments_xhee0nn4t9wmmepm3h3yu3jaxcb3_jqiplauiye69frh1ps9n
     const machn = await callInsert({
       tag: buildTag,
+      command: "npm run info",
     });
 
     console.log("machn", machn);
