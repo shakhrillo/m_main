@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { By } = require("selenium-webdriver");
 const { getMachineData } = require("./services/firebase");
 
