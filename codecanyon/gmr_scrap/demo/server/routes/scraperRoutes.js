@@ -142,7 +142,7 @@ async function callInsert(config) {
               # ${config.command}
 
               # Remove the instance
-              gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-a --project=map-review-scrap --quiet
+              # gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-a --project=map-review-scrap --quiet
             `,
           },
         ],
