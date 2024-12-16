@@ -6,6 +6,7 @@ const { createMachine } = require("../services/firebaseService");
 
 const project = "map-review-scrap";
 const zone = "us-central1-a";
+const machineType = "e2-small";
 
 // Imports the Compute library
 const { InstancesClient } = require("@google-cloud/compute").v1;
@@ -52,12 +53,12 @@ async function callInsert(config) {
   // Construct request
   const request = {
     instanceResource: {
-      canIpForward: false,
-      confidentialInstanceConfig: {
-        enableConfidentialCompute: false,
-      },
-      deletionProtection: false,
-      description: "",
+      // canIpForward: false,
+      // confidentialInstanceConfig: {
+      //   enableConfidentialCompute: false,
+      // },
+      // deletionProtection: false,
+      // description: "",
       disks: [
         {
           autoDelete: true,
@@ -75,41 +76,21 @@ async function callInsert(config) {
           type: "PERSISTENT",
         },
       ],
-      displayDevice: {
-        enableDisplay: false,
-      },
-      guestAccelerators: [],
-      instanceEncryptionKey: {},
-      keyRevocationActionType: "NONE",
-      labels: {
-        "goog-ec-src": "vm_add-rest",
-      },
-      machineType:
-        "projects/map-review-scrap/zones/us-central1-a/machineTypes/e2-small",
+      // displayDevice: {
+      //   enableDisplay: false,
+      // },
+      // guestAccelerators: [],
+      // instanceEncryptionKey: {},
+      // keyRevocationActionType: "NONE",
+      // labels: {
+      //   "goog-ec-src": "vm_add-rest",
+      // },
+      machineType: `projects/map-review-scrap/zones/${zone}/machineTypes/${machineType}`,
       metadata: {
         items: [
           {
             key: "startup-script",
             value: `
-              #! /bin/bash
-              # Update package list and install required tools
-              # apt update && apt install -y unzip wget chromium nodejs npm
-
-              # Download the archive
-              # gsutil cp gs://machine_gmr_scrap/mch.zip /tmp/gmrscrap.zip
-
-              # Ensure the directory exists and unzip the archive
-              # mkdir -p /tmp/gmrs
-              # unzip /tmp/gmrscrap.zip -d /tmp/gmrs
-
-              # gsutil cp gs://machine_gmr_scrap/firebasekeys.json /tmp 
-
-              # Move to the directory
-              # cd /tmp/gmrs
-
-              # Install the dependencies
-              # npm install
-
               # Run the tests
               cd /home/st/m_main/codecanyon/gmr_scrap/demo
 
@@ -122,56 +103,37 @@ async function callInsert(config) {
                 gmr_scrap_selenium \
                 ${config.command}
 
-              # Git get the latest
-              # git config --global --add safe.directory /home/st/m_main
-              # git pull
-
-              # Install the dependencies
-              # npm install
-
-              # Remov .env file
-              # rm -rf .env
-
-              # Create the .env file
-              # echo "TAG=${config.tag}" > .env
-              # echo "NODE_ENV=production" >> .env
-              #echo "FIREBASE_PROJECT_ID=fir-scrapp" >> .env
-              #echo "STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app" >> .env
-
-              # Run the tests
-              # ${config.command}
-
               # Remove the instance
-              # gcloud compute instances delete ${uniqueInstanceName} --zone=us-central1-a --project=map-review-scrap --quiet
+              gcloud compute instances delete ${uniqueInstanceName} --zone=${zone} --project=map-review-scrap --quiet
             `,
           },
         ],
       },
       name: uniqueInstanceName,
-      networkInterfaces: [
-        {
-          accessConfigs: [
-            {
-              name: "External NAT",
-              networkTier: "PREMIUM",
-            },
-          ],
-          stackType: "IPV4_ONLY",
-          subnetwork:
-            "projects/map-review-scrap/regions/us-central1/subnetworks/default",
-        },
-      ],
-      params: {
-        resourceManagerTags: {},
-      },
-      reservationAffinity: {
-        consumeReservationType: "ANY_RESERVATION",
-      },
-      scheduling: {
-        automaticRestart: true,
-        onHostMaintenance: "MIGRATE",
-        provisioningModel: "STANDARD",
-      },
+      // networkInterfaces: [
+      //   {
+      //     accessConfigs: [
+      //       {
+      //         name: "External NAT",
+      //         networkTier: "PREMIUM",
+      //       },
+      //     ],
+      //     stackType: "IPV4_ONLY",
+      //     subnetwork:
+      //       "projects/map-review-scrap/regions/us-central1/subnetworks/default",
+      //   },
+      // ],
+      // params: {
+      //   resourceManagerTags: {},
+      // },
+      // reservationAffinity: {
+      //   consumeReservationType: "ANY_RESERVATION",
+      // },
+      // scheduling: {
+      //   automaticRestart: true,
+      //   onHostMaintenance: "MIGRATE",
+      //   provisioningModel: "STANDARD",
+      // },
       serviceAccounts: [
         {
           email: "gmrscrap@map-review-scrap.iam.gserviceaccount.com",
@@ -186,17 +148,17 @@ async function callInsert(config) {
           ],
         },
       ],
-      shieldedInstanceConfig: {
-        enableIntegrityMonitoring: true,
-        enableSecureBoot: false,
-        enableVtpm: true,
-      },
+      // shieldedInstanceConfig: {
+      //   enableIntegrityMonitoring: true,
+      //   enableSecureBoot: false,
+      //   enableVtpm: true,
+      // },
       sourceMachineImage:
         "projects/map-review-scrap/global/machineImages/gmrscrap",
-      tags: {
-        items: [],
-      },
-      zone: "projects/map-review-scrap/zones/us-central1-a",
+      // tags: {
+      //   items: [],
+      // },
+      zone: `projects/map-review-scrap/zones/${zone}`,
     },
     project,
     zone,
