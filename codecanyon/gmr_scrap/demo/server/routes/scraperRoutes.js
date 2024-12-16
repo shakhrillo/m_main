@@ -205,8 +205,7 @@ async function callInsert(config) {
           deviceName: uniqueInstanceName,
           initializeParams: {
             diskSizeGb: "10",
-            diskType:
-              "projects/map-review-scrap/zones/us-central1-f/diskTypes/pd-standard",
+            diskType: `projects/map-review-scrap/zones/${zone}/diskTypes/pd-standard`,
             labels: {},
             sourceImage:
               "projects/debian-cloud/global/images/debian-12-bookworm-v20241210",
