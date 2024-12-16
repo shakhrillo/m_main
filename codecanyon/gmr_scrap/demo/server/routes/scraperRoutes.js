@@ -5,7 +5,7 @@ const { createMachine } = require("../services/firebaseService");
 // const { startContainer } = require("../controllers/dockerController");
 
 const project = "map-review-scrap";
-let zone = "us-central1-a";
+let zone = "us-east1-b";
 let machineType = "e2-small";
 
 // Imports the Compute library
