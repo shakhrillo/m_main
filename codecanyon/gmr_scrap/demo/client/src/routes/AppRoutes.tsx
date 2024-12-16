@@ -61,23 +61,18 @@ const authRoutes = {
   ],
 }
 
-const router = createBrowserRouter(
-  [
-    authRoutes,
-    {
-      path: "/",
-      element: <PrivateRoute />,
-      children: [dashboardRoutes],
-    },
-    {
-      path: "*",
-      element: <Navigate to="/" replace />,
-    },
-  ],
+const router = createBrowserRouter([
+  authRoutes,
   {
-    basename: "/dashboard/",
+    path: "/",
+    element: <PrivateRoute />,
+    children: [dashboardRoutes],
   },
-)
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
+  },
+])
 
 const AppRoutes = () => {
   return (
