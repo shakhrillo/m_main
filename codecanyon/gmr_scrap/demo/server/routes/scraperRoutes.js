@@ -5,8 +5,8 @@ const { createMachine } = require("../services/firebaseService");
 // const { startContainer } = require("../controllers/dockerController");
 
 const project = "map-review-scrap";
-const zone = "us-central1-a";
-const machineType = "e2-small";
+let zone = "us-central1-a";
+let machineType = "e2-small";
 
 // Imports the Compute library
 const { InstancesClient } = require("@google-cloud/compute").v1;
@@ -50,6 +50,12 @@ const reviewsPrefix = process.env.MACHINES_REVIEWS_PREFIX || "comments";
 
 async function callInsert(config) {
   const uniqueInstanceName = config.tag.replace(/_/g, "-");
+
+  if (uniqueInstanceName.includes("comments")) {
+    zone = "us-central1-f";
+    machineType = "n2-standard-2";
+  }
+
   // Construct request
   const request = {
     instanceResource: {
