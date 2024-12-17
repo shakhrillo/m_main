@@ -16,7 +16,7 @@ const watchBuyCoins = async ({ params: { userId }, data }) => {
     });
 
     const { url } = await axios.post(
-      `${endPointURL}/api/stripe`,
+      `https://api.gmrscrap.store/stripe`,
       { amount },
       {
         headers: {
