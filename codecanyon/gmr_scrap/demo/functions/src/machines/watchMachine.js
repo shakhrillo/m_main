@@ -1,5 +1,4 @@
 const admin = require("firebase-admin");
-const { FieldValue } = require("firebase-admin/firestore");
 
 const watchMachine = async (event) => {
   const machineId = event.params.machineId;
@@ -18,7 +17,7 @@ const watchMachine = async (event) => {
     );
   await docRef.update({
     ...document,
-    updatedAt: FieldValue.serverTimestamp(),
+    updatedAt: +new Date(),
   });
 
   console.log("Document updated", machineId);
