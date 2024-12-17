@@ -35,7 +35,7 @@ COPY selenium_machine/package*.json ./
 RUN npm install
 
 # Copy the Firebase configuration files
-COPY firebase.json firebasekeys.json ./
+COPY firebase.json firebasekeys.json ../
 
 # Copy the application code
 COPY selenium_machine .
