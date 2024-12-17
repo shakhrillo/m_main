@@ -1,5 +1,4 @@
-export const googleCloudProject = "map-review-scrap";
-export const googleCloudZones = [
+const googleCloudZones = [
   // Africa
   "africa-north1-a",
   "africa-north1-b",
@@ -129,3 +128,7 @@ export const googleCloudZones = [
   "me-west1-b",
   "me-west1-c",
 ];
+
+module.exports = {
+  googleCloudZones,
+};

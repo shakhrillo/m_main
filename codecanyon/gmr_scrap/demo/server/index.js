@@ -1,9 +1,7 @@
-const express = require("express");
-const cors = require("cors");
 require("dotenv").config();
 
-// const { watchEvents } = require("./docker");
-// const machinesRoutes = require("./routes/machinesRoutes");
+const express = require("express");
+const cors = require("cors");
 const scraperRoutes = require("./routes/scraperRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 
@@ -19,9 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/stripe", stripeRoutes);
 
 app.use(express.json());
-
 app.use("/scrap", scraperRoutes);
-// app.use("/machines", machinesRoutes);
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
@@ -35,9 +31,18 @@ app.use((req, res, next) => {
 // Error-handling middleware
 app.use(errorHandler);
 
-// watchEvents();
-
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running: http://localhost:${PORT}`);
+  console.log("-".repeat(50));
+  console.log("");
+  console.log(
+    "\x1b[1m\x1b[32m%s\x1b[0m",
+    `\u2713 GMR Scrap Server [${process.env.NODE_ENV}]`
+  );
+  console.log(
+    "\x1b[1m\x1b[32m%s\x1b[0m",
+    `\u2713 Server is running on port [:${PORT}]`
+  );
+  console.log("");
+  console.log("-".repeat(50));
 });
