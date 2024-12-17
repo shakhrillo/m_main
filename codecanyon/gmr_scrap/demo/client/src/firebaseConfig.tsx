@@ -1,48 +1,33 @@
-// src/firebaseConfig.ts
 import { initializeApp } from "firebase/app"
 import { connectAuthEmulator, getAuth } from "firebase/auth"
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore"
 
-// Firebase configuration
-const prodConfig = {
-  apiKey: "AIzaSyAic1Mo91OQaofpFE8VISIAmvZ1azQ-lmc",
-  authDomain: "fir-scrapp.firebaseapp.com",
-  projectId: "fir-scrapp",
-  storageBucket: "fir-scrapp.firebasestorage.app",
-  messagingSenderId: "668777922282",
-  appId: "1:668777922282:web:b0fedff7b583523b13a193",
-  measurementId: "G-Y0Y82432TG",
-}
+const environment = import.meta.env.VITE_ENV
+const apiKey = import.meta.env.VITE_FIREBASE_API_KEY
+const authDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN
+const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID
+const storageBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
+const messagingSenderId = import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID
+const appId = import.meta.env.VITE_FIREBASE_APP_ID
+const measurementId = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 
-const devConfig = {
-  apiKey: "fake-api-key",
-  authDomain: "localhost",
-  projectId: "fir-scrapp",
-  storageBucket: "map-review-scrap.appspot.com",
+const firebaseConfig = {
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId,
 }
-
-// Emulator configuration
-const EMULATOR_CONFIG = {
-  auth: "http://127.0.0.1:9099",
-  firestore: { host: "127.0.0.1", port: 9100 },
-}
-
-// Firebase initialization
-const isProduction = process.env.NODE_ENV === "production"
-const firebaseConfig = isProduction ? prodConfig : devConfig
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 const firestore = getFirestore()
 
-// Connect to emulators in development mode
-if (!isProduction) {
-  connectAuthEmulator(auth, EMULATOR_CONFIG.auth)
-  connectFirestoreEmulator(
-    firestore,
-    EMULATOR_CONFIG.firestore.host,
-    EMULATOR_CONFIG.firestore.port,
-  )
+if (environment === "development") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099")
+  connectFirestoreEmulator(firestore, "127.0.0.1", 9100)
 }
 
 export { app, auth, firestore }
