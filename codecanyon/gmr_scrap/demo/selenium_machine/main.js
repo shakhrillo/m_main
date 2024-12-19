@@ -89,9 +89,10 @@ async function init() {
       await driver.executeScript(scrollToLoader);
       await driver.sleep(1000);
       await driver.executeScript(scrollToContainer);
-      retries++;
     } catch (error) {
       console.error("Error in while loop", error);
+    } finally {
+      retries++;
     }
   }
 
