@@ -325,6 +325,7 @@ async function fetchVisibleElements() {
   }
 
   const childNodes = Array.from(scrollContainer.children);
+  let count = 0;
 
   for (const node of childNodes) {
     try {
@@ -332,7 +333,10 @@ async function fetchVisibleElements() {
       if (validatedElement) {
         visibleElements.push(validatedElement);
       }
-      node.remove();
+      if (count < 20) {
+        node.remove();
+      }
+      count += 1;
     } catch (error) {
       console.error("Error processing node:", error);
     }
