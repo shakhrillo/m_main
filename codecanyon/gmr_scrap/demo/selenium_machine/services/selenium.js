@@ -5,7 +5,7 @@ async function getDriver() {
   const options = new chrome.Options();
   options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   options.setLoggingPrefs({ browser: "ALL" });
-  options.setChromeBinaryPath("/usr/bin/chromedriver");
+  options.setChromeBinaryPath("/usr/bin/google-chrome-stable");
   options.excludeSwitches("enable-automation");
 
   const driver = await new Builder()
