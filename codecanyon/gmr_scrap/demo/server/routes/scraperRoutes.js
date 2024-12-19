@@ -38,7 +38,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           echo "NODE_ENV=${environment}" >> .env
           echo "FIREBASE_PROJECT_ID=${firebaseProjectId}" >> .env
 
-          ${isInfo ? "npm run info" : "npm run start"}
+          ${isInfo ? "node info.js" : "node main.js"}
         `,
       });
     }
