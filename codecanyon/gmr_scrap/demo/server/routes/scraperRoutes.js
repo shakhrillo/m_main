@@ -21,7 +21,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
         tag,
         startupScript: `
           # Run the tests
-          cd /home/st/m_main/codecanyon/gmr_scrap/demo/server
+          cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
 
           #docker run \
           #  --name ${tag} \
@@ -38,7 +38,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           echo "NODE_ENV=${environment}" >> .env
           echo "FIREBASE_PROJECT_ID=${firebaseProjectId}" >> .env
 
-          ${isInfo ? "node info.js" : "node main.js"}
+          ${isInfo ? "npm run info" : "npm run start"}
         `,
       });
     }
