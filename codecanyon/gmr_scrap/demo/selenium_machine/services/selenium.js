@@ -3,7 +3,12 @@ const chrome = require("selenium-webdriver/chrome");
 
 async function getDriver() {
   const options = new chrome.Options();
-  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+  // options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+  // set window size height long as possible and zoom to 10%
+  // options.addArguments(
+  //   "--window-size=1920,3000",
+  //   "--force-device-scale-factor=0.1"
+  // );
   options.setLoggingPrefs({ browser: "ALL" });
   // options.setChromeBinaryPath("/usr/bin/chromium");
   options.excludeSwitches("enable-automation");

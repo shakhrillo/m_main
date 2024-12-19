@@ -4,11 +4,20 @@ if (typeof window === "undefined") {
 }
 
 let waitTime = 100;
-window.checkedIds = new Set();
-window.ids = [];
-window.extractedImages = [];
-window.extractedOwnerReviewCount = 0;
-window.extractedUserReviewCount = 0;
+// window.checkedIds = new Set();
+// window.ids = [];
+// window.extractedImages = [];
+// window.extractedOwnerReviewCount = 0;
+// window.extractedUserReviewCount = 0;
+
+function scrollToLoader() {
+  const targetParent = document.querySelector(".vyucnb")?.parentElement;
+
+  if (targetParent) {
+    const lastChild = targetParent.lastElementChild;
+    lastChild?.scrollIntoView();
+  }
+}
 
 /**
  * Extracts the user information from the review node
@@ -182,12 +191,12 @@ function getReviewMedia(node) {
  * @param {HTMLElement} node
  * @returns {Promise<void>}
  */
+// let pn = 0;
 async function checkNode(node) {
   const id = node.getAttribute("data-review-id");
   if (id && !checkedIds.has(id)) {
     checkedIds.add(id);
-    node.scrollIntoView();
-
+    console.log("id:", id);
     const buttonSelectors = [
       `button[jsaction*="review.showReviewInOriginal"]`,
       `button[jsaction*="review.showOwnerResponseInOriginal"]`,
@@ -200,6 +209,7 @@ async function checkNode(node) {
       let button = node.querySelector(selector);
 
       if (button) {
+        button.scrollIntoView();
         button.click();
 
         // Wait until the button is removed from the DOM
@@ -252,7 +262,7 @@ async function checkNode(node) {
 
     extractedImages.push(...media);
 
-    ids.push({
+    return {
       id,
       review,
       user: getReviewUser(node),
@@ -262,55 +272,158 @@ async function checkNode(node) {
       response,
       media,
       time: +Date.now(),
-    });
+    };
+
+    // try {
+    //   const data = {
+    //     id,
+    //     review,
+    //     user: getReviewUser(node),
+    //     date: getReviewDate(node),
+    //     rating: getReviewRate(node),
+    //     qa: getReviewQA(node),
+    //     response,
+    //     media,
+    //     time: +Date.now(),
+    //   };
+    // } catch (error) {
+    //   console.error("Error: ", error);
+    // }
+
+    // pn += 1;
+    // await db.doc(`machines/${tag}`).update({
+    //   pn,
+    // });
+
+    // ids.push({
+    //   id,
+    //   review,
+    //   user: getReviewUser(node),
+    //   date: getReviewDate(node),
+    //   rating: getReviewRate(node),
+    //   qa: getReviewQA(node),
+    //   response,
+    //   media,
+    //   time: +Date.now(),
+    // });
+
+    // console.log("ids:", ids.length);
   }
+
+  return null;
 }
 
-async function init() {
+// const ins = async () => {
+//   // Store the observer globally to avoid multiple subscriptions
+//   if (window.activeObserver) {
+//     console.log("Disconnecting previous observer...");
+//     window.activeObserver.disconnect();
+//     window.activeObserver = null; // Clear the reference
+//   }
+
+//   const parentEl = document.querySelector(".vyucnb")?.parentElement;
+//   if (!parentEl) {
+//     console.error("Parent element not found!");
+//     return;
+//   }
+
+//   const observerCallback = async (records) => {
+//     console.log("Records:", records);
+//     try {
+//       for (const record of records) {
+//         if (record.type === "childList" && record.addedNodes.length > 0) {
+//           for (const node of record.addedNodes) {
+//             try {
+//               await checkNode(node);
+//             } catch (error) {
+//               console.error("Error processing node:", error);
+//             }
+//           }
+//           await new Promise((resolve) => setTimeout(resolve, 400));
+//           scrollToLoader();
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error processing records:", error);
+//     }
+//   };
+
+//   // Initialize a new MutationObserver
+//   const observer = new MutationObserver(observerCallback);
+
+//   const targetEl = parentEl.children[parentEl.children.length - 2];
+//   if (!targetEl) {
+//     console.error("Target element not found!");
+//     return;
+//   }
+
+//   observer.observe(targetEl, {
+//     childList: true,
+//   });
+
+//   // Save the active observer to prevent duplicate subscriptions
+//   window.activeObserver = observer;
+
+//   const scrollEl =
+//     document.querySelector(".vyucnb")?.parentElement?.lastChild
+//       ?.previousSibling;
+//   if (!scrollEl || !scrollEl.children) {
+//     console.error("Scroll element not found!");
+//     return;
+//   }
+
+//   const scrollElChildren = scrollEl.children;
+//   for (const node of scrollElChildren) {
+//     try {
+//       await checkNode(node);
+//     } catch (error) {
+//       console.error("Error processing node:", error);
+//     }
+//   }
+
+//   scrollToLoader();
+// };
+
+// window.init();
+async function getVisibleEls() {
+  const elements = [];
   const scrollEl =
     document.querySelector(".vyucnb")?.parentElement?.lastChild
       ?.previousSibling;
-  const scrollElChildren = scrollEl.children;
-  for (const node of scrollElChildren) {
+
+  if (!scrollEl || !scrollEl.children) {
+    console.error("Scroll element or its children not found.");
+    return;
+  }
+
+  // Convert children to an array
+  const scrollElChildren = Array.from(scrollEl.children);
+
+  let startIndex = 0;
+
+  console.log(
+    "Number of nodes to process:",
+    scrollElChildren.length - startIndex
+  );
+
+  // Process nodes from startIndex onward
+  for (let i = startIndex; i < scrollElChildren.length; i++) {
+    const node = scrollElChildren[i];
     try {
-      await checkNode(node);
+      const element = await checkNode(node);
+      if (element) {
+        elements.push(element);
+      }
+      // remove the node from the DOM
+      node.remove();
     } catch (error) {
       console.error("Error processing node:", error);
     }
   }
 
-  const parentEl = document.querySelector(".vyucnb").parentElement;
-  const observerCallback = async (records) => {
-    try {
-      for (const record of records) {
-        if (record.type === "childList") {
-          await Promise.all(
-            Array.from(record.addedNodes).map(async (node) => {
-              try {
-                await checkNode(node);
-              } catch (error) {
-                console.error("Error processing node:", error);
-              }
-            })
-          );
-        }
-      }
-
-      // Remove all reviews
-      // if (parentEl && parentEl.children.length > 1) {
-      //   parentEl.children[parentEl.children.length - 2].innerHTML = "";
-      // }
-    } catch (error) {
-      console.error("Error processing records:", error);
-    }
-  };
-
-  new MutationObserver(observerCallback).observe(
-    parentEl.children[parentEl.children.length - 2],
-    {
-      childList: true,
-    }
-  );
+  return elements;
 }
 
-init();
+window.getVisibleEls = getVisibleEls;
+
+// getVisibleEls();

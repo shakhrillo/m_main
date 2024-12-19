@@ -43,6 +43,9 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           `FIREBASE_URL=host.docker.internal`,
         ],
         Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
+        HostConfig: {
+          AutoRemove: true,
+        },
       });
     }
 

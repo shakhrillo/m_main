@@ -23,9 +23,11 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 let firestoreEmulatorPort;
 let storageEmulatorPort;
+let authEmulatorPort;
 if (environment === "development") {
   const serviceAccountPath = path.resolve(__dirname, "../../firebase.json");
   let serviceAccountJson = {};
@@ -40,6 +42,7 @@ if (environment === "development") {
 
   firestoreEmulatorPort = serviceAccountJson.emulators?.firestore?.port || 9100;
   storageEmulatorPort = serviceAccountJson.emulators?.storage?.port || 9199;
+  authEmulatorPort = serviceAccountJson.emulators?.auth?.port || 9099;
 
   db.settings({ host: `${firebaseUrl}:${firestoreEmulatorPort}`, ssl: false });
 }
@@ -146,6 +149,10 @@ async function updateMachineData(tag, data) {
   await ref.update(data);
 }
 
+async function generateCustomToken(uid) {
+  return auth.createCustomToken(uid);
+}
+
 module.exports = {
   admin,
   db,
@@ -153,4 +160,5 @@ module.exports = {
   updateMachineData,
   uploadFile,
   batchWriteLargeArray,
+  generateCustomToken,
 };
