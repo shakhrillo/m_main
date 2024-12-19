@@ -105,6 +105,7 @@ async function init() {
   await driver.executeScript(extracterString);
 
   const extractedReviews = [];
+  let retriesCount = 0;
   // let lastReviewCount = 0;
 
   while (extractedReviews.length < data.limit) {
@@ -114,8 +115,13 @@ async function init() {
       );
 
       if (visibleElements.length === 0) {
-        console.log("No more visible elements to extract.");
-        break; // Break if no more elements are returned
+        console.log("No more visible elements to extract. Retrying...");
+        retriesCount++;
+      }
+
+      if (retriesCount > 10) {
+        console.log("Retries exceeded. Exiting...");
+        break;
       }
 
       extractedReviews.push(...visibleElements);
