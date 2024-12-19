@@ -23,13 +23,22 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           # Run the tests
           cd /home/st/m_main/codecanyon/gmr_scrap/demo
 
-          docker run \
-            --name ${tag} \
-            -e TAG=${tag} \
-            -e NODE_ENV=${environment} \
-            -e FIREBASE_PROJECT_ID=${firebaseProjectId} \
-            ${machineBuildImageName} \
-            ${isInfo ? "npm run info" : "npm run start"}
+          #docker run \
+          #  --name ${tag} \
+          #  -e TAG=${tag} \
+          #  -e NODE_ENV=${environment} \
+          #  -e FIREBASE_PROJECT_ID=${firebaseProjectId} \
+          #  ${machineBuildImageName} \
+
+          # Remove environment file
+          rm -f .env
+
+          # Create environment file
+          echo "TAG=${tag}" > .env
+          echo "NODE_ENV=${environment}" >> .env
+          echo "FIREBASE_PROJECT_ID=${firebaseProjectId}" >> .env
+
+          ${isInfo ? "npm run info" : "npm run start"}
         `,
       });
     }

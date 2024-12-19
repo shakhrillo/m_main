@@ -18,8 +18,8 @@ async function startVmInstance(config) {
   const diskSizeGb = 50;
 
   // if (uniqueInstanceName.includes("comments")) {
-  const machineType = "t2a-standard-1";
-  // const machineType = "n2-standard-2";
+  // const machineType = "t2a-standard-1";
+  const machineType = "n2-standard-2";
   // }
 
   const request = {
@@ -31,7 +31,7 @@ async function startVmInstance(config) {
           deviceName: uniqueInstanceName,
           initializeParams: {
             diskSizeGb,
-            diskType: `projects/${googleProjectId}/zones/${zone}/diskTypes/pd-balanced`,
+            diskType: `projects/${googleProjectId}/zones/${zone}/diskTypes/pd-standard`,
             labels: {},
             sourceImage:
               "projects/debian-cloud/global/images/debian-12-bookworm-arm64-v20241210",
