@@ -10,9 +10,9 @@ async function getDriver() {
 
   const driver = await new Builder()
     .usingServer("http://10.128.0.32:4444/wd/hub")
+    .setChromeOptions(options)
     .forBrowser(Browser.CHROME)
     .build();
-  // .setChromeOptions(options)
 
   await driver.manage().setTimeouts({
     implicit: 90000,
