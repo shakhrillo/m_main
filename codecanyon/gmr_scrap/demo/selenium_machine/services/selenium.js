@@ -3,7 +3,7 @@ const chrome = require("selenium-webdriver/chrome");
 
 async function getDriver() {
   const options = new chrome.Options();
-  // options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   // set window size height long as possible and zoom to 10%
   // options.addArguments(
   //   "--window-size=1920,3000",
@@ -19,9 +19,9 @@ async function getDriver() {
     .build();
 
   await driver.manage().setTimeouts({
-    implicit: 3000,
-    pageLoad: 180000,
-    script: 180000,
+    implicit: 10000,
+    pageLoad: 10000,
+    script: 10000,
   });
 
   return driver;

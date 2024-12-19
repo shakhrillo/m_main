@@ -149,10 +149,6 @@ async function updateMachineData(tag, data) {
   await ref.update(data);
 }
 
-async function generateCustomToken(uid) {
-  return auth.createCustomToken(uid);
-}
-
 module.exports = {
   admin,
   db,
@@ -160,5 +156,4 @@ module.exports = {
   updateMachineData,
   uploadFile,
   batchWriteLargeArray,
-  generateCustomToken,
 };

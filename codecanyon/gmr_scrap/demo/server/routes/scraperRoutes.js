@@ -14,6 +14,8 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     console.log("Request data", req.data);
     const { tag } = req.data;
 
+    console.log("Starting container", tag);
+
     if (environment === "production") {
       await startVmInstance({
         tag,

@@ -20,8 +20,6 @@ const getPlaceOverview = async (event) => {
   const reviewId = event.params.reviewId;
   const tag = `info_${userId}_${reviewId}`.toLowerCase();
 
-  console.log("tag", tag);
-
   await admin
     .firestore()
     .collection("machines")

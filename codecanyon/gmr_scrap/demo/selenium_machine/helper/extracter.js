@@ -4,11 +4,11 @@ if (typeof window === "undefined") {
 }
 
 let waitTime = 100;
-// window.checkedIds = new Set();
-// window.ids = [];
-// window.extractedImages = [];
-// window.extractedOwnerReviewCount = 0;
-// window.extractedUserReviewCount = 0;
+window.checkedIds = new Set();
+window.ids = [];
+window.extractedImages = [];
+window.extractedOwnerReviewCount = 0;
+window.extractedUserReviewCount = 0;
 
 function scrollToLoader() {
   const targetParent = document.querySelector(".vyucnb")?.parentElement;
@@ -192,7 +192,7 @@ function getReviewMedia(node) {
  * @returns {Promise<void>}
  */
 // let pn = 0;
-async function checkNode(node) {
+async function validateNode(node) {
   const id = node.getAttribute("data-review-id");
   if (id && !checkedIds.has(id)) {
     checkedIds.add(id);
@@ -313,117 +313,32 @@ async function checkNode(node) {
   return null;
 }
 
-// const ins = async () => {
-//   // Store the observer globally to avoid multiple subscriptions
-//   if (window.activeObserver) {
-//     console.log("Disconnecting previous observer...");
-//     window.activeObserver.disconnect();
-//     window.activeObserver = null; // Clear the reference
-//   }
-
-//   const parentEl = document.querySelector(".vyucnb")?.parentElement;
-//   if (!parentEl) {
-//     console.error("Parent element not found!");
-//     return;
-//   }
-
-//   const observerCallback = async (records) => {
-//     console.log("Records:", records);
-//     try {
-//       for (const record of records) {
-//         if (record.type === "childList" && record.addedNodes.length > 0) {
-//           for (const node of record.addedNodes) {
-//             try {
-//               await checkNode(node);
-//             } catch (error) {
-//               console.error("Error processing node:", error);
-//             }
-//           }
-//           await new Promise((resolve) => setTimeout(resolve, 400));
-//           scrollToLoader();
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Error processing records:", error);
-//     }
-//   };
-
-//   // Initialize a new MutationObserver
-//   const observer = new MutationObserver(observerCallback);
-
-//   const targetEl = parentEl.children[parentEl.children.length - 2];
-//   if (!targetEl) {
-//     console.error("Target element not found!");
-//     return;
-//   }
-
-//   observer.observe(targetEl, {
-//     childList: true,
-//   });
-
-//   // Save the active observer to prevent duplicate subscriptions
-//   window.activeObserver = observer;
-
-//   const scrollEl =
-//     document.querySelector(".vyucnb")?.parentElement?.lastChild
-//       ?.previousSibling;
-//   if (!scrollEl || !scrollEl.children) {
-//     console.error("Scroll element not found!");
-//     return;
-//   }
-
-//   const scrollElChildren = scrollEl.children;
-//   for (const node of scrollElChildren) {
-//     try {
-//       await checkNode(node);
-//     } catch (error) {
-//       console.error("Error processing node:", error);
-//     }
-//   }
-
-//   scrollToLoader();
-// };
-
-// window.init();
-async function getVisibleEls() {
-  const elements = [];
-  const scrollEl =
+async function fetchVisibleElements() {
+  const visibleElements = [];
+  const scrollContainer =
     document.querySelector(".vyucnb")?.parentElement?.lastChild
       ?.previousSibling;
 
-  if (!scrollEl || !scrollEl.children) {
+  if (!scrollContainer || !scrollContainer.children) {
     console.error("Scroll element or its children not found.");
     return;
   }
 
-  // Convert children to an array
-  const scrollElChildren = Array.from(scrollEl.children);
+  const childNodes = Array.from(scrollContainer.children);
 
-  let startIndex = 0;
-
-  console.log(
-    "Number of nodes to process:",
-    scrollElChildren.length - startIndex
-  );
-
-  // Process nodes from startIndex onward
-  for (let i = startIndex; i < scrollElChildren.length; i++) {
-    const node = scrollElChildren[i];
+  for (const node of childNodes) {
     try {
-      const element = await checkNode(node);
-      if (element) {
-        elements.push(element);
+      const validatedElement = await validateNode(node);
+      if (validatedElement) {
+        visibleElements.push(validatedElement);
       }
-      // remove the node from the DOM
       node.remove();
     } catch (error) {
       console.error("Error processing node:", error);
     }
   }
 
-  return elements;
+  return visibleElements;
 }
 
-window.getVisibleEls = getVisibleEls;
-
-// getVisibleEls();
+window.fetchVisibleElements = fetchVisibleElements;

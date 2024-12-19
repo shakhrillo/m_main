@@ -1,8 +1,14 @@
+const admin = require("firebase-admin");
 const axios = require("axios");
 const { createToken } = require("../utils/jwtUtils");
-const endPointURL = process.env.ENDPOINT_URL;
 
 const getPlaceReview = async (event) => {
+  const isEmulator = process.env.FUNCTIONS_EMULATOR;
+  let endpointURL = "https://api.gmrscrap.store";
+  if (isEmulator) {
+    endpointURL = "http://localhost:1337";
+  }
+
   const snapshot = event.data;
 
   if (!snapshot) {
@@ -10,18 +16,35 @@ const getPlaceReview = async (event) => {
     return;
   }
 
-  const review = snapshot.data();
+  const userId = event.params.userId;
+  const reviewId = event.params.reviewId;
+  const tag = `comments_${userId}_${reviewId}`.toLowerCase();
+
+  await admin
+    .firestore()
+    .collection("machines")
+    .doc(tag)
+    .set({
+      ...snapshot.data(),
+      userId,
+      reviewId,
+      createdAt: +new Date(),
+    });
+
   const token = createToken({
-    ...review,
-    ...event.params,
+    tag,
   });
 
-  await axios.post(`https://api.gmrscrap.store/scrap`, review, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  await axios.post(
+    `${endpointURL}/scrap`,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 
 module.exports = getPlaceReview;
