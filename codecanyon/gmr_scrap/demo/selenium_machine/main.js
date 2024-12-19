@@ -87,7 +87,7 @@ async function init() {
       console.log("Retrying to fetch review IDs...");
       extractedReviewIds = await driver.executeScript(getReviewIds);
       await driver.executeScript(scrollToLoader);
-      await driver.sleep(1000);
+      await driver.sleep(2000);
       await driver.executeScript(scrollToContainer);
     } catch (error) {
       console.error("Error in while loop", error);
