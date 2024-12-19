@@ -28,7 +28,6 @@ async function init() {
   const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
   const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
 
-  let allElements = [];
   let extractedImages = [];
   let extractedOwnerReviewCount = 0;
   let extractedUserReviewCount = 0;
