@@ -31,10 +31,10 @@ async function startVmInstance(config) {
           deviceName: uniqueInstanceName,
           initializeParams: {
             diskSizeGb,
-            diskType: `projects/${googleProjectId}/zones/${zone}/diskTypes/pd-standard`,
+            diskType: `projects/${googleProjectId}/zones/${zone}/diskTypes/pd-balanced`,
             labels: {},
             sourceImage:
-              "projects/debian-cloud/global/images/debian-12-bookworm-v20241210",
+              "projects/debian-cloud/global/images/debian-12-bookworm-arm64-v20241210",
           },
           mode: "READ_WRITE",
           type: "PERSISTENT",
