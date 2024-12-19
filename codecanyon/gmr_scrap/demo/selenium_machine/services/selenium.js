@@ -9,7 +9,7 @@ async function getDriver() {
   options.excludeSwitches("enable-automation");
 
   const driver = await new Builder()
-    .usingServer("http://127.0.0.1:4444/wd/hub")
+    .usingServer("http://10.128.0.32:4444/wd/hub")
     .forBrowser(Browser.CHROME)
     .build();
   // .setChromeOptions(options)
