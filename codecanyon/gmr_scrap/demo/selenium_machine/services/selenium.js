@@ -5,10 +5,11 @@ async function getDriver() {
   const options = new chrome.Options();
   options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   options.setLoggingPrefs({ browser: "ALL" });
-  options.setChromeBinaryPath("/usr/bin/chromium-browser");
+  options.setChromeBinaryPath("/usr/bin/chromedriver");
   options.excludeSwitches("enable-automation");
 
   const driver = await new Builder()
+    .usingServer("http://localhost:4444/wd/hub")
     .forBrowser(Browser.CHROME)
     .setChromeOptions(options)
     .build();
