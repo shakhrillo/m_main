@@ -8,8 +8,8 @@ docker run --rm \
 <!-- "test": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node main.js" -->
 
 docker run \
- --name info_xhee0nn4t9wmmepm3h3yu3jaxcb3_b3h4goltnukhoqu9fr6l \
- -e TAG=info_xhee0nn4t9wmmepm3h3yu3jaxcb3_b3h4goltnukhoqu9fr6l \
+ --name info_xhee0nn4t9wmmepm3h3yu3jaxcb3_1tvgcmnrj4nxkdcnuiyw \
+ -e TAG=info_xhee0nn4t9wmmepm3h3yu3jaxcb3_1tvgcmnrj4nxkdcnuiyw \
  -e NODE_ENV=production \
  -e FIREBASE_PROJECT_ID=fir-scrapp \
  -e STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app \
