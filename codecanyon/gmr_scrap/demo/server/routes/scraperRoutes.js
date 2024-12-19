@@ -21,7 +21,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
         tag,
         startupScript: `
           # Run the tests
-          cd /home/st/m_main/codecanyon/gmr_scrap/demo
+          cd /home/st/m_main/codecanyon/gmr_scrap/demo/server
 
           #docker run \
           #  --name ${tag} \
