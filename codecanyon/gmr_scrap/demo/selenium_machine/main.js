@@ -117,6 +117,10 @@ async function init() {
       if (visibleElements.length === 0) {
         console.log("No more visible elements to extract. Retrying...");
         retriesCount++;
+
+        await driver.executeScript(scrollToLoader);
+        await driver.sleep(2000);
+        await driver.executeScript(scrollToContainer);
       }
 
       if (retriesCount > 10) {

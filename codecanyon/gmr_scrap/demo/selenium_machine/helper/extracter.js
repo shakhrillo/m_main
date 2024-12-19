@@ -333,7 +333,7 @@ async function fetchVisibleElements() {
       if (validatedElement) {
         visibleElements.push(validatedElement);
       }
-      if (count < 20) {
+      if (count < 20 && childNodes.length > 20) {
         node.remove();
       }
       count += 1;
