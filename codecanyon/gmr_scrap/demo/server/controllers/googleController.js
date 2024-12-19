@@ -14,7 +14,7 @@ async function startVmInstance(config) {
     googleCloudZones[Math.floor(Math.random() * googleCloudZones.length)];
   const uniqueInstanceName = config.tag.replace(/_/g, "-");
   // let machineType = "e2-small";
-  const diskSizeGb = 50;
+  const diskSizeGb = 20;
 
   // if (uniqueInstanceName.includes("comments")) {
   const machineType = "n2-standard-2";
