@@ -14,8 +14,8 @@ async function startVmInstance(config) {
     googleCloudZones[Math.floor(Math.random() * googleCloudZones.length)];
   // const zone = "us-central1-f";
   const uniqueInstanceName = config.tag.replace(/_/g, "-");
-  let machineType = "e2-medium";
-  const diskSizeGb = 20;
+  let machineType = "e2-custom-4-16384";
+  const diskSizeGb = 50;
 
   // if (uniqueInstanceName.includes("comments")) {
   // const machineType = "t2a-standard-1";
