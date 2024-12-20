@@ -17,7 +17,7 @@ async function getDriver() {
   await driver.manage().setTimeouts({
     implicit: 350000,
     pageLoad: 350000,
-    script: 350000,
+    script: 60000,
   });
 
   return driver;
