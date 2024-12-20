@@ -37,6 +37,7 @@ async function init() {
 
   // ----------------- Start the process -----------------
   await driver.get(data.url);
+  console.log("URL:", data.url);
   await driver.sleep(2000);
 
   // ----------------- Click on the reviews tab -----------------
@@ -80,7 +81,7 @@ async function init() {
   let extractedReviewIds = (await driver.executeScript(getReviewIds)) || [];
   let retries = 0;
 
-  console.log("Initial review ids", extractedReviewIds);
+  console.log("Initial review ids", extractedReviewIds.length);
   while (extractedReviewIds.length === 0 && retries < 10) {
     try {
       console.log("Retrying to fetch review IDs...");
@@ -94,6 +95,7 @@ async function init() {
       retries++;
     }
   }
+  console.log("Scrolledintials", extractedReviewIds.length);
 
   if (extractedReviewIds.length === 0) {
     console.log("No review IDs found. Exiting...");
@@ -106,9 +108,9 @@ async function init() {
 
   const extractedReviews = [];
   let retriesCount = 0;
-  // let lastReviewCount = 0;
 
   while (extractedReviews.length < data.limit) {
+    let startedTime = Date.now();
     try {
       const visibleElements = await driver.executeScript(
         `return fetchVisibleElements()`
@@ -119,8 +121,10 @@ async function init() {
         retriesCount++;
 
         await driver.executeScript(scrollToLoader);
-        await driver.sleep(2000);
+        await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
+      } else {
+        retriesCount = 0;
       }
 
       if (retriesCount > 10) {
@@ -139,9 +143,16 @@ async function init() {
       if (extractedReviews.length >= data.limit) {
         break; // Exit if we have reached the limit
       }
+      await driver.executeScript(scrollToLoader);
+      await driver.sleep(400);
+      await driver.executeScript(scrollToContainer);
     } catch (error) {
-      console.error("Error in while loop", error);
-      break; // Exit loop on error
+      console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
+      console.error("Error in while loop");
+    } finally {
+      console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
+      console.log("Retries:", retriesCount);
+      console.log("Total reviews:", extractedReviews.length);
     }
   }
 

@@ -3,9 +3,9 @@ const chrome = require("selenium-webdriver/chrome");
 
 async function getDriver() {
   const options = new chrome.Options();
-  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+  // options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   options.setLoggingPrefs({ browser: "ALL" });
-  options.setChromeBinaryPath("/usr/bin/google-chrome-stable");
+  // options.setChromeBinaryPath("/usr/bin/google-chrome-stable");
   options.excludeSwitches("enable-automation");
 
   const driver = await new Builder()
@@ -15,9 +15,9 @@ async function getDriver() {
     .build();
 
   await driver.manage().setTimeouts({
-    implicit: 90000,
-    pageLoad: 90000,
-    script: 90000,
+    implicit: 350000,
+    pageLoad: 350000,
+    script: 350000,
   });
 
   return driver;
