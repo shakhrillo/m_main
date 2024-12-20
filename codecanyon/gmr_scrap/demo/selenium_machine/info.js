@@ -15,8 +15,10 @@ if (!tag) {
 }
 
 async function init() {
+  console.log("Tag:", tag);
   const data = await getMachineData(tag);
   const driver = await getDriver();
+  console.log("Data:", data);
 
   // -----------------
   // Start scraping
