@@ -15,7 +15,7 @@ async function startVmInstance(config) {
   // const zone = "us-central1-f";
   const uniqueInstanceName = config.tag.replace(/_/g, "-");
   let machineType = "e2-medium";
-  const diskSizeGb = 10;
+  const diskSizeGb = 20;
 
   // if (uniqueInstanceName.includes("comments")) {
   // const machineType = "t2a-standard-1";
@@ -50,7 +50,7 @@ async function startVmInstance(config) {
               ${config.startupScript}
 
               # Remove the instance
-              gcloud compute instances delete ${uniqueInstanceName} --zone=${zone} --project=${googleProjectId} --quiet
+              gcloud compute instances delete ${uniqueInstanceName} --zone=${zone} --project=${googleProjectId} --delete-disks=all --quiet
             `,
           },
         ],
