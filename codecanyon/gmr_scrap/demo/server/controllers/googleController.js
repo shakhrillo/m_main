@@ -50,7 +50,7 @@ async function startVmInstance(config) {
               ${config.startupScript}
 
               # Remove the instance
-              gcloud compute instances delete ${uniqueInstanceName} --zone=${zone} --project=${googleProjectId} --delete-disks=all --quiet
+              gcloud compute instances delete ${uniqueInstanceName} --zone=${zone} --project=${googleProjectId} --quiet
             `,
           },
         ],
