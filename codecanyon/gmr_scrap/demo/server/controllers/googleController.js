@@ -10,16 +10,16 @@ const googleProjectId = process.env.GOOGLE_PROJECT_ID || "fir-scrapp";
 const serviceAccountEmail = process.env.SERVICE_ACCOUNT_EMAIL || "";
 
 async function startVmInstance(config) {
-  // const zone =
-  //   googleCloudZones[Math.floor(Math.random() * googleCloudZones.length)];
-  const zone = "us-central1-f";
-  const uniqueInstanceName = config.tag.replace(/_/g, "-");
-  // let machineType = "e2-small";
-  const diskSizeGb = 50;
+  const zone =
+    googleCloudZones[Math.floor(Math.random() * googleCloudZones.length)];
+  // const zone = "us-central1-f";
+  // const uniqueInstanceName = config.tag.replace(/_/g, "-");
+  let machineType = "e2-medium";
+  const diskSizeGb = 10;
 
   // if (uniqueInstanceName.includes("comments")) {
   // const machineType = "t2a-standard-1";
-  const machineType = "e2-custom-4-16384";
+  // const machineType = "e2-custom-4-16384";
   // }
 
   const request = {
