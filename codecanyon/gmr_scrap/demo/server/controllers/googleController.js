@@ -13,7 +13,7 @@ async function startVmInstance(config) {
   const zone =
     googleCloudZones[Math.floor(Math.random() * googleCloudZones.length)];
   // const zone = "us-central1-f";
-  // const uniqueInstanceName = config.tag.replace(/_/g, "-");
+  const uniqueInstanceName = config.tag.replace(/_/g, "-");
   let machineType = "e2-medium";
   const diskSizeGb = 10;
 
