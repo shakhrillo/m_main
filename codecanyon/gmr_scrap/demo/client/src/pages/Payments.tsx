@@ -2,6 +2,7 @@ import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { buyCoins, getPaymentsQuery } from "../services/firebaseService"
+import { formatTimestamp } from "../utils/formatTimestamp"
 
 function Payments() {
   const { firestore, user } = useFirebase()
@@ -147,7 +148,7 @@ function Payments() {
                       {item.status === "succeeded" ? "Success" : "Failed"}
                     </span>
                   </td>
-                  <td>{item.created?.toDate().toLocaleString()}</td>
+                  <td>{formatTimestamp(item.created)}</td>
                 </tr>
               ))}
             </tbody>

@@ -17,8 +17,6 @@ const Settings: React.FC = () => {
   const [costs, setCosts] = useState("0.01")
   const [language, setLanguage] = useState("en")
 
-  const { toggleMenu } = useMenu()
-
   useEffect(() => {
     if (!firestore) return
     const settingsRef = doc(firestore, `app/settings`)
@@ -46,22 +44,21 @@ const Settings: React.FC = () => {
     }
   }, [firestore])
 
-  function saveSettings() {
+  async function saveSettings() {
     if (!firestore) return
     const settingsRef = doc(firestore, `app/settings`)
-    updateDoc(settingsRef, {
+    await updateDoc(settingsRef, {
       language,
       currency,
       costs,
     })
+
+    alert("Settings saved")
   }
 
   return (
-    <div>
-      <div className="d-flex align-items-center gap-3">
-        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
-          <img src={menuIcon} alt="menu-icon" />
-        </button>
+    <div className="container">
+      <div className="d-flex align-items-center gap-3 mb-4">
         <h2>Settings</h2>
       </div>
       <div className="card">
@@ -72,7 +69,7 @@ const Settings: React.FC = () => {
               saveSettings()
             }}
           >
-            <div className="form-wrap">
+            <div className="mb-3">
               <label htmlFor="currency" className="form-label">
                 Currency
               </label>
@@ -88,24 +85,27 @@ const Settings: React.FC = () => {
                 <option value="cad">CAD</option>
               </select>
             </div>
-            <div className="form-wrap">
+            <div className="mb-3">
               <label htmlFor="coin" className="form-label">
                 1 coin costs in {currency}
               </label>
               <input
-                type="string"
+                type="text"
                 name="coin"
                 id="coin"
-                className="form-input"
+                className="form-control"
                 placeholder="0.01"
                 value={costs}
                 onChange={e => setCosts(e.target.value)}
               />
-              <a href="https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts">
+              <a
+                href="https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts"
+                className="form-text"
+              >
                 Learn more about minimum charge
               </a>
             </div>
-            <div className="form-wrap">
+            <div className="mb-3">
               <label htmlFor="language" className="form-label">
                 Language
               </label>
@@ -122,7 +122,9 @@ const Settings: React.FC = () => {
                 <option value="de">German</option>
               </select>
             </div>
-            <button className="button button-primary">Save</button>
+            <button className="btn btn-primary" type="submit">
+              Save
+            </button>
           </form>
         </div>
       </div>
