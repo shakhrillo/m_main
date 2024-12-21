@@ -15,7 +15,12 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     console.log("Request data", req.data);
     const { tag } = req.data;
 
-    console.log("Starting container", tag);
+    console.log(
+      "Starting container",
+      tag,
+      machineBuildImageName,
+      firebaseProjectId
+    );
 
     if (environment === "production") {
       if (tag.includes("info")) {
@@ -26,7 +31,6 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
             `TAG=${tag}`,
             `NODE_ENV=${environment}`,
             `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
-            `FIREBASE_URL=host.docker.internal`,
           ],
           Cmd: ["npm", "run", "info"],
           HostConfig: {
