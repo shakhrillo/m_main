@@ -6,24 +6,20 @@ const cancelUrl = process.env.CANCEL_URL;
 
 exports.createCheckoutSession = async (req, res) => {
   const { amount, userId } = req.data;
-  let currency = "usd";
-  let costs = 1;
-  let unit_amount = amount;
-  const settings = await db.doc("app/settings").get();
-
-  if (settings.exists) {
-    const data = settings.data();
-    currency = data.currency || "usd";
-    costs = Number(data.costs || 1);
-  }
-
-  unit_amount = unit_amount * costs;
-
-  console.log("Currency: ", currency);
-  console.log("Costs: ", costs);
-  console.log("Unit Amount: ", unit_amount);
 
   try {
+    // Fetch app settings and set defaults
+    const settings = await db.doc("app/settings").get();
+    const { currency = "usd", costs = 1 } = settings.exists
+      ? settings.data()
+      : {};
+
+    const unit_amount = amount * Number(costs);
+
+    // Log for debugging
+    console.log({ currency, costs, unit_amount });
+
+    // Create checkout session
     const { url } = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
