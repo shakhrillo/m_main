@@ -7,6 +7,7 @@ import { getReviewsQuery } from "../../services/firebaseService"
 import { formatTimestamp } from "../../utils/formatTimestamp"
 import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
+import { statusRender } from "../../utils/statusRender"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -17,13 +18,15 @@ const Dashboard: React.FC = () => {
     {
       text: "Status",
       field: "status",
-      render: (row: any) => row.status,
+      render: (row: any) => statusRender(row.status, { width: 20, height: 20 }),
     },
     {
       text: "Place",
       field: "title",
       render: (row: any) => (
         <a
+          className="d-inline-block text-truncate"
+          style={{ maxWidth: "200px" }}
           href="#"
           onClick={e => {
             e.preventDefault()

@@ -4,11 +4,16 @@ import ReviewInfo from "../../components/review-info"
 
 function SingleReview() {
   return (
-    <div className="my-5">
-      <ReviewInfo />
-      <div className="card mt-5">
-        <div className="card-body">
+    <div className="container-fluid">
+      <div className="row g-2">
+        <h3>Single Review</h3>
+        <div className="col-12">
+          <ReviewInfo />
+        </div>
+        <div className="col-12">
           <ReviewImages />
+        </div>
+        <div className="col-12">
           <ReviewComments />
         </div>
       </div>

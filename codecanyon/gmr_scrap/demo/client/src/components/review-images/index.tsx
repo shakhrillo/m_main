@@ -44,24 +44,18 @@ function ReviewImages() {
   ) : error ? (
     <div>{error}</div>
   ) : (
-    <div className="row">
-      <div className="col-12 text-center">
-        <h3>Images ({reviewImgs.length})</h3>
-      </div>
+    <div className="row row-cols-6 g-0">
       {reviewImgs.map((img, index) => (
-        <a
-          className="col-sm-12 col-md-6 col-lg-2 mb-3"
-          key={index}
-          href={img.videoUrl || img.thumb}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <img
-            src={img.thumb}
-            className={`img-fluid ${img.videoUrl ? "rounded border border-5 border-danger" : ""}`}
-            alt={`Review ${index}`}
-          />
-        </a>
+        <div className="col" key={index}>
+          <a
+            className={`${img.videoUrl ? "video-wrapper" : "img-wrapper"}`}
+            href={img.videoUrl || img.thumb}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src={img.thumb} alt={`Review ${index}`} />
+          </a>
+        </div>
       ))}
     </div>
   )
