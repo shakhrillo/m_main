@@ -28,21 +28,38 @@ function ReviewInfo() {
   return (
     <div>
       <div className="row g-0">
-        <div className="col-md-6">
+        <div className="col-md-7">
           <div className="d-flex flex-column h-100 single-review">
-            <div className="mt-5">
-              <h5 className="single-review__place">{info.title}</h5>
-              <p className="card-text text-muted single-review__address">
-                {info.address}
-              </p>
+            <h2>{info.title}</h2>
+            <p className="card-text text-muted single-review__address">
+              {info.address}
+            </p>
+            <div className="single-review__export">
+              {/* <div className="border d-inline-flex p-1 w-auto rounded single-review__export__format">
+                <button
+                  className={`btn btn-sm ${fileFormat === "json" ? "border-secondary" : ""}`}
+                  onClick={() => setFileFormat("json")}
+                >
+                  JSON
+                </button>
+                <button
+                  className={`btn btn-sm ${fileFormat === "csv" ? "border-secondary" : ""}`}
+                  onClick={() => setFileFormat("csv")}
+                >
+                  CSV
+                </button>
+              </div> */}
+              <button type="button" className="btn btn-primary btn-lg">
+                Download
+              </button>
             </div>
-            <ul className="row list-unstyled mt-5">
-              {/* <li className="col-2 d-flex flex-column border-end px-4">
+            <ul className="row list-unstyled mt-auto">
+              <li className="col-2 d-flex flex-column border-end px-4">
                 <span className="single-review__info__title">Status</span>
                 <div className="w-100 h-100 d-flex align-items-center justify-content-center">
-                  {statusRender(info.status, { width: 24, height: 24 })}
+                  {statusRender(info.status, { width: 50, height: 50 })}
                 </div>
-              </li> */}
+              </li>
               <li className="col d-flex flex-column border-end px-3">
                 <span className="single-review__info__title">
                   Average Rating
@@ -76,38 +93,10 @@ function ReviewInfo() {
                 </span>
               </li>
             </ul>
-            <div className="mt-5 single-review__export">
-              <h6>Export</h6>
-              <div className="border d-inline-flex p-1 w-auto rounded single-review__export__format">
-                <button
-                  className={`btn btn-sm ${fileFormat === "json" ? "border-secondary" : ""}`}
-                  onClick={() => setFileFormat("json")}
-                >
-                  JSON
-                </button>
-                <button
-                  className={`btn btn-sm ${fileFormat === "csv" ? "border-secondary" : ""}`}
-                  onClick={() => setFileFormat("csv")}
-                >
-                  CSV
-                </button>
-              </div>
-              <button type="button" className="btn btn-secondary ms-3">
-                Download
-              </button>
-            </div>
           </div>
         </div>
-        <div className="col-md-6 border rounded overflow-hidden">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193596.0106964938!2d-74.14483032939027!3d40.69737043291077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNyu-York%20shahri%2C%20Nyu%20York%2C%20Amerika%20Qo%E2%80%98shma%20Shtatlari!5e0!3m2!1suz!2s!4v1734803229954!5m2!1suz!2s"
-            width="100%"
-            height="450"
-            style={{ border: 0 }}
-            loading="lazy"
-            // referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
-          {/* <a
+        <div className="col-md-5 rounded">
+          <a
             href={info.url}
             target="_blank"
             style={{
@@ -117,7 +106,7 @@ function ReviewInfo() {
               backgroundPosition: "center",
               backgroundSize: "cover",
             }}
-          ></a> */}
+          ></a>
         </div>
       </div>
     </div>

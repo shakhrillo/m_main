@@ -6,7 +6,6 @@ function SingleReview() {
   return (
     <div className="container-fluid">
       <div className="row g-2">
-        <h4>Single Review</h4>
         <div className="col-12">
           <ReviewInfo />
         </div>

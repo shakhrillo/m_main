@@ -84,7 +84,7 @@ function ReviewComments() {
           Videos
         </button>
       </div>
-      <Table
+      {/* <Table
         tableHeader={[
           { text: "#" },
           { text: "Data" },
@@ -94,8 +94,8 @@ function ReviewComments() {
           { text: "Response" },
         ]}
         tableBody={reviews}
-      />
-      {/* <table className="table">
+      /> */}
+      <table className="table">
         <thead>
           <tr>
             <th>#</th>
@@ -155,7 +155,7 @@ function ReviewComments() {
             </tr>
           ))}
         </tbody>
-      </table> */}
+      </table>
     </div>
   )
 }
