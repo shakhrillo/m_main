@@ -73,7 +73,7 @@ exports.webhookHandler = async (req, res) => {
     // Add payment to user's payment collection
     batch.set(userPaymentsRef.doc(), {
       amount: paymentIntent.amount,
-      created: new Date(paymentIntent.created * 1000),
+      created: +new Date(paymentIntent.created * 1000),
       payment_method: paymentIntent.payment_method,
       status: paymentIntent.status,
     });
