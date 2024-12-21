@@ -5,7 +5,6 @@ if (typeof window === "undefined") {
 
 let waitTime = 100;
 window.checkedIds = new Set();
-window.ids = [];
 window.extractedImages = [];
 window.extractedOwnerReviewCount = 0;
 window.extractedUserReviewCount = 0;
@@ -169,12 +168,15 @@ function getReviewMedia(node) {
     let data = {};
     const style = button.getAttribute("style");
     const textContent = button.textContent;
-    if (!!textContent) {
+    if (!!textContent && gmrScrap["extractVideoUrls"]) {
       data["button"] = button;
     }
     if (style) {
       const urlMatch = style.split('url("')[1]?.split('");')[0];
-      if (urlMatch) {
+      if (
+        urlMatch &&
+        (gmrScrap["extractImageUrls"] || gmrScrap["extractVideoUrls"])
+      ) {
         data["thumb"] = urlMatch.split("=")[0] + "=w1200";
       }
     }
@@ -196,14 +198,21 @@ async function validateNode(node) {
   const id = node.getAttribute("data-review-id");
   if (id && !checkedIds.has(id)) {
     checkedIds.add(id);
-    console.log("id:", id);
     const buttonSelectors = [
       `button[jsaction*="review.showReviewInOriginal"]`,
-      `button[jsaction*="review.showOwnerResponseInOriginal"]`,
       `button[jsaction*="review.expandReview"]`,
-      `button[jsaction*="review.expandOwnerResponse"]`,
-      `button[jsaction*="review.showMorePhotos"]`,
     ];
+
+    if (gmrScrap["ownerResponse"]) {
+      buttonSelectors.push(
+        'button[jsaction*="review.showOwnerResponseInOriginal"]',
+        'button[jsaction*="review.expandOwnerResponse"]'
+      );
+    }
+
+    if (gmrScrap["extractImageUrls"]) {
+      buttonSelectors.push('button[jsaction*="review.showMorePhotos"]');
+    }
 
     for (const selector of buttonSelectors) {
       let button = node.querySelector(selector);
@@ -223,40 +232,51 @@ async function validateNode(node) {
 
     const review = getReviewComment(node);
     if (!!review) {
-      extractedUserReviewCount += 1;
+      gmrScrap["extractedUserReviewCount"] = !gmrScrap[
+        "extractedUserReviewCount"
+      ]
+        ? 1
+        : gmrScrap["extractedUserReviewCount"] + 1;
     }
 
     const response = getReviewResponse(node);
     if (!!response) {
-      extractedOwnerReviewCount += 1;
+      gmrScrap["extractedOwnerReviewCount"] = !gmrScrap[
+        "extractedOwnerReviewCount"
+      ]
+        ? 1
+        : gmrScrap["extractedOwnerReviewCount"] + 1;
     }
 
     const media = [];
-    const nodeMedia = getReviewMedia(node);
 
-    if (nodeMedia.length) {
-      for (const { thumb, button } of nodeMedia) {
-        let videoUrl = "";
-        if (button) {
-          button.click();
+    if (gmrScrap["extractImageUrls"] || gmrScrap["extractVideoUrls"]) {
+      let nodeMedia = getReviewMedia(node);
 
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          const iframe = document.querySelector("iframe");
-          if (iframe) {
-            const iframeDoc = iframe.contentWindow?.document;
-            if (iframeDoc) {
-              const video = iframeDoc.querySelector("video");
-              if (video) {
-                videoUrl = video.src;
+      if (nodeMedia.length) {
+        for (const { thumb, button } of nodeMedia) {
+          let videoUrl = "";
+          if (button) {
+            button.click();
+
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            const iframe = document.querySelector("iframe");
+            if (iframe) {
+              const iframeDoc = iframe.contentWindow?.document;
+              if (iframeDoc) {
+                const video = iframeDoc.querySelector("video");
+                if (video) {
+                  videoUrl = video.src;
+                }
               }
             }
           }
-        }
 
-        media.push({
-          thumb,
-          videoUrl,
-        });
+          media.push({
+            thumb,
+            videoUrl,
+          });
+        }
       }
     }
 
@@ -273,41 +293,6 @@ async function validateNode(node) {
       media,
       time: +Date.now(),
     };
-
-    // try {
-    //   const data = {
-    //     id,
-    //     review,
-    //     user: getReviewUser(node),
-    //     date: getReviewDate(node),
-    //     rating: getReviewRate(node),
-    //     qa: getReviewQA(node),
-    //     response,
-    //     media,
-    //     time: +Date.now(),
-    //   };
-    // } catch (error) {
-    //   console.error("Error: ", error);
-    // }
-
-    // pn += 1;
-    // await db.doc(`machines/${tag}`).update({
-    //   pn,
-    // });
-
-    // ids.push({
-    //   id,
-    //   review,
-    //   user: getReviewUser(node),
-    //   date: getReviewDate(node),
-    //   rating: getReviewRate(node),
-    //   qa: getReviewQA(node),
-    //   response,
-    //   media,
-    //   time: +Date.now(),
-    // });
-
-    // console.log("ids:", ids.length);
   }
 
   return null;

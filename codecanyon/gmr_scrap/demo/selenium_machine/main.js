@@ -40,6 +40,11 @@ async function init() {
   console.log("URL:", data.url);
   await driver.sleep(2000);
 
+  // ----------------- Set config -----------------
+  await driver.executeScript(
+    `window.gmrScrap = ${JSON.stringify(data, null, 2)}`
+  );
+
   // ----------------- Click on the reviews tab -----------------
   const reviewsTabs =
     (await driver.findElements(By.css('button[role="tab"]'))) || [];
@@ -117,7 +122,6 @@ async function init() {
       );
 
       if (visibleElements.length === 0) {
-        console.log("No more visible elements to extract. Retrying...");
         retriesCount++;
 
         await driver.executeScript(scrollToLoader);
@@ -127,27 +131,24 @@ async function init() {
         retriesCount = 0;
       }
 
-      if (retriesCount > 10) {
+      if (retriesCount > 5) {
         console.log("Retries exceeded. Exiting...");
         break;
       }
 
       extractedReviews.push(...visibleElements);
-      console.log("Elements:", visibleElements.length);
-      console.log("Total reviews:", extractedReviews.length);
 
       await updateMachineData(tag, {
         totalReviews: extractedReviews.length,
       });
 
       if (extractedReviews.length >= data.limit) {
-        break; // Exit if we have reached the limit
+        break;
       }
       await driver.executeScript(scrollToLoader);
       await driver.sleep(400);
       await driver.executeScript(scrollToContainer);
     } catch (error) {
-      console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
       console.error("Error in while loop");
     } finally {
       console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
