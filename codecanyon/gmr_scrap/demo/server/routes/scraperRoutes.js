@@ -33,7 +33,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           ],
           Cmd: ["npm", "run", "info"],
           HostConfig: {
-            AutoRemove: !true,
+            AutoRemove: true,
           },
         });
       } else {
