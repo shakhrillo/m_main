@@ -4,14 +4,12 @@ import Sidebar from "./Sidebar"
 
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="main">
+    <>
       <Sidebar />
-      <div className="container">
-        <div className="row">
-          <Outlet />
-        </div>
+      <div className="content">
+        <Outlet />
       </div>
-    </div>
+    </>
   )
 }
 

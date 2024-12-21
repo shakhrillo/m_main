@@ -2,7 +2,6 @@ import { createRoot } from "react-dom/client"
 import App from "./App"
 import { FirebaseProvider } from "./contexts/FirebaseProvider"
 import "./index.scss"
-import { MenuProvider } from "./context"
 
 const container = document.getElementById("root")
 
@@ -10,11 +9,9 @@ if (container) {
   const root = createRoot(container)
 
   root.render(
-    <MenuProvider>
-      <FirebaseProvider>
-        <App />
-      </FirebaseProvider>
-    </MenuProvider>,
+    <FirebaseProvider>
+      <App />
+    </FirebaseProvider>,
   )
 } else {
   throw new Error(

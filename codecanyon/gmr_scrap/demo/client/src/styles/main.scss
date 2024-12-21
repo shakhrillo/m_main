@@ -1,4 +1,12 @@
-@import "./abstracts/variables";
+@import "./components/sidebar";
+
+.content {
+  width: calc(100% - 180px);
+  margin-left: 180px;
+  padding: 1.5rem 3rem;
+}
+
+// @import "./abstracts/variables";
 
 // @import "./base/reset";
 // @import "./base/typography";
@@ -6,10 +14,9 @@
 // @import "./abstracts/placeholders";
 // @import "./components/button";
 // @import "./components/nav";
-@import "./components/sidebar";
-@import "./components/steps";
+// @import "./components/steps";
 // @import "./components/form";
-@import "./components/table";
+// @import "./components/table";
 // @import "./components/image";
 // @import "./components/card";
 // @import "./components/loader";
@@ -23,21 +30,21 @@
 //   margin: $spacing-lg 0;
 // }
 
-.main {
-  // display: flex;
-  padding-left: 180px;
-}
+// .main {
+//   // display: flex;
+//   // padding-left: 180px;
+// }
 
-.text-wrap {
-  white-space: pre-wrap;
-}
+// .text-wrap {
+//   white-space: pre-wrap;
+// }
 
-.container {
-  flex: 1;
-  padding-left: 230px;
-  @media (max-width: 1200px) {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    width: -webkit-fill-available;
-  }
-}
+// .container {
+//   flex: 1;
+//   padding-left: 230px;
+//   @media (max-width: 1200px) {
+//     padding-left: 1.5rem;
+//     padding-right: 1.5rem;
+//     width: -webkit-fill-available;
+//   }
+// }

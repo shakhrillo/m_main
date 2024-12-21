@@ -1,32 +1,19 @@
-import { collection, doc, onSnapshot, writeBatch } from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Table } from "../../components/table"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { getReviewsQuery } from "../../services/firebaseService"
 import { formatTimestamp } from "../../utils/formatTimestamp"
 import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
-import { statusRender } from "../../utils/statusRender"
-import { useNavigate } from "react-router-dom"
-import { useMenu } from "../../context/MenuContext/MenuContext"
-import menuIcon from "../../assets/icons/list.svg"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
   const { firestore, user } = useFirebase()
   const [info, setInfo] = useState<any>({})
   const [completedReviews, setCompletedReviews] = useState<any[]>([])
-  const [selectedReviews, setSelectedReviews] = useState<any[]>([])
   const tableColumns = [
-    {
-      textRender: () => (
-        <input type="checkbox" id="selectAll" onClick={selectAllCheckbox} />
-      ),
-      field: "index",
-      render: (row: any) => (
-        <input type="checkbox" onClick={selectCheckbox} id={row.id} />
-      ),
-    },
     {
       text: "Status",
       field: "status",
@@ -84,62 +71,6 @@ const Dashboard: React.FC = () => {
     },
   ]
 
-  const selectAllCheckbox = () => {
-    const selectAll = document.getElementById("selectAll") as HTMLInputElement
-    const selectAllValue = selectAll.checked
-    const checkboxes = document.querySelectorAll("input[type=checkbox]")
-    checkboxes.forEach((checkbox: any) => {
-      if (checkbox.id !== "selectAll") {
-        checkbox.checked = selectAllValue
-      }
-    })
-    setSelectedReviews(
-      Array.from(checkboxes)
-        .filter(
-          (checkbox: any) => checkbox.checked && checkbox.id !== "selectAll",
-        )
-        .map((checkbox: any) => checkbox.id),
-    )
-  }
-
-  const selectCheckbox = () => {
-    const checkboxes = document.querySelectorAll("input[type=checkbox]")
-    const selectAll = document.getElementById("selectAll") as HTMLInputElement
-    let allChecked = true
-    checkboxes.forEach((checkbox: any) => {
-      if (checkbox.id !== "selectAll" && !checkbox.checked) {
-        allChecked = false
-      }
-    })
-    selectAll.checked = allChecked
-    setSelectedReviews(
-      Array.from(checkboxes)
-        .filter(
-          (checkbox: any) => checkbox.checked && checkbox.id !== "selectAll",
-        )
-        .map((checkbox: any) => checkbox.id),
-    )
-  }
-
-  const deleteSelectedReviews = async () => {
-    if (!firestore || !user) return
-
-    // Unselect all checkboxes
-    const checkboxes = document.querySelectorAll("input[type=checkbox]")
-    checkboxes.forEach((checkbox: any) => {
-      checkbox.checked = false
-    })
-    setSelectedReviews([])
-
-    const batch = writeBatch(firestore)
-    selectedReviews.forEach(reviewId => {
-      const reviewRef = doc(firestore, `users/${user.uid}/reviews/${reviewId}`)
-      batch.delete(reviewRef)
-    })
-
-    await batch.commit()
-  }
-
   useEffect(() => {
     if (!firestore || !user) return
 
@@ -151,10 +82,6 @@ const Dashboard: React.FC = () => {
           loadLimit: 1000,
         }),
         snapshot => {
-          console.log(
-            "snapshot.docs",
-            snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
-          )
           setCompletedReviews(
             snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
           )
@@ -175,98 +102,59 @@ const Dashboard: React.FC = () => {
     return unsubscribe
   }, [firestore, user])
 
-  const { toggleMenu } = useMenu()
-
   return (
-    <>
-      <div className="d-flex align-items-center gap-3">
-        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
-          <img src={menuIcon} alt="menu-icon" />
-        </button>
+    <div className="container-fluid">
+      <div className="row">
         <h3>Reviews</h3>
-      </div>
-      <div className="card">
-        {info ? (
-          <div className="card-body d-flex gap-3">
-            <div>
-              <p className="m-0">All comments</p>
-              <h3 className="m-0">
+        <div className="col-12">
+          <ul className="list-group list-group-horizontal">
+            <li className="list-group-item">
+              <span>All comments</span>
+              <div className="display-3">
                 {info.totalReviews ? info.totalReviews : "0"}
-              </h3>
-            </div>
-            <div>
-              <p className="m-0">Owner responses</p>
-              <h3 className="m-0">
+              </div>
+            </li>
+            <li className="list-group-item">
+              <span>Owner responses</span>
+              <div className="display-3">
                 {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
-              </h3>
-            </div>
-            <div>
-              <p className="m-0">User comments</p>
-              <h3 className="m-0">
+              </div>
+            </li>
+            <li className="list-group-item">
+              <span>User comments</span>
+              <div className="display-3">
                 {info.totalUserReviews ? info.totalUserReviews : "0"}
-              </h3>
-            </div>
-            <div>
-              <p className="m-0">Images</p>
-              <h3 className="m-0">
+              </div>
+            </li>
+            <li className="list-group-item">
+              <span>Images</span>
+              <div className="display-3">
                 {info.totalImages ? info.totalImages : "0"}
-              </h3>
-            </div>
-          </div>
-        ) : null}
-      </div>
-      <div
-        className="
-        d-flex
-        gap-3
-        py-3
-        border-bottom
-        border-primary
-      "
-      >
-        <a href="#" className="active">
-          All
-        </a>
-        <a href="#">Completed</a>
-        <a href="#">Pending</a>
-        <a href="#">Failed</a>
-      </div>
-      <div className="d-flex justify-space-between py-3">
-        <form action="" className="d-flex align-items-center gap-3">
-          <div className="form-wrap mb-0">
-            <input
-              type="text"
-              id="search"
-              name="search"
-              placeholder="Search"
-              className="form-input"
-            />
-          </div>
-          <button className="button button-primary">Search</button>
-        </form>
-        <div className="d-flex">
-          <button className="button button-primary">Filter</button>
+              </div>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div className="card">
-        <div className="card-header d-none">
-          <h3>Reviews List ({completedReviews.length})</h3>
-          <div className="actions">
-            <button
-              className="button button-danger button-lg"
-              onClick={deleteSelectedReviews}
-              disabled={selectedReviews.length === 0}
-            >
-              Delete{" "}
-              {selectedReviews.length > 0 ? `(${selectedReviews.length})` : ""}
-            </button>
+        <div className="col-12">
+          <div className="btn-group my-3">
+            <a href="#" className="btn btn-primary active" aria-current="page">
+              All
+            </a>
+            <a href="#" className="btn btn-primary">
+              Completed
+            </a>
+            <a href="#" className="btn btn-primary">
+              Pending
+            </a>
+            <a href="#" className="btn btn-primary">
+              Failed
+            </a>
           </div>
         </div>
-        <div className="card-body">
-          <Table tableHeader={tableColumns} body={completedReviews} />
+        <div className="col-12">
+          <Table tableHeader={tableColumns} tableBody={completedReviews} />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

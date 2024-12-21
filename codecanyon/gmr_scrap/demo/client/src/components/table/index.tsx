@@ -1,14 +1,29 @@
-import { TableHeader } from "./TableHeader"
-import { TableBody } from "./Tablebody"
-
 export const Table: React.FC<{
-  tableHeader: any
-  body: any[]
-}> = ({ tableHeader, body }) => {
+  tableHeader: any[]
+  tableBody: any[]
+}> = ({ tableHeader, tableBody }) => {
   return (
-    <table className={"table"}>
-      <TableHeader header={tableHeader} />
-      <TableBody body={body} columns={tableHeader} />
+    <table className="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          {tableHeader.map((item, index) => (
+            <th key={index}>{item.text}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {tableBody.map((row, rowIndex) => (
+          <tr key={rowIndex}>
+            <td>{rowIndex + 1}</td>
+            {tableHeader.map((column, colIndex) => (
+              <td key={colIndex}>
+                {column.render ? column.render(row) : row[column.field]}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   )
 }
