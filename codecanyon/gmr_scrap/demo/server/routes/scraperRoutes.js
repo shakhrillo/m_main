@@ -3,6 +3,7 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const { startContainer } = require("../controllers/dockerController");
 const { startVmInstance } = require("../controllers/googleController");
+const e = require("express");
 
 const environment = process.env.NODE_ENV || "development";
 const machineBuildImageName =
@@ -17,30 +18,47 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     console.log("Starting container", tag);
 
     if (environment === "production") {
-      await startVmInstance({
-        tag,
-        startupScript: `
-          # Run the tests
-          cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
-
-          #docker run \
-          #  --name ${tag} \
-          #  -e TAG=${tag} \
-          #  -e NODE_ENV=${environment} \
-          #  -e FIREBASE_PROJECT_ID=${firebaseProjectId} \
-          #  ${machineBuildImageName} \
-
-          # Remove environment file
-          rm -f .env
-
-          # Create environment file
-          echo "TAG=${tag}" > .env
-          echo "NODE_ENV=${environment}" >> .env
-          echo "FIREBASE_PROJECT_ID=${firebaseProjectId}" >> .env
-
-          ${isInfo ? "npm run info" : "npm run start"}
-        `,
-      });
+      if (tag.includes("info")) {
+        await startContainer({
+          Image: machineBuildImageName,
+          name: tag,
+          Env: [
+            `TAG=${tag}`,
+            `NODE_ENV=${environment}`,
+            `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
+            `FIREBASE_URL=host.docker.internal`,
+          ],
+          Cmd: ["npm", "run", "info"],
+          HostConfig: {
+            AutoRemove: true,
+          },
+        });
+      } else {
+        await startVmInstance({
+          tag,
+          startupScript: `
+            # Run the tests
+            cd /home/st/m_main/codecanyon/gmr_scrap/demo/selenium_machine
+  
+            #docker run \
+            #  --name ${tag} \
+            #  -e TAG=${tag} \
+            #  -e NODE_ENV=${environment} \
+            #  -e FIREBASE_PROJECT_ID=${firebaseProjectId} \
+            #  ${machineBuildImageName} \
+  
+            # Remove environment file
+            rm -f .env
+  
+            # Create environment file
+            echo "TAG=${tag}" > .env
+            echo "NODE_ENV=${environment}" >> .env
+            echo "FIREBASE_PROJECT_ID=${firebaseProjectId}" >> .env
+  
+            ${isInfo ? "npm run info" : "npm run start"}
+          `,
+        });
+      }
     }
 
     if (environment === "development") {
