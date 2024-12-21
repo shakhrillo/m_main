@@ -3,7 +3,6 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const { startContainer } = require("../controllers/dockerController");
 const { startVmInstance } = require("../controllers/googleController");
-const e = require("express");
 
 const environment = process.env.NODE_ENV || "development";
 const machineBuildImageName =
