@@ -4,7 +4,7 @@ export const spentTime = (placeInfo: any): string => {
   }
 
   const startMilliseconds = Number(placeInfo.createdAt)
-  const endMilliseconds = Number(placeInfo.updatedAt)
+  const endMilliseconds = Number(placeInfo.updatedAt || Date.now())
 
   // Ensure both values are valid numbers
   if (isNaN(startMilliseconds) || isNaN(endMilliseconds)) {

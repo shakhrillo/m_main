@@ -53,7 +53,7 @@ export const ReviewsForm = () => {
     reviews: "",
     screenshot: "",
     status: "",
-    createdAt: "",
+    createdAt: new Date(),
     updatedAt: "",
     stats: {},
   })
@@ -89,6 +89,23 @@ export const ReviewsForm = () => {
       alert("Something went wrong. Please try again.")
       setStep(0)
       setLoading(false)
+    } finally {
+      setInfo({
+        error: "",
+        url: scrap.url,
+        title: "",
+        subtitle: "",
+        address: "",
+        phone: "",
+        website: "",
+        rating: 0,
+        reviews: "",
+        screenshot: "",
+        status: "",
+        createdAt: new Date(),
+        updatedAt: "",
+        stats: {},
+      })
     }
   }
 
@@ -215,18 +232,6 @@ export const ReviewsForm = () => {
       case 1:
         return (
           <div>
-            <div className="d-flex alert alert-info gap-3">
-              {formatStats(info.stats)}
-              {/* <strong>
-                CPU: {info.cpuPercent}% | Memory: {info.memoryPercent}% | Memory
-                Usage: {info.memoryUsage} | Disk Read/Write:{" "}
-                {info.diskReadWrite}
-              </strong> */}
-            </div>
-            <div className="d-flex alert alert-primary">
-              <span className="me-auto">{info.status}</span>
-              Spend time: {spentTime(info)}
-            </div>
             {!info.title || loading ? (
               info.error ? (
                 <div className="card">
@@ -256,6 +261,7 @@ export const ReviewsForm = () => {
                       The process may take between 15 to 60 seconds. <br />
                       If it takes too long, please try again.
                     </small>
+                    <small>Spent time: {spentTime(info)}</small>
                   </div>
                 </div>
               )
@@ -306,6 +312,9 @@ export const ReviewsForm = () => {
                             >
                               Confirm
                             </button>
+                          </div>
+                          <div className="alert alert-info mt-3">
+                            Spent time: {spentTime(info)}
                           </div>
                         </div>
                       </div>
