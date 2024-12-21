@@ -16,7 +16,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
     const { tag } = req.data;
 
     console.log(
-      "Starting container",
+      "Starting container>>",
       tag,
       machineBuildImageName,
       firebaseProjectId
