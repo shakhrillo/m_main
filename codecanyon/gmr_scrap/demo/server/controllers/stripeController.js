@@ -9,7 +9,6 @@ exports.createCheckoutSession = async (req, res) => {
   let currency = "usd";
   let costs = 1;
   let unit_amount = amount;
-  console.log("--".repeat(20));
   const settings = await db.doc("app/settings").get();
 
   if (settings.exists) {
@@ -19,6 +18,10 @@ exports.createCheckoutSession = async (req, res) => {
   }
 
   unit_amount = unit_amount * costs;
+
+  console.log("Currency: ", currency);
+  console.log("Costs: ", costs);
+  console.log("Unit Amount: ", unit_amount);
 
   try {
     const { url } = await stripe.checkout.sessions.create({

@@ -1,37 +1,41 @@
 const axios = require("axios");
 const { createToken } = require("../utils/jwtUtils");
-const endPointURL = process.env.ENDPOINT_URL;
 
-const watchBuyCoins = async ({ params: { userId }, data }) => {
-  try {
-    const { amount } = data.data();
-
-    console.log("---".repeat(40));
-    console.log("watchBuyCoins:", userId, amount);
-    console.log("---".repeat(40));
-
-    const token = createToken({
-      userId,
-      amount,
-    });
-
-    const { url } = await axios.post(
-      `https://api.gmrscrap.store/stripe`,
-      { amount },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log("url", url);
-
-    // await data.ref.update({ url });
-  } catch (error) {
-    console.error("Error in watchBuyCoins:", error);
+const watchBuyCoins = async (event) => {
+  const isEmulator = process.env.FUNCTIONS_EMULATOR;
+  let endpointURL = "https://api.gmrscrap.store";
+  if (isEmulator) {
+    endpointURL = "http://localhost:1337";
   }
+
+  const snapshot = event.data;
+
+  if (!snapshot) {
+    console.log("No data associated with the event");
+    return;
+  }
+
+  const amount = snapshot.data().amount;
+  const userId = event.params.userId;
+
+  const token = createToken({
+    userId,
+    amount,
+  });
+
+  const data = await axios.post(
+    `${endpointURL}/stripe`,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const url = data.data.url;
+  await snapshot.ref.update({ url });
 };
 
 module.exports = watchBuyCoins;

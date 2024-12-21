@@ -1,7 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
-import menuIcon from "../assets/icons/list.svg"
-import { useMenu } from "../context/MenuContext/MenuContext"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { buyCoins, getPaymentsQuery } from "../services/firebaseService"
 
@@ -84,14 +82,9 @@ function Payments() {
     }
   }, [firestore])
 
-  const { toggleMenu } = useMenu()
-
   return (
     <div>
       <div className="d-flex align-items-center gap-3 py-3 my-5">
-        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
-          <img src={menuIcon} alt="menu-icon" />
-        </button>
         <h3 className="m-0">Payments</h3>
         <button className="button button-lg button-success ml-auto">
           {(userInformation?.coinBalance || 0)
