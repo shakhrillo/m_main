@@ -61,6 +61,7 @@ export const ReviewsForm = () => {
     url: "",
     limit: 30,
     sortBy: "Most relevant",
+    extractVideoUrls: false,
     extractImageUrls: false,
     ownerResponse: true,
     onlyGoogleReviews: false,
@@ -400,6 +401,73 @@ export const ReviewsForm = () => {
                     <div className="form-text" id="sortByHelp">
                       By default, reviews are sorted by relevance. And the
                       number of reviews is limited to less than 1000.
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="extractImageUrls"
+                        checked={scrap.extractImageUrls}
+                        onChange={() =>
+                          handleCheckboxChange("extractImageUrls")
+                        }
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="extractImageUrls"
+                      >
+                        Extract image URLs
+                      </label>
+                      <div className="form-text" id="extractImageUrlsHelp">
+                        Extract image URLs from reviews.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="extractVideoUrls"
+                        checked={scrap.extractVideoUrls}
+                        onChange={() =>
+                          handleCheckboxChange("extractVideoUrls")
+                        }
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="extractVideoUrls"
+                      >
+                        Extract video URLs
+                      </label>
+                      <div className="form-text" id="extractVideoUrlsHelp">
+                        Extract video URLs from reviews.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="ownerResponse"
+                        checked={scrap.ownerResponse}
+                        onChange={() => handleCheckboxChange("ownerResponse")}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="ownerResponse"
+                      >
+                        Owner response
+                      </label>
+                      <div className="form-text" id="ownerResponseHelp">
+                        Extract owner responses to reviews.
+                      </div>
                     </div>
                   </div>
 
