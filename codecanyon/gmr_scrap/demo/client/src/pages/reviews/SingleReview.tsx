@@ -6,13 +6,13 @@ function SingleReview() {
   return (
     <div className="container-fluid">
       <div className="row g-2">
-        <h3>Single Review</h3>
+        <h4>Single Review</h4>
         <div className="col-12">
           <ReviewInfo />
         </div>
-        <div className="col-12">
+        {/* <div className="col-12">
           <ReviewImages />
-        </div>
+        </div> */}
         <div className="col-12">
           <ReviewComments />
         </div>

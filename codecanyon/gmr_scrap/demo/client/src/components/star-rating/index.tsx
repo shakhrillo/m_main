@@ -4,9 +4,10 @@ import starHalfIcon from "../../assets/icons/star-half.svg"
 
 interface StarRatingProps {
   rating: number
+  size?: number
 }
 
-const StarRating = ({ rating }: StarRatingProps) => {
+const StarRating = ({ rating, size }: StarRatingProps) => {
   if (!rating || typeof rating !== "number") {
     return null
   }
@@ -31,6 +32,8 @@ const StarRating = ({ rating }: StarRatingProps) => {
                 : starIcon
           }
           alt="star"
+          width={`${size}px`}
+          height={`${size}px`}
         />
       ))}
     </div>

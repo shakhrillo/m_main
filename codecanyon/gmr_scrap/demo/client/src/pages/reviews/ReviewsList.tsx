@@ -127,7 +127,7 @@ const Dashboard: React.FC = () => {
                 {info.totalReviews ? info.totalReviews : "0"}
               </h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end ps-5 pe-5">
+            <li className="d-flex flex-column gap-2 border-end px-5">
               <span className="text-muted reviews__header__menu__item__span">
                 Owner responses
               </span>
@@ -135,7 +135,7 @@ const Dashboard: React.FC = () => {
                 {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
               </h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end ps-5 pe-5">
+            <li className="d-flex flex-column gap-2 border-end px-5">
               <span className="text-muted reviews__header__menu__item__span">
                 User comments
               </span>
@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
                 {info.totalUserReviews ? info.totalUserReviews : "0"}
               </h4>
             </li>
-            <li className="d-flex flex-column gap-2 ps-5 pe-5">
+            <li className="d-flex flex-column gap-2 px-5">
               <span className="text-muted reviews__header__menu__item__span">
                 Images
               </span>

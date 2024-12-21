@@ -1,0 +1,37 @@
+.single-review {
+  &__place {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  &__address {
+    font-size: 14px;
+  }
+
+  &__info__title {
+    font-weight: 600;
+  }
+  &__info__subtitle {
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  &__devider {
+    color: #dee2e6;
+    opacity: 1;
+  }
+
+  &__export {
+    .btn {
+      &.active,
+      .btn:not(:last-child):not(.dropdown-toggle) {
+        border-radius: 10px;
+        color: #6c757d;
+      }
+    }
+    &__format {
+      .btn {
+        width: 130px;
+      }
+    }
+  }
+}
