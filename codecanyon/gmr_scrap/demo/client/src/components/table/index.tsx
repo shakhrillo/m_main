@@ -3,12 +3,14 @@ export const Table: React.FC<{
   tableBody: any[]
 }> = ({ tableHeader, tableBody }) => {
   return (
-    <table className="table table-striped table-hover">
+    <table className="table table-hover">
       <thead>
         <tr>
-          <th>#</th>
+          <th className="text-secondary">#</th>
           {tableHeader.map((item, index) => (
-            <th key={index}>{item.text}</th>
+            <th className="text-uppercase text-secondary" key={index}>
+              {item.text}
+            </th>
           ))}
         </tr>
       </thead>

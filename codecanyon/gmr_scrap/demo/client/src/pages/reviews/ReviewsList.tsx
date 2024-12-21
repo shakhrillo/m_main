@@ -8,12 +8,15 @@ import { formatTimestamp } from "../../utils/formatTimestamp"
 import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
+import serverBoltIcon from "../../assets/icons/server-bolt.svg"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
   const { firestore, user } = useFirebase()
   const [info, setInfo] = useState<any>({})
   const [completedReviews, setCompletedReviews] = useState<any[]>([])
+  const [activeTableFilter, setActiveTableFilter] = useState("all")
+
   const tableColumns = [
     {
       text: "Status",
@@ -106,54 +109,87 @@ const Dashboard: React.FC = () => {
   }, [firestore, user])
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid reviews">
       <div className="row">
-        <h3>Reviews</h3>
-        <div className="col-12">
-          <ul className="list-group list-group-horizontal">
-            <li className="list-group-item">
-              <span>All comments</span>
-              <div className="display-3">
+        <div className="d-flex gap-2">
+          <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
+            <img src={serverBoltIcon} alt="icon" width={"18px"} />
+          </div>
+          <h4 className="reviews__title">Reviews</h4>
+        </div>
+        <div className="col-12 mt-3 reviews__header">
+          <ul className="d-flex p-0 list-unstyled reviews__header__menu">
+            <li className="d-flex flex-column gap-2 border-end pe-5 reviews__header__menu__item">
+              <span className="text-muted reviews__header__menu__item__span">
+                All comments
+              </span>
+              <h4 className="reviews__header__menu__item__heading">
                 {info.totalReviews ? info.totalReviews : "0"}
-              </div>
+              </h4>
             </li>
-            <li className="list-group-item">
-              <span>Owner responses</span>
-              <div className="display-3">
+            <li className="d-flex flex-column gap-2 border-end ps-5 pe-5">
+              <span className="text-muted reviews__header__menu__item__span">
+                Owner responses
+              </span>
+              <h4 className="reviews__header__menu__item__heading">
                 {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
-              </div>
+              </h4>
             </li>
-            <li className="list-group-item">
-              <span>User comments</span>
-              <div className="display-3">
+            <li className="d-flex flex-column gap-2 border-end ps-5 pe-5">
+              <span className="text-muted reviews__header__menu__item__span">
+                User comments
+              </span>
+              <h4 className="reviews__header__menu__item__heading">
                 {info.totalUserReviews ? info.totalUserReviews : "0"}
-              </div>
+              </h4>
             </li>
-            <li className="list-group-item">
-              <span>Images</span>
-              <div className="display-3">
+            <li className="d-flex flex-column gap-2 ps-5 pe-5">
+              <span className="text-muted reviews__header__menu__item__span">
+                Images
+              </span>
+              <h4 className="reviews__header__menu__item__heading">
                 {info.totalImages ? info.totalImages : "0"}
-              </div>
+              </h4>
             </li>
           </ul>
         </div>
-        <div className="col-12">
-          <div className="btn-group my-3">
-            <a href="#" className="btn btn-primary active" aria-current="page">
+        <div className="col-12 border-bottom review__table">
+          <div className="btn-group reviews__table__filter mt-3">
+            <button
+              type={"button"}
+              className={`btn ${activeTableFilter === "all" ? "active" : ""} reviews__table__filter__btn`}
+              aria-current="page"
+              onClick={() => setActiveTableFilter("all")}
+            >
               All
-            </a>
-            <a href="#" className="btn btn-primary">
+            </button>
+            <button
+              type={"button"}
+              className={`btn ${activeTableFilter === "completed" ? "active" : ""} reviews__table__filter__btn`}
+              aria-current="page"
+              onClick={() => setActiveTableFilter("completed")}
+            >
               Completed
-            </a>
-            <a href="#" className="btn btn-primary">
+            </button>
+            <button
+              type={"button"}
+              className={`btn ${activeTableFilter === "pending" ? "active" : ""} reviews__table__filter__btn`}
+              aria-current="page"
+              onClick={() => setActiveTableFilter("pending")}
+            >
               Pending
-            </a>
-            <a href="#" className="btn btn-primary">
+            </button>
+            <button
+              type={"button"}
+              className={`btn ${activeTableFilter === "failed" ? "active" : ""} reviews__table__filter__btn`}
+              aria-current="page"
+              onClick={() => setActiveTableFilter("failed")}
+            >
               Failed
-            </a>
+            </button>
           </div>
         </div>
-        <div className="col-12">
+        <div className="col-12 mt-4">
           <Table tableHeader={tableColumns} tableBody={completedReviews} />
         </div>
       </div>
