@@ -118,20 +118,20 @@ const Dashboard: React.FC = () => {
           <h4>Reviews</h4>
         </div>
         <div className="col-12 mt-3 reviews__header">
-          <ul className="d-flex p-0 list-unstyled reviews__header__menu">
-            <li className="d-flex flex-column gap-2 border-end pe-5 reviews__header__menu__item">
+          <ul className="d-flex p-0 list-unstyled">
+            <li className="d-flex flex-column gap-2 border-end pe-5">
               <span className="text-muted">All comments</span>
               <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end px-5 reviews__header__menu__item">
+            <li className="d-flex flex-column gap-2 border-end px-5">
               <span className="text-muted">Owner responses</span>
               <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end px-5 reviews__header__menu__item">
+            <li className="d-flex flex-column gap-2 border-end px-5">
               <span className="text-muted">User comments</span>
               <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 px-5 reviews__header__menu__item">
+            <li className="d-flex flex-column gap-2 px-5">
               <span className="text-muted">Images</span>
               <h4>{info.totalImages ? info.totalImages : "0"}</h4>
             </li>
@@ -141,7 +141,7 @@ const Dashboard: React.FC = () => {
           <div className="btn-group reviews__table__filter mt-3">
             <button
               type={"button"}
-              className={`btn ${activeTableFilter === "all" ? "active" : ""} reviews__table__filter__btn`}
+              className={`btn ${activeTableFilter === "all" ? "active" : ""}`}
               aria-current="page"
               onClick={() => setActiveTableFilter("all")}
             >
@@ -149,7 +149,7 @@ const Dashboard: React.FC = () => {
             </button>
             <button
               type={"button"}
-              className={`btn ${activeTableFilter === "completed" ? "active" : ""} reviews__table__filter__btn`}
+              className={`btn ${activeTableFilter === "completed" ? "active" : ""}`}
               aria-current="page"
               onClick={() => setActiveTableFilter("completed")}
             >
@@ -157,7 +157,7 @@ const Dashboard: React.FC = () => {
             </button>
             <button
               type={"button"}
-              className={`btn ${activeTableFilter === "pending" ? "active" : ""} reviews__table__filter__btn`}
+              className={`btn ${activeTableFilter === "pending" ? "active" : ""}`}
               aria-current="page"
               onClick={() => setActiveTableFilter("pending")}
             >
@@ -165,7 +165,7 @@ const Dashboard: React.FC = () => {
             </button>
             <button
               type={"button"}
-              className={`btn ${activeTableFilter === "failed" ? "active" : ""} reviews__table__filter__btn`}
+              className={`btn ${activeTableFilter === "failed" ? "active" : ""}`}
               aria-current="page"
               onClick={() => setActiveTableFilter("failed")}
             >
