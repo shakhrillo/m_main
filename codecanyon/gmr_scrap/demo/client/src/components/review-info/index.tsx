@@ -29,30 +29,12 @@ function ReviewInfo() {
     <div>
       <div className="row g-0">
         <div className="col-md-7">
-          <div className="d-flex flex-column h-100 single-review">
+          <div className="d-flex flex-column h-100">
             <h2>{info.title}</h2>
-            <p className="card-text text-muted single-review__address">
-              {info.address}
-            </p>
-            <div className="single-review__export">
-              {/* <div className="border d-inline-flex p-1 w-auto rounded single-review__export__format">
-                <button
-                  className={`btn btn-sm ${fileFormat === "json" ? "border-secondary" : ""}`}
-                  onClick={() => setFileFormat("json")}
-                >
-                  JSON
-                </button>
-                <button
-                  className={`btn btn-sm ${fileFormat === "csv" ? "border-secondary" : ""}`}
-                  onClick={() => setFileFormat("csv")}
-                >
-                  CSV
-                </button>
-              </div> */}
-              <button type="button" className="btn btn-primary btn-lg">
-                Download
-              </button>
-            </div>
+            <p className="card-text text-muted">{info.address}</p>
+            {/* <button type="button" className="btn btn-primary btn-lg">
+              Download
+            </button> */}
             <ul className="row list-unstyled mt-auto">
               <li className="col-2 d-flex flex-column border-end px-4">
                 <span className="single-review__info__title">Status</span>
