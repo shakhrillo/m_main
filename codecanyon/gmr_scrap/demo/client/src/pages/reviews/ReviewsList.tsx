@@ -115,41 +115,25 @@ const Dashboard: React.FC = () => {
           <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
             <img src={serverBoltIcon} alt="icon" width={"18px"} />
           </div>
-          <h4 className="reviews__title">Reviews</h4>
+          <h4>Reviews</h4>
         </div>
         <div className="col-12 mt-3 reviews__header">
           <ul className="d-flex p-0 list-unstyled reviews__header__menu">
             <li className="d-flex flex-column gap-2 border-end pe-5 reviews__header__menu__item">
-              <span className="text-muted reviews__header__menu__item__span">
-                All comments
-              </span>
-              <h4 className="reviews__header__menu__item__heading">
-                {info.totalReviews ? info.totalReviews : "0"}
-              </h4>
+              <span className="text-muted">All comments</span>
+              <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end px-5">
-              <span className="text-muted reviews__header__menu__item__span">
-                Owner responses
-              </span>
-              <h4 className="reviews__header__menu__item__heading">
-                {info.totalOwnerReviews ? info.totalOwnerReviews : "0"}
-              </h4>
+            <li className="d-flex flex-column gap-2 border-end px-5 reviews__header__menu__item">
+              <span className="text-muted">Owner responses</span>
+              <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 border-end px-5">
-              <span className="text-muted reviews__header__menu__item__span">
-                User comments
-              </span>
-              <h4 className="reviews__header__menu__item__heading">
-                {info.totalUserReviews ? info.totalUserReviews : "0"}
-              </h4>
+            <li className="d-flex flex-column gap-2 border-end px-5 reviews__header__menu__item">
+              <span className="text-muted">User comments</span>
+              <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
             </li>
-            <li className="d-flex flex-column gap-2 px-5">
-              <span className="text-muted reviews__header__menu__item__span">
-                Images
-              </span>
-              <h4 className="reviews__header__menu__item__heading">
-                {info.totalImages ? info.totalImages : "0"}
-              </h4>
+            <li className="d-flex flex-column gap-2 px-5 reviews__header__menu__item">
+              <span className="text-muted">Images</span>
+              <h4>{info.totalImages ? info.totalImages : "0"}</h4>
             </li>
           </ul>
         </div>

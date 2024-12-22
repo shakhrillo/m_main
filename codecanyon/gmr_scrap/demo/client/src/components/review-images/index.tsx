@@ -44,7 +44,7 @@ function ReviewImages() {
   ) : error ? (
     <div>{error}</div>
   ) : (
-    <div className="row row-cols-6 g-0">
+    <div className="row row-cols-6 g-2">
       {reviewImgs.map((img, index) => (
         <div className="col" key={index}>
           <a

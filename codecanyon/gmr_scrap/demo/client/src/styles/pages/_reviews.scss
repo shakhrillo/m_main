@@ -4,7 +4,7 @@
     height: 36px;
   }
 
-  &__title {
+  h4 {
     margin: 0;
     line-height: unset;
   }
@@ -12,10 +12,10 @@
   &__header {
     &__menu {
       &__item {
-        &__span {
+        span {
           font-size: 14px;
         }
-        &__heading {
+        h4 {
           font-size: 20px;
           font-weight: 600;
         }
