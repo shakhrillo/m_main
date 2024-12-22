@@ -199,33 +199,39 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="card">
-            <div className="card-body">
+          <div className="mt-4">
+            <div className="">
               <form onSubmit={handleGetInfo}>
                 <div className="mb-3">
                   <label htmlFor="url" className="form-label">
                     URL <span className="required">*</span>
                   </label>
-                  <input
-                    type="text"
-                    id="url"
-                    value={scrap.url}
-                    onChange={e => handleInputChange("url", e.target.value)}
-                    placeholder="https://maps.app.goo.gl/..."
-                    disabled={loading}
-                    className="form-control"
-                  />
+                  <div className="row">
+                    <div className="col-md-4">
+                      <input
+                        type="text"
+                        id="url"
+                        value={scrap.url}
+                        onChange={e => handleInputChange("url", e.target.value)}
+                        placeholder="https://maps.app.goo.gl/..."
+                        disabled={loading}
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        disabled={loading || !isUrlValid}
+                      >
+                        Validate URL
+                      </button>
+                    </div>
+                  </div>
                   <div className="form-text" id="urlHelp">
                     Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
                   </div>
                 </div>
-                <button
-                  className="btn btn-primary"
-                  type="submit"
-                  disabled={loading || !isUrlValid}
-                >
-                  Validate URL
-                </button>
               </form>
             </div>
           </div>
@@ -267,40 +273,72 @@ export const ReviewsForm = () => {
                 </div>
               )
             ) : (
-              <div className="d-flex">
+              <div className="d-flex mt-5">
                 <div className="d-flex-column w-100">
-                  <div className="card">
+                  <div className="">
                     <div className="row g-0">
-                      <div className="col-md-6">
+                      <div className="col-md-7">
                         <div className="card-body d-flex flex-column h-100">
-                          <h5 className="card-title">{info.title}</h5>
+                          <h2>{info.title}</h2>
                           <p className="card-text text-muted">{info.address}</p>
-                          <div className="d-flex align-items-center gap-3">
-                            <StarRating rating={info.rating} />
-                            <strong>{info.rating ? info.rating : "N/A"}</strong>
-                            <small>Average user rating</small>
-                          </div>
-                          <ul className="list-unstyled d-flex gap-5 mt-auto">
-                            <li>
-                              <h3 className="my-0">
-                                {(info.reviews || "0").toLocaleString()}
-                              </h3>
-                              <p>Reviews</p>
+                          <ul className="row list-unstyled mt-auto single-review__info">
+                            {/* <li className="col-2 d-flex flex-column border-end px-4">
+                              <p>Status</p>
+                              <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+                                {statusRender(info.status, { width: 50, height: 50 })}
+                              </div>
+                            </li> */}
+                            <li className="col d-flex flex-column border-end px-3">
+                              <p>Average Rating</p>
+                              <div className="d-flex gap-2 align-items-center my-2">
+                                <h2 className="m-0">
+                                  {info.rating ? info.rating : "N/A"}
+                                </h2>
+                                <StarRating rating={info.rating} size={18} />
+                              </div>
+                              <span className="text-muted single-review__info__subtitle">
+                                Avarage rating for this place
+                              </span>
                             </li>
-                            <li>
-                              <h3 className="my-0">
-                                +{" "}
-                                {Math.ceil(
-                                  (parseInt(info.reviews || "0") * 3) / 60,
-                                ).toLocaleString()}{" "}
-                                min
-                              </h3>
+                            <li className="col d-flex flex-column border-end px-3">
+                              <p>Reviews</p>
+                              <div className="d-flex gap-2 align-items-center">
+                                <h2 className="m-0 my-2">
+                                  {info.reviews || 0}
+                                </h2>
+                              </div>
+                              <span className="text-muted single-review__info__subtitle">
+                                Count of extracted reviews
+                              </span>
+                            </li>
+                            <li className="col d-flex flex-column border-end px-3">
+                              <p>Spent time</p>
+                              <div className="d-flex gap-2 align-items-center my-2">
+                                <h2 className="m-0">{spentTime(info)}</h2>
+                              </div>
+                              <span className="text-muted single-review__info__subtitle">
+                                Spended time for this question
+                              </span>
+                            </li>
+                            <li className="col d-flex flex-column border-end px-3">
                               <p>Expected time</p>
+                              <div className="d-flex gap-2 align-items-center my-2">
+                                <h2 className="m-0">
+                                  +{" "}
+                                  {Math.ceil(
+                                    (parseInt(info.reviews || "0") * 3) / 60,
+                                  ).toLocaleString()}{" "}
+                                  min
+                                </h2>
+                              </div>
+                              <span className="text-muted single-review__info__subtitle">
+                                Spended time for this question
+                              </span>
                             </li>
                           </ul>
-                          <div className="d-flex">
+                          <div className="flex-row mt-5">
                             <button
-                              className="btn btn-outline-danger"
+                              className="btn btn-outline-danger me-2"
                               onClick={() => setStep(0)}
                               disabled={loading || !info.title}
                             >
@@ -314,12 +352,12 @@ export const ReviewsForm = () => {
                               Confirm
                             </button>
                           </div>
-                          <div className="alert alert-info mt-3">
+                          {/* <div className="alert alert-info mt-3">
                             Spent time: {spentTime(info)}
-                          </div>
+                          </div> */}
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-5">
                         <div
                           style={{
                             height: 400,
@@ -339,72 +377,76 @@ export const ReviewsForm = () => {
       case 2:
         return (
           <div>
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">{info.title}</h5>
-                <p className="card-text text-muted">
+            <div className="mt-5">
+              <div className="">
+                <h2>{info.title}</h2>
+                <p className="card-text text-muted">{info.address}</p>
+                <small>
+                  <a href={info.url} target="_blank" rel="noreferrer">
+                    {info.url}
+                  </a>
+                </small>
+                {/* <h5 className="card-title">{info.title}</h5> */}
+                {/* <p className="card-text text-muted">
                   {info.address}
                   <br />
-                  <small>
-                    <a href={info.url} target="_blank" rel="noreferrer">
-                      {info.url}
-                    </a>
-                  </small>
-                </p>
+                </p> */}
                 <form onSubmit={handleStartScraping}>
-                  <div className="mb-3">
-                    <label htmlFor="limit" className="form-label">
-                      Limit
-                    </label>
-                    <input
-                      className="form-control"
-                      type="number"
-                      id="limit"
-                      value={scrap.limit}
-                      // disabled={true}
-                      onChange={e =>
-                        handleInputChange("limit", Number(e.target.value))
-                      }
-                    />
-                    <div className="form-text" id="limitHelp">
-                      Available reviews:{" "}
-                      {(info.reviews || "0").toLocaleString()} <br />
-                      Maximum reviews that can be scraped depends on the
-                      Machine's memory
+                  <div className="d-flex mt-5 gap-4">
+                    <div className="mb-3 card p-3 w-50">
+                      <label htmlFor="limit" className="form-label">
+                        Limit
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        id="limit"
+                        value={scrap.limit}
+                        // disabled={true}
+                        onChange={e =>
+                          handleInputChange("limit", Number(e.target.value))
+                        }
+                      />
+                      <div className="form-text" id="limitHelp">
+                        Available reviews:{" "}
+                        {(info.reviews || "0").toLocaleString()} <br />
+                        Maximum reviews that can be scraped depends on the
+                        Machine's memory
+                      </div>
+                    </div>
+
+                    <div className="mb-3 card p-3 w-50">
+                      <label htmlFor="sortBy" className="form-label">
+                        Sort by
+                      </label>
+                      <select
+                        disabled={loading}
+                        id="sortBy"
+                        value={scrap.sortBy}
+                        onChange={e =>
+                          handleInputChange("sortBy", e.target.value)
+                        }
+                        className="form-select"
+                      >
+                        {[
+                          "Most relevant",
+                          "Newest",
+                          "Lowest rating",
+                          "Highest rating",
+                        ].map((option, i) => (
+                          <option key={i} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="form-text" id="sortByHelp">
+                        By default, reviews are sorted by relevance. And the
+                        number of reviews is limited to less than 1000.
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="sortBy" className="form-label">
-                      Sort by
-                    </label>
-                    <select
-                      disabled={loading}
-                      id="sortBy"
-                      value={scrap.sortBy}
-                      onChange={e =>
-                        handleInputChange("sortBy", e.target.value)
-                      }
-                      className="form-select"
-                    >
-                      {[
-                        "Most relevant",
-                        "Newest",
-                        "Lowest rating",
-                        "Highest rating",
-                      ].map((option, i) => (
-                        <option key={i} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="form-text" id="sortByHelp">
-                      By default, reviews are sorted by relevance. And the
-                      number of reviews is limited to less than 1000.
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
+                  <div className="mb-3 mt-4">
                     <div className="form-check">
                       <input
                         className="form-check-input"
@@ -471,9 +513,9 @@ export const ReviewsForm = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex">
+                  <div className="mt-4">
                     <button
-                      className="btn btn-outline-danger"
+                      className="btn btn-outline-danger me-3"
                       onClick={() => setStep(0)}
                       disabled={loading}
                     >
@@ -499,7 +541,7 @@ export const ReviewsForm = () => {
 
   return (
     <div>
-      <div className="progress">
+      {/* <div className="progress mt-3 px-2">
         {steps.map((s, i) => (
           <div
             key={i}
@@ -510,7 +552,7 @@ export const ReviewsForm = () => {
             <div className="progress__text">{s.title}</div>
           </div>
         ))}
-      </div>
+      </div> */}
       {renderStepContent()}
     </div>
   )
