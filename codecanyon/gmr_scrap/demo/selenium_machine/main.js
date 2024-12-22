@@ -149,6 +149,7 @@ async function init() {
       await driver.sleep(400);
       await driver.executeScript(scrollToContainer);
     } catch (error) {
+      retriesCount++;
       console.error("Error in while loop");
     } finally {
       console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
