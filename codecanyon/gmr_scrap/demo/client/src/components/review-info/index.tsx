@@ -35,17 +35,15 @@ function ReviewInfo() {
             {/* <button type="button" className="btn btn-primary btn-lg">
               Download
             </button> */}
-            <ul className="row list-unstyled mt-auto">
+            <ul className="row list-unstyled mt-auto single-review__info">
               <li className="col-2 d-flex flex-column border-end px-4">
-                <span className="single-review__info__title">Status</span>
+                <p>Status</p>
                 <div className="w-100 h-100 d-flex align-items-center justify-content-center">
                   {statusRender(info.status, { width: 50, height: 50 })}
                 </div>
               </li>
               <li className="col d-flex flex-column border-end px-3">
-                <span className="single-review__info__title">
-                  Average Rating
-                </span>
+                <p>Average Rating</p>
                 <div className="d-flex gap-2 align-items-center my-2">
                   <h2 className="m-0">{info.rating ? info.rating : "N/A"}</h2>
                   <StarRating rating={info.rating} size={18} />
@@ -55,9 +53,7 @@ function ReviewInfo() {
                 </span>
               </li>
               <li className="col d-flex flex-column border-end px-3">
-                <span className="single-review__info__title">
-                  Extracted Reviews
-                </span>
+                <p>Extracted Reviews</p>
                 <div className="d-flex gap-2 align-items-center">
                   <h2 className="m-0 my-2">{info.totalReviews || 0}</h2>
                 </div>
@@ -66,7 +62,7 @@ function ReviewInfo() {
                 </span>
               </li>
               <li className="col d-flex flex-column border-end px-3">
-                <span className="single-review__info__title">Spent time</span>
+                <p>Spent time</p>
                 <div className="d-flex gap-2 align-items-center my-2">
                   <h2 className="m-0">{spentTime(info)}</h2>
                 </div>

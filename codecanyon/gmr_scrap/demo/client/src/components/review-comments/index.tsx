@@ -106,14 +106,6 @@ function ReviewComments() {
         </button>
         <button
           type={"button"}
-          className={`btn ${activeTableFilter === "pending" ? "active" : ""} reviews__table__filter__btn`}
-          aria-current="page"
-          onClick={() => setActiveTableFilter("pending")}
-        >
-          Pending
-        </button>
-        <button
-          type={"button"}
           className={`btn ${activeTableFilter === "videos" ? "active" : ""} reviews__table__filter__btn`}
           aria-current="page"
           onClick={() => setActiveTableFilter("videos")}
@@ -128,8 +120,6 @@ function ReviewComments() {
       ) : (
         <div></div>
       )}
-      {/* <div className="col-12"> */}
-      {/* </div> */}
     </div>
   )
 }
