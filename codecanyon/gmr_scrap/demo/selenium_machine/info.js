@@ -17,7 +17,13 @@ if (!tag) {
 async function init() {
   console.log("Tag:", tag);
   const data = await getMachineData(tag);
-  const driver = await getDriver();
+  const driver = await getDriver({
+    timeouts: {
+      implicit: 5000,
+      pageLoad: 5000,
+      script: 5000,
+    },
+  });
   console.log("Data:", data);
 
   // -----------------

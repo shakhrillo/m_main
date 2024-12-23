@@ -2,7 +2,9 @@ const fs = require("fs");
 const { Builder, Browser } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 
-async function getDriver() {
+async function getDriver({
+  timeouts = { implicit: 60000, pageLoad: 60000, script: 60000 },
+}) {
   const options = new chrome.Options();
   options.setLoggingPrefs({ browser: "ALL" });
   const chromePath = "/usr/bin/chromium-browser";
@@ -23,11 +25,7 @@ async function getDriver() {
     .forBrowser(Browser.CHROME)
     .build();
 
-  await driver.manage().setTimeouts({
-    implicit: 60000,
-    pageLoad: 60000,
-    script: 60000,
-  });
+  await driver.manage().setTimeouts(timeouts);
 
   return driver;
 }
