@@ -7,14 +7,10 @@ async function getDriver({
 }) {
   const options = new chrome.Options();
   options.setLoggingPrefs({ browser: "ALL" });
+  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   const chromePath = "/usr/bin/chromium-browser";
   if (fs.existsSync(chromePath)) {
     options.setChromeBinaryPath(chromePath);
-    options.addArguments(
-      "--headless",
-      "--no-sandbox",
-      "--disable-dev-shm-usage"
-    );
   } else {
     console.error("Chrome path not found:", chromePath);
   }
