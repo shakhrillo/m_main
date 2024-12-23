@@ -19,8 +19,8 @@ async function init() {
   const data = await getMachineData(tag);
   const driver = await getDriver({
     timeouts: {
-      implicit: 5000,
-      pageLoad: 5000,
+      implicit: 45000,
+      pageLoad: 45000,
       script: 5000,
     },
   });
