@@ -199,15 +199,46 @@ export const ReviewsForm = () => {
     switch (step) {
       case 0:
         return (
-          <div className="mt-4">
-            <div className="">
+          <div className="mt-4 scrap">
+            <div className="container">
               <form onSubmit={handleGetInfo}>
-                <div className="mb-3">
-                  <label htmlFor="url" className="form-label">
-                    URL <span className="required">*</span>
-                  </label>
-                  <div className="row">
-                    <div className="col-md-4">
+                <div className="mb-3 text-center">
+                  <div className="scrap__header">
+                    <h3>Scrap Reviews</h3>
+                    <span className="text-muted">
+                      For scraping complate this steps
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-center gap-5 my-5 scrap__steps">
+                    <div className="border border-primary d-flex gap-2 justify-content-center align-items-center scrap__steps__item">
+                      <div className="border border-primary d-flex align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                        1
+                      </div>
+                      <span>URL validation</span>
+                    </div>
+                    <div className="d-flex gap-2 justify-content-center align-items-center border scrap__steps__item">
+                      <div className="border d-flex text-muted align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                        2
+                      </div>
+                      <span className="text-muted">Information</span>
+                    </div>
+                    <div className="d-flex gap-2 justify-content-center align-items-center border scrap__steps__item">
+                      <div className="border d-flex text-muted align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                        3
+                      </div>
+                      <span className="text-muted">Result</span>
+                    </div>
+                  </div>
+
+                  <div className="text-start scrap__content">
+                    <div className="scrap__content__header">
+                      <p className="m-0 text-muted">Step 1</p>
+                      <h6>URL validation</h6>
+                    </div>
+                    <div className="mt-3 scrap__content__body">
+                      <label htmlFor="url" className="form-label">
+                        URL <span className="required">*</span>
+                      </label>
                       <input
                         type="text"
                         id="url"
@@ -215,21 +246,19 @@ export const ReviewsForm = () => {
                         onChange={e => handleInputChange("url", e.target.value)}
                         placeholder="https://maps.app.goo.gl/..."
                         disabled={loading}
-                        className="form-control"
+                        className="form-control col"
                       />
-                    </div>
-                    <div className="col-md-4">
+                      <div className="form-text" id="urlHelp">
+                        Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
+                      </div>
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-primary col-2 mt-3"
                         type="submit"
                         disabled={loading || !isUrlValid}
                       >
                         Validate URL
                       </button>
                     </div>
-                  </div>
-                  <div className="form-text" id="urlHelp">
-                    Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
                   </div>
                 </div>
               </form>
