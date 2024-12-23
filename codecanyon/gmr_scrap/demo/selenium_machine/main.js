@@ -104,6 +104,7 @@ async function init() {
   await driver.executeScript(extracterString);
 
   const extractedReviews = [];
+  let gmrScrap = {};
   let retriesCount = 0;
 
   while (extractedReviews.length < data.limit && retriesCount < 20) {
@@ -138,6 +139,7 @@ async function init() {
       if (extractedReviews.length >= data.limit) {
         break;
       }
+      gmrScrap = await driver.executeScript(`return window.gmrScrap`);
     } catch (error) {
       retriesCount++;
       console.error("Error in while loop");
@@ -157,8 +159,7 @@ async function init() {
   console.log("-".repeat(20));
   console.log("Completed");
   console.log("-".repeat(20));
-  // extractedImages
-  const gmrScrap = await driver.executeScript(`return window.gmrScrap`);
+
   let csvUrl = "";
   let jsonUrl = "";
   if (extractedReviews.length > 0) {
@@ -186,11 +187,11 @@ async function init() {
   updateMachineData(tag, {
     csvUrl,
     jsonUrl,
-    totalReviews: extractedReviews.length,
-    totalReviewsScraped: totalReviews,
-    totalImages: gmrScrap["extractedImages"].length,
-    totalOwnerReviews: gmrScrap["extractedOwnerReviewCount"],
-    totalUserReviews: gmrScrap["extractedUserReviewCount"],
+    totalReviews: extractedReviews.length || 0,
+    totalReviewsScraped: totalReviews || 0,
+    totalImages: gmrScrap["extractedImages"].length || 0,
+    totalOwnerReviews: gmrScrap["extractedOwnerReviewCount"] || 0,
+    totalUserReviews: gmrScrap["extractedUserReviewCount"] || 0,
     status: "completed",
   });
 
