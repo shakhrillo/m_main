@@ -20,6 +20,11 @@
         height: 20px;
       }
 
+      &:nth-child(2).second-step {
+        &:nth-child(2)::after {
+          background-color: #007bff;
+        }
+      }
       &:nth-child(2) {
         position: relative;
 
@@ -46,6 +51,7 @@
     }
   }
   &__content {
+    position: relative;
     &__header {
       border-bottom: 1px solid #dee2e6;
       p {
@@ -61,6 +67,20 @@
       label {
         font-size: 12px;
       }
+    }
+    &__dim {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 999;
+      background-color: rgba(
+        255,
+        255,
+        255,
+        0.5
+      ); /* A light transparent overlay */
+      backdrop-filter: blur(1.2px); /* Adjust the blur intensity */
+      -webkit-backdrop-filter: blur(1.5px); /* For Safari support */
     }
   }
 }

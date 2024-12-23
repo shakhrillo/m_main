@@ -81,7 +81,6 @@ export const ReviewsForm = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      setStep(1)
       const overviewId = await startExtractGmapReviewsOverview(user!.uid, scrap)
       setOverviewId(overviewId)
       localStorage.setItem("overviewId", overviewId)
@@ -91,6 +90,7 @@ export const ReviewsForm = () => {
       setStep(0)
       setLoading(false)
     } finally {
+      setStep(1)
       setInfo({
         error: "",
         url: scrap.url,
@@ -231,6 +231,48 @@ export const ReviewsForm = () => {
                   </div>
 
                   <div className="text-start scrap__content">
+                    {
+                      // !info.title ||
+                      loading ? (
+                        <div className="scrap__content__dim d-flex align-items-center justify-content-center">
+                          {info.error ? (
+                            <div>
+                              <div>
+                                <div className="alert alert-danger">
+                                  <strong>Error:</strong> {info.error} <br />
+                                  Please try again. Make sure the URL is correct
+                                  and the place is available on Google Maps.
+                                </div>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => {
+                                    setOverviewId("")
+                                    localStorage.removeItem("overviewId")
+                                    setStep(0)
+                                  }}
+                                >
+                                  Try again
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="text-center">
+                                <Loader />
+                                <small className="text-muted">
+                                  The process may take between 15 to 60 seconds.{" "}
+                                  <br />
+                                  If it takes too long, please try again.
+                                </small>
+                                <small>Spent time: {spentTime(info)}</small>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div></div>
+                      )
+                    }
                     <div className="scrap__content__header">
                       <p className="m-0 text-muted">Step 1</p>
                       <h6>URL validation</h6>
@@ -267,8 +309,8 @@ export const ReviewsForm = () => {
         )
       case 1:
         return (
-          <div>
-            {!info.title || loading ? (
+          <div className="text-center">
+            {/* {!info.title || loading ? (
               info.error ? (
                 <div className="card">
                   <div className="card-body">
@@ -301,106 +343,131 @@ export const ReviewsForm = () => {
                   </div>
                 </div>
               )
-            ) : (
-              <div className="d-flex mt-5">
-                <div className="d-flex-column w-100">
-                  <div className="">
-                    <div className="row g-0">
-                      <div className="col-md-7">
-                        <div className="card-body d-flex flex-column h-100">
-                          <h2>{info.title}</h2>
-                          <p className="card-text text-muted">{info.address}</p>
-                          <ul className="row list-unstyled mt-auto single-review__info">
-                            {/* <li className="col-2 d-flex flex-column border-end px-4">
+            ) : ( */}
+            <div className="scrap__header">
+              <h3>Scrap Reviews</h3>
+              <span className="text-muted">
+                For scraping complate this steps
+              </span>
+            </div>
+            <div className="d-flex justify-content-center gap-5 my-5 scrap__steps">
+              <div className="border border-primary d-flex gap-2 justify-content-center align-items-center scrap__steps__item">
+                <div className="border border-primary d-flex align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                  1
+                </div>
+                <span>URL validation</span>
+              </div>
+              <div className="border border-primary d-flex gap-2 justify-content-center align-items-center scrap__steps__item second-step">
+                <div className="border border-primary d-flex align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                  2
+                </div>
+                <span>Information</span>
+              </div>
+              <div className="d-flex gap-2 justify-content-center align-items-center border scrap__steps__item">
+                <div className="border d-flex text-muted align-items-center justify-content-center rounded-circle scrap__steps__item__number">
+                  3
+                </div>
+                <span className="text-muted">Result</span>
+              </div>
+            </div>
+            <div className="d-flex mt-5 text-start w-100">
+              <div className="d-flex-column w-100 h-10">
+                <div className="">
+                  <div className="row g-0">
+                    <div>
+                      <div
+                        style={{
+                          height: 200,
+                          backgroundImage: `url(${info.screenshot})`,
+                          backgroundPosition: "center",
+                          backgroundSize: "cover",
+                          borderRadius: 10,
+                        }}
+                      ></div>
+                    </div>
+                    <div>
+                      <div className="card-body d-flex flex-column h-100 mt-4">
+                        <h2>{info.title}</h2>
+                        <p className="card-text text-muted">{info.address}</p>
+                        <ul className="row list-unstyled mt-auto single-review__info">
+                          {/* <li className="col-2 d-flex flex-column border-end px-4">
                               <p>Status</p>
                               <div className="w-100 h-100 d-flex align-items-center justify-content-center">
                                 {statusRender(info.status, { width: 50, height: 50 })}
                               </div>
                             </li> */}
-                            <li className="col d-flex flex-column border-end px-3">
-                              <p>Average Rating</p>
-                              <div className="d-flex gap-2 align-items-center my-2">
-                                <h2 className="m-0">
-                                  {info.rating ? info.rating : "N/A"}
-                                </h2>
-                                <StarRating rating={info.rating} size={18} />
-                              </div>
-                              <span className="text-muted single-review__info__subtitle">
-                                Avarage rating for this place
-                              </span>
-                            </li>
-                            <li className="col d-flex flex-column border-end px-3">
-                              <p>Reviews</p>
-                              <div className="d-flex gap-2 align-items-center">
-                                <h2 className="m-0 my-2">
-                                  {info.reviews || 0}
-                                </h2>
-                              </div>
-                              <span className="text-muted single-review__info__subtitle">
-                                Count of extracted reviews
-                              </span>
-                            </li>
-                            <li className="col d-flex flex-column border-end px-3">
-                              <p>Spent time</p>
-                              <div className="d-flex gap-2 align-items-center my-2">
-                                <h2 className="m-0">{spentTime(info)}</h2>
-                              </div>
-                              <span className="text-muted single-review__info__subtitle">
-                                Spended time for this question
-                              </span>
-                            </li>
-                            <li className="col d-flex flex-column border-end px-3">
-                              <p>Expected time</p>
-                              <div className="d-flex gap-2 align-items-center my-2">
-                                <h2 className="m-0">
-                                  +{" "}
-                                  {Math.ceil(
-                                    (parseInt(info.reviews || "0") * 3) / 60,
-                                  ).toLocaleString()}{" "}
-                                  min
-                                </h2>
-                              </div>
-                              <span className="text-muted single-review__info__subtitle">
-                                Spended time for this question
-                              </span>
-                            </li>
-                          </ul>
-                          <div className="flex-row mt-5">
-                            <button
-                              className="btn btn-outline-danger me-2"
-                              onClick={() => setStep(0)}
-                              disabled={loading || !info.title}
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              className="btn btn-primary ms-auto"
-                              onClick={() => setStep(2)}
-                              disabled={loading || !info.title || !info.reviews}
-                            >
-                              Confirm
-                            </button>
-                          </div>
-                          {/* <div className="alert alert-info mt-3">
+                          <li className="col d-flex flex-column border-end px-3">
+                            <p>Average Rating</p>
+                            <div className="d-flex gap-2 align-items-center my-2">
+                              <h2 className="m-0">
+                                {info.rating ? info.rating : "N/A"}
+                              </h2>
+                              <StarRating rating={info.rating} size={18} />
+                            </div>
+                            <span className="text-muted single-review__info__subtitle">
+                              Avarage rating for this place
+                            </span>
+                          </li>
+                          <li className="col d-flex flex-column border-end px-3">
+                            <p>Reviews</p>
+                            <div className="d-flex gap-2 align-items-center">
+                              <h2 className="m-0 my-2">{info.reviews || 0}</h2>
+                            </div>
+                            <span className="text-muted single-review__info__subtitle">
+                              Count of extracted reviews
+                            </span>
+                          </li>
+                          <li className="col d-flex flex-column border-end px-3">
+                            <p>Spent time</p>
+                            <div className="d-flex gap-2 align-items-center my-2">
+                              <h2 className="m-0">{spentTime(info)}</h2>
+                            </div>
+                            <span className="text-muted single-review__info__subtitle">
+                              Spended time for this question
+                            </span>
+                          </li>
+                          <li className="col d-flex flex-column px-3">
+                            <p>Expected time</p>
+                            <div className="d-flex gap-2 align-items-center my-2">
+                              <h2 className="m-0">
+                                +{" "}
+                                {Math.ceil(
+                                  (parseInt(info.reviews || "0") * 3) / 60,
+                                ).toLocaleString()}{" "}
+                                min
+                              </h2>
+                            </div>
+                            <span className="text-muted single-review__info__subtitle">
+                              Spended time for this question
+                            </span>
+                          </li>
+                        </ul>
+                        <div className="flex-row mt-5">
+                          <button
+                            className="btn btn-outline-danger me-2"
+                            onClick={() => setStep(0)}
+                            disabled={loading || !info.title}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            className="btn btn-primary ms-auto"
+                            onClick={() => setStep(2)}
+                            disabled={loading || !info.title || !info.reviews}
+                          >
+                            Confirm
+                          </button>
+                        </div>
+                        {/* <div className="alert alert-info mt-3">
                             Spent time: {spentTime(info)}
                           </div> */}
-                        </div>
-                      </div>
-                      <div className="col-md-5">
-                        <div
-                          style={{
-                            height: 400,
-                            backgroundImage: `url(${info.screenshot})`,
-                            backgroundPosition: "center",
-                            backgroundSize: "cover",
-                          }}
-                        ></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+            {/* )} */}
           </div>
         )
       case 2:
