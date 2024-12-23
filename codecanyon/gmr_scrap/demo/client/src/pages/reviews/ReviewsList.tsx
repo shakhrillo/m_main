@@ -9,6 +9,7 @@ import { reviewsCountRender } from "../../utils/reviewsCountRender"
 import { spentTime } from "../../utils/spentTime"
 import { statusRender } from "../../utils/statusRender"
 import serverBoltIcon from "../../assets/icons/server-bolt.svg"
+import Loader from "../../components/loader"
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -16,6 +17,8 @@ const Dashboard: React.FC = () => {
   const [info, setInfo] = useState<any>({})
   const [completedReviews, setCompletedReviews] = useState<any[]>([])
   const [activeTableFilter, setActiveTableFilter] = useState("all")
+
+  const [loading, setLoading] = useState(false)
 
   const tableColumns = [
     {
@@ -78,6 +81,7 @@ const Dashboard: React.FC = () => {
   ]
 
   useEffect(() => {
+    setLoading(() => true)
     if (!firestore || !user) return
 
     const unsubscribe = () =>
@@ -103,80 +107,85 @@ const Dashboard: React.FC = () => {
     const docRef = doc(firestore, `app/info`)
     const unsubscribe = onSnapshot(docRef, doc => {
       setInfo(doc.data() || {})
+      setLoading(() => false)
+      console.log("info", info)
     })
-
     return unsubscribe
   }, [firestore, user])
 
   return (
     <div className="container-fluid reviews">
-      <div className="row">
-        <div className="d-flex gap-2">
-          <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
-            <img src={serverBoltIcon} alt="icon" width={"18px"} />
+      {loading ? (
+        <Loader cover="full" version={2} />
+      ) : (
+        <div className="row">
+          <div className="d-flex gap-2">
+            <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
+              <img src={serverBoltIcon} alt="icon" width={"18px"} />
+            </div>
+            <h4>Reviews</h4>
           </div>
-          <h4>Reviews</h4>
-        </div>
-        <div className="col-12 mt-3 reviews__header">
-          <ul className="d-flex p-0 list-unstyled">
-            <li className="d-flex flex-column gap-2 border-end pe-5">
-              <span className="text-muted">All comments</span>
-              <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
-            </li>
-            <li className="d-flex flex-column gap-2 border-end px-5">
-              <span className="text-muted">Owner responses</span>
-              <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
-            </li>
-            <li className="d-flex flex-column gap-2 border-end px-5">
-              <span className="text-muted">User comments</span>
-              <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
-            </li>
-            <li className="d-flex flex-column gap-2 px-5">
-              <span className="text-muted">Images</span>
-              <h4>{info.totalImages ? info.totalImages : "0"}</h4>
-            </li>
-          </ul>
-        </div>
-        <div className="col-12 border-bottom review__table">
-          <div className="btn-group reviews__table__filter mt-3">
-            <button
-              type={"button"}
-              className={`btn ${activeTableFilter === "all" ? "active" : ""}`}
-              aria-current="page"
-              onClick={() => setActiveTableFilter("all")}
-            >
-              All
-            </button>
-            <button
-              type={"button"}
-              className={`btn ${activeTableFilter === "completed" ? "active" : ""}`}
-              aria-current="page"
-              onClick={() => setActiveTableFilter("completed")}
-            >
-              Completed
-            </button>
-            <button
-              type={"button"}
-              className={`btn ${activeTableFilter === "pending" ? "active" : ""}`}
-              aria-current="page"
-              onClick={() => setActiveTableFilter("pending")}
-            >
-              Pending
-            </button>
-            <button
-              type={"button"}
-              className={`btn ${activeTableFilter === "failed" ? "active" : ""}`}
-              aria-current="page"
-              onClick={() => setActiveTableFilter("failed")}
-            >
-              Failed
-            </button>
+          <div className="col-12 mt-3 reviews__header">
+            <ul className="d-flex p-0 list-unstyled">
+              <li className="d-flex flex-column gap-2 border-end pe-5">
+                <span className="text-muted">All comments</span>
+                <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
+              </li>
+              <li className="d-flex flex-column gap-2 border-end px-5">
+                <span className="text-muted">Owner responses</span>
+                <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
+              </li>
+              <li className="d-flex flex-column gap-2 border-end px-5">
+                <span className="text-muted">User comments</span>
+                <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
+              </li>
+              <li className="d-flex flex-column gap-2 px-5">
+                <span className="text-muted">Images</span>
+                <h4>{info.totalImages ? info.totalImages : "0"}</h4>
+              </li>
+            </ul>
+          </div>
+          <div className="col-12 border-bottom review__table">
+            <div className="btn-group reviews__table__filter mt-3">
+              <button
+                type={"button"}
+                className={`btn ${activeTableFilter === "all" ? "active" : ""}`}
+                aria-current="page"
+                onClick={() => setActiveTableFilter("all")}
+              >
+                All
+              </button>
+              <button
+                type={"button"}
+                className={`btn ${activeTableFilter === "completed" ? "active" : ""}`}
+                aria-current="page"
+                onClick={() => setActiveTableFilter("completed")}
+              >
+                Completed
+              </button>
+              <button
+                type={"button"}
+                className={`btn ${activeTableFilter === "pending" ? "active" : ""}`}
+                aria-current="page"
+                onClick={() => setActiveTableFilter("pending")}
+              >
+                Pending
+              </button>
+              <button
+                type={"button"}
+                className={`btn ${activeTableFilter === "failed" ? "active" : ""}`}
+                aria-current="page"
+                onClick={() => setActiveTableFilter("failed")}
+              >
+                Failed
+              </button>
+            </div>
+          </div>
+          <div className="col-12 mt-4">
+            <Table tableHeader={tableColumns} tableBody={completedReviews} />
           </div>
         </div>
-        <div className="col-12 mt-4">
-          <Table tableHeader={tableColumns} tableBody={completedReviews} />
-        </div>
-      </div>
+      )}
     </div>
   )
 }

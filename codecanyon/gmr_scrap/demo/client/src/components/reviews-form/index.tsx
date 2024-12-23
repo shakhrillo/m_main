@@ -88,9 +88,9 @@ export const ReviewsForm = () => {
       console.error(error)
       alert("Something went wrong. Please try again.")
       setStep(0)
-      setLoading(false)
+      // setLoading(false)
     } finally {
-      setStep(1)
+      // setStep(1)
       setInfo({
         error: "",
         url: scrap.url,
@@ -132,13 +132,18 @@ export const ReviewsForm = () => {
     const unsubscribe = onSnapshot(
       doc(firestore, `users/${user.uid}/reviewOverview/${overviewId}`),
       doc => {
-        setLoading(false)
+        // setLoading(false)
         if (doc.exists()) {
           const info = doc.data() as any
           if (info.title) {
             localStorage.removeItem("overviewId")
           }
           setInfo(info)
+          console.log(info)
+          if (!!info.address) {
+            setLoading(false)
+            setStep(1)
+          }
         }
       },
     )
