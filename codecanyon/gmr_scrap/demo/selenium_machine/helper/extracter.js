@@ -5,7 +5,6 @@ if (typeof window === "undefined") {
 
 let waitTime = 100;
 window.checkedIds = new Set();
-window.extractedImages = [];
 window.extractedOwnerReviewCount = 0;
 window.extractedUserReviewCount = 0;
 
@@ -341,7 +340,7 @@ async function validateNode(node) {
       }
     }
 
-    extractedImages.push(...media);
+    gmrScrap["extractedImages"].push(...media);
 
     return {
       id,

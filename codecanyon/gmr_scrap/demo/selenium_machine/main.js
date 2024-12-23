@@ -28,7 +28,7 @@ async function init() {
   const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
   const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
 
-  let extractedImages = [];
+  // let extractedImages = [];
   let extractedOwnerReviewCount = 0;
   let extractedUserReviewCount = 0;
 
@@ -114,7 +114,7 @@ async function init() {
   const extractedReviews = [];
   let retriesCount = 0;
 
-  while (extractedReviews.length < data.limit) {
+  while (extractedReviews.length < data.limit && retriesCount < 20) {
     let startedTime = Date.now();
     try {
       let visibleElements = await driver.executeScript(
@@ -162,6 +162,11 @@ async function init() {
   }
 
   // ----------------- Complete -----------------
+  console.log("-".repeat(20));
+  console.log("Completed");
+  console.log("-".repeat(20));
+  // extractedImages
+  const gmrScrap = await driver.executeScript(`return window.gmrScrap`);
   let csvUrl = "";
   let jsonUrl = "";
   if (extractedReviews.length > 0) {

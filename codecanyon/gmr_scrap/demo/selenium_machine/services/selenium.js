@@ -5,7 +5,7 @@ const chrome = require("selenium-webdriver/chrome");
 async function getDriver() {
   const options = new chrome.Options();
   options.setLoggingPrefs({ browser: "ALL" });
-  const chromePath = "/usr/bin/google-chrome-stable";
+  const chromePath = "/usr/bin/chromium-browser";
   if (fs.existsSync(chromePath)) {
     options.setChromeBinaryPath(chromePath);
     options.addArguments(
