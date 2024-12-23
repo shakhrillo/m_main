@@ -377,7 +377,6 @@ async function fetchVisibleElements() {
       if (validatedElement) {
         visibleElements.push(validatedElement);
       }
-      // node.remove();
     } catch (error) {
       console.error("Error processing node:", error);
     }
