@@ -306,8 +306,8 @@ async function validateNode(node) {
         : gmrScrap["extractedOwnerReviewCount"] + 1;
     }
 
-    const media = [];
-
+    const imageUrls = [];
+    const videoUrls = [];
     if (gmrScrap["extractImageUrls"] || gmrScrap["extractVideoUrls"]) {
       let nodeMedia = getReviewMedia(node);
 
@@ -330,19 +330,20 @@ async function validateNode(node) {
             }
           }
 
-          media.push({
-            thumb,
-            videoUrl,
-          });
+          if (videoUrl) {
+            videoUrls.push({
+              thumb,
+              videoUrl,
+            });
+          } else {
+            imageUrls.push({ thumb });
+          }
         }
       }
     }
 
-    if (!gmrScrap["extractedImages"]) {
-      gmrScrap["extractedImages"] = [];
-    }
-
-    gmrScrap["extractedImages"].push(...media);
+    gmrScrap["extractedVideoUrls"].push(...videoUrls);
+    gmrScrap["extractedImageUrls"].push(...imageUrls);
 
     return {
       id,
@@ -352,7 +353,8 @@ async function validateNode(node) {
       rating: getReviewRate(node),
       qa: getReviewQA(node),
       response,
-      media,
+      imageUrls,
+      videoUrls,
       time: +Date.now(),
     };
   }

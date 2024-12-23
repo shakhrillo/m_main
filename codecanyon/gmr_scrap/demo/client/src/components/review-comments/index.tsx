@@ -6,6 +6,7 @@ import { imagesCountRender } from "../../utils/imagesCountRender"
 import { reviewTextRender } from "../../utils/reviewTextRender"
 import { Table } from "../table"
 import ReviewImages from "../review-images"
+import ReviewVideos from "../review-videos"
 
 function ReviewComments() {
   const { place } = useParams()
@@ -118,7 +119,7 @@ function ReviewComments() {
       ) : activeTableFilter === "images" ? (
         <ReviewImages />
       ) : (
-        <div></div>
+        <ReviewVideos />
       )}
     </div>
   )

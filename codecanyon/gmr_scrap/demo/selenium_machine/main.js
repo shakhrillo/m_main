@@ -34,7 +34,17 @@ async function init() {
 
   // ----------------- Set config -----------------
   await driver.executeScript(
-    `window.gmrScrap = ${JSON.stringify(data, null, 2)}`
+    `window.gmrScrap = ${JSON.stringify(
+      {
+        ...data,
+        extractedImageUrls: [],
+        extractedVideoUrls: [],
+        extractedOwnerReviewCount: 0,
+        extractedUserReviewCount: 0,
+      },
+      null,
+      2
+    )}`
   );
 
   // ----------------- Click on the reviews tab -----------------
@@ -181,7 +191,11 @@ async function init() {
   );
   await batchWriteLargeArray(
     `users/${data.userId}/reviews/${data.reviewId}/images`,
-    gmrScrap["extractedImages"]
+    gmrScrap["extractedImageUrls"]
+  );
+  await batchWriteLargeArray(
+    `users/${data.userId}/reviews/${data.reviewId}/videos`,
+    gmrScrap["extractedVideoUrls"]
   );
 
   updateMachineData(tag, {
@@ -189,7 +203,7 @@ async function init() {
     jsonUrl,
     totalReviews: extractedReviews.length || 0,
     totalReviewsScraped: totalReviews || 0,
-    totalImages: gmrScrap["extractedImages"].length || 0,
+    totalImages: gmrScrap["extractedImageUrls"].length || 0,
     totalOwnerReviews: gmrScrap["extractedOwnerReviewCount"] || 0,
     totalUserReviews: gmrScrap["extractedUserReviewCount"] || 0,
     status: "completed",
