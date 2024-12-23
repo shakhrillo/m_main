@@ -189,11 +189,65 @@ function getReviewMedia(node) {
 }
 
 /**
+ * Waits until the element is removed from the DOM
+ * @param {HTMLElement} node
+ * @param {string} selector
+ * @param {number} timeout
+ * @returns {Promise<void>}
+ * @throws {Error} Timeout: Selector "${selector}" still exists.
+ */
+const waitUntilNoElement = async (node, selector, timeout = 5000) => {
+  const start = Date.now();
+  while (node.querySelector(selector)) {
+    if (Date.now() - start > timeout) {
+      throw new Error(`Timeout: Selector "${selector}" still exists.`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Polling interval
+  }
+};
+
+/**
+ * Scrolls the element into view and waits for the scroll event to finish
+ * @param {HTMLElement} element
+ * @param {ScrollIntoViewOptions} [options]
+ * @returns {Promise<void>}
+ * @throws {Error} Timeout: Scroll event not fired.
+ */
+function scrollIntoViewAndWait(
+  element,
+  options = { behavior: "instant", block: "start", inline: "nearest" }
+) {
+  return new Promise((resolve) => {
+    // Listen for the 'scroll' event
+    let isScrolling;
+
+    const onScroll = () => {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        window.removeEventListener("scroll", onScroll);
+        resolve();
+      }, 100); // Wait 100ms after the last scroll event
+    };
+
+    // Attach the event listener
+    window.addEventListener("scroll", onScroll);
+
+    // Start the scroll
+    element.scrollIntoView(options);
+
+    // Fallback in case no scroll event is fired (e.g., already in view)
+    setTimeout(() => {
+      window.removeEventListener("scroll", onScroll);
+      resolve();
+    }, 1000); // Adjust timeout if necessary
+  });
+}
+
+/**
  * Checks the node for review data and extracts it
  * @param {HTMLElement} node
  * @returns {Promise<void>}
  */
-// let pn = 0;
 async function validateNode(node) {
   const id = node.getAttribute("data-review-id");
   if (id && !checkedIds.has(id)) {
@@ -218,17 +272,24 @@ async function validateNode(node) {
       let button = node.querySelector(selector);
 
       if (button) {
-        button.scrollIntoView();
-        button.click();
+        let retries = 0;
+        while (retries < 3) {
+          try {
+            await scrollIntoViewAndWait(button);
+            button.click();
+            await waitUntilNoElement(node, selector);
+            break;
+          } catch (error) {
+            retries++;
+            console.error(`Attempt ${retries}: Error clicking button -`, error);
 
-        // Wait until the button is removed from the DOM
-        while (node.querySelector(selector)) {
-          await new Promise((resolve) => setTimeout(resolve, 100)); // Polling interval
+            if (retries >= 3) {
+              console.error("Max retries reached. Failed to click the button.");
+            }
+          }
         }
       }
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const review = getReviewComment(node);
     if (!!review) {
@@ -316,11 +377,13 @@ async function fetchVisibleElements() {
       if (validatedElement) {
         visibleElements.push(validatedElement);
       }
-      node.remove();
+      // node.remove();
     } catch (error) {
       console.error("Error processing node:", error);
     }
   }
+
+  scrollToLoader();
 
   return visibleElements;
 }

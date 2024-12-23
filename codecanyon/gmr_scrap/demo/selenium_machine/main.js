@@ -117,21 +117,22 @@ async function init() {
   while (extractedReviews.length < data.limit) {
     let startedTime = Date.now();
     try {
-      const visibleElements = await driver.executeScript(
+      let visibleElements = await driver.executeScript(
         `return fetchVisibleElements()`
       );
+      await driver.sleep(400);
+      console.log("Visible elements:", visibleElements.length);
 
       if (visibleElements.length === 0) {
         retriesCount++;
-
-        await driver.executeScript(scrollToLoader);
-        await driver.sleep(400);
-        await driver.executeScript(scrollToContainer);
+        visibleElements = await driver.executeScript(
+          `return fetchVisibleElements()`
+        );
       } else {
         retriesCount = 0;
       }
 
-      if (retriesCount > 5) {
+      if (retriesCount > 20) {
         console.log("Retries exceeded. Exiting...");
         break;
       }
@@ -145,16 +146,18 @@ async function init() {
       if (extractedReviews.length >= data.limit) {
         break;
       }
-      await driver.executeScript(scrollToLoader);
-      await driver.sleep(400);
-      await driver.executeScript(scrollToContainer);
     } catch (error) {
       retriesCount++;
       console.error("Error in while loop");
     } finally {
-      console.log("Elapsed time (ms)", (Date.now() - startedTime) / 1000);
+      console.log(
+        `Elapsed time: (${Math.round(
+          (Date.now() - startedTime) / 1000
+        )} seconds)`
+      );
       console.log("Retries:", retriesCount);
       console.log("Total reviews:", extractedReviews.length);
+      console.log("-".repeat(20));
     }
   }
 

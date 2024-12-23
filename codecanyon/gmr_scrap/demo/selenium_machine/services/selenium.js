@@ -4,11 +4,17 @@ const chrome = require("selenium-webdriver/chrome");
 
 async function getDriver() {
   const options = new chrome.Options();
-  options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
   options.setLoggingPrefs({ browser: "ALL" });
   const chromePath = "/usr/bin/google-chrome-stable";
   if (fs.existsSync(chromePath)) {
     options.setChromeBinaryPath(chromePath);
+    options.addArguments(
+      "--headless",
+      "--no-sandbox",
+      "--disable-dev-shm-usage"
+    );
+  } else {
+    console.error("Chrome path not found:", chromePath);
   }
   options.excludeSwitches("enable-automation");
 
