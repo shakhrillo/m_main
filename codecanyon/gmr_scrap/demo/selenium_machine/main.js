@@ -20,17 +20,9 @@ if (!tag) {
 
 async function init() {
   const extracterString = await getScriptContent("extracter.js", "helper");
-  const getExtractedValues = await getScriptContent(
-    "getExtractedValues.js",
-    "scripts"
-  );
   const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
   const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
   const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
-
-  // let extractedImages = [];
-  let extractedOwnerReviewCount = 0;
-  let extractedUserReviewCount = 0;
 
   const data = await getMachineData(tag);
   const driver = await getDriver();
@@ -188,7 +180,7 @@ async function init() {
   );
   await batchWriteLargeArray(
     `users/${data.userId}/reviews/${data.reviewId}/images`,
-    extractedImages
+    gmrScrap["extractedImages"]
   );
 
   updateMachineData(tag, {
@@ -196,9 +188,9 @@ async function init() {
     jsonUrl,
     totalReviews: extractedReviews.length,
     totalReviewsScraped: totalReviews,
-    totalImages: extractedImages.length,
-    totalOwnerReviews: extractedOwnerReviewCount,
-    totalUserReviews: extractedUserReviewCount,
+    totalImages: gmrScrap["extractedImages"].length,
+    totalOwnerReviews: gmrScrap["extractedOwnerReviewCount"],
+    totalUserReviews: gmrScrap["extractedUserReviewCount"],
     status: "completed",
   });
 

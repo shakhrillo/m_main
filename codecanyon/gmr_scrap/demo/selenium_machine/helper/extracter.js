@@ -3,10 +3,7 @@ if (typeof window === "undefined") {
   return;
 }
 
-let waitTime = 100;
 window.checkedIds = new Set();
-window.extractedOwnerReviewCount = 0;
-window.extractedUserReviewCount = 0;
 
 function scrollToLoader() {
   const targetParent = document.querySelector(".vyucnb")?.parentElement;
@@ -172,15 +169,16 @@ function getReviewMedia(node) {
     }
     if (style) {
       const urlMatch = style.split('url("')[1]?.split('");')[0];
-      if (
-        urlMatch &&
-        (gmrScrap["extractImageUrls"] || gmrScrap["extractVideoUrls"])
-      ) {
+      if (urlMatch) {
         data["thumb"] = urlMatch.split("=")[0] + "=w1200";
       }
     }
     if (Object.keys(data).length) {
-      nodes.push(data);
+      if (data["button"] && gmrScrap["extractVideoUrls"]) {
+        nodes.push(data);
+      } else if (gmrScrap["extractImageUrls"]) {
+        nodes.push(data);
+      }
     }
   }
 
@@ -263,7 +261,7 @@ async function validateNode(node) {
       );
     }
 
-    if (gmrScrap["extractImageUrls"]) {
+    if (gmrScrap["extractImageUrls"] || gmrScrap["extractVideoUrls"]) {
       buttonSelectors.push('button[jsaction*="review.showMorePhotos"]');
     }
 
@@ -338,6 +336,10 @@ async function validateNode(node) {
           });
         }
       }
+    }
+
+    if (!gmrScrap["extractedImages"]) {
+      gmrScrap["extractedImages"] = [];
     }
 
     gmrScrap["extractedImages"].push(...media);
