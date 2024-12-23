@@ -25,7 +25,13 @@ async function init() {
   const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
 
   const data = await getMachineData(tag);
-  const driver = await getDriver();
+  const driver = await getDriver({
+    timeouts: {
+      implicit: 60000,
+      pageLoad: 60000,
+      script: 60000,
+    },
+  });
 
   // ----------------- Start the process -----------------
   await driver.get(data.url);

@@ -26,13 +26,28 @@ async function init() {
   });
   console.log("Data:", data);
 
-  // -----------------
-  // Start scraping
-  // ----------------
-  await driver.get(data.url);
-  await driver.sleep(2000);
-
   try {
+    // -----------------
+    // Start scraping
+    // ----------------
+    await driver.get(data.url);
+    await driver.sleep(2000);
+
+    let isReviewsTabAvailable = false;
+    const reviewsTabs =
+      (await driver.findElements(By.css('button[role="tab"]'))) || [];
+    for (const tab of reviewsTabs) {
+      const tabText = await tab.getText();
+      if (tabText.toLowerCase().includes("reviews")) {
+        isReviewsTabAvailable = true;
+      }
+    }
+
+    if (!isReviewsTabAvailable) {
+      // throw error
+      throw new Error("Reviews tab not available");
+    }
+
     async function getElementBySelector(selector) {
       const elements = await driver.findElements(By.css(selector));
       if (elements.length === 0) return null;
@@ -139,7 +154,8 @@ async function init() {
     await updateMachineData(tag, { error: JSON.stringify(err) });
     console.error("Error:", err);
   } finally {
-    console.log("Data:", data);
+    const logs = await driver.manage().logs().get("browser");
+    console.log(logs);
     await updateMachineData(tag, data);
     await driver.quit();
   }
