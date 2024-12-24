@@ -145,41 +145,37 @@ const Dashboard: React.FC = () => {
               </li>
             </ul>
           </div>
-          <div className="col-12 border-bottom review__table">
-            <div className="btn-group reviews__table__filter mt-3">
-              <button
-                type={"button"}
-                className={`btn ${activeTableFilter === "all" ? "active" : ""}`}
+          <div className="col-12 border-bottom">
+            <ul className="table__filter list-unstyled d-flex m-0">
+              <li
+                className={`py-1 px-3 ${activeTableFilter === "all" ? "active" : ""}`}
                 aria-current="page"
                 onClick={() => setActiveTableFilter("all")}
               >
                 All
-              </button>
-              <button
-                type={"button"}
-                className={`btn ${activeTableFilter === "completed" ? "active" : ""}`}
+              </li>
+              <li
+                className={`py-1 px-3 ${activeTableFilter === "completed" ? "active" : ""}`}
                 aria-current="page"
                 onClick={() => setActiveTableFilter("completed")}
               >
                 Completed
-              </button>
-              <button
-                type={"button"}
-                className={`btn ${activeTableFilter === "pending" ? "active" : ""}`}
+              </li>
+              <li
+                className={`py-1 px-3 ${activeTableFilter === "pending" ? "active" : ""}`}
                 aria-current="page"
                 onClick={() => setActiveTableFilter("pending")}
               >
                 Pending
-              </button>
-              <button
-                type={"button"}
-                className={`btn ${activeTableFilter === "failed" ? "active" : ""}`}
+              </li>
+              <li
+                className={`py-1 px-3 ${activeTableFilter === "failed" ? "active" : ""}`}
                 aria-current="page"
                 onClick={() => setActiveTableFilter("failed")}
               >
                 Failed
-              </button>
-            </div>
+              </li>
+            </ul>
           </div>
           <div className="col-12 mt-4">
             <Table tableHeader={tableColumns} tableBody={completedReviews} />

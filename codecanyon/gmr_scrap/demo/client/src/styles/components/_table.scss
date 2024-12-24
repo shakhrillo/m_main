@@ -5,6 +5,30 @@
   border-collapse: collapse;
   overflow-x: auto;
 
+  &__filter {
+    li {
+      padding-left: 20px;
+      padding-right: 20px;
+      color: #6c757d;
+      background: none;
+      cursor: pointer;
+
+      &:active,
+      &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      &.active {
+        border-radius: 0;
+        border: none;
+        border-bottom: 3px solid #000;
+        color: #000;
+      }
+    }
+  }
+
   th,
   td {
     // padding: $table-padding;

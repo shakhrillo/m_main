@@ -3,23 +3,4 @@
     width: 36px;
     height: 36px;
   }
-
-  &__table {
-    &__filter {
-      button {
-        padding-left: 20px;
-        padding-right: 20px;
-        color: #6c757d;
-
-        &.active {
-          border-radius: 0;
-          border-top: none;
-          border-right: none;
-          border-left: none;
-          border-bottom: 3px solid #000;
-          color: #000;
-        }
-      }
-    }
-  }
 }

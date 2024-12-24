@@ -88,32 +88,29 @@ function ReviewComments() {
     <div>{error}</div>
   ) : (
     <div className="mt-5">
-      <div className="btn-group reviews__table__filter my-4">
-        <button
-          type={"button"}
-          className={`btn ${activeTableFilter === "comments" ? "active" : ""} reviews__table__filter__btn`}
+      <ul className="list-unstyled d-flex m-0 my-4 table__filter">
+        <li
+          className={`py-1 px-3 ${activeTableFilter === "comments" ? "active" : ""} reviews__table__filter__btn`}
           aria-current="page"
           onClick={() => setActiveTableFilter("comments")}
         >
           Comments
-        </button>
-        <button
-          type={"button"}
-          className={`btn ${activeTableFilter === "images" ? "active" : ""} reviews__table__filter__btn`}
+        </li>
+        <li
+          className={`py-1 px-3 ${activeTableFilter === "images" ? "active" : ""} reviews__table__filter__btn`}
           aria-current="page"
           onClick={() => setActiveTableFilter("images")}
         >
           Images
-        </button>
-        <button
-          type={"button"}
-          className={`btn ${activeTableFilter === "videos" ? "active" : ""} reviews__table__filter__btn`}
+        </li>
+        <li
+          className={`py-1 px-3 ${activeTableFilter === "videos" ? "active" : ""} reviews__table__filter__btn`}
           aria-current="page"
           onClick={() => setActiveTableFilter("videos")}
         >
           Videos
-        </button>
-      </div>
+        </li>
+      </ul>
       {activeTableFilter === "comments" ? (
         <Table tableHeader={tableHeader} tableBody={reviews} />
       ) : activeTableFilter === "images" ? (
