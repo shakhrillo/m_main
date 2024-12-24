@@ -3,52 +3,14 @@
 @import "./components/table";
 @import "./pages/reviews";
 @import "./pages/scrap";
-@import "./base/reset";
 @import "./base/typography";
+
 .content {
   width: calc(100% - 180px);
   margin-left: 180px;
   padding: 1.5rem 3rem;
 }
 
-// @import "./abstracts/variables";
-
-// @import "./base/reset";
-// @import "./base/typography";
-
-// @import "./abstracts/placeholders";
-// @import "./components/button";
-// @import "./components/nav";
-// @import "./components/steps";
-// @import "./components/form";
-// @import "./components/image";
-// @import "./components/card";
-// @import "./components/loader";
-// @import "./components/list";
-
-// @import "./utilities/utilities";
-
-// hr {
-//   border: 0;
-//   border-top: 1px solid $border-color;
-//   margin: $spacing-lg 0;
-// }
-
-// .main {
-//   // display: flex;
-//   // padding-left: 180px;
-// }
-
-// .text-wrap {
-//   white-space: pre-wrap;
-// }
-
-// .container {
-//   flex: 1;
-//   padding-left: 230px;
-//   @media (max-width: 1200px) {
-//     padding-left: 1.5rem;
-//     padding-right: 1.5rem;
-//     width: -webkit-fill-available;
-//   }
-// }
+.cursor-pointer {
+  cursor: pointer;
+}
