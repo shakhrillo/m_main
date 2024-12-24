@@ -125,25 +125,25 @@ const Dashboard: React.FC = () => {
             </div>
             <h4>Reviews</h4>
           </div>
-          <div className="col-12 mt-3 reviews__header">
-            <ul className="d-flex p-0 list-unstyled">
-              <li className="d-flex flex-column gap-2 border-end pe-5">
+          <div className="col-12">
+            <div className="row row-cols-4">
+              <div className="col border-end">
                 <span className="text-muted">All comments</span>
                 <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
-              </li>
-              <li className="d-flex flex-column gap-2 border-end px-5">
+              </div>
+              <div className="col border-end">
                 <span className="text-muted">Owner responses</span>
                 <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
-              </li>
-              <li className="d-flex flex-column gap-2 border-end px-5">
+              </div>
+              <div className="col border-end">
                 <span className="text-muted">User comments</span>
                 <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
-              </li>
-              <li className="d-flex flex-column gap-2 px-5">
+              </div>
+              <div className="col">
                 <span className="text-muted">Images</span>
                 <h4>{info.totalImages ? info.totalImages : "0"}</h4>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
           <div className="col-12 border-bottom">
             <ul className="table__filter list-unstyled d-flex m-0">
