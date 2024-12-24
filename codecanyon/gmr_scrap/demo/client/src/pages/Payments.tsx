@@ -108,7 +108,7 @@ function Payments() {
     <div>
       <div className="d-flex align-items-center gap-3">
         <div className="d-flex gap-2">
-          <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
+          <div className="rounded bg-light d-flex justify-content-center align-items-center">
             <img src={cardIcon} alt="icon" width={"18px"} />
           </div>
           <h4>Payments</h4>

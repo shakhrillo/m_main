@@ -1,9 +1,5 @@
 @import "./components/sidebar";
 
-@import "./components/table";
-@import "./pages/reviews";
-@import "./base/typography";
-
 .content {
   width: calc(100% - 180px);
   margin-left: 180px;

@@ -114,13 +114,13 @@ const Dashboard: React.FC = () => {
   }, [firestore, user])
 
   return (
-    <div className="container-fluid reviews">
+    <div className="container-fluid">
       {loading ? (
         <Loader cover="full" version={2} />
       ) : (
         <div className="row">
           <div className="d-flex gap-2">
-            <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
+            <div className="rounded bg-light d-flex justify-content-center align-items-center">
               <img src={serverBoltIcon} alt="icon" width={"18px"} />
             </div>
             <h4>Reviews</h4>
