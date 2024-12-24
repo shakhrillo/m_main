@@ -1,149 +1,117 @@
+/**
+ * @fileoverview This script automates the process of scraping data from a specified website using Selenium.
+ * It captures a screenshot of the website, uploads it to Firebase Storage, and updates Firestore with the scraped data.
+ *
+ * Key Features:
+ * - Fetches data to be scraped from Firestore based on a tag specified in an environment variable.
+ * - Extracts the following details from the target website:
+ *   - Title
+ *   - Address
+ *   - Reviews
+ *   - Rating
+ *   - Screenshot
+ * - Updates Firestore with the scraped data.
+ * - Uploads the screenshot to Firebase Storage.
+ *
+ * Environment Variables:
+ * - `TAG`: Specifies the machine tag for identifying the data to scrape.
+ *
+ * Dependencies:
+ * - `@firebase/firestore` - For Firestore operations.
+ * - `@firebase/storage` - For handling Firebase Storage operations.
+ * - `@selenium-webdriver/chrome` - For Chrome browser automation.
+ * - `@selenium-webdriver` - Core Selenium WebDriver functionality.
+ * - `dotenv` - For managing environment variables.
+ *
+ * Usage:
+ * - Run the script using Node.js:
+ *   ```bash
+ *   node info.js
+ *   ```
+ *
+ * Version History:
+ * - 1.0.0: Initial release with full scraping and data management capabilities.
+ *
+ * Author:
+ * - Shakhrillo
+ *
+ * License:
+ * - This script is licensed under the CodeCanyon Standard License.
+ *   See [CodeCanyon Licenses](https://codecanyon.net/licenses/standard) for more details.
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author Shakhrillo
+ * @license CodeCanyon Standard License
+ */
+
+"use strict";
+
+// Load environment variables from the .env file
 require("dotenv").config();
-const { By } = require("selenium-webdriver");
+
+// Import dependencies
+const { By, WebElement } = require("selenium-webdriver");
 const {
   uploadFile,
   getMachineData,
   updateMachineData,
 } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
+const { getScriptContent } = require("./services/scripts");
 
+// Constants
 const tag = process.env.TAG;
 
+// Validate tag
 if (!tag) {
-  console.error("Tag not found");
-  return;
+  throw new Error("Tag not specified");
 }
 
-async function init() {
-  console.log("Tag:", tag);
-  const data = await getMachineData(tag);
-  const driver = await getDriver({
-    timeouts: {
-      implicit: 45000,
-      pageLoad: 45000,
-      script: 5000,
-    },
-  });
-  console.log("Data:", data);
+// Get the script content for extracting information from the page
+const getInfo = getScriptContent("getInfo.js", "scripts");
 
+// Get the script content for preparing the page for screenshot
+const prepareForScreenshot = getScriptContent(
+  "prepareForScreenshot.js",
+  "scripts"
+);
+
+// Initialize data object
+let data = {};
+
+(async () => {
   try {
-    // -----------------
-    // Start scraping
-    // ----------------
+    // Fetch machine data
+    data = await getMachineData(tag);
+    if (!data || !data.url) {
+      throw new Error("URL not specified or invalid");
+    }
+
+    // Initialize Selenium WebDriver
+    const driver = await getDriver({
+      timeouts: {
+        implicit: Number(process.env.IMPLICIT_TIMEOUT || 60000), // For locating elements (milliseconds)
+        pageLoad: Number(process.env.PAGE_LOAD_TIMEOUT || 60000), // For page load (milliseconds)
+        script: Number(process.env.SCRIPT_TIMEOUT || 60000), // For executing scripts (milliseconds)
+      },
+      chromePath: process.env.CHROME_PATH,
+    });
+
+    // Load the target website
     await driver.get(data.url);
     await driver.sleep(2000);
 
-    let isReviewsTabAvailable = false;
-    const reviewsTabs =
-      (await driver.findElements(By.css('button[role="tab"]'))) || [];
-    for (const tab of reviewsTabs) {
-      const tabText = await tab.getText();
-      if (tabText.toLowerCase().includes("reviews")) {
-        isReviewsTabAvailable = true;
-      }
-    }
+    //
+    const info = (await driver.executeScript(getInfo)) || {};
+    data = {
+      ...data,
+      ...info,
+    };
 
-    if (!isReviewsTabAvailable) {
-      // throw error
-      throw new Error("Reviews tab not available");
-    }
-
-    async function getElementBySelector(selector) {
-      const elements = await driver.findElements(By.css(selector));
-      if (elements.length === 0) return null;
-      return elements[0];
-    }
-
-    async function getAddress() {
-      const addressElement = await getElementBySelector(
-        "button[data-item-id='address']"
-      );
-
-      if (!addressElement) return;
-      return await addressElement.getAttribute("aria-label");
-    }
-
-    async function getReviews() {
-      const moreReviewsElement = await getElementBySelector(
-        "button[jsaction*='reviewChart.moreReviews']"
-      );
-      if (!moreReviewsElement) return 0;
-      await driver.executeScript(
-        "arguments[0].scrollIntoView();",
-        moreReviewsElement
-      );
-      const reviewsText =
-        (await moreReviewsElement.getAttribute("innerText")) || "0";
-      return parseInt(
-        reviewsText.replace(/[^0-9,]/g, "").replace(/,/g, ""),
-        10
-      );
-    }
-
-    async function getRating() {
-      const ratingElement = await getElementBySelector(".fontDisplayLarge");
-      if (!ratingElement) return 0;
-      return parseFloat(await ratingElement.getAttribute("innerText")) || 0;
-    }
-
-    // -----------------
-    // Get data
-    // -----------------
-    data.title = await driver.getTitle();
-    data.address = (await getAddress()) || "";
-    data.reviews = (await getReviews()) || 0;
-    data.rating = (await getRating()) || 0;
-
-    // -----------------
     // Prepare for screenshot
-    // -----------------
-    const minimapElement = await getElementBySelector("#minimap");
-    if (minimapElement) {
-      await driver.executeScript("arguments[0].remove();", minimapElement); // Remove basemap layer
-    }
-
-    const viewcardStripElement = await getElementBySelector(
-      ".app-viewcard-strip"
-    );
-    if (viewcardStripElement) {
-      await driver.executeScript(
-        "arguments[0].remove();",
-        viewcardStripElement
-      ); //Remove bottom toolbar
-    }
-
-    const sidePanelBtns = await driver.findElements(
-      By.css("button[aria-label='Collapse side panel']")
-    );
-    for (const btn of sidePanelBtns) {
-      if (!(await btn.isDisplayed())) {
-        continue;
-      }
-      await btn.click(); // Collapse side panel
-    }
-
-    const sidePanel = await getElementBySelector(
-      "button[jsaction*='drawer.open']"
-    );
-    if (sidePanel) {
-      await driver.executeScript("arguments[0].remove();", sidePanel); // Remove side panel expand button
-    }
-
-    const googleBar = await getElementBySelector("#gb");
-    if (googleBar) {
-      await driver.executeScript("arguments[0].remove();", googleBar); // Remove google bar
-    }
-
-    const sceneFooter = await getElementBySelector(".scene-footer-container");
-    if (sceneFooter) {
-      await driver.executeScript("arguments[0].remove();", sceneFooter); // Remove scene footer
-    }
-
+    await driver.executeScript(prepareForScreenshot);
     await driver.sleep(2000);
-
-    // -----------------
-    // Take screenshot
-    // -----------------
     const screenshot = await driver.takeScreenshot();
     const screenshotBuffer = Buffer.from(screenshot, "base64");
     data.screenshot = await uploadFile(
@@ -151,14 +119,10 @@ async function init() {
       `${tag}/screenshot.png`
     );
   } catch (err) {
-    await updateMachineData(tag, { error: JSON.stringify(err) });
+    data.error = JSON.stringify(err);
     console.error("Error:", err);
   } finally {
-    const logs = await driver.manage().logs().get("browser");
-    console.log(logs);
     await updateMachineData(tag, data);
-    await driver.quit();
+    console.log(JSON.stringify(data, null, 2));
   }
-}
-
-init();
+})();

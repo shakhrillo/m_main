@@ -4,7 +4,6 @@ const { getMachineData } = require("./services/firebase");
 
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
-const { quitDriver, isDriverActive } = require("./services/selenium");
 const {
   uploadFile,
   batchWriteLargeArray,

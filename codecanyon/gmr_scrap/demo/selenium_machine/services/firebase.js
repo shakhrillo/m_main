@@ -1,19 +1,44 @@
+/**
+ * @fileoverview Firebase service for handling Firestore and Firebase Storage operations.
+ *
+ * Dependencies:
+ * - `@google-cloud/storage` - For handling Firebase Storage operations.
+ * - `firebase-admin` - For Firestore operations.
+ * - `fs` - For file system operations.
+ * - `path` - For path operations.
+ *
+ * Environment Variables:
+ * - `NODE_ENV` - Specifies the environment mode.
+ * - `FIREBASE_PROJECT_ID` - Specifies the Firebase project ID.
+ * - `FIREBASE_URL` - Specifies the Firebase URL.
+ * - `FIREBASE_KEYS_PATH` - Specifies the path to the Firebase keys file.
+ *
+ * Version History:
+ * - 1.0.0: Initial release with Firestore and Firebase Storage operations.
+ *
+ * Author: Shakhrillo
+ * License: CodeCanyon Standard License
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @license CodeCanyon Standard License
+ */
+
+"use strict";
+
+// Import dependencies
 const { Storage } = require("@google-cloud/storage");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
+// Constants
 const environment = process.env.NODE_ENV || "development";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const firebaseUrl = process.env.FIREBASE_URL || "127.0.0.1";
-
-console.log("firebaseUrl:", firebaseUrl);
-console.log("Firebase environment:", environment);
-
 const firebasekeysPath = path.resolve(__dirname, "../../firebasekeys.json");
 
-console.log("Firebase project ID:", firebaseProjectId);
-
+// Initialize Firebase Admin SDK
 admin.initializeApp({
   projectId: firebaseProjectId,
   ...(environment === "production" && {
@@ -22,138 +47,121 @@ admin.initializeApp({
   }),
 });
 
+// Initialize Firestore
 const db = admin.firestore();
-const auth = admin.auth();
+let serviceAccountJson = {};
 
-let firestoreEmulatorPort;
-let storageEmulatorPort;
-let authEmulatorPort;
+// Load Firebase keys for development environment
 if (environment === "development") {
   const serviceAccountPath = path.resolve(__dirname, "../../firebase.json");
-  let serviceAccountJson = {};
 
   if (fs.existsSync(serviceAccountPath)) {
     serviceAccountJson = JSON.parse(
       fs.readFileSync(serviceAccountPath, "utf8")
     );
   } else {
-    console.log("\x1b[31m%s\x1b[0m", "Firebase service account file not found");
+    throw new Error("Firebase keys file not found");
   }
 
-  firestoreEmulatorPort = serviceAccountJson.emulators?.firestore?.port || 9100;
-  storageEmulatorPort = serviceAccountJson.emulators?.storage?.port || 9199;
-  authEmulatorPort = serviceAccountJson.emulators?.auth?.port || 9099;
-
+  const firestoreEmulatorPort =
+    serviceAccountJson.emulators?.firestore?.port || 9100;
   db.settings({ host: `${firebaseUrl}:${firestoreEmulatorPort}`, ssl: false });
 }
 
-const uploadFile = async (fileBuffer, destination) => {
-  if (process.env.NODE_ENV === "development") {
-    const storage = new Storage({
-      apiEndpoint: `http://${firebaseUrl}:${storageEmulatorPort}`,
-    });
+/**
+ * Uploads a file to Firebase Storage.
+ *
+ * @param {Buffer} fileBuffer - The file buffer to upload.
+ * @param {string} destination - The destination path to upload the file.
+ * @returns {Promise<string>} - The public URL of the uploaded file.
+ */
+async function uploadFile(fileBuffer, destination) {
+  try {
+    if (environment === "development") {
+      const storageEmulatorPort =
+        serviceAccountJson.emulators?.storage?.port || 9199;
+      const storage = new Storage({
+        apiEndpoint: `http://${firebaseUrl}:${storageEmulatorPort}`,
+      });
 
-    const bucket = storage.bucket(`${firebaseProjectId}.appspot.com`);
+      const bucket = storage.bucket(`${firebaseProjectId}.appspot.com`);
+      const file = bucket.file(destination);
+
+      await file.save(fileBuffer, { resumable: false, public: true });
+
+      const publicUrl = file.publicUrl();
+      return publicUrl.includes("localhost")
+        ? publicUrl
+        : publicUrl.replace(`${firebaseUrl}`, `localhost`);
+    }
+
+    const bucket = admin.storage().bucket();
     const file = bucket.file(destination);
 
-    try {
-      await file.save(fileBuffer, {
-        resumable: false,
-        public: "yes",
-      });
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    }
-
-    const publicUrl = file.publicUrl() || "";
-    if (publicUrl.includes("localhost")) {
-      return publicUrl;
-    }
-
-    return publicUrl.replace(`${firebaseUrl}`, `localhost`);
-  } else {
-    return new Promise((resolve, reject) => {
-      const bucket = admin.storage().bucket();
-      const file = bucket.file(destination);
+    await new Promise((resolve, reject) => {
       const stream = file.createWriteStream({
-        metadata: {
-          contentType: "application/octet-stream",
-        },
+        metadata: { contentType: "application/octet-stream" },
       });
 
-      stream.on("error", (error) => {
-        console.error("Error uploading file:", error);
-        reject(error);
-      });
-
-      stream.on("finish", async () => {
-        console.log(`${destination} uploaded to Firebase Storage`);
-
-        try {
-          const [url] = await file.getSignedUrl({
-            action: "read",
-            expires: "03-09-2491",
-          });
-          resolve(url);
-        } catch (error) {
-          console.error("Error generating signed URL:", error);
-          reject(error);
-        }
-      });
-
+      stream.on("error", reject);
+      stream.on("finish", resolve);
       stream.end(fileBuffer);
     });
-  }
-};
 
+    const [url] = await file.getSignedUrl({
+      action: "read",
+      expires: "03-09-2491",
+    });
+
+    return url;
+  } catch (error) {
+    throw new Error(`Error uploading file: ${error.message}`);
+  }
+}
+
+/**
+ * Writes a large array of data to Firestore using batch writes.
+ * Splits the data into chunks and writes them sequentially.
+ *
+ * @param {string} collectionPath - The Firestore collection path.
+ * @param {Array<object>} data - The data to write.
+ * @returns {Promise<void>}
+ */
 async function batchWriteLargeArray(collectionPath, data) {
-  let collectionRef = db.collection(collectionPath);
-  // empty collection
-  const query = await collectionRef.get();
-  for (const doc of query.docs) {
-    await doc.ref.delete();
-  }
-  console.log("Collection emptied");
-
+  const collectionRef = db.collection(collectionPath);
   const chunkSize = 500;
-  const batches = [];
 
   for (let i = 0; i < data.length; i += chunkSize) {
     const batch = db.batch();
-    const chunk = data.slice(i, i + chunkSize);
-
-    chunk.forEach((doc) => {
-      const docRef = collectionRef.doc();
-      batch.set(docRef, doc);
+    data.slice(i, i + chunkSize).forEach((doc) => {
+      batch.set(collectionRef.doc(), doc);
     });
-
-    batches.push(batch.commit()); // store each batch commit promise
-  }
-
-  // Wait for all batches to commit sequentially
-  for (const batch of batches) {
-    await batch;
+    await batch.commit(); // Commit each batch before starting the next
   }
 }
 
+/**
+ * Fetches machine data from Firestore by tag.
+ * @param {string} tag - The machine tag.
+ * @returns {Promise<object|null>} The machine data or null if not found.
+ */
 async function getMachineData(tag) {
-  const ref = db.collection("machines").doc(tag);
-  const snapshot = await ref.get();
-  const data = snapshot.data();
-
-  return data;
+  return (await db.collection("machines").doc(tag).get()).data();
 }
 
+/**
+ * Updates machine data in Firestore by tag.
+ * @param {string} tag - The machine tag.
+ * @param {object} data - The data to update.
+ * @returns {Promise<void>}
+ */
 async function updateMachineData(tag, data) {
-  const ref = db.collection("machines").doc(tag);
-  await ref.update(data);
+  return db.collection("machines").doc(tag).update(data);
 }
 
 module.exports = {
-  admin,
-  db,
-  getMachineData,
-  updateMachineData,
   uploadFile,
   batchWriteLargeArray,
+  getMachineData,
+  updateMachineData,
 };
