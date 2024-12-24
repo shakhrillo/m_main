@@ -205,7 +205,7 @@ export const ReviewsForm = () => {
       case 0:
         return (
           <div className="mt-4 scrap">
-            <div className="container">
+            <div>
               <form onSubmit={handleGetInfo}>
                 <div className="mb-3 text-center">
                   <div className="scrap__header">
