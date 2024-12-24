@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { useFirebase } from "../contexts/FirebaseProvider"
 import { buyCoins, getPaymentsQuery } from "../services/firebaseService"
 import { formatTimestamp } from "../utils/formatTimestamp"
+import cardIcon from "../assets/icons/credit-card.svg"
+import emptyIcon from "../assets/icons/empty-folder.png"
+import { Table } from "../components/table"
 
 function Payments() {
   const { firestore, user } = useFirebase()
@@ -83,21 +86,130 @@ function Payments() {
     }
   }, [firestore])
 
+  const tableColumns = [
+    {
+      text: "Price",
+      field: "price",
+      render: (row: any) => <span>20</span>,
+    },
+    {
+      text: "Status",
+      field: "status",
+      render: (row: any) => <span>Success</span>,
+    },
+    {
+      text: "Date",
+      field: "date",
+      render: (row: any) => <span>Dec 24, 2024 2:40 PM</span>,
+    },
+  ]
+
   return (
     <div>
-      <div className="d-flex align-items-center gap-3 py-3 my-5">
-        <h3 className="m-0">Payments</h3>
-        <button className="button button-lg button-success ml-auto">
+      <div className="d-flex align-items-center gap-3">
+        <div className="d-flex gap-2">
+          <div className="rounded bg-light d-flex justify-content-center align-items-center reviews__icon">
+            <img src={cardIcon} alt="icon" width={"18px"} />
+          </div>
+          <h4>Payments</h4>
+        </div>
+        {/* <h3 className="m-0">Payments</h3> */}
+        {/* <button className="button button-lg button-success ml-auto">
           {(userInformation?.coinBalance || 0)
             .toFixed()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
           coins
-        </button>
+        </button> */}
       </div>
-      <div className="card">
-        <div className="card-body">
+      <div className="mt-3 row">
+        <div className="col-8 pe-5 border-end">
+          <Table tableHeader={tableColumns} tableBody={history}></Table>
+          {history.length === 0 ? (
+            <div className="d-flex flex-column align-items-center justify-content-center mt-5">
+              <img src={emptyIcon} alt="Empty folder" width={64} />
+              <h6 className="text-muted mt-2">
+                No transactions found in your history.
+              </h6>
+            </div>
+          ) : null}
+          {/* <form>
+              <div className="form-wrap">
+                <label htmlFor="amount" className="form-label">
+                  Amount
+                </label>
+                <input
+                  type="number"
+                  id="amount"
+                  value={amount}
+                  onChange={e => {
+                    const value = e.target.value
+                    setAmount(value)
+                  }}
+                  className="form-select"
+                  min={minAmount}
+                />
+                <p>
+                  Min: {minAmount} coins, Total: {totalPrice} {currency}
+                </p>
+              </div>
+              <button
+                onClick={async () => {
+                  setIsLoading(true)
+                  const coindId =
+                    (await buyCoins(user!.uid, Number(amount) * 100)) || ""
+                  setCoinId(coindId)
+                  setIsLoading(false)
+                }}
+                disabled={isLoading}
+                className="button"
+              >
+                Buy {amount} coins ({totalPrice} {currency})
+              </button>
+            </form> */}
+          {/* <hr /> */}
+          {/* <table className="table">
+            <thead>
+            <tr>
+            <th>Price</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr key={1}>
+                <td>1 usd</td>
+                <td>
+                  <span>"Success"</span>
+                </td>
+                <td>{new Date().toString()}</td>
+              </tr>
+              {history.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.amount / 100} usd</td>
+                  <td>
+                    <span>
+                      {item.status === "succeeded" ? "Success" : "Failed"}
+                    </span>
+                  </td>
+                  <td>{formatTimestamp(item.created)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table> */}
+        </div>
+        {/* <div className="col-2 px-4"></div> */}
+        <div className="col-4 px-5 ">
+          <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
+            <h5 className="m-0">Balance</h5>
+            <button className="btn alert alert-primary py-1 button-success mb-0">
+              {(userInformation?.coinBalance || 0)
+                .toFixed()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
+              coins
+            </button>
+          </div>
           <form>
-            <div className="form-wrap">
+            <div className="form-wrap mt-3 payment__amount">
               <label htmlFor="amount" className="form-label">
                 Amount
               </label>
@@ -112,9 +224,10 @@ function Payments() {
                 className="form-select"
                 min={minAmount}
               />
-              <p>
+              <div className="form-text" id="urlHelp">
+                {/* Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8 */}
                 Min: {minAmount} coins, Total: {totalPrice} {currency}
-              </p>
+              </div>
             </div>
             <button
               onClick={async () => {
@@ -125,34 +238,11 @@ function Payments() {
                 setIsLoading(false)
               }}
               disabled={isLoading}
-              className="button"
+              className="btn btn-primary mt-3"
             >
               Buy {amount} coins ({totalPrice} {currency})
             </button>
           </form>
-          <hr />
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.amount / 100} usd</td>
-                  <td>
-                    <span>
-                      {item.status === "succeeded" ? "Success" : "Failed"}
-                    </span>
-                  </td>
-                  <td>{formatTimestamp(item.created)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
