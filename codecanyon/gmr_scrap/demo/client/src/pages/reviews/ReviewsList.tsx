@@ -119,23 +119,18 @@ const Dashboard: React.FC = () => {
         <Loader cover="full" version={2} />
       ) : (
         <div className="row">
-          <div className="d-flex gap-2">
-            <div className="rounded bg-light d-flex justify-content-center align-items-center">
-              <img src={serverBoltIcon} alt="icon" width={"18px"} />
-            </div>
-            <h4>Reviews</h4>
-          </div>
+          <h4>Reviews</h4>
           <div className="col-12">
-            <div className="row row-cols-4">
-              <div className="col border-end">
+            <div className="row row-cols-4 py-4">
+              <div className="col">
                 <span className="text-muted">All comments</span>
                 <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
               </div>
-              <div className="col border-end">
+              <div className="col">
                 <span className="text-muted">Owner responses</span>
                 <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
               </div>
-              <div className="col border-end">
+              <div className="col">
                 <span className="text-muted">User comments</span>
                 <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
               </div>
@@ -145,37 +140,25 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="col-12 border-bottom">
-            <ul className="table__filter list-unstyled d-flex m-0">
-              <li
-                className={`py-1 px-3 ${activeTableFilter === "all" ? "active" : ""}`}
-                aria-current="page"
-                onClick={() => setActiveTableFilter("all")}
-              >
+          <div className="col-12">
+            <div
+              className="btn-group"
+              role="group"
+              aria-label="Default button group"
+            >
+              <button type="button" className="btn btn-outline-primary">
                 All
-              </li>
-              <li
-                className={`py-1 px-3 ${activeTableFilter === "completed" ? "active" : ""}`}
-                aria-current="page"
-                onClick={() => setActiveTableFilter("completed")}
-              >
+              </button>
+              <button type="button" className="btn btn-outline-primary">
                 Completed
-              </li>
-              <li
-                className={`py-1 px-3 ${activeTableFilter === "pending" ? "active" : ""}`}
-                aria-current="page"
-                onClick={() => setActiveTableFilter("pending")}
-              >
+              </button>
+              <button type="button" className="btn btn-outline-primary">
                 Pending
-              </li>
-              <li
-                className={`py-1 px-3 ${activeTableFilter === "failed" ? "active" : ""}`}
-                aria-current="page"
-                onClick={() => setActiveTableFilter("failed")}
-              >
+              </button>
+              <button type="button" className="btn btn-outline-primary">
                 Failed
-              </li>
-            </ul>
+              </button>
+            </div>
           </div>
           <div className="col-12 mt-4">
             <Table tableHeader={tableColumns} tableBody={completedReviews} />
