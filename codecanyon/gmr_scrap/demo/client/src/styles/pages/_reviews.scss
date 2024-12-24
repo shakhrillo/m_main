@@ -4,21 +4,6 @@
     height: 36px;
   }
 
-  h4 {
-    margin: 0;
-    line-height: unset;
-  }
-
-  &__header > ul > li {
-    span {
-      font-size: 14px;
-    }
-    h4 {
-      font-size: 20px;
-      font-weight: 600;
-    }
-  }
-
   &__table {
     &__filter {
       button {
