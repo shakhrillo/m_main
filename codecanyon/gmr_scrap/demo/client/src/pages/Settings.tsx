@@ -57,20 +57,72 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <div className="container">
-      <div className="d-flex align-items-center gap-3 mb-4">
-        <h2>Settings</h2>
+    <div className="container mt-4 settings">
+      <div className="d-flex align-items-center gap-3">
+        <h3>Settings</h3>
       </div>
-      <div className="card">
-        <div className="card-body">
+      <div className="mt-3 settings__content">
+        <div className="">
           <form
             onSubmit={e => {
               e.preventDefault()
               saveSettings()
             }}
           >
-            <div className="mb-3">
-              <label htmlFor="currency" className="form-label">
+            <div className="mb-3 row justify-content-center align-items-center">
+              <div className="col">
+                <div className="d-inline-flex flex-column">
+                  <label htmlFor="currency" className="form-label">
+                    Currency
+                  </label>
+                  <div className="bg-light p-1 rounded">
+                    <ul className="list-unstyled d-flex m-0">
+                      <li
+                        onClick={() => setCurrency("usd")}
+                        className={`py-1 px-2 rounded text-secondary ${currency === "usd" ? "border bg-white text-black" : ""}`}
+                      >
+                        USD
+                      </li>
+                      <li
+                        onClick={() => setCurrency("eur")}
+                        className={`py-1 px-2 text-secondary rounded ${currency === "eur" ? "border bg-white text-black" : ""}`}
+                      >
+                        EUR
+                      </li>
+                      <li
+                        onClick={() => setCurrency("cad")}
+                        className={`py-1 px-2 text-secondary rounded ${currency === "cad" ? "border bg-white text-black" : ""}`}
+                      >
+                        CAD
+                      </li>
+                    </ul>
+                  </div>
+                  <span className="form-text">Select your currency</span>
+                </div>
+              </div>
+              <div className="col">
+                <div className="mb-3">
+                  <label htmlFor="coin" className="form-label">
+                    1 coin costs in {currency}
+                  </label>
+                  <input
+                    type="text"
+                    name="coin"
+                    id="coin"
+                    className="form-control"
+                    placeholder="0.01"
+                    value={costs}
+                    onChange={e => setCosts(e.target.value)}
+                  />
+                  <a
+                    href="https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts"
+                    className="form-text"
+                  >
+                    Learn more about minimum charge
+                  </a>
+                </div>
+              </div>
+              {/* <label htmlFor="currency" className="form-label">
                 Currency
               </label>
               <select
@@ -83,9 +135,9 @@ const Settings: React.FC = () => {
                 <option value="usd">USD</option>
                 <option value="eur">EUR</option>
                 <option value="cad">CAD</option>
-              </select>
+              </select> */}
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="coin" className="form-label">
                 1 coin costs in {currency}
               </label>
@@ -104,8 +156,8 @@ const Settings: React.FC = () => {
               >
                 Learn more about minimum charge
               </a>
-            </div>
-            <div className="mb-3">
+            </div> */}
+            <div className="mb-3 col-6">
               <label htmlFor="language" className="form-label">
                 Language
               </label>
