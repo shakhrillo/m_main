@@ -231,52 +231,13 @@ export const ReviewsForm = () => {
                   </ol>
                 </nav>
               </div>
-              <div className="scrap__content__header mt-3">
+              <div className="border-bottom mt-3">
                 <h6>
                   {!placeInfoShow ? "URL validation" : "Place information"}
                 </h6>
               </div>
               {!placeInfoShow && (
                 <div className="text-start scrap__content">
-                  {loading ? (
-                    <div className="scrap__content__dim d-flex align-items-center justify-content-center">
-                      {info.error ? (
-                        <div>
-                          <div>
-                            <div className="alert alert-danger">
-                              <strong>Error:</strong> {info.error} <br />
-                              Please try again. Make sure the URL is correct and
-                              the place is available on Google Maps.
-                            </div>
-                            <button
-                              className="btn btn-primary"
-                              onClick={() => {
-                                setOverviewId("")
-                                localStorage.removeItem("overviewId")
-                                setPlaceInfoShow(false)
-                              }}
-                            >
-                              Try again
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <div className="text-center">
-                            <Loader />
-                            <small className="text-muted">
-                              The process may take between 15 to 60 seconds.{" "}
-                              <br />
-                              If it takes too long, please try again.
-                            </small>
-                            <small>Spent time: {spentTime(info)}</small>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
                   <div className="mt-3 scrap__content__body">
                     <label htmlFor="url" className="form-label">
                       URL <span className="required">*</span>
@@ -298,8 +259,29 @@ export const ReviewsForm = () => {
                       type="submit"
                       disabled={loading || !isUrlValid}
                     >
-                      Validate URL
+                      {loading ? "Loading..." : "Validate URL"}
                     </button>
+                    {info.error && (
+                      <div className="mt-3">
+                        <div>
+                          <div className="alert alert-danger">
+                            <strong>Error:</strong> {info.error} <br />
+                            Please try again. Make sure the URL is correct and
+                            the place is available on Google Maps.
+                          </div>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                              setOverviewId("")
+                              localStorage.removeItem("overviewId")
+                              setPlaceInfoShow(false)
+                            }}
+                          >
+                            Try again
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
