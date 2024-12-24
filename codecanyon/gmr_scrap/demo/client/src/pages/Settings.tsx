@@ -57,7 +57,7 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <div className="container mt-4 settings">
+    <div className="mt-4 settings">
       <div className="d-flex align-items-center gap-3">
         <h3>Settings</h3>
       </div>
