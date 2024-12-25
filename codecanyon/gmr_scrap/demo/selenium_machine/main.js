@@ -41,7 +41,9 @@
 require("dotenv").config();
 
 // Import dependencies
-const { By, WebDriver } = require("selenium-webdriver");
+const ora = require("ora");
+const ms = require("ms");
+const { WebDriver } = require("selenium-webdriver");
 const { getMachineData } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
@@ -61,6 +63,7 @@ if (!tag) {
 
 const openReviewsTab = getScriptContent("openReviewsTab.js", "scripts");
 const extracter = getScriptContent("extracter.js", "scripts");
+const checkUpdates = getScriptContent("checkUpdates.js", "scripts");
 const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
 const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
 const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
@@ -105,8 +108,17 @@ let data = {
  */
 let driver;
 
+// Initialize the spinner
+const spinner = ora({
+  text: "Scraping reviews...",
+  spinner: "dots",
+  color: "cyan",
+}).start();
+
 (async () => {
   try {
+    let scrapStartTime = Date.now();
+
     // Fetch machine data
     data = {
       ...data,
@@ -115,6 +127,7 @@ let driver;
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
+    spinner.text = `Scraping reviews from ${data.url}`;
 
     // Initialize Selenium WebDriver
     driver = await getDriver({
@@ -135,74 +148,94 @@ let driver;
       `window.gmrScrap = ${JSON.stringify(data, null, 2)}`
     );
 
+    // Execute the extracter script
+    await driver.executeScript(extracter);
+
     // Open reviews tab
     await driver.executeScript(openReviewsTab);
 
-    // ----------------- Wait for the reviews to load -----------------
-    let extractedReviewIds = (await driver.executeScript(getReviewIds)) || [];
+    // Get review IDs before scrolling
+    let extractedReviewIds = await driver.executeScript(getReviewIds);
+
+    const MAX_RETRIES = 20;
     let retries = 0;
 
-    while (extractedReviewIds.length === 0 && retries < 10) {
-      console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
+    while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
+      spinner.text = `Retrying to fetch review IDs... (Attempt ${retries + 1})`;
       try {
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
-        await driver.sleep(2000);
+        await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
-        console.error("Error fetching review IDs:", error);
+        spinner.text = `Error fetching review IDs: ${error.message}`;
+      } finally {
+        retries++;
       }
-      retries++;
     }
 
     if (extractedReviewIds.length === 0) {
-      console.log("No review IDs found. Exiting...");
       await driver.quit();
-      return;
+      throw new Error("No review IDs found");
+    } else {
+      spinner.text = `Fetched ${extractedReviewIds.length} review IDs`;
+      retries = 0;
     }
 
-    // ----------------- Watch the reviews -----------------
-    await driver.executeScript(extracter);
-
-    const MAX_RETRIES = 20;
-
-    while (
-      data.extractedReviews.length < data.limit &&
-      data.retriesCount < MAX_RETRIES
-    ) {
+    // Scroll and extract reviews
+    let lastReviewCount = 0;
+    while (data.extractedReviews.length < data.limit && retries < MAX_RETRIES) {
       const startTime = Date.now();
 
       try {
-        const gmrScrap = await driver.executeScript(
-          "return fetchVisibleElements()"
-        );
+        // Fetch visible elements
+        const gmrScrap = await driver.executeScript(checkUpdates);
         Object.assign(data, gmrScrap);
 
-        data.retriesCount += 1;
+        // Scroll to the loader to load more reviews
+        await driver.executeScript(scrollToLoader);
 
-        if (data.retriesCount > MAX_RETRIES) {
-          console.log("Retries exceeded. Exiting...");
-          break;
+        // Retry if the number of reviews has not changed
+        if (data.extractedReviews.length === lastReviewCount) {
+          retries += 1;
+        } else {
+          retries = 0;
         }
 
+        // Stop if the number of retries exceeds the limit or the limit is reached
+        if (
+          retries > MAX_RETRIES ||
+          data.extractedReviews.length >= data.limit
+        ) {
+          retries = MAX_RETRIES;
+        }
+      } catch (error) {
+        data.error = JSON.stringify(error);
+        retries += 1;
+      } finally {
+        // Update Firestore with the scraped data
         await updateMachineData(tag, {
           totalReviews: data.extractedReviews.length,
         });
 
-        if (data.extractedReviews.length >= data.limit) break;
-      } catch (error) {
-        data.retriesCount += 1;
-        console.error("Error in while loop:", error);
-      } finally {
-        console.log(
-          `Elapsed time: ${Math.round(
-            (Date.now() - startTime) / 1000
-          )} seconds\nRetries: ${data.retriesCount}\nTotal reviews: ${
-            data.extractedReviews.length
-          }\n${"-".repeat(20)}`
-        );
+        // Set the last review count for comparison
+        lastReviewCount = data.extractedReviews.length;
+
+        // Log the progress
+        spinner.text = `
+          Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
+            long: true,
+          })}
+          Elapsed Time (s): ${
+            ms(Date.now() - startTime, { long: true }) || "< 1s"
+          }
+          Retries: ${retries}
+          Total Reviews: ${data.extractedReviews.length}
+        `.replace(/\n\s+/g, "\n");
       }
     }
+
+    spinner.stop();
 
     // ----------------- Complete -----------------
     console.log("-".repeat(20));
@@ -249,6 +282,6 @@ let driver;
     });
 
     // data.extractedReviews
-    console.table(data.extractedReviews.slice(0, 5));
+    // console.table(data.extractedReviews.slice(0, 5));
   }
 })();

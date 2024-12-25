@@ -1,31 +1,52 @@
-(async () => {
-  const tabs = document.querySelectorAll('button[role="tab"]');
-  for (const tab of tabs) {
-    const tabText = tab.innerText;
-    if (tabText.toLowerCase().includes("reviews")) {
-      tab.click();
-      break;
-    }
-  }
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+/**
+ * Open the reviews tab and sort the reviews by the given option. This script is meant to be executed in the browser.
+ *
+ * @param {Object} gmrScrap - The GMR Scrap object.
+ * @returns {Promise<void>}
+ */
+return (async () => {
+  // Open the reviews tab
+  const tabs = Array.from(document.querySelectorAll('button[role="tab"]'));
+  const reviewsTab = tabs.find((tab) =>
+    tab.innerText.trim().toLowerCase().includes("reviews")
+  );
 
+  if (!reviewsTab) {
+    throw new Error("Reviews tab is not available");
+  }
+
+  reviewsTab.click();
+
+  // Sort the reviews
   const sortButton = document.querySelector(
     'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
   );
-  if (sortButton) {
-    sortButton.click();
-    await new Promise((resolve) => setTimeout(resolve, 400));
 
-    const menuItems = document.querySelectorAll('[role="menuitemradio"]');
-    for (const item of menuItems) {
-      const text = item.innerText;
+  if (!sortButton) {
+    throw new Error("Sort button not found");
+  }
 
-      if (text === data.sortBy) {
-        item.click();
-        console.log("Sorting by:", data.sortBy);
-        break;
-      }
+  sortButton.click();
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const menuItems = document.querySelectorAll('[role="menuitemradio"]');
+  let isOptionFound = false;
+
+  for (const item of menuItems) {
+    const text = item.innerText.trim();
+
+    if (text === gmrScrap.sortBy) {
+      item.click();
+      console.log("Sorting by:", gmrScrap.sortBy);
+      isOptionFound = true;
+      break;
     }
   }
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  if (!isOptionFound) {
+    throw new Error(`Sort option "${gmrScrap.sortBy}" not found`);
+  }
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 })();

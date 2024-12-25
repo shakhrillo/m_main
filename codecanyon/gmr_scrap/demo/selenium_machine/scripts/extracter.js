@@ -5,15 +5,6 @@ if (typeof window === "undefined") {
 
 window.checkedIds = new Set();
 
-function scrollToLoader() {
-  const targetParent = document.querySelector(".vyucnb")?.parentElement;
-
-  if (targetParent) {
-    const lastChild = targetParent.lastElementChild;
-    lastChild?.scrollIntoView();
-  }
-}
-
 /**
  * Extracts the user information from the review node
  * @param {HTMLElement} node
@@ -362,8 +353,11 @@ async function validateNode(node) {
   return null;
 }
 
-async function fetchVisibleElements() {
-  // const visibleElements = [];
+/**
+ * Fetches visible elements from the page.
+ * @returns {Promise<GmrScrap>}
+ */
+window.fetchVisibleElements = async () => {
   const scrollContainer =
     document.querySelector(".vyucnb")?.parentElement?.lastChild
       ?.previousSibling;
@@ -385,10 +379,5 @@ async function fetchVisibleElements() {
     }
   }
 
-  scrollToLoader();
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  return gmrScrap;
-}
-
-window.fetchVisibleElements = fetchVisibleElements;
+  return gmrScrap.extractedReviews;
+};

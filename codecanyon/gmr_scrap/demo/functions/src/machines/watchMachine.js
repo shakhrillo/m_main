@@ -5,9 +5,6 @@ const watchMachine = async (event) => {
   const document = event.data.after.data();
   const [type] = machineId.split("_");
 
-  console.log("document", document);
-  console.log("type", type);
-
   const docRef = admin
     .firestore()
     .doc(
@@ -19,8 +16,6 @@ const watchMachine = async (event) => {
     ...document,
     updatedAt: +new Date(),
   });
-
-  console.log("Document updated", machineId);
 };
 
 module.exports = watchMachine;
