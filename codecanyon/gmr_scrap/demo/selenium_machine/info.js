@@ -51,7 +51,6 @@
 require("dotenv").config();
 
 // Import dependencies
-const { By, WebElement } = require("selenium-webdriver");
 const {
   uploadFile,
   getMachineData,
@@ -102,7 +101,7 @@ let data = {};
     await driver.get(data.url);
     await driver.sleep(2000);
 
-    //
+    // Execute the script to extract information from the page
     const info = (await driver.executeScript(getInfo)) || {};
     data = {
       ...data,

@@ -73,6 +73,7 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           `NODE_ENV=${environment}`,
           `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
           `FIREBASE_URL=host.docker.internal`,
+          `CHROME_PATH=/usr/bin/chromium-browser`,
         ],
         Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
         HostConfig: {
