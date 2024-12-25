@@ -143,7 +143,17 @@ async function batchWriteLargeArray(collectionPath, data) {
 /**
  * Fetches machine data from Firestore by tag.
  * @param {string} tag - The machine tag.
- * @returns {Promise<object|null>} The machine data or null if not found.
+ * @returns {Promise<{
+ *  url: string,
+ *  limit: number,
+ *  sortBy: string,
+ *  extractVideoUrls: boolean,
+ *  extractImageUrls: boolean,
+ *  ownerResponse: boolean,
+ *  createdAt: number,
+ *  userId: string,
+ *  reviewId: string
+ * } | undefined>}
  */
 async function getMachineData(tag) {
   return (await db.collection("machines").doc(tag).get()).data();

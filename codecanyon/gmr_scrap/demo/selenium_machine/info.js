@@ -51,6 +51,7 @@
 require("dotenv").config();
 
 // Import dependencies
+const { WebDriver } = require("selenium-webdriver");
 const {
   uploadFile,
   getMachineData,
@@ -76,8 +77,33 @@ const prepareForScreenshot = getScriptContent(
   "scripts"
 );
 
-// Initialize data object
+/**
+ * @type {{
+ *   url: string,
+ *   limit: number,
+ *   sortBy: string,
+ *   extractVideoUrls: boolean,
+ *   extractImageUrls: boolean,
+ *   ownerResponse: boolean,
+ *   createdAt: number,
+ *   updatedAt: number,
+ *   userId: string,
+ *   reviewId: string,
+ *   address: string,
+ *   reviews: number,
+ *   rating: number,
+ *   screenshot: string,
+ *   title: string,
+ *   error: string
+ * }}
+ * The machine data object.
+ */
 let data = {};
+
+/**
+ * @type {WebDriver | undefined} The Selenium WebDriver instance.
+ */
+let driver;
 
 (async () => {
   try {
@@ -88,7 +114,7 @@ let data = {};
     }
 
     // Initialize Selenium WebDriver
-    const driver = await getDriver({
+    driver = await getDriver({
       timeouts: {
         implicit: Number(process.env.IMPLICIT_TIMEOUT || 60000), // For locating elements (milliseconds)
         pageLoad: Number(process.env.PAGE_LOAD_TIMEOUT || 60000), // For page load (milliseconds)
@@ -101,25 +127,33 @@ let data = {};
     await driver.get(data.url);
     await driver.sleep(2000);
 
-    // Execute the script to extract information from the page
+    /**
+     * Execute the script to extract information from the page.
+     * @type {{
+     *  address: string,
+     *  reviews: number,
+     *  rating: number,
+     *  error: string
+     * }}
+     */
     const info = (await driver.executeScript(getInfo)) || {};
     data = {
       ...data,
       ...info,
     };
 
-    // Prepare for screenshot
+    // Prepare for screenshot by removing unnecessary elements
     await driver.executeScript(prepareForScreenshot);
     await driver.sleep(2000);
+
+    // Capture a screenshot of the page
     const screenshot = await driver.takeScreenshot();
     const screenshotBuffer = Buffer.from(screenshot, "base64");
-    data.screenshot = await uploadFile(
-      screenshotBuffer,
-      `${tag}/screenshot.png`
-    );
-  } catch (err) {
-    data.error = JSON.stringify(err);
-    console.error("Error:", err);
+    const imageName = `${tag}.png`;
+    data.screenshot = await uploadFile(screenshotBuffer, imageName);
+  } catch (error) {
+    data.error = JSON.stringify(error);
+    console.error(error);
   } finally {
     await updateMachineData(tag, data);
     console.log(JSON.stringify(data, null, 2));
