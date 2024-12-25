@@ -110,7 +110,7 @@ function Payments() {
     <div className="container-fluid">
       <h3>Payments</h3>
       <div className="mt-3 row">
-        <div className="col-8 pe-5 border-end">
+        <div className="col-8">
           <Table tableHeader={tableColumns} tableBody={history}></Table>
           {history.length === 0 ? (
             <div className="d-flex flex-column align-items-center justify-content-center mt-5">
@@ -121,7 +121,7 @@ function Payments() {
             </div>
           ) : null}
         </div>
-        <div className="col-4 px-5 ">
+        <div className="col-4">
           <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
             <h5 className="m-0">Balance</h5>
             <button className="btn alert alert-primary py-1 button-success mb-0">
@@ -132,7 +132,7 @@ function Payments() {
             </button>
           </div>
           <form>
-            <div className="form-wrap mt-3 payment__amount">
+            <div className="mt-3">
               <label htmlFor="amount" className="form-label">
                 Amount
               </label>

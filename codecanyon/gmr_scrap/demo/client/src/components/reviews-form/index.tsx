@@ -4,35 +4,8 @@ import {
   startExtractGmapReviewsOverview,
 } from "../../services/firebaseService"
 import { useFirebase } from "../../contexts/FirebaseProvider"
-import {
-  collection,
-  doc,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-} from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
-import StarRating from "../star-rating"
-import Loader from "../loader"
-import { CodeBlock, dracula } from "react-code-blocks"
-import { spentTime } from "../../utils/spentTime"
-import { formatStats } from "../../utils/formatStats"
-
-const steps = [
-  {
-    title: "Validate URL",
-    description: "Enter the URL to scrape reviews from.",
-  },
-  {
-    title: "Review scraping",
-    description: "Review scraping is in progress. Please wait.",
-  },
-  {
-    title: "Start scraping",
-    description: "Scraping completed. You can now download the reviews.",
-  },
-]
 
 export const ReviewsForm = () => {
   const { user, firestore } = useFirebase()
@@ -144,27 +117,6 @@ export const ReviewsForm = () => {
     return unsubscribe
   }, [firestore, user, overviewId])
 
-  // useEffect(() => {
-  //   if (!firestore || !user || !overviewId) return
-  //   setPendingMessages([])
-  //   const collectionRef = query(
-  //     collection(
-  //       firestore,
-  //       `users/${user.uid}/reviewOverview/${overviewId}/status`,
-  //     ),
-  //     orderBy("createdAt", "desc"),
-  //     limit(15),
-  //   )
-  //   const unsubscribe = onSnapshot(collectionRef, snapshot => {
-  //     const messages = snapshot.docs.map(doc => doc.data())
-  //     console.log("messages", messages)
-  //     setPendingMessages(messages as any)
-  //   })
-
-  //   return unsubscribe
-  // }, [firestore, user, overviewId])
-
-  // userId, reviewId,
   useEffect(() => {
     if (!firestore || !user || !overviewId) return
     const unsubscribe = onSnapshot(
@@ -194,267 +146,188 @@ export const ReviewsForm = () => {
     setIsUrlValid(validateUrl(scrap.url))
   }, [scrap.url])
 
-  const renderStepContent = () => {
-    return (
-      <div>
-        <form onSubmit={handleGetInfo}>
-          <div className="mb-3">
-            <h3>Scrap Reviews</h3>
-            <div className="my-4 bg-light px-3 py-1 rounded">
-              <nav aria-label="breadcrumb m-0">
-                <ol className="breadcrumb m-0">
-                  {!placeInfoShow ? (
-                    <li className="breadcrumb-item text-muted">
-                      <span>URL validation / </span>
-                    </li>
-                  ) : (
-                    <>
-                      <li className="breadcrumb-item cursor-pointer">
-                        <a
-                          className="text-underline text-muted cursor-pointer"
-                          onClick={() => setPlaceInfoShow(false)}
-                        >
-                          <span>URL validation</span>
-                        </a>
-                      </li>
-                      <li
-                        className="breadcrumb-item active"
-                        aria-current="page"
-                      >
-                        <span>Library</span>
-                      </li>
-                    </>
-                  )}
-                </ol>
-              </nav>
-            </div>
-            <div className="border-bottom mt-3">
-              <h6>{!placeInfoShow ? "URL validation" : "Place information"}</h6>
-            </div>
-            {!placeInfoShow && (
-              <div className="text-start">
-                <div className="mt-3">
-                  <label htmlFor="url" className="form-label">
-                    URL <span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="url"
-                    value={scrap.url}
-                    onChange={e => handleInputChange("url", e.target.value)}
-                    placeholder="https://maps.app.goo.gl/..."
-                    disabled={loading}
-                    className="form-control col"
-                  />
-                  <div className="form-text" id="urlHelp">
-                    Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
-                  </div>
-                  <button
-                    className="btn btn-primary col-2 mt-3"
-                    type="submit"
-                    disabled={loading || !isUrlValid}
-                  >
-                    {loading ? "Loading..." : "Validate URL"}
-                  </button>
-                  {info.error && (
-                    <div className="mt-3">
-                      <div>
-                        <div className="alert alert-danger">
-                          <strong>Error:</strong> {info.error} <br />
-                          Please try again. Make sure the URL is correct and the
-                          place is available on Google Maps.
-                        </div>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            setOverviewId("")
-                            localStorage.removeItem("overviewId")
-                            setPlaceInfoShow(false)
-                          }}
-                        >
-                          Try again
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-            {placeInfoShow && (
-              <div>
-                <div className="mt-3">
-                  <div>
-                    <h2>{info.title}</h2>
-                    <p className="card-text text-muted">{info.address}</p>
-                    <small>
-                      <a href={info.url} target="_blank" rel="noreferrer">
-                        {info.url}
-                      </a>
-                    </small>
-                    <form onSubmit={handleStartScraping}>
-                      <div className="d-flex mt-5 gap-4">
-                        <div className="mb-3 card p-3 w-50">
-                          <label htmlFor="limit" className="form-label">
-                            Limit
-                          </label>
-                          <input
-                            className="form-control"
-                            type="number"
-                            id="limit"
-                            value={scrap.limit}
-                            onChange={e =>
-                              handleInputChange("limit", Number(e.target.value))
-                            }
-                          />
-                          <div className="form-text" id="limitHelp">
-                            Available reviews:{" "}
-                            {(info.reviews || "0").toLocaleString()} <br />
-                            Maximum reviews that can be scraped depends on the
-                            Machine's memory
-                          </div>
-                        </div>
-
-                        <div className="mb-3 card p-3 w-50">
-                          <label htmlFor="sortBy" className="form-label">
-                            Sort by
-                          </label>
-                          <select
-                            disabled={loading}
-                            id="sortBy"
-                            value={scrap.sortBy}
-                            onChange={e =>
-                              handleInputChange("sortBy", e.target.value)
-                            }
-                            className="form-select"
-                          >
-                            {[
-                              "Most relevant",
-                              "Newest",
-                              "Lowest rating",
-                              "Highest rating",
-                            ].map((option, i) => (
-                              <option key={i} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="form-text" id="sortByHelp">
-                            By default, reviews are sorted by relevance. And the
-                            number of reviews is limited to less than 1000.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-3 mt-4">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="extractImageUrls"
-                            checked={scrap.extractImageUrls}
-                            onChange={() =>
-                              handleCheckboxChange("extractImageUrls")
-                            }
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="extractImageUrls"
-                          >
-                            Extract image URLs
-                          </label>
-                          <div className="form-text" id="extractImageUrlsHelp">
-                            Extract image URLs from reviews.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="extractVideoUrls"
-                            checked={scrap.extractVideoUrls}
-                            onChange={() =>
-                              handleCheckboxChange("extractVideoUrls")
-                            }
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="extractVideoUrls"
-                          >
-                            Extract video URLs
-                          </label>
-                          <div className="form-text" id="extractVideoUrlsHelp">
-                            Extract video URLs from reviews.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="ownerResponse"
-                            checked={scrap.ownerResponse}
-                            onChange={() =>
-                              handleCheckboxChange("ownerResponse")
-                            }
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="ownerResponse"
-                          >
-                            Owner response
-                          </label>
-                          <div className="form-text" id="ownerResponseHelp">
-                            Extract owner responses to reviews.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <button
-                          className="btn btn-outline-danger me-3"
-                          onClick={() => setPlaceInfoShow(false)}
-                          disabled={loading}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="btn btn-primary ms-auto"
-                          type="submit"
-                          disabled={loading}
-                        >
-                          Start Scraping ({scrap.limit} coins)
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            )}
+  const URLValidation: React.FC<{}> = () => (
+    <div className="mt-3">
+      <label htmlFor="url" className="form-label">
+        URL <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="url"
+        value={scrap.url}
+        onChange={e => handleInputChange("url", e.target.value)}
+        placeholder="https://maps.app.goo.gl/..."
+        disabled={loading}
+        className="form-control col"
+      />
+      <div className="form-text" id="urlHelp">
+        Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8
+      </div>
+      <button
+        className="btn btn-primary mt-3"
+        type="submit"
+        disabled={loading || !isUrlValid}
+      >
+        {loading ? "Loading..." : "Validate URL"}
+      </button>
+      {info.error && (
+        <div className="mt-3">
+          <div className="alert alert-danger">
+            <strong>Error:</strong> {info.error} <br />
+            Please try again. Make sure the URL is correct and the place is
+            available on Google Maps.
           </div>
-        </form>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setOverviewId("")
+              localStorage.removeItem("overviewId")
+              setPlaceInfoShow(false)
+            }}
+          >
+            Try again
+          </button>
+        </div>
+      )}
+    </div>
+  )
+
+  const PlaceInfoForm: React.FC<{}> = () => {
+    const formCheckContent = [
+      {
+        id: "extractImageUrls",
+        checked: scrap.extractImageUrls,
+        onChange: () => handleCheckboxChange("extractImageUrls"),
+        label: "Extract image URLs",
+        htmlFor: "extractImageUrls",
+        text: "Extract image URLs from reviews.",
+        textId: "extractImageUrlsHelp",
+      },
+      {
+        id: "extractVideoUrls",
+        checked: scrap.extractVideoUrls,
+        onChange: () => handleCheckboxChange("extractVideoUrls"),
+        label: "Extract video URLs",
+        htmlFor: "extractVideoUrls",
+        text: "Extract video URLs from reviews.",
+        textId: "extractVideoUrlsHelp",
+      },
+      {
+        id: "ownerResponse",
+        checked: scrap.ownerResponse,
+        onChange: () => handleCheckboxChange("ownerResponse"),
+        label: "Owner response",
+        htmlFor: "ownerResponse",
+        text: "Extract owner responses to reviews.",
+        textId: "ownerResponseHelp",
+      },
+    ]
+    return (
+      <div className="mt-3">
+        <h2>{info.title}</h2>
+        <p className="card-text text-muted">{info.address}</p>
+        <small>
+          <a href={info.url} target="_blank" rel="noreferrer">
+            {info.url}
+          </a>
+        </small>
+        <div className="d-flex mt-5 gap-4">
+          <div className="mb-3 card p-3 w-50">
+            <label htmlFor="limit" className="form-label">
+              Limit
+            </label>
+            <input
+              className="form-control"
+              type="number"
+              id="limit"
+              value={scrap.limit}
+              onChange={e => handleInputChange("limit", Number(e.target.value))}
+            />
+            <div className="form-text" id="limitHelp">
+              Available reviews: {(info.reviews || "0").toLocaleString()} <br />
+              Maximum reviews that can be scraped depends on the Machine's
+              memory
+            </div>
+          </div>
+
+          <div className="mb-3 card p-3 w-50">
+            <label htmlFor="sortBy" className="form-label">
+              Sort by
+            </label>
+            <select
+              disabled={loading}
+              id="sortBy"
+              value={scrap.sortBy}
+              onChange={e => handleInputChange("sortBy", e.target.value)}
+              className="form-select"
+            >
+              {[
+                "Most relevant",
+                "Newest",
+                "Lowest rating",
+                "Highest rating",
+              ].map((option, i) => (
+                <option key={i} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <div className="form-text" id="sortByHelp">
+              By default, reviews are sorted by relevance. And the number of
+              reviews is limited to less than 1000.
+            </div>
+          </div>
+        </div>
+        <div className="mt-4">
+          {formCheckContent.map(e => (
+            <div className="mb-3" key={e.textId}>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id={e.id}
+                  checked={e.checked}
+                  onChange={e.onChange}
+                />
+                <label className="form-check-label" htmlFor={e.htmlFor}>
+                  {e.label}
+                </label>
+                <div className="form-text" id={e.textId}>
+                  {e.text}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4">
+          <button
+            className="btn btn-outline-danger me-3"
+            onClick={() => setPlaceInfoShow(false)}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary ms-auto"
+            type="submit"
+            disabled={loading}
+            onClick={handleStartScraping}
+          >
+            Start Scraping ({scrap.limit} coins)
+          </button>
+        </div>
       </div>
     )
   }
+
   return (
-    <div>
-      {/* <div className="progress mt-3 px-2">
-        {steps.map((s, i) => (
-          <div
-            key={i}
-            className={`progress__step ${i === step ? "active" : ""}`}
-            // className={`progress__step ${i === step ? "active" : ""} ${i > step ? "disabled" : ""}`}
-            onClick={() => setStep(i)}
-          >
-            <div className="progress__text">{s.title}</div>
-          </div>
-        ))}
-      </div> */}
-      {renderStepContent()}
-    </div>
+    <form onSubmit={handleGetInfo}>
+      <h3>Scrap Reviews</h3>
+      <div className="border-bottom mt-4">
+        <h6>{!placeInfoShow ? "URL validation" : "Place information"}</h6>
+      </div>
+      {!placeInfoShow && <URLValidation />}
+      {placeInfoShow && <PlaceInfoForm />}
+    </form>
   )
 }
