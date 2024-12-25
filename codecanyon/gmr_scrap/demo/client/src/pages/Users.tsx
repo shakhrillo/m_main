@@ -58,25 +58,6 @@ const Users: React.FC = () => {
           <h3>Users</h3>
           <div className="mt-4">
             <Table tableHeader={tableHeader} tableBody={users}></Table>
-            {/* <table className="table">
-                <thead>
-                  <tr>
-                    <th>Display Name</th>
-                    <th>Email</th>
-                    <th>Coin</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {users.map(user => (
-                    <tr key={user.id}>
-                      <td>{user.displayName}</td>
-                      <td>{user.email}</td>
-                      <td>{user.coin || "0"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table> */}
           </div>
         </div>
       )}

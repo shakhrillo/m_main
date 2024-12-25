@@ -90,37 +90,25 @@ function Payments() {
     {
       text: "Price",
       field: "price",
-      render: (row: any) => <span>20</span>,
+      render: (row: any) => <span>{row.amount / 100} usd</span>,
     },
     {
       text: "Status",
       field: "status",
-      render: (row: any) => <span>Success</span>,
+      render: (row: any) => (
+        <span>{row.status === "succeeded" ? "Success" : "Failed"}</span>
+      ),
     },
     {
       text: "Date",
       field: "date",
-      render: (row: any) => <span>Dec 24, 2024 2:40 PM</span>,
+      render: (row: any) => <span>{formatTimestamp(row.created)}</span>,
     },
   ]
 
   return (
-    <div>
-      <div className="d-flex align-items-center gap-3">
-        <div className="d-flex gap-2">
-          <div className="rounded bg-light d-flex justify-content-center align-items-center">
-            <img src={cardIcon} alt="icon" width={"18px"} />
-          </div>
-          <h4>Payments</h4>
-        </div>
-        {/* <h3 className="m-0">Payments</h3> */}
-        {/* <button className="button button-lg button-success ml-auto">
-          {(userInformation?.coinBalance || 0)
-            .toFixed()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
-          coins
-        </button> */}
-      </div>
+    <div className="container-fluid">
+      <h3>Payments</h3>
       <div className="mt-3 row">
         <div className="col-8 pe-5 border-end">
           <Table tableHeader={tableColumns} tableBody={history}></Table>
@@ -132,72 +120,7 @@ function Payments() {
               </h6>
             </div>
           ) : null}
-          {/* <form>
-              <div className="form-wrap">
-                <label htmlFor="amount" className="form-label">
-                  Amount
-                </label>
-                <input
-                  type="number"
-                  id="amount"
-                  value={amount}
-                  onChange={e => {
-                    const value = e.target.value
-                    setAmount(value)
-                  }}
-                  className="form-select"
-                  min={minAmount}
-                />
-                <p>
-                  Min: {minAmount} coins, Total: {totalPrice} {currency}
-                </p>
-              </div>
-              <button
-                onClick={async () => {
-                  setIsLoading(true)
-                  const coindId =
-                    (await buyCoins(user!.uid, Number(amount) * 100)) || ""
-                  setCoinId(coindId)
-                  setIsLoading(false)
-                }}
-                disabled={isLoading}
-                className="button"
-              >
-                Buy {amount} coins ({totalPrice} {currency})
-              </button>
-            </form> */}
-          {/* <hr /> */}
-          {/* <table className="table">
-            <thead>
-            <tr>
-            <th>Price</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr key={1}>
-                <td>1 usd</td>
-                <td>
-                  <span>"Success"</span>
-                </td>
-                <td>{new Date().toString()}</td>
-              </tr>
-              {history.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.amount / 100} usd</td>
-                  <td>
-                    <span>
-                      {item.status === "succeeded" ? "Success" : "Failed"}
-                    </span>
-                  </td>
-                  <td>{formatTimestamp(item.created)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
         </div>
-        {/* <div className="col-2 px-4"></div> */}
         <div className="col-4 px-5 ">
           <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
             <h5 className="m-0">Balance</h5>
@@ -225,7 +148,6 @@ function Payments() {
                 min={minAmount}
               />
               <div className="form-text" id="urlHelp">
-                {/* Example URL: https://maps.app.goo.gl/uk3pia9UCuxTYJ2r8 */}
                 Min: {minAmount} coins, Total: {totalPrice} {currency}
               </div>
             </div>

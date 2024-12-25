@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
         <Loader cover="full" version={2} />
       ) : (
         <div className="row">
-          <h4>Reviews</h4>
+          <h3>Reviews</h3>
           <div className="col-12">
             <div className="row row-cols-4 py-4">
               <div className="col">
@@ -146,16 +146,32 @@ const Dashboard: React.FC = () => {
               role="group"
               aria-label="Default button group"
             >
-              <button type="button" className="btn btn-outline-primary">
+              <button
+                type="button"
+                onClick={() => setActiveTableFilter("all")}
+                className={`btn btn-outline-primary ${activeTableFilter === "all" ? "active" : ""}`}
+              >
                 All
               </button>
-              <button type="button" className="btn btn-outline-primary">
+              <button
+                type="button"
+                onClick={() => setActiveTableFilter("completed")}
+                className={`btn btn-outline-primary ${activeTableFilter === "completed" ? "active" : ""}`}
+              >
                 Completed
               </button>
-              <button type="button" className="btn btn-outline-primary">
+              <button
+                type="button"
+                onClick={() => setActiveTableFilter("pending")}
+                className={`btn btn-outline-primary ${activeTableFilter === "pending" ? "active" : ""}`}
+              >
                 Pending
               </button>
-              <button type="button" className="btn btn-outline-primary">
+              <button
+                type="button"
+                onClick={() => setActiveTableFilter("filed")}
+                className={`btn btn-outline-primary ${activeTableFilter === "filed" ? "active" : ""}`}
+              >
                 Failed
               </button>
             </div>
