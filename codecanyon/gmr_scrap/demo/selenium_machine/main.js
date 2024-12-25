@@ -109,11 +109,17 @@ let data = {
 let driver;
 
 // Initialize the spinner
-const spinner = ora({
-  text: "Scraping reviews...",
-  spinner: "dots",
-  color: "cyan",
-}).start();
+const isTTY = process.stdout.isTTY;
+let spinner;
+if (isTTY) {
+  spinner = ora({
+    text: "Scraping reviews...",
+    spinner: "dots",
+    color: "cyan",
+  }).start();
+} else {
+  console.log("Scraping reviews...");
+}
 
 // Main function
 (async () => {
@@ -128,7 +134,11 @@ const spinner = ora({
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
-    spinner.text = `Scraping reviews from ${data.url}`;
+    if (spinner) {
+      spinner.text = `Scraping reviews from ${data.url}`;
+    } else {
+      console.log(`Scraping reviews from ${data.url}`);
+    }
 
     // Initialize Selenium WebDriver
     driver = await getDriver({
@@ -158,18 +168,28 @@ const spinner = ora({
     // Get review IDs before scrolling
     let extractedReviewIds = await driver.executeScript(getReviewIds);
 
-    const MAX_RETRIES = 20;
+    const MAX_RETRIES = 100;
     let retries = 0;
 
     while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
-      spinner.text = `Retrying to fetch review IDs... (Attempt ${retries + 1})`;
+      if (spinner) {
+        spinner.text = `Retrying to fetch review IDs... (Attempt ${
+          retries + 1
+        })`;
+      } else {
+        console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
+      }
       try {
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
-        spinner.text = `Error fetching review IDs: ${error.message}`;
+        if (spinner) {
+          spinner.text = `Error fetching review IDs: ${error.message}`;
+        } else {
+          console.error(`Error fetching review IDs: ${error.message}`);
+        }
       } finally {
         retries++;
       }
@@ -179,7 +199,11 @@ const spinner = ora({
       await driver.quit();
       throw new Error("No review IDs found");
     } else {
-      spinner.text = `Fetched ${extractedReviewIds.length} review IDs`;
+      if (spinner) {
+        spinner.text = `Fetched ${extractedReviewIds.length} review IDs`;
+      } else {
+        console.log(`Fetched ${extractedReviewIds.length} review IDs`);
+      }
       retries = 0;
     }
 
@@ -223,7 +247,8 @@ const spinner = ora({
         lastReviewCount = data.extractedReviews.length;
 
         // Log the progress
-        spinner.text = `
+        if (spinner) {
+          spinner.text = `
           Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
             long: true,
           })}
@@ -233,11 +258,29 @@ const spinner = ora({
           Retries: ${retries}
           Total Reviews: ${data.extractedReviews.length}
         `.replace(/\n\s+/g, "\n");
+        } else {
+          console.log(
+            `
+          Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
+            long: true,
+          })}
+          Elapsed Time (s): ${
+            ms(Date.now() - startTime, { long: true }) || "< 1s"
+          }
+          Retries: ${retries}
+          Total Reviews: ${data.extractedReviews.length}
+        `.replace(/\n\s+/g, "\n")
+          );
+        }
       }
     }
 
     // Upload the extracted data to Firestore
-    spinner.text = "Uploading data to Firestore...";
+    if (spinner) {
+      spinner.text = "Uploading data to Firestore...";
+    } else {
+      console.log("Uploading data to Firestore...");
+    }
     if (data.extractedReviews.length > 0) {
       const jsonContent = JSON.stringify(data.extractedReviews, null, 2);
       const csvContent = [
@@ -275,7 +318,9 @@ const spinner = ora({
       status: "completed",
     });
 
-    spinner.stop();
+    if (spinner) {
+      spinner.stop();
+    }
     console.log(
       `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
     );
