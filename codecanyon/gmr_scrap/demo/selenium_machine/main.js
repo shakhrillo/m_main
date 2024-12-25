@@ -115,6 +115,7 @@ const spinner = ora({
   color: "cyan",
 }).start();
 
+// Main function
 (async () => {
   try {
     let scrapStartTime = Date.now();
@@ -235,23 +236,16 @@ const spinner = ora({
       }
     }
 
-    spinner.stop();
-
-    // ----------------- Complete -----------------
-    console.log("-".repeat(20));
-    console.log("Completed");
-    console.log("-".repeat(20));
-
-    let csvUrl = "";
-    let jsonUrl = "";
+    // Upload the extracted data to Firestore
+    spinner.text = "Uploading data to Firestore...";
     if (data.extractedReviews.length > 0) {
       const jsonContent = JSON.stringify(data.extractedReviews, null, 2);
       const csvContent = [
         Object.keys(data.extractedReviews[0]).join(","),
         ...data.extractedReviews.map((el) => Object.values(el).join(",")),
       ].join("\n");
-      csvUrl = await uploadFile(csvContent, `csv/${tag}.csv`);
-      jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
+      data.csvUrl = await uploadFile(csvContent, `csv/${tag}.csv`);
+      data.jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
     }
 
     await batchWriteLargeArray(
@@ -281,7 +275,9 @@ const spinner = ora({
       status: "completed",
     });
 
-    // data.extractedReviews
-    // console.table(data.extractedReviews.slice(0, 5));
+    spinner.stop();
+    console.log(
+      `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
+    );
   }
 })();
