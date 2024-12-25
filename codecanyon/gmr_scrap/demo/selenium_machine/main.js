@@ -142,52 +142,45 @@ let driver;
     let extractedReviewIds = (await driver.executeScript(getReviewIds)) || [];
     let retries = 0;
 
-    console.log("Initial review ids", extractedReviewIds.length);
     while (extractedReviewIds.length === 0 && retries < 10) {
+      console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
       try {
-        console.log("Retrying to fetch review IDs...");
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(2000);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
-        console.error("Error in while loop", error);
-      } finally {
-        retries++;
+        console.error("Error fetching review IDs:", error);
       }
+      retries++;
     }
-    console.log("Scrolledintials", extractedReviewIds.length);
 
     if (extractedReviewIds.length === 0) {
       console.log("No review IDs found. Exiting...");
-      driver.quit();
+      await driver.quit();
       return;
     }
 
     // ----------------- Watch the reviews -----------------
     await driver.executeScript(extracter);
 
+    const MAX_RETRIES = 20;
+
     while (
       data.extractedReviews.length < data.limit &&
-      data.retriesCount < 20
+      data.retriesCount < MAX_RETRIES
     ) {
-      let startedTime = Date.now();
+      const startTime = Date.now();
+
       try {
         const gmrScrap = await driver.executeScript(
-          `return fetchVisibleElements()`
+          "return fetchVisibleElements()"
         );
-        data = {
-          ...data,
-          ...gmrScrap,
-        };
+        Object.assign(data, gmrScrap);
 
-        if (data.extractedReviews.length === 0) {
-          data.retriesCount++;
-        } else {
-          data.retriesCount = 0;
-        }
+        data.retriesCount += 1;
 
-        if (data.retriesCount > 20) {
+        if (data.retriesCount > MAX_RETRIES) {
           console.log("Retries exceeded. Exiting...");
           break;
         }
@@ -196,21 +189,18 @@ let driver;
           totalReviews: data.extractedReviews.length,
         });
 
-        if (data.extractedReviews.length >= data.limit) {
-          break;
-        }
+        if (data.extractedReviews.length >= data.limit) break;
       } catch (error) {
-        data.retriesCount++;
-        console.error("Error in while loop");
+        data.retriesCount += 1;
+        console.error("Error in while loop:", error);
       } finally {
         console.log(
-          `Elapsed time: (${Math.round(
-            (Date.now() - startedTime) / 1000
-          )} seconds)`
+          `Elapsed time: ${Math.round(
+            (Date.now() - startTime) / 1000
+          )} seconds\nRetries: ${data.retriesCount}\nTotal reviews: ${
+            data.extractedReviews.length
+          }\n${"-".repeat(20)}`
         );
-        console.log("Retries:", data.retriesCount);
-        console.log("Total reviews:", data.extractedReviews.length);
-        console.log("-".repeat(20));
       }
     }
 
