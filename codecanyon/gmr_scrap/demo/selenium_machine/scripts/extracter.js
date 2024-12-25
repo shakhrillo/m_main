@@ -363,7 +363,7 @@ async function validateNode(node) {
 }
 
 async function fetchVisibleElements() {
-  const visibleElements = [];
+  // const visibleElements = [];
   const scrollContainer =
     document.querySelector(".vyucnb")?.parentElement?.lastChild
       ?.previousSibling;
@@ -378,7 +378,7 @@ async function fetchVisibleElements() {
     try {
       const validatedElement = await validateNode(node);
       if (validatedElement) {
-        visibleElements.push(validatedElement);
+        gmrScrap.extractedReviews.push(validatedElement);
       }
     } catch (error) {
       console.error("Error processing node:", error);
@@ -386,8 +386,9 @@ async function fetchVisibleElements() {
   }
 
   scrollToLoader();
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  return visibleElements;
+  return gmrScrap;
 }
 
 window.fetchVisibleElements = fetchVisibleElements;

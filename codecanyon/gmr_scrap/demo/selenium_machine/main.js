@@ -59,7 +59,8 @@ if (!tag) {
   throw new Error("Tag not specified");
 }
 
-const extracterString = getScriptContent("extracter.js", "scripts");
+const openReviewsTab = getScriptContent("openReviewsTab.js", "scripts");
+const extracter = getScriptContent("extracter.js", "scripts");
 const getReviewIds = getScriptContent("getReviewIds.js", "scripts");
 const scrollToLoader = getScriptContent("scrollToLoader.js", "scripts");
 const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
@@ -81,11 +82,23 @@ const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
  *   rating: number,
  *   screenshot: string,
  *   title: string,
- *   error: string
+ *   extractedImageUrls: string[],
+ *   extractedVideoUrls: string[],
+ *   extractedOwnerReviewCount: number,
+ *   extractedUserReviewCount: number,
+ *   extractedReviews: any[],
+ *   retriesCount: number,
  * }}
  * The machine data object.
  */
-let data = {};
+let data = {
+  extractedImageUrls: [],
+  extractedVideoUrls: [],
+  extractedOwnerReviewCount: 0,
+  extractedUserReviewCount: 0,
+  extractedReviews: [],
+  retriesCount: 0,
+};
 
 /**
  * @type {WebDriver | undefined} The Selenium WebDriver instance.
@@ -95,7 +108,10 @@ let driver;
 (async () => {
   try {
     // Fetch machine data
-    data = await getMachineData(tag);
+    data = {
+      ...data,
+      ...((await getMachineData(tag)) || {}),
+    };
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
@@ -110,62 +126,17 @@ let driver;
       chromePath: process.env.CHROME_PATH,
     });
 
-    // ----------------- Start the process -----------------
+    // Load the target website
     await driver.get(data.url);
-    console.log("URL:", data.url);
     await driver.sleep(2000);
 
-    // ----------------- Set config -----------------
+    // Execute the script to set the global variable
     await driver.executeScript(
-      `window.gmrScrap = ${JSON.stringify(
-        {
-          ...data,
-          extractedImageUrls: [],
-          extractedVideoUrls: [],
-          extractedOwnerReviewCount: 0,
-          extractedUserReviewCount: 0,
-        },
-        null,
-        2
-      )}`
+      `window.gmrScrap = ${JSON.stringify(data, null, 2)}`
     );
 
-    // ----------------- Click on the reviews tab -----------------
-    const reviewsTabs =
-      (await driver.findElements(By.css('button[role="tab"]'))) || [];
-    for (const tab of reviewsTabs) {
-      const tabText = await tab.getText();
-      if (tabText.toLowerCase().includes("reviews")) {
-        tab.click();
-        break;
-      }
-    }
-    await driver.sleep(2000);
-
-    // ----------------- Sort the reviews -----------------
-    const sortButton = await driver.findElement(
-      By.css(
-        'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
-      )
-    );
-    if (sortButton) {
-      await sortButton.click();
-      await driver.sleep(400);
-
-      const menuItems = await driver.findElements(
-        By.css('[role="menuitemradio"]')
-      );
-      for (const item of menuItems) {
-        const text = await item.getText();
-
-        if (text === data.sortBy) {
-          await item.click();
-          console.log("Sorting by:", data.sortBy);
-          break;
-        }
-      }
-    }
-    await driver.sleep(2000);
+    // Open reviews tab
+    await driver.executeScript(openReviewsTab);
 
     // ----------------- Wait for the reviews to load -----------------
     let extractedReviewIds = (await driver.executeScript(getReviewIds)) || [];
@@ -194,10 +165,7 @@ let driver;
     }
 
     // ----------------- Watch the reviews -----------------
-    await driver.executeScript(extracterString);
-
-    data.extractedReviews = [];
-    data.retriesCount = 0;
+    await driver.executeScript(extracter);
 
     while (
       data.extractedReviews.length < data.limit &&
@@ -205,17 +173,16 @@ let driver;
     ) {
       let startedTime = Date.now();
       try {
-        let visibleElements = await driver.executeScript(
+        const gmrScrap = await driver.executeScript(
           `return fetchVisibleElements()`
         );
-        await driver.sleep(400);
-        console.log("Visible elements:", visibleElements.length);
+        data = {
+          ...data,
+          ...gmrScrap,
+        };
 
-        if (visibleElements.length === 0) {
+        if (data.extractedReviews.length === 0) {
           data.retriesCount++;
-          visibleElements = await driver.executeScript(
-            `return fetchVisibleElements()`
-          );
         } else {
           data.retriesCount = 0;
         }
@@ -225,8 +192,6 @@ let driver;
           break;
         }
 
-        data.extractedReviews.push(...visibleElements);
-
         await updateMachineData(tag, {
           totalReviews: data.extractedReviews.length,
         });
@@ -234,11 +199,6 @@ let driver;
         if (data.extractedReviews.length >= data.limit) {
           break;
         }
-
-        data = {
-          ...data,
-          ...(await driver.executeScript(`return window.gmrScrap`)),
-        };
       } catch (error) {
         data.retriesCount++;
         console.error("Error in while loop");
