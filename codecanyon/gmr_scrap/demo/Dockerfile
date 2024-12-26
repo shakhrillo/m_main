@@ -1,45 +1,21 @@
 FROM alpine:3.19
 
-# Installs latest Chromium package.
-RUN apk upgrade --no-cache --available \
-    && apk add --no-cache \
-      chromium \
-      chromium-swiftshader \
-      ttf-freefont \
-      font-noto-emoji \
-    && apk add --no-cache \
-      --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community \
-      font-wqy-zenhei
-
-# USER root
-RUN apk add --no-cache \
-    tini make gcc g++ python3 git nodejs npm yarn
-
-# chromedriver installation
-RUN apk add --no-cache chromium-chromedriver
-
-# USER chrome
-# Verify installation
-RUN node -v && npm -v
+# Install necessary packages and Chromium with additional fonts
+RUN apk upgrade --no-cache --available && \
+    apk add --no-cache \
+      chromium chromium-swiftshader chromium-chromedriver \
+      ttf-freefont font-noto-emoji \
+      --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community font-wqy-zenhei && \
+    apk add --no-cache tini make gcc g++ python3 git nodejs npm yarn && \
+    node -v && npm -v && chromium-browser --version
 
 # Set working directory
 WORKDIR /usr/src/app
 
-ENV CHROME_BIN=/usr/bin/chromium-browser \
-    CHROME_PATH=/usr/lib/chromium/
-
-# Console log version of chromium
-RUN chromium-browser --version
-
-# Autorun chrome headless
-ENV CHROMIUM_FLAGS="--disable-software-rasterizer --disable-dev-shm-usage"
-
-# Install dependencies
-COPY selenium_machine/package*.json ./
+# Copy package files and install dependencies
+COPY machine/package*.json ./
 RUN npm install
 
-# Copy the Firebase configuration files
+# Copy Firebase config and application code
 COPY firebase.json firebasekeys.json ../
-
-# Copy the application code
-COPY selenium_machine .
+COPY machine .
