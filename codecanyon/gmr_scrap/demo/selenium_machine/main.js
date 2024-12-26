@@ -276,7 +276,7 @@ let driver;
       status: "completed",
     });
 
-    log(null); // Clear the spinner
+    log(null); // Clear the log
     console.log(
       `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
     );

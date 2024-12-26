@@ -59,6 +59,7 @@ const {
 } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
+const { log } = require("./services/logger");
 
 // Constants
 const tag = process.env.TAG;
@@ -106,6 +107,8 @@ let data = {};
 let driver;
 
 (async () => {
+  log(`Scraping data for tag: ${tag}`);
+
   try {
     // Fetch machine data
     data = await getMachineData(tag);
@@ -141,6 +144,7 @@ let driver;
       ...data,
       ...info,
     };
+    log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
 
     // Prepare for screenshot by removing unnecessary elements
     await driver.executeScript(prepareForScreenshot);
@@ -151,11 +155,13 @@ let driver;
     const screenshotBuffer = Buffer.from(screenshot, "base64");
     const imageName = `${tag}.png`;
     data.screenshot = await uploadFile(screenshotBuffer, imageName);
+    log(`Screenshot uploaded: ${data.screenshot}`);
   } catch (error) {
     data.error = JSON.stringify(error);
-    console.error(error);
+    log(`Error: ${error.message}`);
   } finally {
     await updateMachineData(tag, data);
+    log(null); // Clear the log
     console.log(JSON.stringify(data, null, 2));
   }
 })();
