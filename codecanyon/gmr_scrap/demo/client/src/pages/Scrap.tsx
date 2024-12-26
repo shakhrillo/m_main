@@ -7,7 +7,7 @@ import {
 } from "../services/firebaseService"
 import { doc, onSnapshot } from "firebase/firestore"
 
-export const Scrap = () => {
+const Scrap = () => {
   const { user, firestore } = useFirebase()
   const navigate = useNavigate()
 
@@ -194,10 +194,14 @@ export const Scrap = () => {
   return (
     <form onSubmit={handleGetInfo}>
       <h3>Scrap Reviews</h3>
+
+      {/* Section for URL validation or Place information */}
       <div className="border-bottom mt-4">
         <h6>{!placeInfoShow ? "URL validation" : "Place information"}</h6>
       </div>
-      {!placeInfoShow && (
+
+      {/* URL validation form */}
+      {!placeInfoShow ? (
         <div className="mt-3">
           <label htmlFor="url" className="form-label">
             URL <span className="required">*</span>
@@ -206,9 +210,9 @@ export const Scrap = () => {
             type="text"
             id="url"
             value={scrap.url}
-            onChange={e => handleInputChange("url", e.target.value)}
+            onChange={e => handleInputChange("url", e.target.value)} // Handle URL input change
             placeholder="https://maps.app.goo.gl/..."
-            disabled={loading}
+            disabled={loading} // Disable input while loading
             className="form-control col"
           />
           <div className="form-text" id="urlHelp">
@@ -217,42 +221,45 @@ export const Scrap = () => {
           <button
             className="btn btn-primary mt-3"
             type="submit"
-            disabled={loading || !isUrlValid}
+            disabled={loading || !isUrlValid} // Disable button if loading or URL is invalid
           >
             {loading ? "Loading..." : "Validate URL"}
           </button>
+
+          {/* Show error if validation fails */}
           {info.error && (
-            <div className="mt-3">
-              <div className="alert alert-danger">
-                <strong>Error:</strong> {info.error} <br />
-                Please try again. Make sure the URL is correct and the place is
-                available on Google Maps.
-              </div>
+            <div className="mt-3 alert alert-danger">
+              <strong>Error:</strong> {info.error} <br />
+              Please try again. Make sure the URL is correct and the place is
+              available on Google Maps.
             </div>
           )}
         </div>
-      )}
-      {placeInfoShow && (
+      ) : (
+        /* Display place information if URL validation is successful */
         <div className="mt-3">
           <h2>{info.title}</h2>
           <p className="card-text text-muted">{info.address}</p>
-          <a href={info.url} target="_blank">
-            <img src={info.screenshot} alt="Map of New York" height={320} />
+
+          {/* Show map screenshot and link to place */}
+          <a href={info.url} target="_blank" rel="noopener noreferrer">
+            <img src={info.screenshot} alt="Place Map" height={320} />
           </a>
 
+          {/* Review limit and sorting options */}
           <div className="d-flex mt-5 gap-4">
             <div className="mb-3 card p-3 w-50">
               <label htmlFor="limit" className="form-label">
                 Limit
               </label>
               <input
-                className="form-control"
                 type="number"
                 id="limit"
                 value={scrap.limit}
-                onChange={e =>
-                  handleInputChange("limit", Number(e.target.value))
+                onChange={
+                  e => handleInputChange("limit", Number(e.target.value)) // Update limit value
                 }
+                className="form-control"
               />
               <div className="form-text" id="limitHelp">
                 Available reviews: {(info.reviews || "0").toLocaleString()}{" "}
@@ -267,11 +274,11 @@ export const Scrap = () => {
                 Sort by
               </label>
               <select
-                disabled={loading}
                 id="sortBy"
                 value={scrap.sortBy}
-                onChange={e => handleInputChange("sortBy", e.target.value)}
+                onChange={e => handleInputChange("sortBy", e.target.value)} // Update sorting option
                 className="form-select"
+                disabled={loading} // Disable select while loading
               >
                 {[
                   "Most relevant",
@@ -290,31 +297,35 @@ export const Scrap = () => {
               </div>
             </div>
           </div>
+
+          {/* Checkbox options for additional features */}
           <div className="mt-4">
             {formCheckContent.map(e => (
               <div className="mb-3" key={e.textId}>
                 <div className="form-check">
                   <input
-                    className="form-check-input"
                     type="checkbox"
                     id={e.id}
                     checked={e.checked}
                     onChange={e.onChange}
+                    className="form-check-input"
                   />
                   <label className="form-check-label" htmlFor={e.htmlFor}>
                     {e.label}
                   </label>
                   <div className="form-text" id={e.textId}>
-                    {e.text}
+                    {e.text} {/* Display text for checkbox */}
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Action buttons */}
           <div className="mt-4">
             <button
               className="btn btn-outline-danger me-3"
-              onClick={() => setPlaceInfoShow(false)}
+              onClick={() => setPlaceInfoShow(false)} // Cancel and go back to URL validation
               disabled={loading}
             >
               Cancel
@@ -322,8 +333,8 @@ export const Scrap = () => {
             <button
               className="btn btn-primary ms-auto"
               type="submit"
+              onClick={handleStartScraping} // Start craping reviews
               disabled={loading}
-              onClick={handleStartScraping}
             >
               Start Scraping ({scrap.limit} coins)
             </button>
@@ -333,3 +344,5 @@ export const Scrap = () => {
     </form>
   )
 }
+
+export default Scrap
