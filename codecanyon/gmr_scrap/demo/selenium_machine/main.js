@@ -41,7 +41,6 @@
 require("dotenv").config();
 
 // Import dependencies
-const ora = require("ora");
 const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
 const { getMachineData } = require("./services/firebase");
@@ -210,6 +209,11 @@ let driver;
         }
       } catch (error) {
         data.error = JSON.stringify(error);
+        // Get browser logs
+        let logs = await driver.manage().logs().get("browser");
+        logs.forEach(({ level, message }) => log(`[${level}] ${message}`));
+        await driver.sleep(1000);
+
         retries += 1;
       } finally {
         // Update Firestore with the scraped data

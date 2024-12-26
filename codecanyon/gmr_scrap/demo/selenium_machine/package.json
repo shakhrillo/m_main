@@ -1,19 +1,18 @@
 {
-  "name": "selenium_machine",
+  "name": "gmrscrap-machine",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "GMR Scrap Machine",
+  "main": "main.js",
   "scripts": {
     "info": "node info.js",
-    "start": "node main.js",
-    "testfoo": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node info.js",
-    "test": "TAG=comments_yrkcpmhrwrjwp0roetu2pgrnjesq_qyfrjxp9wtox4dzirqex STORAGE_BUCKET=gs://fir-scrapp.firebasestorage.app FIREBASE_PROJECT_ID=fir-scrapp NODE_ENV=production node main.js"
+    "start": "node main.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "gmrscrap"
+  ],
+  "author": "Shakhrillo",
+  "license": "Envato License",
   "dependencies": {
-    "dockerode": "^4.0.2",
     "dotenv": "^16.4.6",
     "firebase-admin": "^13.0.1",
     "ms": "^2.1.3",
