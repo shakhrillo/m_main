@@ -1,30 +1,38 @@
-import { doc, onSnapshot } from "firebase/firestore"
-import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Table } from "../../components/table"
-import { useFirebase } from "../../contexts/FirebaseProvider"
-import { getReviewsQuery } from "../../services/firebaseService"
-import { formatTimestamp } from "../../utils/formatTimestamp"
-import { reviewsCountRender } from "../../utils/reviewsCountRender"
-import { spentTime } from "../../utils/spentTime"
-import { statusRender } from "../../utils/statusRender"
-import serverBoltIcon from "../../assets/icons/server-bolt.svg"
-import Loader from "../../components/loader"
+import React, { useEffect, useState } from "react" // React imports for state and effect handling
+import { useNavigate } from "react-router-dom" // Hook for navigation
+import { doc, onSnapshot } from "firebase/firestore" // Firestore imports for document snapshot
+import { Table } from "../../components/table" // Custom Table component for displaying data
+import { useFirebase } from "../../contexts/FirebaseProvider" // Context for Firebase integration
+import { getReviewsQuery } from "../../services/firebaseService" // Function to get reviews query
+import { formatTimestamp } from "../../utils/formatTimestamp" // Utility to format timestamps
+import { reviewsCountRender } from "../../utils/reviewsCountRender" // Utility for rendering reviews count
+import { spentTime } from "../../utils/spentTime" // Utility for calculating spent time
+import { statusRender } from "../../utils/statusRender" // Utility for rendering status
+import Loader from "../../components/loader" // Loader component to show while loading data
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate()
-  const { firestore, user } = useFirebase()
+  const navigate = useNavigate() //Hook for navigation
+  const { firestore, user } = useFirebase() // Firebase context to get firestore and user data
+
+  // States for managing dashboard data
   const [info, setInfo] = useState<any>({})
-  const [completedReviews, setCompletedReviews] = useState<any[]>([])
-  const [activeTableFilter, setActiveTableFilter] = useState("all")
+  const [completedReviews, setCompletedReviews] = useState<any[]>([]) // List of complated reviews
+  const [loading, setLoading] = useState(false) // Loading state for fetching data
+  const [activeTableFilter, setActiveTableFilter] = useState("all") // Active table filter
 
-  const [loading, setLoading] = useState(false)
+  const stats = [
+    { label: "All comments", value: info.totalReviews || "0" },
+    { label: "Owner responses", value: info.totalOwnerReviews || "0" },
+    { label: "User comments", value: info.totalUserReviews || "0" },
+    { label: "Images", value: info.totalImages || "0" },
+  ]
 
+  // Table columns configuration
   const tableColumns = [
     {
       text: "Status",
       field: "status",
-      render: (row: any) => statusRender(row.status, { width: 20, height: 20 }),
+      render: (row: any) => statusRender(row.status, { width: 20, height: 20 }), // Render status icon
     },
     {
       text: "Place",
@@ -36,148 +44,135 @@ const Dashboard: React.FC = () => {
           href="#"
           onClick={e => {
             e.preventDefault()
-            navigate(`/reviews/${row.id}`)
+            navigate(`/reviews/${row.id}`) // Navigate to reviews page on click
           }}
         >
-          {row.title || row.url}
+          {row.title || row.url} {/* Display place title or URL */}
         </a>
       ),
     },
     {
       text: "Limit",
       field: "limit",
-      render: (row: any) => <span>{row.limit}</span>,
+      render: (row: any) => <span>{row.limit}</span>, // Display limit value
     },
     {
       text: "Date",
       field: "createdAt",
-      render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>,
+      render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>, // Format creation date
     },
     {
       text: "Updated",
       field: "updatedAt",
-      render: (row: any) => <span>{formatTimestamp(row.updatedAt)}</span>,
+      render: (row: any) => <span>{formatTimestamp(row.updatedAt)}</span>, // Format update date
     },
     {
       text: "Reviews",
       field: "totalReviews",
-      render: (row: any) => reviewsCountRender(row),
+      render: (row: any) => reviewsCountRender(row), // Render review count
     },
     {
       text: "Time",
       field: "timeSpent",
-      render: (row: any) => spentTime(row),
+      render: (row: any) => spentTime(row), // Render time spent
     },
     {
       text: "",
       field: "csv",
-      render: (row: any) => <a href={row.csvUrl}>Csv</a>,
+      render: (row: any) => <a href={row.csvUrl}>Csv</a>, // Provide CSV download
     },
     {
       text: "",
       field: "json",
-      render: (row: any) => <a href={row.jsonUrl}>JSON</a>,
+      render: (row: any) => <a href={row.jsonUrl}>JSON</a>, // // Provide JSON download
     },
   ]
 
+  // Fetch completed reviews data from Firebase
   useEffect(() => {
-    setLoading(() => true)
+    setLoading(() => true) // Set loading state to true during data fetch
     if (!firestore || !user) return
 
-    const unsubscribe = () =>
-      onSnapshot(
-        getReviewsQuery({
-          uid: user.uid,
-          orderByField: "createdAt",
-          loadLimit: 1000,
-        }),
-        snapshot => {
-          setCompletedReviews(
-            snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
-          )
-        },
-      )
+    const unsubscribe = onSnapshot(
+      getReviewsQuery({
+        uid: user.uid,
+        orderByField: "createdAt", // Sort by creation date
+        loadLimit: 1000, // Limit number of reviews
+      }),
+      snapshot => {
+        setCompletedReviews(
+          snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })), // Map Firebase docs to state
+        )
+      },
+    )
 
-    return unsubscribe()
+    return unsubscribe() // Unsubscribe from Firestore listner when component unmounts
   }, [firestore, user])
 
+  // Fetch app info from Firestore
   useEffect(() => {
     if (!firestore || !user) return
 
-    const docRef = doc(firestore, `app/info`)
+    const docRef = doc(firestore, `app/info`) // Get app info document
     const unsubscribe = onSnapshot(docRef, doc => {
-      setInfo(doc.data() || {})
-      setLoading(() => false)
-      console.log("info", info)
+      setInfo(doc.data() || {}) // Update state with the app info
+      setLoading(() => false) // Set loading to false once data is fetched
+      console.log("info", info) // Log fetched info (for debugging purposes)
     })
-    return unsubscribe
+    return unsubscribe // Cleanup on unmount
   }, [firestore, user])
+
+  // Filter the table data based on the active filter
+  const filteredReviews = completedReviews.filter(review => {
+    if (activeTableFilter === "all") return true // Show all reviews
+    return review.status === activeTableFilter // Filter by status
+  })
 
   return (
     <div className="container-fluid">
       {loading ? (
+        // Show loader while data is being fetched
         <Loader cover="full" version={2} />
       ) : (
         <div className="row">
           <h3>Reviews</h3>
           <div className="col-12">
             <div className="row row-cols-4 py-4">
-              <div className="col">
-                <span className="text-muted">All comments</span>
-                <h4>{info.totalReviews ? info.totalReviews : "0"}</h4>
-              </div>
-              <div className="col">
-                <span className="text-muted">Owner responses</span>
-                <h4>{info.totalOwnerReviews ? info.totalOwnerReviews : "0"}</h4>
-              </div>
-              <div className="col">
-                <span className="text-muted">User comments</span>
-                <h4>{info.totalUserReviews ? info.totalUserReviews : "0"}</h4>
-              </div>
-              <div className="col">
-                <span className="text-muted">Images</span>
-                <h4>{info.totalImages ? info.totalImages : "0"}</h4>
-              </div>
+              {/* Summary cards for total reviews */}
+              {stats.map((stat, index) => (
+                <div className="col" key={index}>
+                  <span className="text-muted">{stat.label}</span>
+                  <h4>{stat.value}</h4>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* Filter buttons to select review status */}
           <div className="col-12">
             <div
               className="btn-group"
               role="group"
               aria-label="Default button group"
             >
-              <button
-                type="button"
-                onClick={() => setActiveTableFilter("all")}
-                className={`btn btn-outline-primary ${activeTableFilter === "all" ? "active" : ""}`}
-              >
-                All
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTableFilter("completed")}
-                className={`btn btn-outline-primary ${activeTableFilter === "completed" ? "active" : ""}`}
-              >
-                Completed
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTableFilter("pending")}
-                className={`btn btn-outline-primary ${activeTableFilter === "pending" ? "active" : ""}`}
-              >
-                Pending
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTableFilter("filed")}
-                className={`btn btn-outline-primary ${activeTableFilter === "filed" ? "active" : ""}`}
-              >
-                Failed
-              </button>
+              {["all", "completed", "pending", "filed"].map(filter => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActiveTableFilter(filter)}
+                  className={`btn btn-outline-primary ${
+                    activeTableFilter === filter ? "active" : ""
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Table for displaying reviews based on active filter */}
           <div className="col-12 mt-4">
-            <Table tableHeader={tableColumns} tableBody={completedReviews} />
+            <Table tableHeader={tableColumns} tableBody={filteredReviews} />
           </div>
         </div>
       )}

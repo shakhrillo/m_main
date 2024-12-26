@@ -9,9 +9,6 @@ function SingleReview() {
         <div className="col-12">
           <ReviewInfo />
         </div>
-        {/* <div className="col-12">
-          <ReviewImages />
-        </div> */}
         <div className="col-12">
           <ReviewComments />
         </div>
