@@ -1,9 +1,31 @@
-if (typeof window === "undefined") {
-  console.log("Window is undefined");
-  return;
-}
+/**
+ * @fileoverview This script navigates to each comment and extracts the user information, date, rating, comment, question and answer, response, and media.
+ * It also extracts the image and video URLs from the comments.
+ *
+ * Key Features:
+ * - Extracts user information, date, rating, comment, question and answer, response, and media from each comment.
+ * - Extracts image and video URLs from the comments.
+ *
+ * Usage:
+ * - Script is executed in the browser
+ *
+ * Version History:
+ * - 1.0.0: Initial release with full scraping capabilities.
+ *
+ * Author:
+ * - Shakhrillo
+ *
+ * License:
+ * - This script is licensed under the CodeCanyon Standard License.
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author Shakhrillo
+ * @license CodeCanyon Standard License
+ */
 
-window.checkedIds = new Set();
+// Constants
+const checkedIds = new Set();
 
 /**
  * Extracts the user information from the review node
@@ -325,9 +347,10 @@ async function validateNode(node) {
             videoUrls.push({
               thumb,
               videoUrl,
+              id,
             });
           } else {
-            imageUrls.push({ thumb });
+            imageUrls.push({ thumb, id });
           }
         }
       }

@@ -52,6 +52,7 @@ const {
   batchWriteLargeArray,
   updateMachineData,
 } = require("./services/firebase");
+const { log } = require("./services/logger");
 
 // Constants
 const tag = process.env.TAG;
@@ -108,21 +109,10 @@ let data = {
  */
 let driver;
 
-// Initialize the spinner
-const isTTY = process.stdout.isTTY;
-let spinner;
-if (isTTY) {
-  spinner = ora({
-    text: "Scraping reviews...",
-    spinner: "dots",
-    color: "cyan",
-  }).start();
-} else {
-  console.log("Scraping reviews...");
-}
-
 // Main function
 (async () => {
+  log("Scraping reviews...");
+
   try {
     let scrapStartTime = Date.now();
 
@@ -134,11 +124,7 @@ if (isTTY) {
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
-    if (spinner) {
-      spinner.text = `Scraping reviews from ${data.url}`;
-    } else {
-      console.log(`Scraping reviews from ${data.url}`);
-    }
+    log(`Scraping reviews from ${data.url}`);
 
     // Initialize Selenium WebDriver
     driver = await getDriver({
@@ -172,24 +158,14 @@ if (isTTY) {
     let retries = 0;
 
     while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
-      if (spinner) {
-        spinner.text = `Retrying to fetch review IDs... (Attempt ${
-          retries + 1
-        })`;
-      } else {
-        console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
-      }
+      log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
       try {
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
-        if (spinner) {
-          spinner.text = `Error fetching review IDs: ${error.message}`;
-        } else {
-          console.error(`Error fetching review IDs: ${error.message}`);
-        }
+        log(`Error fetching review IDs: ${error.message}`);
       } finally {
         retries++;
       }
@@ -199,11 +175,7 @@ if (isTTY) {
       await driver.quit();
       throw new Error("No review IDs found");
     } else {
-      if (spinner) {
-        spinner.text = `Fetched ${extractedReviewIds.length} review IDs`;
-      } else {
-        console.log(`Fetched ${extractedReviewIds.length} review IDs`);
-      }
+      log(`Fetched ${extractedReviewIds.length} review IDs`);
       retries = 0;
     }
 
@@ -217,12 +189,14 @@ if (isTTY) {
         const gmrScrap = await driver.executeScript(checkUpdates);
         Object.assign(data, gmrScrap);
 
-        // Scroll to the loader to load more reviews
-        await driver.executeScript(scrollToLoader);
-
         // Retry if the number of reviews has not changed
         if (data.extractedReviews.length === lastReviewCount) {
           retries += 1;
+
+          // Scroll to the loader and container elements to trigger the next batch of reviews
+          await driver.executeScript(scrollToLoader);
+          await driver.sleep(1000);
+          await driver.executeScript(scrollToContainer);
         } else {
           retries = 0;
         }
@@ -247,40 +221,24 @@ if (isTTY) {
         lastReviewCount = data.extractedReviews.length;
 
         // Log the progress
-        if (spinner) {
-          spinner.text = `
-          Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
-            long: true,
-          })}
-          Elapsed Time (s): ${
-            ms(Date.now() - startTime, { long: true }) || "< 1s"
-          }
-          Retries: ${retries}
-          Total Reviews: ${data.extractedReviews.length}
-        `.replace(/\n\s+/g, "\n");
-        } else {
-          console.log(
-            `
-          Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
-            long: true,
-          })}
-          Elapsed Time (s): ${
-            ms(Date.now() - startTime, { long: true }) || "< 1s"
-          }
-          Retries: ${retries}
-          Total Reviews: ${data.extractedReviews.length}
-        `.replace(/\n\s+/g, "\n")
-          );
-        }
+        log(
+          `
+            Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
+              long: true,
+            })}
+            Elapsed Time (s): ${
+              ms(Date.now() - startTime, { long: true }) || "< 1s"
+            }
+            Retries: ${retries}
+            Total Reviews: ${data.extractedReviews.length}
+            Error: ${data.error || "None"}
+          `.replace(/\n\s+/g, "\n")
+        );
       }
     }
 
     // Upload the extracted data to Firestore
-    if (spinner) {
-      spinner.text = "Uploading data to Firestore...";
-    } else {
-      console.log("Uploading data to Firestore...");
-    }
+    log("Uploading data to Firestore...");
     if (data.extractedReviews.length > 0) {
       const jsonContent = JSON.stringify(data.extractedReviews, null, 2);
       const csvContent = [
@@ -318,9 +276,7 @@ if (isTTY) {
       status: "completed",
     });
 
-    if (spinner) {
-      spinner.stop();
-    }
+    log(null); // Clear the spinner
     console.log(
       `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
     );
