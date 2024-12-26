@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  machine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gmr_scrap
+    working_dir: /usr/src/app
+    ports:
+      - "3000:3000" # Replace with your app's actual port if needed
+    volumes:
+      - ./machine:/usr/src/app/machine
+      - ./firebase.json:/usr/src/app/firebase.json
+      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+    environment:
+      NODE_ENV: production

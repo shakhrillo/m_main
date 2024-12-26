@@ -1,0 +1,20 @@
+# Step 1: Build the React app
+FROM node:18 AS build
+
+WORKDIR /usr/src/app
+
+COPY client/package*.json ./
+RUN npm install --legacy-peer-deps
+
+COPY client .
+RUN npm run build
+
+# Step 2: Set up Nginx to serve the React app
+FROM nginx:alpine
+
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+# Expose port 80 to access the app
+EXPOSE 4400
+
+CMD ["nginx", "-g", "daemon off;"]
