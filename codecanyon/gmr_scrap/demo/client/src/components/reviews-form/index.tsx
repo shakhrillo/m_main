@@ -238,7 +238,7 @@ export const ReviewsForm = () => {
               src={info.screenshot}
               alt="Map of New York"
               // width={"100%"}
-              height={320}
+              height={20}
             />
           </a>
 
