@@ -22,25 +22,23 @@ services:
       - app-network
   client:
     build:
-      context: .
-      dockerfile: Dockerfile.client
+      context: ./client
+      dockerfile: Dockerfile
     container_name: gmr_scrap_client
     environment:
-      NODE_ENV: development
+      VITE_ENV: development
     ports:
       - "4200:4200"
     networks:
       - app-network
   server:
     build:
-      context: .
-      dockerfile: Dockerfile.server
+      context: ./server
+      dockerfile: Dockerfile
     container_name: gmr_scrap_server
-    working_dir: /usr/src/app
     volumes:
-      - ./server:/usr/src/app/server
-      - ./firebase.json:/usr/src/app/firebase.json
-      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ./firebase.json:/usr/src/firebase.json
+      - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
       NODE_ENV: development
     ports:
