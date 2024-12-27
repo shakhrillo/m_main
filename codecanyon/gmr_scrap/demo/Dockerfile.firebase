@@ -1,0 +1,7 @@
+FROM node:18 AS build
+WORKDIR /usr/src/app
+COPY firebase.json firebasekeys.json firestore.indexes.json firestore.rules package*.json storage.rules ./
+RUN npm install
+COPY functions ./functions
+RUN cd functions && npm install --legacy-peer-deps && cd ..
+

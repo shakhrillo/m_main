@@ -6,7 +6,7 @@ const { startVmInstance } = require("../controllers/googleController");
 
 const environment = process.env.NODE_ENV || "development";
 const machineBuildImageName =
-  process.env.MACHINE_BUILD_IMAGE_NAME || "gmrscrap-machine";
+  process.env.MACHINE_BUILD_IMAGE_NAME || "gmr_scrap_machine";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "fir-scrapp";
 
 const handleContainerOperations = async (req, res, isInfo = false) => {

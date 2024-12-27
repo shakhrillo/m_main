@@ -9,19 +9,21 @@ RUN npm install --legacy-peer-deps
 
 # Copy the React app files and build the app
 COPY client .
-RUN npm run build
+EXPOSE 4200
+CMD ["npm", "run", "dev"]
+# RUN npm run DEV
 
-# Show the files in the dist folder
-RUN ls -la dist
+# # Show the files in the dist folder
+# RUN ls -la dist
 
-# Step 2: Set up Nginx to serve the React app
-FROM nginx:alpine
+# # Step 2: Set up Nginx to serve the React app
+# FROM nginx:alpine
 
-# Copy the built files from the dist directory to Nginx's html folder
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+# # Copy the built files from the dist directory to Nginx's html folder
+# COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-# Expose port 80 (default for HTTP)
-EXPOSE 80
+# # Expose port 80 (default for HTTP)
+# EXPOSE 80
 
-# Start Nginx in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# # Start Nginx in the foreground
+# CMD ["nginx", "-g", "daemon off;"]

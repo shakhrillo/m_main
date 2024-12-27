@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_ENV=development vite --port 4200",
-    "start": "VITE_ENV=production vite --port 4200",
-    "build": "tsc && vite build --mode production",
+    "start": "vite --port 4200",
+    "build": "VITE_ENV=development tsc && vite build --mode development",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "prettier --write .",

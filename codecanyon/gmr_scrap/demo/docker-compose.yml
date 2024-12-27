@@ -1,13 +1,15 @@
 version: "3.9"
 
 services:
-  react-app:
+  client:
     build:
       context: .
       dockerfile: Dockerfile.client
-    container_name: gmr_scrap_react
+    container_name: gmr_scrap_client
+    environment:
+      NODE_ENV: development
     ports:
-      - "4200:80"
+      - "4200:4200"
     networks:
       - app-network
   server:
@@ -21,7 +23,7 @@ services:
       - ./firebase.json:/usr/src/app/firebase.json
       - ./firebasekeys.json:/usr/src/app/firebasekeys.json
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
     ports:
       - "1337:1337"
     networks:
@@ -30,14 +32,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: gmr_scrap
+    container_name: gmr_scrap_machine
     working_dir: /usr/src/app
     volumes:
       - ./machine:/usr/src/app/machine
       - ./firebase.json:/usr/src/app/firebase.json
       - ./firebasekeys.json:/usr/src/app/firebasekeys.json
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
 
 networks:
   app-network:
