@@ -1,6 +1,25 @@
 version: "3.9"
 
 services:
+  firebase:
+    build:
+      context: .
+      dockerfile: Dockerfile.firebase
+    container_name: gmr_scrap_firebase
+    ports:
+      - "5001:5001"
+      - "9100:9100"
+      - "9199:9199"
+      - "9099:9099"
+      - "4000:4000"
+    environment:
+      FIREBASE_FUNCTIONS_EMULATOR_HOST: "firebase:5001"
+      FIRESTORE_EMULATOR_HOST: "firebase:9100"
+      STORAGE_EMULATOR_HOST: "firebase:9199"
+      FIREBASE_AUTH_EMULATOR_HOST: "firebase:9099"
+      UI_EMULATOR_HOST: "firebase:4000"
+    networks:
+      - app-network
   client:
     build:
       context: .

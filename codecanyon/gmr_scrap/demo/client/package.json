@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "VITE_ENV=development vite --port 4200",
+    "dev": "VITE_ENV=development vite --port 4200 --host",
     "start": "vite --port 4200",
     "build": "VITE_ENV=development tsc && vite build --mode development",
     "preview": "vite preview",
