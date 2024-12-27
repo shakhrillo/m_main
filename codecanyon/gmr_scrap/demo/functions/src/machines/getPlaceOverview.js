@@ -4,10 +4,7 @@ const { createToken } = require("../utils/jwtUtils");
 
 const getPlaceOverview = async (event) => {
   const isEmulator = process.env.FUNCTIONS_EMULATOR;
-  let endpointURL = "https://api.gmrscrap.store";
-  if (isEmulator) {
-    endpointURL = "http://localhost:1337";
-  }
+  const endpointURL = process.env.ENDPOINT_URL;
 
   const snapshot = event.data;
 

@@ -13,6 +13,7 @@ services:
       - "9099:9099"
       - "4000:4000"
     environment:
+      ENDPOINT_URL: "http://host.docker.internal:1337"
       FIREBASE_FUNCTIONS_EMULATOR_HOST: "firebase:5001"
       FIRESTORE_EMULATOR_HOST: "firebase:9100"
       STORAGE_EMULATOR_HOST: "firebase:9199"
@@ -47,14 +48,12 @@ services:
       - app-network
   machine:
     build:
-      context: .
+      context: ./machine
       dockerfile: Dockerfile
     container_name: gmr_scrap_machine
-    working_dir: /usr/src/app
     volumes:
-      - ./machine:/usr/src/app/machine
-      - ./firebase.json:/usr/src/app/firebase.json
-      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ./firebase.json:/usr/src/firebase.json
+      - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
       NODE_ENV: development
 
