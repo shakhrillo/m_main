@@ -13,8 +13,8 @@ RUN apk upgrade --no-cache --available && \
 WORKDIR /usr/src/app
 
 # Copy package files and install dependencies
-COPY package*.json ./
+COPY package.json .
 RUN npm install
 
-# COPY firebase.json firebasekeys.json ../
 COPY . .
+# COPY firebase.json firebasekeys.json ../

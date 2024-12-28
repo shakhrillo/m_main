@@ -83,7 +83,7 @@ services:
 
 networks:
   app-network:
-    external: true
+    # external: true
     driver: bridge
     ipam:
       config:

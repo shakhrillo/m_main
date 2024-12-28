@@ -1,26 +1,42 @@
+console.log("Init script running");
+
 const Docker = require("dockerode");
 const docker = new Docker({
   protocol: "http",
   host: "host.docker.internal",
   port: 2375,
+  timeout: 30000, // Increase timeout to 30 seconds
 });
 
-(async () => {
-  try {
-    let containers = await docker.listContainers();
-    while (!containers) {
-      containers = await docker.listContainers();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Retrying to get containers");
+async function retryDockerAction(action, retries = 15, delay = 2000) {
+  let attempt = 0;
+  while (attempt < retries) {
+    try {
+      return await action(); // Try the Docker action
+    } catch (err) {
+      attempt++;
+      console.error(`Attempt ${attempt} failed: ${err.message}`);
+      if (attempt >= retries) {
+        throw new Error("Maximum retries reached");
+      }
+      console.log(`Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay)); // Wait before retrying
     }
+  }
+}
+
+(async () => {
+  console.log("Starting the init script");
+  try {
+    let containers = await retryDockerAction(() => docker.listContainers());
     console.log("Containers: ");
     console.log(containers);
 
     // Building the image with log stream
     const buildStream = await docker.buildImage(
       {
-        context: __dirname,
-        src: ["Dockerfile"],
+        context: process.cwd(),
+        src: ["."],
       },
       { t: "gmr_scrap_machine" }
     );
@@ -36,9 +52,10 @@ const docker = new Docker({
     });
 
     buildStream.on("error", (err) => {
-      console.error("Build failed:", err);
+      console.error("Build failed:", err.message);
+      console.error("Stack trace:", err.stack);
     });
   } catch (err) {
-    console.error(err);
+    console.error("Failed during init:", err);
   }
 })();
