@@ -9,8 +9,22 @@ const machineBuildImageName =
   process.env.MACHINE_BUILD_IMAGE_NAME || "gmr_scrap_machine";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "fir-scrapp";
 
+var os = require("os");
+// Get the network interfaces
+const networkInterfaces = os.networkInterfaces();
+
+// Find the first non-internal IPv4 address
+const firstIPAddress = Object.values(networkInterfaces)
+  .flat()
+  .find(
+    (iface) => iface && !iface.internal && iface.family === "IPv4"
+  )?.address;
+
 const handleContainerOperations = async (req, res, isInfo = false) => {
   try {
+    console.log(
+      `First IP Address: ${firstIPAddress || "No external IPv4 address found"}`
+    );
     console.log("Request data", req.data);
     const { tag } = req.data;
 
@@ -72,12 +86,13 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           `TAG=${tag}`,
           `NODE_ENV=${environment}`,
           `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
-          `FIREBASE_URL=host.docker.internal`,
+          `FIREBASE_URL=172.9.0.25`,
           `CHROME_PATH=/usr/bin/chromium-browser`,
         ],
         Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
         HostConfig: {
           AutoRemove: !true,
+          // ExtraHosts: ["host.docker.internal:host-gateway"],
         },
       });
     }

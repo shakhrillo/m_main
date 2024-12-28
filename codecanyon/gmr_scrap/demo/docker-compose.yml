@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  docker:
+    image: docker:27.0-dind
+    container_name: gmr_scrap_docker
+    privileged: true
+    volumes:
+      - /var/lib/docker
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebase.json:/usr/src/app/firebase.json
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebasekeys.json:/usr/src/app/firebasekeys.json
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/machine:/usr/src/app
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    ports:
+      - "2375:2375" # Exposes the Docker API on port 2375 (without TLS)
+    working_dir: /usr/src/app
+    networks:
+      app-network:
+        ipv4_address: 172.9.0.26
   firebase:
     build:
       context: .
@@ -20,7 +37,8 @@ services:
       FIREBASE_AUTH_EMULATOR_HOST: "firebase:9099"
       UI_EMULATOR_HOST: "firebase:4000"
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.9.0.25
   client:
     build:
       context: ./client
@@ -31,7 +49,8 @@ services:
     ports:
       - "4200:4200"
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.9.0.27
   server:
     build:
       context: ./server
@@ -45,18 +64,13 @@ services:
     ports:
       - "1337:1337"
     networks:
-      - app-network
-  machine:
-    build:
-      context: ./machine
-      dockerfile: Dockerfile
-    container_name: gmr_scrap_machine
-    volumes:
-      - ./firebase.json:/usr/src/firebase.json
-      - ./firebasekeys.json:/usr/src/firebasekeys.json
-    environment:
-      NODE_ENV: development
+      app-network:
+        ipv4_address: 172.9.0.28
 
 networks:
   app-network:
+    external: true
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.9.0.0/24
