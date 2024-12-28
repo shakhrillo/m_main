@@ -16,5 +16,5 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
-COPY firebase.json firebasekeys.json ../
+# COPY firebase.json firebasekeys.json ../
 COPY . .

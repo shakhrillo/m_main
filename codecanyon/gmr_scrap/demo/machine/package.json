@@ -13,6 +13,7 @@
   "author": "Shakhrillo",
   "license": "Envato License",
   "dependencies": {
+    "dockerode": "^4.0.2",
     "dotenv": "^16.4.6",
     "firebase-admin": "^13.0.1",
     "ms": "^2.1.3",

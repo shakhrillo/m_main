@@ -7,17 +7,31 @@ services:
     privileged: true
     volumes:
       - /var/lib/docker
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebase.json:/usr/src/app/firebase.json
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebasekeys.json:/usr/src/app/firebasekeys.json
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/machine:/usr/src/app
     environment:
       DOCKER_TLS_CERTDIR: ""
     ports:
-      - "2375:2375" # Exposes the Docker API on port 2375 (without TLS)
+      - "2375:2375"
     working_dir: /usr/src/app
     networks:
       app-network:
         ipv4_address: 172.9.0.26
+  machine:
+    build:
+      context: ./machine
+      dockerfile: Dockerfile
+    container_name: gmr_scrap_machine
+    volumes:
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebase.json:/usr/src/app/firebase.json
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebasekeys.json:/usr/src/app/firebasekeys.json
+      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/machine:/usr/src/app
+    working_dir: /usr/src/app
+    networks:
+      app-network:
+        ipv4_address: 172.9.0.48
+    restart: "no"
+    depends_on:
+      - docker
+    entrypoint: ["node", "init.js"]
   firebase:
     build:
       context: .
