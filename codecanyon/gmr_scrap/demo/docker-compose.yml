@@ -2,84 +2,87 @@ version: "3.9"
 
 services:
   docker:
-    image: docker:27.0-dind
-    container_name: gmr_scrap_docker
+    image: ${DOCKER_IMAGE}
+    container_name: ${DOCKER_CONTAINER_NAME}
     privileged: true
     volumes:
       - /var/lib/docker
     environment:
       DOCKER_TLS_CERTDIR: ""
     ports:
-      - "2375:2375"
-    working_dir: /usr/src/app
+      - "${DOCKER_PORT}:2375"
+    working_dir: ${DOCKER_WORKING_DIR}
     networks:
       app-network:
-        ipv4_address: 172.9.0.26
+        ipv4_address: ${DOCKER_IP}
   machine:
     build:
-      context: ./machine
+      context: ${MACHINE_BUILD_CONTEXT}
       dockerfile: Dockerfile
-    container_name: gmr_scrap_machine
+    container_name: ${MACHINE_CONTAINER_NAME}
     volumes:
       - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebase.json:/usr/src/app/firebase.json
       - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebasekeys.json:/usr/src/app/firebasekeys.json
       - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/machine:/usr/src/app
-    working_dir: /usr/src/app
+    working_dir: ${MACHINE_WORKING_DIR}
+    environment:
+      NODE_ENV: development
+      DOCKER_HOST: ${DOCKER_IP}
+      DOCKER_PORT: ${DOCKER_PORT}
     networks:
       app-network:
-        ipv4_address: 172.9.0.48
+        ipv4_address: ${MACHINE_IP}
     restart: "no"
     depends_on:
       - docker
     entrypoint: ["node", "init.js"]
   firebase:
     build:
-      context: .
-      dockerfile: Dockerfile.firebase
-    container_name: gmr_scrap_firebase
+      context: ${FIREBASE_BUILD_CONTEXT}
+      dockerfile: Dockerfile
+    container_name: ${FIREBASE_CONTAINER_NAME}
     ports:
-      - "5001:5001"
-      - "9100:9100"
-      - "9199:9199"
-      - "9099:9099"
-      - "4000:4000"
+      - "${FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"
+      - "${FIRESTORE_EMULATOR_PORT}:9100"
+      - "${STORAGE_EMULATOR_PORT}:9199"
+      - "${FIREBASE_AUTH_EMULATOR_PORT}:9099"
+      - "${UI_EMULATOR_PORT}:4000"
     environment:
-      ENDPOINT_URL: "http://host.docker.internal:1337"
-      FIREBASE_FUNCTIONS_EMULATOR_HOST: "firebase:5001"
-      FIRESTORE_EMULATOR_HOST: "firebase:9100"
-      STORAGE_EMULATOR_HOST: "firebase:9199"
-      FIREBASE_AUTH_EMULATOR_HOST: "firebase:9099"
-      UI_EMULATOR_HOST: "firebase:4000"
+      SERVER_IP: ${SERVER_IP}
+      SERVER_PORT: ${SERVER_PORT}
     networks:
       app-network:
-        ipv4_address: 172.9.0.25
+        ipv4_address: ${FIREBASE_IP}
   client:
     build:
-      context: ./client
+      context: ${CLIENT_BUILD_CONTEXT}
       dockerfile: Dockerfile
-    container_name: gmr_scrap_client
+    container_name: ${CLIENT_CONTAINER_NAME}
     environment:
       VITE_ENV: development
     ports:
-      - "4200:4200"
+      - "${CLIENT_PORT}:4200"
     networks:
       app-network:
-        ipv4_address: 172.9.0.27
+        ipv4_address: ${CLIENT_IP}
   server:
     build:
-      context: ./server
+      context: ${SERVER_BUILD_CONTEXT}
       dockerfile: Dockerfile
-    container_name: gmr_scrap_server
+    container_name: ${SERVER_CONTAINER_NAME}
     volumes:
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
       NODE_ENV: development
+      DOCKER_HOST: ${DOCKER_IP}
+      DOCKER_PORT: ${DOCKER_PORT}
+      FIREBASE_IP: ${FIREBASE_IP}
     ports:
-      - "1337:1337"
+      - "${SERVER_PORT}:1337"
     networks:
       app-network:
-        ipv4_address: 172.9.0.28
+        ipv4_address: ${SERVER_IP}
 
 networks:
   app-network:
@@ -87,4 +90,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.9.0.0/24
+        - subnet: ${NETWORK_SUBNET}

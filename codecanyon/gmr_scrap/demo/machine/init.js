@@ -3,9 +3,8 @@ console.log("Init script running");
 const Docker = require("dockerode");
 const docker = new Docker({
   protocol: "http",
-  host: "host.docker.internal",
-  port: 2375,
-  timeout: 30000, // Increase timeout to 30 seconds
+  host: process.env.DOCKER_HOST || "host.docker.internal",
+  port: process.env.DOCKER_PORT || 2375,
 });
 
 async function retryDockerAction(action, retries = 15, delay = 2000) {

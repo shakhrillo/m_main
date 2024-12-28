@@ -3,8 +3,9 @@ const admin = require("firebase-admin");
 const { createToken } = require("../utils/jwtUtils");
 
 const getPlaceOverview = async (event) => {
-  const isEmulator = process.env.FUNCTIONS_EMULATOR;
-  const endpointURL = process.env.ENDPOINT_URL;
+  const endpointURL = `http://${
+    process.env.SERVER_IP || "host.docker.internal"
+  }:${process.env.SERVER_PORT || 1337}`;
 
   const snapshot = event.data;
 

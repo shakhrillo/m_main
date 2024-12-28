@@ -3,7 +3,9 @@ const axios = require("axios");
 const { createToken } = require("../utils/jwtUtils");
 
 const getPlaceReview = async (event) => {
-  const endpointURL = process.env.ENDPOINT_URL;
+  const endpointURL = `http://${
+    process.env.SERVER_IP || "host.docker.internal"
+  }:${process.env.SERVER_PORT || 1337}`;
 
   const snapshot = event.data;
 
