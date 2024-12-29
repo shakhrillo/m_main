@@ -1,9 +1,7 @@
-version: "3.9"
-
 services:
   stripe-cli:
     image: stripe/stripe-cli
-    container_name: stripe-cli
+    container_name: ${STRIPE_CONTAINER_NAME}
     working_dir: /usr/src/app
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
@@ -15,9 +13,7 @@ services:
       - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/stripe-secrets:/usr/src/app/secrets
     entrypoint: >
       sh -c "
-        # Start the first stripe listen in the background to print the secret
-        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to ${SERVER_IP}:${SERVER_PORT}/stripe/webhook --print-secret > /usr/src/app/secrets/stripe_webhook_secret & 
-        # Run the second stripe listen for webhook forwarding
+        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IP}:${SERVER_PORT}/stripe/webhook
       "
   docker:
