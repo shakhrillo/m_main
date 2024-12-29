@@ -1,0 +1,40 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+bower_components/
+vendor/
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+*.out
+*.class
+*.exe
+
+# IDE Files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Other Temporary Files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.lock
+*.pid
