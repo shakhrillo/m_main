@@ -50,7 +50,7 @@ services:
     restart: "no"
     depends_on:
       - docker
-    entrypoint: ["node", "init.js"]
+    entrypoint: ["npm", "run", "init"]
   firebase:
     build:
       context: ${FIREBASE_BUILD_CONTEXT}
