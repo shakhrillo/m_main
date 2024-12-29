@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app"
 import { connectAuthEmulator, getAuth } from "firebase/auth"
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore"
-
+console.log("firebaseConfig.tsx")
+console.log(import.meta.env)
 const environment = import.meta.env.VITE_ENV
 const apiKey = import.meta.env.VITE_FIREBASE_API_KEY
 const authDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN
@@ -24,6 +25,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 const firestore = getFirestore()
+
+console.log("environment", environment)
 
 if (environment === "development") {
   connectAuthEmulator(
