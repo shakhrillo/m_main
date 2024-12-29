@@ -1,5 +1,3 @@
-console.log("Init script running");
-
 const Docker = require("dockerode");
 const docker = new Docker({
   protocol: "http",

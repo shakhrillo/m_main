@@ -65,6 +65,7 @@ services:
     environment:
       SERVER_IP: ${SERVER_IP}
       SERVER_PORT: ${SERVER_PORT}
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       app-network:
         ipv4_address: ${FIREBASE_IP}
