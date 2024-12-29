@@ -7,7 +7,7 @@ services:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME}
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${STRIPE_IP}
     volumes:
       - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/stripe-secrets:/usr/src/app/secrets
@@ -28,7 +28,7 @@ services:
       - "${DOCKER_PORT}:2375"
     working_dir: ${DOCKER_WORKING_DIR}
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${DOCKER_IP}
   machine:
     build:
@@ -45,7 +45,7 @@ services:
       DOCKER_HOST: ${DOCKER_IP}
       DOCKER_PORT: ${DOCKER_PORT}
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${MACHINE_IP}
     restart: "no"
     depends_on:
@@ -67,7 +67,7 @@ services:
       SERVER_PORT: ${SERVER_PORT}
       JWT_SECRET: ${JWT_SECRET}
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${FIREBASE_IP}
   client:
     build:
@@ -92,7 +92,7 @@ services:
     ports:
       - "${CLIENT_PORT}:4200"
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${CLIENT_IP}
   server:
     build:
@@ -121,11 +121,11 @@ services:
     ports:
       - "${SERVER_PORT}:1337"
     networks:
-      gmrsc-network:
+      gmrscrap-network:
         ipv4_address: ${SERVER_IP}
 
 networks:
-  gmrsc-network:
+  gmrscrap-network:
     driver: bridge
     ipam:
       config:
