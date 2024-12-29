@@ -26,8 +26,15 @@ const auth = getAuth()
 const firestore = getFirestore()
 
 if (environment === "development") {
-  connectAuthEmulator(auth, "http://127.0.0.1:9099")
-  connectFirestoreEmulator(firestore, "127.0.0.1", 9100)
+  connectAuthEmulator(
+    auth,
+    `http://localhost:${import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_PORT}`,
+  )
+  connectFirestoreEmulator(
+    firestore,
+    "localhost",
+    import.meta.env.VITE_FIRESTORE_EMULATOR_PORT,
+  )
 }
 
 export { app, auth, firestore }

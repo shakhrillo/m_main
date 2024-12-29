@@ -19,19 +19,10 @@ admin.initializeApp({
 const db = admin.firestore();
 
 if (environment === "development") {
-  const serviceAccountPath = path.resolve(__dirname, "../firebase.json");
-  let serviceAccountJson = {};
-
-  if (fs.existsSync(serviceAccountPath)) {
-    serviceAccountJson = JSON.parse(
-      fs.readFileSync(serviceAccountPath, "utf8")
-    );
-  } else {
-    console.log("\x1b[31m%s\x1b[0m", "Firebase service account file not found");
-  }
-
-  const firestorePort = serviceAccountJson.emulators?.firestore?.port || 9100;
-  db.settings({ host: `localhost:${firestorePort}`, ssl: false });
+  db.settings({
+    host: `${process.env.FIREBASE_IP}:${process.env.FIRESTORE_EMULATOR_PORT}`,
+    ssl: false,
+  });
 }
 
 module.exports = { admin, db };
