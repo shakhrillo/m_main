@@ -10,7 +10,7 @@ services:
       gmrscrap-network:
         ipv4_address: ${STRIPE_IP}
     volumes:
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/stripe-secrets:/usr/src/app/secrets
+      - ${SOURCE_PATH}/stripe-secrets:/usr/src/app/secrets
     entrypoint: >
       sh -c "
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
@@ -36,9 +36,9 @@ services:
       dockerfile: Dockerfile
     container_name: ${MACHINE_CONTAINER_NAME}
     volumes:
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebase.json:/usr/src/app/firebase.json
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/firebasekeys.json:/usr/src/app/firebasekeys.json
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/machine:/usr/src/app
+      - ${SOURCE_PATH}/firebase.json:/usr/src/app/firebase.json
+      - ${SOURCE_PATH}/firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ${SOURCE_PATH}/machine:/usr/src/app
     working_dir: ${MACHINE_WORKING_DIR}
     environment:
       NODE_ENV: development
@@ -100,7 +100,7 @@ services:
       dockerfile: Dockerfile
     container_name: ${SERVER_CONTAINER_NAME}
     volumes:
-      - /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/stripe-secrets:/usr/src/app/secrets
+      - ${SOURCE_PATH}/stripe-secrets:/usr/src/app/secrets
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
