@@ -154,6 +154,7 @@ export const getReviewsQuery = ({
   orderByField: string
   loadLimit: number
 }) => {
+  console.log(">", { uid, orderByField, loadLimit })
   const collectionReviews = collection(firestore, `users/${uid}/reviews`)
   const reviewsQuery = query(
     collectionReviews,

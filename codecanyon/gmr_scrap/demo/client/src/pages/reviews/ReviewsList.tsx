@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react" // React imports for state and effect handling
 import { useNavigate } from "react-router-dom" // Hook for navigation
-import { doc, onSnapshot } from "firebase/firestore" // Firestore imports for document snapshot
+import { collection, doc, onSnapshot } from "firebase/firestore" // Firestore imports for document snapshot
 import { Table } from "../../components/table" // Custom Table component for displaying data
 import { useFirebase } from "../../contexts/FirebaseProvider" // Context for Firebase integration
 import { getReviewsQuery } from "../../services/firebaseService" // Function to get reviews query
@@ -88,25 +88,17 @@ const Dashboard: React.FC = () => {
     },
   ]
 
-  // Fetch completed reviews data from Firebase
   useEffect(() => {
-    setLoading(() => true) // Set loading state to true during data fetch
+    setLoading(() => true)
     if (!firestore || !user) return
 
-    const unsubscribe = onSnapshot(
-      getReviewsQuery({
-        uid: user.uid,
-        orderByField: "createdAt", // Sort by creation date
-        loadLimit: 1000, // Limit number of reviews
-      }),
-      snapshot => {
-        setCompletedReviews(
-          snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })), // Map Firebase docs to state
-        )
-      },
-    )
-
-    return unsubscribe() // Unsubscribe from Firestore listner when component unmounts
+    const collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
+    const unsubscribe = onSnapshot(collectionReviews, snapshot => {
+      setCompletedReviews(
+        snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
+      )
+    })
+    return unsubscribe
   }, [firestore, user])
 
   // Fetch app info from Firestore

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import logo from "../../assets/images/logo.svg"
 import { useFirebase } from "../../contexts/FirebaseProvider"
 import { googleLogin, login } from "../../services/firebaseService"
 
@@ -43,57 +42,63 @@ const Login: React.FC = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col">
-          <h3>Login</h3>
+        <div className="col col-md-6 col-lg-5 mx-auto">
           <div className="card">
             <div className="card-body">
+              <h1 className="card-title text-center">Sign In</h1>
+              <p className="text-center">Sign in to your account</p>
+              <hr />
               <form onSubmit={handleLogin}>
-                <div className="form-wrap">
+                <div className="mb-3">
                   <label className="form-label" htmlFor="email">
-                    Email <span className="required">*</span>
+                    Email <span className="text-danger">*</span>
                   </label>
                   <input
                     type="email"
                     id="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder="email"
-                    className="form-input"
+                    placeholder="Enter your email"
+                    className="form-control"
                   />
                 </div>
-                <div className="form-wrap">
+                <div className="mb-3">
                   <label className="form-label" htmlFor="password">
-                    Password <span className="required">*</span>
+                    Password <span className="text-danger">*</span>
                   </label>
                   <input
-                    type="text"
-                    id="email"
+                    type="password"
+                    id="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    placeholder="password"
-                    className="form-input"
+                    placeholder="Enter your password"
+                    className="form-control"
                   />
                 </div>
-                <button className="button button-primary" type="submit">
+                <button className="btn btn-primary w-100" type="submit">
                   Sign In
                 </button>
-                {error && <div className="text-danger py-3">{error}</div>}
-                <div className="py-3">
-                  <Link to="/auth/reset-password">
-                    <button className="button button-link">
-                      Forgot password?
-                    </button>
+                {error && <div className="text-danger mt-3">{error}</div>}
+                <div className="mt-3 text-center">
+                  <Link to="/auth/reset-password" className="btn btn-link">
+                    Forgot password?
                   </Link>
                 </div>
               </form>
               <hr />
-              <button className="btn btn-primary" onClick={handleGoogleLogin}>
+              <button
+                className="btn btn-outline-primary w-100 mb-3"
+                onClick={handleGoogleLogin}
+              >
                 <i className="bi bi-google me-2"></i>
                 Login with Google
               </button>
-              <span className="d-block">
-                Don't have an account? <Link to="/auth/register">Register</Link>
-              </span>
+              <p className="text-center mb-0">
+                Don't have an account?{" "}
+                <Link to="/auth/register" className="text-primary">
+                  Register
+                </Link>
+              </p>
             </div>
           </div>
         </div>
