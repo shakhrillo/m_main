@@ -195,11 +195,6 @@ const Scrap = () => {
     <form onSubmit={handleGetInfo}>
       <h3>Scrap Reviews</h3>
 
-      {/* Section for URL validation or Place information */}
-      <div className="border-bottom mt-4">
-        <h6>{!placeInfoShow ? "URL validation" : "Place information"}</h6>
-      </div>
-
       {/* URL validation form */}
       {!placeInfoShow ? (
         <div className="mt-3">

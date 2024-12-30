@@ -5,60 +5,27 @@ import serverBoltIcon from "../../assets/icons/server-bolt.svg"
 import settingsIcon from "../../assets/icons/settings.svg"
 import usersIcon from "../../assets/icons/users.svg"
 
-const Sidebar = () => {
-  return (
-    <div className="sidebar">
-      <ul className="list-unstyled m-0">
-        <li>
-          <NavLink
-            to={"/scrap"}
-            className={({ isActive }) => ` ${isActive ? "active" : ""}`}
-          >
-            <img src={searchIcon} alt="icon" />
-            Scrap
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={"/reviews"}
-            className={({ isActive }) => ` ${isActive ? "active" : ""}`}
-          >
-            <img src={serverBoltIcon} alt="icon" />
-            Reviews
-          </NavLink>
-        </li>
-      </ul>
-      <ul className="list-unstyled m-0">
-        <li>
-          <NavLink
-            to={"/payments"}
-            className={({ isActive }) => ` ${isActive ? "active" : ""}`}
-          >
-            <img src={creditCardIcon} alt="icon" />
-            Payments
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={"/settings"}
-            className={({ isActive }) => ` ${isActive ? "active" : ""}`}
-          >
-            <img src={settingsIcon} alt="icon" />
-            Settings
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={"/users"}
-            className={({ isActive }) => ` ${isActive ? "active" : ""}`}
-          >
-            <img src={usersIcon} alt="icon" />
-            Users
-          </NavLink>
-        </li>
-      </ul>
-    </div>
-  )
-}
+const navItems = [
+  { to: "/scrap", icon: searchIcon, label: "Scrap" },
+  { to: "/reviews", icon: serverBoltIcon, label: "Reviews" },
+  { to: "/payments", icon: creditCardIcon, label: "Payments" },
+  { to: "/settings", icon: settingsIcon, label: "Settings" },
+  { to: "/users", icon: usersIcon, label: "Users" },
+]
+
+const Sidebar = () => (
+  <div className="sidebar">
+    {navItems.map(({ to, icon, label }) => (
+      <NavLink
+        key={to}
+        to={to}
+        className={({ isActive }) => (isActive ? "active" : "")}
+      >
+        <img src={icon} alt={`${label} icon`} />
+        <span>{label}</span>
+      </NavLink>
+    ))}
+  </div>
+)
 
 export default Sidebar

@@ -1,4 +1,32 @@
-// @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+* {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+}
+
+.firebase-emulator-warning {
+  display: none;
+}
 
 @import "./styles/main.scss";
 
@@ -22,15 +50,9 @@
   }
 }
 
-p.firebase-emulator-warning {
-  border: 0 !important;
-  display: inline-block !important;
-  width: 300px !important;
-  right: 0 !important;
-  left: auto !important;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
-  padding: 10px !important;
-  background: #fff !important;
-  border-top-left-radius: 12px !important;
-  font-size: 12px !important;
+// Typography
+
+a {
+  color: #333;
+  text-decoration: none;
 }
