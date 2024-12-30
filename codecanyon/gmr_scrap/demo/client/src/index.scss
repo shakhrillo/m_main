@@ -1,3 +1,5 @@
+@use "./styles/main.scss" as *;
+
 @font-face {
   font-family: "Ubuntu";
   src: url("/src/assets/fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype");
@@ -27,8 +29,6 @@
 .firebase-emulator-warning {
   display: none;
 }
-
-@import "./styles/main.scss";
 
 .video-wrapper,
 .img-wrapper {
