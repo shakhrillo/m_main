@@ -1,5 +1,3 @@
-// src/layouts/PreloaderLayout/PreloaderLayout.tsx
-
 import React, { useEffect, useState } from "react"
 import { checkAuth } from "../../services/firebaseService"
 import Preloader from "./Preloader"
