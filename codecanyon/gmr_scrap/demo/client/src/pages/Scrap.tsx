@@ -24,6 +24,11 @@ const Scrap = () => {
     extractImageUrls: false,
     ownerResponse: true,
   })
+  const [selectedTariff, setSelectedTariff] = useState("default")
+
+  const handleTariffChange = (event: any) => {
+    setSelectedTariff(event.target.value)
+  }
 
   // Handlers for input changes
   const handleInputChange = useCallback(
@@ -112,52 +117,121 @@ const Scrap = () => {
             </div>
           </form>
         </div>
-        <div className="col-md-9">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Default</h5>
-              <p className="card-text">
-                Basic scraping of Google Maps reviews. Extracting from about 100
-                reviews
-              </p>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">Extracting from 100 reviews</li>
-                <li className="list-group-item">Extracting image URLs</li>
-                <li className="list-group-item">Extracting video URLs</li>
-                <li className="list-group-item">Extracting owner responses</li>
-              </ul>
+        <div className="col-md-5">
+          <div className="form-check d-flex flex-column gap-3 tariffs">
+            <div
+              className={`card py-3 px-2 ${selectedTariff === "default" && "tariffs__active-border"}`}
+            >
+              <div className="card-body d-flex gap-3">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="tariffRadio"
+                    value={"default"}
+                    checked={selectedTariff === "default"}
+                    onChange={handleTariffChange}
+                  />
+                </div>
+                <div className="tariffs-content">
+                  <h5 className="card-title">Default</h5>
+                  <p className="text-secondary fw-light">
+                    Basic scraping of Google Maps reviews. Extracting from about
+                    100 reviews
+                  </p>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting from 100 reviews
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting image URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting video URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting owner responses
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Basic</h5>
-              <p className="card-text">
-                Basic scraping of Google Maps reviews. Extracting from about 500
-                reviews
-              </p>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">Extracting from 500 reviews</li>
-                <li className="list-group-item">Extracting image URLs</li>
-                <li className="list-group-item">Extracting video URLs</li>
-                <li className="list-group-item">Extracting owner responses</li>
-              </ul>
+            <div
+              className={`card py-3 px-2 ${selectedTariff === "basic" && "tariffs__active-border"}`}
+            >
+              <div className="card-body d-flex gap-3">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="flexRadioBasic"
+                    id="tariffRadio"
+                    value={"basic"}
+                    checked={selectedTariff === "basic"}
+                    onChange={handleTariffChange}
+                  />
+                </div>
+                <div className="col">
+                  <h5 className="card-title">Basic</h5>
+                  <p className="text-secondary fw-light">
+                    Basic scraping of Google Maps reviews. Extracting from about
+                    500 reviews
+                  </p>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting from 500 reviews
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting image URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting video URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting owner responses
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Pro</h5>
-              <p className="card-text">
-                Basic scraping of Google Maps reviews. Extracting from about
-                1000 reviews
-              </p>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  Extracting from 1000 reviews
-                </li>
-                <li className="list-group-item">Extracting image URLs</li>
-                <li className="list-group-item">Extracting video URLs</li>
-                <li className="list-group-item">Extracting owner responses</li>
-              </ul>
+            <div
+              className={`card py-3 px-2 ${selectedTariff === "pro" && "tariffs__active-border"}`}
+            >
+              <div className="card-body d-flex gap-3">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="flexRadioPro"
+                    id="tariffRadio"
+                    value={"pro"}
+                    checked={selectedTariff === "pro"}
+                    onChange={handleTariffChange}
+                  />
+                </div>
+                <div className="col">
+                  <h5 className="card-title">Pro</h5>
+                  <p className="text-secondary fw-light">
+                    Basic scraping of Google Maps reviews. Extracting from about
+                    1000 reviews
+                  </p>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting from 1000 reviews
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting image URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting video URLs
+                    </li>
+                    <li className="list-group-item text-secondary fw-light">
+                      Extracting owner responses
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
