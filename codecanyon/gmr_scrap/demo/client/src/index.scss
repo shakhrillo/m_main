@@ -1,29 +1,15 @@
 @use "./styles/main.scss" as *;
 
 @font-face {
-  font-family: "Ubuntu";
-  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype");
+  font-family: "Inter";
+  font-style: normal;
   font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Ubuntu";
-  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Ubuntu";
-  src: url("/src/assets/fonts/Ubuntu/Ubuntu-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
+  font-display: swap;
+  src: url("/src/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf");
 }
 
 * {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 400;
+  font-family: "Inter", sans-serif;
 }
 
 .firebase-emulator-warning {
@@ -48,11 +34,4 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-}
-
-// Typography
-
-a {
-  color: #333;
-  text-decoration: none;
 }

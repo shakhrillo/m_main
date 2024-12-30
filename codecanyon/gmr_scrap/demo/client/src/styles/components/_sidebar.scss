@@ -1,5 +1,5 @@
 .sidebar {
-  width: 180px;
+  width: 260px;
   flex-direction: column;
   position: fixed;
   top: 0;
@@ -7,19 +7,21 @@
   bottom: 0;
   padding: 1rem;
   display: flex;
-  background-color: #f8f9fa;
+  font-size: 16px;
 
   a {
-    padding: 0.5rem 0;
-  }
+    align-items: center;
+    border-radius: 0.25rem;
+    display: flex;
+    padding: 0.5rem;
+    text-decoration: none;
 
-  img {
-    width: 18px;
-    top: -2px;
-    position: relative;
+    &.active {
+      background-color: #f0f0f0;
+    }
   }
 
   span {
-    margin-left: 10px;
+    margin-left: 1rem;
   }
 }
