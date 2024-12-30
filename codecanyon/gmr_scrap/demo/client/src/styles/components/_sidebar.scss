@@ -1,18 +1,18 @@
 .sidebar {
-  width: 260px;
-  flex-direction: column;
+  display: flex;
   position: fixed;
   top: 0;
-  left: 0;
   bottom: 0;
+  left: 0;
+  flex-direction: column;
   padding: 1rem;
-  display: flex;
+  width: 260px;
   font-size: 16px;
 
   a {
+    display: flex;
     align-items: center;
     border-radius: 0.25rem;
-    display: flex;
     padding: 0.5rem;
     text-decoration: none;
 
