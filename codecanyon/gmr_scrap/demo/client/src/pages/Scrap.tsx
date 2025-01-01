@@ -151,6 +151,16 @@ const Scrap = () => {
                 alt="helper"
                 className="w-100 rounded mt-4"
               />
+              <img
+                src={helperGif}
+                alt="helper"
+                className="w-100 rounded mt-4"
+              />
+              <img
+                src={helperGif}
+                alt="helper"
+                className="w-100 rounded mt-4"
+              />
             </div>
           </div>
         </div>

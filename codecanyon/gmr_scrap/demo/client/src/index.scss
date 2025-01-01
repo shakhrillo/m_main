@@ -1,18 +1,23 @@
-@use "./styles/main.scss" as *;
-@use "bootstrap/scss/bootstrap.scss" as *;
+// Import Bootstrap and custom styles
+@use "bootstrap/scss/bootstrap" as *;
+@use "./styles/index" as *;
 
+// Define custom font
 @font-face {
   font-style: normal;
   font-weight: 400;
-  src: url("/src/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf");
+  src: url("/src/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf")
+    format("truetype");
   font-family: "Inter";
   font-display: swap;
 }
 
+// Apply global font style
 * {
   font-family: "Inter", sans-serif;
 }
 
+// Reset html and body
 html,
 body {
   margin: 0;
@@ -21,26 +26,7 @@ body {
   color: #333;
 }
 
+// Hide Firebase emulator warning
 .firebase-emulator-warning {
   display: none;
-}
-
-.video-wrapper,
-.img-wrapper {
-  display: flex;
-  position: relative;
-  border-radius: 10px;
-  background: #000;
-  width: 100%;
-  height: 160px;
-  overflow: hidden;
-
-  img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: auto;
-  }
 }
