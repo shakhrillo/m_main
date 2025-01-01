@@ -5,6 +5,7 @@
 .dashboard-layout {
   display: flex;
   flex-direction: row;
+  gap: 24px;
   width: 100%;
   height: 100vh;
 }
@@ -20,4 +21,24 @@
   width: 100%;
   height: 100vh;
   overflow: auto;
+}
+
+.dashboard-title {
+  margin: 20px 0;
+  color: #333;
+}
+
+.dashboard-card {
+  margin-bottom: 24px;
+  box-shadow:
+    0px 1px 4px rgba(0, 0, 0, 0.06),
+    0px 1px 2px rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 24px;
+}
+
+.form-label {
+  margin-bottom: 8px;
+  font-size: 14px;
 }

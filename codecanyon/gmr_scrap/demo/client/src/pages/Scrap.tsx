@@ -93,75 +93,54 @@ const Scrap = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-4">
-          <h2>Premium Scraping</h2>
-          <p className="text-secondary">
-            Extracting reviews from Google Maps with more features
-          </p>
-          <div className="card">
-            <div className="card-body">
-              <form>
-                <div className="mb-3">
-                  <label className="form-label">Google Maps URL</label>
-                  <input
-                    type="url"
-                    value={scrap.url}
-                    onChange={(e) => handleInputChange("url", e.target.value)}
-                    placeholder="https://maps.app.goo.gl/..."
-                    disabled={loading}
-                    className="form-control"
-                  />
+          <h2 className="dashboard-title">Premium Scraping</h2>
+          <div className="dashboard-card">
+            <form>
+              <div className="mb-3">
+                <label className="form-label">Google Maps URL</label>
+                <input
+                  type="url"
+                  value={scrap.url}
+                  onChange={(e) => handleInputChange("url", e.target.value)}
+                  placeholder="https://maps.app.goo.gl/..."
+                  disabled={loading}
+                  className="form-control"
+                />
+              </div>
+              <div className="row">
+                <div className="col-md-4">
+                  <button className="btn btn-secondary w-100">Cancel</button>
                 </div>
-                <div className="row">
-                  <div className="col-md-4">
-                    <button className="btn btn-secondary w-100">Cancel</button>
-                  </div>
-                  <div className="col">
-                    <button
-                      type="submit"
-                      className="btn btn-primary w-100"
-                      disabled={!info.reviews}
-                    >
-                      Get Place Info
-                    </button>
-                  </div>
+                <div className="col">
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                    disabled={!info.reviews}
+                  >
+                    Get Place Info
+                  </button>
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
-          <div className="card mt-4">
-            <div className="card-body">
-              <h5 className="card-title">
-                How to get the Google Maps URL for the place you want to scrape
-              </h5>
-              <ul className="list-group list-group-flush list-group-numbered mt-3">
-                <li className="list-group-item">Go to the Google Maps</li>
-                <li className="list-group-item">
-                  Search for the place you want to scrape
-                </li>
-                <li className="list-group-item">Click on the share button</li>
-                <li className="list-group-item">
-                  Click on the copy link button
-                </li>
-                <li className="list-group-item">
-                  Paste the link in the input field
-                </li>
-              </ul>
-              <img
-                src={helperGif}
-                alt="helper"
-                className="w-100 rounded mt-4"
-              />
-              <img
-                src={helperGif}
-                alt="helper"
-                className="w-100 rounded mt-4"
-              />
-              <img
-                src={helperGif}
-                alt="helper"
-                className="w-100 rounded mt-4"
-              />
-            </div>
+          <div className="dashboard-card">
+            <h5 className="card-title">
+              How to get the Google Maps URL for the place you want to scrape
+            </h5>
+            <ul className="list-group list-group-flush list-group-numbered mt-3">
+              <li className="list-group-item">Go to the Google Maps</li>
+              <li className="list-group-item">
+                Search for the place you want to scrape
+              </li>
+              <li className="list-group-item">Click on the share button</li>
+              <li className="list-group-item">Click on the copy link button</li>
+              <li className="list-group-item">
+                Paste the link in the input field
+              </li>
+            </ul>
+            <img src={helperGif} alt="helper" className="w-100 rounded mt-4" />
+            <img src={helperGif} alt="helper" className="w-100 rounded mt-4" />
+            <img src={helperGif} alt="helper" className="w-100 rounded mt-4" />
           </div>
         </div>
         <div className="col-md-8"></div>
