@@ -154,46 +154,7 @@ const Scrap = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-8">
-          <ul className="list-group">
-            <li className="list-group-item">
-              <input
-                className="form-check-input me-1"
-                type="radio"
-                name="listGroupRadio"
-                value=""
-                id="firstRadio"
-                checked
-              />
-              <label className="form-check-label">
-                <h5>Pay as you go</h5>
-                <p className="text-secondary">
-                  Pay only for the reviews you scrape
-                </p>
-              </label>
-            </li>
-            <li className="list-group-item">
-              <input
-                className="form-check-input me-1"
-                type="radio"
-                name="listGroupRadio"
-                value=""
-                id="secondRadio"
-              />
-              <label className="form-check-label">Second radio</label>
-            </li>
-            <li className="list-group-item">
-              <input
-                className="form-check-input me-1"
-                type="radio"
-                name="listGroupRadio"
-                value=""
-                id="thirdRadio"
-              />
-              <label className="form-check-label">Third radio</label>
-            </li>
-          </ul>
-        </div>
+        <div className="col-md-8"></div>
       </div>
     </div>
   );
