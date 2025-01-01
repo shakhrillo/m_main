@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback } from "react"
-import { useNavigate } from "react-router-dom"
-import { useFirebase } from "../contexts/FirebaseProvider"
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFirebase } from "../contexts/FirebaseProvider";
 import {
   startExtractGmapReviews,
   startExtractGmapReviewsOverview,
-} from "../services/firebaseService"
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore"
-import validateUrl from "../utils/validateUrl"
+} from "../services/firebaseService";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import validateUrl from "../utils/validateUrl";
 
 const Scrap = () => {
-  const { user, firestore } = useFirebase()
-  const navigate = useNavigate()
+  const { user, firestore } = useFirebase();
+  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false)
-  const [overviewId, setOverviewId] = useState("")
+  const [loading, setLoading] = useState(false);
+  const [overviewId, setOverviewId] = useState("");
 
-  const [info, setInfo] = useState({} as any)
+  const [info, setInfo] = useState({} as any);
   const [scrap, setScrap] = useState({
     url: "",
     limit: 30,
@@ -23,82 +23,86 @@ const Scrap = () => {
     extractVideoUrls: false,
     extractImageUrls: false,
     ownerResponse: true,
-  })
-  const [selectedTariff, setSelectedTariff] = useState("default")
+  });
+  const [selectedTariff, setSelectedTariff] = useState("default");
 
   const handleTariffChange = (event: any) => {
-    setSelectedTariff(event.target.value)
-  }
+    setSelectedTariff(event.target.value);
+  };
 
   // Handlers for input changes
   const handleInputChange = useCallback(
     (name: string, value: string | number) =>
-      setScrap(prev => ({ ...prev, [name]: value })),
+      setScrap((prev) => ({ ...prev, [name]: value })),
     [],
-  )
+  );
 
   const handleCheckboxChange = (name: string) =>
-    setScrap((prev: any) => ({ ...prev, [name]: !prev[name] }))
+    setScrap((prev: any) => ({ ...prev, [name]: !prev[name] }));
 
   // Function to start scraping reviews
   const handleStartScraping = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
       await startExtractGmapReviews(user!.uid, overviewId, {
         ...info,
         ...scrap,
-      })
-      navigate(`/reviews/${overviewId}`)
+      });
+      navigate(`/reviews/${overviewId}`);
     } catch (error) {
-      console.error(error)
-      alert("Something went wrong. Please try again.")
+      console.error(error);
+      alert("Something went wrong. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    if (!firestore || !user || !overviewId) return
+    if (!firestore || !user || !overviewId) return;
 
     const unsubscribe = onSnapshot(
       doc(firestore, `users/${user.uid}/reviewOverview/${overviewId}`),
-      doc => {
+      (doc) => {
         if (doc.exists()) {
-          const result = doc.data() as any
-          console.log(">", result)
-          setInfo(result)
+          const result = doc.data() as any;
+          console.log(">", result);
+          setInfo(result);
           if (result && result.title) {
-            setLoading(false)
+            setLoading(false);
           }
         }
       },
-    )
+    );
 
-    return unsubscribe
-  }, [firestore, user, overviewId])
+    return unsubscribe;
+  }, [firestore, user, overviewId]);
 
   useEffect(() => {
-    if (!validateUrl(scrap.url) || !user) return
+    if (!validateUrl(scrap.url) || !user) return;
     // setLoading(true)
     // addDoc(collection(firestore, `users/${user.uid}/reviewOverview`), {
     //   url: scrap.url,
     // })
     //   .then(docRef => setOverviewId(docRef.id))
     //   .catch(error => console.error("Error adding document:", error))
-  }, [user, scrap.url])
+  }, [user, scrap.url]);
 
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-4">
+          <h2>Premium Scraping</h2>
+          <p className="text-secondary">
+            Extracting reviews from Google Maps with more features
+          </p>
           <form>
             <div className="mb-3">
               <label className="form-label">Google Maps URL</label>
               <input
                 type="url"
                 value={scrap.url}
-                onChange={e => handleInputChange("url", e.target.value)}
+                onChange={(e) => handleInputChange("url", e.target.value)}
                 placeholder="https://maps.app.goo.gl/..."
                 disabled={loading}
                 className="form-control"
@@ -109,15 +113,11 @@ const Scrap = () => {
               className="btn btn-primary"
               disabled={!info.reviews}
             >
-              Submit
+              Get Place Info
             </button>
-            <hr />
-            <div className="card">
-              <div className="card-body">Ads</div>
-            </div>
           </form>
         </div>
-        <div className="col-md-5">
+        <div className="col-md-8">
           <div className="form-check d-flex flex-column gap-3 tariffs">
             <div
               className={`card py-3 px-2 ${selectedTariff === "default" && "tariffs__active-border"}`}
@@ -237,7 +237,7 @@ const Scrap = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Scrap
+export default Scrap;
