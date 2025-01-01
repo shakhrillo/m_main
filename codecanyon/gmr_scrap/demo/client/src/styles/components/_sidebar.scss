@@ -12,6 +12,20 @@
 
   .sidebar-header {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--bs-primary);
+  }
+
+  .sidebar-title {
+    margin: 0;
+    width: 100%;
+  }
+
+  .sidebar-subtitle {
+    width: 100%;
+    font-size: 14px;
   }
 
   .sidebar-menu {
@@ -31,7 +45,7 @@
     text-decoration: none;
 
     &.active {
-      background-color: rgba(255, 255, 255, 0.4);
+      background-color: rgba(255, 255, 255, 0.2);
       color: #fff;
 
       &::after {
