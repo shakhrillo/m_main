@@ -27,9 +27,7 @@ const SidebarItem: FC<NavItemProps> = ({ to, icon, label, badge }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `sidebar-item d-flex align-items-center p-2 ${
-        isActive ? "active" : ""
-      }`.trim()
+      `sidebar-item ${isActive ? "active" : ""}`.trim()
     }
   >
     {createElement(icon, { size: 20, className: "me-3" })}
@@ -41,7 +39,7 @@ const SidebarItem: FC<NavItemProps> = ({ to, icon, label, badge }) => (
 );
 
 const Sidebar: FC = () => (
-  <nav className="sidebar bg-white">
+  <nav className="sidebar">
     <div className="sidebar-header">
       <h5 className="text-primary">GMR Scrap</h5>
     </div>
