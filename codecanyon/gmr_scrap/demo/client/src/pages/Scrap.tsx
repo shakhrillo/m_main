@@ -92,8 +92,10 @@ const Scrap = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-12">
           <h2 className="dashboard-title">Premium Scraping</h2>
+        </div>
+        <div className="col-md-4">
           <div className="card mb-3">
             <div className="card-body">
               <form>
@@ -151,7 +153,177 @@ const Scrap = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-8"></div>
+        <div className="col-md-8">
+          <div className="row row-cols-1 g-3">
+            <div className="col">
+              <div className="card">
+                <div className="card-body">
+                  <div className="d-flex fs-5">
+                    <input
+                      className="form-check-input me-3"
+                      type="radio"
+                      name="tariff"
+                      value=""
+                      id="defaultPrice"
+                      checked
+                    />
+                    <label className="form-check-label" htmlFor="defaultPrice">
+                      Basic Scraping
+                      <span className="ms-2 badge bg-primary">
+                        1 point per review
+                      </span>
+                    </label>
+                  </div>
+                  <ul className="list-group list-group-flush mt-3">
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="imageCheckbox"
+                        checked
+                        disabled
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="imageCheckbox"
+                      >
+                        Image URLs
+                      </label>
+                    </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="videoCheckbox"
+                        checked
+                        disabled
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="videoCheckbox"
+                      >
+                        Video URLs
+                      </label>
+                    </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="ownerResponseCheckbox"
+                        checked
+                        disabled
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="ownerResponseCheckbox"
+                      >
+                        Owner Response
+                      </label>
+                    </li>
+                  </ul>
+                  <div className="d-flex justify-content-between mt-3">
+                    <span>Forecasted price: 0.00 USD</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col">
+              <div className="card">
+                <div className="card-body">
+                  <div className="d-flex fs-5">
+                    <input
+                      className="form-check-input me-3"
+                      type="radio"
+                      name="tariff"
+                      value=""
+                      id="defaultPrice"
+                      checked
+                    />
+                    <label className="form-check-label" htmlFor="defaultPrice">
+                      Basic Scraping
+                      <span className="ms-2 badge bg-primary">
+                        1 point per review
+                      </span>
+                    </label>
+                  </div>
+                  <ul className="list-group list-group-flush mt-3">
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="imageCheckbox"
+                        checked
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="imageCheckbox"
+                      >
+                        Image URLs
+                      </label>
+                    </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="videoCheckbox"
+                        checked
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="videoCheckbox"
+                      >
+                        Video URLs
+                      </label>
+                    </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="ownerResponseCheckbox"
+                        checked
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="ownerResponseCheckbox"
+                      >
+                        Owner Response
+                      </label>
+                    </li>
+                  </ul>
+                  <div className="d-flex justify-content-between mt-3">
+                    <span>Forecasted price: 0.00 USD</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleStartScraping}
+                    disabled={loading}
+                  >
+                    Start Scraping
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="col">
+              <p>
+                Scraping reviews from Google Maps is a premium feature. You need
+                to have enough points to start scraping. You can purchase points
+                from the pricing page.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
