@@ -366,6 +366,21 @@ const Scrap = () => {
                         Owner Response
                       </label>
                     </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="maxReviewCheckbox"
+                        checked
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="maxReviewCheckbox"
+                      >
+                        Maximum 5000 reviews
+                      </label>
+                    </li>
                   </ul>
                   <div className="d-flex justify-content-between mt-3">
                     <span>
