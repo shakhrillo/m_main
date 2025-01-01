@@ -5,6 +5,8 @@
   bottom: 0;
   left: 0;
   flex-direction: column;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   padding: 1rem;
   width: 260px;
   font-size: 16px;
@@ -12,12 +14,15 @@
   a {
     display: flex;
     align-items: center;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     padding: 0.5rem;
+    color: #666;
     text-decoration: none;
 
     &.active {
       background-color: #f0f0f0;
+      color: #000;
+      font-weight: 900;
     }
   }
 
