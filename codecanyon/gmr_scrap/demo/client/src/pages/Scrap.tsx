@@ -7,6 +7,7 @@ import {
 } from "../services/firebaseService";
 import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import validateUrl from "../utils/validateUrl";
+import helperGif from "../assets/images/helper.gif";
 
 const Scrap = () => {
   const { user, firestore } = useFirebase();
@@ -96,144 +97,102 @@ const Scrap = () => {
           <p className="text-secondary">
             Extracting reviews from Google Maps with more features
           </p>
-          <form>
-            <div className="mb-3">
-              <label className="form-label">Google Maps URL</label>
-              <input
-                type="url"
-                value={scrap.url}
-                onChange={(e) => handleInputChange("url", e.target.value)}
-                placeholder="https://maps.app.goo.gl/..."
-                disabled={loading}
-                className="form-control"
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!info.reviews}
-            >
-              Get Place Info
-            </button>
-          </form>
-        </div>
-        <div className="col-md-8">
-          <div className="form-check d-flex flex-column gap-3 tariffs">
-            <div
-              className={`card py-3 px-2 ${selectedTariff === "default" && "tariffs__active-border"}`}
-            >
-              <div className="card-body d-flex gap-3">
-                <div className="form-check">
+          <div className="card">
+            <div className="card-body">
+              <form>
+                <div className="mb-3">
+                  <label className="form-label">Google Maps URL</label>
                   <input
-                    className="form-check-input"
-                    type="radio"
-                    name="flexRadioDefault"
-                    id="tariffRadio"
-                    value={"default"}
-                    checked={selectedTariff === "default"}
-                    onChange={handleTariffChange}
+                    type="url"
+                    value={scrap.url}
+                    onChange={(e) => handleInputChange("url", e.target.value)}
+                    placeholder="https://maps.app.goo.gl/..."
+                    disabled={loading}
+                    className="form-control"
                   />
                 </div>
-                <div className="tariffs-content">
-                  <h5 className="card-title">Default</h5>
-                  <p className="text-secondary fw-light">
-                    Basic scraping of Google Maps reviews. Extracting from about
-                    100 reviews
-                  </p>
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting from 100 reviews
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting image URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting video URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting owner responses
-                    </li>
-                  </ul>
+                <div className="row">
+                  <div className="col-md-4">
+                    <button className="btn btn-secondary w-100">Cancel</button>
+                  </div>
+                  <div className="col">
+                    <button
+                      type="submit"
+                      className="btn btn-primary w-100"
+                      disabled={!info.reviews}
+                    >
+                      Get Place Info
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div
-              className={`card py-3 px-2 ${selectedTariff === "basic" && "tariffs__active-border"}`}
-            >
-              <div className="card-body d-flex gap-3">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="flexRadioBasic"
-                    id="tariffRadio"
-                    value={"basic"}
-                    checked={selectedTariff === "basic"}
-                    onChange={handleTariffChange}
-                  />
-                </div>
-                <div className="col">
-                  <h5 className="card-title">Basic</h5>
-                  <p className="text-secondary fw-light">
-                    Basic scraping of Google Maps reviews. Extracting from about
-                    500 reviews
-                  </p>
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting from 500 reviews
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting image URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting video URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting owner responses
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`card py-3 px-2 ${selectedTariff === "pro" && "tariffs__active-border"}`}
-            >
-              <div className="card-body d-flex gap-3">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="flexRadioPro"
-                    id="tariffRadio"
-                    value={"pro"}
-                    checked={selectedTariff === "pro"}
-                    onChange={handleTariffChange}
-                  />
-                </div>
-                <div className="col">
-                  <h5 className="card-title">Pro</h5>
-                  <p className="text-secondary fw-light">
-                    Basic scraping of Google Maps reviews. Extracting from about
-                    1000 reviews
-                  </p>
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting from 1000 reviews
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting image URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting video URLs
-                    </li>
-                    <li className="list-group-item text-secondary fw-light">
-                      Extracting owner responses
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
+          <div className="card mt-4">
+            <div className="card-body">
+              <h5 className="card-title">
+                How to get the Google Maps URL for the place you want to scrape
+              </h5>
+              <ul className="list-group list-group-flush list-group-numbered mt-3">
+                <li className="list-group-item">Go to the Google Maps</li>
+                <li className="list-group-item">
+                  Search for the place you want to scrape
+                </li>
+                <li className="list-group-item">Click on the share button</li>
+                <li className="list-group-item">
+                  Click on the copy link button
+                </li>
+                <li className="list-group-item">
+                  Paste the link in the input field
+                </li>
+              </ul>
+              <img
+                src={helperGif}
+                alt="helper"
+                className="w-100 rounded mt-4"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-md-8">
+          <ul className="list-group">
+            <li className="list-group-item">
+              <input
+                className="form-check-input me-1"
+                type="radio"
+                name="listGroupRadio"
+                value=""
+                id="firstRadio"
+                checked
+              />
+              <label className="form-check-label">
+                <h5>Pay as you go</h5>
+                <p className="text-secondary">
+                  Pay only for the reviews you scrape
+                </p>
+              </label>
+            </li>
+            <li className="list-group-item">
+              <input
+                className="form-check-input me-1"
+                type="radio"
+                name="listGroupRadio"
+                value=""
+                id="secondRadio"
+              />
+              <label className="form-check-label">Second radio</label>
+            </li>
+            <li className="list-group-item">
+              <input
+                className="form-check-input me-1"
+                type="radio"
+                name="listGroupRadio"
+                value=""
+                id="thirdRadio"
+              />
+              <label className="form-check-label">Third radio</label>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
