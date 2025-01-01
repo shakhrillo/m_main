@@ -69,7 +69,7 @@ const Scrap = () => {
           const result = doc.data() as any;
           console.log(">", result);
           setInfo(result);
-          if (result && result.title) {
+          if (result && result.rating) {
             setLoading(false);
           }
         }
@@ -89,6 +89,17 @@ const Scrap = () => {
     //   .catch(error => console.error("Error adding document:", error))
   }, [user, scrap.url]);
 
+  function getPlaceInfo(e: React.FormEvent) {
+    e.preventDefault();
+
+    setLoading(true);
+    addDoc(collection(firestore, `users/${user?.uid}/reviewOverview`), {
+      url: scrap.url,
+    })
+      .then((docRef) => setOverviewId(docRef.id))
+      .catch((error) => console.error("Error adding document:", error));
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -98,7 +109,7 @@ const Scrap = () => {
         <div className="col-md-4">
           <div className="card mb-3">
             <div className="card-body">
-              <form>
+              <form onSubmit={getPlaceInfo}>
                 <div className="mb-3">
                   <label className="form-label">Google Maps URL</label>
                   <input
@@ -110,18 +121,52 @@ const Scrap = () => {
                     className="form-control"
                   />
                 </div>
-                <div className="row">
-                  <div className="col-md-5">
-                    <button className="btn btn-secondary w-100">Cancel</button>
+                <div className="row row-cols-1 row-cols-md-2 g-3">
+                  <div className="col">
+                    <button
+                      className="btn btn-secondary w-100"
+                      disabled={loading}
+                    >
+                      Cancel
+                    </button>
                   </div>
                   <div className="col">
                     <button
                       type="submit"
                       className="btn btn-primary w-100"
-                      disabled={!info.reviews}
+                      disabled={loading}
                     >
-                      Get Place Info
+                      Check Place
                     </button>
+                  </div>
+                </div>
+                <div className="row row-cols-1 g-3">
+                  <div className="col">
+                    {loading && <p className="text-muted mt-3">Loading...</p>}
+                  </div>
+                  <div className="col">
+                    {info.rating && (
+                      <ul className="list-group list-group-flush mt-3">
+                        <li className="list-group-item">
+                          <strong>Address:</strong> {info.address}
+                        </li>
+                        <li className="list-group-item">
+                          <strong>Rating:</strong> {info.rating} stars
+                        </li>
+                        <li className="list-group-item">
+                          <strong>Total Reviews:</strong> {info.reviews}
+                        </li>
+                      </ul>
+                    )}
+                    {info.screenshot && (
+                      <a href={info.url} target="_blank">
+                        <img
+                          src={info.screenshot}
+                          alt="screenshot"
+                          className="w-100 rounded"
+                        />
+                      </a>
+                    )}
                   </div>
                 </div>
               </form>
@@ -133,7 +178,11 @@ const Scrap = () => {
                 How to get the Google Maps URL for the place you want to scrape
               </h5>
               <ul className="list-group list-group-flush list-group-numbered mt-3">
-                <li className="list-group-item">Go to the Google Maps</li>
+                <li className="list-group-item">
+                  <a href="https://www.google.com/maps" target="_blank">
+                    Go to the Google Maps
+                  </a>
+                </li>
                 <li className="list-group-item">
                   Search for the place you want to scrape
                 </li>
@@ -223,9 +272,31 @@ const Scrap = () => {
                         Owner Response
                       </label>
                     </li>
+                    <li className="list-group-item p-0">
+                      <input
+                        className="form-check-input me-3"
+                        type="checkbox"
+                        value=""
+                        id="maxReviewCheckbox"
+                        checked
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="maxReviewCheckbox"
+                      >
+                        Maximum 100 reviews
+                      </label>
+                    </li>
                   </ul>
                   <div className="d-flex justify-content-between mt-3">
-                    <span>Forecasted price: 0.00 USD</span>
+                    {info.reviews ? (
+                      <span>
+                        Forecasted points:{" "}
+                        {info.reviews < 100 ? info.reviews : 100} points
+                      </span>
+                    ) : (
+                      <span>No reviews found</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -245,7 +316,7 @@ const Scrap = () => {
                     <label className="form-check-label" htmlFor="defaultPrice">
                       Basic Scraping
                       <span className="ms-2 badge bg-primary">
-                        1 point per review
+                        5 point per review
                       </span>
                     </label>
                   </div>
@@ -297,7 +368,10 @@ const Scrap = () => {
                     </li>
                   </ul>
                   <div className="d-flex justify-content-between mt-3">
-                    <span>Forecasted price: 0.00 USD</span>
+                    <span>
+                      Forecasted points: {info.reviews ? info.reviews * 5 : 0}{" "}
+                      points
+                    </span>
                   </div>
                 </div>
               </div>
