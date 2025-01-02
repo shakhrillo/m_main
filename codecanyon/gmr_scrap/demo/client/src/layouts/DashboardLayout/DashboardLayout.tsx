@@ -9,6 +9,7 @@ const DashboardLayout: React.FC = () => {
         <Sidebar />
       </aside>
       <main className="dashboard-main">
+        <div className="dashboard-header"></div>
         <div className="dashboard-content">
           <Outlet />
         </div>

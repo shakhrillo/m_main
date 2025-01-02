@@ -103,9 +103,9 @@ const Scrap = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-12">
+        {/* <div className="col-md-12">
           <h2 className="dashboard-title">Premium Scraping</h2>
-        </div>
+        </div> */}
         <div className="col-md-4">
           <div className="card mb-3">
             <div className="card-body">
