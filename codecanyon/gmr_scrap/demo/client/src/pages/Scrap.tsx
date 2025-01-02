@@ -9,7 +9,14 @@ import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import validateUrl from "../utils/validateUrl";
 import helperGif from "../assets/images/helper.gif";
 
-import { IconWorldCheck, IconCoins } from "@tabler/icons-react";
+import {
+  IconWorldCheck,
+  IconPhoto,
+  IconStarFilled,
+  IconCoins,
+  IconVideo,
+  IconMessageReply,
+} from "@tabler/icons-react";
 
 const Scrap = () => {
   const { user, firestore } = useFirebase();
@@ -165,209 +172,144 @@ const Scrap = () => {
             <div className="col">
               <div className="card">
                 <div className="card-body">
-                  <div className="d-flex fs-5">
-                    <input
-                      className="form-check-input me-3"
-                      type="radio"
-                      name="tariff"
-                      value=""
-                      id="defaultPrice"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="defaultPrice">
-                      Basic Scraping
-                      <span className="ms-2 badge bg-primary">
-                        1 point per review
-                      </span>
-                    </label>
+                  <h5 className="card-title">Scraping Options</h5>
+                  <p className="card-text">
+                    Scraping the reviews from the Google Maps URL you provided.
+                    You can customize the scraping options below.
+                  </p>
+                  <div className="d-flex">
+                    <ul className="list-group w-100">
+                      <li className="list-group-item">
+                        <div className="d-flex w-100 justify-content-between">
+                          <h5 className="mb-1">Place Name</h5>
+                          <span>{info.title}</span>
+                        </div>
+                      </li>
+                      <li className="list-group-item">
+                        <div className="d-flex w-100 align-items-center">
+                          <p className="my-0 me-auto">
+                            <strong>Rating</strong>
+                          </p>
+                          <IconStarFilled
+                            size={18}
+                            className="mx-1 text-warning"
+                          />
+                          <span>{info.rating}</span>
+                        </div>
+                      </li>
+                      <li className="list-group-item">
+                        <div className="d-flex w-100 justify-content-between">
+                          <h5 className="mb-1">Total Reviews</h5>
+                          <span>{info.reviews}</span>
+                        </div>
+                      </li>
+                      <li className="list-group-item">
+                        <div className="d-flex w-100 justify-content-between">
+                          <span>{info.address}</span>
+                        </div>
+                      </li>
+                    </ul>
+
+                    <div className="ms-3">
+                      <img
+                        src={info.screenshot}
+                        alt="screenshot"
+                        width="300"
+                        className="rounded"
+                      />
+                    </div>
                   </div>
-                  <ul className="list-group list-group-flush mt-3">
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="imageCheckbox"
-                        checked
-                        disabled
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="imageCheckbox"
-                      >
-                        Image URLs
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="videoCheckbox"
-                        checked
-                        disabled
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="videoCheckbox"
-                      >
-                        Video URLs
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="ownerResponseCheckbox"
-                        checked
-                        disabled
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="ownerResponseCheckbox"
-                      >
-                        Owner Response
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="maxReviewCheckbox"
-                        checked
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="maxReviewCheckbox"
-                      >
-                        Maximum 100 reviews
-                      </label>
-                    </li>
-                  </ul>
-                  <div className="d-flex justify-content-between mt-3">
-                    {info.reviews ? (
-                      <span>
-                        Forecasted points:{" "}
-                        {info.reviews < 100 ? info.reviews : 100} points
-                      </span>
-                    ) : (
-                      <span>No reviews found</span>
-                    )}
+                  <div className="list-group mt-3">
+                    <a href="#" className="list-group-item" aria-current="true">
+                      <div className="d-flex w-100 justify-content-between">
+                        <div className="d-flex align-items-center">
+                          <IconPhoto size={40} className="me-3 text-primary" />
+                          <div className="d-block">
+                            <div className="d-flex align-items-center">
+                              <h5 className="m-0">Images</h5>
+                              <span className="badge bg-primary ms-2">
+                                <IconCoins size={14} className="ms-1" /> 1 point
+                              </span>
+                            </div>
+                            <p className="mb-1">
+                              The points will be deducted for each image
+                              extracted from the reviews.
+                            </p>
+                          </div>
+                        </div>
+                        <input
+                          className="form-check-input fs-5"
+                          type="checkbox"
+                          name="tariff"
+                          value=""
+                          checked
+                        />
+                      </div>
+                    </a>
+                    <a href="#" className="list-group-item" aria-current="true">
+                      <div className="d-flex w-100 justify-content-between">
+                        <div className="d-flex align-items-center">
+                          <IconVideo size={40} className="me-3 text-primary" />
+                          <div className="d-block">
+                            <div className="d-flex align-items-center">
+                              <h5 className="m-0">Videos</h5>
+                              <span className="badge bg-primary ms-2">
+                                <IconCoins size={14} className="ms-1" /> 3 point
+                              </span>
+                            </div>
+                            <p className="mb-1">
+                              The points will be deducted for each video
+                              extracted from the reviews.
+                            </p>
+                          </div>
+                        </div>
+                        <input
+                          className="form-check-input fs-5"
+                          type="checkbox"
+                          name="tariff"
+                          value=""
+                          checked
+                        />
+                      </div>
+                    </a>
+                    <a href="#" className="list-group-item" aria-current="true">
+                      <div className="d-flex w-100 justify-content-between">
+                        <div className="d-flex align-items-center">
+                          <IconMessageReply
+                            size={40}
+                            className="me-3 text-primary"
+                          />
+                          <div className="d-block">
+                            <div className="d-flex align-items-center">
+                              <h5 className="m-0">Owner Response</h5>
+                              <span className="badge bg-primary ms-2">
+                                <IconCoins size={14} className="ms-1" /> 1 point
+                              </span>
+                            </div>
+                            <p className="mb-1">
+                              The points will be deducted for each owner
+                              response extracted from the reviews.
+                            </p>
+                          </div>
+                        </div>
+                        <input
+                          className="form-check-input fs-5"
+                          type="checkbox"
+                          name="tariff"
+                          value=""
+                          checked
+                        />
+                      </div>
+                    </a>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <div className="d-flex fs-5">
-                    <input
-                      className="form-check-input me-3"
-                      type="radio"
-                      name="tariff"
-                      value=""
-                      id="defaultPrice"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="defaultPrice">
-                      Basic Scraping
-                      <span className="ms-2 badge bg-primary">
-                        5 point per review
-                      </span>
-                    </label>
-                  </div>
-                  <ul className="list-group list-group-flush mt-3">
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="imageCheckbox"
-                        checked
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="imageCheckbox"
-                      >
-                        Image URLs
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="videoCheckbox"
-                        checked
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="videoCheckbox"
-                      >
-                        Video URLs
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="ownerResponseCheckbox"
-                        checked
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="ownerResponseCheckbox"
-                      >
-                        Owner Response
-                      </label>
-                    </li>
-                    <li className="list-group-item p-0">
-                      <input
-                        className="form-check-input me-3"
-                        type="checkbox"
-                        value=""
-                        id="maxReviewCheckbox"
-                        checked
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="maxReviewCheckbox"
-                      >
-                        Maximum 5000 reviews
-                      </label>
-                    </li>
-                  </ul>
-                  <div className="d-flex justify-content-between mt-3">
-                    <span>
-                      Forecasted points: {info.reviews ? info.reviews * 5 : 0}{" "}
-                      points
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="row">
-                <div className="col">
                   <button
-                    className="btn btn-primary btn-lg"
-                    onClick={handleStartScraping}
+                    className="btn btn-lg btn-primary mt-3"
                     disabled={loading}
                   >
                     Start Scraping
                   </button>
                 </div>
               </div>
-            </div>
-            <div className="col">
-              <p>
-                Scraping reviews from Google Maps is a premium feature. You need
-                to have enough points to start scraping. You can purchase points
-                from the pricing page.
-              </p>
             </div>
           </div>
         </div>
