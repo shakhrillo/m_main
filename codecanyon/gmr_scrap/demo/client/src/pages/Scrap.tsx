@@ -190,7 +190,7 @@ const Scrap = () => {
                     </span>
                   </div>
                   <h5 className="card-title">
-                    <span>{info.name || "Loading..."}</span>
+                    <span>{info.title || "Loading..."}</span>
                   </h5>
                   <p className="card-text">{info.address}</p>
                   <hr />

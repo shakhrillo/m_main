@@ -136,6 +136,7 @@ let driver;
      *  address: string,
      *  reviews: number,
      *  rating: number,
+     *  title: string
      *  error: string
      * }}
      */
@@ -143,6 +144,7 @@ let driver;
     data = {
       ...data,
       ...info,
+      title: await driver.getTitle(),
     };
     log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
 
