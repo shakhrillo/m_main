@@ -110,6 +110,24 @@ const Scrap = () => {
       .catch((error) => console.error("Error adding document:", error));
   }
 
+  function calculatePoints() {
+    let points = scrap.limit || 0;
+
+    if (scrap.extractImageUrls) {
+      points += scrap.limit * 2;
+    }
+
+    if (scrap.extractVideoUrls) {
+      points += scrap.limit * 3;
+    }
+
+    if (scrap.ownerResponse) {
+      points += scrap.limit;
+    }
+
+    return points;
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -214,12 +232,12 @@ const Scrap = () => {
                     >
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex">
-                          <IconPhoto size={36} className="me-3 text-primary" />
+                          <IconPhoto size={40} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h6 className="m-0">Images</h6>
+                              <h5 className="m-0">Images</h5>
                               <span className="badge bg-primary ms-2">
-                                <IconCoins size={14} className="ms-1" /> 1 point
+                                <IconCoins size={14} className="ms-1" /> 2 point
                               </span>
                             </div>
                             <p className="mb-1">
@@ -249,10 +267,10 @@ const Scrap = () => {
                     >
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex">
-                          <IconVideo size={36} className="me-3 text-primary" />
+                          <IconVideo size={40} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h6 className="m-0">Videos</h6>
+                              <h5 className="m-0">Videos</h5>
                               <span className="badge bg-primary ms-2">
                                 <IconCoins size={14} className="ms-1" /> 3 point
                               </span>
@@ -283,12 +301,12 @@ const Scrap = () => {
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex">
                           <IconMessageReply
-                            size={36}
+                            size={40}
                             className="me-3 text-primary"
                           />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h6 className="m-0">Owner Response</h6>
+                              <h5 className="m-0">Owner Response</h5>
                               <span className="badge bg-primary ms-2">
                                 <IconCoins size={14} className="ms-1" /> 1 point
                               </span>
@@ -315,7 +333,11 @@ const Scrap = () => {
                     disabled={info.rating === undefined || loading}
                   >
                     <IconPlayerPlay size={20} className="me-2" />
-                    Start Scraping / <IconCoins size={20} className="ms-1" /> 5
+                    Start Scraping / <IconCoins
+                      size={20}
+                      className="ms-1"
+                    />{" "}
+                    {calculatePoints()}
                     point
                   </button>
                 </div>
