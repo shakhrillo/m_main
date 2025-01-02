@@ -138,7 +138,7 @@ const Scrap = () => {
             <div className="card-body">
               <form
                 onSubmit={getPlaceInfo}
-                className="mb-3 bg-light p-3 rounded"
+                className="mb-3 bg-primary-subtle p-3 rounded"
               >
                 <div className="mb-3">
                   <label className="form-label">Google Maps URL</label>
@@ -153,21 +153,21 @@ const Scrap = () => {
                 </div>
                 <button
                   type="submit"
-                  className="btn btn-warning"
+                  className="btn btn-primary"
                   disabled={loading}
                 >
                   <IconWorldCheck size={20} className="me-2" />
                   Validate (<IconCoins size={20} /> 3 points)
                 </button>
               </form>
-              <div className="mt-3 d-flex align-items-start">
-                <IconInfoCircle size={30} className="me-2" />
-                <h5>
+              <div className="mt-3 d-flex">
+                <IconInfoCircle size={40} className="me-3" />
+                <h5 className="m-0">
                   How to get the Google Maps URL for the place you want to
                   scrape
                 </h5>
               </div>
-              <ul className="list-unstyled">
+              <ul className="list-unstyled mt-3">
                 <li>
                   <IconCaretRight size={20} className="me-2" />
                   <a href="https://www.google.com/maps" target="_blank">
