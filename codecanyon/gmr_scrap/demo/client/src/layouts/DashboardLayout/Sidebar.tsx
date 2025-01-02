@@ -1,14 +1,13 @@
-import { NavLink } from "react-router-dom";
 import {
+  IconChevronRight,
+  IconCreditCard,
   IconSearch,
   IconServerBolt,
-  IconCreditCard,
   IconSettings,
   IconUser,
-  IconChevronRight,
-  IconMessageSearch,
 } from "@tabler/icons-react";
 import { createElement, FC } from "react";
+import { NavLink } from "react-router-dom";
 
 interface NavItemProps {
   to: string;
@@ -44,10 +43,7 @@ const SidebarItem: FC<NavItemProps> = ({ to, icon, label, badge }) => (
 const Sidebar: FC = () => (
   <nav className="sidebar">
     <div className="sidebar-header">
-      <h5 className="sidebar-title">
-        {/* <IconMessageSearch size={30} /> */}
-        GMRS
-      </h5>
+      <h5 className="sidebar-title">GMRS</h5>
       <small className="sidebar-subtitle">Google Maps Review Scraper</small>
     </div>
     <div className="sidebar-menu">

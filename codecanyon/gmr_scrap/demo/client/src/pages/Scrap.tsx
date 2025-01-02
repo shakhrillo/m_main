@@ -9,6 +9,8 @@ import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import validateUrl from "../utils/validateUrl";
 import helperGif from "../assets/images/helper.gif";
 
+import { IconWorldCheck, IconCoins } from "@tabler/icons-react";
+
 const Scrap = () => {
   const { user, firestore } = useFirebase();
   const navigate = useNavigate();
@@ -106,7 +108,10 @@ const Scrap = () => {
         <div className="col-md-4">
           <div className="card mb-3 border-primary">
             <div className="card-body">
-              <form onSubmit={getPlaceInfo}>
+              <form
+                onSubmit={getPlaceInfo}
+                className="mb-3 bg-light p-3 rounded"
+              >
                 <div className="mb-3">
                   <label className="form-label">Google Maps URL</label>
                   <input
@@ -118,54 +123,14 @@ const Scrap = () => {
                     className="form-control"
                   />
                 </div>
-                <div className="row row-cols-1 row-cols-md-2 g-3">
-                  <div className="col">
-                    <button
-                      className="btn btn-secondary w-100"
-                      disabled={loading}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                  <div className="col">
-                    <button
-                      type="submit"
-                      className="btn btn-primary w-100"
-                      disabled={loading}
-                    >
-                      Validate
-                    </button>
-                  </div>
-                </div>
-                <div className="row row-cols-1 g-3">
-                  <div className="col">
-                    {loading && <p className="text-muted mt-3">Loading...</p>}
-                  </div>
-                  <div className="col">
-                    {info.rating && (
-                      <ul className="list-group list-group-flush mt-3">
-                        <li className="list-group-item">
-                          <strong>Address:</strong> {info.address}
-                        </li>
-                        <li className="list-group-item">
-                          <strong>Rating:</strong> {info.rating} stars
-                        </li>
-                        <li className="list-group-item">
-                          <strong>Total Reviews:</strong> {info.reviews}
-                        </li>
-                      </ul>
-                    )}
-                    {info.screenshot && (
-                      <a href={info.url} target="_blank">
-                        <img
-                          src={info.screenshot}
-                          alt="screenshot"
-                          className="w-100 rounded"
-                        />
-                      </a>
-                    )}
-                  </div>
-                </div>
+                <button
+                  type="submit"
+                  className="btn btn-warning"
+                  disabled={loading}
+                >
+                  Validate /
+                  <IconCoins size={20} className="ms-1" /> 3 point
+                </button>
               </form>
               <p>
                 How to get the Google Maps URL for the place you want to scrape
