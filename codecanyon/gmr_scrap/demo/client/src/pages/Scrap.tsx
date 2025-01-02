@@ -178,22 +178,22 @@ const Scrap = () => {
                     height: "180px",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    backgroundColor: "#f5f5f5",
                   }}
                   className="w-100 card-img-top"
                 ></div>
                 <div className="card-body">
                   <div className="d-flex align-items-center gap-2 mb-2">
                     <IconStarFilled size={16} className="text-warning" />
-                    <span>{info.rating}</span>
+                    <span>{info.rating || "N/A"}</span>
                     <span>
                       ({Number(info.reviews || 0).toLocaleString()} reviews)
                     </span>
                   </div>
                   <h5 className="card-title">
-                    <span>{info.title || "Loading..."}</span>
+                    <span>{info.title || "Google Maps"}</span>
                   </h5>
                   <p className="card-text">{info.address}</p>
-                  <hr />
                   <div className="mb-3">
                     <label className="form-label">Maximum reviews</label>
                     <input
@@ -202,14 +202,18 @@ const Scrap = () => {
                       onChange={(e) =>
                         handleInputChange("limit", Number(e.target.value))
                       }
-                      disabled={loading}
-                      className="form-control"
+                      disabled={loading || info.rating === undefined}
+                      className="form-control form-control-lg"
                     />
                   </div>
                   <div className="list-group mt-3 list-group-flush">
-                    <a href="#" className="list-group-item" aria-current="true">
+                    <a
+                      href="#"
+                      className={`list-group-item ${info.rating === undefined || loading ? "disabled" : ""}`}
+                      aria-disabled="true"
+                    >
                       <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex">
                           <IconPhoto size={36} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
@@ -228,14 +232,23 @@ const Scrap = () => {
                           className="form-check-input fs-5"
                           type="checkbox"
                           name="tariff"
-                          value=""
-                          checked
+                          checked={scrap.extractImageUrls}
+                          onChange={() =>
+                            handleCheckboxChange("extractImageUrls")
+                          }
+                          disabled={info.rating === undefined || loading}
                         />
                       </div>
                     </a>
-                    <a href="#" className="list-group-item" aria-current="true">
+                    <a
+                      href="#"
+                      className={`list-group-item ${
+                        info.rating === undefined || loading ? "disabled" : ""
+                      }`}
+                      aria-disabled="true"
+                    >
                       <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex">
                           <IconVideo size={36} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
@@ -253,15 +266,22 @@ const Scrap = () => {
                         <input
                           className="form-check-input fs-5"
                           type="checkbox"
-                          name="tariff"
-                          value=""
-                          checked
+                          name="video"
+                          checked={scrap.extractVideoUrls}
+                          onChange={() =>
+                            handleCheckboxChange("extractVideoUrls")
+                          }
+                          disabled={info.rating === undefined || loading}
                         />
                       </div>
                     </a>
-                    <a href="#" className="list-group-item" aria-current="true">
+                    <a
+                      href="#"
+                      className={`list-group-item ${info.rating === undefined || loading ? "disabled" : ""}`}
+                      aria-disabled="true"
+                    >
                       <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex">
                           <IconMessageReply
                             size={36}
                             className="me-3 text-primary"
@@ -282,16 +302,17 @@ const Scrap = () => {
                         <input
                           className="form-check-input fs-5"
                           type="checkbox"
-                          name="tariff"
-                          value=""
-                          checked
+                          name="ownerResponse"
+                          disabled={info.rating === undefined || loading}
+                          checked={scrap.ownerResponse}
+                          onChange={() => handleCheckboxChange("ownerResponse")}
                         />
                       </div>
                     </a>
                   </div>
                   <button
                     className="btn btn-lg btn-primary mt-3"
-                    disabled={loading}
+                    disabled={info.rating === undefined || loading}
                   >
                     <IconPlayerPlay size={20} className="me-2" />
                     Start Scraping / <IconCoins size={20} className="ms-1" /> 5
