@@ -16,6 +16,7 @@ import {
   IconCoins,
   IconVideo,
   IconMessageReply,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
 
 const Scrap = () => {
@@ -303,9 +304,10 @@ const Scrap = () => {
                     </a>
                   </div>
                   <button
-                    className="btn btn-lg btn-primary mt-3"
+                    className="btn btn-lg btn-success mt-3"
                     disabled={loading}
                   >
+                    <IconPlayerPlay size={20} className="me-2" />
                     Start Scraping
                   </button>
                 </div>
