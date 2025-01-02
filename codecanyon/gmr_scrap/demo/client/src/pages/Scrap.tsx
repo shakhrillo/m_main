@@ -172,62 +172,48 @@ const Scrap = () => {
           <div className="row row-cols-1 g-3">
             <div className="col">
               <div className="card">
+                <div
+                  style={{
+                    backgroundImage: "url(" + info.screenshot + ")",
+                    height: "180px",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                  className="w-100 card-img-top"
+                ></div>
                 <div className="card-body">
-                  <h5 className="card-title">Scraping Options</h5>
-                  <p className="card-text">
-                    Scraping the reviews from the Google Maps URL you provided.
-                    You can customize the scraping options below.
-                  </p>
-                  <div className="d-flex">
-                    <ul className="list-group w-100">
-                      <li className="list-group-item">
-                        <div className="d-flex w-100 justify-content-between">
-                          <h5 className="mb-1">Place Name</h5>
-                          <span>{info.title}</span>
-                        </div>
-                      </li>
-                      <li className="list-group-item">
-                        <div className="d-flex w-100 align-items-center">
-                          <p className="my-0 me-auto">
-                            <strong>Rating</strong>
-                          </p>
-                          <IconStarFilled
-                            size={18}
-                            className="mx-1 text-warning"
-                          />
-                          <span>{info.rating}</span>
-                        </div>
-                      </li>
-                      <li className="list-group-item">
-                        <div className="d-flex w-100 justify-content-between">
-                          <h5 className="mb-1">Total Reviews</h5>
-                          <span>{info.reviews}</span>
-                        </div>
-                      </li>
-                      <li className="list-group-item">
-                        <div className="d-flex w-100 justify-content-between">
-                          <span>{info.address}</span>
-                        </div>
-                      </li>
-                    </ul>
-
-                    <div className="ms-3">
-                      <img
-                        src={info.screenshot}
-                        alt="screenshot"
-                        width="300"
-                        className="rounded"
-                      />
-                    </div>
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <IconStarFilled size={16} className="text-warning" />
+                    <span>{info.rating}</span>
+                    <span>
+                      ({Number(info.reviews || 0).toLocaleString()} reviews)
+                    </span>
                   </div>
-                  <div className="list-group mt-3">
+                  <h5 className="card-title">
+                    <span>{info.name || "Loading..."}</span>
+                  </h5>
+                  <p className="card-text">{info.address}</p>
+                  <hr />
+                  <div className="mb-3">
+                    <label className="form-label">Maximum reviews</label>
+                    <input
+                      type="number"
+                      value={scrap.limit}
+                      onChange={(e) =>
+                        handleInputChange("limit", Number(e.target.value))
+                      }
+                      disabled={loading}
+                      className="form-control"
+                    />
+                  </div>
+                  <div className="list-group mt-3 list-group-flush">
                     <a href="#" className="list-group-item" aria-current="true">
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex align-items-center">
-                          <IconPhoto size={40} className="me-3 text-primary" />
+                          <IconPhoto size={36} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h5 className="m-0">Images</h5>
+                              <h6 className="m-0">Images</h6>
                               <span className="badge bg-primary ms-2">
                                 <IconCoins size={14} className="ms-1" /> 1 point
                               </span>
@@ -250,10 +236,10 @@ const Scrap = () => {
                     <a href="#" className="list-group-item" aria-current="true">
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex align-items-center">
-                          <IconVideo size={40} className="me-3 text-primary" />
+                          <IconVideo size={36} className="me-3 text-primary" />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h5 className="m-0">Videos</h5>
+                              <h6 className="m-0">Videos</h6>
                               <span className="badge bg-primary ms-2">
                                 <IconCoins size={14} className="ms-1" /> 3 point
                               </span>
@@ -277,12 +263,12 @@ const Scrap = () => {
                       <div className="d-flex w-100 justify-content-between">
                         <div className="d-flex align-items-center">
                           <IconMessageReply
-                            size={40}
+                            size={36}
                             className="me-3 text-primary"
                           />
                           <div className="d-block">
                             <div className="d-flex align-items-center">
-                              <h5 className="m-0">Owner Response</h5>
+                              <h6 className="m-0">Owner Response</h6>
                               <span className="badge bg-primary ms-2">
                                 <IconCoins size={14} className="ms-1" /> 1 point
                               </span>
@@ -304,11 +290,12 @@ const Scrap = () => {
                     </a>
                   </div>
                   <button
-                    className="btn btn-lg btn-success mt-3"
+                    className="btn btn-lg btn-primary mt-3"
                     disabled={loading}
                   >
                     <IconPlayerPlay size={20} className="me-2" />
-                    Start Scraping
+                    Start Scraping / <IconCoins size={20} className="ms-1" /> 5
+                    point
                   </button>
                 </div>
               </div>
