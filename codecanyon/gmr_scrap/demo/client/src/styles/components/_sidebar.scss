@@ -17,6 +17,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1rem;
     color: var(--bs-primary);
   }
 
@@ -31,7 +32,9 @@
   }
 
   .sidebar-menu {
-    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   .sidebar-item {

@@ -5,6 +5,7 @@ import {
   IconServerBolt,
   IconSettings,
   IconUser,
+  IconHelp,
 } from "@tabler/icons-react";
 import { createElement, FC } from "react";
 import { NavLink } from "react-router-dom";
@@ -13,22 +14,39 @@ interface NavItemProps {
   to: string;
   icon: React.ElementType;
   label: string;
-  badge?: number; // Optional badge
+  badge?: number;
+  className?: string;
 }
 
 const navItems: NavItemProps[] = [
   { to: "/scrap", icon: IconSearch, label: "Scrap" },
   { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
   { to: "/payments", icon: IconCreditCard, label: "Payments" },
-  { to: "/settings", icon: IconSettings, label: "Settings" },
   { to: "/users", icon: IconUser, label: "Users" },
+  {
+    to: "/help",
+    icon: IconHelp,
+    label: "Help",
+    className: "mt-auto",
+  },
+  {
+    to: "/settings",
+    icon: IconSettings,
+    label: "Settings",
+  },
 ];
 
-const SidebarItem: FC<NavItemProps> = ({ to, icon, label, badge }) => (
+const SidebarItem: FC<NavItemProps> = ({
+  to,
+  icon,
+  label,
+  badge,
+  className,
+}) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `sidebar-item ${isActive ? "active" : ""}`.trim()
+      `sidebar-item ${className} ${isActive ? "active" : ""}`.trim()
     }
   >
     {createElement(icon, { size: 20, className: "me-2" })}
@@ -36,7 +54,6 @@ const SidebarItem: FC<NavItemProps> = ({ to, icon, label, badge }) => (
     {badge !== undefined && (
       <span className="badge text-bg-primary ms-auto">{badge}</span>
     )}
-    {createElement(IconChevronRight, { size: 16, className: "ms-2" })}
   </NavLink>
 );
 
