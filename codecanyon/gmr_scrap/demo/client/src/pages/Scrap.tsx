@@ -17,6 +17,8 @@ import {
   IconVideo,
   IconMessageReply,
   IconPlayerPlay,
+  IconCaretRight,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 
 const Scrap = () => {
@@ -132,7 +134,7 @@ const Scrap = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-4">
-          <div className="card mb-3 border-primary">
+          <div className="card mb-3">
             <div className="card-body">
               <form
                 onSubmit={getPlaceInfo}
@@ -154,35 +156,50 @@ const Scrap = () => {
                   className="btn btn-warning"
                   disabled={loading}
                 >
-                  Validate /
-                  <IconCoins size={20} className="ms-1" /> 3 point
+                  <IconWorldCheck size={20} className="me-2" />
+                  Validate (<IconCoins size={20} /> 3 points)
                 </button>
               </form>
-              <p>
-                How to get the Google Maps URL for the place you want to scrape
-              </p>
-              <ol className="list-group list-group-numbered list-group-flush">
-                <li className="list-group-item">
+              <div className="mt-3 d-flex align-items-start">
+                <IconInfoCircle size={30} className="me-2" />
+                <h5>
+                  How to get the Google Maps URL for the place you want to
+                  scrape
+                </h5>
+              </div>
+              <ul className="list-unstyled">
+                <li>
+                  <IconCaretRight size={20} className="me-2" />
                   <a href="https://www.google.com/maps" target="_blank">
                     Go to the Google Maps
                   </a>
                 </li>
-                <li className="list-group-item">
+                <li>
+                  <IconCaretRight size={20} className="me-2" />
                   Search for the place you want to scrape
                 </li>
-                <li className="list-group-item">Click on the share button</li>
-                <li className="list-group-item">
+                <li>
+                  <IconCaretRight size={20} className="me-2" />
+                  Click on the share button
+                </li>
+                <li>
+                  <IconCaretRight size={20} className="me-2" />
                   Click on the copy link button
                 </li>
-                <li className="list-group-item">
+                <li>
+                  <IconCaretRight size={20} className="me-2" />
                   Paste the link in the input field
                 </li>
-              </ol>
-              <img
-                src={helperGif}
-                alt="helper"
+              </ul>
+              <iframe
                 className="w-100 rounded mt-4"
-              />
+                height="250"
+                src="https://www.youtube.com/embed/TMjezeeGVfY?si=j9XaBxKYwdfBdcdv"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
         </div>
