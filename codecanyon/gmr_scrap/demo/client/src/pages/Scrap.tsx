@@ -103,11 +103,8 @@ const Scrap = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        {/* <div className="col-md-12">
-          <h2 className="dashboard-title">Premium Scraping</h2>
-        </div> */}
         <div className="col-md-4">
-          <div className="card mb-3">
+          <div className="card mb-3 border-primary">
             <div className="card-body">
               <form onSubmit={getPlaceInfo}>
                 <div className="mb-3">
@@ -136,7 +133,7 @@ const Scrap = () => {
                       className="btn btn-primary w-100"
                       disabled={loading}
                     >
-                      Check Place
+                      Validate
                     </button>
                   </div>
                 </div>
@@ -170,14 +167,10 @@ const Scrap = () => {
                   </div>
                 </div>
               </form>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">
+              <p>
                 How to get the Google Maps URL for the place you want to scrape
-              </h5>
-              <ul className="list-group list-group-flush list-group-numbered mt-3">
+              </p>
+              <ol className="list-group list-group-numbered list-group-flush">
                 <li className="list-group-item">
                   <a href="https://www.google.com/maps" target="_blank">
                     Go to the Google Maps
@@ -193,7 +186,7 @@ const Scrap = () => {
                 <li className="list-group-item">
                   Paste the link in the input field
                 </li>
-              </ul>
+              </ol>
               <img
                 src={helperGif}
                 alt="helper"
