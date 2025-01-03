@@ -330,6 +330,95 @@ const Scrap = () => {
                             </div>
                           </div>
                         </div>
+                        <div className="col-12">
+                          <div className="card">
+                            <h5 className="card-header">Output settings</h5>
+                            <div className="card-body">
+                              <div className="row g-3">
+                                <div className="col-md-6">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="outputCsv"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="outputCsv"
+                                        >
+                                          CSV
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="outputJson"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="outputJson"
+                                        >
+                                          JSON
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="card">
+                            <h5 className="card-header">
+                              Reliability settings
+                            </h5>
+                            {/* Retry and timeouts */}
+                            <div className="card-body">
+                              <div className="row g-3">
+                                <div className="col-md-6">
+                                  <label
+                                    htmlFor="retryCount"
+                                    className="form-label"
+                                  >
+                                    Retry count
+                                  </label>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    id="retryCount"
+                                    value="3"
+                                  />
+                                </div>
+                                <div className="col-md-6">
+                                  <label
+                                    htmlFor="timeoutSeconds"
+                                    className="form-label"
+                                  >
+                                    Timeout seconds
+                                  </label>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    id="timeoutSeconds"
+                                    value="30"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
