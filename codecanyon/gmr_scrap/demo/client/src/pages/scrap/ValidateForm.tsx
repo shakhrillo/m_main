@@ -1,4 +1,4 @@
-import { IconPlayerPlay, IconWorldCheck } from "@tabler/icons-react";
+import { IconWorldCheck } from "@tabler/icons-react";
 import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
@@ -8,23 +8,36 @@ function ValidateForm() {
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
 
-  function getPlaceInfo(e: React.FormEvent) {
-    e.preventDefault();
-
+  /**
+   * Get place information from Google Maps URL
+   *
+   * @param {React.FormEvent} event
+   * @returns {Promise<void>}
+   */
+  async function getPlaceInfo(event: React.FormEvent): Promise<void> {
+    event.preventDefault();
+    const uid = user?.uid;
+    const collectionPath = `users/${uid}/reviewOverview`;
     setLoading(true);
-    addDoc(collection(firestore, `users/${user?.uid}/reviewOverview`), {
-      url,
-    })
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch((error) => console.error("Error adding document:", error));
+    try {
+      const collectionRef = collection(firestore, collectionPath);
+      const document = await addDoc(collectionRef, {
+        url,
+      });
+      console.log("Document written with ID: ", document.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    } finally {
+      setLoading(false);
+      setUrl("");
+    }
   }
+
   return (
-    <form onSubmit={getPlaceInfo} className="mb-3">
+    <form onSubmit={getPlaceInfo}>
       <div className="mb-3">
         <label className="form-label">Google Maps URL</label>
-        <div className="input-group mb-3">
+        <div className="input-group">
           <input
             type="url"
             value={url}
