@@ -12,7 +12,11 @@ import { useFirebase } from "../../contexts/FirebaseProvider";
  *
  * @returns {JSX.Element}
  */
-function ScrapValidateForm(): JSX.Element {
+function ScrapValidateForm({
+  setDocumentId,
+}: {
+  setDocumentId: (id: string) => void;
+}): JSX.Element {
   const { user, firestore } = useFirebase();
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
@@ -34,12 +38,12 @@ function ScrapValidateForm(): JSX.Element {
       const document = await addDoc(collectionRef, {
         url,
       });
-      console.log("Document written with ID: ", document.id);
+      setDocumentId(document.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     } finally {
-      setLoading(false);
-      setUrl("");
+      // setLoading(false);
+      // setUrl("");
     }
   }
 

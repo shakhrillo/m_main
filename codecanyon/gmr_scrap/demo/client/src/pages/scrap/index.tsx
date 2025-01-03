@@ -21,6 +21,7 @@ import {
 } from "@tabler/icons-react";
 import ScrapValidateForm from "./ScrapValidateForm";
 import ScrapHelper from "./ScrapHelper";
+import ScrapPlaceInfo from "./ScrapPlaceInfo";
 
 const Scrap = () => {
   const { user, firestore } = useFirebase();
@@ -138,7 +139,7 @@ const Scrap = () => {
           <div className="card mb-3">
             <div className="card-body">
               <div className="d-flex flex-column gap-3">
-                <ScrapValidateForm />
+                <ScrapValidateForm setDocumentId={setOverviewId} />
                 <ScrapHelper />
               </div>
             </div>
@@ -147,159 +148,7 @@ const Scrap = () => {
         <div className="col-md-8">
           <div className="row row-cols-1 g-3">
             <div className="col">
-              <div className="card">
-                <div
-                  style={{
-                    backgroundImage: "url(" + info.screenshot + ")",
-                    height: "180px",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                  className="w-100 card-img-top"
-                ></div>
-                <div className="card-body">
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <IconStarFilled size={16} className="text-warning" />
-                    <span>{info.rating || "N/A"}</span>
-                    <span>
-                      ({Number(info.reviews || 0).toLocaleString()} reviews)
-                    </span>
-                  </div>
-                  <h5 className="card-title">
-                    <span>{info.title || "Google Maps"}</span>
-                  </h5>
-                  <p className="card-text">{info.address}</p>
-                  <div className="mb-3">
-                    <label className="form-label">Maximum reviews</label>
-                    <input
-                      type="number"
-                      value={scrap.limit}
-                      onChange={(e) =>
-                        handleInputChange("limit", Number(e.target.value))
-                      }
-                      disabled={loading || info.rating === undefined}
-                      className="form-control form-control-lg"
-                    />
-                  </div>
-                  <div className="list-group mt-3 list-group-flush">
-                    <a
-                      href="#"
-                      className={`list-group-item ${info.rating === undefined || loading ? "disabled" : ""}`}
-                      aria-disabled="true"
-                    >
-                      <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex">
-                          <IconPhoto size={40} className="me-3 text-primary" />
-                          <div className="d-block">
-                            <div className="d-flex align-items-center">
-                              <h5 className="m-0">Images</h5>
-                              <span className="badge bg-primary ms-2">
-                                <IconCoins size={14} className="ms-1" /> 2 point
-                              </span>
-                            </div>
-                            <p className="mb-1">
-                              The points will be deducted for each image
-                              extracted from the reviews.
-                            </p>
-                          </div>
-                        </div>
-                        <input
-                          className="form-check-input fs-5"
-                          type="checkbox"
-                          name="tariff"
-                          checked={scrap.extractImageUrls}
-                          onChange={() =>
-                            handleCheckboxChange("extractImageUrls")
-                          }
-                          disabled={info.rating === undefined || loading}
-                        />
-                      </div>
-                    </a>
-                    <a
-                      href="#"
-                      className={`list-group-item ${
-                        info.rating === undefined || loading ? "disabled" : ""
-                      }`}
-                      aria-disabled="true"
-                    >
-                      <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex">
-                          <IconVideo size={40} className="me-3 text-primary" />
-                          <div className="d-block">
-                            <div className="d-flex align-items-center">
-                              <h5 className="m-0">Videos</h5>
-                              <span className="badge bg-primary ms-2">
-                                <IconCoins size={14} className="ms-1" /> 3 point
-                              </span>
-                            </div>
-                            <p className="mb-1">
-                              The points will be deducted for each video
-                              extracted from the reviews.
-                            </p>
-                          </div>
-                        </div>
-                        <input
-                          className="form-check-input fs-5"
-                          type="checkbox"
-                          name="video"
-                          checked={scrap.extractVideoUrls}
-                          onChange={() =>
-                            handleCheckboxChange("extractVideoUrls")
-                          }
-                          disabled={info.rating === undefined || loading}
-                        />
-                      </div>
-                    </a>
-                    <a
-                      href="#"
-                      className={`list-group-item ${info.rating === undefined || loading ? "disabled" : ""}`}
-                      aria-disabled="true"
-                    >
-                      <div className="d-flex w-100 justify-content-between">
-                        <div className="d-flex">
-                          <IconMessageReply
-                            size={40}
-                            className="me-3 text-primary"
-                          />
-                          <div className="d-block">
-                            <div className="d-flex align-items-center">
-                              <h5 className="m-0">Owner Response</h5>
-                              <span className="badge bg-primary ms-2">
-                                <IconCoins size={14} className="ms-1" /> 1 point
-                              </span>
-                            </div>
-                            <p className="mb-1">
-                              The points will be deducted for each owner
-                              response extracted from the reviews.
-                            </p>
-                          </div>
-                        </div>
-                        <input
-                          className="form-check-input fs-5"
-                          type="checkbox"
-                          name="ownerResponse"
-                          disabled={info.rating === undefined || loading}
-                          checked={scrap.ownerResponse}
-                          onChange={() => handleCheckboxChange("ownerResponse")}
-                        />
-                      </div>
-                    </a>
-                  </div>
-                  <button
-                    className="btn btn-lg btn-primary mt-3"
-                    disabled={info.rating === undefined || loading}
-                  >
-                    <IconPlayerPlay size={20} className="me-2" />
-                    Start Scraping / <IconCoins
-                      size={20}
-                      className="ms-1"
-                    />{" "}
-                    {calculatePoints()}
-                    point
-                  </button>
-                </div>
-              </div>
+              <ScrapPlaceInfo info={info} />
             </div>
           </div>
         </div>
