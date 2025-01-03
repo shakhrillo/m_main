@@ -279,6 +279,57 @@ const Scrap = () => {
                             </div>
                           </div>
                         </div>
+                        <div className="col-12">
+                          <div className="card">
+                            <h5 className="card-header">
+                              Notification settings
+                            </h5>
+                            <div className="card-body">
+                              <div className="row g-3">
+                                <div className="col-md-6">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="notificationEmail"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="notificationEmail"
+                                        >
+                                          Email
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="notificationSlack"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="notificationSlack"
+                                        >
+                                          Slack
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
