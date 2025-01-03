@@ -1,6 +1,9 @@
+// Modules
 import { IconCaretRight, IconInfoCircle } from "@tabler/icons-react";
+import { JSX } from "react";
 
-const listData = [
+// Constants
+const steps = [
   {
     text: "Go to the Google Maps",
     link: "https://www.google.com/maps",
@@ -11,7 +14,11 @@ const listData = [
   { text: "Paste the link in the input field" },
 ];
 
-function ScrapHelper() {
+/**
+ * Helper component for getting the Google Maps URL
+ * @returns {JSX.Element}
+ */
+function ScrapHelper(): JSX.Element {
   return (
     <>
       <div className="d-flex align-items-center">
@@ -19,7 +26,7 @@ function ScrapHelper() {
         <h6 className="m-0">How to get the Google Maps URL</h6>
       </div>
       <ul className="list-unstyled small mb-0">
-        {listData.map(({ text, link }, index) => (
+        {steps.map(({ text, link }, index) => (
           <li key={index} className="d-flex align-items-center mb-2">
             <IconCaretRight size={16} className="me-2" />
             {link ? (
