@@ -40,7 +40,7 @@ function ScrapHelper(): JSX.Element {
         ))}
       </ul>
       <iframe
-        className="w-100 rounded"
+        className="w-100 rounded d-none"
         height="300"
         src="https://www.youtube.com/embed/TMjezeeGVfY?si=j9XaBxKYwdfBdcdv"
         title="YouTube video player"

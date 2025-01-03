@@ -48,28 +48,32 @@ function ScrapValidateForm({
   }
 
   return (
-    <form onSubmit={getPlaceInfo}>
-      <div className="mb-3">
-        <label className="form-label">Google Maps URL</label>
-        <div className="input-group">
-          <input
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://maps.app.goo.gl/..."
-            disabled={loading}
-            className="form-control"
-          />
-          <span className="input-group-text">
-            <IconWorldCheck size={20} />
-          </span>
-        </div>
+    <div className="card">
+      <div className="card-body">
+        <form onSubmit={getPlaceInfo}>
+          <div className="mb-3">
+            <label className="form-label">Google Maps URL</label>
+            <div className="input-group">
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://maps.app.goo.gl/..."
+                disabled={loading}
+                className="form-control"
+              />
+              <span className="input-group-text">
+                <IconWorldCheck size={20} />
+              </span>
+            </div>
+          </div>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            Validate
+            <span className="badge bg-secondary ms-2">3 points</span>
+          </button>
+        </form>
       </div>
-      <button type="submit" className="btn btn-primary" disabled={loading}>
-        Validate
-        <span className="badge bg-secondary ms-2">3 points</span>
-      </button>
-    </form>
+    </div>
   );
 }
 
