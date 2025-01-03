@@ -19,7 +19,8 @@ import {
   IconCaretRight,
   IconInfoCircle,
 } from "@tabler/icons-react";
-import ValidateForm from "./ValidateForm";
+import ScrapValidateForm from "./ScrapValidateForm";
+import ScrapHelper from "./ScrapHelper";
 
 const Scrap = () => {
   const { user, firestore } = useFirebase();
@@ -136,48 +137,10 @@ const Scrap = () => {
         <div className="col-md-4">
           <div className="card mb-3">
             <div className="card-body">
-              <ValidateForm />
-              <hr />
-              <div className="mt-3 d-flex">
-                <IconInfoCircle size={40} className="me-3" />
-                <h5 className="m-0">
-                  How to get the Google Maps URL for the place you want to
-                  scrape
-                </h5>
+              <div className="d-flex flex-column gap-3">
+                <ScrapValidateForm />
+                <ScrapHelper />
               </div>
-              <ul className="list-unstyled mt-3">
-                <li>
-                  <IconCaretRight size={20} className="me-2" />
-                  <a href="https://www.google.com/maps" target="_blank">
-                    Go to the Google Maps
-                  </a>
-                </li>
-                <li>
-                  <IconCaretRight size={20} className="me-2" />
-                  Search for the place you want to scrape
-                </li>
-                <li>
-                  <IconCaretRight size={20} className="me-2" />
-                  Click on the share button
-                </li>
-                <li>
-                  <IconCaretRight size={20} className="me-2" />
-                  Click on the copy link button
-                </li>
-                <li>
-                  <IconCaretRight size={20} className="me-2" />
-                  Paste the link in the input field
-                </li>
-              </ul>
-              <iframe
-                className="w-100 rounded mt-4"
-                height="250"
-                src="https://www.youtube.com/embed/TMjezeeGVfY?si=j9XaBxKYwdfBdcdv"
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
             </div>
           </div>
         </div>
