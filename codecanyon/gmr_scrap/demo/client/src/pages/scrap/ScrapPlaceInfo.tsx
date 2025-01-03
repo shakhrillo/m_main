@@ -72,86 +72,32 @@ function ScrapPlaceInfo({ info }: IProps): JSX.Element {
                 <h5 className="card-title">
                   <span>{info.title || "Google Maps"}</span>
                 </h5>
-                <p className="card-text">{info.address}</p>
                 <hr />
-                <div className="form-group">
-                  <label className="form-label">Maximum reviews</label>
-                  <input
-                    type="number"
-                    value={limit}
-                    onChange={(e) => setLimit(Number(e.target.value))}
-                    disabled={loading || info.rating === undefined}
-                    className="form-control"
-                  />
+                <strong>
+                  Your estimated points for this scraping task is:
+                </strong>
+                <div className="d-flex justify-content-between mb-3">
+                  <span>Reviews</span>
+                  <span className="fw-bold">30 coins</span>
                 </div>
-
-                <div className="list-group mt-3 list-group-flush">
-                  {[
-                    {
-                      title: "Images",
-                      subTitle:
-                        "The points will be deducted for each image extracted from the reviews.",
-                      icon: IconPhoto,
-                      point: 2,
-                      checked: extractImageUrls,
-                    },
-                    {
-                      title: "Videos",
-                      subTitle:
-                        "The points will be deducted for each video extracted from the reviews.",
-                      icon: IconPlayerPlay,
-                      point: 3,
-                      checked: extractVideoUrls,
-                    },
-                    {
-                      title: "Owner Response",
-                      subTitle:
-                        "The points will be deducted for each owner response extracted from the reviews.",
-                      icon: IconMessageReply,
-                      point: 1,
-                      checked: ownerResponse,
-                    },
-                  ].map((item, index) => (
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name={item.title}
-                        checked={item.checked}
-                        id={item.title}
-                        onChange={(e) => {
-                          switch (item.title) {
-                            case "Images":
-                              setExtractImageUrls(e.target.checked);
-                              break;
-                            case "Videos":
-                              setExtractVideoUrls(e.target.checked);
-                              break;
-                            case "Owner Response":
-                              setOwnerResponse(e.target.checked);
-                              break;
-                          }
-                        }}
-                        disabled={info.rating === undefined || loading}
-                      />
-                      <label className="form-check-label" htmlFor={item.title}>
-                        {item.title}
-
-                        <span className="badge bg-primary ms-2">
-                          {item.point} point / each
-                        </span>
-                      </label>
-                    </div>
-                  ))}
+                <div className="d-flex justify-content-between mb-3">
+                  <span>Extract Image URLs</span>
+                  <span className="fw-bold">60 coins</span>
+                </div>
+                <div className="d-flex justify-content-between mb-3">
+                  <span>Extract Video URLs</span>
+                  <span className="fw-bold">90 coins</span>
+                </div>
+                <hr />
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold">Total</span>
+                  <span className="fw-bold text-primary">180 coins</span>
                 </div>
                 <button
-                  className="btn btn-primary mt-3"
+                  className="btn btn-primary w-100 mt-3"
                   disabled={info.rating === undefined || loading}
                 >
                   Start Scraping
-                  <span className="badge bg-light text-dark ms-2">
-                    {calculatePoints()}
-                  </span>
                 </button>
               </div>
             </div>
