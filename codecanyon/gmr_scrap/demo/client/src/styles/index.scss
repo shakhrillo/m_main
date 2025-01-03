@@ -1,5 +1,6 @@
 @use "./components/card" as *;
 @use "./components/sidebar" as *;
+@use "./components/navbar" as *;
 
 .dashboard-layout {
   display: flex;

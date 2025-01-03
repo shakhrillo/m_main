@@ -1,0 +1,55 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 36px;
+  width: 100%;
+
+  form {
+    display: flex;
+    gap: 36px;
+    margin-left: auto;
+
+    ul {
+      display: flex;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      font-size: 14px;
+      li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        a {
+          color: #ffffff;
+        }
+      }
+    }
+    .navbar__user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      a img {
+        border-radius: 50%;
+        width: 38px;
+      }
+      & > div {
+        display: flex;
+        flex-direction: column;
+
+        h6 {
+          margin: 0;
+          color: #ffffff;
+          font-size: 14px;
+        }
+
+        small {
+          opacity: 0.6;
+          color: #ffffff;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

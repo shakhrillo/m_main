@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 
 const DashboardLayout: React.FC = () => {
   return (
@@ -9,7 +10,9 @@ const DashboardLayout: React.FC = () => {
         <Sidebar />
       </aside>
       <main className="dashboard-main">
-        <div className="dashboard-header"></div>
+        <div className="dashboard-header">
+          <Navbar />
+        </div>
         <div className="dashboard-content">
           <Outlet />
         </div>
