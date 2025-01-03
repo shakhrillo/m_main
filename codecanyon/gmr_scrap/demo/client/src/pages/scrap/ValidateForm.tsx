@@ -1,4 +1,4 @@
-import { IconCoins, IconWorldCheck } from "@tabler/icons-react";
+import { IconPlayerPlay, IconWorldCheck } from "@tabler/icons-react";
 import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
@@ -39,7 +39,8 @@ function ValidateForm() {
         </div>
       </div>
       <button type="submit" className="btn btn-primary" disabled={loading}>
-        Validate (<IconCoins size={20} /> 3 points)
+        Validate
+        <span className="badge bg-secondary ms-2">3 points</span>
       </button>
     </form>
   );
