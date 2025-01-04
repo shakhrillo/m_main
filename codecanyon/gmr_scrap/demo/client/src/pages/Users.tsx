@@ -1,36 +1,36 @@
-import { useEffect, useState } from "react"
-import { useFirebase } from "../contexts/FirebaseProvider"
-import { collection, onSnapshot } from "firebase/firestore"
-import Loader from "../components/loader"
-import { Table } from "../components/table"
+import { useEffect, useState } from "react";
+import { useFirebase } from "../contexts/FirebaseProvider";
+import { collection, onSnapshot } from "firebase/firestore";
+import Loader from "../components/loader";
+import { Table } from "../components/table";
 
 interface User {
-  id: string
-  coin: string
-  displayName: string
-  email: string
+  id: string;
+  coin: string;
+  displayName: string;
+  email: string;
 }
 
 const Users: React.FC = () => {
-  const { firestore } = useFirebase()
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(false)
+  const { firestore } = useFirebase();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!firestore) return
-    setLoading(true)
-    const usersRef = collection(firestore, "users")
+    if (!firestore) return;
+    setLoading(true);
+    const usersRef = collection(firestore, "users");
 
-    const unsubscribe = onSnapshot(usersRef, snapshot => {
-      const usersData = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+      const usersData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }))
-      setUsers(usersData as User[])
-      setLoading(false)
-    })
-    return () => unsubscribe()
-  }, [firestore])
+      }));
+      setUsers(usersData as User[]);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [firestore]);
 
   const tableHeader = [
     {
@@ -48,21 +48,24 @@ const Users: React.FC = () => {
       field: "coin",
       render: (row: any) => <span>{row.coin || "0"}</span>,
     },
-  ]
+  ];
   return (
     <>
       {loading ? (
         <Loader version={2} cover="full" />
       ) : (
-        <div>
-          <h3>Users</h3>
-          <div className="mt-4">
-            <Table tableHeader={tableHeader} tableBody={users}></Table>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="card">
+              <div className="card-body">
+                <Table tableHeader={tableHeader} tableBody={users}></Table>
+              </div>
+            </div>
           </div>
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Users
+export default Users;
