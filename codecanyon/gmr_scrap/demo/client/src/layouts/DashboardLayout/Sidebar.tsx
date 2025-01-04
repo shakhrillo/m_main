@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { createElement, FC } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/logo.svg";
 
 interface NavItemProps {
   to: string;
@@ -60,8 +61,9 @@ const SidebarItem: FC<NavItemProps> = ({
 const Sidebar: FC = () => (
   <nav className="sidebar">
     <div className="sidebar-header">
-      <h5 className="sidebar-title">GMRS</h5>
-      <small className="sidebar-subtitle">Google Maps Review Scraper</small>
+      <img src={logo} alt="GMRS" className="sidebar-logo" />
+      {/* <h5 className="sidebar-title">GMRS</h5>
+      <small className="sidebar-subtitle">Google Maps Review Scraper</small> */}
     </div>
     <div className="sidebar-menu">
       {navItems.map((item) => (
