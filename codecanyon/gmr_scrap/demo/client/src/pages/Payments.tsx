@@ -24,6 +24,7 @@ function Payments() {
 
     const unsubscribe = onSnapshot(getPaymentsQuery(user.uid), (snapshot) => {
       const historyData = snapshot.docs.map((doc) => doc.data());
+      console.log(historyData);
       setHistory(historyData);
     });
 
@@ -103,6 +104,26 @@ function Payments() {
       text: "Date",
       field: "date",
       render: (row: any) => <span>{formatTimestamp(row.created)}</span>,
+    },
+    {
+      text: "Card",
+      field: "card",
+      render: (row: any) => (
+        <span>
+          {row.charge?.payment_method_details?.card?.brand}{" "}
+          {row.charge?.payment_method_details?.card?.last4}
+        </span>
+      ),
+    },
+    {
+      text: "Receipt",
+      field: "receipt",
+      render: (row: any) => (
+        <a href={row.charge?.receipt_url} target="_blank" rel="noreferrer">
+          <img src={cardIcon} alt="Receipt" width={16} className="me-1" />
+          Receipt
+        </a>
+      ),
     },
   ];
 

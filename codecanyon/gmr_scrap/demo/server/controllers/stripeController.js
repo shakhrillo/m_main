@@ -72,6 +72,8 @@ exports.webhookHandler = async (req, res) => {
           return res.status(200).send("Event ignored");
         }
 
+        const chargeId = paymentIntent.charges.data[0].id;
+        const charge = await stripe.charges.retrieve(chargeId);
         const userId = paymentIntent.metadata.userId;
         const userPaymentsRef = db.collection(`users/${userId}/payments`);
         const userRef = db.doc(`users/${userId}`);
@@ -83,6 +85,7 @@ exports.webhookHandler = async (req, res) => {
           created: +new Date(paymentIntent.created * 1000),
           payment_method: paymentIntent.payment_method,
           status: paymentIntent.status,
+          charge,
         });
 
         // Update user's coin balance
