@@ -55,26 +55,29 @@ function ScrapPlaceInfo({ info }: IProps): JSX.Element {
   }
 
   const handleStartScraping = async (e: React.FormEvent) => {
+    let id;
     e.preventDefault();
     setLoading(true);
     try {
       const docReview = collection(firestore, `users/${user?.uid}/reviews`);
 
-      await addDoc(docReview, {
-        ...info,
-        type: "comments",
-        limit: 30,
-        extractImageUrls: true,
-        extractVideoUrls: true,
-        ownerResponse: true,
-        sortBy: "Newest",
-        status: "in-progress",
-      });
+      id = (
+        await addDoc(docReview, {
+          ...info,
+          type: "comments",
+          limit: 30,
+          extractImageUrls: true,
+          extractVideoUrls: true,
+          ownerResponse: true,
+          sortBy: "Newest",
+          status: "in-progress",
+        })
+      ).id;
     } catch (error) {
       console.error(error);
       alert("Something went wrong. Please try again.");
     } finally {
-      navigate(`/reviews/${info.reviewId}`);
+      navigate(`/reviews/${id}`);
     }
   };
 
