@@ -4,7 +4,10 @@ import {
   IconPlayerPlay,
   IconStarFilled,
 } from "@tabler/icons-react";
+import { doc, setDoc } from "firebase/firestore";
 import { createElement, JSX, useState } from "react";
+import { useFirebase } from "../../contexts/FirebaseProvider";
+import { useNavigate } from "react-router-dom";
 
 interface IInfo {
   address: string;
@@ -12,6 +15,7 @@ interface IInfo {
   reviews: number;
   screenshot: string;
   title: string;
+  reviewId: string;
 }
 
 interface IProps {
@@ -19,6 +23,9 @@ interface IProps {
 }
 
 function ScrapPlaceInfo({ info }: IProps): JSX.Element {
+  const { user, firestore } = useFirebase();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(30);
   const [extractImageUrls, setExtractImageUrls] = useState(false);
@@ -46,6 +53,32 @@ function ScrapPlaceInfo({ info }: IProps): JSX.Element {
 
     return `${points} points`;
   }
+
+  const handleStartScraping = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const docReview = doc(
+        firestore,
+        `users/${user?.uid}/reviews/${info.reviewId}`,
+      );
+
+      await setDoc(docReview, {
+        ...info,
+        limit: 30,
+        extractImageUrls: true,
+        extractVideoUrls: true,
+        ownerResponse: true,
+        sortBy: "Newest",
+        status: "in-progress",
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      navigate(`/reviews/${info.reviewId}`);
+    }
+  };
 
   return (
     <div className="row">
@@ -96,6 +129,7 @@ function ScrapPlaceInfo({ info }: IProps): JSX.Element {
                 <button
                   className="btn btn-primary w-100 mt-3"
                   disabled={info.rating === undefined || loading}
+                  onClick={handleStartScraping}
                 >
                   Start Scraping
                 </button>
