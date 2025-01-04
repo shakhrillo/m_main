@@ -45,7 +45,7 @@ const dashboardRoutes = {
     { path: "settings", element: <Settings /> },
     { path: "help", element: <Help /> },
     { path: "info", element: <Info /> },
-    { path: "usage", element: <Usage /> },
+    { path: "dashboard", element: <Usage /> },
     { path: "payments", element: <Payments /> },
   ],
 };

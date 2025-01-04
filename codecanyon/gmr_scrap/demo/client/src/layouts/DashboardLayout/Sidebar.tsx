@@ -6,6 +6,7 @@ import {
   IconSettings,
   IconUser,
   IconHelp,
+  IconDashboard,
 } from "@tabler/icons-react";
 import { createElement, FC } from "react";
 import { NavLink } from "react-router-dom";
@@ -20,6 +21,7 @@ interface NavItemProps {
 }
 
 const navItems: NavItemProps[] = [
+  { to: "/dashboard", icon: IconDashboard, label: "Dashboard" },
   { to: "/scrap", icon: IconSearch, label: "Scrap" },
   { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
   { to: "/payments", icon: IconCreditCard, label: "Payments" },
