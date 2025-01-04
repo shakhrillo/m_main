@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react" // React imports for state and effect handling
-import { useNavigate } from "react-router-dom" // Hook for navigation
-import { collection, doc, onSnapshot } from "firebase/firestore" // Firestore imports for document snapshot
-import { Table } from "../../components/table" // Custom Table component for displaying data
-import { useFirebase } from "../../contexts/FirebaseProvider" // Context for Firebase integration
-import { getReviewsQuery } from "../../services/firebaseService" // Function to get reviews query
-import { formatTimestamp } from "../../utils/formatTimestamp" // Utility to format timestamps
-import { reviewsCountRender } from "../../utils/reviewsCountRender" // Utility for rendering reviews count
-import { spentTime } from "../../utils/spentTime" // Utility for calculating spent time
-import { statusRender } from "../../utils/statusRender" // Utility for rendering status
-import Loader from "../../components/loader" // Loader component to show while loading data
+import React, { useEffect, useState } from "react"; // React imports for state and effect handling
+import { useNavigate } from "react-router-dom"; // Hook for navigation
+import { collection, doc, onSnapshot } from "firebase/firestore"; // Firestore imports for document snapshot
+import { Table } from "../../components/table"; // Custom Table component for displaying data
+import { useFirebase } from "../../contexts/FirebaseProvider"; // Context for Firebase integration
+import { getReviewsQuery } from "../../services/firebaseService"; // Function to get reviews query
+import { formatTimestamp } from "../../utils/formatTimestamp"; // Utility to format timestamps
+import { reviewsCountRender } from "../../utils/reviewsCountRender"; // Utility for rendering reviews count
+import { spentTime } from "../../utils/spentTime"; // Utility for calculating spent time
+import { statusRender } from "../../utils/statusRender"; // Utility for rendering status
+import Loader from "../../components/loader"; // Loader component to show while loading data
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate() //Hook for navigation
-  const { firestore, user } = useFirebase() // Firebase context to get firestore and user data
+  const navigate = useNavigate(); //Hook for navigation
+  const { firestore, user } = useFirebase(); // Firebase context to get firestore and user data
 
   // States for managing dashboard data
-  const [info, setInfo] = useState<any>({})
-  const [completedReviews, setCompletedReviews] = useState<any[]>([]) // List of complated reviews
-  const [loading, setLoading] = useState(false) // Loading state for fetching data
-  const [activeTableFilter, setActiveTableFilter] = useState("all") // Active table filter
+  const [info, setInfo] = useState<any>({});
+  const [completedReviews, setCompletedReviews] = useState<any[]>([]); // List of complated reviews
+  const [loading, setLoading] = useState(false); // Loading state for fetching data
+  const [activeTableFilter, setActiveTableFilter] = useState("all"); // Active table filter
 
   const stats = [
     { label: "All comments", value: info.totalReviews || "0" },
     { label: "Owner responses", value: info.totalOwnerReviews || "0" },
     { label: "User comments", value: info.totalUserReviews || "0" },
     { label: "Images", value: info.totalImages || "0" },
-  ]
+  ];
 
   // Table columns configuration
   const tableColumns = [
@@ -42,9 +42,9 @@ const Dashboard: React.FC = () => {
           className="d-inline-block text-truncate"
           style={{ maxWidth: "200px" }}
           href="#"
-          onClick={e => {
-            e.preventDefault()
-            navigate(`/reviews/${row.id}`) // Navigate to reviews page on click
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(`/reviews/${row.id}`); // Navigate to reviews page on click
           }}
         >
           {row.title || row.url} {/* Display place title or URL */}
@@ -86,39 +86,42 @@ const Dashboard: React.FC = () => {
       field: "json",
       render: (row: any) => <a href={row.jsonUrl}>JSON</a>, // // Provide JSON download
     },
-  ]
+  ];
 
   useEffect(() => {
-    setLoading(() => true)
-    if (!firestore || !user) return
+    setLoading(() => true);
+    if (!firestore || !user) return;
 
-    const collectionReviews = collection(firestore, `users/${user.uid}/reviews`)
-    const unsubscribe = onSnapshot(collectionReviews, snapshot => {
+    const collectionReviews = collection(
+      firestore,
+      `users/${user.uid}/reviews`,
+    );
+    const unsubscribe = onSnapshot(collectionReviews, (snapshot) => {
       setCompletedReviews(
-        snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })),
-      )
-    })
-    return unsubscribe
-  }, [firestore, user])
+        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+      );
+    });
+    return unsubscribe;
+  }, [firestore, user]);
 
   // Fetch app info from Firestore
   useEffect(() => {
-    if (!firestore || !user) return
+    if (!firestore || !user) return;
 
-    const docRef = doc(firestore, `app/info`) // Get app info document
-    const unsubscribe = onSnapshot(docRef, doc => {
-      setInfo(doc.data() || {}) // Update state with the app info
-      setLoading(() => false) // Set loading to false once data is fetched
-      console.log("info", info) // Log fetched info (for debugging purposes)
-    })
-    return unsubscribe // Cleanup on unmount
-  }, [firestore, user])
+    const docRef = doc(firestore, `app/info`); // Get app info document
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      setInfo(doc.data() || {}); // Update state with the app info
+      setLoading(() => false); // Set loading to false once data is fetched
+      console.log("info", info); // Log fetched info (for debugging purposes)
+    });
+    return unsubscribe; // Cleanup on unmount
+  }, [firestore, user]);
 
   // Filter the table data based on the active filter
-  const filteredReviews = completedReviews.filter(review => {
-    if (activeTableFilter === "all") return true // Show all reviews
-    return review.status === activeTableFilter // Filter by status
-  })
+  const filteredReviews = completedReviews.filter((review) => {
+    if (activeTableFilter === "all") return true; // Show all reviews
+    return review.status === activeTableFilter; // Filter by status
+  });
 
   return (
     <div className="container-fluid">
@@ -126,33 +129,34 @@ const Dashboard: React.FC = () => {
         // Show loader while data is being fetched
         <Loader cover="full" version={2} />
       ) : (
-        <div className="row">
-          <h3>Reviews</h3>
+        <div className="row g-3">
           <div className="col-12">
-            <div className="row row-cols-4 py-4">
-              {/* Summary cards for total reviews */}
-              {stats.map((stat, index) => (
-                <div className="col" key={index}>
-                  <span className="text-muted">{stat.label}</span>
-                  <h4>{stat.value}</h4>
+            <div className="card">
+              <div className="card-body">
+                <div className="row row-cols-4">
+                  {stats.map((stat, index) => (
+                    <div className="col" key={index}>
+                      <span className="text-muted">{stat.label}</span>
+                      <span className="d-block fs-1">{stat.value}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
-          {/* Filter buttons to select review status */}
           <div className="col-12">
             <div
               className="btn-group"
               role="group"
               aria-label="Default button group"
             >
-              {["all", "completed", "pending", "filed"].map(filter => (
+              {["all", "completed", "pending", "filed"].map((filter) => (
                 <button
                   key={filter}
                   type="button"
                   onClick={() => setActiveTableFilter(filter)}
-                  className={`btn btn-outline-primary ${
+                  className={`btn btn-secondary ${
                     activeTableFilter === filter ? "active" : ""
                   }`}
                 >
@@ -164,12 +168,16 @@ const Dashboard: React.FC = () => {
 
           {/* Table for displaying reviews based on active filter */}
           <div className="col-12 mt-4">
-            <Table tableHeader={tableColumns} tableBody={filteredReviews} />
+            <div className="card">
+              <div className="card-body">
+                <Table tableHeader={tableColumns} tableBody={filteredReviews} />
+              </div>
+            </div>
           </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
