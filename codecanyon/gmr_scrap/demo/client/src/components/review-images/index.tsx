@@ -1,17 +1,17 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useFirebase } from "../../contexts/FirebaseProvider"
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useFirebase } from "../../contexts/FirebaseProvider";
 
 function ReviewImages() {
-  const { place } = useParams()
-  const { firestore, user } = useFirebase()
-  const [reviewImgs, setReviewImgs] = useState<any[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+  const { place } = useParams();
+  const { firestore, user } = useFirebase();
+  const [reviewImgs, setReviewImgs] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!firestore || !place || !user) return
+    if (!firestore || !place || !user) return;
 
     const reviewsImgRef = collection(
       firestore,
@@ -20,24 +20,24 @@ function ReviewImages() {
       "reviews",
       place,
       "images",
-    )
+    );
 
-    const q = query(reviewsImgRef)
+    const q = query(reviewsImgRef);
     // const q = query(reviewsImgRef, orderBy("time", "asc"))
 
-    const unsubscribe = onSnapshot(q, async snapshot => {
-      const reviewsData = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const reviewsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }))
+      }));
 
-      setReviewImgs(reviewsData)
-      setLoading(false)
-      setError(null)
-    })
+      setReviewImgs(reviewsData);
+      setLoading(false);
+      setError(null);
+    });
 
-    return unsubscribe
-  }, [firestore, user, place])
+    return unsubscribe;
+  }, [firestore, user, place]);
 
   return loading ? (
     <div>Loading...</div>
@@ -47,18 +47,17 @@ function ReviewImages() {
     <div className="row row-cols-6 g-2">
       {reviewImgs.map((img, index) => (
         <div className="col" key={index}>
-          <a
-            className={`${img.videoUrl ? "video-wrapper" : "img-wrapper"}`}
-            href={img.videoUrl || img.thumb}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img src={img.thumb} alt={`Review ${index}`} />
+          <a href={img.videoUrl || img.thumb} target="_blank" rel="noreferrer">
+            <img
+              src={img.thumb}
+              alt={`Review ${index}`}
+              className="img-fluid rounded"
+            />
           </a>
         </div>
       ))}
     </div>
-  )
+  );
 }
 
-export default ReviewImages
+export default ReviewImages;
