@@ -44,6 +44,7 @@ services:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IP}
       DOCKER_PORT: ${DOCKER_PORT}
+      MACHINE_BUILD_IMAGE_NAME: ${MACHINE_BUILD_IMAGE_NAME}
     networks:
       gmrscrap-network:
         ipv4_address: ${MACHINE_IP}
