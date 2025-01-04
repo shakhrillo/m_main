@@ -1,31 +1,32 @@
-import { IconBell } from "@tabler/icons-react";
-import React, { FC } from "react";
+import { FC } from "react";
+import { IconBell, IconCoins } from "@tabler/icons-react";
 
 const Navbar: FC = () => {
   return (
-    <nav className="navbar">
-      <form>
-        <ul>
-          <li>EN</li>
-          <li>
-            <a href="">
-              <IconBell size={20} />
+    <nav className="navbar navbar-expand-lg navbar-dark w-100">
+      <div className="container-fluid">
+        <ul className="ms-auto navbar-nav">
+          <li className="nav-item">
+            <a className="nav-link" aria-current="page" href="#">
+              <IconBell size={22} />
+              <span className="badge bg-info rounded-pill mt-n2 ms-n2 position-absolute">
+                3
+              </span>
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              <IconCoins size={22} className="text-warning" />
+              <span className="text-warning fw-bold ms-2">500</span>
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              John Doe
             </a>
           </li>
         </ul>
-        <div className="navbar__user">
-          <a href="#">
-            <img
-              src="https://mighty.tools/mockmind-api/content/human/104.jpg"
-              alt="User Avatar"
-            />
-          </a>
-          <div>
-            <h6>Anna Adame</h6>
-            <small>Consumer</small>
-          </div>
-        </div>
-      </form>
+      </div>
     </nav>
   );
 };
