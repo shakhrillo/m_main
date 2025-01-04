@@ -4,7 +4,7 @@ import {
   IconPlayerPlay,
   IconStarFilled,
 } from "@tabler/icons-react";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { createElement, JSX, useState } from "react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
 import { useNavigate } from "react-router-dom";
@@ -58,13 +58,11 @@ function ScrapPlaceInfo({ info }: IProps): JSX.Element {
     e.preventDefault();
     setLoading(true);
     try {
-      const docReview = doc(
-        firestore,
-        `users/${user?.uid}/reviews/${info.reviewId}`,
-      );
+      const docReview = collection(firestore, `users/${user?.uid}/reviews`);
 
-      await setDoc(docReview, {
+      await addDoc(docReview, {
         ...info,
+        type: "comments",
         limit: 30,
         extractImageUrls: true,
         extractVideoUrls: true,

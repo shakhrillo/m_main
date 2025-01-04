@@ -162,8 +162,8 @@ let driver;
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);
   } finally {
-    await updateMachineData(tag, data);
-    log(null); // Clear the log
     console.log(JSON.stringify(data, null, 2));
+    await updateMachineData(tag, data);
+    log(null);
   }
 })();

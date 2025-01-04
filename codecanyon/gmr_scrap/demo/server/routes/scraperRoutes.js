@@ -20,13 +20,13 @@ const firstIPAddress = Object.values(networkInterfaces)
     (iface) => iface && !iface.internal && iface.family === "IPv4"
   )?.address;
 
-const handleContainerOperations = async (req, res, isInfo = false) => {
+const handleContainerOperations = async (req, res) => {
   try {
     console.log(
       `First IP Address: ${firstIPAddress || "No external IPv4 address found"}`
     );
     console.log("Request data", req.data);
-    const { tag } = req.data;
+    const { tag, type } = req.data;
 
     console.log(
       "Starting container>>",
@@ -89,9 +89,9 @@ const handleContainerOperations = async (req, res, isInfo = false) => {
           `FIREBASE_URL=${process.env.FIREBASE_IP}`,
           `CHROME_PATH=/usr/bin/chromium-browser`,
         ],
-        Cmd: isInfo ? ["npm", "run", "info"] : ["npm", "run", "start"],
+        Cmd: ["npm", "run", type],
         HostConfig: {
-          AutoRemove: true,
+          AutoRemove: !true,
         },
       });
     }
@@ -107,8 +107,8 @@ router.post("/", authMiddleware, async (req, res) =>
   handleContainerOperations(req, res)
 );
 
-router.post("/info", authMiddleware, async (req, res) =>
-  handleContainerOperations(req, res, true)
-);
+// router.post("/info", authMiddleware, async (req, res) =>
+//   handleContainerOperations(req, res, true)
+// );
 
 module.exports = router;

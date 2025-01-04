@@ -8,9 +8,8 @@ const {
 } = require("firebase-functions/v2/firestore");
 const watchBuyCoins = require("./src/payments/watchBuyCoins");
 const userCreate = require("./src/user/userCreate");
-const getPlaceOverview = require("./src/machines/getPlaceOverview");
-const getPlaceReview = require("./src/machines/getPlaceReviews");
-const watchMachine = require("./src/machines/watchMachine");
+const processReviewCreated = require("./src/containers/processReviewCreated");
+const processContainerWritten = require("./src/containers/processContainerWritten");
 
 admin.initializeApp();
 
@@ -21,14 +20,17 @@ exports.watchBuyCoins = onDocumentCreated(
   watchBuyCoins
 );
 
-exports.watchNewReview = onDocumentCreated(
+// exports.watchNewReview = onDocumentCreated(
+//   "users/{userId}/reviews/{reviewId}",
+//   getPlaceReview
+// );
+
+exports.watchReview = onDocumentCreated(
   "users/{userId}/reviews/{reviewId}",
-  getPlaceReview
+  processReviewCreated
 );
 
-exports.watchReviewOverview = onDocumentCreated(
-  "users/{userId}/reviewOverview/{reviewId}",
-  getPlaceOverview
+exports.watchContainers = onDocumentWritten(
+  "container/{containerId}",
+  processContainerWritten
 );
-
-exports.watchMachines = onDocumentUpdated("machines/{machineId}", watchMachine);

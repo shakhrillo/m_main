@@ -2,11 +2,11 @@
   "name": "gmrscrap-machine",
   "version": "1.0.0",
   "description": "GMR Scrap Machine",
-  "main": "main.js",
+  "main": "init.js",
   "scripts": {
     "init": "npm install && node init.js",
     "info": "node info.js",
-    "start": "node main.js"
+    "comments": "node comments.js"
   },
   "keywords": [
     "gmrscrap"

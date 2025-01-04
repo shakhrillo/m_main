@@ -28,7 +28,7 @@ const Scrap = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [overviewId, setOverviewId] = useState("");
+  const [reviewId, setReviewId] = useState("");
 
   const [info, setInfo] = useState({} as any);
   const [scrap, setScrap] = useState({
@@ -60,11 +60,11 @@ const Scrap = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await startExtractGmapReviews(user!.uid, overviewId, {
+      await startExtractGmapReviews(user!.uid, reviewId, {
         ...info,
         ...scrap,
       });
-      navigate(`/reviews/${overviewId}`);
+      navigate(`/reviews/${reviewId}`);
     } catch (error) {
       console.error(error);
       alert("Something went wrong. Please try again.");
@@ -74,10 +74,10 @@ const Scrap = () => {
   };
 
   useEffect(() => {
-    if (!firestore || !user || !overviewId) return;
+    if (!firestore || !user || !reviewId) return;
 
     const unsubscribe = onSnapshot(
-      doc(firestore, `users/${user.uid}/reviewOverview/${overviewId}`),
+      doc(firestore, `users/${user.uid}/reviews/${reviewId}`),
       (doc) => {
         if (doc.exists()) {
           const result = doc.data() as any;
@@ -91,7 +91,7 @@ const Scrap = () => {
     );
 
     return unsubscribe;
-  }, [firestore, user, overviewId]);
+  }, [firestore, user, reviewId]);
 
   useEffect(() => {
     if (!validateUrl(scrap.url) || !user) return;
@@ -99,7 +99,7 @@ const Scrap = () => {
     // addDoc(collection(firestore, `users/${user.uid}/reviewOverview`), {
     //   url: scrap.url,
     // })
-    //   .then(docRef => setOverviewId(docRef.id))
+    //   .then(docRef => setReviewId(docRef.id))
     //   .catch(error => console.error("Error adding document:", error))
   }, [user, scrap.url]);
 
@@ -110,7 +110,7 @@ const Scrap = () => {
     addDoc(collection(firestore, `users/${user?.uid}/reviewOverview`), {
       url: scrap.url,
     })
-      .then((docRef) => setOverviewId(docRef.id))
+      .then((docRef) => setReviewId(docRef.id))
       .catch((error) => console.error("Error adding document:", error));
   }
 
@@ -138,7 +138,7 @@ const Scrap = () => {
         <div className="col-md-9">
           <div className="row row-cols-1 g-3">
             <div className="col">
-              <ScrapValidateForm setDocumentId={setOverviewId} />
+              <ScrapValidateForm setDocumentId={setReviewId} />
             </div>
             <div className="col">
               <div className="card scrap-form">
@@ -424,7 +424,7 @@ const Scrap = () => {
                   </div>
                 </form>
                 {/* <div className="card-body">
-              <ScrapValidateForm setDocumentId={setOverviewId} />
+              <ScrapValidateForm setDocumentId={setReviewId} />
               <ScrapHelper />
             </div> */}
               </div>

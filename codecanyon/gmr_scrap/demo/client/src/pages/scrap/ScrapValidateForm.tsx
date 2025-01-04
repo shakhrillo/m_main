@@ -30,13 +30,15 @@ function ScrapValidateForm({
   async function getPlaceInfo(event: React.FormEvent): Promise<void> {
     event.preventDefault();
     const uid = user?.uid;
-    const collectionPath = `users/${uid}/reviewOverview`;
+    // const reviewId = url.split("/").pop();
+    const collectionPath = `users/${uid}/reviews`;
     setLoading(true);
 
     try {
       const collectionRef = collection(firestore, collectionPath);
       const document = await addDoc(collectionRef, {
         url,
+        type: "info",
       });
       setDocumentId(document.id);
     } catch (error) {
