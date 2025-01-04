@@ -10,10 +10,4 @@ const axiosInstance = axios.create({
   },
 });
 
-// Optionally, set up interceptors
-// axiosInstance.interceptors.request.use((config) => {
-//   config.headers.Authorization = `Bearer ${process.env.API_KEY}`;
-//   return config;
-// });
-
 module.exports = axiosInstance;

@@ -24,6 +24,7 @@ async function processReviewCreated(event) {
       createdAt,
       updatedAt,
     });
+
   const token = createToken({
     tag,
     type,

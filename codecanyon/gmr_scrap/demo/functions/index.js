@@ -4,28 +4,28 @@ const admin = require("firebase-admin");
 const {
   onDocumentCreated,
   onDocumentWritten,
-  onDocumentUpdated,
 } = require("firebase-functions/v2/firestore");
-const watchBuyCoins = require("./src/payments/watchBuyCoins");
-const userCreate = require("./src/user/userCreate");
+const processBuyCoins = require("./src/payments/processBuyCoins");
+
+const processUserCreated = require("./src/user/processUserCreated");
 const processReviewCreated = require("./src/containers/processReviewCreated");
 const processContainerWritten = require("./src/containers/processContainerWritten");
 
 admin.initializeApp();
 
-exports.userCreate = functions.auth.user().onCreate(userCreate);
+exports.processUserCreated = functions.auth.user().onCreate(processUserCreated);
 
-exports.watchBuyCoins = onDocumentCreated(
+exports.processBuyCoins = onDocumentCreated(
   "users/{userId}/buyCoins/{coinId}",
-  watchBuyCoins
+  processBuyCoins
 );
 
-exports.watchReview = onDocumentCreated(
+exports.processReviewCreated = onDocumentCreated(
   "users/{userId}/reviews/{reviewId}",
   processReviewCreated
 );
 
-exports.watchContainers = onDocumentWritten(
+exports.processContainerWritten = onDocumentWritten(
   "container/{containerId}",
   processContainerWritten
 );
