@@ -7,6 +7,8 @@ import {
   IconUser,
   IconHelp,
   IconDashboard,
+  IconInvoice,
+  IconShield,
 } from "@tabler/icons-react";
 import { createElement, FC } from "react";
 import { NavLink } from "react-router-dom";
@@ -24,13 +26,19 @@ const navItems: NavItemProps[] = [
   { to: "/dashboard", icon: IconDashboard, label: "Dashboard" },
   { to: "/scrap", icon: IconSearch, label: "Scrap" },
   { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
-  { to: "/payments", icon: IconCreditCard, label: "Payments" },
+  { to: "/payments", icon: IconCreditCard, label: "Payment" },
+  { to: "/invoice", icon: IconInvoice, label: "Invoice" },
   { to: "/users", icon: IconUser, label: "Users" },
+  {
+    to: "/security",
+    icon: IconShield,
+    label: "Security",
+    className: "mt-auto",
+  },
   {
     to: "/help",
     icon: IconHelp,
     label: "Help",
-    className: "mt-auto",
   },
   {
     to: "/settings",
