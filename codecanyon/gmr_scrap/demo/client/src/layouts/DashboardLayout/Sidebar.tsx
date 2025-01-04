@@ -62,8 +62,6 @@ const Sidebar: FC = () => (
   <nav className="sidebar">
     <div className="sidebar-header">
       <img src={logo} alt="GMRS" className="sidebar-logo" />
-      {/* <h5 className="sidebar-title">GMRS</h5>
-      <small className="sidebar-subtitle">Google Maps Review Scraper</small> */}
     </div>
     <div className="sidebar-menu">
       {navItems.map((item) => (
