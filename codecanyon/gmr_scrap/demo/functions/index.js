@@ -20,11 +20,6 @@ exports.watchBuyCoins = onDocumentCreated(
   watchBuyCoins
 );
 
-// exports.watchNewReview = onDocumentCreated(
-//   "users/{userId}/reviews/{reviewId}",
-//   getPlaceReview
-// );
-
 exports.watchReview = onDocumentCreated(
   "users/{userId}/reviews/{reviewId}",
   processReviewCreated
