@@ -87,33 +87,40 @@ function Payments() {
     };
   }, [firestore]);
 
+  // DateIDPayment MethodAmountStatusReceiptInvoice
   const tableColumns = [
-    {
-      text: "Price",
-      field: "price",
-      render: (row: any) => <span>{row.amount / 100} usd</span>,
-    },
-    {
-      text: "Status",
-      field: "status",
-      render: (row: any) => (
-        <span>{row.status === "succeeded" ? "Success" : "Failed"}</span>
-      ),
-    },
     {
       text: "Date",
       field: "date",
       render: (row: any) => <span>{formatTimestamp(row.created)}</span>,
     },
     {
-      text: "Card",
-      field: "card",
+      text: "ID",
+      field: "id",
+      render: (row: any) => <span>{row.charge?.payment_intent}</span>,
+    },
+    {
+      text: "Payment Method",
+      field: "paymentMethod",
       render: (row: any) => (
         <span>
-          {row.charge?.payment_method_details?.card?.brand}{" "}
-          {row.charge?.payment_method_details?.card?.last4}
+          {`${row.charge?.payment_method_details?.card?.brand} ending in ${row.charge?.payment_method_details?.card?.last4}`}
         </span>
       ),
+    },
+    {
+      text: "Amount",
+      field: "amount",
+      render: (row: any) => (
+        <span>
+          {row.charge?.amount / 100} {currency}
+        </span>
+      ),
+    },
+    {
+      text: "Status",
+      field: "status",
+      render: (row: any) => <span>{row.charge?.status}</span>,
     },
     {
       text: "Receipt",
