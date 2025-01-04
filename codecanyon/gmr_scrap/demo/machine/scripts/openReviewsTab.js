@@ -17,6 +17,8 @@ return (async () => {
 
   reviewsTab.click();
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   // Sort the reviews
   const sortButton = document.querySelector(
     'button[aria-label="Sort reviews"], button[aria-label="Most relevant"]'
