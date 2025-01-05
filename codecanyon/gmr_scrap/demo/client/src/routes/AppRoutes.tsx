@@ -24,52 +24,42 @@ import Info from "../pages/Info";
 import Usage from "../pages/Usage";
 import ValidatedUrls from "../pages/reviews/ValidatedUrls";
 
-const reviewsRoutes = {
-  path: "reviews",
-  element: <Outlet />,
-  children: [
-    { path: "", element: <ReviewsList /> },
-    { path: ":place", element: <SingleReview /> },
-  ],
-};
-
-const dashboardRoutes = {
-  path: "",
-  element: <DashboardLayout />,
-  children: [
-    { path: "", element: <Navigate to={"reviews"} replace /> },
-    reviewsRoutes,
-    { path: "validates", element: <ValidatedUrls /> },
-    { path: "scrap", element: <Scrap /> },
-    { path: "user", element: <User /> },
-    { path: "users", element: <Users /> },
-    { path: "machines", element: <Machines /> },
-    { path: "settings", element: <Settings /> },
-    { path: "help", element: <Help /> },
-    { path: "info", element: <Info /> },
-    { path: "dashboard", element: <Usage /> },
-    { path: "payments", element: <Payments /> },
-  ],
-};
-
-const authRoutes = {
-  path: "auth",
-  element: <Outlet />,
-  children: [
-    { path: "register", element: <Register /> },
-    { path: "login", element: <Login /> },
-    { path: "logout", element: <Logout /> },
-    { path: "reset-password", element: <ResetPassword /> },
-  ],
-};
-
 const router = createBrowserRouter([
-  authRoutes,
   {
     path: "/",
     element: <PrivateRoute />,
-    children: [dashboardRoutes],
+    children: [
+      {
+        path: "",
+        element: <DashboardLayout />,
+        children: [
+          { path: "", element: <Navigate to={"reviews"} replace /> },
+          {
+            path: "reviews",
+            element: <Outlet />,
+            children: [
+              { path: "", element: <ReviewsList /> },
+              { path: ":place", element: <SingleReview /> },
+            ],
+          },
+          { path: "validates", element: <ValidatedUrls /> },
+          { path: "scrap", element: <Scrap /> },
+          { path: "user", element: <User /> },
+          { path: "users", element: <Users /> },
+          { path: "machines", element: <Machines /> },
+          { path: "settings", element: <Settings /> },
+          { path: "help", element: <Help /> },
+          { path: "info", element: <Info /> },
+          { path: "dashboard", element: <Usage /> },
+          { path: "payments", element: <Payments /> },
+        ],
+      },
+    ],
   },
+  { path: "register", element: <Register /> },
+  { path: "login", element: <Login /> },
+  { path: "logout", element: <Logout /> },
+  { path: "reset-password", element: <ResetPassword /> },
   {
     path: "*",
     element: <Navigate to="/" replace />,
