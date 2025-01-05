@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react"; // React imports for state and effect handling
 import { useNavigate } from "react-router-dom"; // Hook for navigation
-import { collection, doc, onSnapshot } from "firebase/firestore"; // Firestore imports for document snapshot
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore"; // Firestore imports for document snapshot
 import { Table } from "../../components/table"; // Custom Table component for displaying data
 import { useFirebase } from "../../contexts/FirebaseProvider"; // Context for Firebase integration
 import { getReviewsQuery } from "../../services/firebaseService"; // Function to get reviews query
@@ -96,11 +102,19 @@ const Dashboard: React.FC = () => {
       firestore,
       `users/${user.uid}/reviews`,
     );
-    const unsubscribe = onSnapshot(collectionReviews, (snapshot) => {
+
+    const reviewsQuery = query(
+      collectionReviews,
+      orderBy("createdAt", "desc"), // Specify "desc" for descending order or "asc" for ascending order
+    );
+
+    const unsubscribe = onSnapshot(reviewsQuery, (snapshot) => {
       setCompletedReviews(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
       );
+      setLoading(() => false);
     });
+
     return unsubscribe;
   }, [firestore, user]);
 

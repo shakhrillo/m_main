@@ -111,7 +111,14 @@ let driver;
 
   try {
     // Fetch machine data
+    let dataRetries = 3;
     data = await getMachineData(tag);
+    while (!data && dataRetries > 0) {
+      log(`Retrying to fetch data for tag: ${tag}`);
+      data = await getMachineData(tag);
+      dataRetries--;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }

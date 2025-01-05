@@ -26,6 +26,6 @@ exports.processReviewCreated = onDocumentCreated(
 );
 
 exports.processContainerWritten = onDocumentWritten(
-  "container/{containerId}",
+  "containers/{containerId}",
   processContainerWritten
 );

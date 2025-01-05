@@ -156,7 +156,7 @@ async function batchWriteLargeArray(collectionPath, data) {
  * } | undefined>}
  */
 async function getMachineData(tag) {
-  return (await db.collection("container").doc(tag).get()).data();
+  return (await db.collection("containers").doc(tag).get()).data();
 }
 
 /**
@@ -166,7 +166,7 @@ async function getMachineData(tag) {
  * @returns {Promise<void>}
  */
 async function updateMachineData(tag, data) {
-  return db.collection("container").doc(tag).update(data);
+  return db.collection("containers").doc(tag).update(data);
 }
 
 module.exports = {

@@ -21,18 +21,37 @@ async function processContainerWritten(event) {
     eventType = "delete";
   }
 
+  if (eventType === "delete" || !afterData) {
+    console.log("No further action required.");
+    return;
+  }
+
   const userId = afterData.userId;
   const reviewId = afterData.reviewId;
   const documentPath = `users/${userId}/reviews/${reviewId}`;
   const createdAt = Timestamp.now();
   const updatedAt = Timestamp.now();
 
-  const docRef = admin.firestore().doc(documentPath);
-  await docRef.update({
-    ...afterData,
-    createdAt,
-    updatedAt,
-  });
+  const db = admin.firestore();
+  const docRef = db.doc(documentPath);
+
+  const batch = db.batch();
+
+  // Update review document
+  batch.update(
+    docRef,
+    {
+      ...afterData,
+      createdAt,
+      updatedAt,
+    },
+    { merge: true }
+  );
+
+  // Commit the batch
+  await batch.commit();
+
+  console.log("Firestore batch update completed successfully.");
 }
 
 module.exports = processContainerWritten;

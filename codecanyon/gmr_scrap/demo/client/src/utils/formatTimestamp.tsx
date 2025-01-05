@@ -1,10 +1,21 @@
-export const formatTimestamp = (date: string) => {
-  if (!date) return ""
+import { Timestamp } from "firebase/firestore";
 
-  const d = new Date(date) // Convert the string to a Date object
-  if (isNaN(d.getTime())) return "" // Check if the date is valid
+export const formatTimestamp = (timestamp: Timestamp | null): string => {
+  if (!timestamp) return "";
 
-  // Format the date (e.g., "YYYY-MM-DD HH:mm:ss")
-  const formattedDate = d.toISOString().replace("T", " ").split(".")[0]
-  return formattedDate
-}
+  const date = timestamp.toDate();
+  const [year, month, day] = [
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate(),
+  ];
+  const [hours, minutes, seconds] = [
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+  ];
+
+  const pad = (num: number) => String(num).padStart(2, "0");
+
+  return `${year}-${pad(month)}-${pad(day)} ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+};

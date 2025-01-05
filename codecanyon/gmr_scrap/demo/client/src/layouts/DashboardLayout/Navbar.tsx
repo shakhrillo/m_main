@@ -1,7 +1,30 @@
-import { FC } from "react";
+import { FC, use, useEffect, useState } from "react";
 import { IconBell, IconCoins } from "@tabler/icons-react";
+import { useFirebase } from "../../contexts/FirebaseProvider";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const Navbar: FC = () => {
+  const { user, firestore } = useFirebase();
+
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      const docRef = doc(firestore, "users", user.uid);
+      const unsubscribe = onSnapshot(docRef, (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("user data", data);
+          setBalance(data.coinBalance);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, []);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark w-100">
       <div className="container-fluid">
@@ -17,7 +40,7 @@ const Navbar: FC = () => {
           <li className="nav-item">
             <a className="nav-link" href="#">
               <IconCoins size={22} className="text-warning" />
-              <span className="text-warning fw-bold ms-2">500</span>
+              <span className="text-warning fw-bold ms-2">{balance}</span>
             </a>
           </li>
           <li className="nav-item">

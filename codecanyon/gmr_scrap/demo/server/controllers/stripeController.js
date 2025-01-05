@@ -2,6 +2,7 @@ const fs = require("fs");
 
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { db } = require("../firebase");
+const { Timestamp } = require("firebase-admin/firestore");
 
 exports.createCheckoutSession = async (req, res) => {
   const { amount, userId } = req.data;
@@ -82,7 +83,7 @@ exports.webhookHandler = async (req, res) => {
         // Add payment to user's payment collection
         batch.set(userPaymentsRef.doc(), {
           amount: paymentIntent.amount,
-          created: +new Date(paymentIntent.created * 1000),
+          createdAt: Timestamp.now(),
           payment_method: paymentIntent.payment_method,
           status: paymentIntent.status,
           charge,

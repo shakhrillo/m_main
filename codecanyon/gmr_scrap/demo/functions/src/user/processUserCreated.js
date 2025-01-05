@@ -5,7 +5,7 @@ async function processUserCreated({ uid, email, displayName }) {
   await admin.firestore().collection("users").doc(uid).set({
     email,
     displayName,
-    coins: 100,
+    coinBalance: 100,
     notifications: 0,
     createdAt: Timestamp.now(),
   });
