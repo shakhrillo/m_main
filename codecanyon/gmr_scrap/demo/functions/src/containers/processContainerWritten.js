@@ -39,43 +39,42 @@ async function processContainerWritten(event) {
   const batch = db.batch();
 
   if (status === "completed") {
-    ["settings/statistics", `users/${userId}/settings/statistics`].forEach(
-      async (path) => {
-        const settingsStatisticsRef = db.doc(path);
-        const settingsStatisticsSnap = await settingsStatisticsRef.get();
-        const settingsStatistics = settingsStatisticsSnap.data() || {
-          totalReviews: 0,
-          totalReviewsScraped: 0,
-          totalImages: 0,
-          totalVideos: 0,
-          totalUserReviews: 0,
-          totalOwnerReviews: 0,
-        };
+    for (const path of [
+      "settings/statistics",
+      `users/${userId}/settings/statistics`,
+    ]) {
+      const settingsStatisticsRef = db.doc(path);
+      const settingsStatisticsSnap = await settingsStatisticsRef.get();
+      const settingsStatistics = settingsStatisticsSnap.data() || {
+        totalReviews: 0,
+        totalReviewsScraped: 0,
+        totalImages: 0,
+        totalVideos: 0,
+        totalUserReviews: 0,
+        totalOwnerReviews: 0,
+      };
 
-        let totalReviews =
-          settingsStatistics.totalReviews + afterData.totalReviews;
-        let totalReviewsScraped =
-          settingsStatistics.totalReviewsScrape + afterData.totalReviewsScraped;
-        let totalImages =
-          settingsStatistics.totalImages + afterData.totalImages;
-        let totalVideos =
-          settingsStatistics.totalVideos + afterData.totalVideos;
-        let totalUserReviews =
-          settingsStatistics.totalUserReviews + afterData.totalUserReviews;
-        let totalOwnerReviews =
-          settingsStatistics.totalOwnerReviews + afterData.totalOwnerReviews;
+      let totalReviews =
+        settingsStatistics.totalReviews + afterData.totalReviews;
+      let totalReviewsScraped =
+        settingsStatistics.totalReviewsScrape + afterData.totalReviewsScraped;
+      let totalImages = settingsStatistics.totalImages + afterData.totalImages;
+      let totalVideos = settingsStatistics.totalVideos + afterData.totalVideos;
+      let totalUserReviews =
+        settingsStatistics.totalUserReviews + afterData.totalUserReviews;
+      let totalOwnerReviews =
+        settingsStatistics.totalOwnerReviews + afterData.totalOwnerReviews;
 
-        // Update statistics document
-        batch.set(settingsStatisticsRef, {
-          totalReviews,
-          totalReviewsScraped,
-          totalImages,
-          totalVideos,
-          totalUserReviews,
-          totalOwnerReviews,
-        });
-      }
-    );
+      // Update statistics document
+      batch.set(settingsStatisticsRef, {
+        totalReviews,
+        totalReviewsScraped,
+        totalImages,
+        totalVideos,
+        totalUserReviews,
+        totalOwnerReviews,
+      });
+    }
   }
 
   // Update review document
