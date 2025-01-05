@@ -1,27 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFirebase } from "../../contexts/FirebaseProvider";
-import {
-  startExtractGmapReviews,
-  startExtractGmapReviewsOverview,
-} from "../../services/firebaseService";
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { startExtractGmapReviews } from "../../services/firebaseService";
 import validateUrl from "../../utils/validateUrl";
 
 import {
-  IconWorldCheck,
-  IconPhoto,
-  IconStarFilled,
+  IconCoin,
   IconCoins,
-  IconVideo,
   IconMessageReply,
-  IconPlayerPlay,
-  IconCaretRight,
-  IconInfoCircle,
+  IconPhoto,
+  IconVideo,
 } from "@tabler/icons-react";
-import ScrapValidateForm from "./ScrapValidateForm";
-import ScrapHelper from "./ScrapHelper";
 import ScrapPlaceInfo from "./ScrapPlaceInfo";
+import ScrapValidateForm from "./ScrapValidateForm";
 
 const Scrap = () => {
   const { user, firestore } = useFirebase();
@@ -134,305 +126,114 @@ const Scrap = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-9">
-          <div className="row row-cols-1 g-3">
-            <div className="col">
-              <ScrapValidateForm setDocumentId={setReviewId} />
-            </div>
-            <div className="col">
-              <div className="card scrap-form">
-                <form className="row">
-                  <div className="col">
-                    <div className="card-body">
-                      <div className="row g-3">
-                        <div className="col-md-6">
-                          <label htmlFor="maxNumbers" className="form-label">
-                            Maximum reviews
-                          </label>
-                          <input
-                            type="number"
-                            className="form-control"
-                            id="maxNumbers"
-                            value={scrap.limit}
-                          />
-                        </div>
-                        <div className="col-md-6">
-                          <label htmlFor="machineType" className="form-label">
-                            Machine type
-                          </label>
-                          <select
-                            className="form-select"
-                            id="machineType"
-                            aria-label="Select machine type"
-                          >
-                            <option selected>Select machine type</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                        </div>
-                        <div className="col-12">
-                          <div className="card">
-                            <h5 className="card-header">Extract options</h5>
-                            <div className="card-body">
-                              <div className="row">
-                                <div className="col-auto">
-                                  <input
-                                    className="form-check-input fs-4"
-                                    type="checkbox"
-                                    value=""
-                                    id="flexCheckDefault"
-                                  />
-                                </div>
-                                <div className="col">
-                                  <div className="row g-3">
-                                    <div className="col-md-4">
-                                      <div className="card">
-                                        <div className="card-body">
-                                          <div className="form-check">
-                                            <input
-                                              className="form-check-input"
-                                              type="checkbox"
-                                              value=""
-                                              id="extractVideoUrls"
-                                            />
-                                            <label
-                                              className="form-check-label d-flex flex-column align-items-center"
-                                              htmlFor="extractVideoUrls"
-                                            >
-                                              <IconPhoto size={50} />
-                                              <span>Extract image URLs</span>
-                                              <span>
-                                                2 points /{" "}
-                                                <span className="text-muted">
-                                                  each review
-                                                </span>
-                                              </span>
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="col-md-4">
-                                      <div className="card">
-                                        <div className="card-body">
-                                          <div className="form-check">
-                                            <input
-                                              className="form-check-input"
-                                              type="checkbox"
-                                              value=""
-                                              id="extractImageUrls"
-                                            />
-                                            <label
-                                              className="form-check-label d-flex flex-column align-items-center"
-                                              htmlFor="extractImageUrls"
-                                            >
-                                              <IconVideo size={50} />
-                                              <span>Extract video URLs</span>
-                                              <span>
-                                                3 points /{" "}
-                                                <span className="text-muted">
-                                                  each review
-                                                </span>
-                                              </span>
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="col-md-4">
-                                      <div className="card">
-                                        <div className="card-body">
-                                          <div className="form-check">
-                                            <input
-                                              className="form-check-input"
-                                              type="checkbox"
-                                              value=""
-                                              id="extractOwnerResponse"
-                                            />
-                                            <label
-                                              className="form-check-label d-flex flex-column align-items-center"
-                                              htmlFor="extractOwnerResponse"
-                                            >
-                                              <IconMessageReply size={50} />
-                                              <span>
-                                                Extract owner response
-                                              </span>
-                                              <span className="d-flex gap-1 align-items-center">
-                                                <span className="badge bg-secondary">
-                                                  1 points
-                                                </span>
-                                                <span>/</span>
-                                                <span className="text-muted">
-                                                  each review
-                                                </span>
-                                              </span>
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-12">
-                          <div className="card">
-                            <h5 className="card-header">
-                              Notification settings
-                            </h5>
-                            <div className="card-body">
-                              <div className="row g-3">
-                                <div className="col-md-6">
-                                  <div className="card">
-                                    <div className="card-body">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="notificationEmail"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="notificationEmail"
-                                        >
-                                          Email
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="card">
-                                    <div className="card-body">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="notificationSlack"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="notificationSlack"
-                                        >
-                                          Slack
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-12">
-                          <div className="card">
-                            <h5 className="card-header">Output settings</h5>
-                            <div className="card-body">
-                              <div className="row g-3">
-                                <div className="col-md-6">
-                                  <div className="card">
-                                    <div className="card-body">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="outputCsv"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="outputCsv"
-                                        >
-                                          CSV
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="card">
-                                    <div className="card-body">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="outputJson"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="outputJson"
-                                        >
-                                          JSON
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-12">
-                          <div className="card">
-                            <h5 className="card-header">
-                              Reliability settings
-                            </h5>
-                            {/* Retry and timeouts */}
-                            <div className="card-body">
-                              <div className="row g-3">
-                                <div className="col-md-6">
-                                  <label
-                                    htmlFor="retryCount"
-                                    className="form-label"
-                                  >
-                                    Retry count
-                                  </label>
-                                  <input
-                                    type="number"
-                                    className="form-control"
-                                    id="retryCount"
-                                    value="3"
-                                  />
-                                </div>
-                                <div className="col-md-6">
-                                  <label
-                                    htmlFor="timeoutSeconds"
-                                    className="form-label"
-                                  >
-                                    Timeout seconds
-                                  </label>
-                                  <input
-                                    type="number"
-                                    className="form-control"
-                                    id="timeoutSeconds"
-                                    value="30"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-                {/* <div className="card-body">
-              <ScrapValidateForm setDocumentId={setReviewId} />
-              <ScrapHelper />
-            </div> */}
-              </div>
+      <div className="row row-cols-1 g-3">
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Validate Place Info</h5>
+              <form onSubmit={getPlaceInfo}>
+                <div className="mb-3">
+                  <label htmlFor="url" className="form-label">
+                    Google Maps URL
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="url"
+                    value={scrap.url}
+                    placeholder="https://www.google.com/maps/place/..."
+                    onChange={(e) => handleInputChange("url", e.target.value)}
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary px-5">
+                  Validate
+                </button>
+              </form>
             </div>
           </div>
         </div>
-        <div className="col-md-3">
-          <ScrapPlaceInfo info={info} />
+
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h5>Extract Options</h5>
+              <form>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label htmlFor="limit" className="form-label">
+                      Maximum number of reviews to extract
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="limit"
+                      value={scrap.limit}
+                      onChange={(e) =>
+                        handleInputChange("limit", Number(e.target.value))
+                      }
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="sortBy" className="form-label">
+                      Sort by
+                    </label>
+                    <select
+                      className="form-select"
+                      id="sortBy"
+                      value={scrap.sortBy}
+                      onChange={(e) =>
+                        handleInputChange("sortBy", e.target.value)
+                      }
+                    >
+                      <option value="Most relevant">Most relevant</option>
+                      <option value="Newest">Newest</option>
+                      <option value="Rating">Rating</option>
+                    </select>
+                  </div>
+                  <div className="col-md-12">
+                    <label htmlFor="extractOptions" className="form-label">
+                      Extract Options
+                    </label>
+                    <div className="row">
+                      {[
+                        "Extract image URLs",
+                        "Extract video URLs",
+                        "Owner response",
+                      ].map((option, index) => (
+                        <div className="col-md-4">
+                          <div className="form-check position-relative p-0 border rounded">
+                            <input
+                              className="form-check-input position-absolute top-0 end-0 fs-3 mt-3 me-3"
+                              type="checkbox"
+                              id="extractImageUrls"
+                              checked={scrap.extractImageUrls}
+                              onChange={() =>
+                                handleCheckboxChange("extractImageUrls")
+                              }
+                            />
+                            <label
+                              className="w-100 form-check-label p-3"
+                              htmlFor="extractImageUrls"
+                            >
+                              <span className="fs-5">{option}</span>
+                              <span className="d-block text-muted">
+                                Extract image URLs from reviews. Each image URL
+                              </span>
+                              <span>
+                                <IconCoin size={40} className="mb-3" />
+                                <strong className="fs-1 me-1">2</strong>
+                                points per review
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
