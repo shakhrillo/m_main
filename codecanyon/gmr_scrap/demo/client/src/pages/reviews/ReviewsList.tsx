@@ -122,11 +122,11 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (!firestore || !user) return;
 
-    const docRef = doc(firestore, `app/info`); // Get app info document
+    const docRef = doc(firestore, `users/${user.uid}/settings/statistics`); // Get app info document
     const unsubscribe = onSnapshot(docRef, (doc) => {
       setInfo(doc.data() || {}); // Update state with the app info
       setLoading(() => false); // Set loading to false once data is fetched
-      console.log("info", info); // Log fetched info (for debugging purposes)
+      console.log("info", doc); // Log fetched info (for debugging purposes)
     });
     return unsubscribe; // Cleanup on unmount
   }, [firestore, user]);

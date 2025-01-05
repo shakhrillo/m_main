@@ -275,6 +275,7 @@ let driver;
       totalReviews: data.extractedReviews.length || 0,
       totalReviewsScraped: data.totalReviews || 0,
       totalImages: data.extractedImageUrls.length || 0,
+      totalVideos: data.extractedVideoUrls.length || 0,
       totalOwnerReviews: data.extractedOwnerReviewCount || 0,
       totalUserReviews: data.extractedUserReviewCount || 0,
       status: "completed",
