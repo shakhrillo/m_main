@@ -22,6 +22,7 @@ import Users from "../pages/Users";
 import Machines from "../pages/Machines";
 import Info from "../pages/Info";
 import Usage from "../pages/Usage";
+import ValidatedUrls from "../pages/reviews/ValidatedUrls";
 
 const reviewsRoutes = {
   path: "reviews",
@@ -38,6 +39,7 @@ const dashboardRoutes = {
   children: [
     { path: "", element: <Navigate to={"reviews"} replace /> },
     reviewsRoutes,
+    { path: "validates", element: <ValidatedUrls /> },
     { path: "scrap", element: <Scrap /> },
     { path: "user", element: <User /> },
     { path: "users", element: <Users /> },
