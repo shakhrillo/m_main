@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const { Timestamp } = require("firebase-admin/firestore");
+const { Timestamp, GeoPoint } = require("firebase-admin/firestore");
 
 async function processContainerWritten(event) {
   const data = event.data;
@@ -29,6 +29,8 @@ async function processContainerWritten(event) {
   const userId = afterData.userId;
   const reviewId = afterData.reviewId;
   const status = afterData.status;
+  const extendedUrl = afterData.extendedUrl;
+  let location = "";
   const documentPath = `users/${userId}/reviews/${reviewId}`;
   const createdAt = Timestamp.now();
   const updatedAt = Timestamp.now();
@@ -75,6 +77,13 @@ async function processContainerWritten(event) {
         totalOwnerReviews,
       });
     }
+
+    const matches = extendedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (matches) {
+      const lat = matches[1];
+      const lng = matches[2];
+      location = new GeoPoint(parseFloat(lat), parseFloat(lng));
+    }
   }
 
   // Update review document
@@ -82,6 +91,7 @@ async function processContainerWritten(event) {
     docRef,
     {
       ...afterData,
+      location,
       createdAt,
       updatedAt,
     },

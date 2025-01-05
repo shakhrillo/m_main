@@ -106,6 +106,7 @@ $input-btn-padding-x: 1.2rem;
 // $list-group-action-active-bg:       var(--#{$prefix}secondary-bg);
 
 @import "bootstrap/scss/bootstrap";
+@import "leaflet/dist/leaflet.css";
 
 @import "./styles/index";
 

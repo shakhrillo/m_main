@@ -136,6 +136,7 @@ let driver;
     // Load the target website
     await driver.get(data.url);
     await driver.sleep(2000);
+    data.extendedUrl = await driver.getCurrentUrl();
 
     /**
      * Execute the script to extract information from the page.
