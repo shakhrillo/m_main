@@ -11,6 +11,11 @@
   width: 260px;
   min-width: 260px;
   height: 100%;
+
+  &.dashboard-sidebar-collapse {
+    width: 60px;
+    min-width: 60px;
+  }
 }
 
 .dashboard-main {

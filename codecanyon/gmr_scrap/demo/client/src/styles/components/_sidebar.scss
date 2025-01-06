@@ -14,7 +14,7 @@
   .sidebar-header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    // border-bottom: 1px solid #ccc;
     padding: 0 1rem;
     height: 64px;
     min-height: 64px;
@@ -40,7 +40,7 @@
     align-items: center;
     transition: background-color 0.2s;
     // margin-left: -1rem;
-    border: 1px solid #eee;
+    // border: 1px solid #eee;
     padding: 0.5rem 1rem;
     width: 100%;
     color: var(--bs-body-color);
@@ -49,8 +49,8 @@
 
     svg {
       margin-right: 1rem;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
     }
 
     &.active {
@@ -96,7 +96,6 @@
     .sidebar-item {
       justify-content: center;
       margin: 0;
-      padding: 0.5rem 0;
 
       svg {
         margin: 0;

@@ -11,8 +11,9 @@ import {
   IconShield,
   IconWorldCheck,
   IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
 } from "@tabler/icons-react";
-import { createElement, FC, useState } from "react";
+import { createElement, FC, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 
@@ -53,6 +54,11 @@ const navItems: NavItemProps[] = [
 const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
+  useEffect(() => {
+    const dashboardSidebar = document.querySelector(".dashboard-sidebar");
+    dashboardSidebar?.classList.toggle("dashboard-sidebar-collapse", collapsed);
+  }, [collapsed]);
+
   return (
     <nav className={`sidebar ${collapsed ? "sidebar-collapse" : ""}`}>
       <div className="sidebar-header">
@@ -61,7 +67,14 @@ const Sidebar: FC = () => {
           className="ms-auto btn p-0"
           onClick={() => setCollapsed(!collapsed)}
         >
-          <IconLayoutSidebarLeftCollapse size={30} />
+          {createElement(
+            collapsed
+              ? IconLayoutSidebarLeftExpand
+              : IconLayoutSidebarLeftCollapse,
+            {
+              size: 30,
+            },
+          )}
         </button>
       </div>
       <div className="sidebar-menu">
