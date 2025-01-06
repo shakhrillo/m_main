@@ -2,6 +2,7 @@ import { FC, use, useEffect, useState } from "react";
 import { IconBell, IconCoins } from "@tabler/icons-react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
 import { doc, onSnapshot } from "firebase/firestore";
+import logo from "../../assets/logo.svg";
 
 const Navbar: FC = () => {
   const { user, firestore } = useFirebase();
@@ -28,6 +29,7 @@ const Navbar: FC = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark w-100">
       <div className="container-fluid">
+        <img src={logo} alt="GMRS" className="navbar-logo" />
         <ul className="ms-auto navbar-nav">
           <li className="nav-item">
             <a className="nav-link" aria-current="page" href="#">
