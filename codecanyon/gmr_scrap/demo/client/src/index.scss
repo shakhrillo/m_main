@@ -56,8 +56,8 @@ $input-btn-padding-x: 1.2rem;
 // $btn-active-border-shade-amount:  25%;
 // $btn-active-border-tint-amount:   10%;
 
-// $card-spacer-y: 1.5rem;
-// $card-spacer-x: 1.5rem;
+$card-spacer-y: 1.5rem;
+$card-spacer-x: 2rem;
 // $card-title-spacer-y:               $spacer * .5;
 // $card-title-color:                  null;
 // $card-subtitle-color:               null;
@@ -104,6 +104,9 @@ $input-btn-padding-x: 1.2rem;
 
 // $list-group-action-active-color:    var(--#{$prefix}body-color);
 // $list-group-action-active-bg:       var(--#{$prefix}secondary-bg);
+
+$form-feedback-icon-valid: none;
+$form-feedback-icon-invalid: none;
 
 @import "bootstrap/scss/bootstrap";
 @import "leaflet/dist/leaflet.css";
