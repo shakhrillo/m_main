@@ -310,13 +310,16 @@ async function validateNode(node) {
         : gmrScrap["extractedUserReviewCount"] + 1;
     }
 
-    const response = getReviewResponse(node);
-    if (!!response) {
-      gmrScrap["extractedOwnerReviewCount"] = !gmrScrap[
-        "extractedOwnerReviewCount"
-      ]
-        ? 1
-        : gmrScrap["extractedOwnerReviewCount"] + 1;
+    let response = "";
+    if (gmrScrap["extractOwnerResponse"]) {
+      let response = getReviewResponse(node);
+      if (!!response) {
+        gmrScrap["extractedOwnerReviewCount"] = !gmrScrap[
+          "extractedOwnerReviewCount"
+        ]
+          ? 1
+          : gmrScrap["extractedOwnerReviewCount"] + 1;
+      }
     }
 
     const imageUrls = [];
