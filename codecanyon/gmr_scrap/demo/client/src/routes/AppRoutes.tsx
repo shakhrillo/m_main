@@ -15,7 +15,7 @@ import Help from "../pages/Help";
 import Payments from "../pages/Payments";
 import ReviewsList from "../pages/reviews/ReviewsList";
 import SingleReview from "../pages/reviews/SingleReview";
-import Scrap from "../pages/scrap";
+import Scrap from "../pages/Scrap";
 import Settings from "../pages/Settings";
 import User from "../pages/User";
 import Users from "../pages/Users";

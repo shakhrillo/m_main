@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useFirebase } from "../../contexts/FirebaseProvider";
+import { useFirebase } from "../contexts/FirebaseProvider";
 
 import {
   IconAlertCircle,
