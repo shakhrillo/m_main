@@ -13,8 +13,14 @@ import {
   IconPhoto,
   IconVideo,
 } from "@tabler/icons-react";
-import { createElement, use, useEffect, useState } from "react";
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import { createElement, useEffect, useState } from "react";
 
 const EXTRACT_OPTIONS = [
   {
@@ -174,6 +180,34 @@ const Scrap = () => {
     )?.classList.remove("was-validated");
   }
 
+  /**
+   * Start Scrap process
+   */
+  async function startScrap() {
+    setLoading(true);
+    try {
+      const docCollection = collection(firestore, `users/${user?.uid}/reviews`);
+      const data = await addDoc(docCollection, {
+        ...placeInfo,
+        type: "comments",
+        url,
+        limit,
+        sortBy,
+        extractImageUrls: extractOptions.extractImageUrls,
+        extractVideoUrls: extractOptions.extractVideoUrls,
+        extractOwnerResponse: extractOptions.extractOwnerResponse,
+        status: "in-progress",
+      });
+
+      navigate(`/reviews/${data.id}`);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -221,8 +255,16 @@ const Scrap = () => {
                       className="btn btn-primary ms-auto"
                       disabled={loading || placeInfo?.rating}
                     >
-                      Validate{" "}
-                      <span className="badge bg-secondary ms-2">3 points</span>
+                      {loading ? (
+                        "Validating..."
+                      ) : (
+                        <>
+                          Validate{" "}
+                          <span className="badge bg-secondary ms-2">
+                            3 points
+                          </span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>
@@ -594,8 +636,8 @@ const Scrap = () => {
               </div>
               <button
                 className="btn btn-primary w-100 mt-3"
-                disabled={loading || !isValidated}
-                onClick={() => navigate("/scrap/result")}
+                disabled={loading || !isValidated || !isTermsAccepted}
+                onClick={startScrap}
               >
                 Scrap
               </button>

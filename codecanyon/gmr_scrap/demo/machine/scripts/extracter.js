@@ -267,7 +267,7 @@ async function validateNode(node) {
       `button[jsaction*="review.expandReview"]`,
     ];
 
-    if (gmrScrap["ownerResponse"]) {
+    if (gmrScrap["extractOwnerResponse"]) {
       buttonSelectors.push(
         'button[jsaction*="review.showOwnerResponseInOriginal"]',
         'button[jsaction*="review.expandOwnerResponse"]'

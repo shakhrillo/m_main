@@ -75,7 +75,7 @@ const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
  *   sortBy: string,
  *   extractVideoUrls: boolean,
  *   extractImageUrls: boolean,
- *   ownerResponse: boolean,
+ *   extractOwnerResponse: boolean,
  *   createdAt: number,
  *   updatedAt: number,
  *   userId: string,
@@ -203,7 +203,8 @@ let driver;
         // Stop if the number of retries exceeds the limit or the limit is reached
         if (
           retries > MAX_RETRIES ||
-          data.extractedReviews.length >= data.limit
+          data.extractedReviews.length >= data.limit ||
+          data.reviews <= data.extractedReviews.length
         ) {
           retries = MAX_RETRIES;
         }
