@@ -10,8 +10,9 @@ import {
   IconInvoice,
   IconShield,
   IconWorldCheck,
+  IconLayoutSidebarLeftCollapse,
 } from "@tabler/icons-react";
-import { createElement, FC } from "react";
+import { createElement, FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 
@@ -49,38 +50,40 @@ const navItems: NavItemProps[] = [
   },
 ];
 
-const SidebarItem: FC<NavItemProps> = ({
-  to,
-  icon,
-  label,
-  badge,
-  className,
-}) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      `sidebar-item ${className} ${isActive ? "active" : ""}`.trim()
-    }
-  >
-    {createElement(icon, { size: 20, className: "me-2" })}
-    <span className="label me-auto">{label}</span>
-    {badge !== undefined && (
-      <span className="badge text-bg-primary ms-auto">{badge}</span>
-    )}
-  </NavLink>
-);
+const Sidebar: FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
 
-const Sidebar: FC = () => (
-  <nav className="sidebar">
-    <div className="sidebar-header">
-      <img src={logo} alt="GMRS" className="sidebar-logo" />
-    </div>
-    <div className="sidebar-menu">
-      {navItems.map((item) => (
-        <SidebarItem key={item.to} {...item} />
-      ))}
-    </div>
-  </nav>
-);
+  return (
+    <nav className={`sidebar ${collapsed ? "sidebar-collapse" : ""}`}>
+      <div className="sidebar-header">
+        <img src={logo} alt="GMRS" className="sidebar-logo" />
+        <button
+          className="ms-auto btn p-0"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <IconLayoutSidebarLeftCollapse size={30} />
+        </button>
+      </div>
+      <div className="sidebar-menu">
+        {navItems.map((item) => (
+          <NavLink
+            to={item.to}
+            className={({ isActive }) =>
+              `sidebar-item ${item.className} ${isActive ? "active" : ""}`.trim()
+            }
+          >
+            {createElement(item.icon)}
+            <span className="label me-auto">{item.label}</span>
+            {item.badge !== undefined && (
+              <span className="badge text-bg-primary ms-auto">
+                {item.badge}
+              </span>
+            )}
+          </NavLink>
+        ))}
+      </div>
+    </nav>
+  );
+};
 
 export default Sidebar;

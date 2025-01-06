@@ -278,9 +278,9 @@ const Scrap = () => {
                 <h5>Extract Options</h5>
                 <form noValidate className="needs-validation was-validated">
                   <div className="row g-3">
-                    <div className="col-md-6">
+                    <div className="col-lg-6">
                       <label htmlFor="limit" className="form-label">
-                        Maximum number of reviews to extract
+                        Review limit
                       </label>
                       <input
                         type="text"
@@ -304,7 +304,7 @@ const Scrap = () => {
                         Maximum 5,000 reviews can be extracted at a time.
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-lg-6">
                       <label
                         htmlFor="sortBy"
                         className="form-label"
@@ -333,9 +333,9 @@ const Scrap = () => {
                       <label htmlFor="extractOptions" className="form-label">
                         Options
                       </label>
-                      <div className="row">
+                      <div className="row g-3">
                         {EXTRACT_OPTIONS.map((option, index) => (
-                          <div className="col-md-4" key={index}>
+                          <div className="col-lg-6 col-xl-4" key={index}>
                             <div
                               className={
                                 "form-check position-relative p-0 rounded border " +
@@ -415,9 +415,9 @@ const Scrap = () => {
                       <label htmlFor="outputOptions" className="form-label">
                         Result format
                       </label>
-                      <div className="row">
+                      <div className="row g-3">
                         {OUTPUT_OPTIONS.map((option, index) => (
-                          <div className="col-md-6" key={index}>
+                          <div className="col-lg-6" key={index}>
                             <div
                               className={
                                 "form-check position-relative p-0 rounded border " +
@@ -491,7 +491,7 @@ const Scrap = () => {
                       </label>
                       <div className="row">
                         {NOTIFICATION_OPTIONS.map((option, index) => (
-                          <div className="col-md-6" key={index}>
+                          <div className="col-lg-6" key={index}>
                             <div
                               className={
                                 "form-check position-relative p-0 rounded border " +
