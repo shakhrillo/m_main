@@ -118,7 +118,8 @@ exports.webhookHandler = async (req, res) => {
           coinBalance: 0,
           totalSpent: 0,
         };
-        const coinBalance = userDocData.coinBalance + paymentIntent.amount;
+        const coinBalance =
+          userDocData.coinBalance + (paymentIntent.amount / 100) * 10;
         const totalSpent = userDocData.totalSpent + paymentIntent.amount;
 
         batch.set(
