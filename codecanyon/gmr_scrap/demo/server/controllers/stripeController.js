@@ -19,6 +19,28 @@ exports.createCheckoutSession = async (req, res) => {
     // Log for debugging
     console.log({ currency, costs, unit_amount });
 
+    const user = await db.doc(`users/${userId}`).get();
+    const userEmail = user.exists ? user.data().email : null;
+
+    const customer = await stripe.customers.list({
+      email: userEmail,
+      limit: 1,
+    });
+
+    let customerId;
+
+    // Check if a customer with the given email exists
+    if (customer.data.length === 0) {
+      // Create a new customer and assign the ID
+      const newCustomer = await stripe.customers.create({ email: userEmail });
+      customerId = newCustomer.id;
+    } else {
+      // Use the existing customer's ID
+      customerId = customer.data[0].id;
+    }
+
+    console.log(`Customer ID: ${customerId}`);
+
     // Create checkout session
     const { url } = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -36,6 +58,7 @@ exports.createCheckoutSession = async (req, res) => {
       success_url: process.env.STRIPE_SUCCESS_URL,
       cancel_url: process.env.STRIPE_CANCEL_URL,
       payment_intent_data: { metadata: { userId } },
+      customer: customerId,
     });
 
     res.status(200).json({ url });
@@ -96,7 +119,9 @@ exports.webhookHandler = async (req, res) => {
           : 0;
         batch.set(
           userRef,
-          { coinBalance: currentBalance + paymentIntent.amount },
+          {
+            coinBalance: currentBalance + paymentIntent.amount,
+          },
           { merge: true }
         );
 

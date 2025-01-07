@@ -92,7 +92,7 @@ function Payments() {
     {
       text: "Date",
       field: "date",
-      render: (row: any) => <span>{formatTimestamp(row.created)}</span>,
+      render: (row: any) => <span>{formatTimestamp(row.created).date}</span>,
     },
     {
       text: "ID",
