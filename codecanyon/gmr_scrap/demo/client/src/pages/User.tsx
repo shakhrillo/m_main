@@ -1,36 +1,29 @@
-import React, { useEffect, useState } from "react"
-import { useFirebase } from "../contexts/FirebaseProvider"
-import { useMenu } from "../context/MenuContext/MenuContext"
-import menuIcon from "../assets/icons/list.svg"
+import React, { useEffect, useState } from "react";
+import { useFirebase } from "../contexts/FirebaseProvider";
 
 const User: React.FC = () => {
-  const { user } = useFirebase()
+  const { user } = useFirebase();
 
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (!user) return
+    if (!user) return;
 
     if (user.displayName) {
-      const [first, last] = user.displayName.split(" ")
-      setFirstName(first)
-      setLastName(last)
+      const [first, last] = user.displayName.split(" ");
+      setFirstName(first);
+      setLastName(last);
     }
 
-    setEmail(user.email || "")
-  }, [])
-
-  const { toggleMenu } = useMenu()
+    setEmail(user.email || "");
+  }, []);
 
   return (
     <div>
       <div className="d-flex align-items-center gap-3">
-        <button className="sidebar-toggle-btn button" onClick={toggleMenu}>
-          <img src={menuIcon} alt="menu-icon" />
-        </button>
         <h2>Account</h2>
       </div>
       <div className="card">
@@ -43,7 +36,7 @@ const User: React.FC = () => {
               <input
                 name="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 disabled={true}
                 placeholder="Email"
                 type="text"
@@ -58,7 +51,7 @@ const User: React.FC = () => {
               <input
                 name="firstName"
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value)}
                 placeholder="First name"
                 type="text"
                 id="firstName"
@@ -72,7 +65,7 @@ const User: React.FC = () => {
               <input
                 name="lastName"
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={(e) => setLastName(e.target.value)}
                 placeholder="Last name"
                 type="text"
                 id="lastName"
@@ -86,7 +79,7 @@ const User: React.FC = () => {
               <input
                 name="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 type="password"
                 id="password"
@@ -98,7 +91,7 @@ const User: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;
