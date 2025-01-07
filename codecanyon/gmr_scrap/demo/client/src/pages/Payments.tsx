@@ -20,9 +20,6 @@ function Payments() {
   useEffect(() => {
     if (!coinId) return;
 
-    console.log("uid", user?.uid);
-    console.log("coinId", coinId);
-
     const unsubscribe = onSnapshot(
       doc(firestore, `users/${user?.uid}/buyCoins/${coinId}`),
       (doc) => {
@@ -38,6 +35,8 @@ function Payments() {
   }, [coinId]);
 
   useEffect(() => {
+    if (!amount) return;
+
     const validateForm = document.getElementById(
       "validateForm",
     ) as HTMLFormElement;
