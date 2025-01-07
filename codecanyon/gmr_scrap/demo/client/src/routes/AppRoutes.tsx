@@ -7,22 +7,21 @@ import {
 import PrivateRoute from "../components/PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout";
-import Login from "../pages/auth/Login";
-import Logout from "../pages/auth/Logout";
-import Register from "../pages/auth/Register";
-import ResetPassword from "../pages/auth/ResetPassword";
+import Login from "../pages/Login";
+import Logout from "../pages/Logout";
+import Register from "../pages/Register";
+import ResetPassword from "../pages/ResetPassword";
 import Help from "../pages/Help";
 import Payments from "../pages/Payments";
-import ReviewsList from "../pages/reviews/ReviewsList";
-import SingleReview from "../pages/reviews/SingleReview";
+import ReviewsList from "../pages/ReviewsList";
+import SingleReview from "../pages/SingleReview";
+import ValidatedUrls from "../pages/ValidatedUrls";
 import Scrap from "../pages/Scrap";
 import Settings from "../pages/Settings";
 import User from "../pages/User";
 import Users from "../pages/Users";
-import Machines from "../pages/Machines";
 import Info from "../pages/Info";
 import Usage from "../pages/Usage";
-import ValidatedUrls from "../pages/reviews/ValidatedUrls";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +45,6 @@ const router = createBrowserRouter([
           { path: "scrap", element: <Scrap /> },
           { path: "user", element: <User /> },
           { path: "users", element: <Users /> },
-          { path: "machines", element: <Machines /> },
           { path: "settings", element: <Settings /> },
           { path: "help", element: <Help /> },
           { path: "info", element: <Info /> },

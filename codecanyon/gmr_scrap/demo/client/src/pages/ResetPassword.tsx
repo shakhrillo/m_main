@@ -1,21 +1,21 @@
-import React, { useState } from "react"
-import logo from "../../assets/images/logo.png"
-import { resetPassword } from "../../services/firebaseService"
+import React, { useState } from "react";
+import logo from "../assets/images/logo.png";
+import { resetPassword } from "../services/firebaseService";
 
 const ResetPassword: React.FC = () => {
-  const [success, setSuccess] = useState(false)
-  const [email, setEmail] = useState("")
-  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await resetPassword(email)
-      setSuccess(true)
+      await resetPassword(email);
+      setSuccess(true);
     } catch (error) {
-      setError("Failed to reset password.")
+      setError("Failed to reset password.");
     }
-  }
+  };
 
   return (
     <div className="login container-fluid">
@@ -49,19 +49,19 @@ const ResetPassword: React.FC = () => {
               Reset Password
             </button>
           </div>
-          {
-            error && <div className="alert alert-danger">{error}</div>
-          }
-          {
-            success && <div className="alert alert-success">Password reset link sent to your email.</div>
-          }
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && (
+            <div className="alert alert-success">
+              Password reset link sent to your email.
+            </div>
+          )}
         </form>
         <div className="login__card__footer">
           <a href="/auth/login">Back to login</a>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;
