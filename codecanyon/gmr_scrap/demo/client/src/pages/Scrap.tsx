@@ -335,7 +335,7 @@ const Scrap = () => {
                       </label>
                       <div className="row g-3">
                         {EXTRACT_OPTIONS.map((option, index) => (
-                          <div className="col-lg-6 col-xl-4" key={index}>
+                          <div className="col-lg-6 col-xxl-4" key={index}>
                             <div
                               className={
                                 "form-check position-relative p-0 rounded border " +

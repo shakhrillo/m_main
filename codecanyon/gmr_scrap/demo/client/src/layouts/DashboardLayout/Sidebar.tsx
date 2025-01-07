@@ -12,57 +12,69 @@ import {
   IconWorldCheck,
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 import { createElement, FC, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 
 interface NavItemProps {
-  to: string;
-  icon: React.ElementType;
-  label: string;
+  to?: string;
+  icon?: React.ElementType;
+  label?: string;
   badge?: number;
   className?: string;
+  children?: NavItemProps[];
 }
 
-const navItems: NavItemProps[] = [
-  { to: "/dashboard", icon: IconDashboard, label: "Dashboard" },
-  { to: "/scrap", icon: IconSearch, label: "Scrap" },
-  { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
-  { to: "/validates", icon: IconWorldCheck, label: "Validates" },
-  { to: "/payments", icon: IconCreditCard, label: "Payment" },
-  { to: "/invoice", icon: IconInvoice, label: "Invoice" },
-  { to: "/users", icon: IconUser, label: "Users" },
-  {
-    to: "/security",
-    icon: IconShield,
-    label: "Security",
-    className: "mt-auto",
-  },
-  {
-    to: "/help",
-    icon: IconHelp,
-    label: "Help",
-  },
-  {
-    to: "/settings",
-    icon: IconSettings,
-    label: "Settings",
-  },
-];
+// const navItems: NavItemProps[] = [
+//   { to: "/dashboard", icon: IconDashboard, label: "Dashboard" },
+//   { to: "/scrap", icon: IconSearch, label: "Scrap" },
+//   {
+//     label: "Reviews",
+//     children: [
+//       { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
+//       { to: "/validates", icon: IconWorldCheck, label: "Validates" },
+//     ],
+//   },
+//   {
+//     label: "Reports",
+//     children: [
+//       { to: "/payments", icon: IconCreditCard, label: "Payment" },
+//       { to: "/invoice", icon: IconInvoice, label: "Invoice" },
+//     ],
+//   },
+//   { to: "/users", icon: IconUser, label: "Users" },
+//   {
+//     to: "/security",
+//     icon: IconShield,
+//     label: "Security",
+//     className: "mt-auto",
+//   },
+//   {
+//     to: "/help",
+//     icon: IconHelp,
+//     label: "Help",
+//   },
+//   {
+//     to: "/settings",
+//     icon: IconSettings,
+//     label: "Settings",
+//   },
+// ];
 
 const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    const dashboardSidebar = document.querySelector(".dashboard-sidebar");
-    dashboardSidebar?.classList.toggle("dashboard-sidebar-collapse", collapsed);
+    const dashboardSidebar = document.querySelector(".dashboard-layout");
+    dashboardSidebar?.classList.toggle("dashboard-minimize", collapsed);
   }, [collapsed]);
 
   return (
-    <nav className={`sidebar ${collapsed ? "sidebar-collapse" : ""}`}>
+    <nav className="sidebar">
       <div className="sidebar-header">
-        <img src={logo} alt="GMRS" className="sidebar-logo" />
+        <img src={logo} alt="logo" className="sidebar-logo" />
         <button
           className="ms-auto btn p-0"
           onClick={() => setCollapsed(!collapsed)}
@@ -78,22 +90,129 @@ const Sidebar: FC = () => {
         </button>
       </div>
       <div className="sidebar-menu">
-        {navItems.map((item) => (
+        <div className="sidebar-group">
+          <span className="sidebar-group-title">MAIN</span>
           <NavLink
-            to={item.to}
+            to={"/dashboard"}
             className={({ isActive }) =>
-              `sidebar-item ${item.className} ${isActive ? "active" : ""}`.trim()
+              `sidebar-item ${isActive ? "active" : ""}`
             }
           >
-            {createElement(item.icon)}
-            <span className="label me-auto">{item.label}</span>
-            {item.badge !== undefined && (
-              <span className="badge text-bg-primary ms-auto">
-                {item.badge}
-              </span>
-            )}
+            {createElement(IconDashboard, { size: 20 })}
+            <span className="me-auto">Dashboard</span>
+            <span className="badge text-bg-primary ms-auto">4</span>
           </NavLink>
-        ))}
+
+          <NavLink
+            to={"/scrap"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconSearch, { size: 20 })}
+            <span className="me-auto">Scrap</span>
+          </NavLink>
+        </div>
+
+        <div className="sidebar-group">
+          <span className="sidebar-group-title">REVIEWS</span>
+          <NavLink
+            to={"/reviews"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconServerBolt, { size: 20 })}
+            <span className="me-auto">Reviews</span>
+            <span className="badge text-bg-primary ms-auto">4</span>
+          </NavLink>
+
+          <NavLink
+            to={"/validates"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconWorldCheck, { size: 20 })}
+            <span className="me-auto">Validates</span>
+          </NavLink>
+        </div>
+
+        <div className="sidebar-group">
+          <span className="sidebar-group-title">REPORTS</span>
+          <NavLink
+            to={"/payments"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconCreditCard, { size: 20 })}
+            <span className="me-auto">Payment</span>
+          </NavLink>
+
+          <NavLink
+            to={"/invoice"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconInvoice, { size: 20 })}
+            <span className="me-auto">Invoice</span>
+          </NavLink>
+        </div>
+
+        <div className="sidebar-group">
+          <span className="sidebar-group-title">SETTINGS</span>
+          <NavLink
+            to={"/users"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconUser, { size: 20 })}
+            <span className="me-auto">Users</span>
+          </NavLink>
+
+          <NavLink
+            to={"/security"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconShield, { size: 20 })}
+            <span className="me-auto">Security</span>
+          </NavLink>
+
+          <NavLink
+            to={"/help"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconHelp, { size: 20 })}
+            <span className="me-auto">Help</span>
+          </NavLink>
+
+          <NavLink
+            to={"/settings"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconSettings, { size: 20 })}
+            <span className="me-auto">Settings</span>
+          </NavLink>
+
+          <NavLink
+            to={"/info"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconInfoCircle, { size: 20 })}
+            <span className="me-auto">Info</span>
+          </NavLink>
+        </div>
       </div>
     </nav>
   );
