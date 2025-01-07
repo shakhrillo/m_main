@@ -1,54 +1,30 @@
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  IconAlertCircle,
+  IconCoin,
+  IconCoins,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useFirebase } from "../contexts/FirebaseProvider";
-import { buyCoins, getPaymentsQuery } from "../services/firebaseService";
-import { formatTimestamp } from "../utils/formatTimestamp";
-import cardIcon from "../assets/icons/credit-card.svg";
-import emptyIcon from "../assets/icons/empty-folder.png";
-import { Table } from "../components/table";
 
 function Payments() {
   const { firestore, user } = useFirebase();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [history, setHistory] = useState([] as any[]);
-  const [minAmount, setMinAmount] = useState("100");
-  const [amount, setAmount] = useState("100");
-  const [currency, setCurrency] = useState("usd");
-  const [totalPrice, setTotalPrice] = useState("0");
-  const [userInformation, setUserInformation] = useState({} as any);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState("");
   const [coinId, setCoinId] = useState("");
-
-  useEffect(() => {
-    if (!user || !firestore) return;
-
-    const unsubscribe = onSnapshot(getPaymentsQuery(user.uid), (snapshot) => {
-      const historyData = snapshot.docs.map((doc) => doc.data());
-      console.log(historyData);
-      setHistory(historyData);
-    });
-
-    return () => unsubscribe();
-  }, [firestore, user]);
-
-  useEffect(() => {
-    if (!firestore || !user) return;
-    const userDoc = doc(firestore, `users/${user.uid}`);
-
-    const unsubscribe = onSnapshot(userDoc, (doc) => {
-      setUserInformation(doc.data());
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [firestore, user]);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
   useEffect(() => {
     if (!coinId) return;
 
+    console.log("uid", user?.uid);
+    console.log("coinId", coinId);
+
     const unsubscribe = onSnapshot(
-      doc(firestore, `users/${user?.uid}/buyCoins`, coinId),
+      doc(firestore, `users/${user?.uid}/buyCoins/${coinId}`),
       (doc) => {
         const data = doc.data();
         const url = data?.url;
@@ -62,142 +38,173 @@ function Payments() {
   }, [coinId]);
 
   useEffect(() => {
-    if (!firestore) return;
-    const settingsRef = doc(firestore, `app/settings`);
-    const unsubscribe = onSnapshot(settingsRef, (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-        const costs = Number(data.costs);
-        const currency = data.currency;
-        const minimumCount = 99;
+    const validateForm = document.getElementById(
+      "validateForm",
+    ) as HTMLFormElement;
+    if (validateForm) {
+      validateForm.classList.add("was-validated");
+    }
 
-        const minimumCost = 0.5;
-        if (["usd", "eur", "cad"].includes(currency)) {
-          const amount = Math.max(minimumCount, Math.ceil(minimumCost / costs));
-          setAmount(amount.toString());
-          setTotalPrice((amount * costs).toFixed(2));
-        }
-        setCurrency(currency);
-        setMinAmount(minimumCount.toString());
-      }
-    });
+    const isValid = validateForm?.checkValidity();
+    setIsFormValid(isValid);
+  }, [amount]);
 
-    return () => {
-      unsubscribe();
-    };
-  }, [firestore]);
+  async function handlePurchase() {
+    if (!user || !firestore) return;
 
-  // DateIDPayment MethodAmountStatusReceiptInvoice
-  const tableColumns = [
-    {
-      text: "Date",
-      field: "date",
-      render: (row: any) => <span>{formatTimestamp(row.created).date}</span>,
-    },
-    {
-      text: "ID",
-      field: "id",
-      render: (row: any) => <span>{row.charge?.payment_intent}</span>,
-    },
-    {
-      text: "Payment Method",
-      field: "paymentMethod",
-      render: (row: any) => (
-        <span>
-          {`${row.charge?.payment_method_details?.card?.brand} ending in ${row.charge?.payment_method_details?.card?.last4}`}
-        </span>
-      ),
-    },
-    {
-      text: "Amount",
-      field: "amount",
-      render: (row: any) => (
-        <span>
-          {row.charge?.amount / 100} {currency}
-        </span>
-      ),
-    },
-    {
-      text: "Status",
-      field: "status",
-      render: (row: any) => <span>{row.charge?.status}</span>,
-    },
-    {
-      text: "Receipt",
-      field: "receipt",
-      render: (row: any) => (
-        <a href={row.charge?.receipt_url} target="_blank" rel="noreferrer">
-          <img src={cardIcon} alt="Receipt" width={16} className="me-1" />
-          Receipt
-        </a>
-      ),
-    },
-  ];
+    setLoading(true);
+
+    try {
+      const collectionRef = collection(firestore, `users/${user.uid}/buyCoins`);
+      const docRef = await addDoc(collectionRef, {
+        amount: Number(amount) * 10,
+      });
+      setCoinId(docRef.id);
+    } catch (error) {
+      console.error("Failed to buy coins", error);
+    }
+  }
 
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-8">
-          <div className="card">
+          <div className="card mb-3">
             <div className="card-body">
-              <Table tableHeader={tableColumns} tableBody={history}></Table>
-              {history.length === 0 ? (
-                <div className="d-flex flex-column align-items-center justify-content-center mt-5">
-                  <img src={emptyIcon} alt="Empty folder" width={64} />
-                  <h6 className="text-muted mt-2">
-                    No transactions found in your history.
-                  </h6>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
-                <h5 className="m-0">Balance</h5>
-                <button className="btn alert alert-primary py-1 button-success mb-0">
-                  {(userInformation?.coinBalance || 0)
-                    .toFixed()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
-                  coins
-                </button>
-              </div>
-              <form>
-                <div className="mt-3">
+              <h5 className="card-title">Purchase Coins</h5>
+              <form noValidate id="validateForm" className="needs-validation">
+                <div className="mb-3">
                   <label htmlFor="amount" className="form-label">
                     Amount
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     id="amount"
                     value={amount}
                     onChange={(e) => {
                       const value = e.target.value;
-                      setAmount(value);
+                      setAmount(Number(value) ? value : "");
                     }}
-                    className="form-select"
-                    min={minAmount}
+                    className="form-control"
+                    pattern="^([1-9][0-9]|[1-9][0-9]{2}|1000)$"
+                    placeholder="Enter amount"
+                    required
                   />
-                  <div className="form-text" id="urlHelp">
-                    Min: {minAmount} coins, Total: {totalPrice} {currency}
+                  <small className="invalid-feedback">
+                    <IconAlertCircle className="me-2" size={20} />
+                    Please enter a valid amount.
+                  </small>
+                  <div className="form-text">
+                    The minimum amount you can purchase is between 10 and 1000.
                   </div>
                 </div>
-                <button
-                  onClick={async () => {
-                    setIsLoading(true);
-                    const coindId =
-                      (await buyCoins(user!.uid, Number(amount) * 100)) || "";
-                    setCoinId(coindId);
-                    setIsLoading(false);
-                  }}
-                  disabled={isLoading}
-                  className="btn btn-primary mt-3"
-                >
-                  Buy {amount} coins ({totalPrice} {currency})
-                </button>
               </form>
+            </div>
+          </div>
+          <div className="card mb-3">
+            <div className="card-body">
+              <div className="row">
+                <div className="col col-auto">
+                  <IconCoins size={40} />
+                </div>
+                <div className="col">
+                  <h5 className="card-title">Coins explained</h5>
+                  <p className="card-text">
+                    Coins are the currency used to purchase data from the
+                    website. You can purchase coins in the following ways:
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Free Coins:</strong> You can earn coins by
+                      participating in the website's activities.
+                    </li>
+                    <li>
+                      <strong>Purchase Coins:</strong> You can purchase coins
+                      using the payment methods provided.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-body">
+              <div className="row">
+                <div className="col col-auto">
+                  <IconInfoCircle size={40} />
+                </div>
+                <div className="col">
+                  <h5 className="card-title">Cancellation and Refund Policy</h5>
+                  <p className="card-text">
+                    Once you have purchased coins, you cannot cancel the
+                    purchase or request a refund. Please be sure to purchase
+                    coins after confirming the amount.
+                  </p>
+                  <p className="card-text">
+                    If you have purchased coins by mistake, please contact us
+                    immediately. We will refund the coins you purchased.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-4">
+          <div className="card mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Summary</h5>
+              <div className="d-flex my-2">
+                <div className="me-auto">Coins</div>
+                <div className="d-flex align-items-center gap-1">
+                  {amount} <IconCoins size={20} />
+                </div>
+              </div>
+              <div className="d-flex my-2">
+                <div className="me-auto">USD</div>
+                <div className="d-flex align-items-center gap-1">
+                  {Number(amount || 0) / 10} <IconCoin size={20} />
+                </div>
+              </div>
+              <div className="d-flex my-2">
+                <div className="me-auto">Discount</div>
+                <div>15%</div>
+              </div>
+              <div className="d-flex my-2">
+                <div className="me-auto">Tax</div>
+                <div>0%</div>
+              </div>
+              <hr />
+              <div className="d-flex my-2">
+                <strong className="me-auto">Total</strong>
+                <div>500</div>
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-body">
+              <div className="form-check mt-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="terms"
+                  required
+                  checked={isTermsAccepted}
+                  onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="terms">
+                  I agree to the{" "}
+                  <a href="#" target="_blank">
+                    terms and conditions
+                  </a>
+                </label>
+              </div>
+              <button
+                className="btn btn-primary w-100 mt-3"
+                onClick={handlePurchase}
+                disabled={!isTermsAccepted || loading || !isFormValid}
+              >
+                Purchase
+              </button>
             </div>
           </div>
         </div>
