@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; // React imports for state and effect handling
+import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import { useNavigate } from "react-router-dom"; // Hook for navigation
 import {
   collection,
@@ -16,6 +16,7 @@ import { reviewsCountRender } from "../utils/reviewsCountRender"; // Utility for
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 import { statusRender } from "../utils/statusRender"; // Utility for rendering status
 import Loader from "../components/loader"; // Loader component to show while loading data
+import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate(); //Hook for navigation
@@ -23,76 +24,27 @@ const Dashboard: React.FC = () => {
 
   // States for managing dashboard data
   const [info, setInfo] = useState<any>({});
-  const [completedReviews, setCompletedReviews] = useState<any[]>([]); // List of complated reviews
+  const [reviews, setReviews] = useState<any[]>([]); // List of complated reviews
   const [loading, setLoading] = useState(false); // Loading state for fetching data
   const [activeTableFilter, setActiveTableFilter] = useState("all"); // Active table filter
 
   const stats = [
-    { label: "All comments", value: info.totalReviews || "0" },
-    { label: "Owner responses", value: info.totalOwnerReviews || "0" },
-    { label: "User comments", value: info.totalUserReviews || "0" },
-    { label: "Images", value: info.totalImages || "0" },
-  ];
-
-  // Table columns configuration
-  const tableColumns = [
     {
-      text: "Status",
-      field: "status",
-      render: (row: any) => statusRender(row.status, { width: 20, height: 20 }), // Render status icon
+      label: "All comments",
+      icon: IconMessages,
+      value: info.totalReviews || "0",
     },
     {
-      text: "Place",
-      field: "title",
-      render: (row: any) => (
-        <a
-          className="d-inline-block text-truncate"
-          style={{ maxWidth: "200px" }}
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(`/reviews/${row.id}`); // Navigate to reviews page on click
-          }}
-        >
-          {row.title || row.url} {/* Display place title or URL */}
-        </a>
-      ),
+      label: "Owner responses",
+      icon: IconMessageReply,
+      value: info.totalOwnerReviews || "0",
     },
     {
-      text: "Limit",
-      field: "limit",
-      render: (row: any) => <span>{row.limit}</span>, // Display limit value
+      label: "User comments",
+      icon: IconMessages,
+      value: info.totalUserReviews || "0",
     },
-    {
-      text: "Date",
-      field: "createdAt",
-      render: (row: any) => <span>{formatTimestamp(row.createdAt)}</span>, // Format creation date
-    },
-    {
-      text: "Updated",
-      field: "updatedAt",
-      render: (row: any) => <span>{formatTimestamp(row.updatedAt)}</span>, // Format update date
-    },
-    {
-      text: "Reviews",
-      field: "totalReviews",
-      render: (row: any) => reviewsCountRender(row), // Render review count
-    },
-    {
-      text: "Time",
-      field: "timeSpent",
-      render: (row: any) => spentTime(row), // Render time spent
-    },
-    {
-      text: "",
-      field: "csv",
-      render: (row: any) => <a href={row.csvUrl}>Csv</a>, // Provide CSV download
-    },
-    {
-      text: "",
-      field: "json",
-      render: (row: any) => <a href={row.jsonUrl}>JSON</a>, // // Provide JSON download
-    },
+    { label: "Images", icon: IconPhoto, value: info.totalImages || "0" },
   ];
 
   useEffect(() => {
@@ -106,39 +58,31 @@ const Dashboard: React.FC = () => {
 
     const reviewsQuery = query(
       collectionReviews,
-      orderBy("createdAt", "desc"), // Specify "desc" for descending order or "asc" for ascending order
+      orderBy("createdAt", "desc"),
       where("type", "==", "comments"),
     );
 
     const unsubscribe = onSnapshot(reviewsQuery, (snapshot) => {
-      setCompletedReviews(
-        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-      );
+      const data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      console.log("data", data);
+      setReviews(data);
       setLoading(() => false);
     });
 
     return unsubscribe;
   }, [firestore, user]);
 
-  // Fetch app info from Firestore
   useEffect(() => {
     if (!firestore || !user) return;
+    const docRef = doc(firestore, `users/${user.uid}/settings/statistics`);
 
-    console.log("user", `users/${user.uid}/settings/statistics`);
-    const docRef = doc(firestore, `users/${user.uid}/settings/statistics`); // Get app info document
     const unsubscribe = onSnapshot(docRef, (doc) => {
-      setInfo(doc.data() || {}); // Update state with the app info
-      setLoading(() => false); // Set loading to false once data is fetched
-      console.log("info", doc.data());
+      setInfo(doc.data() || {});
+      setLoading(() => false);
     });
-    return unsubscribe; // Cleanup on unmount
-  }, [firestore, user]);
 
-  // Filter the table data based on the active filter
-  const filteredReviews = completedReviews.filter((review) => {
-    if (activeTableFilter === "all") return true; // Show all reviews
-    return review.status === activeTableFilter; // Filter by status
-  });
+    return unsubscribe;
+  }, [firestore, user]);
 
   return (
     <div className="container-fluid">
@@ -148,18 +92,21 @@ const Dashboard: React.FC = () => {
       ) : (
         <div className="row g-3">
           <div className="col-12">
+            {/*---Extracted reviews status---*/}
             <div className="card">
               <div className="card-body">
-                <div className="row row-cols-4">
+                <div className="d-flex gap-3">
                   {stats.map((stat, index) => (
-                    <div className="col" key={index}>
-                      <span className="text-muted">{stat.label}</span>
-                      <span className="d-block fs-1">{stat.value}</span>
+                    <div key={index} className="w-100 text-center">
+                      {createElement(stat.icon, { size: 50, strokeWidth: 1 })}
+                      <span className="d-block fs-3">{stat.value}</span>
+                      <span className="d-block">{stat.label}</span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
+            {/*---End: Extracted reviews status---*/}
           </div>
 
           <div className="col-12">
@@ -187,7 +134,74 @@ const Dashboard: React.FC = () => {
           <div className="col-12 mt-4">
             <div className="card">
               <div className="card-body">
-                <Table tableHeader={tableColumns} tableBody={filteredReviews} />
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Place</th>
+                        <th scope="col">Limit</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reviews</th>
+                        <th scope="col">Images</th>
+                        <th scope="col">Videos</th>
+                        <th scope="col">Time</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reviews.map((review, index) => (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/reviews/${review.id}`);
+                              }}
+                            >
+                              <span className="d-flex align-items-center">
+                                {statusRender(review.status, {
+                                  width: 18,
+                                  height: 18,
+                                })}
+                                <div className="ms-1">
+                                  {review.title || review.url}
+                                </div>
+                              </span>
+                              <span className="d-block">{review.address}</span>
+                            </a>
+                          </td>
+                          <td>{review.limit}</td>
+                          <td>
+                            <span>
+                              {formatTimestamp(review.createdAt).time}
+                            </span>
+                            <span className="d-block">
+                              {formatTimestamp(review.createdAt).date}
+                            </span>
+                          </td>
+                          <td>
+                            {Number(
+                              review.totalReviews || "0",
+                            ).toLocaleString()}{" "}
+                            / {Number(review.reviews || "0").toLocaleString()}
+                          </td>
+                          <td>{review.totalImages || "0"}</td>
+                          <td>{review.totalVideos || "0"}</td>
+                          <td>{spentTime(review)}</td>
+                          <td>
+                            <div className="d-flex flex-column gap-1">
+                              <a href={review.csvUrl}>Csv</a>
+                              <a href={review.jsonUrl}>JSON</a>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

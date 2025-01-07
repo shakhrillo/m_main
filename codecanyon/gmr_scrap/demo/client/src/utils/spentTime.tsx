@@ -1,23 +1,37 @@
-export const spentTime = (placeInfo: any): string => {
-  if (!placeInfo?.createdAt || !placeInfo?.updatedAt) {
-    return "N/A"
+import { Timestamp } from "firebase/firestore";
+
+export const spentTime = (placeInfo: {
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}): string => {
+  const createdAt: Timestamp = placeInfo.createdAt;
+  const updatedAt: Timestamp = placeInfo.updatedAt;
+
+  // Ensure both timestamps are defined
+  if (!createdAt || !updatedAt) {
+    throw new Error("Missing 'createdAt' or 'updatedAt' in placeInfo.");
   }
 
-  const startMilliseconds = Number(placeInfo.createdAt)
-  const endMilliseconds = Number(placeInfo.updatedAt || Date.now())
+  // Calculate difference in seconds, considering both seconds and nanoseconds
+  const createdAtSeconds = createdAt.seconds + createdAt.nanoseconds / 1e9;
+  const updatedAtSeconds = updatedAt.seconds + updatedAt.nanoseconds / 1e9;
 
-  // Ensure both values are valid numbers
-  if (isNaN(startMilliseconds) || isNaN(endMilliseconds)) {
-    return "Invalid timestamps"
+  const diff = updatedAtSeconds - createdAtSeconds;
+
+  // Prevent negative time difference
+  if (diff < 0) {
+    throw new Error("'updatedAt' must be later than 'createdAt'.");
   }
 
-  const diffInSeconds = Math.floor((endMilliseconds - startMilliseconds) / 1000)
+  // Convert difference to hours, minutes, and seconds
+  const hours = Math.floor(diff / 3600);
+  const minutes = Math.floor((diff % 3600) / 60);
+  const seconds = Math.floor(diff % 60);
 
-  if (diffInSeconds < 0) {
-    return "Invalid time range"
-  }
+  // Format as HH:MM:SS with zero padding
+  const formattedTime = [hours, minutes, seconds]
+    .map((unit) => String(unit).padStart(2, "0"))
+    .join(":");
 
-  if (diffInSeconds < 60) return `${diffInSeconds}s`
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`
-  return `${Math.floor(diffInSeconds / 3600)}h`
-}
+  return formattedTime;
+};
