@@ -2,6 +2,7 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebase } from "../../contexts/FirebaseProvider";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 function ReviewImages() {
   const { place } = useParams();
@@ -45,17 +46,32 @@ function ReviewImages() {
     <div>{error}</div>
   ) : (
     <div className="row row-cols-6 g-2">
-      {reviewImgs.map((img, index) => (
-        <div className="col" key={index}>
-          <a href={img.videoUrl || img.thumb} target="_blank" rel="noreferrer">
-            <img
-              src={img.thumb}
-              alt={`Review ${index}`}
-              className="img-fluid rounded"
-            />
-          </a>
-        </div>
-      ))}
+      <Gallery
+        options={{
+          zoom: false,
+          showHideAnimationType: "none",
+          hideAnimationDuration: 0,
+          showAnimationDuration: 0,
+          zoomAnimationDuration: 0,
+          bgOpacity: 0.9,
+        }}
+      >
+        {reviewImgs.map((img, index) => (
+          <Item original={img.thumb || img.videoUrl} key={index}>
+            {({ ref, open }) => (
+              <div className="col">
+                <img
+                  ref={ref}
+                  onClick={open}
+                  src={img.thumb || img.videoUrl}
+                  alt={`Review ${index}`}
+                  className="img-fluid img-thumbnail rounded"
+                />
+              </div>
+            )}
+          </Item>
+        ))}
+      </Gallery>
     </div>
   );
 }

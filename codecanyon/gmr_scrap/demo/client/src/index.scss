@@ -109,7 +109,24 @@ $form-feedback-icon-valid: none;
 $form-feedback-icon-invalid: none;
 
 @import "bootstrap/scss/bootstrap";
-@import "leaflet/dist/leaflet.css";
+@import "photoswipe/dist/photoswipe.css";
+
+.pswp img {
+  right: auto;
+  left: auto;
+  margin: 0 auto;
+  width: auto !important;
+  height: 100vh !important;
+}
+
+.pswp__zoom-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
 @import "./styles/index";
 
