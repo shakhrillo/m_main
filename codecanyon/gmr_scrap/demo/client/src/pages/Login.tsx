@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useFirebase } from "../../contexts/FirebaseProvider"
-import { googleLogin, login } from "../../services/firebaseService"
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useFirebase } from "../contexts/FirebaseProvider";
+import { googleLogin, login } from "../services/firebaseService";
 
 const Login: React.FC = () => {
-  const { user } = useFirebase()
-  const navigate = useNavigate()
+  const { user } = useFirebase();
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    redirectToDashboard()
-  }, [user])
+    redirectToDashboard();
+  }, [user]);
 
   function redirectToDashboard() {
     if (user) {
-      navigate("/dashboard")
+      navigate("/dashboard");
     }
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      await login(email, password)
+      await login(email, password);
     } catch (error) {
-      setError("Email or password is incorrect.")
+      setError("Email or password is incorrect.");
     }
   }
 
   async function handleGoogleLogin() {
     try {
-      await googleLogin()
+      await googleLogin();
     } catch (error) {
-      setError("Failed to log in with Google.")
+      setError("Failed to log in with Google.");
     }
   }
 
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
                     type="email"
                     id="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     className="form-control"
                   />
@@ -70,7 +70,7 @@ const Login: React.FC = () => {
                     type="password"
                     id="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     className="form-control"
                   />
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

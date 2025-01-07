@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react"; // React imports for state and effect handling
+import { useNavigate } from "react-router-dom"; // Hook for navigation
 import {
   collection,
   doc,
@@ -6,17 +8,16 @@ import {
   query,
   where,
 } from "firebase/firestore"; // Firestore imports for document snapshot
-import React, { useEffect, useState } from "react"; // React imports for state and effect handling
-import { useNavigate } from "react-router-dom"; // Hook for navigation
-import Loader from "../../components/loader"; // Loader component to show while loading data
-import { Table } from "../../components/table"; // Custom Table component for displaying data
-import { useFirebase } from "../../contexts/FirebaseProvider"; // Context for Firebase integration
-import { formatTimestamp } from "../../utils/formatTimestamp"; // Utility to format timestamps
-import { reviewsCountRender } from "../../utils/reviewsCountRender"; // Utility for rendering reviews count
-import { spentTime } from "../../utils/spentTime"; // Utility for calculating spent time
-import { statusRender } from "../../utils/statusRender"; // Utility for rendering status
+import { Table } from "../components/table"; // Custom Table component for displaying data
+import { useFirebase } from "../contexts/FirebaseProvider"; // Context for Firebase integration
+import { getReviewsQuery } from "../services/firebaseService"; // Function to get reviews query
+import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
+import { reviewsCountRender } from "../utils/reviewsCountRender"; // Utility for rendering reviews count
+import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
+import { statusRender } from "../utils/statusRender"; // Utility for rendering status
+import Loader from "../components/loader"; // Loader component to show while loading data
 
-const ValidatedUrls: React.FC = () => {
+const Dashboard: React.FC = () => {
   const navigate = useNavigate(); //Hook for navigation
   const { firestore, user } = useFirebase(); // Firebase context to get firestore and user data
 
@@ -106,8 +107,7 @@ const ValidatedUrls: React.FC = () => {
     const reviewsQuery = query(
       collectionReviews,
       orderBy("createdAt", "desc"), // Specify "desc" for descending order or "asc" for ascending order
-      // Filter by type
-      where("type", "==", "info"),
+      where("type", "==", "comments"),
     );
 
     const unsubscribe = onSnapshot(reviewsQuery, (snapshot) => {
@@ -197,4 +197,4 @@ const ValidatedUrls: React.FC = () => {
   );
 };
 
-export default ValidatedUrls;
+export default Dashboard;

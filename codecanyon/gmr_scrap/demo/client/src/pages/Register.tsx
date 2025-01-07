@@ -1,64 +1,63 @@
-import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import logo from "../../assets/images/logo.svg"
-import { useFirebase } from "../../contexts/FirebaseProvider"
-import { googleLogin, register } from "../../services/firebaseService"
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useFirebase } from "../contexts/FirebaseProvider";
+import { googleLogin, register } from "../services/firebaseService";
 
 const Register: React.FC = () => {
-  const { user } = useFirebase()
-  const navigate = useNavigate()
+  const { user } = useFirebase();
+  const navigate = useNavigate();
 
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    redirectToDashboard()
-  }, [user])
+    redirectToDashboard();
+  }, [user]);
 
   function redirectToDashboard() {
     if (user) {
-      navigate("/dashboard")
+      navigate("/dashboard");
     }
   }
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.")
-      return
+      setError("Passwords do not match.");
+      return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.")
-      return
+      setError("Password must be at least 6 characters.");
+      return;
     }
 
     try {
-      await register(email, password, firstName, lastName)
-      navigate("/auth/login")
+      await register(email, password, firstName, lastName);
+      navigate("/auth/login");
     } catch (error: any) {
       if (typeof error === "string") {
-        setError(error)
-        return
+        setError(error);
+        return;
       }
-      setError(error?.message)
+      setError(error?.message);
     }
-  }
+  };
 
   const handleGoogleLogin = async () => {
     try {
-      await googleLogin()
-      navigate("/dashboard")
+      await googleLogin();
+      navigate("/dashboard");
     } catch (error) {
-      setError("Failed to log in with Google.")
+      setError("Failed to log in with Google.");
     }
-  }
+  };
 
   return (
     <div className="main">
@@ -77,7 +76,7 @@ const Register: React.FC = () => {
                     placeholder="First name"
                     id="firstName"
                     value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -89,7 +88,7 @@ const Register: React.FC = () => {
                     type="text"
                     id="lastName"
                     placeholder="Last name"
-                    onChange={e => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -101,7 +100,7 @@ const Register: React.FC = () => {
                     type="email"
                     id="email"
                     placeholder="Enter email"
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -113,7 +112,7 @@ const Register: React.FC = () => {
                     type="password"
                     id="password"
                     placeholder="Password"
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -125,7 +124,7 @@ const Register: React.FC = () => {
                     type="password"
                     id="confirmPassword"
                     placeholder="Confirm password"
-                    onChange={e => setConfirmPassword(e.target.value)}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -156,7 +155,7 @@ const Register: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
