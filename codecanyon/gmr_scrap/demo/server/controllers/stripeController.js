@@ -114,13 +114,18 @@ exports.webhookHandler = async (req, res) => {
 
         // Update user's coin balance
         const userDoc = await userRef.get();
-        const currentBalance = userDoc.exists
-          ? userDoc.data().coinBalance || 0
-          : 0;
+        const userDocData = userDoc.data() || {
+          coinBalance: 0,
+          totalSpent: 0,
+        };
+        const coinBalance = userDocData.coinBalance + paymentIntent.amount;
+        const totalSpent = userDocData.totalSpent + paymentIntent.amount;
+
         batch.set(
           userRef,
           {
-            coinBalance: currentBalance + paymentIntent.amount,
+            coinBalance,
+            totalSpent,
           },
           { merge: true }
         );

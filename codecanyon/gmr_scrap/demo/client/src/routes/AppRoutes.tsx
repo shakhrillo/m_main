@@ -13,6 +13,7 @@ import Register from "../pages/Register";
 import ResetPassword from "../pages/ResetPassword";
 import Help from "../pages/Help";
 import Payments from "../pages/Payments";
+import Receipts from "../pages/Receipts";
 import ReviewsList from "../pages/ReviewsList";
 import SingleReview from "../pages/SingleReview";
 import ValidatedUrls from "../pages/ValidatedUrls";
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
           { path: "info", element: <Info /> },
           { path: "dashboard", element: <Usage /> },
           { path: "payments", element: <Payments /> },
+          { path: "receipts", element: <Receipts /> },
         ],
       },
     ],

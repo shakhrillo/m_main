@@ -13,6 +13,7 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
   IconInfoCircle,
+  IconReceipt,
 } from "@tabler/icons-react";
 import { createElement, FC, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -147,17 +148,17 @@ const Sidebar: FC = () => {
             }
           >
             {createElement(IconCreditCard, { size: 20 })}
-            <span className="me-auto">Payment</span>
+            <span className="me-auto">Buy Coins</span>
           </NavLink>
 
           <NavLink
-            to={"/invoice"}
+            to={"/receipts"}
             className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
-            {createElement(IconInvoice, { size: 20 })}
-            <span className="me-auto">Invoice</span>
+            {createElement(IconReceipt, { size: 20 })}
+            <span className="me-auto">Receipts</span>
           </NavLink>
         </div>
 
