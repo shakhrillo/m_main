@@ -1,5 +1,4 @@
-import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
-import { useNavigate } from "react-router-dom"; // Hook for navigation
+import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
 import {
   collection,
   doc,
@@ -8,15 +7,13 @@ import {
   query,
   where,
 } from "firebase/firestore"; // Firestore imports for document snapshot
-import { Table } from "../components/table"; // Custom Table component for displaying data
+import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
+import { useNavigate } from "react-router-dom"; // Hook for navigation
+import Loader from "../components/loader"; // Loader component to show while loading data
 import { useFirebase } from "../contexts/FirebaseProvider"; // Context for Firebase integration
-import { getReviewsQuery } from "../services/firebaseService"; // Function to get reviews query
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-import { reviewsCountRender } from "../utils/reviewsCountRender"; // Utility for rendering reviews count
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 import { statusRender } from "../utils/statusRender"; // Utility for rendering status
-import Loader from "../components/loader"; // Loader component to show while loading data
-import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate(); //Hook for navigation
@@ -109,32 +106,29 @@ const Dashboard: React.FC = () => {
             {/*---End: Extracted reviews status---*/}
           </div>
 
-          <div className="col-12">
-            <div
-              className="btn-group"
-              role="group"
-              aria-label="Default button group"
-            >
-              {["all", "completed", "pending", "filed"].map((filter) => (
-                <button
-                  key={filter}
-                  type="button"
-                  onClick={() => setActiveTableFilter(filter)}
-                  className={`btn btn-secondary ${
-                    activeTableFilter === filter ? "active" : ""
-                  }`}
-                >
-                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Table for displaying reviews based on active filter */}
           <div className="col-12 mt-4">
             <div className="card">
               <div className="card-body">
-                <div className="table-responsive">
+                <div
+                  className="btn-group"
+                  role="group"
+                  aria-label="Default button group"
+                >
+                  {["all", "completed", "pending", "filed"].map((filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setActiveTableFilter(filter)}
+                      className={`btn btn-primary ${
+                        activeTableFilter === filter ? "active" : ""
+                      }`}
+                    >
+                      {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    </button>
+                  ))}
+                </div>
+                <div className="table-responsive mt-3">
                   <table className="table">
                     <thead>
                       <tr>
