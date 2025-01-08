@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useFirebase } from "../contexts/FirebaseProvider";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import {
   IconAlertCircle,
@@ -13,14 +12,14 @@ import {
   IconPhoto,
   IconVideo,
 } from "@tabler/icons-react";
-import {
-  addDoc,
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-} from "firebase/firestore";
+import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react";
+import {
+  IReview,
+  startScrap,
+  validateUrl,
+  validateUrlData,
+} from "../services/scrapService";
 
 const EXTRACT_OPTIONS = [
   {
@@ -71,12 +70,12 @@ const NOTIFICATION_OPTIONS = [
 ];
 
 const Scrap = () => {
-  const { user, firestore } = useFirebase();
+  const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
-  const [placeInfo, setPlaceInfo] = useState<Record<string, any>>({});
+  const [placeInfo, setPlaceInfo] = useState<IReview>({} as IReview);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
   const [url, setUrl] = useState("");
@@ -101,54 +100,39 @@ const Scrap = () => {
   const [documentId, setDocumentId] = useState("");
 
   useEffect(() => {
-    if (!firestore || !user || !documentId) return;
+    if (!documentId) return;
 
-    const unsubscribe = onSnapshot(
-      doc(firestore, `users/${user.uid}/reviews/${documentId}`),
-      (doc) => {
-        if (doc.exists()) {
-          const result = doc.data() as any;
-          console.log(">", result);
-          setPlaceInfo(result);
-          if (result && result.rating) {
-            setLoading(false);
-            setIsValidated(true);
-          }
-        }
-      },
-    );
+    const unsubscribe = validateUrlData(documentId, uid).subscribe((data) => {
+      setPlaceInfo(data);
+      if (data?.reviews > 0) {
+        setIsValidated(true);
+        setLoading(false);
+      }
+    });
 
-    return unsubscribe;
-  }, [firestore, user, documentId]);
+    return () => {
+      unsubscribe.unsubscribe();
+    };
+  }, [documentId]);
 
   /**
    * Validation URL
    * @param e Form event
    */
-  async function validateUrl(e: React.FormEvent<HTMLFormElement>) {
+  async function handleUrlValidation(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    e.currentTarget.classList.add("was-validated");
+    const target = e.currentTarget as HTMLFormElement;
 
-    if (!e.currentTarget.checkValidity()) {
-      return;
-    }
+    target.classList.add("was-validated");
+    if (!target.checkValidity()) return;
 
-    setLoading(true);
-
-    const uid = user?.uid;
-    const collectionPath = `users/${uid}/reviews`;
     setLoading(true);
 
     try {
-      const collectionRef = collection(firestore, collectionPath);
-      const document = await addDoc(collectionRef, {
-        url,
-        type: "info",
-      });
-      setDocumentId(document.id);
+      const id = await validateUrl(url, uid);
+      setDocumentId(id);
     } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("Error adding document: " + JSON.stringify(error));
+      console.log(error);
     }
   }
 
@@ -156,7 +140,7 @@ const Scrap = () => {
    * Clear results and reset the form
    */
   function clearResults() {
-    setPlaceInfo({});
+    setPlaceInfo({} as IReview);
     setIsValidated(false);
     setUrl("");
     setLimit(10);
@@ -183,11 +167,10 @@ const Scrap = () => {
   /**
    * Start Scrap process
    */
-  async function startScrap() {
+  async function handleStartScrap() {
     setLoading(true);
     try {
-      const docCollection = collection(firestore, `users/${user?.uid}/reviews`);
-      const data = await addDoc(docCollection, {
+      const id = await startScrap(uid, {
         ...placeInfo,
         type: "comments",
         url,
@@ -198,11 +181,9 @@ const Scrap = () => {
         extractOwnerResponse: extractOptions.extractOwnerResponse,
         status: "in-progress",
       });
-
-      navigate(`/reviews/${data.id}`);
+      navigate(`/reviews/${id}`);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -217,7 +198,11 @@ const Scrap = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Validate Place Info</h5>
-                <form onSubmit={validateUrl} noValidate id="validateForm">
+                <form
+                  onSubmit={handleUrlValidation}
+                  noValidate
+                  id="validateForm"
+                >
                   <div className="mb-3">
                     <label htmlFor="url" className="form-label">
                       Google Maps URL
@@ -229,7 +214,7 @@ const Scrap = () => {
                       value={url}
                       placeholder="https://www.google.com/maps/place/..."
                       onChange={(e) => setUrl(e.target.value)}
-                      disabled={loading || placeInfo?.rating}
+                      disabled={loading}
                       pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
                       itemRef="url"
                       required
@@ -253,7 +238,7 @@ const Scrap = () => {
                     <button
                       type="submit"
                       className="btn btn-primary ms-auto"
-                      disabled={loading || placeInfo?.rating}
+                      disabled={loading}
                     >
                       {loading ? (
                         "Validating..."
@@ -637,7 +622,7 @@ const Scrap = () => {
               <button
                 className="btn btn-primary w-100 mt-3"
                 disabled={loading || !isValidated || !isTermsAccepted}
-                onClick={startScrap}
+                onClick={handleStartScrap}
               >
                 Scrap
               </button>
