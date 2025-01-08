@@ -6,13 +6,9 @@ import Navbar from "../../components/Navbar";
 const DashboardLayout: React.FC = () => {
   return (
     <div className="dashboard-layout">
-      <aside className="dashboard-sidebar">
-        <Sidebar />
-      </aside>
+      <Sidebar />
       <main className="dashboard-main">
-        <div className="dashboard-header">
-          <Navbar />
-        </div>
+        <Navbar />
         <div className="dashboard-content">
           <Outlet />
         </div>

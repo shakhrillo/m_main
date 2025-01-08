@@ -1,79 +1,32 @@
 import {
-  IconChevronRight,
   IconCreditCard,
+  IconDashboard,
+  IconHelp,
+  IconInfoCircle,
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+  IconReceipt,
   IconSearch,
   IconServerBolt,
   IconSettings,
-  IconUser,
-  IconHelp,
-  IconDashboard,
-  IconInvoice,
   IconShield,
+  IconUser,
   IconWorldCheck,
-  IconLayoutSidebarLeftCollapse,
-  IconLayoutSidebarLeftExpand,
-  IconInfoCircle,
-  IconReceipt,
 } from "@tabler/icons-react";
 import { createElement, FC, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 
-interface NavItemProps {
-  to?: string;
-  icon?: React.ElementType;
-  label?: string;
-  badge?: number;
-  className?: string;
-  children?: NavItemProps[];
-}
-
-// const navItems: NavItemProps[] = [
-//   { to: "/dashboard", icon: IconDashboard, label: "Dashboard" },
-//   { to: "/scrap", icon: IconSearch, label: "Scrap" },
-//   {
-//     label: "Reviews",
-//     children: [
-//       { to: "/reviews", icon: IconServerBolt, label: "Reviews", badge: 4 },
-//       { to: "/validates", icon: IconWorldCheck, label: "Validates" },
-//     ],
-//   },
-//   {
-//     label: "Reports",
-//     children: [
-//       { to: "/payments", icon: IconCreditCard, label: "Payment" },
-//       { to: "/invoice", icon: IconInvoice, label: "Invoice" },
-//     ],
-//   },
-//   { to: "/users", icon: IconUser, label: "Users" },
-//   {
-//     to: "/security",
-//     icon: IconShield,
-//     label: "Security",
-//     className: "mt-auto",
-//   },
-//   {
-//     to: "/help",
-//     icon: IconHelp,
-//     label: "Help",
-//   },
-//   {
-//     to: "/settings",
-//     icon: IconSettings,
-//     label: "Settings",
-//   },
-// ];
-
 const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    const dashboardSidebar = document.querySelector(".dashboard-layout");
-    dashboardSidebar?.classList.toggle("dashboard-minimize", collapsed);
-  }, [collapsed]);
+  // useEffect(() => {
+  //   const dashboardSidebar = document.querySelector(".dashboard-layout");
+  //   dashboardSidebar?.classList.toggle("dashboard-minimize", collapsed);
+  // }, [collapsed]);
 
   return (
-    <nav className="sidebar">
+    <nav className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
       <div className="sidebar-header">
         <img src={logo} alt="logo" className="sidebar-logo" />
         <button
@@ -86,6 +39,7 @@ const Sidebar: FC = () => {
               : IconLayoutSidebarLeftCollapse,
             {
               size: 30,
+              stroke: 1.5,
             },
           )}
         </button>
