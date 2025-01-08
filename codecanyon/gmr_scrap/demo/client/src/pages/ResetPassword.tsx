@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "../assets/images/logo.png";
 import { resetPassword } from "../services/firebaseService";
 
 const ResetPassword: React.FC = () => {
@@ -21,11 +20,11 @@ const ResetPassword: React.FC = () => {
     <div className="login container-fluid">
       <nav className="login__navbar">
         <a href="/">
-          <img
+          {/* <img
             className="login__navbar-logo"
             src={logo}
             alt="GeoScraper logo"
-          />
+          /> */}
         </a>
       </nav>
       <div className="login__card">
