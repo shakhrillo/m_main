@@ -1,8 +1,4 @@
-import { useFirebase } from "../contexts/FirebaseProvider";
-
 const Info: React.FC = () => {
-  const { firestore } = useFirebase();
-
   return (
     <div className="container-fluid">
       <div className="row">

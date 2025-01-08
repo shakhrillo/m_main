@@ -1,32 +1,25 @@
 import { IconBell, IconCoins } from "@tabler/icons-react";
+import { User } from "firebase/auth";
 import { FC, useEffect, useState } from "react";
-import { useFirebase } from "../../contexts/FirebaseProvider";
-
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink } from "react-router-dom";
-import { userCoins } from "../../services/coinService";
+import { NavLink, useOutletContext } from "react-router-dom";
+import { IUser, userData } from "../../services/userService";
+import formatNumber from "../../utils/formatCoins";
 
 const AppNavbar: FC = () => {
-  const { user, firestore } = useFirebase();
-
-  const [balance, setBalance] = useState("0");
+  const { uid } = useOutletContext<User>();
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
-
-    const unsubscribe = userCoins(user?.uid).subscribe((balance) => {
-      setBalance(balance);
-    });
+    const unsubscribe = userData(uid).subscribe((user) => setUser(user));
 
     return () => {
       unsubscribe.unsubscribe();
     };
-  }, [user]);
+  }, []);
 
   return (
     <Navbar expand="lg" bg="dark" variant="dark">
@@ -37,28 +30,32 @@ const AppNavbar: FC = () => {
           <Nav className="ms-auto">
             <NavLink to={"/payments"} className="nav-link">
               <IconCoins size={22} className="text-warning" stroke={2} />
-              <span className="fw-bold ms-2">{balance}</span>
+              <span className="fw-bold ms-2">
+                {formatNumber(user?.coinBalance)}
+              </span>
             </NavLink>
             <NavDropdown
               title={
                 <>
                   <IconBell size={22} />
                   <span className="badge bg-info mt-n1 ms-n2 position-absolute">
-                    3
+                    {user?.newNotifications}
                   </span>
                 </>
               }
               align={{ sm: "end" }}
             >
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
+              {(user?.notifications || [])?.map((notification, index) => (
+                <NavLink
+                  to={`/notification/${notification.id}`}
+                  key={index}
+                  className="dropdown-item"
+                >
+                  {notification.title}
+                </NavLink>
+              ))}
             </NavDropdown>
-            <NavDropdown
-              title={user ? user.displayName : "Guest"}
-              align={{ sm: "end" }}
-            >
+            <NavDropdown title={"Guest"} align={{ sm: "end" }}>
               <NavLink to={"/profile"} className="dropdown-item">
                 Profile
               </NavLink>

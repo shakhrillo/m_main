@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { FirebaseProvider } from "./contexts/FirebaseProvider";
+// import { FirebaseProvider } from "./contexts/FirebaseProvider";
 import "./index.scss";
 
 const container = document.getElementById("root");
@@ -9,9 +9,9 @@ if (container) {
   const root = createRoot(container);
 
   root.render(
-    <FirebaseProvider>
-      <App />
-    </FirebaseProvider>,
+    <App />,
+    // <FirebaseProvider>
+    // </FirebaseProvider>,
   );
 } else {
   throw new Error(
