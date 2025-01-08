@@ -23,6 +23,7 @@ import User from "../pages/User";
 import Users from "../pages/Users";
 import Info from "../pages/Info";
 import Usage from "../pages/Usage";
+import Security from "../pages/Security";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
           { path: "scrap", element: <Scrap /> },
           { path: "user", element: <User /> },
           { path: "users", element: <Users /> },
+          { path: "security", element: <Security /> },
           { path: "settings", element: <Settings /> },
           { path: "help", element: <Help /> },
           { path: "info", element: <Info /> },

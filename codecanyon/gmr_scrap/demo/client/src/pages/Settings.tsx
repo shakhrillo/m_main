@@ -1,31 +1,23 @@
-import React, { useEffect, useState } from "react"
-import { useFirebase } from "../contexts/FirebaseProvider"
-import { useMenu } from "../context/MenuContext/MenuContext"
-import menuIcon from "../assets/icons/list.svg"
-import {
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore"
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useFirebase } from "../contexts/FirebaseProvider";
 
 const Settings: React.FC = () => {
-  const { user, firestore } = useFirebase()
+  const { user, firestore } = useFirebase();
 
-  const [currency, setCurrency] = useState("usd")
-  const [costs, setCosts] = useState("0.01")
-  const [language, setLanguage] = useState("en")
+  const [currency, setCurrency] = useState("usd");
+  const [costs, setCosts] = useState("0.01");
+  const [language, setLanguage] = useState("en");
 
   useEffect(() => {
-    if (!firestore) return
-    const settingsRef = doc(firestore, `app/settings`)
-    const unsubscribe = onSnapshot(settingsRef, doc => {
+    if (!firestore) return;
+    const settingsRef = doc(firestore, `app/settings`);
+    const unsubscribe = onSnapshot(settingsRef, (doc) => {
       if (doc.exists()) {
-        const data = doc.data()
-        setCurrency(data.currency)
-        setCosts(data.costs)
-        setLanguage(data.language)
+        const data = doc.data();
+        setCurrency(data.currency);
+        setCosts(data.costs);
+        setLanguage(data.language);
       } else {
         setDoc(
           settingsRef,
@@ -35,25 +27,25 @@ const Settings: React.FC = () => {
             costs: "0.01",
           },
           { merge: true },
-        )
+        );
       }
-    })
+    });
 
     return () => {
-      unsubscribe()
-    }
-  }, [firestore])
+      unsubscribe();
+    };
+  }, [firestore]);
 
   async function saveSettings() {
-    if (!firestore) return
-    const settingsRef = doc(firestore, `app/settings`)
+    if (!firestore) return;
+    const settingsRef = doc(firestore, `app/settings`);
     await updateDoc(settingsRef, {
       language,
       currency,
       costs,
-    })
+    });
 
-    alert("Settings saved")
+    alert("Settings saved");
   }
 
   return (
@@ -62,9 +54,9 @@ const Settings: React.FC = () => {
       <div className="mt-3">
         <div>
           <form
-            onSubmit={e => {
-              e.preventDefault()
-              saveSettings()
+            onSubmit={(e) => {
+              e.preventDefault();
+              saveSettings();
             }}
           >
             <div className="row mb-3 justify-content-center align-items-center">
@@ -115,7 +107,7 @@ const Settings: React.FC = () => {
                     className="form-control"
                     placeholder="0.01"
                     value={costs}
-                    onChange={e => setCosts(e.target.value)}
+                    onChange={(e) => setCosts(e.target.value)}
                   />
                   <a
                     href="https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts"
@@ -134,7 +126,7 @@ const Settings: React.FC = () => {
                 name="language"
                 id="language"
                 value={language}
-                onChange={e => setLanguage(e.target.value)}
+                onChange={(e) => setLanguage(e.target.value)}
                 className="form-select"
               >
                 <option value="en">English</option>
@@ -150,7 +142,7 @@ const Settings: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
