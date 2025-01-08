@@ -6,12 +6,9 @@ import {
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
-import { buyCoins, getPaymentsQuery } from "../services/firebaseService";
-import { formatTimestamp } from "../utils/formatTimestamp";
-import cardIcon from "../assets/icons/credit-card.svg";
-import emptyIcon from "../assets/icons/empty-folder.png";
 import { Table } from "../components/table";
+import { useFirebase } from "../contexts/FirebaseProvider";
+import { formatTimestamp } from "../utils/formatTimestamp";
 
 function Receipts() {
   const { firestore, user } = useFirebase();
@@ -34,12 +31,6 @@ function Receipts() {
       const historyData = snapshot.docs.map((doc) => doc.data());
       setHistory(historyData);
     });
-
-    // const unsubscribe = onSnapshot(getPaymentsQuery(user.uid), (snapshot) => {
-    //   const historyData = snapshot.docs.map((doc) => doc.data());
-    //   console.log(historyData);
-    //   setHistory(historyData);
-    // });
 
     return () => unsubscribe();
   }, [firestore, user]);
@@ -100,63 +91,14 @@ function Receipts() {
     };
   }, [firestore]);
 
-  // DateIDPayment MethodAmountStatusReceiptInvoice
-  const tableColumns = [
-    {
-      text: "Date",
-      field: "date",
-      render: (row: any) => <span>{formatTimestamp(row.created).date}</span>,
-    },
-    {
-      text: "ID",
-      field: "id",
-      render: (row: any) => <span>{row.charge?.payment_intent}</span>,
-    },
-    {
-      text: "Payment Method",
-      field: "paymentMethod",
-      render: (row: any) => (
-        <span>
-          {`${row.charge?.payment_method_details?.card?.brand} ending in ${row.charge?.payment_method_details?.card?.last4}`}
-        </span>
-      ),
-    },
-    {
-      text: "Amount",
-      field: "amount",
-      render: (row: any) => (
-        <span>
-          {row.charge?.amount / 100} {currency}
-        </span>
-      ),
-    },
-    {
-      text: "Status",
-      field: "status",
-      render: (row: any) => <span>{row.charge?.status}</span>,
-    },
-    {
-      text: "Receipt",
-      field: "receipt",
-      render: (row: any) => (
-        <a href={row.charge?.receipt_url} target="_blank" rel="noreferrer">
-          <img src={cardIcon} alt="Receipt" width={16} className="me-1" />
-          Receipt
-        </a>
-      ),
-    },
-  ];
-
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col">
           <div className="card">
             <div className="card-body">
-              <Table tableHeader={tableColumns} tableBody={history}></Table>
               {history.length === 0 ? (
                 <div className="d-flex flex-column align-items-center justify-content-center mt-5">
-                  <img src={emptyIcon} alt="Empty folder" width={64} />
                   <h6 className="text-muted mt-2">
                     No transactions found in your history.
                   </h6>

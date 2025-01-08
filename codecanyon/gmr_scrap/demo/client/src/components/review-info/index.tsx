@@ -3,10 +3,6 @@ import { useParams } from "react-router-dom"; // React Router hook to get URL pa
 import { doc, onSnapshot } from "firebase/firestore"; // Firebase Firestore methods for real-time updates
 
 import { useFirebase } from "../../contexts/FirebaseProvider"; // Custom context to access Firebase utilities
-import { spentTime } from "../../utils/spentTime"; // Utility function to calculate spent time
-import { statusRender } from "../../utils/statusRender"; // Utility function to render status icons
-
-import StarRating from "../star-rating"; // Component to display star ratings
 
 function ReviewInfo() {
   const { place } = useParams(); // Extract "place" parameter from the URL
@@ -35,7 +31,7 @@ function ReviewInfo() {
       title: "Status",
       content: (
         <div className="w-100 h-100 d-flex align-items-center justify-content-center">
-          {statusRender(info.status, { width: 50, height: 50 })}
+          {info.status}
         </div>
       ),
     },
@@ -44,7 +40,7 @@ function ReviewInfo() {
       content: (
         <div className="d-flex gap-2 align-items-center my-2">
           <h2 className="m-0">{info.rating ? info.rating : "N/A"}</h2>
-          <StarRating rating={info.rating} size={18} />
+          {info.rating}
         </div>
       ),
       subtitle: "Average rating for this place",

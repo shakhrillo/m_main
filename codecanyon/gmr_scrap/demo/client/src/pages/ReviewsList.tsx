@@ -13,7 +13,6 @@ import Loader from "../components/loader"; // Loader component to show while loa
 import { useFirebase } from "../contexts/FirebaseProvider"; // Context for Firebase integration
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
-import { statusRender } from "../utils/statusRender"; // Utility for rendering status
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate(); //Hook for navigation
@@ -156,10 +155,7 @@ const Dashboard: React.FC = () => {
                               }}
                             >
                               <span className="d-flex align-items-center">
-                                {statusRender(review.status, {
-                                  width: 18,
-                                  height: 18,
-                                })}
+                                {review.status}
                                 <div className="ms-1">
                                   {review.title || review.url}
                                 </div>
