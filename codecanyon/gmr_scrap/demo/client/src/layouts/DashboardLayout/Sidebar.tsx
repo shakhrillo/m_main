@@ -13,17 +13,12 @@ import {
   IconUser,
   IconWorldCheck,
 } from "@tabler/icons-react";
-import { createElement, FC, useEffect, useState } from "react";
+import { createElement, FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 
 const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-
-  // useEffect(() => {
-  //   const dashboardSidebar = document.querySelector(".dashboard-layout");
-  //   dashboardSidebar?.classList.toggle("dashboard-minimize", collapsed);
-  // }, [collapsed]);
 
   return (
     <nav className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>

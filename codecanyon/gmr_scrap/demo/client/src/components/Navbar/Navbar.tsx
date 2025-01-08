@@ -1,36 +1,32 @@
-import { FC, use, useEffect, useState } from "react";
 import { IconBell, IconCoins } from "@tabler/icons-react";
+import { FC, useEffect, useState } from "react";
 import { useFirebase } from "../../contexts/FirebaseProvider";
-import { doc, onSnapshot } from "firebase/firestore";
-import logo from "../../assets/logo.svg";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
+import { userCoins } from "../../services/coinService";
 
 const AppNavbar: FC = () => {
   const { user, firestore } = useFirebase();
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState("0");
 
   useEffect(() => {
-    if (user) {
-      const docRef = doc(firestore, "users", user.uid);
-      const unsubscribe = onSnapshot(docRef, (doc) => {
-        if (doc.exists()) {
-          const data = doc.data();
-          console.log("user data", data);
-          setBalance(data.coinBalance);
-        }
-      });
-
-      return () => {
-        unsubscribe();
-      };
+    if (!user) {
+      return;
     }
-  }, []);
+
+    const unsubscribe = userCoins(user?.uid).subscribe((balance) => {
+      setBalance(balance);
+    });
+
+    return () => {
+      unsubscribe.unsubscribe();
+    };
+  }, [user]);
 
   return (
     <Navbar expand="lg" bg="dark" variant="dark">
@@ -78,32 +74,6 @@ const AppNavbar: FC = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    // <nav className="navbar navbar-expand-lg">
-    //   <div className="container-fluid">
-    //     <img src={logo} alt="GMRS" className="navbar-logo" height={40} />
-    //     <ul className="ms-auto navbar-nav">
-    //       <li className="nav-item">
-    //         <a className="nav-link" aria-current="page" href="#">
-    //           <IconBell size={22} />
-    //           <span className="badge bg-info rounded-pill mt-n2 ms-n2 position-absolute">
-    //             3
-    //           </span>
-    //         </a>
-    //       </li>
-    //       <li className="nav-item">
-    //         <a className="nav-link" href="#">
-    //           <IconCoins size={22} className="text-warning" />
-    //           <span className="text-warning fw-bold ms-2">{balance}</span>
-    //         </a>
-    //       </li>
-    //       <li className="nav-item">
-    //         <a className="nav-link" href="#">
-    //           John Doe
-    //         </a>
-    //       </li>
-    //     </ul>
-    //   </div>
-    // </nav>
   );
 };
 
