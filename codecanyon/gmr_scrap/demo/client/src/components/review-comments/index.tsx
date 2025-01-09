@@ -18,14 +18,14 @@ function ReviewComments() {
   const [activeTableFilter, setActiveTableFilter] = useState("comments"); // State to track active filter (comments, images, videos)
 
   useEffect(() => {
-    const ubscription = scrapData(place, uid).subscribe((data) => {
+    const subscription = scrapData(place, uid).subscribe((data) => {
       console.log("data", data);
       setReviews(data);
       setLoading(false);
     });
 
     return () => {
-      ubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

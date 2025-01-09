@@ -1,44 +1,29 @@
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useFirebase } from "../../contexts/FirebaseProvider";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { scrapImages } from "../../services/scrapService";
+import { User } from "firebase/auth";
 
 function ReviewImages() {
-  const { place } = useParams();
-  const { firestore, user } = useFirebase();
+  const { place } = useParams() as { place: string };
+  const { uid } = useOutletContext<User>();
   const [reviewImgs, setReviewImgs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!firestore || !place || !user) return;
-
-    const reviewsImgRef = collection(
-      firestore,
-      "users",
-      user.uid,
-      "reviews",
-      place,
-      "images",
-    );
-
-    const q = query(reviewsImgRef);
-    // const q = query(reviewsImgRef, orderBy("time", "asc"))
-
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const reviewsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setReviewImgs(reviewsData);
+    const subscription = scrapImages(place, uid).subscribe((data) => {
+      console.log("images", data);
+      setReviewImgs(data);
       setLoading(false);
-      setError(null);
     });
 
-    return unsubscribe;
-  }, [firestore, user, place]);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [place]);
 
   return loading ? (
     <div>Loading...</div>
