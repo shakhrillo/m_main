@@ -209,6 +209,38 @@ export const scrapImages = (placeId: string, uid: string) => {
   });
 };
 
+export const scrapVideos = (placeId: string, uid: string) => {
+  const collectionRef = collection(
+    firestore,
+    `users/${uid}/reviews/${placeId}/videos`,
+  );
+  const videos$ = new BehaviorSubject([] as any);
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const videosData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      videos$.next(videosData);
+    },
+    (error) => {
+      console.error("Error fetching videos data:", error);
+      videos$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = videos$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
 export const scrapStatistics = (uid: string) => {
   const docRef = doc(firestore, `users/${uid}/settings/statistics`);
   const stats$ = new BehaviorSubject({});

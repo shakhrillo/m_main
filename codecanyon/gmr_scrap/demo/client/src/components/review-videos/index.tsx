@@ -1,44 +1,28 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useFirebase } from "../../contexts/FirebaseProvider";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { useOutletContext, useParams } from "react-router-dom";
+import { scrapImages } from "../../services/scrapService";
 
 function ReviewVideos() {
-  const { place } = useParams();
-  const { firestore, user } = useFirebase();
-  const [reviewImgs, setReviewImgs] = useState<any[]>([]);
+  const { place } = useParams() as { place: string };
+  const { uid } = useOutletContext<User>();
+
+  const [videos, setVideos] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!firestore || !place || !user) return;
-
-    const reviewsImgRef = collection(
-      firestore,
-      "users",
-      user.uid,
-      "reviews",
-      place,
-      "videos",
-    );
-
-    const q = query(reviewsImgRef);
-    // const q = query(reviewsImgRef, orderBy("time", "asc"))
-
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const reviewsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setReviewImgs(reviewsData);
+    const subscription = scrapImages(place, uid).subscribe((data) => {
+      console.log("videos", data);
+      setVideos(data);
       setLoading(false);
-      setError(null);
     });
 
-    return unsubscribe;
-  }, [firestore, user, place]);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [place]);
 
   return loading ? (
     <div>Loading...</div>
@@ -64,7 +48,7 @@ function ReviewVideos() {
           },
         }}
       >
-        {reviewImgs.map((img, index) => (
+        {videos.map((img, index) => (
           <Item original={img.thumb} key={index} alt={img.videoUrl}>
             {({ ref, open }) => (
               <div className="col">
