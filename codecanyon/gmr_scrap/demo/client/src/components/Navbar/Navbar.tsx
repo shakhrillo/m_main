@@ -23,8 +23,8 @@ const AppNavbar: FC = () => {
 
   return (
     <Navbar expand="lg" bg="dark" variant="dark">
-      <Container>
-        {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */}
+      <Container fluid>
+        <Navbar.Brand href="#home">GMRScrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />
         <Navbar.Collapse id="user-navbar">
           <Nav className="ms-auto">
