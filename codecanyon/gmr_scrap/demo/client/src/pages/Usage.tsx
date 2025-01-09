@@ -1,17 +1,19 @@
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import L from "leaflet";
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { IReview, validatedUrls } from "../services/scrapService";
 
+const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
+
 // Fix default marker icons in Leaflet
-L.Marker.prototype.options.icon = L.icon({
-  iconUrl: markerIconPng,
-  shadowUrl: markerShadowPng,
+L.Marker.prototype.options.icon = L.divIcon({
+  html: iconHtml,
+  iconSize: [24, 24],
 });
 
 // Component to dynamically fit the map bounds to marker locations
@@ -29,14 +31,30 @@ const FitBounds = ({ locations }: { locations: [number, number][] }) => {
 const Dashboard: React.FC = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
-
   const [reviews, setReviews] = useState([] as IReview[]);
-  const position: [number, number] = [51.505, -0.09]; // Default position
+  const [markerLocations, setMarkerLocations] = useState(
+    [] as [number, number][],
+  );
 
   useEffect(() => {
     const subscription = validatedUrls(uid, "comments").subscribe((data) => {
-      console.log("data", data);
       setReviews(data);
+
+      const locations = data
+        .filter(
+          (review) =>
+            review.location &&
+            review.location.latitude &&
+            review.location.longitude,
+        )
+        .map((review) => {
+          return [review.location?.latitude, review.location?.longitude] as [
+            number,
+            number,
+          ];
+        });
+
+      setMarkerLocations(locations);
     });
 
     return () => {
@@ -44,41 +62,14 @@ const Dashboard: React.FC = () => {
     };
   }, []);
 
-  // Extract marker locations
-  const markerLocations = reviews
-    .filter(
-      (review) =>
-        review.location &&
-        review.location.latitude &&
-        review.location.longitude,
-    )
-    .map((review) => {
-      if (review.location) {
-        return [review.location.latitude, review.location.longitude] as [
-          number,
-          number,
-        ];
-      }
-      return [0, 0] as [number, number]; // Default value if location is undefined
-    });
-
   return (
     <div className="container-fluid">
       <div className="card">
         <div className="card-body">
           <div className="row">
             <div className="col">
-              <h1>Earnings</h1>
-              <p>Coming soon...</p>
-            </div>
-            <div className="col">
-              <h1>New Users</h1>
-              <p>Coming soon...</p>
-            </div>
-            <div className="col">
               <div style={{ height: "100vh" }}>
                 <MapContainer
-                  center={position}
                   zoom={3}
                   style={{ height: "100%", width: "100%" }}
                 >

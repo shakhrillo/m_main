@@ -19,6 +19,15 @@ $enable-negative-margins: true;
   overflow: hidden;
 }
 
+.leaflet-div-icon {
+  border: none;
+  border-radius: 50%;
+  svg {
+    color: var(--bs-primary);
+    stroke-width: 1;
+  }
+}
+
 body {
   background-color: #f5f5f5;
 }
