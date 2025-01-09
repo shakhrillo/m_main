@@ -1,34 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { User } from "firebase/auth";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
+import "leaflet/dist/leaflet.css";
+import React, { useEffect, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { IReview, validatedUrls } from "../services/scrapService";
 
 // Fix default marker icons in Leaflet
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: markerIconPng,
   shadowUrl: markerShadowPng,
 });
-
-// Define the type for a review
-type Review = {
-  id: string;
-  name: string;
-  comment: string;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-};
 
 // Component to dynamically fit the map bounds to marker locations
 const FitBounds = ({ locations }: { locations: [number, number][] }) => {
@@ -43,50 +27,40 @@ const FitBounds = ({ locations }: { locations: [number, number][] }) => {
 };
 
 const Dashboard: React.FC = () => {
-  const { firestore, user } = useFirebase();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const { uid } = useOutletContext<User>();
+  const navigate = useNavigate();
+
+  const [reviews, setReviews] = useState([] as IReview[]);
   const position: [number, number] = [51.505, -0.09]; // Default position
 
   useEffect(() => {
-    if (!firestore || !user) return;
-
-    const collectionReviews = collection(
-      firestore,
-      `users/${user.uid}/reviews`,
-    );
-    const reviewsQuery = query(
-      collectionReviews,
-      orderBy("createdAt", "desc"),
-      where("type", "==", "comments"),
-    );
-
-    const unsubscribe = onSnapshot(reviewsQuery, (snapshot) => {
-      setReviews(
-        snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name || "Unnamed",
-            comment: data.comment || "No comment",
-            location: data.location || { latitude: 0, longitude: 0 },
-          } as Review;
-        }),
-      );
+    const subscription = validatedUrls(uid, "comments").subscribe((data) => {
+      console.log("data", data);
+      setReviews(data);
     });
 
-    return unsubscribe;
-  }, [firestore, user]);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   // Extract marker locations
   const markerLocations = reviews
-    .filter((review) => review.location.latitude && review.location.longitude)
-    .map(
+    .filter(
       (review) =>
-        [review.location.latitude, review.location.longitude] as [
+        review.location &&
+        review.location.latitude &&
+        review.location.longitude,
+    )
+    .map((review) => {
+      if (review.location) {
+        return [review.location.latitude, review.location.longitude] as [
           number,
           number,
-        ],
-    );
+        ];
+      }
+      return [0, 0] as [number, number]; // Default value if location is undefined
+    });
 
   return (
     <div className="container-fluid">
@@ -114,7 +88,9 @@ const Dashboard: React.FC = () => {
                   />
                   <FitBounds locations={markerLocations} />
                   {reviews.map((review) =>
-                    review.location.latitude && review.location.longitude ? (
+                    review.location &&
+                    review.location.latitude &&
+                    review.location.longitude ? (
                       <Marker
                         key={review.id}
                         position={[
@@ -123,9 +99,9 @@ const Dashboard: React.FC = () => {
                         ]}
                       >
                         <Popup>
-                          <strong>{review.name}</strong>
+                          <strong>{review.title}</strong>
                           <br />
-                          {review.comment}
+                          {review.reviews} reviews
                         </Popup>
                       </Marker>
                     ) : null,

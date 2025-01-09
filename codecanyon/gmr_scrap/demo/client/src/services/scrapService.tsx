@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  GeoPoint,
   onSnapshot,
   orderBy,
   query,
@@ -17,7 +18,6 @@ export interface IReview {
   address: string;
   createdAt: Timestamp;
   extendedUrl: string;
-  location: string;
   rating: number;
   reviewId: string;
   reviews: number;
@@ -34,6 +34,8 @@ export interface IReview {
   extractVideoUrls?: boolean;
   extractOwnerResponse?: boolean;
   status?: string;
+
+  location?: GeoPoint;
 }
 
 export const validateUrl = async (url: string, uid: string) => {
@@ -48,21 +50,7 @@ export const validateUrl = async (url: string, uid: string) => {
 
 export const validateUrlData = (documentId: string, uid: string) => {
   const docRef = doc(firestore, `users/${uid}/reviews/${documentId}`);
-  const review$ = new BehaviorSubject<IReview>({
-    address: "",
-    createdAt: Timestamp.now(),
-    extendedUrl: "",
-    location: "",
-    rating: 0,
-    reviewId: "",
-    reviews: 0,
-    screenshot: "",
-    title: "",
-    type: "",
-    updatedAt: Timestamp.now(),
-    url: "",
-    userId: "",
-  });
+  const review$ = new BehaviorSubject<IReview>({} as IReview);
 
   const unsubscribe = onSnapshot(
     docRef,
@@ -71,21 +59,7 @@ export const validateUrlData = (documentId: string, uid: string) => {
         const data = doc.data() || {};
         review$.next(data as IReview);
       } else {
-        review$.next({
-          address: "",
-          createdAt: Timestamp.now(),
-          extendedUrl: "",
-          location: "",
-          rating: 0,
-          reviewId: "",
-          reviews: 0,
-          screenshot: "",
-          title: "",
-          type: "",
-          updatedAt: Timestamp.now(),
-          url: "",
-          userId: "",
-        });
+        review$.next({} as IReview);
       }
     },
     (error) => {
