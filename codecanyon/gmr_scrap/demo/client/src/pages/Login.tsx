@@ -7,6 +7,7 @@ import {
   IconBrandGoogle,
   IconBrandMeta,
 } from "@tabler/icons-react";
+import logo from "../assets/logo.svg";
 
 const Login: React.FC = () => {
   const user = useOutletContext<User>();
@@ -45,7 +46,8 @@ const Login: React.FC = () => {
       <div className="row">
         <div className="col-md-6">
           <div className="auth-content">
-            <h3>Google Map Reviews Scraping Tool</h3>
+            <img src={logo} alt="_Logo" width="200" className="mb-5" />
+            <h3>Welcome!</h3>
             <p>Sign in to your account</p>
             <form
               onSubmit={handleLogin}
@@ -114,6 +116,9 @@ const Login: React.FC = () => {
                   Meta
                 </button>
               </div>
+            </div>
+            <div className="text-center mt-3">
+              Don't have an account? <Link to="/register">Register</Link>
             </div>
           </div>
         </div>
