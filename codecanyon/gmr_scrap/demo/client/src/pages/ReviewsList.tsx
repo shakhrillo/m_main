@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = scrapsData(uid).subscribe((data) => {
+    const reviewSubscription = scrapsData(uid, "comments").subscribe((data) => {
       setReviews(data);
       setLoading(false);
     });

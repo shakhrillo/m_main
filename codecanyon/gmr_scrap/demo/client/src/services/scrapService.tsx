@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
   Timestamp,
+  where,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -108,12 +109,16 @@ export const startScrap = async (uid: string, data: IReview) => {
   return documentRef.id;
 };
 
-export const scrapsData = (uid: string) => {
+export const scrapsData = (uid: string, type = "info") => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
   const scraps$ = new BehaviorSubject([] as IReview[]);
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, orderBy("createdAt", "desc")),
+    query(
+      collectionRef,
+      orderBy("createdAt", "desc"),
+      where("type", "==", type),
+    ),
     (snapshot) => {
       const scrapsData = snapshot.docs.map((doc) => ({
         ...doc.data(),
