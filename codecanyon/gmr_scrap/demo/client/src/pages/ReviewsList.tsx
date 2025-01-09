@@ -3,7 +3,7 @@ import { User } from "firebase/auth";
 import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import Loader from "../components/loader"; // Loader component to show while loading data
-import { scrapsData, scrapStatistics } from "../services/scrapService";
+import { validatedUrls, scrapStatistics } from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 
@@ -37,10 +37,12 @@ const Dashboard: React.FC = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = scrapsData(uid, "comments").subscribe((data) => {
-      setReviews(data);
-      setLoading(false);
-    });
+    const reviewSubscription = validatedUrls(uid, "comments").subscribe(
+      (data) => {
+        setReviews(data);
+        setLoading(false);
+      },
+    );
 
     const statsSubscription = scrapStatistics(uid).subscribe((data) => {
       setInfo(data);

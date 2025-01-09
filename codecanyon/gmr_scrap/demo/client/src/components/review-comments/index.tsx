@@ -1,57 +1,33 @@
 import { useEffect, useState } from "react"; // React hook for lifecycle management
-import { useParams } from "react-router-dom"; // React Router hook to get URL parameters
+import { useOutletContext, useParams } from "react-router-dom"; // React Router hook to get URL parameters
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore"; // Firebase Firestore methods
 import { useFirebase } from "../../contexts/FirebaseProvider"; // Custom hook to access Firebase context
 import { reviewTextRender } from "../../utils/reviewTextRender"; // Utility for rendering review text
 import { Table } from "../table"; // Table component to display review data
 import ReviewImages from "../review-images"; // ReviewImages component
 import ReviewVideos from "../review-videos"; // ReviewVideos component
+import { User } from "firebase/auth";
+import { scrapData } from "../../services/scrapService";
 
 function ReviewComments() {
-  const { place } = useParams(); // Extract 'place' from URL parameters to identify which review to fetch
-  const { firestore, user } = useFirebase(); // Access firestore and user data from Firebase context
+  const { place } = useParams() as { place: string };
+  const { uid } = useOutletContext<User>();
   const [reviews, setReviews] = useState<any[]>([]); // State to hold the reviews data
   const [loading, setLoading] = useState<boolean>(true); // State to track loading status
   const [error, setError] = useState<string | null>(null); // State to handle error messages
   const [activeTableFilter, setActiveTableFilter] = useState("comments"); // State to track active filter (comments, images, videos)
 
-  // Fetch reviews from Firestore when the component mounts or when 'firestore', 'user', or 'place' changes
   useEffect(() => {
-    if (!firestore || !place || !user) return; // Exit if any required data (firestore, place, or user) is missing
+    const ubscription = scrapData(place, uid).subscribe((data) => {
+      console.log("data", data);
+      setReviews(data);
+      setLoading(false);
+    });
 
-    // Create a reference to the 'reviews' collection in Firestore for the specific place and user
-    const reviewsRef = collection(
-      firestore,
-      "users",
-      user.uid,
-      "reviews",
-      place,
-      "reviews",
-    );
-    const q = query(reviewsRef, orderBy("time", "asc")); // Create a query to order reviews by time in ascending order
-
-    // Set up a real-time listener for the reviews collection
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        // Map the snapshot data to an array of review objects
-        const reviewsData = snapshot.docs.map((doc) => ({
-          id: doc.id, // Include the document ID
-          ...doc.data(), // Include the document data (review data)
-        }));
-
-        setReviews(reviewsData); // Update state with the fetched reviews
-        setLoading(false); // Set loading state to false once data is loaded
-        setError(null); // Clear any existing error
-      },
-      (err) => {
-        setLoading(false); // Stop loading if there's an error
-        setError(err.message); // Set error message
-      },
-    );
-    // Cleanup the listener when the component is unmounted or dependencies change
-    return unsubscribe;
-  }, [firestore, user, place]); // Re-run the effect when 'firestore', 'user', or 'place' changes
+    return () => {
+      ubscription.unsubscribe();
+    };
+  }, []);
 
   // Define the table header structure for displaying review data
   const tableHeader = [

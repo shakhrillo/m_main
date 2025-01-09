@@ -47,6 +47,10 @@ const router = createBrowserRouter([
             path: "reviews",
             element: <ReviewsList />,
           },
+          {
+            path: "reviews/:place",
+            element: <SingleReview />,
+          },
           { path: "validates", element: <ValidatedUrls /> },
           { path: "scrap", element: <Scrap /> },
           { path: "user", element: <User /> },

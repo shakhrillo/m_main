@@ -12,6 +12,8 @@ import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export interface IReview {
+  id?: string;
+
   address: string;
   createdAt: Timestamp;
   extendedUrl: string;
@@ -102,14 +104,7 @@ export const validateUrlData = (documentId: string, uid: string) => {
   });
 };
 
-export const startScrap = async (uid: string, data: IReview) => {
-  const collectionRef = collection(firestore, `users/${uid}/reviews`);
-  const documentRef = await addDoc(collectionRef, data);
-
-  return documentRef.id;
-};
-
-export const scrapsData = (uid: string, type = "info") => {
+export const validatedUrls = (uid: string, type = "info") => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
   const scraps$ = new BehaviorSubject([] as IReview[]);
 
@@ -122,7 +117,7 @@ export const scrapsData = (uid: string, type = "info") => {
     (snapshot) => {
       const scrapsData = snapshot.docs.map((doc) => ({
         ...doc.data(),
-        reviewId: doc.id,
+        id: doc.id,
       })) as IReview[];
       scraps$.next(scrapsData);
     },
@@ -134,6 +129,45 @@ export const scrapsData = (uid: string, type = "info") => {
 
   return new Observable<IReview[]>((subscriber) => {
     const subscription = scraps$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const startScrap = async (uid: string, data: IReview) => {
+  const collectionRef = collection(firestore, `users/${uid}/reviews`);
+  const documentRef = await addDoc(collectionRef, data);
+
+  return documentRef.id;
+};
+
+export const scrapData = (placeId: string, uid: string) => {
+  const collectionRef = collection(
+    firestore,
+    `users/${uid}/reviews/${placeId}/reviews`,
+  );
+  const reviews$ = new BehaviorSubject([] as any);
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, orderBy("time", "asc")),
+    (snapshot) => {
+      const reviewsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      reviews$.next(reviewsData);
+    },
+    (error) => {
+      console.error("Error fetching reviews data:", error);
+      reviews$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = reviews$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
