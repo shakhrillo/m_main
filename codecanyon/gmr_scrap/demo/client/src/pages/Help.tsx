@@ -1,8 +1,6 @@
 import React from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
 
 const Help: React.FC = () => {
-  const { user } = useFirebase();
   return (
     <div>
       <div className="d-flex align-items-center gap-3">

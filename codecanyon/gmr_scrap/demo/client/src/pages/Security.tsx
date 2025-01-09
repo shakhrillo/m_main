@@ -1,8 +1,6 @@
 import React from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
 
 const Security: React.FC = () => {
-  const { user } = useFirebase();
   return (
     <div>
       <div className="card">
