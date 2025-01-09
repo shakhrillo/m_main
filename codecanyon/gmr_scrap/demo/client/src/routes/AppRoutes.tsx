@@ -35,13 +35,17 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: "", element: <Navigate to={"reviews"} replace /> },
+          // {
+          //   path: "reviews",
+          //   element: <Outlet />,
+          //   children: [
+          //     { path: "", element: <ReviewsList /> },
+          //     { path: ":place", element: <SingleReview /> },
+          //   ],
+          // },
           {
             path: "reviews",
-            element: <Outlet />,
-            children: [
-              { path: "", element: <ReviewsList /> },
-              { path: ":place", element: <SingleReview /> },
-            ],
+            element: <ReviewsList />,
           },
           { path: "validates", element: <ValidatedUrls /> },
           { path: "scrap", element: <Scrap /> },
