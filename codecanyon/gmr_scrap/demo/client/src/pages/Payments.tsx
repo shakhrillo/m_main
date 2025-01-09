@@ -4,12 +4,13 @@ import {
   IconCoins,
   IconInfoCircle,
 } from "@tabler/icons-react";
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
+import { useOutletContext } from "react-router-dom";
+import { buyCoins, buyCoinsData } from "../services/paymentService";
 
 function Payments() {
-  const { firestore, user } = useFirebase();
+  const { uid } = useOutletContext<User>();
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,18 +21,17 @@ function Payments() {
   useEffect(() => {
     if (!coinId) return;
 
-    const unsubscribe = onSnapshot(
-      doc(firestore, `users/${user?.uid}/buyCoins/${coinId}`),
-      (doc) => {
-        const data = doc.data();
-        const url = data?.url;
-        if (url) {
-          window.open(url, "_blank");
-        }
-      },
-    );
+    const unsubscribe = buyCoinsData(coinId, uid).subscribe((data) => {
+      console.log(data);
+      const url = data?.url;
+      if (url) {
+        window.location.href = url;
+      }
+    });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe.unsubscribe();
+    };
   }, [coinId]);
 
   useEffect(() => {
@@ -49,18 +49,12 @@ function Payments() {
   }, [amount]);
 
   async function handlePurchase() {
-    if (!user || !firestore) return;
-
     setLoading(true);
-
     try {
-      const collectionRef = collection(firestore, `users/${user.uid}/buyCoins`);
-      const docRef = await addDoc(collectionRef, {
-        amount: Number(amount) * 10,
-      });
-      setCoinId(docRef.id);
+      const id = await buyCoins(uid, Number(amount) * 100);
+      setCoinId(id);
     } catch (error) {
-      console.error("Failed to buy coins", error);
+      console.log(error);
     }
   }
 
