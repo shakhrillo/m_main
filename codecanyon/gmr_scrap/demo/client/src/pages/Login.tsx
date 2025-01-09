@@ -43,14 +43,14 @@ const Login: React.FC = () => {
   return (
     <div className="container-fluid auth">
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="auth-content">
             <h3>Google Map Reviews Scraping Tool</h3>
             <p>Sign in to your account</p>
             <form
               onSubmit={handleLogin}
               noValidate
-              className="needs-validation was-validated mb-3"
+              className="needs-validation was-validated"
             >
               <div className="mb-3">
                 <label className="form-label" htmlFor="email">
@@ -90,17 +90,11 @@ const Login: React.FC = () => {
                   Password must be at least 6 characters long.
                 </small>
               </div>
-              <button className="btn btn-primary" type="submit">
+              <button className="btn btn-primary w-100" type="submit">
                 Sign In
               </button>
             </form>
-            <p className="m-0">
-              Don't have an account? <br />
-              <Link to="/register">Create an account</Link>
-            </p>
-            <h3 className="mt-4">Other ways to sign in</h3>
-            <p>Sign in using your social media account.</p>
-
+            <div className="text-center my-3">Or login with</div>
             <div className="row g-3">
               <div className="col">
                 <button
@@ -108,7 +102,7 @@ const Login: React.FC = () => {
                   onClick={handleGoogleLogin}
                 >
                   <IconBrandGoogle className="me-2" size={20} />
-                  Sign in with Google
+                  Google
                 </button>
               </div>
               <div className="col">
@@ -117,13 +111,13 @@ const Login: React.FC = () => {
                   onClick={handleGoogleLogin}
                 >
                   <IconBrandMeta className="me-2" size={20} />
-                  Sign in with Meta
+                  Meta
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-6">
           <div className="auth-image"></div>
         </div>
       </div>
