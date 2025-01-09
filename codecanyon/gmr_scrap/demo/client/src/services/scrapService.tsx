@@ -3,6 +3,8 @@ import {
   collection,
   doc,
   onSnapshot,
+  orderBy,
+  query,
   Timestamp,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
@@ -104,4 +106,59 @@ export const startScrap = async (uid: string, data: IReview) => {
   const documentRef = await addDoc(collectionRef, data);
 
   return documentRef.id;
+};
+
+export const scrapsData = (uid: string) => {
+  const collectionRef = collection(firestore, `users/${uid}/reviews`);
+  const scraps$ = new BehaviorSubject([] as IReview[]);
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, orderBy("createdAt", "desc")),
+    (snapshot) => {
+      const scrapsData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        reviewId: doc.id,
+      })) as IReview[];
+      scraps$.next(scrapsData);
+    },
+    (error) => {
+      console.error("Error fetching scraps data:", error);
+      scraps$.error(error);
+    },
+  );
+
+  return new Observable<IReview[]>((subscriber) => {
+    const subscription = scraps$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const scrapStatistics = (uid: string) => {
+  const docRef = doc(firestore, `users/${uid}/settings/statistics`);
+  const stats$ = new BehaviorSubject({});
+
+  const unsubscribe = onSnapshot(
+    docRef,
+    (doc) => {
+      const data = doc.data() || {};
+      stats$.next(data);
+    },
+    (error) => {
+      console.error("Error fetching stats data:", error);
+      stats$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = stats$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
 };

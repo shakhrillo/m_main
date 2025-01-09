@@ -1,22 +1,15 @@
 import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore"; // Firestore imports for document snapshot
+import { User } from "firebase/auth";
 import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
-import { useNavigate } from "react-router-dom"; // Hook for navigation
+import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import Loader from "../components/loader"; // Loader component to show while loading data
-import { useFirebase } from "../contexts/FirebaseProvider"; // Context for Firebase integration
+import { scrapsData, scrapStatistics } from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate(); //Hook for navigation
-  const { firestore, user } = useFirebase(); // Firebase context to get firestore and user data
+  const { uid } = useOutletContext<User>();
+  const navigate = useNavigate();
 
   // States for managing dashboard data
   const [info, setInfo] = useState<any>({});
@@ -44,41 +37,20 @@ const Dashboard: React.FC = () => {
   ];
 
   useEffect(() => {
-    setLoading(() => true);
-    if (!firestore || !user) return;
-
-    const collectionReviews = collection(
-      firestore,
-      `users/${user.uid}/reviews`,
-    );
-
-    const reviewsQuery = query(
-      collectionReviews,
-      orderBy("createdAt", "desc"),
-      where("type", "==", "comments"),
-    );
-
-    const unsubscribe = onSnapshot(reviewsQuery, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log("data", data);
+    const reviewSubscription = scrapsData(uid).subscribe((data) => {
       setReviews(data);
-      setLoading(() => false);
+      setLoading(false);
     });
 
-    return unsubscribe;
-  }, [firestore, user]);
-
-  useEffect(() => {
-    if (!firestore || !user) return;
-    const docRef = doc(firestore, `users/${user.uid}/settings/statistics`);
-
-    const unsubscribe = onSnapshot(docRef, (doc) => {
-      setInfo(doc.data() || {});
-      setLoading(() => false);
+    const statsSubscription = scrapStatistics(uid).subscribe((data) => {
+      setInfo(data);
     });
 
-    return unsubscribe;
-  }, [firestore, user]);
+    return () => {
+      reviewSubscription.unsubscribe();
+      statsSubscription.unsubscribe();
+    };
+  }, [uid]);
 
   return (
     <div className="container-fluid">
