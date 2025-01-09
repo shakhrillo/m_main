@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import { resetPassword } from "../services/firebaseService";
 
 const ResetPassword: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await resetPassword(email);
-      setSuccess(true);
-    } catch (error) {
-      setError("Failed to reset password.");
-    }
-  };
+  const handleResetPassword = async (e: React.FormEvent) => {};
 
   return (
     <div className="login container-fluid">

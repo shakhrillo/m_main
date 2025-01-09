@@ -1,10 +1,10 @@
+import { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useFirebase } from "../contexts/FirebaseProvider";
-import { googleLogin, login } from "../services/firebaseService";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { googleLogin, login } from "../services/authService";
 
 const Login: React.FC = () => {
-  const { user } = useFirebase();
+  const user = useOutletContext<User>();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -12,14 +12,9 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    redirectToDashboard();
-  }, [user]);
-
-  function redirectToDashboard() {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }
+    if (!user) return;
+    navigate("/scrap");
+  }, []);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,6 +29,7 @@ const Login: React.FC = () => {
   async function handleGoogleLogin() {
     try {
       await googleLogin();
+      window.location.reload();
     } catch (error) {
       setError("Failed to log in with Google.");
     }

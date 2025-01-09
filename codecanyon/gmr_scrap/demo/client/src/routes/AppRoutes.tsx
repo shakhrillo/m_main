@@ -35,14 +35,6 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: "", element: <Navigate to={"reviews"} replace /> },
-          // {
-          //   path: "reviews",
-          //   element: <Outlet />,
-          //   children: [
-          //     { path: "", element: <ReviewsList /> },
-          //     { path: ":place", element: <SingleReview /> },
-          //   ],
-          // },
           {
             path: "reviews",
             element: <ReviewsList />,
@@ -64,12 +56,12 @@ const router = createBrowserRouter([
           { path: "receipts", element: <Receipts /> },
         ],
       },
+      { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
+      { path: "logout", element: <Logout /> },
+      { path: "reset-password", element: <ResetPassword /> },
     ],
   },
-  { path: "register", element: <Register /> },
-  { path: "login", element: <Login /> },
-  { path: "logout", element: <Logout /> },
-  { path: "reset-password", element: <ResetPassword /> },
   {
     path: "*",
     element: <Navigate to="/" replace />,

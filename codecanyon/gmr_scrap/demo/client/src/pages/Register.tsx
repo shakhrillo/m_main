@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebase } from "../contexts/FirebaseProvider";
-import { googleLogin, register } from "../services/firebaseService";
+import { googleLogin, register } from "../services/authService";
 
 const Register: React.FC = () => {
   const { user } = useFirebase();
@@ -39,7 +39,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      await register(email, password, firstName, lastName);
+      await register(email, password);
       navigate("/auth/login");
     } catch (error: any) {
       if (typeof error === "string") {
