@@ -22,7 +22,6 @@ function Payments() {
     if (!coinId) return;
 
     const unsubscribe = buyCoinsData(coinId, uid).subscribe((data) => {
-      console.log(data);
       const url = data?.url;
       if (url) {
         window.location.href = url;

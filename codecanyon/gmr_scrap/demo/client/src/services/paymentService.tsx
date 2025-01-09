@@ -1,4 +1,11 @@
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -32,6 +39,30 @@ export const buyCoinsData = (documentId: string, uid: string) => {
 
   return new Observable<IBuyCoins>((subscriber) => {
     const subscription = buyCoins$.subscribe(subscriber);
+    return () => {
+      unsubscribe();
+      subscription.unsubscribe();
+    };
+  });
+};
+
+export const receiptData = (uid: string) => {
+  const collectionRef = collection(firestore, `users/${uid}/payments`);
+  const receiptData$ = new BehaviorSubject([] as any[]);
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, orderBy("createdAt", "desc")),
+    (snapshot) => {
+      const historyData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      receiptData$.next(historyData);
+    },
+  );
+
+  return new Observable<any[]>((subscriber) => {
+    const subscription = receiptData$.subscribe(subscriber);
     return () => {
       unsubscribe();
       subscription.unsubscribe();
