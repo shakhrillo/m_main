@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { useOutletContext, useParams } from "react-router-dom";
-import { scrapImages } from "../../services/scrapService";
+import { scrapVideos } from "../../services/scrapService";
 
 function ReviewVideos() {
   const { place } = useParams() as { place: string };
@@ -13,7 +13,7 @@ function ReviewVideos() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const subscription = scrapImages(place, uid).subscribe((data) => {
+    const subscription = scrapVideos(place, uid).subscribe((data) => {
       console.log("videos", data);
       setVideos(data);
       setLoading(false);
