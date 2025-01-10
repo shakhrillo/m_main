@@ -2,7 +2,6 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react"; // React hook for lifecycle management
 import { useOutletContext, useParams } from "react-router-dom"; // React Router hook to get URL parameters
 import { scrapData } from "../../services/scrapService";
-import { reviewTextRender } from "../../utils/reviewTextRender"; // Utility for rendering review text
 import ReviewImages from "../review-images"; // ReviewImages component
 import ReviewVideos from "../review-videos"; // ReviewVideos component
 
@@ -41,7 +40,7 @@ function ReviewComments() {
     {
       text: "Review", // Column title for the 'Review' column
       field: "review", // Field name for the review text
-      render: (row: any) => <span>{reviewTextRender(row.review)}</span>, // Use utility function to render review text
+      render: (row: any) => <span>{row.review}</span>, // Use utility function to render review text
     },
     {
       text: "QA", // Column title for the 'QA' column
@@ -60,7 +59,7 @@ function ReviewComments() {
     {
       text: "Response", // Column title for the 'Response' column
       field: "response", // Field name for the response text
-      render: (row: any) => <span>{reviewTextRender(row.response)}</span>, // Use utility function to render response text
+      render: (row: any) => <span>{row.response}</span>, // Use utility function to render response text
     },
   ];
 
