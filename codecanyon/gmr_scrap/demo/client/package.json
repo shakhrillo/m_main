@@ -29,6 +29,7 @@
     "react-jwt": "^1.2.2",
     "react-leaflet": "^5.0.0",
     "react-photoswipe-gallery": "^3.0.1",
+    "react-player": "^2.16.0",
     "react-router-dom": "^7.1.1",
     "rxjs": "^7.8.1"
   },
