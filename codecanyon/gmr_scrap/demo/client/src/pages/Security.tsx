@@ -1,6 +1,4 @@
-import React from "react";
-
-const Security: React.FC = () => {
+export const Security = () => {
   return (
     <div>
       <div className="card">
@@ -20,5 +18,3 @@ const Security: React.FC = () => {
     </div>
   );
 };
-
-export default Security;

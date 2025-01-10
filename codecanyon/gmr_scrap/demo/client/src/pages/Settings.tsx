@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const Settings: React.FC = () => {
+export const Settings = () => {
   const [currency, setCurrency] = useState("usd");
   const [costs, setCosts] = useState("0.01");
   const [language, setLanguage] = useState("en");
@@ -103,5 +103,3 @@ const Settings: React.FC = () => {
     </div>
   );
 };
-
-export default Settings;

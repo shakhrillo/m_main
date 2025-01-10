@@ -1,4 +1,4 @@
-const Info: React.FC = () => {
+export const Info: React.FC = () => {
   return (
     <div className="container-fluid">
       <div className="row">
@@ -22,5 +22,3 @@ const Info: React.FC = () => {
     </div>
   );
 };
-
-export default Info;

@@ -4,23 +4,25 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";
-import Help from "../pages/Help";
-import Info from "../pages/Info";
-import Login from "../pages/Login";
-import Logout from "../pages/Logout";
-import Payments from "../pages/Payments";
-import Receipts from "../pages/Receipts";
-import Register from "../pages/Register";
-import ResetPassword from "../pages/ResetPassword";
-import ReviewsList from "../pages/ReviewsList";
-import Scrap from "../pages/Scrap";
-import Security from "../pages/Security";
-import Settings from "../pages/Settings";
-import SingleReview from "../pages/SingleReview";
-import Usage from "../pages/Usage";
-import User from "../pages/User";
-import Users from "../pages/Users";
-import ValidatedUrls from "../pages/ValidatedUrls";
+import {
+  Dashboard,
+  Help,
+  Info,
+  Login,
+  Logout,
+  Payments,
+  Receipts,
+  Register,
+  ResetPassword,
+  ReviewsList,
+  Scrap,
+  Security,
+  Settings,
+  SingleReview,
+  User,
+  Users,
+  ValidatedURLs,
+} from "../pages";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -41,7 +43,7 @@ const router = createBrowserRouter([
             path: "reviews/:place",
             element: <SingleReview />,
           },
-          { path: "validates", element: <ValidatedUrls /> },
+          { path: "validates", element: <ValidatedURLs /> },
           { path: "scrap", element: <Scrap /> },
           { path: "user", element: <User /> },
           { path: "users", element: <Users /> },
@@ -49,7 +51,7 @@ const router = createBrowserRouter([
           { path: "settings", element: <Settings /> },
           { path: "help", element: <Help /> },
           { path: "info", element: <Info /> },
-          { path: "dashboard", element: <Usage /> },
+          { path: "dashboard", element: <Dashboard /> },
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
         ],

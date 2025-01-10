@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { allUsers } from "../services/settingService";
 
-const Users: React.FC = () => {
+export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -63,5 +63,3 @@ const Users: React.FC = () => {
     </>
   );
 };
-
-export default Users;

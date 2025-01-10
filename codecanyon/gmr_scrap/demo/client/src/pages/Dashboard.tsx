@@ -28,7 +28,7 @@ const FitBounds = ({ locations }: { locations: [number, number][] }) => {
   return null;
 };
 
-const Dashboard: React.FC = () => {
+export const Dashboard: React.FC = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
   const [reviews, setReviews] = useState([] as IReview[]);
@@ -213,5 +213,3 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
-export default Dashboard;

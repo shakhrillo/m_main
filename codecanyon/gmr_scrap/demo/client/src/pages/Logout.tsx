@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../services/authService";
 
-const Logout: React.FC = () => {
+export const Logout: React.FC = () => {
   const navigate = useNavigate();
   useEffect(() => {
     logout().then(() => {
@@ -16,5 +16,3 @@ const Logout: React.FC = () => {
     </div>
   );
 };
-
-export default Logout;

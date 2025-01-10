@@ -7,7 +7,7 @@ import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 import { Tabs, Tab } from "react-bootstrap";
 
-const Dashboard: React.FC = () => {
+export const ReviewsList = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -173,5 +173,3 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
-export default Dashboard;

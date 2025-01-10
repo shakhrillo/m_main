@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 
-function Payments() {
+export const Payments = () => {
   const { uid } = useOutletContext<User>();
 
   const [isFormValid, setIsFormValid] = useState(false);
@@ -203,6 +203,4 @@ function Payments() {
       </div>
     </div>
   );
-}
-
-export default Payments;
+};

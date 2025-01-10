@@ -1,6 +1,6 @@
 import React from "react";
 
-const Help: React.FC = () => {
+export const Help: React.FC = () => {
   return (
     <div>
       <div className="d-flex align-items-center gap-3">
@@ -23,5 +23,3 @@ const Help: React.FC = () => {
     </div>
   );
 };
-
-export default Help;

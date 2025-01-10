@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const User: React.FC = () => {
+export const User = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -78,5 +78,3 @@ const User: React.FC = () => {
     </div>
   );
 };
-
-export default User;

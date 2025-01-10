@@ -1,12 +1,12 @@
 import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
+import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
-import { validatedUrls, scrapStatistics } from "../services/scrapService";
+import { scrapStatistics, validatedUrls } from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 
-const ValidatedURLs: React.FC = () => {
+export const ValidatedURLs = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -170,5 +170,3 @@ const ValidatedURLs: React.FC = () => {
     </div>
   );
 };
-
-export default ValidatedURLs;

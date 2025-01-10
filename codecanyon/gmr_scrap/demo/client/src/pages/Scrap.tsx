@@ -69,7 +69,7 @@ const NOTIFICATION_OPTIONS = [
   },
 ];
 
-const Scrap = () => {
+export const Scrap = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -634,5 +634,3 @@ const Scrap = () => {
     </div>
   );
 };
-
-export default Scrap;

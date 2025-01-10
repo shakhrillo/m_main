@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { receiptData } from "../services/paymentService";
 
-function Receipts() {
+export const Receipts = () => {
   const { uid } = useOutletContext<User>();
   const [history, setHistory] = useState([] as any[]);
 
@@ -54,6 +54,4 @@ function Receipts() {
       </div>
     </div>
   );
-}
-
-export default Receipts;
+};

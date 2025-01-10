@@ -1,6 +1,8 @@
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Tab, Table, Tabs } from "react-bootstrap";
+import { Gallery, Item } from "react-photoswipe-gallery";
+import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
 import {
   scrapData,
@@ -8,10 +10,8 @@ import {
   scrapVideos,
   validateUrlData,
 } from "../services/scrapService";
-import { Gallery, Item } from "react-photoswipe-gallery";
-import ReactPlayer from "react-player";
 
-function SingleReview() {
+export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
   const { place } = useParams() as { place: string };
   const [info, setPlaceInfo] = useState<any>({});
@@ -177,6 +177,4 @@ function SingleReview() {
       </div>
     </div>
   );
-}
-
-export default SingleReview;
+};

@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import logo from "../assets/logo.svg";
 
-const Login: React.FC = () => {
+export const Login: React.FC = () => {
   const user = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -129,5 +129,3 @@ const Login: React.FC = () => {
     </div>
   );
 };
-
-export default Login;

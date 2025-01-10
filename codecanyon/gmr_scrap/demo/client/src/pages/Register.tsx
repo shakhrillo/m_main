@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { googleLogin, register } from "../services/authService";
 
-const Register: React.FC = () => {
+export const Register = () => {
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
@@ -145,5 +145,3 @@ const Register: React.FC = () => {
     </div>
   );
 };
-
-export default Register;

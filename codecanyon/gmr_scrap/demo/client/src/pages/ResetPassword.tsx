@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ResetPassword: React.FC = () => {
+export const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -53,5 +53,3 @@ const ResetPassword: React.FC = () => {
     </div>
   );
 };
-
-export default ResetPassword;
