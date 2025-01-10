@@ -15,7 +15,7 @@ import {
 } from "@tabler/icons-react";
 import { createElement, FC, useState } from "react";
 import { NavLink } from "react-router-dom";
-import logo from "../../assets/logo.svg";
+import logo from "../assets/logo.svg";
 
 const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);

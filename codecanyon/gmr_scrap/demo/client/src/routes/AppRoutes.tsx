@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
-import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
+import DashboardLayout from "../layouts/DashboardLayout";
 import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
