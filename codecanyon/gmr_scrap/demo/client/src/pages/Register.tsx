@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebase } from "../contexts/FirebaseProvider";
 import { googleLogin, register } from "../services/authService";
 
 const Register: React.FC = () => {
-  const { user } = useFirebase();
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
@@ -14,16 +12,6 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    redirectToDashboard();
-  }, [user]);
-
-  function redirectToDashboard() {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();

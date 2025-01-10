@@ -1,25 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useFirebase } from "../contexts/FirebaseProvider";
+import React, { useState } from "react";
 
 const User: React.FC = () => {
-  const { user } = useFirebase();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    if (!user) return;
-
-    if (user.displayName) {
-      const [first, last] = user.displayName.split(" ");
-      setFirstName(first);
-      setLastName(last);
-    }
-
-    setEmail(user.email || "");
-  }, []);
 
   return (
     <div>

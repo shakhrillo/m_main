@@ -1,10 +1,8 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
-import { useFirebase } from "../../contexts/FirebaseProvider";
-import { Gallery, Item } from "react-photoswipe-gallery";
-import { scrapImages } from "../../services/scrapService";
 import { User } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { Gallery, Item } from "react-photoswipe-gallery";
+import { useOutletContext, useParams } from "react-router-dom";
+import { scrapImages } from "../../services/scrapService";
 
 function ReviewImages() {
   const { place } = useParams() as { place: string };
