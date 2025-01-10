@@ -3,7 +3,6 @@ import App from "./App";
 import "./index.scss";
 
 const containerId = "root";
-
 const container = document.getElementById(containerId);
 
 if (!container) {
