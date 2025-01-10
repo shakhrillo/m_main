@@ -101,17 +101,24 @@ async function processContainerWritten(event) {
     const currentBalance = user?.coinBalance || 0;
     let newBalance = currentBalance;
 
+    // Define the prices and total counts for each type
     const commentPrice = settingsPrices.prices.comment || 1;
-    newBalance = currentBalance - commentPrice * afterData.totalReviews;
+    const totalComments = afterData.totalReviews;
 
     const imagePrice = settingsPrices.prices.image || 2;
-    newBalance = newBalance - imagePrice * afterData.totalImages;
+    const totalImages = afterData.totalImages;
 
     const videoPrice = settingsPrices.prices.video || 3;
-    newBalance = newBalance - videoPrice * afterData.totalVideos;
+    const totalVideos = afterData.totalVideos;
 
     const responsePrice = settingsPrices.prices.response || 1;
-    newBalance = newBalance - responsePrice * afterData.totalOwnerReviews;
+    const totalOwnerReviews = afterData.totalOwnerReviews;
+
+    // Subtract the respective prices from the current balance
+    newBalance -= commentPrice * totalComments;
+    newBalance -= imagePrice * totalImages;
+    newBalance -= videoPrice * totalVideos;
+    newBalance -= responsePrice * totalOwnerReviews;
 
     if (newBalance < 0) {
       console.log("Insufficient balance.");
