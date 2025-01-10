@@ -9,6 +9,7 @@ async function userTopUp(event) {
   const db = admin.firestore();
   const earningsRef = db.collection("earnings");
 
+  const statisticsRef = db.doc("statistics/userTopUp");
   const userRef = db.doc(`users/${userId}`);
   const batch = db.batch();
 
@@ -32,6 +33,16 @@ async function userTopUp(event) {
     userId,
     paymentId,
   });
+
+  if (statisticsRef && statisticsRef.exists) {
+    batch.update(statisticsRef, {
+      totalTopUp: admin.firestore.FieldValue.increment(amount),
+    });
+  } else {
+    batch.set(statisticsRef, {
+      totalTopUp: amount,
+    });
+  }
 
   await batch.commit();
 }
