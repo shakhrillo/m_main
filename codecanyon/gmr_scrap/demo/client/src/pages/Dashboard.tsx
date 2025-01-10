@@ -171,9 +171,14 @@ export const Dashboard: React.FC = () => {
                   ],
                   datasets: [
                     {
-                      label: "Dataset 1",
+                      label: "Earnings",
                       data: [65, 59, 80, 81, 56, 55, 40],
                       backgroundColor: "rgba(255, 99, 132, 0.5)",
+                    },
+                    {
+                      label: "Users",
+                      data: [5, 9, 10, 11, 6, 5, 4],
+                      backgroundColor: "rgba(54, 162, 235, 0.5)",
                     },
                   ],
                 }}
