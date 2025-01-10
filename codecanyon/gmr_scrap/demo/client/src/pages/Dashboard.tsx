@@ -19,9 +19,14 @@ import {
   BarElement,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
-import { allUsers, totalEarnings } from "../services/settingService";
+import {
+  allContainers,
+  allUsers,
+  totalEarnings,
+} from "../services/settingService";
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
+import { formatTotalContainers } from "../utils/formatTotalContainers";
 
 ChartJS.register(
   CategoryScale,
@@ -63,8 +68,15 @@ export const Dashboard: React.FC = () => {
   );
   const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
+  const [containers, setContainers] = useState([] as any[]);
 
   useEffect(() => {
+    const containersSubscription = allContainers().subscribe((data) => {
+      console.log("containers", formatTotalContainers(data));
+      console.log("containers", data);
+      setContainers(formatTotalContainers(data));
+    });
+
     const earningsSubscription = totalEarnings().subscribe((data) => {
       console.log("earnings", formatTotalEarnings(data));
       setEarnings(formatTotalEarnings(data));
@@ -101,6 +113,7 @@ export const Dashboard: React.FC = () => {
       earningsSubscription.unsubscribe();
       usersSubscription.unsubscribe();
       commentsSubscription.unsubscribe();
+      containersSubscription.unsubscribe();
     };
   }, []);
 
@@ -110,47 +123,35 @@ export const Dashboard: React.FC = () => {
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
-              <h1>Graph</h1>
+              <h5 className="card-title">Activity</h5>
+              <p className="card-text">Total activity for the past 3 months</p>
               <Line
                 data={{
-                  labels: [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                  ],
+                  labels: containers.map((e) => e.date),
                   datasets: [
                     {
-                      label: "Comments",
-                      data: [65, 59, 80, 81, 56, 55, 40],
+                      label: "Reviews",
+                      data: containers.map((e) => e.totalReviews),
                       fill: false,
                       tension: 0,
                     },
                     {
                       label: "Images",
-                      data: [102, 92, 105, 101, 102, 92, 105],
+                      data: containers.map((e) => e.totalImages),
                       fill: false,
                       tension: 0,
                       borderColor: "rgb(75, 192, 192)",
                     },
                     {
                       label: "Videos",
-                      data: [9, 2, 3, 2, 1, 5, 6],
+                      data: containers.map((e) => e.totalVideos),
                       fill: false,
                       tension: 0,
                       borderColor: "rgb(54, 162, 235)",
                     },
                     {
                       label: "Response comments",
-                      data: [28, 48, 40, 19, 86, 27, 90],
+                      data: containers.map((e) => e.totalOwnerReviews),
                       fill: false,
                       borderColor: "rgb(255, 99, 132)",
                       tension: 0,

@@ -30,6 +30,36 @@ export const allUsers = (fromDate = startDate) => {
   });
 };
 
+export const allContainers = (fromDate = startDate) => {
+  const collectionRef = collection(firestore, "containers");
+  const containers$ = new BehaviorSubject([] as any);
+
+  const unsubscribe = onSnapshot(
+    query(
+      collectionRef,
+      where("createdAt", ">", fromDate),
+      where("type", "==", "comments"),
+      where("status", "==", "completed"),
+    ),
+    (snapshot) => {
+      const containersData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      containers$.next(containersData);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = containers$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
 export const totalEarnings = (fromDate = startDate) => {
   const collectionRef = collection(firestore, "earnings");
   const earnings$ = new BehaviorSubject([] as any);
