@@ -5,6 +5,7 @@ import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for na
 import { scrapStatistics, validatedUrls } from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
+import { Tabs, Tab } from "react-bootstrap";
 
 const Dashboard: React.FC = () => {
   const { uid } = useOutletContext<User>();
