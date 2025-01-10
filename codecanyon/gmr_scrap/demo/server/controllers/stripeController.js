@@ -113,23 +113,23 @@ exports.webhookHandler = async (req, res) => {
         });
 
         // Update user's coin balance
-        const userDoc = await userRef.get();
-        const userDocData = userDoc.data() || {
-          coinBalance: 0,
-          totalSpent: 0,
-        };
-        const coinBalance =
-          userDocData.coinBalance + (paymentIntent.amount / 100) * 10;
-        const totalSpent = userDocData.totalSpent + paymentIntent.amount;
+        // const userDoc = await userRef.get();
+        // const userDocData = userDoc.data() || {
+        //   coinBalance: 0,
+        //   totalSpent: 0,
+        // };
+        // const coinBalance =
+        //   userDocData.coinBalance + (paymentIntent.amount / 100) * 10;
+        // const totalSpent = userDocData.totalSpent + paymentIntent.amount;
 
-        batch.set(
-          userRef,
-          {
-            coinBalance,
-            totalSpent,
-          },
-          { merge: true }
-        );
+        // batch.set(
+        //   userRef,
+        //   {
+        //     coinBalance,
+        //     totalSpent,
+        //   },
+        //   { merge: true }
+        // );
 
         await batch.commit();
         res.status(200).send("Webhook received and processed");

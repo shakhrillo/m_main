@@ -19,6 +19,9 @@ import {
   BarElement,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
+import { allUsers, totalEarnings } from "../services/settingService";
+import { formatTotalEarnings } from "../utils/formatTotalEarnings";
+import { formatTotalUsers } from "../utils/formatTotalUsers";
 
 ChartJS.register(
   CategoryScale,
@@ -58,37 +61,53 @@ export const Dashboard: React.FC = () => {
   const [markerLocations, setMarkerLocations] = useState(
     [] as [number, number][],
   );
+  const [earnings, setEarnings] = useState([] as any[]);
+  const [users, setUsers] = useState([] as any[]);
 
   useEffect(() => {
-    const subscription = validatedUrls(uid, "comments").subscribe((data) => {
-      setReviews(data);
-
-      const locations = data
-        .filter(
-          (review) =>
-            review.location &&
-            review.location.latitude &&
-            review.location.longitude,
-        )
-        .map((review) => {
-          return [review.location?.latitude, review.location?.longitude] as [
-            number,
-            number,
-          ];
-        });
-
-      setMarkerLocations(locations);
+    const earningsSubscription = totalEarnings().subscribe((data) => {
+      console.log("earnings", formatTotalEarnings(data));
+      setEarnings(formatTotalEarnings(data));
     });
 
+    const usersSubscription = allUsers().subscribe((data) => {
+      console.log("users", formatTotalUsers(data));
+      setUsers(formatTotalUsers(data));
+    });
+
+    const commentsSubscription = validatedUrls(uid, "comments").subscribe(
+      (data) => {
+        setReviews(data);
+
+        const locations = data
+          .filter(
+            (review) =>
+              review.location &&
+              review.location.latitude &&
+              review.location.longitude,
+          )
+          .map((review) => {
+            return [review.location?.latitude, review.location?.longitude] as [
+              number,
+              number,
+            ];
+          });
+
+        setMarkerLocations(locations);
+      },
+    );
+
     return () => {
-      subscription.unsubscribe();
+      earningsSubscription.unsubscribe();
+      usersSubscription.unsubscribe();
+      commentsSubscription.unsubscribe();
     };
   }, []);
 
   return (
     <div className="container-fluid">
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="card">
             <div className="card-body">
               <h1>Graph</h1>
@@ -149,36 +168,39 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="card">
             <div className="card-body">
-              <h1>Graph</h1>
+              <h5 className="card-title">Earnings</h5>
+              <p className="card-text">Total earnings for the past 3 months</p>
               <Bar
                 data={{
-                  labels: [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                  ],
+                  labels: earnings.map((e) => e.date),
                   datasets: [
                     {
                       label: "Earnings",
-                      data: [65, 59, 80, 81, 56, 55, 40],
-                      backgroundColor: "rgba(255, 99, 132, 0.5)",
+                      data: earnings.map((e) => e.total),
+                      backgroundColor: "#0d6efd",
                     },
+                  ],
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Users</h5>
+              <p className="card-text">Total users for the past 3 months</p>
+              <Bar
+                data={{
+                  labels: earnings.map((e) => e.date),
+                  datasets: [
                     {
                       label: "Users",
-                      data: [5, 9, 10, 11, 6, 5, 4],
-                      backgroundColor: "rgba(54, 162, 235, 0.5)",
+                      data: users.map((e) => e.total),
+                      backgroundColor: "#dc3545",
                     },
                   ],
                 }}
