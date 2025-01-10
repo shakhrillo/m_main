@@ -7,6 +7,29 @@ import ReactDOMServer from "react-dom/server";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { IReview, validatedUrls } from "../services/scrapService";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+} from "chart.js";
+import { Bar, Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -65,19 +88,96 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="container-fluid">
       <div className="row g-3">
-        <div className="col-md-12">
+        <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h1>Reviews</h1>
-              <p>
-                This is a demo of a dashboard with a map and a list of reviews.
-              </p>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/add")}
-              >
-                Add Review
-              </button>
+              <h1>Graph</h1>
+              <Line
+                data={{
+                  labels: [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ],
+                  datasets: [
+                    {
+                      label: "Comments",
+                      data: [65, 59, 80, 81, 56, 55, 40],
+                      fill: false,
+                      tension: 0,
+                    },
+                    {
+                      label: "Images",
+                      data: [102, 92, 105, 101, 102, 92, 105],
+                      fill: false,
+                      tension: 0,
+                      borderColor: "rgb(75, 192, 192)",
+                    },
+                    {
+                      label: "Videos",
+                      data: [9, 2, 3, 2, 1, 5, 6],
+                      fill: false,
+                      tension: 0,
+                      borderColor: "rgb(54, 162, 235)",
+                    },
+                    {
+                      label: "Response comments",
+                      data: [28, 48, 40, 19, 86, 27, 90],
+                      fill: false,
+                      borderColor: "rgb(255, 99, 132)",
+                      tension: 0,
+                    },
+                  ],
+                }}
+                options={{
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h1>Graph</h1>
+              <Bar
+                data={{
+                  labels: [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ],
+                  datasets: [
+                    {
+                      label: "Dataset 1",
+                      data: [65, 59, 80, 81, 56, 55, 40],
+                      backgroundColor: "rgba(255, 99, 132, 0.5)",
+                    },
+                  ],
+                }}
+              />
             </div>
           </div>
         </div>

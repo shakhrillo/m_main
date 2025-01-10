@@ -9,7 +9,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { IUser, userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 
-const AppNavbar = () => {
+export const AppNavbar = () => {
   const { uid } = useOutletContext<User>();
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -73,5 +73,3 @@ const AppNavbar = () => {
     </Navbar>
   );
 };
-
-export default AppNavbar;

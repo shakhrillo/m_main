@@ -1,17 +1,15 @@
 import { User } from "firebase/auth";
-import React from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
-import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+import { AppNavbar, Sidebar } from "./";
 
-const DashboardLayout: React.FC = () => {
+export const DashboardLayout = () => {
   const user = useOutletContext<User>();
 
   return (
     <div className="dashboard-layout">
       <Sidebar />
       <main className="dashboard-main">
-        <Navbar />
+        <AppNavbar />
         <div className="dashboard-content">
           <Outlet context={user} />
         </div>
@@ -19,5 +17,3 @@ const DashboardLayout: React.FC = () => {
     </div>
   );
 };
-
-export default DashboardLayout;

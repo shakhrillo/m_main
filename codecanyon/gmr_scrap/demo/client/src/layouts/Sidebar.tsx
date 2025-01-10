@@ -13,11 +13,11 @@ import {
   IconUser,
   IconWorldCheck,
 } from "@tabler/icons-react";
-import { createElement, FC, useState } from "react";
+import { createElement, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo.svg";
 
-const Sidebar: FC = () => {
+export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -166,5 +166,3 @@ const Sidebar: FC = () => {
     </nav>
   );
 };
-
-export default Sidebar;
