@@ -83,6 +83,45 @@ async function processContainerWritten(event) {
       const lng = matches[2];
       location = new GeoPoint(parseFloat(lat), parseFloat(lng));
     }
+
+    const settingsPricesRef = db.doc("settings/prices");
+    const settingsPricesSnap = await settingsPricesRef.get();
+    const settingsPrices = settingsPricesSnap.data() || {
+      prices: {
+        image: 2,
+        video: 3,
+        response: 1,
+        review: 1,
+        validation: 3,
+      },
+    };
+    const userRef = db.doc(`users/${userId}`);
+    const userSnap = await userRef.get();
+    const user = userSnap.data();
+    const currentBalance = user?.coinBalance || 0;
+    let newBalance = currentBalance;
+
+    const commentPrice = settingsPrices.prices.comment || 1;
+    newBalance = currentBalance - commentPrice * afterData.totalReviews;
+
+    const imagePrice = settingsPrices.prices.image || 2;
+    newBalance = newBalance - imagePrice * afterData.totalImages;
+
+    const videoPrice = settingsPrices.prices.video || 3;
+    newBalance = newBalance - videoPrice * afterData.totalVideos;
+
+    const responsePrice = settingsPrices.prices.response || 1;
+    newBalance = newBalance - responsePrice * afterData.totalOwnerReviews;
+
+    if (newBalance < 0) {
+      console.log("Insufficient balance.");
+      // return;
+    }
+
+    // Update user document
+    batch.update(userRef, {
+      coinBalance: newBalance,
+    });
   }
 
   // Update review document

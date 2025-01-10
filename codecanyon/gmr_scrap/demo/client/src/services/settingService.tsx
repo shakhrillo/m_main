@@ -84,3 +84,25 @@ export const totalEarnings = (fromDate = startDate) => {
     };
   });
 };
+
+export const appStatistics = () => {
+  const collectionRef = collection(firestore, "statistics");
+  const statistics$ = new BehaviorSubject([] as any);
+
+  const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    const statisticsData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    statistics$.next(statisticsData);
+  });
+
+  return new Observable<any>((subscriber) => {
+    const subscription = statistics$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};

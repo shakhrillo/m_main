@@ -22,6 +22,7 @@ import { Bar, Line } from "react-chartjs-2";
 import {
   allContainers,
   allUsers,
+  appStatistics,
   totalEarnings,
 } from "../services/settingService";
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
@@ -69,8 +70,14 @@ export const Dashboard: React.FC = () => {
   const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
   const [containers, setContainers] = useState([] as any[]);
+  const [statistics, setStatistics] = useState([] as any[]);
 
   useEffect(() => {
+    const appStatisticsSubscription = appStatistics().subscribe((data) => {
+      console.log("appStatistics", data);
+      setStatistics(data);
+    });
+
     const containersSubscription = allContainers().subscribe((data) => {
       console.log("containers", formatTotalContainers(data));
       console.log("containers", data);
@@ -110,6 +117,7 @@ export const Dashboard: React.FC = () => {
     );
 
     return () => {
+      appStatisticsSubscription.unsubscribe();
       earningsSubscription.unsubscribe();
       usersSubscription.unsubscribe();
       commentsSubscription.unsubscribe();
@@ -248,54 +256,16 @@ export const Dashboard: React.FC = () => {
         </div>
         <div className="col-md-6">
           <div className="row row-cols-2 g-3">
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Reviews</h5>
-                  <h2 className="fs-1">{reviews.length}</h2>
+            {statistics.map((item, index) => (
+              <div className="col" key={index}>
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{item.id}</h5>
+                    <h2 className="fs-1">{item.totalTopUp}</h2>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Locations</h5>
-                  <h2 className="fs-1">{markerLocations.length}</h2>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Users</h5>
-                  <h2 className="fs-1">0</h2>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Comments</h5>
-                  <h2 className="fs-1">0</h2>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Likes</h5>
-                  <h2 className="fs-1">0</h2>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Total Dislikes</h5>
-                  <h2 className="fs-1">0</h2>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
         <div className="col-md-12">

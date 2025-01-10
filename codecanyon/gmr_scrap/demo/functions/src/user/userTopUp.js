@@ -36,11 +36,11 @@ async function userTopUp(event) {
 
   if (statisticsRef && statisticsRef.exists) {
     batch.update(statisticsRef, {
-      totalTopUp: admin.firestore.FieldValue.increment(amount),
+      total: admin.firestore.FieldValue.increment(amount),
     });
   } else {
     batch.set(statisticsRef, {
-      totalTopUp: amount,
+      total: amount,
     });
   }
 
