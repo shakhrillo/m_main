@@ -1,12 +1,10 @@
+import { User } from "firebase/auth";
 import { useEffect, useState } from "react"; // React hook for lifecycle management
 import { useOutletContext, useParams } from "react-router-dom"; // React Router hook to get URL parameters
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore"; // Firebase Firestore methods
-import { useFirebase } from "../../contexts/FirebaseProvider"; // Custom hook to access Firebase context
+import { scrapData } from "../../services/scrapService";
 import { reviewTextRender } from "../../utils/reviewTextRender"; // Utility for rendering review text
 import ReviewImages from "../review-images"; // ReviewImages component
 import ReviewVideos from "../review-videos"; // ReviewVideos component
-import { User } from "firebase/auth";
-import { scrapData } from "../../services/scrapService";
 
 function ReviewComments() {
   const { place } = useParams() as { place: string };
