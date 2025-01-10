@@ -1,7 +1,5 @@
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import Loader from "../components/loader";
-import { Table } from "../components/table";
 import { allUsers } from "../services/settingService";
 
 const Users: React.FC = () => {
@@ -40,7 +38,24 @@ const Users: React.FC = () => {
         <div className="row">
           <div className="card">
             <div className="card-body">
-              <Table tableHeader={tableHeader} tableBody={users}></Table>
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    {tableHeader.map((header) => (
+                      <th key={header.text}>{header.text}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.uid}>
+                      {tableHeader.map((header) => (
+                        <td key={header.text}>{header.render(user)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

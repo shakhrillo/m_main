@@ -3,7 +3,6 @@ import { useOutletContext, useParams } from "react-router-dom"; // React Router 
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore"; // Firebase Firestore methods
 import { useFirebase } from "../../contexts/FirebaseProvider"; // Custom hook to access Firebase context
 import { reviewTextRender } from "../../utils/reviewTextRender"; // Utility for rendering review text
-import { Table } from "../table"; // Table component to display review data
 import ReviewImages from "../review-images"; // ReviewImages component
 import ReviewVideos from "../review-videos"; // ReviewVideos component
 import { User } from "firebase/auth";
@@ -99,7 +98,24 @@ function ReviewComments() {
       <div className="card">
         <div className="card-body">
           {activeTableFilter === "comments" ? (
-            <Table tableHeader={tableHeader} tableBody={reviews} /> // Display the table if 'comments' filter is active
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  {tableHeader.map((header) => (
+                    <th key={header.text}>{header.text}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {reviews.map((review) => (
+                  <tr key={review.id}>
+                    {tableHeader.map((header) => (
+                      <td key={header.text}>{header.render(review)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : activeTableFilter === "images" ? (
             <ReviewImages /> // Display the ReviewImages component if 'images' filter is active
           ) : (

@@ -1,5 +1,4 @@
 import ReviewComments from "../components/review-comments";
-import ReviewImages from "../components/review-images";
 import ReviewInfo from "../components/review-info";
 
 function SingleReview() {
