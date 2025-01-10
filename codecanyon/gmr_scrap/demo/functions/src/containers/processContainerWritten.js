@@ -32,7 +32,6 @@ async function processContainerWritten(event) {
   const extendedUrl = afterData.extendedUrl;
   let location = "";
   const documentPath = `users/${userId}/reviews/${reviewId}`;
-  const createdAt = Timestamp.now();
   const updatedAt = Timestamp.now();
 
   const db = admin.firestore();
@@ -92,7 +91,6 @@ async function processContainerWritten(event) {
     {
       ...afterData,
       location,
-      createdAt,
       updatedAt,
     },
     { merge: true }
