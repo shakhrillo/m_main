@@ -3,7 +3,6 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import PrivateRoute from "../components/PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Help from "../pages/Help";
 import Info from "../pages/Info";
@@ -22,11 +21,12 @@ import Usage from "../pages/Usage";
 import User from "../pages/User";
 import Users from "../pages/Users";
 import ValidatedUrls from "../pages/ValidatedUrls";
+import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PrivateRoute />,
+    element: <AuthGuard />,
     children: [
       {
         path: "",
