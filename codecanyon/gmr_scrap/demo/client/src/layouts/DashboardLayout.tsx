@@ -1,8 +1,8 @@
+import { User } from "firebase/auth";
 import React from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { User } from "firebase/auth";
 
 const DashboardLayout: React.FC = () => {
   const user = useOutletContext<User>();

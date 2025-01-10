@@ -6,10 +6,10 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useOutletContext } from "react-router-dom";
-import { IUser, userData } from "../../services/userService";
-import formatNumber from "../../utils/formatCoins";
+import { IUser, userData } from "../services/userService";
+import formatNumber from "../utils/formatCoins";
 
-const AppNavbar: FC = () => {
+const AppNavbar = () => {
   const { uid } = useOutletContext<User>();
   const [user, setUser] = useState<IUser | null>(null);
 
