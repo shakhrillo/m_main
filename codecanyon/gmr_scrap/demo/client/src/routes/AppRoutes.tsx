@@ -1,29 +1,27 @@
 import {
   createBrowserRouter,
   Navigate,
-  Outlet,
   RouterProvider,
 } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
-import PreloaderLayout from "../layouts/PreloaderLayout/PreloaderLayout";
+import Help from "../pages/Help";
+import Info from "../pages/Info";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
-import Register from "../pages/Register";
-import ResetPassword from "../pages/ResetPassword";
-import Help from "../pages/Help";
 import Payments from "../pages/Payments";
 import Receipts from "../pages/Receipts";
+import Register from "../pages/Register";
+import ResetPassword from "../pages/ResetPassword";
 import ReviewsList from "../pages/ReviewsList";
-import SingleReview from "../pages/SingleReview";
-import ValidatedUrls from "../pages/ValidatedUrls";
 import Scrap from "../pages/Scrap";
+import Security from "../pages/Security";
 import Settings from "../pages/Settings";
+import SingleReview from "../pages/SingleReview";
+import Usage from "../pages/Usage";
 import User from "../pages/User";
 import Users from "../pages/Users";
-import Info from "../pages/Info";
-import Usage from "../pages/Usage";
-import Security from "../pages/Security";
+import ValidatedUrls from "../pages/ValidatedUrls";
 
 const router = createBrowserRouter([
   {
@@ -69,11 +67,7 @@ const router = createBrowserRouter([
 ]);
 
 const AppRoutes = () => {
-  return (
-    // <PreloaderLayout>
-    // </PreloaderLayout>
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default AppRoutes;

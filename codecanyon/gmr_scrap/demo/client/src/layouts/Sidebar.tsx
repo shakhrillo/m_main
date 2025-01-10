@@ -50,7 +50,6 @@ const Sidebar: FC = () => {
           >
             {createElement(IconDashboard, { size: 20 })}
             <span className="me-auto">Dashboard</span>
-            <span className="badge text-bg-primary ms-auto">4</span>
           </NavLink>
 
           <NavLink
