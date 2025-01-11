@@ -17,6 +17,7 @@ import {
   Tooltip,
   Legend,
   BarElement,
+  Filler,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import {
@@ -28,6 +29,7 @@ import {
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { formatTotalContainers } from "../utils/formatTotalContainers";
+import { LineChart } from "../components/LineChart";
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +37,7 @@ ChartJS.register(
   BarElement,
   PointElement,
   LineElement,
+  Filler,
   Title,
   Tooltip,
   Legend,
@@ -128,81 +131,52 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="container-fluid">
       <div className="row g-3">
-        <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex mb-3">
-                <IconActivity size={48} />
-                <div className="ms-2">
-                  <h5 className="card-title mb-0">
-                    Activity
-                    <span className="badge bg-primary ms-2">
-                      {containers.reduce(
-                        (acc, cur) =>
-                          acc +
-                          cur.totalReviews +
-                          cur.totalImages + // Images
-                          cur.totalVideos + // Videos
-                          cur.totalOwnerReviews, // Response comments
-                        0,
-                      )}
-                    </span>
-                  </h5>
-                  <p className="card-text">
-                    Total activity for the past 3 months
-                  </p>
+        {statistics.map((item, index) =>
+          containers.filter((e) => typeof e[item.id] === "number").length >
+          0 ? (
+            <div className="col-md-3" key={index}>
+              <div className="card">
+                <div className="card-body">
+                  <LineChart
+                    total={item.total}
+                    labels={containers.map((e) => e.date)}
+                    label={item.id}
+                    datasets={[
+                      {
+                        label: item.id,
+                        data: containers.map((e) => e[item.id]),
+                        tension: 0.5,
+                        borderColor: "blue",
+                        fill: false,
+                      },
+                    ]}
+                  />
                 </div>
               </div>
-              <Line
-                className="border rounded p-3 bg-light"
-                data={{
-                  labels: containers.map((e) => e.date),
-                  datasets: [
-                    {
-                      label: "Reviews",
-                      data: containers.map((e) => e.totalReviews),
-                      tension: 0,
-                      borderColor: "blue",
-                      backgroundColor: "rgba(0, 0, 255, 0.2)",
-                    },
-                    {
-                      label: "Images",
-                      data: containers.map((e) => e.totalImages),
-                      tension: 0,
-                      borderColor: "red",
-                      backgroundColor: "rgba(255, 0, 0, 0.2)",
-                    },
-                    {
-                      label: "Videos",
-                      data: containers.map((e) => e.totalVideos),
-                      tension: 0,
-                      borderColor: "green",
-                      backgroundColor: "rgba(0, 128, 0, 0.2)",
-                    },
-                    {
-                      label: "Response comments",
-                      data: containers.map((e) => e.totalOwnerReviews),
-                      tension: 0,
-                      borderColor: "orange",
-                      backgroundColor: "rgba(255, 165, 0, 0.2)",
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "bottom",
-                      labels: {
-                        usePointStyle: true,
-                      },
-                    },
+            </div>
+          ) : null,
+        )}
+        {/* <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <LineChart
+                total={
+                  statistics.find((item) => item.id === "totalImages")?.total
+                }
+                labels={containers.map((e) => e.date)}
+                datasets={[
+                  {
+                    label: "Images",
+                    data: containers.map((e) => e.totalImages),
+                    tension: 0.5,
+                    borderColor: "blue",
+                    fill: false,
                   },
-                }}
+                ]}
               />
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
