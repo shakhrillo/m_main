@@ -32,6 +32,10 @@ async function processUserCreated(user) {
     coinBalance: 100,
     notifications: 0,
     createdAt: Timestamp.now(),
+    totalReviews: 0,
+    totalImages: 0,
+    totalVideos: 0,
+    totalOwnerReviews: 0,
   });
 
   await batch.commit();

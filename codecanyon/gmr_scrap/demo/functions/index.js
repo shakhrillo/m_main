@@ -40,9 +40,19 @@ exports.processContainerWritten = onDocumentWritten(
   const db = admin.firestore();
   const batch = db.batch();
 
+  /*-------------------*/
+  /* Statistics        */
+  /*-------------------*/
   const statisticsRef = db.collection("statistics");
-  const types = ["comments", "info", "users"];
-
+  const types = [
+    "comments",
+    "info",
+    "users",
+    "totalReviews",
+    "totalImages",
+    "totalVideos",
+    "totalOwnerReviews",
+  ];
   for (const type of types) {
     const ref = statisticsRef.doc(type);
     const doc = await ref.get();
@@ -50,6 +60,21 @@ exports.processContainerWritten = onDocumentWritten(
 
     batch.set(ref, {
       total: 0,
+    });
+  }
+
+  /*-------------------*/
+  /* Settings          */
+  /*-------------------*/
+  const settingsPricesRef = db.doc("settings/prices");
+  const settingsPricesSnap = await settingsPricesRef.get();
+  if (!settingsPricesSnap.exists) {
+    batch.set(settingsPricesRef, {
+      image: 2,
+      video: 3,
+      response: 1,
+      review: 1,
+      validation: 3,
     });
   }
 

@@ -57,6 +57,7 @@ const {
   getMachineData,
   updateMachineData,
 } = require("./services/firebase");
+const { GeoPoint } = require("firebase-admin/firestore");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 const { log } = require("./services/logger");
@@ -95,6 +96,8 @@ const prepareForScreenshot = getScriptContent(
  *   rating: number,
  *   screenshot: string,
  *   title: string,
+ *   extendedUrl: string,
+ *   location: GeoPoint,
  *   error: string
  * }}
  * The machine data object.
@@ -136,7 +139,6 @@ let driver;
     // Load the target website
     await driver.get(data.url);
     await driver.sleep(2000);
-    data.extendedUrl = await driver.getCurrentUrl();
 
     /**
      * Execute the script to extract information from the page.
@@ -166,6 +168,14 @@ let driver;
     const imageName = `${tag}.png`;
     data.screenshot = await uploadFile(screenshotBuffer, imageName);
     log(`Screenshot uploaded: ${data.screenshot}`);
+
+    data.extendedUrl = await driver.getCurrentUrl();
+    const matches = data.extendedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (matches) {
+      const lat = matches[1];
+      const lng = matches[2];
+      data.location = new GeoPoint(parseFloat(lat), parseFloat(lng));
+    }
   } catch (error) {
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);

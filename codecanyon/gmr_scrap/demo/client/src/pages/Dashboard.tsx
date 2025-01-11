@@ -94,7 +94,7 @@ export const Dashboard: React.FC = () => {
       setUsers(formatTotalUsers(data));
     });
 
-    const commentsSubscription = validatedUrls(uid, "comments").subscribe(
+    const commentsSubscription = validatedUrls(uid, "info").subscribe(
       (data) => {
         setReviews(data);
 

@@ -302,13 +302,6 @@ async function validateNode(node) {
     }
 
     const review = getReviewComment(node);
-    if (!!review) {
-      gmrScrap["extractedUserReviewCount"] = !gmrScrap[
-        "extractedUserReviewCount"
-      ]
-        ? 1
-        : gmrScrap["extractedUserReviewCount"] + 1;
-    }
 
     let response = "";
     if (gmrScrap["extractOwnerResponse"]) {
