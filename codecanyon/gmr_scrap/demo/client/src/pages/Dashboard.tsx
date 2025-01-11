@@ -1,4 +1,4 @@
-import { IconMapPinFilled } from "@tabler/icons-react";
+import { IconActivity, IconMapPinFilled } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -131,8 +131,28 @@ export const Dashboard: React.FC = () => {
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Activity</h5>
-              <p className="card-text">Total activity for the past 3 months</p>
+              <div className="d-flex mb-3">
+                <IconActivity size={48} />
+                <div className="ms-2">
+                  <h5 className="card-title mb-0">
+                    Activity
+                    <span className="badge bg-primary ms-2">
+                      {containers.reduce(
+                        (acc, cur) =>
+                          acc +
+                          cur.totalReviews +
+                          cur.totalImages + // Images
+                          cur.totalVideos + // Videos
+                          cur.totalOwnerReviews, // Response comments
+                        0,
+                      )}
+                    </span>
+                  </h5>
+                  <p className="card-text">
+                    Total activity for the past 3 months
+                  </p>
+                </div>
+              </div>
               <Line
                 className="border rounded p-3 bg-light"
                 data={{
@@ -169,24 +189,6 @@ export const Dashboard: React.FC = () => {
                   ],
                 }}
                 options={{
-                  layout: {
-                    padding: 0,
-                  },
-                  scales: {
-                    x: {
-                      grid: {
-                        color: "#ccc",
-                      },
-                    },
-                    y: {
-                      grid: {
-                        color: "#ccc",
-                      },
-                      border: {
-                        color: "#fff",
-                      },
-                    },
-                  },
                   plugins: {
                     legend: {
                       display: true,
@@ -207,15 +209,23 @@ export const Dashboard: React.FC = () => {
               <h5 className="card-title">Earnings</h5>
               <p className="card-text">Total earnings for the past 3 months</p>
               <Bar
+                className="border rounded p-3 bg-light"
                 data={{
                   labels: earnings.map((e) => e.date),
                   datasets: [
                     {
                       label: "Earnings",
                       data: earnings.map((e) => e.total),
-                      backgroundColor: "#0d6efd",
+                      backgroundColor: "orange",
                     },
                   ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                  },
                 }}
               />
             </div>
@@ -227,6 +237,7 @@ export const Dashboard: React.FC = () => {
               <h5 className="card-title">Users</h5>
               <p className="card-text">Total users for the past 3 months</p>
               <Bar
+                className="border rounded p-3 bg-light"
                 data={{
                   labels: earnings.map((e) => e.date),
                   datasets: [
@@ -236,6 +247,13 @@ export const Dashboard: React.FC = () => {
                       backgroundColor: "#dc3545",
                     },
                   ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                  },
                 }}
               />
             </div>
