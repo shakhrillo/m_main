@@ -20,6 +20,28 @@ const executeScraping = async (data) => {
   await axiosInstance.post(`/scrap`, {}, config);
 };
 
+/**
+ * Generate stripe payment url
+ * @typedef {{ userId: string, amount: number }} PaymentData
+ * @param {PaymentData} data
+ * @returns {Promise<string>}
+ */
+const generateStripePaymentUrl = async (data) => {
+  const token = createToken(data);
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const config = {
+    headers,
+  };
+
+  const results = await axiosInstance.post(`/stripe`, {}, config);
+  return results.data.url;
+};
+
 module.exports = {
   executeScraping,
+  generateStripePaymentUrl,
 };
