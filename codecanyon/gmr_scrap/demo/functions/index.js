@@ -36,28 +36,22 @@ exports.processContainerWritten = onDocumentWritten(
   processContainerWritten
 );
 
-(() => {
-  console.log("-".repeat(40));
-  console.log("Setting up initial statistics");
-  console.log("-".repeat(40));
-
+(async () => {
   const db = admin.firestore();
   const batch = db.batch();
 
-  const statisticsRef = db.doc("statistics/info");
-  batch.set(statisticsRef, {
-    total: 0,
-  });
+  const statisticsRef = db.collection("statistics");
+  const types = ["comments", "info", "users"];
 
-  const commentsRef = db.doc("statistics/comments");
-  batch.set(commentsRef, {
-    total: 0,
-  });
+  for (const type of types) {
+    const ref = statisticsRef.doc(type);
+    const doc = await ref.get();
+    if (doc.exists) continue;
 
-  const usersRef = db.doc("statistics/users");
-  batch.set(usersRef, {
-    total: 0,
-  });
+    batch.set(ref, {
+      total: 0,
+    });
+  }
 
-  return batch.commit();
+  await batch.commit();
 })();

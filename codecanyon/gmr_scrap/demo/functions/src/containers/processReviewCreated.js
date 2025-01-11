@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const { Timestamp } = require("firebase-admin/firestore");
+const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 const { executeScraping } = require("../services/mainService");
 
 /**
@@ -28,7 +28,7 @@ async function processReviewCreated(event) {
   /*-------------------*/
   const statisticsRef = db.doc(`statistics/${type}`);
   batch.update(statisticsRef, {
-    total: admin.firestore.FieldValue.increment(1),
+    total: FieldValue.increment(1),
   });
 
   /*-------------------*/
