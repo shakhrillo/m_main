@@ -35,3 +35,29 @@ exports.processContainerWritten = onDocumentWritten(
   "containers/{containerId}",
   processContainerWritten
 );
+
+(() => {
+  console.log("-".repeat(40));
+  console.log("Setting up initial statistics");
+  console.log("-".repeat(40));
+
+  const db = admin.firestore();
+  const batch = db.batch();
+
+  const statisticsRef = db.doc("statistics/info");
+  batch.set(statisticsRef, {
+    total: 0,
+  });
+
+  const commentsRef = db.doc("statistics/comments");
+  batch.set(commentsRef, {
+    total: 0,
+  });
+
+  const usersRef = db.doc("statistics/users");
+  batch.set(usersRef, {
+    total: 0,
+  });
+
+  return batch.commit();
+})();

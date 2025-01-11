@@ -1,68 +1,57 @@
-const axios = require("../utils/axiosClient");
 const admin = require("firebase-admin");
 const { Timestamp } = require("firebase-admin/firestore");
-const { createToken } = require("../utils/jwtUtils");
+const { executeScraping } = require("../services/mainService");
 
+/**
+ * Once a review is created, this function will be triggered.
+ * - Update statistics
+ * - Create container
+ * - Execute scraping
+ *
+ * @param {functions.EventContext} event
+ * @returns {Promise<void>}
+ */
 async function processReviewCreated(event) {
-  const snapshot = event.data;
-  const data = snapshot.data();
-  const userId = event.params.userId;
-  const reviewId = event.params.reviewId;
-  const type = data.type;
-  const limit = data.limit;
-  const extractImageUrls = data.extractImageUrls;
-  const extractVideoUrls = data.extractVideoUrls;
-  const ownerResponse = data.ownerResponse;
-  const tag = `${type}_${userId}_${reviewId}`.toLowerCase();
+  const data = event.data.data();
+  const { userId, reviewId } = event.params;
+  const { type } = data; // e.g. "info | comments"
+
+  const tag = [type, userId, reviewId].join("_").toLowerCase(); // e.g. "info_123_456"
   const createdAt = Timestamp.now();
-  const updatedAt = Timestamp.now();
+  const updatedAt = createdAt;
 
   const db = admin.firestore();
-  const containerRef = db.doc(`containers/${tag}`);
-
   const batch = db.batch();
+
+  /*-------------------*/
+  /* Update statistics */
+  /*-------------------*/
   const statisticsRef = db.doc(`statistics/${type}`);
+  batch.update(statisticsRef, {
+    total: admin.firestore.FieldValue.increment(1),
+  });
 
-  if (statisticsRef && statisticsRef.exists) {
-    batch.update(statisticsRef, {
-      total: admin.firestore.FieldValue.increment(1),
-    });
-  } else {
-    batch.set(statisticsRef, {
-      total: 1,
-    });
-  }
+  /*-------------------*/
+  /* Create container  */
+  /*-------------------*/
+  const containerRef = db.doc(`containers/${tag}`);
+  batch.set(containerRef, {
+    ...data,
+    userId,
+    reviewId,
+    createdAt,
+    updatedAt,
+  });
 
-  // Update review document
-  batch.set(
-    containerRef,
-    {
-      ...data,
-      userId,
-      reviewId,
-      createdAt,
-      updatedAt,
-    },
-    { merge: true }
-  );
-
-  // Commit the batch
   await batch.commit();
 
-  const token = createToken({
+  /*-------------------*/
+  /* Execute scraping  */
+  /*-------------------*/
+  await executeScraping({
     tag,
     type,
   });
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  const config = {
-    headers,
-  };
-
-  await axios.post(`/scrap`, {}, config);
 }
 
 module.exports = processReviewCreated;

@@ -4,6 +4,8 @@ import { auth, firestore } from "../firebaseConfig";
 import { User } from "firebase/auth";
 
 export interface IUser {
+  photoURL?: string;
+  displayName?: string;
   uid?: string;
   coinBalance?: string;
   notifications?: { id: string; title: string }[];

@@ -261,7 +261,7 @@ export const Dashboard: React.FC = () => {
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">{item.id}</h5>
-                    <h2 className="fs-1">{item.totalTopUp}</h2>
+                    <h2 className="fs-1">{item.total}</h2>
                   </div>
                 </div>
               </div>

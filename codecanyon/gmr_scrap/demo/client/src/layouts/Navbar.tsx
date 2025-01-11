@@ -55,7 +55,17 @@ export const AppNavbar = () => {
                 </NavLink>
               ))}
             </NavDropdown>
-            <NavDropdown title={"Guest"} align={{ sm: "end" }}>
+            <NavDropdown
+              title={
+                <img
+                  src={user?.photoURL}
+                  alt={user?.displayName}
+                  className="rounded-circle bg-light"
+                  style={{ width: 32, height: 32 }}
+                />
+              }
+              align={{ sm: "end" }}
+            >
               <NavLink to={"/profile"} className="dropdown-item">
                 Profile
               </NavLink>
