@@ -134,42 +134,66 @@ export const Dashboard: React.FC = () => {
               <h5 className="card-title">Activity</h5>
               <p className="card-text">Total activity for the past 3 months</p>
               <Line
+                className="border rounded p-3 bg-light"
                 data={{
                   labels: containers.map((e) => e.date),
                   datasets: [
                     {
                       label: "Reviews",
                       data: containers.map((e) => e.totalReviews),
-                      fill: false,
                       tension: 0,
+                      borderColor: "blue",
+                      backgroundColor: "rgba(0, 0, 255, 0.2)",
                     },
                     {
                       label: "Images",
                       data: containers.map((e) => e.totalImages),
-                      fill: false,
                       tension: 0,
-                      borderColor: "rgb(75, 192, 192)",
+                      borderColor: "red",
+                      backgroundColor: "rgba(255, 0, 0, 0.2)",
                     },
                     {
                       label: "Videos",
                       data: containers.map((e) => e.totalVideos),
-                      fill: false,
                       tension: 0,
-                      borderColor: "rgb(54, 162, 235)",
+                      borderColor: "green",
+                      backgroundColor: "rgba(0, 128, 0, 0.2)",
                     },
                     {
                       label: "Response comments",
                       data: containers.map((e) => e.totalOwnerReviews),
-                      fill: false,
-                      borderColor: "rgb(255, 99, 132)",
                       tension: 0,
+                      borderColor: "orange",
+                      backgroundColor: "rgba(255, 165, 0, 0.2)",
                     },
                   ],
                 }}
                 options={{
+                  layout: {
+                    padding: 0,
+                  },
                   scales: {
+                    x: {
+                      grid: {
+                        color: "#ccc",
+                      },
+                    },
                     y: {
-                      beginAtZero: true,
+                      grid: {
+                        color: "#ccc",
+                      },
+                      border: {
+                        color: "#fff",
+                      },
+                    },
+                  },
+                  plugins: {
+                    legend: {
+                      display: true,
+                      position: "bottom",
+                      labels: {
+                        usePointStyle: true,
+                      },
                     },
                   },
                 }}
