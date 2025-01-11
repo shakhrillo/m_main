@@ -57,7 +57,8 @@ services:
       context: ${FIREBASE_BUILD_CONTEXT}
       dockerfile: Dockerfile
     volumes:
-      - ${SOURCE_PATH}/functions:/usr/src/app/functions # Will be deleted
+      - ${SOURCE_PATH}/functions/index.js:/usr/src/app/functions/index.js
+      - ${SOURCE_PATH}/functions/src:/usr/src/app/functions/src
     container_name: ${FIREBASE_CONTAINER_NAME}
     ports:
       - "${VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"
@@ -76,6 +77,8 @@ services:
     build:
       context: ${CLIENT_BUILD_CONTEXT}
       dockerfile: Dockerfile
+    volumes:
+      - ${SOURCE_PATH}/client/src:/usr/src/app/src
     container_name: ${CLIENT_CONTAINER_NAME}
     environment:
       VITE_ENV: development

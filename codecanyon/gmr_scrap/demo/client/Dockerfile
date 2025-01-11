@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 4200
 
 # Use a more explicit command to ensure the app starts as intended
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
