@@ -145,8 +145,7 @@ export const Dashboard: React.FC = () => {
                       {
                         label: item.id,
                         data: containers.map((e) => e[item.id]),
-                        tension: 0.5,
-                        borderColor: "blue",
+                        tension: 0.2,
                         fill: false,
                       },
                     ]}
