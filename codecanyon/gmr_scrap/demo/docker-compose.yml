@@ -56,6 +56,8 @@ services:
     build:
       context: ${FIREBASE_BUILD_CONTEXT}
       dockerfile: Dockerfile
+    volumes:
+      - ${SOURCE_PATH}/functions:/usr/src/app/functions # Will be deleted
     container_name: ${FIREBASE_CONTAINER_NAME}
     ports:
       - "${VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"

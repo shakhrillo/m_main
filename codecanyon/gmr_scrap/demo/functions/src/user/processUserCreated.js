@@ -1,11 +1,11 @@
 const admin = require("firebase-admin");
-const { Timestamp } = require("firebase-admin/firestore");
+const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 
 /**
  * Once a user is created, this function will be triggered.
  * - Update statistics
  * - Create user
- * @param {functions.auth.UserRecord} user
+ * @param {admin.auth.UserRecord} user
  * @returns {Promise<void>}
  */
 async function processUserCreated(user) {
@@ -17,15 +17,18 @@ async function processUserCreated(user) {
   /*-------------------*/
   const statisticsRef = db.doc(`statistics/users`);
   batch.update(statisticsRef, {
-    total: admin.firestore.FieldValue.increment(1),
+    total: FieldValue.increment(1),
   });
 
   /*-------------------*/
   /* Create user       */
   /*-------------------*/
-  const userRef = db.doc(`users/${uid}`);
+  const userRef = db.doc(`users/${user.uid}`);
   batch.set(userRef, {
-    ...user.toJSON(),
+    displayName: user.displayName,
+    email: user.email,
+    photoURL: user.photoURL,
+    phone: user.phoneNumber,
     coinBalance: 100,
     notifications: 0,
     createdAt: Timestamp.now(),
