@@ -32,6 +32,7 @@ export const Map = ({ locations }: { locations: [number, number][] }) => {
       zoomAnimation={false}
       fadeAnimation={false}
       markerZoomAnimation={false}
+      maxZoom={14}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

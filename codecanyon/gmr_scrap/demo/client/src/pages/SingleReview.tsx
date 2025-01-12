@@ -10,6 +10,7 @@ import {
   scrapVideos,
   validateUrlData,
 } from "../services/scrapService";
+import { Map } from "../components/Map";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -22,6 +23,7 @@ export const SingleReview = () => {
   useEffect(() => {
     const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
       (data) => {
+        console.log("info", data);
         setPlaceInfo(data);
       },
     );
@@ -54,11 +56,31 @@ export const SingleReview = () => {
           <div className="card">
             <div className="row g-0">
               <div className="col-md-4">
-                <img
-                  src={info.screenshot}
-                  className="img-fluid rounded-start"
-                  alt="..."
-                />
+                <Tabs defaultActiveKey="leafletMap" className="mb-3">
+                  <Tab
+                    eventKey="leafletMap"
+                    title="Leaflet Map"
+                    mountOnEnter={true}
+                    unmountOnExit={true}
+                  >
+                    {info.location ? (
+                      <div style={{ height: "250px" }}>
+                        <Map
+                          locations={[
+                            [info.location.latitude, info.location.longitude],
+                          ]}
+                        />
+                      </div>
+                    ) : null}
+                  </Tab>
+                  <Tab eventKey="googleMap" title="Google Map Screenshot">
+                    <img
+                      src={info.screenshot}
+                      className="img-fluid rounded-start"
+                      alt="..."
+                    />
+                  </Tab>
+                </Tabs>
               </div>
               <div className="col-md-8">
                 <div className="card-body">
