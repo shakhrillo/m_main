@@ -1,8 +1,10 @@
 import {
+  IconArrowUp,
   IconCircle,
   IconCircle1,
   IconCircleFilled,
   IconMapPinFilled,
+  IconTrendingUp,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import L from "leaflet";
@@ -23,7 +25,7 @@ import {
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { Map } from "../components/Map";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row, Table } from "react-bootstrap";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -144,8 +146,8 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Container fluid>
-      <Row>
-        <Col>
+      <Row className="g-3">
+        <Col md={4}>
           <Card>
             <Row>
               <Col sm={7} className="d-flex">
@@ -201,69 +203,39 @@ export const Dashboard: React.FC = () => {
             </Row>
           </Card>
         </Col>
-        <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Total Earnings</h5>
+        <Col md={4}>
+          <Card className="h-100">
+            <Card.Body className="d-flex flex-column">
+              <Card.Title>Earnings</Card.Title>
               <div className="fs-1">
-                {earnings.reduce((acc, e) => acc + e.total, 0)}
+                ${earnings.reduce((acc, e) => acc + e.total, 0)}2.222.3
               </div>
-              <small>Total earnings for the past 3 months</small>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Users</h5>
+              <small className="mt-auto">24% increase from last month</small>
+              <div className="position-absolute p-1 top-0 end-0 bg-success-subtle mt-2 me-2 rounded">
+                <IconTrendingUp size={24} className="text-success" />
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="h-100">
+            <Card.Body className="d-flex flex-column">
+              <Card.Title>Users</Card.Title>
               <div className="fs-1">
-                {users.reduce((acc, e) => acc + e.total, 0)}
+                ${users.reduce((acc, e) => acc + e.total, 0)}2.222.3
               </div>
-              <small>Total earnings for the past 3 months</small>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="row g-3">
-            {statistics.map((item, index) =>
-              containers.filter((e) => typeof e[item.id] === "number").length >
-              0 ? (
-                <div className="col-md-6" key={index}>
-                  <div className="card">
-                    <div className="card-body">
-                      <LineChart
-                        total={item.total}
-                        labels={containers.map((e) => e.date)}
-                        label={item.id}
-                        datasets={[
-                          {
-                            label: item.id,
-                            data: containers.map((e) => e[item.id]),
-                            tension: 0.2,
-                            fill: false,
-                          },
-                        ]}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : null,
-            )}
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <div style={{ height: "350px" }}>
-                <Map locations={markerLocations} />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-body">
-              <table className="table table-striped">
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card className="h-100">
+            <Map locations={markerLocations} />
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card style={{ height: "400px" }} className="overflow-auto">
+            <Card.Body>
+              <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>Title</th>
@@ -295,10 +267,10 @@ export const Dashboard: React.FC = () => {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
     </Container>
   );
