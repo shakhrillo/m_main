@@ -62,7 +62,7 @@ export const DoughnutChart = ({
           ],
         }}
         options={{
-          cutout: 50,
+          // cutout: 50,
           layout: {
             padding: 10,
             autoPadding: false,

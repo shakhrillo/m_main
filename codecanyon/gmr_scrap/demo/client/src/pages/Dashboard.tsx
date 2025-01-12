@@ -7,7 +7,7 @@ import {
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import L from "leaflet";
+import L, { point } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
@@ -63,40 +63,47 @@ export const Dashboard: React.FC = () => {
     const appStatisticsSubscription = appStatistics().subscribe((data) => {
       console.log("appStatistics", data);
       setStatistics(data);
+
+      setContainers([
+        data.filter((e: any) => e.id === "totalImages")[0].total,
+        data.filter((e: any) => e.id === "totalVideos")[0].total,
+        data.filter((e: any) => e.id === "totalReviews")[0].total,
+        data.filter((e: any) => e.id === "totalOwnerReviews")[0].total,
+      ]);
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
       console.log("data", data);
-      const totalImages = data.reduce(
-        (acc: any, e: any) => acc + e.totalImages,
-        0,
-      );
-      const totalOwnerReviews = data.reduce(
-        (acc: any, e: any) => acc + e.totalOwnerReviews,
-        0,
-      );
-      const totalReviews = data.reduce(
-        (acc: any, e: any) => acc + e.totalReviews,
-        0,
-      );
-      const totalVideos = data.reduce(
-        (acc: any, e: any) => acc + e.totalVideos,
-        0,
-      );
+      // const totalImages = data.reduce(
+      //   (acc: any, e: any) => acc + e.totalImages,
+      //   0,
+      // );
+      // const totalOwnerReviews = data.reduce(
+      //   (acc: any, e: any) => acc + e.totalOwnerReviews,
+      //   0,
+      // );
+      // const totalReviews = data.reduce(
+      //   (acc: any, e: any) => acc + e.totalReviews,
+      //   0,
+      // );
+      // const totalVideos = data.reduce(
+      //   (acc: any, e: any) => acc + e.totalVideos,
+      //   0,
+      // );
 
-      console.log("d", [
-        totalImages,
-        totalVideos,
-        totalReviews,
-        totalOwnerReviews,
-      ]);
+      // console.log("d", [
+      //   totalImages,
+      //   totalVideos,
+      //   totalReviews,
+      //   totalOwnerReviews,
+      // ]);
 
-      setContainers([
-        totalImages,
-        totalVideos,
-        totalReviews,
-        totalOwnerReviews,
-      ]);
+      // setContainers([
+      //   totalImages,
+      //   totalVideos,
+      //   totalReviews,
+      //   totalOwnerReviews,
+      // ]);
 
       // console.log("containers", formatTotalContainers(data));
       // console.log("containers", data);
@@ -147,6 +154,29 @@ export const Dashboard: React.FC = () => {
   return (
     <Container fluid>
       <Row className="g-3">
+        <Col md={12}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Total revenue</Card.Title>
+              <LineChart
+                total={earnings.reduce((acc, e) => acc + e.total, 0)}
+                label="Total revenue"
+                labels={earnings.map((e) => e.date)}
+                datasets={[
+                  {
+                    label: "Total revenue",
+                    data: earnings.map((e) => e.total),
+                    borderColor: "#3e2c41",
+                    backgroundColor: "rgba(62, 44, 65, 0.1)",
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: "#3e2c41",
+                  },
+                ]}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
         <Col md={4}>
           <Card>
             <Row>

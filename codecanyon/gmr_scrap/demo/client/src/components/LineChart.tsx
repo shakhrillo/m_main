@@ -41,7 +41,7 @@ export const LineChart = ({
   return (
     <div className="row g-0 row-cols-1 row-cols-md-2">
       <div className="col">
-        <div className="fs-3">{total}</div>
+        <div className="fs-1">${total}</div>
         <p className="m-0">{label}</p>
         {/* <hr />
         <small>* Graph for the last 3 days</small> */}
