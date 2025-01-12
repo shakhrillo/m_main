@@ -18,8 +18,10 @@ import {
   Legend,
   BarElement,
   Filler,
+  ArcElement,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import {
   allContainers,
   allUsers,
@@ -32,6 +34,7 @@ import { formatTotalContainers } from "../utils/formatTotalContainers";
 import { LineChart } from "../components/LineChart";
 
 ChartJS.register(
+  ArcElement,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -82,9 +85,33 @@ export const Dashboard: React.FC = () => {
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
-      console.log("containers", formatTotalContainers(data));
-      console.log("containers", data);
-      setContainers(formatTotalContainers(data));
+      const totalImages = data.reduce(
+        (acc: any, e: any) => acc + e.totalImages,
+        0,
+      );
+      const totalOwnerReviews = data.reduce(
+        (acc: any, e: any) => acc + e.totalOwnerReviews,
+        0,
+      );
+      const totalReviews = data.reduce(
+        (acc: any, e: any) => acc + e.totalReviews,
+        0,
+      );
+      const totalVideos = data.reduce(
+        (acc: any, e: any) => acc + e.totalVideos,
+        0,
+      );
+
+      setContainers([
+        totalImages,
+        totalOwnerReviews,
+        totalReviews,
+        totalVideos,
+      ]);
+
+      // console.log("containers", formatTotalContainers(data));
+      // console.log("containers", data);
+      // setContainers(formatTotalContainers(data));
     });
 
     const earningsSubscription = totalEarnings().subscribe((data) => {
@@ -131,76 +158,67 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="container-fluid">
       <div className="row g-3">
-        {statistics.map((item, index) =>
-          containers.filter((e) => typeof e[item.id] === "number").length >
-          0 ? (
-            <div className="col-md-3" key={index}>
-              <div className="card">
-                <div className="card-body">
-                  <LineChart
-                    total={item.total}
-                    labels={containers.map((e) => e.date)}
-                    label={item.id}
-                    datasets={[
-                      {
-                        label: item.id,
-                        data: containers.map((e) => e[item.id]),
-                        tension: 0.2,
-                        fill: false,
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-            </div>
-          ) : null,
-        )}
-        {/* <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <LineChart
-                total={
-                  statistics.find((item) => item.id === "totalImages")?.total
-                }
-                labels={containers.map((e) => e.date)}
-                datasets={[
-                  {
-                    label: "Images",
-                    data: containers.map((e) => e.totalImages),
-                    tension: 0.5,
-                    borderColor: "blue",
-                    fill: false,
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        </div> */}
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Earnings</h5>
-              <p className="card-text">Total earnings for the past 3 months</p>
-              <Bar
-                className="border rounded p-3 bg-light"
-                data={{
-                  labels: earnings.map((e) => e.date),
-                  datasets: [
-                    {
-                      label: "Earnings",
-                      data: earnings.map((e) => e.total),
-                      backgroundColor: "orange",
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
+              <h5 className="card-title">Containers</h5>
+              <ul className="d-flex gap-2">
+                {containers.map((item, index) => (
+                  <span className="badge bg-primary">{item}</span>
+                ))}
+              </ul>
+
+              <div
+                className="position-relative border"
+                style={{ height: "200px", width: "200px" }}
+              >
+                <div className="position-absolute top-50 start-50 translate-middle">
+                  <div className="d-flex flex-column align-items-center">
+                    <span className="fs-1">
+                      {containers.reduce((acc, e) => acc + e, 0)}
+                    </span>
+                    <p className="m-0 text-muted mt-n3">Total</p>
+                  </div>
+                </div>
+                <Doughnut
+                  data={{
+                    labels: [],
+                    datasets: [
+                      {
+                        label: "# of Votes",
+                        data: containers,
+                        backgroundColor: [
+                          "rgba(255, 99, 132, 1)",
+                          "rgba(54, 162, 235, 1)",
+                          "rgba(255, 206, 86, 1)",
+                          "rgba(75, 192, 192, 1)",
+                        ],
+                        borderRadius: 100,
+                        borderAlign: "center",
+                        spacing: 1,
+                        circular: true,
+                        animation: {
+                          duration: 0,
+                        },
+                      },
+                    ],
+                  }}
+                  options={{
+                    cutout: 80,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Total Earnings</h5>
+              <div className="fs-1">
+                {earnings.reduce((acc, e) => acc + e.total, 0)}
+              </div>
+              <small>Total earnings for the past 3 months</small>
             </div>
           </div>
         </div>
@@ -208,28 +226,39 @@ export const Dashboard: React.FC = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Users</h5>
-              <p className="card-text">Total users for the past 3 months</p>
-              <Bar
-                className="border rounded p-3 bg-light"
-                data={{
-                  labels: earnings.map((e) => e.date),
-                  datasets: [
-                    {
-                      label: "Users",
-                      data: users.map((e) => e.total),
-                      backgroundColor: "#dc3545",
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
+              <div className="fs-1">
+                {users.reduce((acc, e) => acc + e.total, 0)}
+              </div>
+              <small>Total earnings for the past 3 months</small>
             </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="row g-3">
+            {statistics.map((item, index) =>
+              containers.filter((e) => typeof e[item.id] === "number").length >
+              0 ? (
+                <div className="col-md-6" key={index}>
+                  <div className="card">
+                    <div className="card-body">
+                      <LineChart
+                        total={item.total}
+                        labels={containers.map((e) => e.date)}
+                        label={item.id}
+                        datasets={[
+                          {
+                            label: item.id,
+                            data: containers.map((e) => e[item.id]),
+                            tension: 0.2,
+                            fill: false,
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null,
+            )}
           </div>
         </div>
         <div className="col-md-6">
@@ -267,20 +296,6 @@ export const Dashboard: React.FC = () => {
                 </MapContainer>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="row row-cols-2 g-3">
-            {statistics.map((item, index) => (
-              <div className="col" key={index}>
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">{item.id}</h5>
-                    <h2 className="fs-1">{item.total}</h2>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
         <div className="col-md-12">
