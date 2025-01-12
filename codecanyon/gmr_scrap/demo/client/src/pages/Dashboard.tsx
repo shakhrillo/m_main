@@ -1,4 +1,9 @@
-import { IconActivity, IconMapPinFilled } from "@tabler/icons-react";
+import {
+  IconCircle,
+  IconCircle1,
+  IconCircleFilled,
+  IconMapPinFilled,
+} from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,22 +11,9 @@ import React, { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { DoughnutChart } from "../components/DoughnutChart";
+import { LineChart } from "../components/LineChart";
 import { IReview, validatedUrls } from "../services/scrapService";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  Filler,
-  ArcElement,
-} from "chart.js";
-import { Bar, Line } from "react-chartjs-2";
-import { Doughnut } from "react-chartjs-2";
 import {
   allContainers,
   allUsers,
@@ -30,21 +22,8 @@ import {
 } from "../services/settingService";
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
-import { formatTotalContainers } from "../utils/formatTotalContainers";
-import { LineChart } from "../components/LineChart";
-
-ChartJS.register(
-  ArcElement,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-);
+import { Map } from "../components/Map";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -85,6 +64,7 @@ export const Dashboard: React.FC = () => {
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
+      console.log("data", data);
       const totalImages = data.reduce(
         (acc: any, e: any) => acc + e.totalImages,
         0,
@@ -102,11 +82,18 @@ export const Dashboard: React.FC = () => {
         0,
       );
 
+      console.log("d", [
+        totalImages,
+        totalVideos,
+        totalReviews,
+        totalOwnerReviews,
+      ]);
+
       setContainers([
         totalImages,
-        totalOwnerReviews,
-        totalReviews,
         totalVideos,
+        totalReviews,
+        totalOwnerReviews,
       ]);
 
       // console.log("containers", formatTotalContainers(data));
@@ -156,61 +143,142 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="container-fluid">
-      <div className="row g-3">
-        <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Containers</h5>
-              <ul className="d-flex gap-2">
-                {containers.map((item, index) => (
-                  <span className="badge bg-primary">{item}</span>
-                ))}
-              </ul>
-
-              <div
-                className="position-relative border"
-                style={{ height: "200px", width: "200px" }}
-              >
-                <div className="position-absolute top-50 start-50 translate-middle">
-                  <div className="d-flex flex-column align-items-center">
-                    <span className="fs-1">
-                      {containers.reduce((acc, e) => acc + e, 0)}
+    <Container fluid>
+      <Row>
+        <Col>
+          <Card>
+            <Row>
+              <Col sm={7} className="d-flex">
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title>Statistics</Card.Title>
+                  <Row className="mt-auto row-cols-2 g-2">
+                    {[
+                      {
+                        title: "Images",
+                        total: containers[0],
+                        backgroundColor: "bg-primary-subtle",
+                        color: "text-primary",
+                      },
+                      {
+                        title: "Videos",
+                        total: containers[1],
+                        backgroundColor: "bg-success-subtle",
+                        color: "text-success",
+                      },
+                      {
+                        title: "Reviews",
+                        total: containers[2],
+                        backgroundColor: "bg-info-subtle",
+                        color: "text-info",
+                      },
+                      {
+                        title: "Responses",
+                        total: containers[3],
+                        backgroundColor: "bg-warning-subtle",
+                        color: "text-warning",
+                      },
+                    ].map((item, index) => (
+                      <Col key={index}>
+                        <IconCircleFilled
+                          size={20}
+                          strokeWidth={1}
+                          className={item.color}
+                        />
+                        <span className="text-capitalize ms-2">
+                          {item.title}
+                        </span>
+                      </Col>
+                    ))}
+                  </Row>
+                </Card.Body>
+              </Col>
+              <Col sm={5}>
+                <DoughnutChart
+                  data={containers}
+                  total={containers.reduce((acc, e) => acc + e, 0)}
+                />
+              </Col>
+            </Row>
+            <div className="card-body d-none">
+              <div className="row">
+                <div className="col-6 border d-flex">
+                  <h5 className="card-title">Containers</h5>
+                  <div className="w-100 border mt-auto row row-cols-2 g-2">
+                    {[
+                      {
+                        title: "Images",
+                        total: containers[0],
+                        backgroundColor: "bg-primary-subtle",
+                        color: "text-primary",
+                      },
+                      {
+                        title: "Videos",
+                        total: containers[1],
+                        backgroundColor: "bg-success-subtle",
+                        color: "text-success",
+                      },
+                      {
+                        title: "Reviews",
+                        total: containers[2],
+                        backgroundColor: "bg-info-subtle",
+                        color: "text-info",
+                      },
+                      {
+                        title: "Owner Reviews",
+                        total: containers[3],
+                        backgroundColor: "bg-warning-subtle",
+                        color: "text-warning",
+                      },
+                    ].map((item, index) => (
+                      <div className="col" key={index}>
+                        <span
+                          className={`rounded d-flex align-items-center gap-2 p-2 ${item.backgroundColor}`}
+                        >
+                          <IconCircleFilled
+                            size={20}
+                            strokeWidth={1}
+                            className={item.color}
+                          />
+                          {item.title}
+                        </span>
+                      </div>
+                    ))}
+                    {/* <span className="bg-success-subtle rounded p-2 d-flex gap-2 align-items-center">
+                      <IconCircleFilled
+                        size={18}
+                        strokeWidth={1}
+                        className="text-success"
+                      />
+                      Videos
                     </span>
-                    <p className="m-0 text-muted mt-n3">Total</p>
+                    <span className="bg-info-subtle rounded p-2 d-flex gap-2 align-items-center">
+                      <IconCircleFilled
+                        size={18}
+                        strokeWidth={1}
+                        className="text-info"
+                      />
+                      Reviews
+                    </span>
+                    <span className="bg-warning-subtle rounded p-2 d-flex gap-2 align-items-center">
+                      <IconCircleFilled
+                        size={18}
+                        strokeWidth={1}
+                        className="text-warning"
+                      />
+                      Owner Reviews
+                    </span> */}
                   </div>
                 </div>
-                <Doughnut
-                  data={{
-                    labels: [],
-                    datasets: [
-                      {
-                        label: "# of Votes",
-                        data: containers,
-                        backgroundColor: [
-                          "rgba(255, 99, 132, 1)",
-                          "rgba(54, 162, 235, 1)",
-                          "rgba(255, 206, 86, 1)",
-                          "rgba(75, 192, 192, 1)",
-                        ],
-                        borderRadius: 100,
-                        borderAlign: "center",
-                        spacing: 1,
-                        circular: true,
-                        animation: {
-                          duration: 0,
-                        },
-                      },
-                    ],
-                  }}
-                  options={{
-                    cutout: 80,
-                  }}
-                />
+                <div className="col-6">
+                  <DoughnutChart
+                    data={containers}
+                    total={containers.reduce((acc, e) => acc + e, 0)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </Card>
+        </Col>
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
@@ -265,35 +333,7 @@ export const Dashboard: React.FC = () => {
           <div className="card">
             <div className="card-body">
               <div style={{ height: "350px" }}>
-                <MapContainer
-                  zoom={3}
-                  style={{ height: "100%", width: "100%" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <FitBounds locations={markerLocations} />
-                  {reviews.map((review) =>
-                    review.location &&
-                    review.location.latitude &&
-                    review.location.longitude ? (
-                      <Marker
-                        key={review.id}
-                        position={[
-                          review.location.latitude,
-                          review.location.longitude,
-                        ]}
-                      >
-                        <Popup>
-                          <strong>{review.title}</strong>
-                          <br />
-                          {review.reviews} reviews
-                        </Popup>
-                      </Marker>
-                    ) : null,
-                  )}
-                </MapContainer>
+                <Map locations={markerLocations} />
               </div>
             </div>
           </div>
@@ -337,7 +377,7 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };

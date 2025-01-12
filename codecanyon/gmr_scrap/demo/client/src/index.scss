@@ -1,4 +1,22 @@
 $enable-negative-margins: true;
+// $primary: #007bff;
+// $secondary: #6c757d;
+// $success: #28a745;
+// $info: #17a2b8;
+// $warning: #ffc107;
+// $danger: #dc3545;
+// $light: #f8f9fa;
+// $dark: #343a40;
+
+$primary: #3e2c41;
+$secondary: #194850;
+$success: #a4c694;
+$info: #a1d6e2;
+$warning: #f6e27f;
+$danger: #e05260;
+$light: #e8f0f2;
+$dark: #2c2f33;
+
 @import "bootstrap/scss/bootstrap";
 @import "photoswipe/dist/photoswipe.css";
 
@@ -19,9 +37,17 @@ $enable-negative-margins: true;
   overflow: hidden;
 }
 
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
 .leaflet-div-icon {
   border: none;
   border-radius: 50%;
+  // background-color: var(--bs-primary);
+  background-color: transparent;
+
   svg {
     color: var(--bs-primary);
     stroke-width: 1;
