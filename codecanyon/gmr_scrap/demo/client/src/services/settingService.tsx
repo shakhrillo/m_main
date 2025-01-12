@@ -3,7 +3,7 @@ import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
 const startDate: Date = new Date();
-startDate.setMonth(startDate.getMonth() - 3);
+startDate.setMonth(startDate.getMonth() - 12);
 
 export const allUsers = (fromDate = startDate) => {
   const collectionRef = collection(firestore, "users");

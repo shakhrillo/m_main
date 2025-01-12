@@ -5,7 +5,7 @@ export const formatTotalEarnings = (data: any[], startDate?: Date) => {
   // Default start date to three months ago if not provided
   if (!startDate) {
     startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 2);
+    startDate.setMonth(startDate.getMonth() - 11);
   }
 
   // Populate the dateArray with months from startDate to currentDate

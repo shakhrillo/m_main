@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "chart.js";
 import "leaflet/dist/leaflet.css";
+import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -26,63 +27,72 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  label: string;
-  total: number;
   labels: string[];
   datasets: any[];
 }
 
-export const LineChart = ({
-  total,
-  label,
-  labels,
-  datasets,
-}: LineChartProps) => {
+// let dashboard = document.querySelector("#dashboard");
+// alert(dashboard?.clientWidth);
+
+export const LineChart = ({ labels, datasets }: LineChartProps) => {
+  const [chartWidth, setChartWidth] = useState(0);
+  const chartHeight = 300;
+
+  useEffect(() => {
+    const setWidth = () => {
+      const dashboard = document.querySelector("#dashboard");
+      setChartWidth((dashboard?.clientWidth || 0) - 40);
+    };
+
+    setWidth();
+  }, []);
+
   return (
-    <div className="row g-0 row-cols-1 row-cols-md-2">
-      <div className="col">
-        <div className="fs-1">${total}</div>
-        <p className="m-0">{label}</p>
-        {/* <hr />
-        <small>* Graph for the last 3 days</small> */}
-      </div>
-      <div className="col">
-        <Line
-          data={{
-            labels,
-            datasets,
-          }}
-          options={{
-            scales: {
-              x: {
-                grid: {
-                  color: "#fff",
-                },
-                display: false,
+    chartWidth > 0 && (
+      <Line
+        height={chartHeight}
+        width={chartWidth}
+        data={{
+          labels,
+          datasets,
+        }}
+        options={{
+          // responsive: false,
+          // maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                color: "#fff",
               },
-              y: {
-                display: false,
-                backgroundColor: "#fff",
-                grid: {
-                  color: "#fff",
-                },
-                border: {
-                  color: "transparent",
-                },
+              // display: false,
+              // backgroundColor: "#eee",
+              border: {
+                color: "transparent",
               },
             },
-            plugins: {
-              legend: {
-                display: false,
-                position: "bottom",
-                labels: {
-                  usePointStyle: true,
-                },
+            y: {
+              // display: false,
+              // backgroundColor: "#eee",
+              grid: {
+                // tickBorderDash: [15],
+                color: "#f5f5f5",
+              },
+              border: {
+                color: "transparent",
               },
             },
-          }}
-        />
-      </div>
-    </div>
+          },
+          plugins: {
+            legend: {
+              display: false,
+              position: "bottom",
+              labels: {
+                usePointStyle: true,
+              },
+            },
+          },
+        }}
+      />
+    )
   );
 };

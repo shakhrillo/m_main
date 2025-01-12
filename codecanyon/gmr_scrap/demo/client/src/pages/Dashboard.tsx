@@ -154,23 +154,46 @@ export const Dashboard: React.FC = () => {
   return (
     <Container fluid>
       <Row className="g-3">
-        <Col md={12}>
-          <Card>
+        <Col md={8}>
+          <Card id="dashboard">
             <Card.Body>
               <Card.Title>Total revenue</Card.Title>
               <LineChart
-                total={earnings.reduce((acc, e) => acc + e.total, 0)}
-                label="Total revenue"
                 labels={earnings.map((e) => e.date)}
                 datasets={[
                   {
                     label: "Total revenue",
                     data: earnings.map((e) => e.total),
                     borderColor: "#3e2c41",
-                    backgroundColor: "rgba(62, 44, 65, 0.1)",
+                    // backgroundColor: "rgba(62, 44, 65, 0.1)",
                     borderWidth: 2,
-                    pointRadius: 4,
+                    pointRadius: 2,
                     pointBackgroundColor: "#3e2c41",
+                    tension: 0.2,
+                    fill: true,
+                    backgroundColor: (context: any) => {
+                      const { chart } = context;
+                      const { ctx, chartArea } = chart;
+
+                      // Check if chartArea is defined to avoid rendering issues during animation
+                      if (!chartArea) {
+                        return;
+                      }
+
+                      const { top, bottom } = chartArea;
+
+                      // Create a linear gradient
+                      const gradient = ctx.createLinearGradient(
+                        0,
+                        top,
+                        0,
+                        bottom,
+                      );
+                      gradient.addColorStop(0, "rgba(0, 0, 0, 0.1)");
+                      gradient.addColorStop(1, "rgba(62, 44, 65, 0)");
+
+                      return gradient;
+                    },
                   },
                 ]}
               />
@@ -178,127 +201,84 @@ export const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card>
-            <Row>
-              <Col sm={7} className="d-flex">
+          <Row className="row-cols-1 g-3">
+            <Col>
+              <Card>
+                <Row>
+                  <Col sm={7} className="d-flex">
+                    <Card.Body className="d-flex flex-column">
+                      <Card.Title>Statistics</Card.Title>
+                      <Row className="mt-auto row-cols-2 g-2">
+                        {[
+                          {
+                            title: "Images",
+                            total: containers[0],
+                            backgroundColor: "bg-primary-subtle",
+                            color: "text-primary",
+                          },
+                          {
+                            title: "Videos",
+                            total: containers[1],
+                            backgroundColor: "bg-success-subtle",
+                            color: "text-success",
+                          },
+                          {
+                            title: "Reviews",
+                            total: containers[2],
+                            backgroundColor: "bg-info-subtle",
+                            color: "text-info",
+                          },
+                          {
+                            title: "Responses",
+                            total: containers[3],
+                            backgroundColor: "bg-warning-subtle",
+                            color: "text-warning",
+                          },
+                        ].map((item, index) => (
+                          <Col key={index}>
+                            <IconCircleFilled
+                              size={20}
+                              strokeWidth={1}
+                              className={item.color}
+                            />
+                            <span className="text-capitalize ms-2">
+                              {item.title}
+                            </span>
+                          </Col>
+                        ))}
+                      </Row>
+                    </Card.Body>
+                  </Col>
+                  <Col sm={5}>
+                    <DoughnutChart
+                      data={containers}
+                      total={containers.reduce((acc, e) => acc + e, 0)}
+                    />
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col>
+              <Card className="h-100">
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title>Statistics</Card.Title>
-                  <Row className="mt-auto row-cols-2 g-2">
-                    {[
-                      {
-                        title: "Images",
-                        total: containers[0],
-                        backgroundColor: "bg-primary-subtle",
-                        color: "text-primary",
-                      },
-                      {
-                        title: "Videos",
-                        total: containers[1],
-                        backgroundColor: "bg-success-subtle",
-                        color: "text-success",
-                      },
-                      {
-                        title: "Reviews",
-                        total: containers[2],
-                        backgroundColor: "bg-info-subtle",
-                        color: "text-info",
-                      },
-                      {
-                        title: "Responses",
-                        total: containers[3],
-                        backgroundColor: "bg-warning-subtle",
-                        color: "text-warning",
-                      },
-                    ].map((item, index) => (
-                      <Col key={index}>
-                        <IconCircleFilled
-                          size={20}
-                          strokeWidth={1}
-                          className={item.color}
-                        />
-                        <span className="text-capitalize ms-2">
-                          {item.title}
-                        </span>
-                      </Col>
-                    ))}
-                  </Row>
+                  <Card.Title>Earnings</Card.Title>
+                  <div className="fs-1">
+                    ${earnings.reduce((acc, e) => acc + e.total, 0)}2.222.3
+                  </div>
+                  <small className="mt-auto">
+                    24% increase from last month
+                  </small>
+                  <div className="position-absolute p-1 top-0 end-0 bg-success-subtle mt-2 me-2 rounded">
+                    <IconTrendingUp size={24} className="text-success" />
+                  </div>
                 </Card.Body>
-              </Col>
-              <Col sm={5}>
-                <DoughnutChart
-                  data={containers}
-                  total={containers.reduce((acc, e) => acc + e, 0)}
-                />
-              </Col>
-            </Row>
-          </Card>
+              </Card>
+            </Col>
+          </Row>
         </Col>
-        <Col md={4}>
-          <Card className="h-100">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title>Earnings</Card.Title>
-              <div className="fs-1">
-                ${earnings.reduce((acc, e) => acc + e.total, 0)}2.222.3
-              </div>
-              <small className="mt-auto">24% increase from last month</small>
-              <div className="position-absolute p-1 top-0 end-0 bg-success-subtle mt-2 me-2 rounded">
-                <IconTrendingUp size={24} className="text-success" />
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="h-100">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title>Users</Card.Title>
-              <div className="fs-1">
-                ${users.reduce((acc, e) => acc + e.total, 0)}2.222.3
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card className="h-100">
+        <Col md={12}>
+          <Card style={{ height: "400px" }}>
             <Map locations={markerLocations} />
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card style={{ height: "400px" }} className="overflow-auto">
-            <Card.Body>
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Reviews</th>
-                    <th>Location</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reviews.map((review) => (
-                    <tr key={review.id}>
-                      <td>{review.title}</td>
-                      <td>{review.reviews}</td>
-                      <td>
-                        {review.location &&
-                        review.location.latitude &&
-                        review.location.longitude ? (
-                          <a
-                            href={`https://www.google.com/maps/search/?api=1&query=${review.location.latitude},${review.location.longitude}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {review.location.latitude},{" "}
-                            {review.location.longitude}
-                          </a>
-                        ) : (
-                          "N/A"
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
           </Card>
         </Col>
       </Row>
