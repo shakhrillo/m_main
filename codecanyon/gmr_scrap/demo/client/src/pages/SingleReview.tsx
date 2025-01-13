@@ -27,6 +27,8 @@ import {
 } from "../services/scrapService";
 import { CommentQAView } from "../components/CommentQAView";
 import { CommentResponseView } from "../components/CommentResponseView";
+import { CommentImages } from "../components/CommentImages";
+import { CommentVideos } from "../components/CommentVideos";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -97,6 +99,8 @@ export const SingleReview = () => {
                         <th>Review</th>
                         <th>QA</th>
                         <th>Response</th>
+                        <th>Images</th>
+                        <th>Videos</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -116,6 +120,12 @@ export const SingleReview = () => {
                           </td>
                           <td>
                             <CommentResponseView comment={review} />
+                          </td>
+                          <td>
+                            <CommentImages comment={review} />
+                          </td>
+                          <td>
+                            <CommentVideos comment={review} />
                           </td>
                         </tr>
                       ))}

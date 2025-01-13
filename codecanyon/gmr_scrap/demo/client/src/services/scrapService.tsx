@@ -21,14 +21,14 @@ export interface ICommentUser {
 export interface IComment {
   date: string;
   id: string;
-  imageUrls: string[];
+  imageUrls: { thumb: string; id: string }[];
   qa: string[];
   rating: number;
   response: string;
   review: string;
   time: number; // Need to convert to Timestamp
   user: ICommentUser;
-  videoUrls: string[];
+  videoUrls: { videoUrl: string; thumb: string; id: string }[];
 }
 
 export interface IReview {
