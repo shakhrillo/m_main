@@ -25,13 +25,13 @@ export const Ratings = ({ info }: { info?: IReview }) => {
       <span className="me-2">{validRating.toFixed(1)}</span>
 
       {Array.from({ length: fullStars }).map((_, i) => (
-        <IconStarFilled key={`full-${i}`} size={24} color="#FFD700" />
+        <IconStarFilled key={`full-${i}`} size={20} color="#FFD700" />
       ))}
 
-      {halfStar && <IconStarHalfFilled size={24} color="#FFD700" />}
+      {halfStar && <IconStarHalfFilled size={20} color="#FFD700" />}
 
       {Array.from({ length: emptyStars }).map((_, i) => (
-        <IconStar key={`empty-${i}`} size={24} color="#FFD700" />
+        <IconStar key={`empty-${i}`} size={20} color="#FFD700" />
       ))}
 
       <span className="ms-2">({formatNumber(info.reviews)} reviews)</span>

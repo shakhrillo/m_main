@@ -40,6 +40,9 @@ export interface IReview {
   totalVideos?: number;
   totalOwnerReviews?: number;
 
+  csvUrl?: string;
+  jsonUrl?: string;
+
   location?: GeoPoint;
 }
 

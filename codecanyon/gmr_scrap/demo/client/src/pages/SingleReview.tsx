@@ -1,6 +1,16 @@
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Stack,
+  Tab,
+  Table,
+  Tabs,
+} from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
@@ -183,6 +193,42 @@ export const SingleReview = () => {
         </Col>
         <Col md={4}>
           <PlaceInfo info={info} />
+          <Card className="mt-3">
+            <Card.Body>
+              <Stack gap={3} direction="horizontal">
+                <Button
+                  variant="secondary"
+                  className="w-100"
+                  onClick={() => {
+                    const url = info.csvUrl;
+                    if (url) {
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = "data.csv";
+                      a.click();
+                    }
+                  }}
+                >
+                  Download CSV
+                </Button>
+                <Button
+                  variant="outline-secondary"
+                  className="w-100"
+                  onClick={() => {
+                    const url = info.jsonUrl;
+                    if (url) {
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = "data.json";
+                      a.click();
+                    }
+                  }}
+                >
+                  Download JSON
+                </Button>
+              </Stack>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
