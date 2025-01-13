@@ -5,6 +5,7 @@ import { Ratings } from "./Ratings";
 import formatNumber from "../utils/formatNumber";
 import { spentTime } from "../utils/spentTime";
 import { formatTimestamp } from "../utils/formatTimestamp";
+import { StatusInfo } from "./StatusInfo";
 
 export const PlaceInfo = ({ info }: { info: IReview | undefined }) => {
   return info ? (
@@ -26,31 +27,34 @@ export const PlaceInfo = ({ info }: { info: IReview | undefined }) => {
             <Ratings info={info} />
             <hr />
             <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Status:</strong> {info.status}
+              <span className="me-auto">Status:</span>{" "}
+              <StatusInfo info={info} />
             </Stack>
             <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Reviews:</strong>{" "}
-              {formatNumber(info.totalReviews)}
+              <span className="me-auto">Comments:</span>{" "}
+              <strong>
+                {formatNumber(info.totalReviews)} reviews /{" "}
+                {formatNumber(info.totalOwnerReviews)} replies
+              </strong>
             </Stack>
             <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Images:</strong>{" "}
-              {formatNumber(info.totalImages)}
+              <span className="me-auto">Media:</span>
+              <strong>
+                {formatNumber(info.totalImages)} images /{" "}
+                {formatNumber(info.totalVideos)} videos
+              </strong>
             </Stack>
             <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Videos:</strong>{" "}
-              {formatNumber(info.totalVideos)}
+              <span className="me-auto">Spent Time:</span>
+              <strong>{spentTime(info)}</strong>
             </Stack>
             <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Owner Reviews:</strong>{" "}
-              {formatNumber(info.totalOwnerReviews)}
-            </Stack>
-            <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Spent Time:</strong> {spentTime(info)}
-            </Stack>
-            <Stack direction="horizontal" className="mb-2">
-              <strong className="me-auto">Created At:</strong>{" "}
-              {formatTimestamp(info.createdAt).date}{" "}
-              {formatTimestamp(info.createdAt).time}
+              <span className="me-auto">Created At:</span>
+              <strong>
+                {formatTimestamp(info.createdAt).date}
+                {" | "}
+                {formatTimestamp(info.createdAt).time}
+              </strong>
             </Stack>
           </Card.Body>
         </Col>
