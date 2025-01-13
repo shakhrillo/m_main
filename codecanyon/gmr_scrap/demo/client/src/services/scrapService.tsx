@@ -35,6 +35,11 @@ export interface IReview {
   extractOwnerResponse?: boolean;
   status?: string;
 
+  totalReviews?: number;
+  totalImages?: number;
+  totalVideos?: number;
+  totalOwnerReviews?: number;
+
   location?: GeoPoint;
 }
 

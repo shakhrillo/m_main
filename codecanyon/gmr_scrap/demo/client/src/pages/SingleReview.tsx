@@ -69,6 +69,7 @@ export const SingleReview = () => {
                 transition={false}
                 variant="underline"
                 justify={true}
+                className="border-bottom"
               >
                 <Tab
                   className="mt-3"

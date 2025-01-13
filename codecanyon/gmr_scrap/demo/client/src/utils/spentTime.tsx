@@ -1,19 +1,13 @@
 import { Timestamp } from "firebase/firestore";
 import { differenceInSeconds } from "date-fns";
+import { IReview } from "../services/scrapService";
 
-export const spentTime = ({
-  createdAt,
-  updatedAt,
-}: {
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}): string => {
-  if (!createdAt || !updatedAt)
-    throw new Error("Missing 'createdAt' or 'updatedAt'.");
+export const spentTime = (info: IReview) => {
+  if (!info.createdAt || !info.updatedAt) return "00:00:00";
 
   const diffInSeconds = differenceInSeconds(
-    new Date(updatedAt.seconds * 1000),
-    new Date(createdAt.seconds * 1000),
+    new Date(info.updatedAt.seconds * 1000),
+    new Date(info.createdAt.seconds * 1000),
   );
 
   if (diffInSeconds < 0)
