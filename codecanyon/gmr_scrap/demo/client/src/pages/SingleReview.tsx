@@ -10,7 +10,7 @@ import {
   scrapVideos,
   validateUrlData,
 } from "../services/scrapService";
-import { Map } from "../components/Map";
+import { Map } from "@vis.gl/react-google-maps";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -56,31 +56,18 @@ export const SingleReview = () => {
           <div className="card">
             <div className="row g-0">
               <div className="col-md-4">
-                <Tabs defaultActiveKey="leafletMap" className="mb-3">
-                  <Tab
-                    eventKey="leafletMap"
-                    title="Leaflet Map"
-                    mountOnEnter={true}
-                    unmountOnExit={true}
-                  >
-                    {info.location ? (
-                      <div style={{ height: "250px" }}>
-                        <Map
-                          locations={[
-                            [info.location.latitude, info.location.longitude],
-                          ]}
-                        />
-                      </div>
-                    ) : null}
-                  </Tab>
-                  <Tab eventKey="googleMap" title="Google Map Screenshot">
-                    <img
-                      src={info.screenshot}
-                      className="img-fluid rounded-start"
-                      alt="..."
-                    />
-                  </Tab>
-                </Tabs>
+                {info?.location ? (
+                  <Map
+                    style={{ width: "250px", height: "250px" }}
+                    defaultCenter={{
+                      lat: info?.location?.latitude,
+                      lng: info?.location?.longitude,
+                    }}
+                    defaultZoom={12}
+                    gestureHandling={"greedy"}
+                    disableDefaultUI={true}
+                  />
+                ) : null}
               </div>
               <div className="col-md-8">
                 <div className="card-body">
