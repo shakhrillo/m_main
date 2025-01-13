@@ -10,7 +10,7 @@ import {
   scrapVideos,
   validateUrlData,
 } from "../services/scrapService";
-import { Map } from "@vis.gl/react-google-maps";
+import { Map, Marker } from "@vis.gl/react-google-maps";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -66,13 +66,30 @@ export const SingleReview = () => {
                     defaultZoom={12}
                     gestureHandling={"greedy"}
                     disableDefaultUI={true}
-                  />
+                  >
+                    <Marker
+                      position={{
+                        lat: 41.0200155,
+                        lng: 28.9732201,
+                      }}
+                      clickable={true}
+                      onClick={() => alert("marker was clicked!")}
+                      title={"clickable google.maps.Marker"}
+                    />
+                  </Map>
                 ) : null}
               </div>
               <div className="col-md-8">
                 <div className="card-body">
                   <h5 className="card-title">{info.title}</h5>
-                  <p className="card-text">{info.address}</p>
+                  <a
+                    href={info.extendedUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="card-text"
+                  >
+                    {info.address}
+                  </a>
                   <hr />
                   <ul className="list-unstyled">
                     <li>

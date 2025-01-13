@@ -170,11 +170,15 @@ let driver;
     log(`Screenshot uploaded: ${data.screenshot}`);
 
     data.extendedUrl = await driver.getCurrentUrl();
-    const matches = data.extendedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const matches = url.match(
+      /@(-?\d+\.\d+),(-?\d+\.\d+)|3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/
+    );
     if (matches) {
-      const lat = matches[1];
-      const lng = matches[2];
-      data.location = new GeoPoint(parseFloat(lat), parseFloat(lng));
+      const lat = matches[3];
+      const lng = matches[4];
+      if (lat && lng) {
+        data.location = new GeoPoint(parseFloat(lat), parseFloat(lng));
+      }
     }
   } catch (error) {
     data.error = JSON.stringify(error);

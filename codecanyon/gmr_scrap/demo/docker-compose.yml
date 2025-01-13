@@ -20,8 +20,8 @@ services:
     image: ${DOCKER_IMAGE}
     container_name: ${DOCKER_CONTAINER_NAME}
     privileged: true
-    volumes:
-      - /var/lib/docker
+    # volumes:
+    #   - ${DOCKER_PATH}
     environment:
       DOCKER_TLS_CERTDIR: ""
     ports:
