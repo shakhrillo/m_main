@@ -57,26 +57,28 @@ export const SingleReview = () => {
             <div className="row g-0">
               <div className="col-md-4">
                 {info?.location ? (
-                  <Map
-                    style={{ width: "250px", height: "250px" }}
-                    defaultCenter={{
-                      lat: info?.location?.latitude,
-                      lng: info?.location?.longitude,
-                    }}
-                    defaultZoom={12}
-                    gestureHandling={"greedy"}
-                    disableDefaultUI={true}
-                  >
-                    <Marker
-                      position={{
-                        lat: 41.0200155,
-                        lng: 28.9732201,
+                  <div style={{ height: "300px" }}>
+                    <Map
+                      className="w-100 h-100"
+                      defaultCenter={{
+                        lat: info?.location?.latitude,
+                        lng: info?.location?.longitude,
                       }}
-                      clickable={true}
-                      onClick={() => alert("marker was clicked!")}
-                      title={"clickable google.maps.Marker"}
-                    />
-                  </Map>
+                      defaultZoom={18}
+                      gestureHandling={"greedy"}
+                      disableDefaultUI={true}
+                    >
+                      <Marker
+                        position={{
+                          lat: info?.location?.latitude,
+                          lng: info?.location?.longitude,
+                        }}
+                        clickable={true}
+                        onClick={() => alert("marker was clicked!")}
+                        title={"clickable google.maps.Marker"}
+                      />
+                    </Map>
+                  </div>
                 ) : null}
               </div>
               <div className="col-md-8">

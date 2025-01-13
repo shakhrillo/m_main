@@ -182,8 +182,8 @@ let driver;
     const lng2 = secondMatch ? secondMatch[2] : null;
 
     data.location = new GeoPoint(
-      parseFloat(lat1 || lat2),
-      parseFloat(lng1 || lng2)
+      parseFloat(lat2 || lat1),
+      parseFloat(lng2 || lng1)
     );
   } catch (error) {
     data.error = JSON.stringify(error);
