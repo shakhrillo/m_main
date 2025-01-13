@@ -305,7 +305,7 @@ async function validateNode(node) {
 
     let response = "";
     if (gmrScrap["extractOwnerResponse"]) {
-      let response = getReviewResponse(node);
+      response = getReviewResponse(node);
       if (!!response) {
         gmrScrap["extractedOwnerReviewCount"] = !gmrScrap[
           "extractedOwnerReviewCount"

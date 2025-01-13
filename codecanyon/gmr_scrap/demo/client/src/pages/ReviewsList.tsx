@@ -2,7 +2,12 @@ import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
-import { scrapStatistics, validatedUrls } from "../services/scrapService";
+import {
+  IComment,
+  IReview,
+  scrapStatistics,
+  validatedUrls,
+} from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 import { Tabs, Tab } from "react-bootstrap";
@@ -13,7 +18,7 @@ export const ReviewsList = () => {
 
   // States for managing dashboard data
   const [info, setInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<any[]>([]); // List of complated reviews
+  const [reviews, setReviews] = useState<IReview[]>([]);
   const [loading, setLoading] = useState(false); // Loading state for fetching data
   const [activeTableFilter, setActiveTableFilter] = useState("all"); // Active table filter
 
@@ -111,6 +116,7 @@ export const ReviewsList = () => {
                         <th scope="col">Reviews</th>
                         <th scope="col">Images</th>
                         <th scope="col">Videos</th>
+                        <th scope="col">Responses</th>
                         <th scope="col">Time</th>
                         <th scope="col"></th>
                       </tr>
@@ -128,7 +134,7 @@ export const ReviewsList = () => {
                               }}
                             >
                               <span className="d-flex align-items-center">
-                                {review.status}
+                                {/* {review.status} */}
                                 <div className="ms-1">
                                   {review.title || review.url}
                                 </div>
@@ -153,6 +159,7 @@ export const ReviewsList = () => {
                           </td>
                           <td>{review.totalImages || "0"}</td>
                           <td>{review.totalVideos || "0"}</td>
+                          <td>{review.totalOwnerReviews || "0"}</td>
                           <td>{spentTime(review)}</td>
                           <td>
                             <div className="d-flex flex-column gap-1">
