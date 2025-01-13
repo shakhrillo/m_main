@@ -1,3 +1,4 @@
+import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
@@ -14,6 +15,9 @@ import {
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
+import { CommentView } from "../components/CommentView";
+import { PlaceInfo } from "../components/PlaceInfo";
+import { Ratings } from "../components/Ratings";
 import {
   IComment,
   scrapData,
@@ -21,16 +25,8 @@ import {
   scrapVideos,
   validateUrlData,
 } from "../services/scrapService";
-import { Map, Marker } from "@vis.gl/react-google-maps";
-import { GoogleMap } from "../components/GoogleMap";
-import {
-  IconLibraryPhoto,
-  IconMessage,
-  IconStar,
-  IconVideo,
-} from "@tabler/icons-react";
-import { PlaceInfo } from "../components/PlaceInfo";
-import { Ratings } from "../components/Ratings";
+import { CommentQAView } from "../components/CommentQAView";
+import { CommentResponseView } from "../components/CommentResponseView";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -112,17 +108,15 @@ export const SingleReview = () => {
                               <Ratings info={review} />
                             </div>
                           </td>
-                          <td>{review.review}</td>
                           <td>
-                            <ul>
-                              {/* {review..map((qa, index) => (
-                        <li key={index} className="list-group-item">
-                          <small className="text-nowrap">{qa}</small>
-                        </li>
-                      ))} */}
-                            </ul>
+                            <CommentView comment={review} />
                           </td>
-                          <td>{/* {review.response} */}</td>
+                          <td>
+                            <CommentQAView comment={review} />
+                          </td>
+                          <td>
+                            <CommentResponseView comment={review} />
+                          </td>
                         </tr>
                       ))}
                     </tbody>
