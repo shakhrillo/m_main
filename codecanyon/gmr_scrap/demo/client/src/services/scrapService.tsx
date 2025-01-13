@@ -12,6 +12,25 @@ import {
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
+export interface ICommentUser {
+  info: string[];
+  url: string;
+  name: string;
+}
+
+export interface IComment {
+  date: string;
+  id: string;
+  imageUrls: string[];
+  qa: string[];
+  rating: number;
+  response: string;
+  review: string;
+  time: number; // Need to convert to Timestamp
+  user: ICommentUser;
+  videoUrls: string[];
+}
+
 export interface IReview {
   id?: string;
 
@@ -131,7 +150,7 @@ export const scrapData = (placeId: string, uid: string) => {
     firestore,
     `users/${uid}/reviews/${placeId}/reviews`,
   );
-  const reviews$ = new BehaviorSubject([] as any);
+  const reviews$ = new BehaviorSubject([] as IComment[]);
 
   const unsubscribe = onSnapshot(
     query(collectionRef, orderBy("time", "asc")),
@@ -139,7 +158,7 @@ export const scrapData = (placeId: string, uid: string) => {
       const reviewsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as IComment[];
       reviews$.next(reviewsData);
     },
     (error) => {

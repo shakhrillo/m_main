@@ -15,6 +15,7 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
 import {
+  IComment,
   scrapData,
   scrapImages,
   scrapVideos,
@@ -29,12 +30,13 @@ import {
   IconVideo,
 } from "@tabler/icons-react";
 import { PlaceInfo } from "../components/PlaceInfo";
+import { Ratings } from "../components/Ratings";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
   const { place } = useParams() as { place: string };
   const [info, setPlaceInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<IComment[]>([]);
   const [images, setImages] = useState<any[]>([]);
   const [videos, setVideos] = useState<any[]>([]);
 
@@ -107,8 +109,9 @@ export const SingleReview = () => {
                           <td>{index + 1}</td>
                           <td>
                             <div className="d-flex align-items-center gap-1">
-                              <IconStar size={20} />
-                              {review.rating}
+                              <Ratings info={review} expand />
+                              {/* <IconStar size={20} />
+                              {review.rating} */}
                             </div>
                           </td>
                           <td>{review.review}</td>
