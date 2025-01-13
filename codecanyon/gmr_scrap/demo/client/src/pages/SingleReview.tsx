@@ -109,9 +109,7 @@ export const SingleReview = () => {
                           <td>{index + 1}</td>
                           <td>
                             <div className="d-flex align-items-center gap-1">
-                              <Ratings info={review} expand />
-                              {/* <IconStar size={20} />
-                              {review.rating} */}
+                              <Ratings info={review} />
                             </div>
                           </td>
                           <td>{review.review}</td>
