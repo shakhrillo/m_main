@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
@@ -11,6 +11,13 @@ import {
   validateUrlData,
 } from "../services/scrapService";
 import { Map, Marker } from "@vis.gl/react-google-maps";
+import { GoogleMap } from "../components/GoogleMap";
+import {
+  IconLibraryPhoto,
+  IconMessage,
+  IconStar,
+  IconVideo,
+} from "@tabler/icons-react";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -50,83 +57,32 @@ export const SingleReview = () => {
   }, [place]);
 
   return (
-    <div className="container-fluid">
-      <div className="row row-cols-1 g-3">
-        <div className="col">
-          <div className="card">
-            <div className="row g-0">
-              <div className="col-md-4">
-                {info?.location ? (
-                  <div style={{ height: "300px" }}>
-                    <Map
-                      className="w-100 h-100"
-                      defaultCenter={{
-                        lat: info?.location?.latitude,
-                        lng: info?.location?.longitude,
-                      }}
-                      defaultZoom={18}
-                      gestureHandling={"greedy"}
-                      disableDefaultUI={true}
-                    >
-                      <Marker
-                        position={{
-                          lat: info?.location?.latitude,
-                          lng: info?.location?.longitude,
-                        }}
-                        clickable={true}
-                        onClick={() => alert("marker was clicked!")}
-                        title={"clickable google.maps.Marker"}
-                      />
-                    </Map>
-                  </div>
-                ) : null}
-              </div>
-              <div className="col-md-8">
-                <div className="card-body">
-                  <h5 className="card-title">{info.title}</h5>
-                  <a
-                    href={info.extendedUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="card-text"
-                  >
-                    {info.address}
-                  </a>
-                  <hr />
-                  <ul className="list-unstyled">
-                    <li>
-                      <strong>Status:</strong> {info.status}
-                    </li>
-                    <li>
-                      <strong>Average Rating:</strong>{" "}
-                      {info.rating ? info.rating : "N/A"}
-                    </li>
-                    <li>
-                      <strong>Extracted Reviews:</strong>{" "}
-                      {info.totalReviews || 0}
-                    </li>
-                    <li>
-                      <strong>Spent Time:</strong>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col">
-          <div className="card">
-            <div className="card-body">
+    <Container fluid>
+      <Row>
+        <Col>
+          <Card>
+            <Card.Body>
               <Tabs
                 defaultActiveKey="comments"
                 id="scrap-tabs"
-                className="mb-3"
+                transition={false}
+                variant="underline"
+                justify={true}
               >
-                <Tab eventKey="comments" title="Comments">
-                  <Table striped bordered hover>
+                <Tab
+                  className="mt-3"
+                  eventKey="comments"
+                  title={
+                    <>
+                      <IconMessage size={24} />
+                      <span className="ms-2">Comments</span>
+                    </>
+                  }
+                >
+                  <Table borderless responsive hover>
                     <thead>
                       <tr>
-                        <th>Date</th>
+                        <th>#</th>
                         <th>Rating</th>
                         <th>Review</th>
                         <th>QA</th>
@@ -134,10 +90,15 @@ export const SingleReview = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {reviews.map((review) => (
+                      {reviews.map((review, index) => (
                         <tr key={review.id}>
-                          <td>{}</td>
-                          <td>{review.rating}</td>
+                          <td>{index + 1}</td>
+                          <td>
+                            <div className="d-flex align-items-center gap-1">
+                              <IconStar size={20} />
+                              {review.rating}
+                            </div>
+                          </td>
                           <td>{review.review}</td>
                           <td>
                             <ul>
@@ -154,7 +115,15 @@ export const SingleReview = () => {
                     </tbody>
                   </Table>
                 </Tab>
-                <Tab eventKey="images" title="Images">
+                <Tab
+                  eventKey="images"
+                  title={
+                    <>
+                      <IconLibraryPhoto size={24} />
+                      <span className="ms-2">Images</span>
+                    </>
+                  }
+                >
                   <div className="row row-cols-6 g-2">
                     <Gallery
                       options={{
@@ -184,7 +153,15 @@ export const SingleReview = () => {
                     </Gallery>
                   </div>
                 </Tab>
-                <Tab eventKey="videos" title="Videos">
+                <Tab
+                  eventKey="videos"
+                  title={
+                    <>
+                      <IconVideo size={24} />
+                      <span className="ms-2">Videos</span>
+                    </>
+                  }
+                >
                   <div className="row row-cols-6 g-2">
                     {videos.map((video, index) => (
                       <div className="col" key={index}>
@@ -199,10 +176,50 @@ export const SingleReview = () => {
                   </div>
                 </Tab>
               </Tabs>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card>
+            <Row className="g-0 row-cols-1">
+              <Col>
+                {info?.location ? (
+                  <div
+                    style={{ height: "300px" }}
+                    className="rounded-top overflow-hidden"
+                  >
+                    <GoogleMap location={info?.location} />
+                  </div>
+                ) : null}
+              </Col>
+              <Col>
+                <Card.Body>
+                  <Card.Title>{info.title}</Card.Title>
+                  <Card.Link href={info.url} target="_blank" rel="noreferrer">
+                    {info.address}
+                  </Card.Link>
+                  <ul className="d-none list-unstyled">
+                    <li>
+                      <strong>Status:</strong> {info.status}
+                    </li>
+                    <li>
+                      <strong>Average Rating:</strong>{" "}
+                      {info.rating ? info.rating : "N/A"}
+                    </li>
+                    <li>
+                      <strong>Extracted Reviews:</strong>{" "}
+                      {info.totalReviews || 0}
+                    </li>
+                    <li>
+                      <strong>Spent Time:</strong>
+                    </li>
+                  </ul>
+                </Card.Body>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
