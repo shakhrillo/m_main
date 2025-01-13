@@ -170,16 +170,21 @@ let driver;
     log(`Screenshot uploaded: ${data.screenshot}`);
 
     data.extendedUrl = await driver.getCurrentUrl();
-    const matches = url.match(
-      /@(-?\d+\.\d+),(-?\d+\.\d+)|3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/
+
+    // Match the first set of coordinates after '@'
+    const atMatch = data.extendedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const lat1 = atMatch ? atMatch[1] : null;
+    const lng1 = atMatch ? atMatch[2] : null;
+
+    // Match the second set of coordinates after '3d' and '4d'
+    const secondMatch = data.extendedUrl.match(/3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+    const lat2 = secondMatch ? secondMatch[1] : null;
+    const lng2 = secondMatch ? secondMatch[2] : null;
+
+    data.location = new GeoPoint(
+      parseFloat(lat1 || lat2),
+      parseFloat(lng1 || lng2)
     );
-    if (matches) {
-      const lat = matches[3];
-      const lng = matches[4];
-      if (lat && lng) {
-        data.location = new GeoPoint(parseFloat(lat), parseFloat(lng));
-      }
-    }
   } catch (error) {
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);
