@@ -364,7 +364,8 @@ export const Scrap = () => {
                                 <span className="fs-5">
                                   {createElement(option.icon, {
                                     size: 40,
-                                    className: "me-2",
+                                    className: "text-primary me-2",
+                                    strokeWidth: 2,
                                   })}
                                   {option.title}
                                 </span>

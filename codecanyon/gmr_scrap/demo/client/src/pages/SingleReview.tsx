@@ -18,6 +18,7 @@ import {
   IconStar,
   IconVideo,
 } from "@tabler/icons-react";
+import { PlaceInfo } from "../components/PlaceInfo";
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -180,44 +181,7 @@ export const SingleReview = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card>
-            <Row className="g-0 row-cols-1">
-              <Col>
-                {info?.location ? (
-                  <div
-                    style={{ height: "300px" }}
-                    className="rounded-top overflow-hidden"
-                  >
-                    <GoogleMap location={info?.location} />
-                  </div>
-                ) : null}
-              </Col>
-              <Col>
-                <Card.Body>
-                  <Card.Title>{info.title}</Card.Title>
-                  <Card.Link href={info.url} target="_blank" rel="noreferrer">
-                    {info.address}
-                  </Card.Link>
-                  <ul className="d-none list-unstyled">
-                    <li>
-                      <strong>Status:</strong> {info.status}
-                    </li>
-                    <li>
-                      <strong>Average Rating:</strong>{" "}
-                      {info.rating ? info.rating : "N/A"}
-                    </li>
-                    <li>
-                      <strong>Extracted Reviews:</strong>{" "}
-                      {info.totalReviews || 0}
-                    </li>
-                    <li>
-                      <strong>Spent Time:</strong>
-                    </li>
-                  </ul>
-                </Card.Body>
-              </Col>
-            </Row>
-          </Card>
+          <PlaceInfo info={info} />
         </Col>
       </Row>
     </Container>

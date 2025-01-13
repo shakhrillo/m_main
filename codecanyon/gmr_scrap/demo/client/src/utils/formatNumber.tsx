@@ -3,7 +3,7 @@
  * @param number The number to format
  * @returns The formatted number
  */
-function formatNumber(number: string | undefined): string {
+function formatNumber(number: number | string | undefined): string {
   if (!number) {
     return "0";
   }
