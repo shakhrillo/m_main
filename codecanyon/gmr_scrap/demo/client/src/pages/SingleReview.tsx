@@ -1,4 +1,9 @@
-import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
+import {
+  IconLibraryPhoto,
+  IconMessage,
+  IconSearch,
+  IconVideo,
+} from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
@@ -6,6 +11,9 @@ import {
   Card,
   Col,
   Container,
+  Dropdown,
+  Form,
+  InputGroup,
   Row,
   Stack,
   Tab,
@@ -37,6 +45,17 @@ export const SingleReview = () => {
   const [reviews, setReviews] = useState<IComment[]>([]);
   const [images, setImages] = useState<any[]>([]);
   const [videos, setVideos] = useState<any[]>([]);
+  const [filterOptions, setFilterOptions] = useState<{
+    onlyImages: boolean;
+    onlyVideos: boolean;
+    onlyQA: boolean;
+    onlyResponse: boolean;
+  }>({
+    onlyImages: false,
+    onlyVideos: false,
+    onlyQA: false,
+    onlyResponse: false,
+  });
 
   useEffect(() => {
     const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
@@ -46,10 +65,18 @@ export const SingleReview = () => {
       },
     );
 
-    const reviewsSubscription = scrapData(place, uid).subscribe((data) => {
-      console.log("data", data);
-      setReviews(data);
-    });
+    return () => {
+      placeInfoSubbscription.unsubscribe();
+    };
+  }, [place, uid]);
+
+  useEffect(() => {
+    const reviewsSubscription = scrapData(place, uid, filterOptions).subscribe(
+      (data) => {
+        console.log("data", data);
+        setReviews(data);
+      },
+    );
 
     const imagesSubscription = scrapImages(place, uid).subscribe((data) => {
       console.log("images", data);
@@ -62,35 +89,126 @@ export const SingleReview = () => {
     });
 
     return () => {
-      placeInfoSubbscription.unsubscribe();
       reviewsSubscription.unsubscribe();
     };
-  }, [place]);
+  }, [place, filterOptions, uid]);
 
   return (
     <Container fluid>
       <Row>
         <Col md={9}>
-          <Card>
-            <Card.Body>
-              <Tabs
-                defaultActiveKey="comments"
-                id="scrap-tabs"
-                transition={false}
-                variant="underline"
-                justify={true}
-                className="border-bottom"
-              >
-                <Tab
-                  className="mt-3"
-                  eventKey="comments"
-                  title={
-                    <>
-                      <IconMessage size={24} />
-                      <span className="ms-2">Comments</span>
-                    </>
-                  }
-                >
+          <Tabs
+            defaultActiveKey="comments"
+            id="scrap-tabs"
+            variant="underline"
+            className="border-bottom"
+          >
+            <Tab
+              eventKey="comments"
+              title={
+                <>
+                  <IconMessage size={24} />
+                  <span className="ms-2">Comments</span>
+                </>
+              }
+            >
+              <Stack direction="horizontal" className="mt-3">
+                <div className="d-inline-block me-auto">
+                  <InputGroup>
+                    <InputGroup.Text id="search-icon">
+                      <IconSearch />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="search"
+                      id="search"
+                      placeholder="Search..."
+                      aria-label="Search"
+                    />
+                  </InputGroup>
+                </div>
+                <Dropdown autoClose="outside">
+                  <Dropdown.Toggle id="dropdown-filter" variant="secondary">
+                    Filter
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFilterOptions({
+                          ...filterOptions,
+                          onlyImages: !filterOptions.onlyImages,
+                        });
+                      }}
+                    >
+                      <Form>
+                        <Form.Check
+                          type="checkbox"
+                          id="filter-image-checkbox"
+                          label="Image comments"
+                          checked={filterOptions.onlyImages}
+                        />
+                      </Form>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFilterOptions({
+                          ...filterOptions,
+                          onlyVideos: !filterOptions.onlyVideos,
+                        });
+                      }}
+                    >
+                      <Form>
+                        <Form.Check
+                          type="checkbox"
+                          id="filter-video-checkbox"
+                          label="Video comments"
+                          checked={filterOptions.onlyVideos}
+                        />
+                      </Form>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFilterOptions({
+                          ...filterOptions,
+                          onlyQA: !filterOptions.onlyQA,
+                        });
+                      }}
+                    >
+                      <Form>
+                        <Form.Check
+                          type="checkbox"
+                          id="filter-qa-checkbox"
+                          label="QA comments"
+                          checked={filterOptions.onlyQA}
+                        />
+                      </Form>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFilterOptions({
+                          ...filterOptions,
+                          onlyResponse: !filterOptions.onlyResponse,
+                        });
+                      }}
+                    >
+                      <Form>
+                        <Form.Check
+                          type="checkbox"
+                          id="filter-response-checkbox"
+                          label="Response comments"
+                          checked={filterOptions.onlyResponse}
+                        />
+                      </Form>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Stack>
+              <Card className="mt-3">
+                <Card.Body>
                   <Table responsive hover>
                     <thead>
                       <tr>
@@ -116,83 +234,83 @@ export const SingleReview = () => {
                           <td>
                             <CommentQAView comment={review} />
                           </td>
-                          <td className="border">
+                          <td>
                             <CommentResponseView comment={review} />
                           </td>
-                          <td className="border" style={{ width: "60px" }}>
+                          <td style={{ width: "60px" }}>
                             <CommentImages comment={review} />
                           </td>
-                          <td className="border" style={{ width: "60px" }}>
+                          <td style={{ width: "60px" }}>
                             <CommentVideos comment={review} />
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </Table>
-                </Tab>
-                <Tab
-                  eventKey="images"
-                  title={
-                    <>
-                      <IconLibraryPhoto size={24} />
-                      <span className="ms-2">Images</span>
-                    </>
-                  }
+                </Card.Body>
+              </Card>
+            </Tab>
+            <Tab
+              eventKey="images"
+              title={
+                <>
+                  <IconLibraryPhoto size={24} />
+                  <span className="ms-3">Images</span>
+                </>
+              }
+            >
+              <div className="row row-cols-6 g-2">
+                <Gallery
+                  options={{
+                    zoom: false,
+                    showHideAnimationType: "none",
+                    hideAnimationDuration: 0,
+                    showAnimationDuration: 0,
+                    zoomAnimationDuration: 0,
+                    bgOpacity: 0.9,
+                  }}
                 >
-                  <div className="row row-cols-6 g-2">
-                    <Gallery
-                      options={{
-                        zoom: false,
-                        showHideAnimationType: "none",
-                        hideAnimationDuration: 0,
-                        showAnimationDuration: 0,
-                        zoomAnimationDuration: 0,
-                        bgOpacity: 0.9,
-                      }}
-                    >
-                      {images.map((img, index) => (
-                        <Item original={img.thumb || img.videoUrl} key={index}>
-                          {({ ref, open }) => (
-                            <div className="col">
-                              <img
-                                ref={ref}
-                                onClick={open}
-                                src={img.thumb || img.videoUrl}
-                                alt={`Review ${index}`}
-                                className="img-fluid img-thumbnail rounded"
-                              />
-                            </div>
-                          )}
-                        </Item>
-                      ))}
-                    </Gallery>
+                  {images.map((img, index) => (
+                    <Item original={img.thumb || img.videoUrl} key={index}>
+                      {({ ref, open }) => (
+                        <div className="col">
+                          <img
+                            ref={ref}
+                            onClick={open}
+                            src={img.thumb || img.videoUrl}
+                            alt={`Review ${index}`}
+                            className="img-fluid img-thumbnail rounded"
+                          />
+                        </div>
+                      )}
+                    </Item>
+                  ))}
+                </Gallery>
+              </div>
+            </Tab>
+            <Tab
+              eventKey="videos"
+              title={
+                <>
+                  <IconVideo size={24} />
+                  <span className="ms-3">Videos</span>
+                </>
+              }
+            >
+              <div className="row row-cols-6 g-2">
+                {videos.map((video, index) => (
+                  <div className="col" key={index}>
+                    <ReactPlayer
+                      url={video.videoUrl}
+                      controls
+                      width="100%"
+                      height="100%"
+                    />
                   </div>
-                </Tab>
-                <Tab
-                  eventKey="videos"
-                  title={
-                    <>
-                      <IconVideo size={24} />
-                      <span className="ms-2">Videos</span>
-                    </>
-                  }
-                >
-                  <div className="row row-cols-6 g-2">
-                    {videos.map((video, index) => (
-                      <div className="col" key={index}>
-                        <ReactPlayer
-                          url={video.videoUrl}
-                          controls
-                          width="100%"
-                          height="100%"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </Tab>
-              </Tabs>
-            </Card.Body>
-          </Card>
+                ))}
+              </div>
+            </Tab>
+          </Tabs>
         </Col>
         <Col md={3}>
           <PlaceInfo info={info} />

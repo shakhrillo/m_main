@@ -145,7 +145,16 @@ export const startScrap = async (uid: string, data: IReview) => {
   return documentRef.id;
 };
 
-export const scrapData = (placeId: string, uid: string) => {
+export const scrapData = (
+  placeId: string,
+  uid: string,
+  filterOptions: {
+    onlyImages: boolean;
+    onlyVideos: boolean;
+    onlyQA: boolean;
+    onlyResponse: boolean;
+  },
+) => {
   const collectionRef = collection(
     firestore,
     `users/${uid}/reviews/${placeId}/reviews`,
@@ -153,7 +162,14 @@ export const scrapData = (placeId: string, uid: string) => {
   const reviews$ = new BehaviorSubject([] as IComment[]);
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, orderBy("time", "asc")),
+    query(
+      collectionRef,
+      orderBy("time", "asc"),
+      ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
+      ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
+      ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),
+      ...(filterOptions.onlyVideos ? [where("videoUrls", ">", [])] : []),
+    ),
     (snapshot) => {
       const reviewsData = snapshot.docs.map((doc) => ({
         id: doc.id,
