@@ -10,7 +10,19 @@ import {
 } from "../services/scrapService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
-import { Tabs, Tab } from "react-bootstrap";
+import {
+  Tabs,
+  Tab,
+  Table,
+  Card,
+  Col,
+  Stack,
+  Container,
+  Row,
+} from "react-bootstrap";
+import { userData } from "../services/userService";
+import { StatusInfo } from "../components/StatusInfo";
+import formatNumber from "../utils/formatNumber";
 
 export const ReviewsList = () => {
   const { uid } = useOutletContext<User>();
@@ -49,7 +61,7 @@ export const ReviewsList = () => {
       },
     );
 
-    const statsSubscription = scrapStatistics(uid).subscribe((data) => {
+    const statsSubscription = userData(uid).subscribe((data) => {
       setInfo(data);
     });
 
@@ -60,14 +72,14 @@ export const ReviewsList = () => {
   }, [uid]);
 
   return (
-    <div className="container-fluid">
+    <Container fluid>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="row g-3">
-          <div className="col-12">
-            {/*---Extracted reviews status---*/}
-            <div className="card">
+        <Row>
+          {/* <div className="col-12"> */}
+          {/*---Extracted reviews status---*/}
+          {/* <div className="card">
               <div className="card-body">
                 <div className="d-flex gap-3">
                   {stats.map((stat, index) => (
@@ -79,15 +91,33 @@ export const ReviewsList = () => {
                   ))}
                 </div>
               </div>
-            </div>
-            {/*---End: Extracted reviews status---*/}
-          </div>
+            </div> */}
+          {/*---End: Extracted reviews status---*/}
+          {/* </div> */}
+
+          {stats.map((stat, index) => (
+            <Col key={index} md={3}>
+              <Card>
+                <Card.Body>
+                  <Stack direction="horizontal" gap={3}>
+                    {createElement(stat.icon, { size: 48, strokeWidth: 1.5 })}
+                    <Stack direction="vertical">
+                      <Card.Title className="fs-3 m-0">
+                        {formatNumber(stat.value)}
+                      </Card.Title>
+                      <Card.Text>{stat.label}</Card.Text>
+                    </Stack>
+                  </Stack>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
 
           {/* Table for displaying reviews based on active filter */}
           <div className="col-12 mt-4">
             <div className="card">
               <div className="card-body">
-                <div
+                {/* <div
                   className="btn-group"
                   role="group"
                   aria-label="Default button group"
@@ -104,9 +134,9 @@ export const ReviewsList = () => {
                       {filter.charAt(0).toUpperCase() + filter.slice(1)}
                     </button>
                   ))}
-                </div>
+                </div> */}
                 <div className="table-responsive mt-3">
-                  <table className="table">
+                  <Table striped hover>
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -125,6 +155,9 @@ export const ReviewsList = () => {
                       {reviews.map((review, index) => (
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
+                          <td>
+                            <StatusInfo info={review} />
+                          </td>
                           <td>
                             <a
                               href="#"
@@ -170,13 +203,13 @@ export const ReviewsList = () => {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </Table>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Row>
       )}
-    </div>
+    </Container>
   );
 };
