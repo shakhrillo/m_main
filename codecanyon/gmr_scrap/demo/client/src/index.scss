@@ -18,24 +18,24 @@ $light: #e8f0f2;
 $dark: #080e2c;
 
 @import "bootstrap/scss/bootstrap";
-@import "photoswipe/dist/photoswipe.css";
+// @import "photoswipe/dist/photoswipe.css";
 
-.pswp img {
-  right: auto;
-  left: auto;
-  margin: 0 auto;
-  width: auto !important;
-  height: 100vh !important;
-}
+// .pswp img {
+//   right: auto;
+//   left: auto;
+//   margin: 0 auto;
+//   width: auto !important;
+//   height: 100vh !important;
+// }
 
-.pswp__zoom-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+// .pswp__zoom-wrap {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   width: 100%;
+//   height: 100%;
+//   overflow: hidden;
+// }
 
 .leaflet-container {
   width: 100%;

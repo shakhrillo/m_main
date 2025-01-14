@@ -70,7 +70,7 @@ export const SingleReview = () => {
   return (
     <Container fluid>
       <Row>
-        <Col>
+        <Col md={9}>
           <Card>
             <Card.Body>
               <Tabs
@@ -196,7 +196,7 @@ export const SingleReview = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <PlaceInfo info={info} />
           <Card className="mt-3">
             <Card.Body>

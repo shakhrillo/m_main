@@ -1,6 +1,7 @@
 import { Col, Image, Stack } from "react-bootstrap";
 import { IComment } from "../services/scrapService";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import "photoswipe/dist/photoswipe.css";
 
 export const CommentImages = ({
   comment,
@@ -12,23 +13,44 @@ export const CommentImages = ({
     <Stack {...rest} direction="horizontal">
       <Gallery
         options={{
-          zoom: false,
-          showHideAnimationType: "none",
           hideAnimationDuration: 0,
-          showAnimationDuration: 0,
           zoomAnimationDuration: 0,
+          showAnimationDuration: 0,
+          showHideAnimationType: "fade",
           bgOpacity: 0.9,
         }}
       >
         {comment?.imageUrls.map((image, index) => (
-          <Item original={image.thumb} key={index}>
+          <Item
+            original={image.thumb}
+            key={`comment-${index}`}
+            content={
+              <div className="d-flex justify-content-center align-items-center h-100">
+                <Image
+                  src={image.thumb}
+                  alt={`comment-${index}`}
+                  style={{
+                    height: "auto",
+                    objectFit: "contain",
+                    maxWidth: "90%",
+                    maxHeight: "100vh",
+                  }}
+                />
+              </div>
+            }
+          >
             {({ ref, open }) => (
               <Image
                 src={image.thumb}
-                key={index}
-                width={50}
-                className={"ms-n3" + (index >= 3 ? " d-none" : "")}
-                rounded
+                alt={`comment-thumb-${index}`}
+                width={40}
+                style={{
+                  height: 40,
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  marginLeft: "-30px",
+                }}
+                className={index >= 3 ? " d-none" : ""}
                 thumbnail
                 ref={ref}
                 onClick={open}
@@ -39,7 +61,9 @@ export const CommentImages = ({
       </Gallery>
       {(comment?.imageUrls?.length ?? 0) > 3 && (
         <div>
-          <span className="ms-2">+{(comment?.imageUrls?.length ?? 0) - 3}</span>
+          <small className="ms-1">
+            +{(comment?.imageUrls?.length ?? 0) - 3}
+          </small>
         </div>
       )}
     </Stack>

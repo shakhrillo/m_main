@@ -24,7 +24,9 @@ export const CommentView = ({
     <div {...rest} ref={refs.setReference} style={{ display: "inline-block" }}>
       <span
         className="d-inline-block text-truncate"
-        style={{ maxWidth: "250px" }}
+        style={{
+          maxWidth: "100px",
+        }}
       >
         {comment?.review}
       </span>
@@ -38,7 +40,7 @@ export const CommentView = ({
             padding: "5px",
             borderRadius: "4px",
             zIndex: 1000,
-            position: "absolute", // Ensure the tooltip is absolutely positioned
+            position: "absolute",
           }}
         >
           {comment?.review}
