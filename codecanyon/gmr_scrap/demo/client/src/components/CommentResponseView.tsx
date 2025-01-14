@@ -35,12 +35,13 @@ export const CommentResponseView = ({
             ref={refs.setFloating}
             style={{
               ...floatingStyles,
-              backgroundColor: "black",
+              backgroundColor: "#4e6178",
               color: "white",
-              padding: "5px",
-              borderRadius: "4px",
+              padding: "12px",
+              borderRadius: "6px",
               zIndex: 1000,
               position: "absolute",
+              width: "50%",
             }}
           >
             {comment?.response}
