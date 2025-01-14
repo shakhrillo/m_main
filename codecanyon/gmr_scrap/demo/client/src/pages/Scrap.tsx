@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 import {
   IconAlertCircle,
@@ -20,6 +20,7 @@ import {
   validateUrl,
   validateUrlData,
 } from "../services/scrapService";
+import { PlaceInfo } from "../components/PlaceInfo";
 
 const EXTRACT_OPTIONS = [
   {
@@ -71,6 +72,7 @@ const NOTIFICATION_OPTIONS = [
 
 export const Scrap = () => {
   const { uid } = useOutletContext<User>();
+  const { scrapId } = useParams() as { scrapId: string };
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -98,6 +100,40 @@ export const Scrap = () => {
     notificationEmail: false,
   });
   const [documentId, setDocumentId] = useState("");
+
+  useEffect(() => {
+    if (!scrapId) return;
+  }, [scrapId]);
+
+  useEffect(() => {
+    const placeInfoSubbscription = validateUrlData(scrapId, uid).subscribe(
+      (data) => {
+        console.log("info", data);
+        setPlaceInfo(data);
+        setSortBy(data.sortBy || "Most relevant");
+        setLimit(data.limit || 10);
+        setExtractOptions({
+          extractImageUrls: data.extractImageUrls || false,
+          extractVideoUrls: data.extractVideoUrls || false,
+          extractOwnerResponse: data.extractOwnerResponse || false,
+        });
+        setUrl(data.url || "");
+        setLoading(false);
+        setIsValidated(true);
+        // setOutputOptions({
+        //   json: data.json || true,
+        //   csv: data.csv || false,
+        // });
+        // setNotificationOptions({
+        //   notificationEmail: data.notificationEmail || false,
+        // });
+      },
+    );
+
+    return () => {
+      placeInfoSubbscription.unsubscribe();
+    };
+  }, [scrapId, uid]);
 
   useEffect(() => {
     if (!documentId) return;
@@ -191,8 +227,8 @@ export const Scrap = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-8">
+      <div className="row g-3">
+        <div className="col-md-9">
           <div className="d-flex flex-column flex-grow-1 gap-3">
             {/*---Validate Place Info---*/}
             <div className="card">
@@ -540,30 +576,8 @@ export const Scrap = () => {
             {/*---End: Output Options---*/}
           </div>
         </div>
-        <div className="col-md-4">
-          {/*---Place Info---*/}
-          {placeInfo?.rating && (
-            <div className="card mb-3">
-              <img
-                src={placeInfo?.screenshot}
-                className="card-img-top"
-                alt="Place Image"
-              />
-              <div className="card-body">
-                <h5 className="card-title">
-                  {placeInfo?.title || "Place Name"} - {placeInfo?.rating || 0}{" "}
-                  stars
-                </h5>
-                <a href={placeInfo?.url} target="_blank" className="card-link">
-                  {placeInfo?.address}
-                </a>
-                <p className="card-text">
-                  Reviews: <strong>{placeInfo?.reviews || 0}</strong>
-                </p>
-              </div>
-            </div>
-          )}
-          {/*---End: Place Info---*/}
+        <div className="col-md-3">
+          <PlaceInfo info={placeInfo} className="mb-3" />
 
           {/*---Expected Points---*/}
           <div className="card">

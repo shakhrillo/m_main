@@ -7,9 +7,14 @@ import { GoogleMap } from "./GoogleMap";
 import { Ratings } from "./Ratings";
 import { StatusInfo } from "./StatusInfo";
 
-export const PlaceInfo = ({ info }: { info: IReview | undefined }) => {
+export const PlaceInfo = ({
+  info,
+  ...rest
+}: {
+  info?: IReview;
+} & React.HTMLAttributes<HTMLDivElement>) => {
   return info ? (
-    <Card>
+    <Card {...rest}>
       <Row className="g-0 row-cols-1">
         <Col>
           {info?.location ? (

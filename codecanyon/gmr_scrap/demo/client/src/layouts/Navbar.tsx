@@ -9,7 +9,9 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { IUser, userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 
-export const AppNavbar = () => {
+export const AppNavbar = ({
+  ...rest
+}: React.HTMLAttributes<HTMLDivElement>) => {
   const { uid } = useOutletContext<User>();
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -22,64 +24,40 @@ export const AppNavbar = () => {
   }, []);
 
   return (
-    <Navbar expand="lg" bg="dark" variant="dark">
-      <Container fluid>
-        <Navbar.Brand href="#home">GMRScrap</Navbar.Brand>
-        <Navbar.Toggle aria-controls="user-navbar" />
-        <Navbar.Collapse id="user-navbar">
-          <Nav className="ms-auto">
-            <NavLink to={"/payments"} className="nav-link">
-              <IconCoins size={22} className="text-warning" stroke={2} />
-              <span className="fw-bold ms-2">
-                {formatNumber(user?.coinBalance)}
-              </span>
-            </NavLink>
-            <NavDropdown
-              title={
-                <>
-                  <IconBell size={22} />
-                  <span className="badge bg-info mt-n1 ms-n2 position-absolute">
-                    {user?.newNotifications}
-                  </span>
-                </>
-              }
-              align={{ sm: "end" }}
-            >
-              {(user?.notifications || [])?.map((notification, index) => (
-                <NavLink
-                  to={`/notification/${notification.id}`}
-                  key={index}
-                  className="dropdown-item"
-                >
-                  {notification.title}
-                </NavLink>
-              ))}
-            </NavDropdown>
-            <NavDropdown
-              title={
-                <img
-                  src={user?.photoURL}
-                  alt={user?.displayName}
-                  className="rounded-circle bg-light"
-                  style={{ width: 32, height: 32 }}
-                />
-              }
-              align={{ sm: "end" }}
-            >
-              <NavLink to={"/profile"} className="dropdown-item">
-                Profile
+    <div {...rest}>
+      <Navbar expand="lg" variant="dark" bg="dark">
+        <Container fluid>
+          <Navbar.Brand>GMRScrap</Navbar.Brand>
+          <Navbar.Toggle aria-controls="user-navbar" />
+
+          <Navbar.Collapse id="user-navbar">
+            <Nav className="ms-auto">
+              <NavLink to={"/payments"} className="nav-link">
+                <IconCoins size={22} className="text-warning" stroke={2} />
+                <span className="fw-bold ms-2">
+                  {formatNumber(user?.coinBalance)}
+                </span>
               </NavLink>
-              <NavLink to={"/settings"} className="dropdown-item">
-                Settings
+
+              <NavLink to={"/payments"} className="nav-link">
+                <IconBell size={22} className="text-warning" stroke={2} />
+                <span className="fw-bold ms-2">0</span>
               </NavLink>
-              <NavDropdown.Divider />
-              <NavLink to={"/logout"} className="dropdown-item">
-                Logout
-              </NavLink>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+              <NavDropdown
+                title={user?.displayName}
+                id="user-dropdown"
+                align="end"
+              >
+                <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </div>
   );
 };

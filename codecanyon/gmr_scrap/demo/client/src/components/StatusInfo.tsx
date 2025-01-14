@@ -1,7 +1,12 @@
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { IReview } from "../services/scrapService";
 
-export const StatusInfo = ({ info }: { info: IReview | undefined }) => {
+export const StatusInfo = ({
+  info,
+  ...rest
+}: {
+  info?: IReview;
+} & React.HTMLAttributes<HTMLDivElement>) => {
   if (!info || !info.status) return null;
 
   const status = info.status.toLowerCase();
@@ -13,13 +18,15 @@ export const StatusInfo = ({ info }: { info: IReview | undefined }) => {
         : "danger";
 
   return (
-    <span className={`badge bg-${color} rounded-pill`}>
-      {status === "completed" ? (
-        <IconCheck size={18} className="me-1" />
-      ) : (
-        <IconX size={18} className="me-1" />
-      )}
-      {status}
-    </span>
+    <div {...rest}>
+      <span className={`badge bg-${color} rounded-pill`}>
+        {status === "completed" ? (
+          <IconCheck size={18} className="me-1" />
+        ) : (
+          <IconX size={18} className="me-1" />
+        )}
+        {status}
+      </span>
+    </div>
   );
 };

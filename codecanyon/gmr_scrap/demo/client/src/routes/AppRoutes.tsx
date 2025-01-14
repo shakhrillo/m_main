@@ -45,6 +45,7 @@ const router = createBrowserRouter([
           },
           { path: "validates", element: <ValidatedURLs /> },
           { path: "scrap", element: <Scrap /> },
+          { path: "scrap/:scrapId", element: <Scrap /> },
           { path: "user", element: <User /> },
           { path: "users", element: <Users /> },
           { path: "security", element: <Security /> },
