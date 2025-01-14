@@ -91,7 +91,7 @@ export const SingleReview = () => {
                     </>
                   }
                 >
-                  <Table borderless responsive hover>
+                  <Table responsive hover>
                     <thead>
                       <tr>
                         <th>#</th>
@@ -108,9 +108,7 @@ export const SingleReview = () => {
                         <tr key={review.id}>
                           <td>{index + 1}</td>
                           <td>
-                            <div className="d-flex align-items-center gap-1">
-                              <Ratings info={review} />
-                            </div>
+                            <Ratings info={review} />
                           </td>
                           <td>
                             <CommentView comment={review} />
@@ -118,13 +116,13 @@ export const SingleReview = () => {
                           <td>
                             <CommentQAView comment={review} />
                           </td>
-                          <td>
+                          <td className="border">
                             <CommentResponseView comment={review} />
                           </td>
-                          <td>
+                          <td className="border" style={{ width: "60px" }}>
                             <CommentImages comment={review} />
                           </td>
-                          <td>
+                          <td className="border" style={{ width: "60px" }}>
                             <CommentVideos comment={review} />
                           </td>
                         </tr>

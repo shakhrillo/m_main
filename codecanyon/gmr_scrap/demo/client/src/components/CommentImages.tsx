@@ -10,7 +10,11 @@ export const CommentImages = ({
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <Stack {...rest} direction="horizontal">
+    <Stack
+      {...rest}
+      direction="horizontal"
+      style={{ marginLeft: "30px", width: "60px" }}
+    >
       <Gallery
         options={{
           hideAnimationDuration: 0,
@@ -65,6 +69,14 @@ export const CommentImages = ({
             +{(comment?.imageUrls?.length ?? 0) - 3}
           </small>
         </div>
+      )}
+      {comment?.imageUrls?.length === 0 && (
+        <Col
+          className="text-center border rounded"
+          style={{ marginLeft: "-30px", minWidth: "60px" }}
+        >
+          <small>No images</small>
+        </Col>
       )}
     </Stack>
   );

@@ -8,6 +8,7 @@ export const CommentResponseView = ({
 }: {
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
+  const textLimit = 150;
   const [isVisible, setIsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     middleware: [offset(8), flip(), shift()],
@@ -15,34 +16,36 @@ export const CommentResponseView = ({
     onOpenChange: setIsVisible,
   });
 
+  // Set up hover behavior
   useHover(context, {
-    delay: { open: 400, close: 0 },
+    delay: { open: 400, close: 0 }, // Optional delay for hover
   });
 
   return (
     <div {...rest} ref={refs.setReference} style={{ display: "inline-block" }}>
-      <span
-        className="d-inline-block text-truncate"
-        style={{ maxWidth: "250px" }}
-      >
-        {comment?.response}
+      <span>
+        {comment?.response && comment.response.length > textLimit
+          ? comment.response.slice(0, textLimit) + "..."
+          : comment?.response}
       </span>
-      {isVisible && (
-        <div
-          ref={refs.setFloating}
-          style={{
-            ...floatingStyles,
-            backgroundColor: "black",
-            color: "white",
-            padding: "5px",
-            borderRadius: "4px",
-            zIndex: 1000,
-            position: "absolute",
-          }}
-        >
-          {comment?.response}
-        </div>
-      )}
+      {isVisible &&
+        comment?.response &&
+        comment.response.length > textLimit && (
+          <div
+            ref={refs.setFloating}
+            style={{
+              ...floatingStyles,
+              backgroundColor: "black",
+              color: "white",
+              padding: "5px",
+              borderRadius: "4px",
+              zIndex: 1000,
+              position: "absolute",
+            }}
+          >
+            {comment?.response}
+          </div>
+        )}
     </div>
   );
 };

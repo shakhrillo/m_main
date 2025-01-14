@@ -8,6 +8,7 @@ export const CommentView = ({
 }: {
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
+  const textLimit = 150;
   const [isVisible, setIsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     middleware: [offset(8), flip(), shift()],
@@ -22,15 +23,12 @@ export const CommentView = ({
 
   return (
     <div {...rest} ref={refs.setReference} style={{ display: "inline-block" }}>
-      <span
-        className="d-inline-block text-truncate"
-        style={{
-          maxWidth: "100px",
-        }}
-      >
-        {comment?.review}
+      <span>
+        {comment?.review && comment.review.length > textLimit
+          ? comment.review.slice(0, textLimit) + "..."
+          : comment?.review}
       </span>
-      {isVisible && (
+      {isVisible && comment?.review && comment.review.length > textLimit && (
         <div
           ref={refs.setFloating}
           style={{

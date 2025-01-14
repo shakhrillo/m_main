@@ -10,7 +10,11 @@ export const CommentVideos = ({
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <Stack {...rest} direction="horizontal">
+    <Stack
+      {...rest}
+      direction="horizontal"
+      style={{ marginLeft: "30px", width: "60px" }}
+    >
       <Gallery
         options={{
           zoom: false,
@@ -60,6 +64,15 @@ export const CommentVideos = ({
         <div>
           <span className="ms-2">+{(comment?.videoUrls?.length ?? 0) - 3}</span>
         </div>
+      )}
+
+      {comment?.videoUrls?.length === 0 && (
+        <Col
+          className="text-center border rounded"
+          style={{ marginLeft: "-30px", minWidth: "60px" }}
+        >
+          <small>No videos</small>
+        </Col>
       )}
     </Stack>
   );
