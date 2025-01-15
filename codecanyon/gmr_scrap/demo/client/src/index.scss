@@ -196,7 +196,77 @@ body {
   }
 }
 
+// Button outline
+
+.button-outline {
+  border-color: #dee2e6;
+  background-color: #fff;
+  color: #3c486b;
+}
+
+.input {
+  border: 1px solid #dee2e6;
+  height: 38px;
+  font-weight: 500;
+  font-size: 14px;
+}
+.input-label {
+  margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
 // Auth
+.auth {
+  position: relative;
+  &-logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+  &-footer {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #6c757d;
+    font-size: 12px;
+  }
+  &-devider {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: #f8f9fa;
+    width: 44px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  &-header {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  &-title {
+    font-weight: 600;
+    font-size: 36px;
+  }
+  &-subtitle {
+    font-weight: 400;
+    font-size: 16px;
+  }
+  &-link {
+    margin-top: 4px;
+    font-weight: 500;
+    font-size: 12px;
+    text-decoration: none;
+  }
+}
 
 .auth-content {
   display: flex;
