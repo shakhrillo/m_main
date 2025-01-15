@@ -273,6 +273,7 @@ let driver;
       data.extractedVideoUrls
     );
   } catch (error) {
+    data.status = "error";
     data.error = JSON.stringify(error);
     console.error(error);
   } finally {

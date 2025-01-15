@@ -215,7 +215,6 @@ export const Scrap = () => {
         extractImageUrls: extractOptions.extractImageUrls,
         extractVideoUrls: extractOptions.extractVideoUrls,
         extractOwnerResponse: extractOptions.extractOwnerResponse,
-        status: "in-progress",
       });
       navigate(`/reviews/${id}`);
     } catch (error) {

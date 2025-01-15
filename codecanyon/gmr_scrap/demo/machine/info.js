@@ -192,9 +192,11 @@ let driver;
     // Generate search keywords
     data.keywords = generateSearchKeywords(data.title);
   } catch (error) {
+    data.status = "error";
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);
   } finally {
+    data.status = "completed";
     console.log(JSON.stringify(data, null, 2));
     await updateMachineData(tag, data);
     log(null);

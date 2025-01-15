@@ -37,6 +37,7 @@ async function processReviewCreated(event) {
   const containerRef = db.doc(`containers/${tag}`);
   batch.set(containerRef, {
     ...data,
+    status: "pending",
     userId,
     reviewId,
     createdAt,

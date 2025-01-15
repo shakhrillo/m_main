@@ -1,6 +1,7 @@
 require("dotenv").config();
 const admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
+const capitalizeText = require("../utils/capitalizeText");
 
 /**
  * Once a container is written, this function will be triggered.
@@ -35,19 +36,26 @@ async function processContainerWritten(event) {
       totalImages: FieldValue.increment(data.totalImages || 0),
       totalVideos: FieldValue.increment(data.totalVideos || 0),
       totalOwnerReviews: FieldValue.increment(data.totalOwnerReviews || 0),
+      [`total${capitalizeText(data.type)}`]: FieldValue.increment(
+        data.totalValidate || 0
+      ),
     });
 
     /*-------------------*/
     /* Update statistics */
     /*-------------------*/
-    ["totalReviews", "totalImages", "totalVideos", "totalOwnerReviews"].forEach(
-      (type) => {
-        const statisticsRef = db.doc(`statistics/${type}`);
-        batch.update(statisticsRef, {
-          total: FieldValue.increment(data[type] || 0),
-        });
-      }
-    );
+    [
+      `totalValidate${capitalizeText(data.type)}`,
+      "totalReviews",
+      "totalImages",
+      "totalVideos",
+      "totalOwnerReviews",
+    ].forEach((type) => {
+      const statisticsRef = db.doc(`statistics/${type}`);
+      batch.update(statisticsRef, {
+        total: FieldValue.increment(data[type] || 0),
+      });
+    });
   }
 
   /*-------------------*/
