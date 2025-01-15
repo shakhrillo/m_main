@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { googleLogin, login } from "../services/authService";
 import {
   IconAlertCircle,
@@ -17,6 +17,7 @@ import {
   FormGroup,
   Image,
   Row,
+  Stack,
 } from "react-bootstrap";
 
 export const Login: React.FC = () => {
@@ -55,63 +56,37 @@ export const Login: React.FC = () => {
   return (
     <Container fluid>
       <Row>
-        {/* Left Side: Authentication Section */}
         <Col md={6} className="auth">
           <Image src={logo} alt="Logo" width="200" className="auth-logo" />
           <div className="auth-content">
             <Form onSubmit={handleLogin} noValidate className="auth-form">
-              {/* Error Message */}
-              {error && (
-                <div className="alert alert-danger text-center" role="alert">
-                  {error}
-                </div>
-              )}
-
-              {/* Header */}
-              <div className="auth-header">
+              <Stack gap={4}>
                 <div>
-                  <h2 className="auth-title">Get Started Now</h2>
-                  <p className="auth-subtitle">
-                    Enter your credentials to access your account.
-                  </p>
+                  <h2>Get Started Now</h2>
+                  <p>Enter your credentials to access your account.</p>
                 </div>
 
-                {/* Social Login Buttons */}
                 <Row className="g-3">
                   <Col>
-                    <Button
-                      className="button-outline w-100"
-                      onClick={handleGoogleLogin}
-                    >
+                    <Button className="w-100" onClick={handleGoogleLogin}>
                       <IconBrandGoogleFilled className="me-2" size={20} />
                       Log in with Google
                     </Button>
                   </Col>
                   <Col>
-                    <Button
-                      className="button-outline w-100"
-                      onClick={handleGoogleLogin}
-                    >
+                    <Button className="w-100" onClick={handleGoogleLogin}>
                       <IconBrandMeta className="me-2" size={20} />
                       Log in with Meta
                     </Button>
                   </Col>
                 </Row>
-              </div>
-
-              {/* Divider */}
-              <div className="text-center my-3 position-relative">
-                <hr />
-                <span className="auth-devider">or</span>
-              </div>
-
-              {/* Login Form */}
+              </Stack>
+              <div className="auth-divider my-3">or</div>
               <div>
                 <FormGroup className="mb-3" controlId="email">
-                  <Form.Label className="input-label">Email</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <FormControl
                     type="email"
-                    className="input"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
@@ -130,10 +105,9 @@ export const Login: React.FC = () => {
                 </FormGroup>
 
                 <FormGroup className="mb-3" controlId="password">
-                  <Form.Label className="input-label">Password</Form.Label>
+                  <Form.Label>Password</Form.Label>
                   <FormControl
                     type="password"
-                    className="input"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
@@ -145,35 +119,34 @@ export const Login: React.FC = () => {
                     Password must be at least 6 characters long.
                   </Form.Control.Feedback>
                   <div className="text-end">
-                    <Link to={"#"} className="auth-link">
-                      Forgot password?
-                    </Link>
+                    <NavLink to="#">Forgot password?</NavLink>
                   </div>
                 </FormGroup>
               </div>
 
-              {/* Submit Button */}
               <Button variant="primary" className="w-100" type="submit">
                 Login
               </Button>
+              {error && (
+                <div className="alert alert-danger text-center" role="alert">
+                  {error}
+                </div>
+              )}
 
-              {/* Register Link */}
               <div className="text-center mt-3 auth-link">
                 Don't have an account?{" "}
-                <Link className="text-decoration-none" to="/register">
+                <NavLink className="text-decoration-none" to="/register">
                   Create an account
-                </Link>
+                </NavLink>
               </div>
             </Form>
           </div>
-          {/* Footer */}
           <div className="auth-footer">
             <p>2025 GMRS, All right Reserved</p>
           </div>
         </Col>
 
-        {/* Right Side: Illustration */}
-        <Col md={6}>
+        <Col md={6} className="d-none d-md-block">
           <div className="auth-image"></div>
         </Col>
       </Row>
