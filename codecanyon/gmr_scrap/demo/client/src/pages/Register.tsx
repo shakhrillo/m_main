@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { googleLogin, register } from "../services/authService";
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  Container,
+  Form,
+  FormControl,
+  FormGroup,
+} from "react-bootstrap";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -49,99 +59,80 @@ export const Register = () => {
 
   return (
     <div className="main">
-      <div className="container">
+      <Container>
         <div className="content">
           <h3>Register</h3>
-          <div className="card">
-            <div className="card-body">
-              <form onSubmit={handleRegister}>
-                <div className="form-wrap">
-                  <label className="form-label" htmlFor="firstName">
-                    First name
-                  </label>
-                  <input
+          <Card>
+            <CardBody>
+              <Form onSubmit={handleRegister}>
+                <FormGroup className="mb-3" controlId="firstName">
+                  <Form.Label>First name</Form.Label>
+                  <FormControl
                     type="text"
-                    placeholder="First name"
-                    id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="form-input"
+                    placeholder="First name"
                   />
-                </div>
-                <div className="form-wrap">
-                  <label className="form-label" htmlFor="lastName">
-                    Last name
-                  </label>
-                  <input
+                </FormGroup>
+                <FormGroup className="mb-3" controlId="lastName">
+                  <Form.Label>Last name</Form.Label>
+                  <FormControl
                     type="text"
-                    id="lastName"
-                    placeholder="Last name"
+                    value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="form-input"
+                    placeholder="Last name"
                   />
-                </div>
-                <div className="form-wrap">
-                  <label className="form-label" htmlFor="email">
-                    Email
-                  </label>
-                  <input
+                </FormGroup>
+                <FormGroup className="mb-3" controlId="email">
+                  <Form.Label>Email</Form.Label>
+                  <FormControl
                     type="email"
-                    id="email"
+                    value={email}
                     placeholder="Enter email"
                     onChange={(e) => setEmail(e.target.value)}
-                    className="form-input"
                   />
-                </div>
-                <div className="form-wrap">
-                  <label className="form-label" htmlFor="password">
-                    Password
-                  </label>
-                  <input
+                </FormGroup>
+                <FormGroup className="mb-3" controlId="">
+                  <Form.Label>Password</Form.Label>
+                  <FormControl
                     type="password"
-                    id="password"
+                    value={password}
                     placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
-                    className="form-input"
                   />
-                </div>
-                <div className="form-wrap">
-                  <label className="form-label" htmlFor="confirmPassword">
-                    Confirm Password
-                  </label>
-                  <input
+                </FormGroup>
+                <FormGroup className="mb-3" controlId="">
+                  <Form.Label>Confirm Password</Form.Label>
+                  <FormControl
                     type="password"
-                    id="confirmPassword"
+                    value={confirmPassword}
                     placeholder="Confirm password"
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="form-input"
                   />
-                </div>
-                <button className="button button-primary" type="submit">
+                </FormGroup>
+                <Button variant="primary" type="submit">
                   Register
-                </button>
-                {error && <div className="alert alert-danger">{error}</div>}
-              </form>
+                </Button>
+                {error && <Alert variant="danger">{error}</Alert>}
+              </Form>
               <div className="mt-2">
-                <button
-                  className="button button-google"
+                <Button
+                  className="button-google"
                   type="button"
                   onClick={handleGoogleLogin}
                 >
                   Continue with Google
-                </button>
+                </Button>
               </div>
               <div className="mt-2">
                 <span>
-                  Already have an account?{" "}
-                  <Link className="registration__card__link" to="/auth/login">
-                    Login
-                  </Link>
+                  Already have an account? <Link to="/auth/login">Login</Link>
                 </span>
               </div>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

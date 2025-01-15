@@ -8,6 +8,16 @@ import {
   IconBrandMeta,
 } from "@tabler/icons-react";
 import logo from "../assets/logo.svg";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  FormControl,
+  FormGroup,
+  Image,
+  Row,
+} from "react-bootstrap";
 
 export const Login: React.FC = () => {
   const user = useOutletContext<User>();
@@ -42,90 +52,87 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div className="container-fluid auth">
-      <div className="row">
-        <div className="col-md-6">
+    <Container fluid>
+      <Row>
+        <Col md={6}>
           <div className="auth-content">
-            <img src={logo} alt="_Logo" width="200" className="mb-5" />
+            <Image src={logo} alt="_Logo" width="200" className="mb-5" />
             <h3>Welcome!</h3>
             <p>Sign in to your account</p>
-            <form
+            <Form
               onSubmit={handleLogin}
               noValidate
               className="needs-validation was-validated"
             >
-              <div className="mb-3">
-                <label className="form-label" htmlFor="email">
-                  Email
-                </label>
-                <input
+              <FormGroup className="mb-3" controlId="email">
+                <Form.Label>Email</Form.Label>
+                <FormControl
                   type="email"
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="form-control"
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                   required
+                  isInvalid={
+                    !email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+                  }
                 />
-                <small className="invalid-feedback">
+                <Form.Control.Feedback type={"invalid"}>
                   <IconAlertCircle className="me-2" size={20} />
                   Please enter a valid email address.
-                </small>
-              </div>
-              <div className="mb-3">
-                <label className="form-label" htmlFor="password">
-                  Password
-                </label>
-                <input
+                </Form.Control.Feedback>
+              </FormGroup>
+              <FormGroup className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <FormControl
                   type="password"
-                  id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="form-control"
                   pattern=".{6,}"
                   required
                 />
-                <small className="invalid-feedback">
+                <Form.Control.Feedback type={"invalid"}>
                   <IconAlertCircle className="me-2" size={20} />
                   Password must be at least 6 characters long.
-                </small>
-              </div>
-              <button className="btn btn-primary w-100" type="submit">
+                </Form.Control.Feedback>
+              </FormGroup>
+              <Button variant="primary" className="w-100" type="submit">
                 Sign In
-              </button>
-            </form>
+              </Button>
+            </Form>
             <div className="text-center my-3">Or login with</div>
-            <div className="row g-3">
-              <div className="col">
-                <button
-                  className="btn btn-primary w-100"
+            <Row className="g-3">
+              <Col>
+                <Button
+                  variant="primary"
+                  className="w-100"
                   onClick={handleGoogleLogin}
                 >
                   <IconBrandGoogle className="me-2" size={20} />
                   Google
-                </button>
-              </div>
-              <div className="col">
-                <button
-                  className="btn btn-primary w-100"
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  variant="primary"
+                  className="w-100"
                   onClick={handleGoogleLogin}
                 >
                   <IconBrandMeta className="me-2" size={20} />
                   Meta
-                </button>
-              </div>
-            </div>
+                </Button>
+              </Col>
+            </Row>
             <div className="text-center mt-3">
               Don't have an account? <Link to="/register">Register</Link>
             </div>
           </div>
-        </div>
-        <div className="col-md-6">
+        </Col>
+        <Col md={6}>
           <div className="auth-image"></div>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
