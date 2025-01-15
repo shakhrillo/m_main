@@ -61,6 +61,7 @@ const { GeoPoint } = require("firebase-admin/firestore");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 const { log } = require("./services/logger");
+const generateSearchKeywords = require("./utils/generateSearchKeywords");
 
 // Constants
 const tag = process.env.TAG;
@@ -185,6 +186,8 @@ let driver;
       parseFloat(lat2 || lat1),
       parseFloat(lng2 || lng1)
     );
+
+    data.keywors = generateSearchKeywords(data.title);
   } catch (error) {
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);
