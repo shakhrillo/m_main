@@ -31,31 +31,32 @@ async function processContainerWritten(event) {
     cost += data.totalOwnerReviews * settingsPrices.response;
 
     batch.update(userRef, {
-      coinBalance: FieldValue.increment(-cost),
+      coinBalance: FieldValue.increment(-cost || 0),
       totalReviews: FieldValue.increment(data.totalReviews || 0),
       totalImages: FieldValue.increment(data.totalImages || 0),
       totalVideos: FieldValue.increment(data.totalVideos || 0),
       totalOwnerReviews: FieldValue.increment(data.totalOwnerReviews || 0),
-      [`totalValidate${capitalizeText(data.type)}`]: FieldValue.increment(
-        data.totalValidate || 0
-      ),
+      [`totalValidate${capitalizeText(data.type)}`]: FieldValue.increment(1),
     });
 
     /*-------------------*/
     /* Update statistics */
     /*-------------------*/
-    [
-      `totalValidate${capitalizeText(data.type)}`,
-      "totalReviews",
-      "totalImages",
-      "totalVideos",
-      "totalOwnerReviews",
-    ].forEach((type) => {
-      const statisticsRef = db.doc(`statistics/${type}`);
-      batch.update(statisticsRef, {
-        total: FieldValue.increment(data[type] || 0),
-      });
-    });
+    ["totalReviews", "totalImages", "totalVideos", "totalOwnerReviews"].forEach(
+      (type) => {
+        const statisticsRef = db.doc(`statistics/${type}`);
+        batch.update(statisticsRef, {
+          total: FieldValue.increment(data[type] || 0),
+        });
+      }
+    );
+
+    batch.update(
+      db.doc(`statistics/totalValidate${capitalizeText(data.type)}`),
+      {
+        total: FieldValue.increment(1),
+      }
+    );
   }
 
   /*-------------------*/
@@ -67,7 +68,11 @@ async function processContainerWritten(event) {
     updatedAt: Timestamp.now(),
   });
 
-  await batch.commit();
+  try {
+    await batch.commit();
+  } catch (error) {
+    console.error("Error updating container", error);
+  }
 }
 
 module.exports = processContainerWritten;

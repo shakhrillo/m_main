@@ -117,7 +117,7 @@ export const SingleReview = () => {
   return (
     <Container>
       <Row>
-        <Col md={9}>
+        <Col md={8}>
           <Tabs
             defaultActiveKey="comments"
             id="scrap-tabs"
@@ -336,7 +336,7 @@ export const SingleReview = () => {
             </Tab>
           </Tabs>
         </Col>
-        <Col md={3}>
+        <Col md={4}>
           <PlaceInfo info={info} />
           <Card className="mt-3">
             <Card.Body>

@@ -23,33 +23,42 @@ export const CommentQAView = ({
 
   return (
     <div {...rest} ref={refs.setReference} style={{ display: "inline-block" }}>
-      <span className="d-inline-block">
-        {comment?.qa.map((qa, index) => {
-          return (
-            index < 2 && (
-              <Stack key={"qa-" + index} direction="horizontal">
-                {qa.split("\n").map((line, i) => (
-                  <Col key={i} className="d-flex">
-                    <span
-                      className="d-inline-block text-truncate me-1"
-                      style={{ width: i !== 0 ? "100px" : "auto" }}
-                    >
-                      {i === 0 && qa.split("\n").length > 1 ? (
-                        <strong>{line}</strong>
-                      ) : (
-                        line
-                      )}
-                    </span>
-                  </Col>
-                ))}
-              </Stack>
-            )
-          );
-        })}
-        {comment?.qa && comment?.qa?.length > 2 && (
-          <span className="d-inline-block text-truncate">...</span>
-        )}
-      </span>
+      {comment?.qa && comment?.qa.length > 0 ? (
+        <span className="d-inline-block">
+          {comment?.qa.map((qa, index) => {
+            return (
+              index < 2 && (
+                <Stack key={"qa-" + index} direction="horizontal">
+                  {qa.split("\n").map((line, i) => (
+                    <Col key={i} className="d-flex">
+                      <span
+                        className="d-inline-block text-truncate me-1"
+                        style={{ width: i !== 0 ? "100px" : "auto" }}
+                      >
+                        {i === 0 && qa.split("\n").length > 1 ? (
+                          <strong>{line}</strong>
+                        ) : (
+                          line
+                        )}
+                      </span>
+                    </Col>
+                  ))}
+                </Stack>
+              )
+            );
+          })}
+          {comment?.qa && comment?.qa?.length > 2 && (
+            <span className="d-inline-block text-truncate">...</span>
+          )}
+        </span>
+      ) : (
+        <Col
+          className="text-center border rounded"
+          style={{ minWidth: "60px" }}
+        >
+          <small>No QA</small>
+        </Col>
+      )}
       {isVisible && (
         <div
           ref={refs.setFloating}
