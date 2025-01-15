@@ -120,27 +120,27 @@ export const Dashboard: React.FC = () => {
       setUsers(formatTotalUsers(data));
     });
 
-    const commentsSubscription = validatedUrls(uid, "info").subscribe(
-      (data) => {
-        setReviews(data);
+    const commentsSubscription = validatedUrls(uid, {
+      type: "info",
+    }).subscribe((data) => {
+      setReviews(data);
 
-        const locations = data
-          .filter(
-            (review) =>
-              review.location &&
-              review.location.latitude &&
-              review.location.longitude,
-          )
-          .map((review) => {
-            return [review.location?.latitude, review.location?.longitude] as [
-              number,
-              number,
-            ];
-          });
+      const locations = data
+        .filter(
+          (review) =>
+            review.location &&
+            review.location.latitude &&
+            review.location.longitude,
+        )
+        .map((review) => {
+          return [review.location?.latitude, review.location?.longitude] as [
+            number,
+            number,
+          ];
+        });
 
-        setMarkerLocations(locations);
-      },
-    );
+      setMarkerLocations(locations);
+    });
 
     return () => {
       appStatisticsSubscription.unsubscribe();
