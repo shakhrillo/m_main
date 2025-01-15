@@ -155,7 +155,7 @@ export const Login: React.FC = () => {
                   </Stack>
                 </Col>
               </Row>
-              <Col md={12}>
+              <Col md={12} className="mt-auto">
                 <p className="text-center text-sm text-gray-600">
                   2025 GMRS, All rights Reserved
                 </p>
