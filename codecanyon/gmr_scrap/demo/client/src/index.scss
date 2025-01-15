@@ -207,11 +207,6 @@ body {
     top: 24px;
     left: 24px;
   }
-  &-footer {
-    color: #6c757d;
-    font-size: 12px;
-    text-align: center;
-  }
   &-divider {
     position: relative;
     font-weight: 500;
@@ -242,8 +237,7 @@ body {
 
 .auth-content {
   display: flex;
-  position: relative;
-  flex-direction: column;
+  justify-content: center;
   margin: 0 auto;
   width: 100%;
   max-width: 500px;

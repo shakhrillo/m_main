@@ -59,7 +59,7 @@ export const Login: React.FC = () => {
       <Row>
         <Col md={6} className="auth">
           <Image src={logo} alt="Logo" width="200" className="auth-logo" />
-          <div className="auth-content">
+          <Stack className="auth-content my-auto">
             <Form onSubmit={handleLogin} noValidate className="auth-form">
               <Stack gap={4}>
                 <Stack>
@@ -145,10 +145,12 @@ export const Login: React.FC = () => {
                 </NavLink>
               </Stack>
             </Form>
-          </div>
-          <div className="auth-footer">
-            <p>2025 GMRS, All right Reserved</p>
-          </div>
+          </Stack>
+          <Stack className="flex flex-col justify-content-end h-full">
+            <p className="text-center text-sm text-gray-600">
+              2025 GMRS, All rights Reserved
+            </p>
+          </Stack>
         </Col>
 
         <Col md={6} className="d-none d-md-block">
