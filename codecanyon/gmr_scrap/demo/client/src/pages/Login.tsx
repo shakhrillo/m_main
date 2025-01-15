@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import logo from "../assets/logo_1.svg";
 import {
+  Alert,
   Button,
   Col,
   Container,
@@ -61,10 +62,10 @@ export const Login: React.FC = () => {
           <div className="auth-content">
             <Form onSubmit={handleLogin} noValidate className="auth-form">
               <Stack gap={4}>
-                <div>
+                <Stack>
                   <h2>Get Started Now</h2>
                   <p>Enter your credentials to access your account.</p>
-                </div>
+                </Stack>
 
                 <Row className="g-3">
                   <Col>
@@ -82,7 +83,7 @@ export const Login: React.FC = () => {
                 </Row>
               </Stack>
               <div className="auth-divider my-3">or</div>
-              <div>
+              <Stack>
                 <FormGroup className="mb-3" controlId="email">
                   <Form.Label>Email</Form.Label>
                   <FormControl
@@ -122,23 +123,27 @@ export const Login: React.FC = () => {
                     <NavLink to="#">Forgot password?</NavLink>
                   </div>
                 </FormGroup>
-              </div>
+              </Stack>
 
               <Button variant="primary" className="w-100" type="submit">
                 Login
               </Button>
               {error && (
-                <div className="alert alert-danger text-center" role="alert">
+                <Alert variant="danger" role="alert">
                   {error}
-                </div>
+                </Alert>
               )}
 
-              <div className="text-center mt-3 auth-link">
+              <Stack
+                direction="horizontal"
+                gap={1}
+                className="mx-auto mt-3 auth-link"
+              >
                 Don't have an account?{" "}
                 <NavLink className="text-decoration-none" to="/register">
                   Create an account
                 </NavLink>
-              </div>
+              </Stack>
             </Form>
           </div>
           <div className="auth-footer">
