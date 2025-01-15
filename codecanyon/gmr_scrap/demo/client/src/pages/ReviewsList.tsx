@@ -76,25 +76,8 @@ export const ReviewsList = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <Row>
-          {/* <div className="col-12"> */}
+        <Row className="g-3">
           {/*---Extracted reviews status---*/}
-          {/* <div className="card">
-              <div className="card-body">
-                <div className="d-flex gap-3">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="w-100 text-center">
-                      {createElement(stat.icon, { size: 50, strokeWidth: 1 })}
-                      <span className="d-block fs-3">{stat.value}</span>
-                      <span className="d-block">{stat.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div> */}
-          {/*---End: Extracted reviews status---*/}
-          {/* </div> */}
-
           {stats.map((stat, index) => (
             <Col key={index} md={3}>
               <Card>
@@ -112,99 +95,48 @@ export const ReviewsList = () => {
               </Card>
             </Col>
           ))}
+          {/*---End: Extracted reviews status---*/}
 
           {/* Table for displaying reviews based on active filter */}
-          <div className="col-12 mt-4">
+          <div className="col-12">
             <div className="card">
               <div className="card-body">
-                {/* <div
-                  className="btn-group"
-                  role="group"
-                  aria-label="Default button group"
-                >
-                  {["all", "completed", "pending", "filed"].map((filter) => (
-                    <button
-                      key={filter}
-                      type="button"
-                      onClick={() => setActiveTableFilter(filter)}
-                      className={`btn btn-primary ${
-                        activeTableFilter === filter ? "active" : ""
-                      }`}
-                    >
-                      {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                    </button>
-                  ))}
-                </div> */}
-                <div className="table-responsive mt-3">
-                  <Table striped hover>
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Place</th>
-                        <th scope="col">Limit</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Reviews</th>
-                        <th scope="col">Images</th>
-                        <th scope="col">Videos</th>
-                        <th scope="col">Responses</th>
-                        <th scope="col">Time</th>
-                        <th scope="col"></th>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviews.map((review, index) => (
+                      <tr key={index}>
+                        <td scope="row" style={{ width: "40px" }}>
+                          {index + 1}
+                        </td>
+                        <td style={{ width: "130px" }}>
+                          <StatusInfo info={review} />
+                        </td>
+                        <td>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/reviews/${review.id}`);
+                            }}
+                          >
+                            {review.title}
+                          </a>
+                        </td>
+                        <td style={{ width: "250px" }}>
+                          {formatTimestamp(review.createdAt)}
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {reviews.map((review, index) => (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>
-                            <StatusInfo info={review} />
-                          </td>
-                          <td>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                navigate(`/reviews/${review.id}`);
-                              }}
-                            >
-                              <span className="d-flex align-items-center">
-                                {/* {review.status} */}
-                                <div className="ms-1">
-                                  {review.title || review.url}
-                                </div>
-                              </span>
-                              <span className="d-block">{review.address}</span>
-                            </a>
-                          </td>
-                          <td>{review.limit}</td>
-                          <td>
-                            <span>
-                              {formatTimestamp(review.createdAt).time}
-                            </span>
-                            <span className="d-block">
-                              {formatTimestamp(review.createdAt).date}
-                            </span>
-                          </td>
-                          <td>
-                            {Number(
-                              review.totalReviews || "0",
-                            ).toLocaleString()}{" "}
-                            / {Number(review.reviews || "0").toLocaleString()}
-                          </td>
-                          <td>{review.totalImages || "0"}</td>
-                          <td>{review.totalVideos || "0"}</td>
-                          <td>{review.totalOwnerReviews || "0"}</td>
-                          <td>{spentTime(review)}</td>
-                          <td>
-                            <div className="d-flex flex-column gap-1">
-                              <a href={review.csvUrl}>Csv</a>
-                              <a href={review.jsonUrl}>JSON</a>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
+                    ))}
+                  </tbody>
+                </Table>
               </div>
             </div>
           </div>

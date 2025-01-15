@@ -1,15 +1,15 @@
 import { Timestamp } from "firebase/firestore";
 import { format } from "date-fns";
 
-export const formatTimestamp = (
-  timestamp: Timestamp | null,
-): { date: string; time: string } => {
-  if (!timestamp) return { date: "", time: "" };
+/**
+ * Format a Firestore timestamp to a human-readable string.
+ * @param timestamp The Firestore timestamp to format.
+ * @returns The formatted timestamp.
+ */
+export const formatTimestamp = (timestamp: Timestamp | null): string => {
+  if (!timestamp) return "";
 
   const date = timestamp.toDate();
 
-  return {
-    date: format(date, "yyyy/MM/dd"),
-    time: format(date, "HH:mm:ss"),
-  };
+  return `${format(date, "MMM dd, yyyy")} ${format(date, "HH:mm:ss a")}`;
 };
