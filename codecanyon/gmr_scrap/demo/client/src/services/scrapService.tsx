@@ -42,7 +42,7 @@ export interface IReview {
   reviews: number;
   screenshot: string;
   title: string;
-  type: string;
+  type: "info" | "comments";
   updatedAt: Timestamp;
   url: string;
   userId: string;

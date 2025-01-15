@@ -148,7 +148,7 @@ export const ValidatedURLs = () => {
                             href="#"
                             onClick={(e) => {
                               e.preventDefault();
-                              navigate(`/reviews/${review.id}`);
+                              navigate(`/scrap/${review.id}`);
                             }}
                           >
                             {review.title}
