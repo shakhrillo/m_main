@@ -146,7 +146,10 @@ export const Login: React.FC = () => {
               </Stack>
             </Form>
           </Stack>
-          <Stack className="flex flex-col justify-content-end h-full">
+          <Stack
+            direction="horizontal"
+            className="flex flex-none justify-content-center"
+          >
             <p className="text-center text-sm text-gray-600">
               2025 GMRS, All rights Reserved
             </p>
