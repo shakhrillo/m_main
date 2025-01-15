@@ -75,7 +75,7 @@ export const ValidatedURLs = () => {
   }, [uid]);
 
   return (
-    <Container fluid>
+    <Container>
       {loading ? (
         <div>Loading...</div>
       ) : (

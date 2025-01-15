@@ -115,7 +115,7 @@ export const SingleReview = () => {
   }, [place, filterOptions, uid]);
 
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col md={9}>
           <Tabs

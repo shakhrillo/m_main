@@ -36,6 +36,8 @@ async function processUserCreated(user) {
     totalImages: 0,
     totalVideos: 0,
     totalOwnerReviews: 0,
+    totalValidateComments: 0,
+    totalValidateInfo: 0,
   });
 
   await batch.commit();

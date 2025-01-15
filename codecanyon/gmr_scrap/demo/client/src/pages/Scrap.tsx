@@ -225,7 +225,7 @@ export const Scrap = () => {
   }
 
   return (
-    <div className="container-fluid">
+    <div className="container">
       <div className="row g-3">
         <div className="col-md-9">
           <div className="d-flex flex-column flex-grow-1 gap-3">

@@ -75,7 +75,7 @@ export const ReviewsList = () => {
   }, [uid]);
 
   return (
-    <Container fluid>
+    <Container>
       {loading ? (
         <div>Loading...</div>
       ) : (

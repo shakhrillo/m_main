@@ -36,7 +36,7 @@ async function processContainerWritten(event) {
       totalImages: FieldValue.increment(data.totalImages || 0),
       totalVideos: FieldValue.increment(data.totalVideos || 0),
       totalOwnerReviews: FieldValue.increment(data.totalOwnerReviews || 0),
-      [`total${capitalizeText(data.type)}`]: FieldValue.increment(
+      [`totalValidate${capitalizeText(data.type)}`]: FieldValue.increment(
         data.totalValidate || 0
       ),
     });
