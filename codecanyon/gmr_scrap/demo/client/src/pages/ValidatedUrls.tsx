@@ -1,20 +1,36 @@
-import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
+import {
+  IconMessageReply,
+  IconMessages,
+  IconPhoto,
+  IconSearch,
+} from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
+import {
+  Card,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Stack,
+  Table,
+} from "react-bootstrap";
 import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
-import { scrapStatistics, validatedUrls } from "../services/scrapService";
+import { StatusInfo } from "../components/StatusInfo";
+import { IReview, validatedUrls } from "../services/scrapService";
+import { userData } from "../services/userService";
+import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
 
 export const ValidatedURLs = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
-  // States for managing dashboard data
   const [info, setInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<any[]>([]); // List of complated reviews
-  const [loading, setLoading] = useState(false); // Loading state for fetching data
-  const [activeTableFilter, setActiveTableFilter] = useState("all"); // Active table filter
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   const stats = [
     {
@@ -36,137 +52,120 @@ export const ValidatedURLs = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = validatedUrls(uid).subscribe((data) => {
+    const reviewSubscription = validatedUrls(uid, {
+      type: "info",
+      search,
+    }).subscribe((data) => {
       setReviews(data);
       setLoading(false);
     });
 
-    const statsSubscription = scrapStatistics(uid).subscribe((data) => {
+    return () => {
+      reviewSubscription.unsubscribe();
+    };
+  }, [search, uid]);
+  useEffect(() => {
+    const statsSubscription = userData(uid).subscribe((data) => {
       setInfo(data);
     });
 
     return () => {
-      reviewSubscription.unsubscribe();
       statsSubscription.unsubscribe();
     };
   }, [uid]);
 
   return (
-    <div className="container-fluid">
+    <Container fluid>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="row g-3">
-          <div className="col-12">
-            {/*---Extracted reviews status---*/}
-            <div className="card">
-              <div className="card-body">
-                <div className="d-flex gap-3">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="w-100 text-center">
-                      {createElement(stat.icon, { size: 50, strokeWidth: 1 })}
-                      <span className="d-block fs-3">{stat.value}</span>
-                      <span className="d-block">{stat.label}</span>
-                    </div>
-                  ))}
-                </div>
+        <Row className="g-3">
+          {/*---Extracted reviews status---*/}
+          {stats.map((stat, index) => (
+            <Col key={index} md={3}>
+              <Card>
+                <Card.Body>
+                  <Stack direction="horizontal" gap={3}>
+                    {createElement(stat.icon, { size: 48, strokeWidth: 1.5 })}
+                    <Stack direction="vertical">
+                      <Card.Title className="fs-3 m-0">
+                        {formatNumber(stat.value)}
+                      </Card.Title>
+                      <Card.Text>{stat.label}</Card.Text>
+                    </Stack>
+                  </Stack>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+          {/*---End: Extracted reviews status---*/}
+
+          <Col md={12}>
+            <Stack direction="horizontal">
+              <div className="d-inline-block me-auto">
+                <InputGroup>
+                  <InputGroup.Text id="search-icon">
+                    <IconSearch />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="search"
+                    id="search"
+                    placeholder="Search..."
+                    aria-label="Search"
+                    aria-describedby="search-icon"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </InputGroup>
               </div>
-            </div>
-            {/*---End: Extracted reviews status---*/}
-          </div>
+            </Stack>
+          </Col>
 
           {/* Table for displaying reviews based on active filter */}
-          <div className="col-12 mt-4">
+          <div className="col-12">
             <div className="card">
               <div className="card-body">
-                <div
-                  className="btn-group"
-                  role="group"
-                  aria-label="Default button group"
-                >
-                  {["all", "completed", "pending", "filed"].map((filter) => (
-                    <button
-                      key={filter}
-                      type="button"
-                      onClick={() => setActiveTableFilter(filter)}
-                      className={`btn btn-primary ${
-                        activeTableFilter === filter ? "active" : ""
-                      }`}
-                    >
-                      {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                    </button>
-                  ))}
-                </div>
-                <div className="table-responsive mt-3">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Place</th>
-                        <th scope="col">Limit</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Reviews</th>
-                        <th scope="col">Images</th>
-                        <th scope="col">Videos</th>
-                        <th scope="col">Time</th>
-                        <th scope="col"></th>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviews.map((review, index) => (
+                      <tr key={index}>
+                        <td scope="row" style={{ width: "40px" }}>
+                          {index + 1}
+                        </td>
+                        <td style={{ width: "130px" }}>
+                          <StatusInfo info={review} />
+                        </td>
+                        <td>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/reviews/${review.id}`);
+                            }}
+                          >
+                            {review.title}
+                          </a>
+                        </td>
+                        <td style={{ width: "250px" }}>
+                          {formatTimestamp(review.createdAt)}
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {reviews.map((review, index) => (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                navigate(`/scrap/${review.id}`);
-                              }}
-                            >
-                              <span className="d-flex align-items-center">
-                                {review.status}
-                                <div className="ms-1">
-                                  {review.title || review.url}
-                                </div>
-                              </span>
-                              <span className="d-block">{review.address}</span>
-                            </a>
-                          </td>
-                          <td>{review.limit}</td>
-                          <td>
-                            <span>
-                              {formatTimestamp(review.createdAt).time}
-                            </span>
-                            <span className="d-block">
-                              {formatTimestamp(review.createdAt).date}
-                            </span>
-                          </td>
-                          <td>
-                            {Number(
-                              review.totalReviews || "0",
-                            ).toLocaleString()}{" "}
-                            / {Number(review.reviews || "0").toLocaleString()}
-                          </td>
-                          <td>{review.totalImages || "0"}</td>
-                          <td>{review.totalVideos || "0"}</td>
-                          <td>{spentTime(review)}</td>
-                          <td>
-                            <div className="d-flex flex-column gap-1">
-                              <a href={review.csvUrl}>Csv</a>
-                              <a href={review.jsonUrl}>JSON</a>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </Table>
               </div>
             </div>
           </div>
-        </div>
+        </Row>
       )}
-    </div>
+    </Container>
   );
 };

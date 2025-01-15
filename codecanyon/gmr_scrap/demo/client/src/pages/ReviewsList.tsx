@@ -53,7 +53,7 @@ export const ReviewsList = () => {
 
   useEffect(() => {
     const reviewSubscription = validatedUrls(uid, {
-      type: "info",
+      type: "comments",
       search,
     }).subscribe((data) => {
       setReviews(data);
