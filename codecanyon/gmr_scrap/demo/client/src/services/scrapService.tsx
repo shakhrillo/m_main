@@ -105,7 +105,16 @@ export const validateUrlData = (documentId: string, uid: string) => {
   });
 };
 
-export const validatedUrls = (uid: string, type = "info") => {
+export const validatedUrls = (
+  uid: string,
+  {
+    type = "info",
+    searchTerm = "",
+  }: {
+    type: "info" | "comments";
+    searchTerm?: string;
+  },
+) => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
   const scraps$ = new BehaviorSubject([] as IReview[]);
 
@@ -114,6 +123,8 @@ export const validatedUrls = (uid: string, type = "info") => {
       collectionRef,
       orderBy("createdAt", "desc"),
       where("type", "==", type),
+      ...(searchTerm ? [where("title", ">=", searchTerm)] : []),
+      ...(searchTerm ? [where("title", "<=", searchTerm + "\uf8ff")] : []),
     ),
     (snapshot) => {
       const scrapsData = snapshot.docs.map((doc) => ({

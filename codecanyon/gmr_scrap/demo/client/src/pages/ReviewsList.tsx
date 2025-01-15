@@ -1,38 +1,36 @@
-import { IconMessageReply, IconMessages, IconPhoto } from "@tabler/icons-react";
+import {
+  IconMessageReply,
+  IconMessages,
+  IconPhoto,
+  IconSearch,
+} from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import React, { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
-import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
+import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import {
-  IComment,
-  IReview,
-  scrapStatistics,
-  validatedUrls,
-} from "../services/scrapService";
-import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-import { spentTime } from "../utils/spentTime"; // Utility for calculating spent time
-import {
-  Tabs,
-  Tab,
-  Table,
   Card,
   Col,
-  Stack,
   Container,
+  Form,
+  InputGroup,
   Row,
+  Stack,
+  Table,
 } from "react-bootstrap";
-import { userData } from "../services/userService";
+import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import { StatusInfo } from "../components/StatusInfo";
+import { IReview, validatedUrls } from "../services/scrapService";
+import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
+import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 
 export const ReviewsList = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
-  // States for managing dashboard data
   const [info, setInfo] = useState<any>({});
   const [reviews, setReviews] = useState<IReview[]>([]);
-  const [loading, setLoading] = useState(false); // Loading state for fetching data
-  const [activeTableFilter, setActiveTableFilter] = useState("all"); // Active table filter
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const stats = [
     {
@@ -54,19 +52,24 @@ export const ReviewsList = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = validatedUrls(uid, "comments").subscribe(
-      (data) => {
-        setReviews(data);
-        setLoading(false);
-      },
-    );
+    const reviewSubscription = validatedUrls(uid, {
+      type: "comments",
+      searchTerm,
+    }).subscribe((data) => {
+      setReviews(data);
+      setLoading(false);
+    });
 
+    return () => {
+      reviewSubscription.unsubscribe();
+    };
+  }, [searchTerm, uid]);
+  useEffect(() => {
     const statsSubscription = userData(uid).subscribe((data) => {
       setInfo(data);
     });
 
     return () => {
-      reviewSubscription.unsubscribe();
       statsSubscription.unsubscribe();
     };
   }, [uid]);
@@ -96,6 +99,27 @@ export const ReviewsList = () => {
             </Col>
           ))}
           {/*---End: Extracted reviews status---*/}
+
+          <Col md={12}>
+            <Stack direction="horizontal">
+              <div className="d-inline-block me-auto">
+                <InputGroup>
+                  <InputGroup.Text id="search-icon">
+                    <IconSearch />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="search"
+                    id="search"
+                    placeholder="Search..."
+                    aria-label="Search"
+                    aria-describedby="search-icon"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup>
+              </div>
+            </Stack>
+          </Col>
 
           {/* Table for displaying reviews based on active filter */}
           <div className="col-12">

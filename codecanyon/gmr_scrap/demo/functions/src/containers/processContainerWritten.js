@@ -1,3 +1,4 @@
+require("dotenv").config();
 const admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 
