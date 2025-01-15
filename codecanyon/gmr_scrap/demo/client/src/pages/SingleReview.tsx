@@ -37,6 +37,8 @@ import { CommentQAView } from "../components/CommentQAView";
 import { CommentResponseView } from "../components/CommentResponseView";
 import { CommentImages } from "../components/CommentImages";
 import { CommentVideos } from "../components/CommentVideos";
+import { Subject, debounceTime } from "rxjs";
+const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
@@ -56,6 +58,7 @@ export const SingleReview = () => {
     onlyQA: false,
     onlyResponse: false,
   });
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
@@ -71,13 +74,35 @@ export const SingleReview = () => {
   }, [place, uid]);
 
   useEffect(() => {
-    const reviewsSubscription = scrapData(place, uid, filterOptions).subscribe(
-      (data) => {
-        console.log("data", data);
-        setReviews(data);
-      },
-    );
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        console.log("search", value);
+        setSearch(value);
+      });
 
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const reviewsSubscription = scrapData(
+      place,
+      uid,
+      filterOptions,
+      search,
+    ).subscribe((data) => {
+      console.log("data", data);
+      setReviews(data);
+    });
+
+    return () => {
+      reviewsSubscription.unsubscribe();
+    };
+  }, [place, filterOptions, search, uid]);
+
+  useEffect(() => {
     const imagesSubscription = scrapImages(place, uid).subscribe((data) => {
       console.log("images", data);
       setImages(data);
@@ -87,10 +112,6 @@ export const SingleReview = () => {
       console.log("videos", data);
       setVideos(data);
     });
-
-    return () => {
-      reviewsSubscription.unsubscribe();
-    };
   }, [place, filterOptions, uid]);
 
   return (
@@ -123,6 +144,9 @@ export const SingleReview = () => {
                       id="search"
                       placeholder="Search..."
                       aria-label="Search"
+                      aria-describedby="search-icon"
+                      onChange={(e) => searchSubject.next(e.target.value)}
+                      // value={search}
                     />
                   </InputGroup>
                 </div>

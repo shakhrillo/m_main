@@ -14,7 +14,10 @@ if (!hasReviewsTab) return { error: "Reviews tab is not available" };
 
 // Get the address, reviews count, and rating
 const addressButton = document.querySelector("button[data-item-id='address']");
-const address = addressButton?.getAttribute("aria-label") || "";
+const address = (addressButton?.getAttribute("aria-label") || "").replace(
+  "Address: ",
+  ""
+);
 
 const reviewsButton = document.querySelector(
   "button[jsaction*='reviewChart.moreReviews']"

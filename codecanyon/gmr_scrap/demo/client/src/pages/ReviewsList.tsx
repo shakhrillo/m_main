@@ -30,7 +30,7 @@ export const ReviewsList = () => {
   const [info, setInfo] = useState<any>({});
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [search, setSearch] = useState("");
 
   const stats = [
     {
@@ -53,8 +53,8 @@ export const ReviewsList = () => {
 
   useEffect(() => {
     const reviewSubscription = validatedUrls(uid, {
-      type: "comments",
-      searchTerm,
+      type: "info",
+      search,
     }).subscribe((data) => {
       setReviews(data);
       setLoading(false);
@@ -63,7 +63,7 @@ export const ReviewsList = () => {
     return () => {
       reviewSubscription.unsubscribe();
     };
-  }, [searchTerm, uid]);
+  }, [search, uid]);
   useEffect(() => {
     const statsSubscription = userData(uid).subscribe((data) => {
       setInfo(data);
@@ -113,8 +113,8 @@ export const ReviewsList = () => {
                     placeholder="Search..."
                     aria-label="Search"
                     aria-describedby="search-icon"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
                 </InputGroup>
               </div>

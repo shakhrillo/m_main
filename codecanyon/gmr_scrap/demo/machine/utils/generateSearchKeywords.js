@@ -4,23 +4,33 @@
  * @param {number} maxKeywords - Maximum number of keywords to return.
  * @returns {string[]} - The generated search keywords.
  */
-function generateSearchKeywords(text, maxKeywords = 10) {
-  const result = new Set();
-  const words = text.toLowerCase().split(/\s+/); // Split input into words.
+function generateSearchKeywords(input, maxKeywords = 10) {
+  const keywords = new Set();
+  const words = input.toLowerCase().split(/\s+/).filter(Boolean); // Split into words
 
-  // Add the first substring (up to 3 characters) and the full word for each word.
-  words.forEach((word) => {
-    if (word.length > 0) {
-      result.add(word.slice(0, 3)); // Add the first 3 characters.
-      result.add(word); // Add the full word.
+  // Generate substrings for each word (minimum length 3)
+  for (const word of words) {
+    for (let i = 0; i < word.length; i++) {
+      for (let j = i + 1; j <= word.length; j++) {
+        const substring = word.slice(i, j);
+        if (substring.length >= 3) {
+          keywords.add(substring);
+        }
+      }
     }
-  });
+  }
 
-  // Add the full input text as a single keyword.
-  result.add(words.join(" "));
+  // Generate substrings across words (minimum length 3)
+  for (let i = 0; i < words.length; i++) {
+    let phrase = words[i];
+    if (phrase.length >= 3) keywords.add(phrase); // Add the individual word if length >= 3
+    for (let j = i + 1; j < words.length; j++) {
+      phrase += ` ${words[j]}`;
+      if (phrase.length >= 3) keywords.add(phrase); // Add phrases if length >= 3
+    }
+  }
 
-  // Convert the set back to an array, limit to maxKeywords, and return.
-  return Array.from(result).slice(0, maxKeywords);
+  return Array.from(keywords).slice(0, maxKeywords);
 }
 
 module.exports = generateSearchKeywords;

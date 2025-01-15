@@ -366,6 +366,7 @@ async function validateNode(node) {
       imageUrls,
       videoUrls,
       time: +Date.now(),
+      keywords: generateSearchKeywords(review),
     };
   }
 

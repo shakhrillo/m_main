@@ -99,6 +99,7 @@ const prepareForScreenshot = getScriptContent(
  *   title: string,
  *   extendedUrl: string,
  *   location: GeoPoint,
+ *   keywords: string[],
  *   error: string
  * }}
  * The machine data object.
@@ -155,7 +156,7 @@ let driver;
     data = {
       ...data,
       ...info,
-      title: await driver.getTitle(),
+      title: (await driver.getTitle()).replace(" - Google Maps", ""),
     };
     log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
 
@@ -182,12 +183,14 @@ let driver;
     const lat2 = secondMatch ? secondMatch[1] : null;
     const lng2 = secondMatch ? secondMatch[2] : null;
 
+    // Set the location based on the coordinates
     data.location = new GeoPoint(
       parseFloat(lat2 || lat1),
       parseFloat(lng2 || lng1)
     );
 
-    data.keywors = generateSearchKeywords(data.title);
+    // Generate search keywords
+    data.keywords = generateSearchKeywords(data.title);
   } catch (error) {
     data.error = JSON.stringify(error);
     log(`Error: ${error.message}`);

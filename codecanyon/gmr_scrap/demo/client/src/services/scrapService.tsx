@@ -109,10 +109,10 @@ export const validatedUrls = (
   uid: string,
   {
     type = "info",
-    searchTerm = "",
+    search = "",
   }: {
     type: "info" | "comments";
-    searchTerm?: string;
+    search?: string;
   },
 ) => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
@@ -123,8 +123,7 @@ export const validatedUrls = (
       collectionRef,
       orderBy("createdAt", "desc"),
       where("type", "==", type),
-      ...(searchTerm ? [where("title", ">=", searchTerm)] : []),
-      ...(searchTerm ? [where("title", "<=", searchTerm + "\uf8ff")] : []),
+      ...(search ? [where("keywords", "array-contains", search)] : []),
     ),
     (snapshot) => {
       const scrapsData = snapshot.docs.map((doc) => ({
@@ -165,6 +164,7 @@ export const scrapData = (
     onlyQA: boolean;
     onlyResponse: boolean;
   },
+  search: string,
 ) => {
   const collectionRef = collection(
     firestore,
@@ -180,6 +180,7 @@ export const scrapData = (
       ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
       ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),
       ...(filterOptions.onlyVideos ? [where("videoUrls", ">", [])] : []),
+      ...(search ? [where("keywords", "array-contains", search)] : []),
     ),
     (snapshot) => {
       const reviewsData = snapshot.docs.map((doc) => ({

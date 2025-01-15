@@ -51,6 +51,7 @@ const {
   batchWriteLargeArray,
   updateMachineData,
 } = require("./services/firebase");
+const generateSearchKeywords = require("./utils/generateSearchKeywords");
 const { log } = require("./services/logger");
 
 // Constants
@@ -142,6 +143,11 @@ let driver;
     // Execute the script to set the global variable
     await driver.executeScript(
       `window.gmrScrap = ${JSON.stringify(data, null, 2)}`
+    );
+
+    // Set global generateSearchKeywords function
+    await driver.executeScript(
+      `window.generateSearchKeywords = ${generateSearchKeywords.toString()}`
     );
 
     // Execute the extracter script
