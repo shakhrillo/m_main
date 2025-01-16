@@ -1,4 +1,5 @@
 const { db } = require("../firebase");
+const { Timestamp } = require("firebase-admin/firestore");
 
 async function createMachine(docId, data) {
   try {
@@ -13,12 +14,29 @@ async function updateMachine(docId, data) {
     await db
       .collection("machines")
       .doc(docId)
-      .update({
-        ...data,
-        updatedAt: +new Date(),
-      });
+      .set(
+        {
+          ...data,
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true }
+      );
   } catch (error) {
     console.error("Error updating machine:", error);
+  }
+}
+
+async function updateDockerInfo(info) {
+  try {
+    await db
+      .collection("docker")
+      .doc("info")
+      .set(
+        { info: JSON.stringify(info), updatedAt: Timestamp.now() },
+        { merge: true }
+      );
+  } catch (error) {
+    console.error("Error saving Docker info:", error);
   }
 }
 
@@ -27,7 +45,10 @@ async function updateDockerImageInfo(info) {
     await db
       .collection("docker")
       .doc("image")
-      .set({ info: JSON.stringify(info) }, { merge: true });
+      .set(
+        { info: JSON.stringify(info), updatedAt: Timestamp.now() },
+        { merge: true }
+      );
   } catch (error) {
     console.error("Error saving Docker info:", error);
   }
@@ -36,5 +57,6 @@ async function updateDockerImageInfo(info) {
 module.exports = {
   createMachine,
   updateMachine,
+  updateDockerInfo,
   updateDockerImageInfo,
 };
