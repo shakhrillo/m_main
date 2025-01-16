@@ -33,7 +33,9 @@ import {
   Form,
   FormCheck,
   FormControl,
+  FormGroup,
   FormLabel,
+  FormText,
   Row,
   Stack,
 } from "react-bootstrap";
@@ -254,8 +256,8 @@ export const Scrap = () => {
                   noValidate
                   id="validateForm"
                 >
-                  <Form.Group className="mb-3" controlId="url">
-                    <Form.Label>Google Maps URL</Form.Label>
+                  <FormGroup className="mb-3" controlId="url">
+                    <FormLabel>Google Maps URL</FormLabel>
                     <FormControl
                       type="text"
                       className="form-control"
@@ -267,12 +269,12 @@ export const Scrap = () => {
                       itemRef="url"
                       required
                     />
-                    <Form.Text className="invalid-feedback">
+                    <FormText className="invalid-feedback">
                       <IconAlertCircle className="me-2" size={20} />
                       Given URL is not valid. Example URL:
                       https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
-                    </Form.Text>
-                  </Form.Group>
+                    </FormText>
+                  </FormGroup>
                   <Stack direction={"horizontal"}>
                     {placeInfo?.rating && (
                       <Button
@@ -311,9 +313,9 @@ export const Scrap = () => {
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col lg={6}>
-                      <Form.Group controlId="limit">
-                        <Form.Label>Review limit</Form.Label>
-                        <Form.Control
+                      <FormGroup controlId="limit">
+                        <FormLabel>Review limit</FormLabel>
+                        <FormControl
                           type="text"
                           pattern="^[1-9]\d{1,3}$"
                           aria-describedby="maxExtractHelpBlock"
@@ -325,23 +327,23 @@ export const Scrap = () => {
                           required
                           disabled={loading || !isValidated}
                         />
-                        <Form.Control.Feedback type="invalid">
+                        <FormControl.Feedback type="invalid">
                           <IconAlertCircle className="me-2" size={20} />
                           Please enter a valid number between 10 and 5,000.
-                        </Form.Control.Feedback>
-                        <Form.Text id="maxExtractHelpBlock">
+                        </FormControl.Feedback>
+                        <FormText id="maxExtractHelpBlock">
                           Maximum 5,000 reviews can be extracted at a time.
-                        </Form.Text>
-                      </Form.Group>
+                        </FormText>
+                      </FormGroup>
                     </Col>
                     <Col lg={6}>
-                      <Form.Group controlId="sortBy">
-                        <Form.Label aria-describedby="sortByHelpBlock">
+                      <FormGroup controlId="sortBy">
+                        <FormLabel aria-describedby="sortByHelpBlock">
                           Sorts by
-                        </Form.Label>
-                        <Form.Control
+                        </FormLabel>
+                        <FormControl
                           as={"select"}
-                          id="sortBy"
+                          //  id="sortBy"
                           required
                           onChange={(e) => setSortBy(e.target.value)}
                           disabled={loading || !isValidated}
@@ -349,22 +351,17 @@ export const Scrap = () => {
                           <option value="Most relevant">Most relevant</option>
                           <option value="Newest">Newest</option>
                           <option value="Rating">Rating</option>
-                        </Form.Control>
-                        <Form.Text id="sortByHelpBlock">
+                        </FormControl>
+                        <FormText id="sortByHelpBlock">
                           Sort reviews by most relevant, newest, or rating. By
                           default, reviews are sorted by most relevant and less
                           than 500 reviews can be extracted at a time.
-                        </Form.Text>
-                      </Form.Group>
+                        </FormText>
+                      </FormGroup>
                     </Col>
                     <Col md={12}>
-                      <Form.Group controlId="extractOptions">
-                        <Form.Label
-                          htmlFor="extractOptions"
-                          className="form-label"
-                        >
-                          Options
-                        </Form.Label>
+                      <FormGroup controlId="extractOptions">
+                        <FormLabel className="form-label">Options</FormLabel>
                         <Row className="g-3">
                           {EXTRACT_OPTIONS.map((option, index) => (
                             <Col lg={6} xxl={4} key={index}>
@@ -412,10 +409,7 @@ export const Scrap = () => {
                                   )}
                                 </span>
 
-                                <CardBody
-                                  className="w-100 p-3"
-                                  // htmlFor={option.id}
-                                >
+                                <CardBody className="w-100 p-3">
                                   <CardTitle>
                                     {createElement(option.icon, {
                                       size: 40,
@@ -439,7 +433,7 @@ export const Scrap = () => {
                             </Col>
                           ))}
                         </Row>
-                      </Form.Group>
+                      </FormGroup>
                     </Col>
                   </Row>
                 </Form>
@@ -454,7 +448,7 @@ export const Scrap = () => {
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col md={12}>
-                      <FormLabel htmlFor="outputOptions" className="form-label">
+                      <FormLabel className="form-label">
                         Result format
                       </FormLabel>
                       <Row className="g-3">
@@ -528,10 +522,7 @@ export const Scrap = () => {
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col md={12} className="col-md-12">
-                      <FormLabel
-                        htmlFor="notificationEmail"
-                        className="form-label"
-                      >
+                      <FormLabel className="form-label">
                         Notification settings
                       </FormLabel>
                       <Row>
@@ -644,6 +635,9 @@ export const Scrap = () => {
                 className="mt-3"
                 type="checkbox"
                 id="terms"
+                checked={isTermsAccepted}
+                disabled={loading || !isValidated}
+                onChange={(e) => setIsTermsAccepted(!isTermsAccepted)}
                 label={
                   <>
                     I agree to the{" "}
