@@ -39,6 +39,7 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
+import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 
 const EXTRACT_OPTIONS = [
   {
@@ -365,71 +366,77 @@ export const Scrap = () => {
                         <Row className="g-3">
                           {EXTRACT_OPTIONS.map((option, index) => (
                             <Col lg={6} xxl={4} key={index}>
-                              <Card
-                                className={
-                                  "form-check position-relative p-0 rounded border " +
-                                  (loading || !isValidated
-                                    ? "text-body-tertiary bg-body-secondary"
-                                    : extractOptions[option.id] === true
-                                      ? "border-primary text-primary"
-                                      : "border-light-subtle")
-                                }
+                              <FormCheck
+                                type="checkbox"
+                                className="position-absolute visually-hidden"
+                                id={option.id}
+                                value={option.id}
+                                onChange={(e) => {
+                                  console.log(e);
+                                  return setExtractOptions({
+                                    ...extractOptions,
+                                    [option.id]: e.target.checked,
+                                  });
+                                }}
+                                disabled={loading || !isValidated}
+                                checked={extractOptions[option.id] || false}
+                              />
+                              <FormCheckLabel
+                                htmlFor={option.id}
+                                className="w-100 h-100"
                               >
-                                <FormCheck
-                                  type="checkbox"
-                                  className="position-absolute visually-hidden"
-                                  id={option.id}
-                                  value={option.id}
-                                  onChange={(e) =>
-                                    setExtractOptions({
-                                      ...extractOptions,
-                                      [option.id]: e.target.checked,
-                                    })
-                                  }
-                                  disabled={loading || !isValidated}
-                                  checked={extractOptions[option.id] || false}
-                                />
-                                <span
+                                <Card
                                   className={
-                                    "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                    "position-relative p-0 rounded border " +
                                     (loading || !isValidated
                                       ? "text-body-tertiary bg-body-secondary"
                                       : extractOptions[option.id] === true
-                                        ? "border-primary"
+                                        ? "border-primary text-primary"
                                         : "border-light-subtle")
                                   }
                                 >
-                                  {extractOptions[option.id] === true ? (
-                                    <IconCheck size={20} className="m-1" />
-                                  ) : (
-                                    <IconCircleDashed
-                                      size={20}
-                                      className="m-1"
-                                    />
-                                  )}
-                                </span>
+                                  <span
+                                    className={
+                                      "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                      (loading || !isValidated
+                                        ? "text-body-tertiary bg-body-secondary"
+                                        : extractOptions[option.id] === true
+                                          ? "border-primary"
+                                          : "border-light-subtle")
+                                    }
+                                  >
+                                    {extractOptions[option.id] === true ? (
+                                      <IconCheck size={20} className="m-1" />
+                                    ) : (
+                                      <IconCircleDashed
+                                        size={20}
+                                        className="m-1"
+                                      />
+                                    )}
+                                  </span>
 
-                                <CardBody className="w-100 p-3">
-                                  <CardTitle>
-                                    {createElement(option.icon, {
-                                      size: 40,
-                                      className: "text-primary me-2",
-                                      strokeWidth: 2,
-                                    })}
-                                    {option.title}
-                                  </CardTitle>
-                                  <CardText className="my-2">
-                                    {option.description}
-                                  </CardText>
-                                  <CardText className="d-block">
-                                    <IconCoin size={30} className="mb-3" />
-                                    <strong className="fs-1 mx-1">
-                                      {option.points}
-                                    </strong>
-                                    points per review
-                                  </CardText>
-                                </CardBody>
-                              </Card>
+                                  <CardBody className="w-100 p-3">
+                                    <CardTitle>
+                                      {createElement(option.icon, {
+                                        size: 40,
+                                        className: "text-primary me-2",
+                                        strokeWidth: 2,
+                                      })}
+                                      {option.title}
+                                    </CardTitle>
+                                    <CardText className="my-2">
+                                      {option.description}
+                                    </CardText>
+                                    <CardText className="d-block">
+                                      <IconCoin size={30} className="mb-3" />
+                                      <strong className="fs-1 mx-1">
+                                        {option.points}
+                                      </strong>
+                                      points per review
+                                    </CardText>
+                                  </CardBody>
+                                </Card>
+                              </FormCheckLabel>
                             </Col>
                           ))}
                         </Row>
@@ -454,57 +461,68 @@ export const Scrap = () => {
                       <Row className="g-3">
                         {OUTPUT_OPTIONS.map((option, index) => (
                           <Col lg={6} key={index}>
-                            <Card
-                              className={
-                                "form-check position-relative p-0 rounded border " +
-                                (loading || !isValidated
-                                  ? "text-body-tertiary bg-body-secondary"
-                                  : outputOptions[option.id] === true
-                                    ? "border-primary text-primary"
-                                    : "border-light-subtle")
-                              }
+                            <FormCheck
+                              type="checkbox"
+                              checked={outputOptions[option.id] || false}
+                              id={option.id}
+                              value={option.id}
+                              onChange={(e) => {
+                                console.log(e.target.id, e.target.checked); // Debugging
+                                const { id, checked } = e.target;
+                                setOutputOptions((prevOptions) => ({
+                                  ...prevOptions,
+                                  [id]: checked,
+                                }));
+                              }}
+                              // disabled={loading || !isValidated}
+                              className="position-absolute visually-hidden"
+                            />
+                            <FormCheckLabel
+                              htmlFor={option.id}
+                              className="w-100 h-100"
                             >
-                              <FormCheck
-                                type="checkbox"
-                                id={option.id}
-                                value={option.id}
-                                onChange={(e) =>
-                                  setOutputOptions({
-                                    ...outputOptions,
-                                    [option.id]: e.target.checked,
-                                  })
-                                }
-                                disabled={loading || !isValidated}
-                                className="position-absolute visually-hidden"
-                              />
-                              <span
+                              <Card
                                 className={
-                                  "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                  "position-relative p-0 rounded border " +
                                   (loading || !isValidated
                                     ? "text-body-tertiary bg-body-secondary"
                                     : outputOptions[option.id] === true
-                                      ? "border-primary"
+                                      ? "border-primary text-primary"
                                       : "border-light-subtle")
                                 }
                               >
-                                {outputOptions[option.id] === true ? (
-                                  <IconCheck size={20} className="m-1" />
-                                ) : (
-                                  <IconCircleDashed size={20} className="m-1" />
-                                )}
-                              </span>
-                              <CardBody className="w-100 p-3">
-                                <CardTitle>
-                                  {createElement(option.icon, {
-                                    size: 40,
-                                    className: "me-2",
-                                  })}
-                                </CardTitle>
-                                <CardText className="my-2">
-                                  {option.description}
-                                </CardText>
-                              </CardBody>
-                            </Card>
+                                <span
+                                  className={
+                                    "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                    (loading || !isValidated
+                                      ? "text-body-tertiary bg-body-secondary"
+                                      : outputOptions[option.id] === true
+                                        ? "border-primary"
+                                        : "border-light-subtle")
+                                  }
+                                >
+                                  {outputOptions[option.id] === true ? (
+                                    <IconCheck size={20} className="m-1" />
+                                  ) : (
+                                    <IconCircleDashed
+                                      size={20}
+                                      className="m-1"
+                                    />
+                                  )}
+                                </span>
+                                <CardBody className="w-100 p-3">
+                                  <CardTitle>
+                                    {createElement(option.icon, {
+                                      size: 40,
+                                      className: "me-2",
+                                    })}
+                                  </CardTitle>
+                                  <CardText className="my-2">
+                                    {option.description}
+                                  </CardText>
+                                </CardBody>
+                              </Card>
+                            </FormCheckLabel>
                           </Col>
                         ))}
                       </Row>
@@ -528,57 +546,65 @@ export const Scrap = () => {
                       <Row>
                         {NOTIFICATION_OPTIONS.map((option, index) => (
                           <Col lg={6} key={index}>
-                            <Card
-                              className={
-                                "form-check position-relative p-0 rounded border " +
-                                (loading || !isValidated
-                                  ? "text-body-tertiary bg-body-secondary"
-                                  : notificationOptions[option.id] === true
-                                    ? "border-primary text-primary"
-                                    : "border-light-subtle")
+                            <FormCheck
+                              type="checkbox"
+                              id={option.id}
+                              value={option.id}
+                              onChange={(e) =>
+                                setNotificationOptions({
+                                  ...notificationOptions,
+                                  [option.id]: e.target.checked,
+                                })
                               }
+                              disabled={loading || !isValidated}
+                              className="form-check-input position-absolute visually-hidden"
+                            />
+                            <FormCheckLabel
+                              htmlFor={option.id}
+                              className="w-100 h-100"
                             >
-                              <FormCheck
-                                type="checkbox"
-                                id={option.id}
-                                value={option.id}
-                                onChange={(e) =>
-                                  setNotificationOptions({
-                                    ...notificationOptions,
-                                    [option.id]: e.target.checked,
-                                  })
-                                }
-                                disabled={loading || !isValidated}
-                                className="form-check-input position-absolute visually-hidden"
-                              />
-                              <span
+                              <Card
                                 className={
-                                  "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                  "position-relative p-0 rounded border " +
                                   (loading || !isValidated
                                     ? "text-body-tertiary bg-body-secondary"
                                     : notificationOptions[option.id] === true
-                                      ? "border-primary"
+                                      ? "border-primary text-primary"
                                       : "border-light-subtle")
                                 }
                               >
-                                {notificationOptions[option.id] === true ? (
-                                  <IconCheck size={20} className="m-1" />
-                                ) : (
-                                  <IconCircleDashed size={20} className="m-1" />
-                                )}
-                              </span>
-                              <CardBody className="w-100 p-3">
-                                <CardTitle>
-                                  {createElement(option.icon, {
-                                    size: 40,
-                                    className: "me-2",
-                                  })}
-                                </CardTitle>
-                                <CardText className="my-2">
-                                  {option.description}
-                                </CardText>
-                              </CardBody>
-                            </Card>
+                                <span
+                                  className={
+                                    "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                    (loading || !isValidated
+                                      ? "text-body-tertiary bg-body-secondary"
+                                      : notificationOptions[option.id] === true
+                                        ? "border-primary"
+                                        : "border-light-subtle")
+                                  }
+                                >
+                                  {notificationOptions[option.id] === true ? (
+                                    <IconCheck size={20} className="m-1" />
+                                  ) : (
+                                    <IconCircleDashed
+                                      size={20}
+                                      className="m-1"
+                                    />
+                                  )}
+                                </span>
+                                <CardBody className="w-100 p-3">
+                                  <CardTitle>
+                                    {createElement(option.icon, {
+                                      size: 40,
+                                      className: "me-2",
+                                    })}
+                                  </CardTitle>
+                                  <CardText className="my-2">
+                                    {option.description}
+                                  </CardText>
+                                </CardBody>
+                              </Card>
+                            </FormCheckLabel>
                           </Col>
                         ))}
                       </Row>
