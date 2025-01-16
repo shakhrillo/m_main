@@ -21,6 +21,22 @@ import {
   validateUrlData,
 } from "../services/scrapService";
 import { PlaceInfo } from "../components/PlaceInfo";
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  CardText,
+  CardTitle,
+  Col,
+  Container,
+  Form,
+  FormCheck,
+  FormControl,
+  FormLabel,
+  Row,
+  Stack,
+} from "react-bootstrap";
 
 const EXTRACT_OPTIONS = [
   {
@@ -225,27 +241,24 @@ export const Scrap = () => {
   }
 
   return (
-    <div className="container">
-      <div className="row g-3">
-        <div className="col-md-9">
-          <div className="d-flex flex-column flex-grow-1 gap-3">
+    <Container>
+      <Row className="g-3">
+        <Col md={9}>
+          <Stack direction={"vertical"} gap={3}>
             {/*---Validate Place Info---*/}
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Validate Place Info</h5>
-                <form
+            <Card>
+              <CardBody>
+                <Card.Title as="h5">Validate Place Info</Card.Title>
+                <Form
                   onSubmit={handleUrlValidation}
                   noValidate
                   id="validateForm"
                 >
-                  <div className="mb-3">
-                    <label htmlFor="url" className="form-label">
-                      Google Maps URL
-                    </label>
-                    <input
+                  <Form.Group className="mb-3" controlId="url">
+                    <Form.Label>Google Maps URL</Form.Label>
+                    <FormControl
                       type="text"
                       className="form-control"
-                      id="url"
                       value={url}
                       placeholder="https://www.google.com/maps/place/..."
                       onChange={(e) => setUrl(e.target.value)}
@@ -254,25 +267,26 @@ export const Scrap = () => {
                       itemRef="url"
                       required
                     />
-                    <small className="invalid-feedback">
+                    <Form.Text className="invalid-feedback">
                       <IconAlertCircle className="me-2" size={20} />
                       Given URL is not valid. Example URL:
                       https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
-                    </small>
-                  </div>
-                  <div className="d-flex">
+                    </Form.Text>
+                  </Form.Group>
+                  <Stack direction={"horizontal"}>
                     {placeInfo?.rating && (
-                      <button
+                      <Button
+                        variant="secondary"
                         type="reset"
-                        className="btn btn-secondary"
                         onClick={clearResults}
                       >
                         Clear results
-                      </button>
+                      </Button>
                     )}
-                    <button
+                    <Button
+                      variant="primary"
                       type="submit"
-                      className="btn btn-primary ms-auto"
+                      className="ms-auto"
                       disabled={loading}
                     >
                       {loading ? (
@@ -280,166 +294,173 @@ export const Scrap = () => {
                       ) : (
                         <>
                           Validate{" "}
-                          <span className="badge bg-secondary ms-2">
-                            3 points
-                          </span>
+                          <Badge className="bg-secondary ms-2">3 points</Badge>
                         </>
                       )}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+                    </Button>
+                  </Stack>
+                </Form>
+              </CardBody>
+            </Card>
             {/*---End: Validate Place Info---*/}
 
             {/*---Extract Options---*/}
-            <div className="card">
-              <div className="card-body">
-                <h5>Extract Options</h5>
-                <form noValidate className="needs-validation was-validated">
-                  <div className="row g-3">
-                    <div className="col-lg-6">
-                      <label htmlFor="limit" className="form-label">
-                        Review limit
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="limit"
-                        pattern="^[1-9]\d{1,3}$"
-                        aria-describedby="maxExtractHelpBlock"
-                        placeholder="10 - 5,000"
-                        value={limit}
-                        onChange={(e) =>
-                          setLimit(parseInt(e.target.value || "0", 10))
-                        }
-                        required
-                        disabled={loading || !isValidated}
-                      />
-                      <small className="invalid-feedback">
-                        <IconAlertCircle className="me-2" size={20} />
-                        Please enter a valid number between 10 and 5,000.
-                      </small>
-                      <div id="maxExtractHelpBlock" className="form-text">
-                        Maximum 5,000 reviews can be extracted at a time.
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <label
-                        htmlFor="sortBy"
-                        className="form-label"
-                        aria-describedby="sortByHelpBlock"
-                      >
-                        Sort by
-                      </label>
-                      <select
-                        className="form-select"
-                        id="sortBy"
-                        required
-                        onChange={(e) => setSortBy(e.target.value)}
-                        disabled={loading || !isValidated}
-                      >
-                        <option value="Most relevant">Most relevant</option>
-                        <option value="Newest">Newest</option>
-                        <option value="Rating">Rating</option>
-                      </select>
-                      <div className="form-text" id="sortByHelpBlock">
-                        Sort reviews by most relevant, newest, or rating. By
-                        default, reviews are sorted by most relevant and less
-                        than 500 reviews can be extracted at a time.
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <label htmlFor="extractOptions" className="form-label">
-                        Options
-                      </label>
-                      <div className="row g-3">
-                        {EXTRACT_OPTIONS.map((option, index) => (
-                          <div className="col-lg-6 col-xxl-4" key={index}>
-                            <div
-                              className={
-                                "form-check position-relative p-0 rounded border " +
-                                (loading || !isValidated
-                                  ? "text-body-tertiary bg-body-secondary"
-                                  : extractOptions[option.id] === true
-                                    ? "border-primary text-primary"
-                                    : "border-light-subtle")
-                              }
-                            >
-                              <input
-                                className="form-check-input position-absolute visually-hidden"
-                                type="checkbox"
-                                id={option.id}
-                                value={option.id}
-                                onChange={(e) =>
-                                  setExtractOptions({
-                                    ...extractOptions,
-                                    [option.id]: e.target.checked,
-                                  })
-                                }
-                                disabled={loading || !isValidated}
-                              />
-                              <span
+            <Card>
+              <CardBody>
+                <Card.Title as={"h5"}>Extract Options</Card.Title>
+                <Form noValidate className="needs-validation was-validated">
+                  <Row className="g-3">
+                    <Col lg={6}>
+                      <Form.Group controlId="limit">
+                        <Form.Label>Review limit</Form.Label>
+                        <Form.Control
+                          type="text"
+                          pattern="^[1-9]\d{1,3}$"
+                          aria-describedby="maxExtractHelpBlock"
+                          placeholder="10 - 5,000"
+                          value={limit}
+                          onChange={(e) =>
+                            setLimit(parseInt(e.target.value || "0", 10))
+                          }
+                          required
+                          disabled={loading || !isValidated}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          <IconAlertCircle className="me-2" size={20} />
+                          Please enter a valid number between 10 and 5,000.
+                        </Form.Control.Feedback>
+                        <Form.Text id="maxExtractHelpBlock">
+                          Maximum 5,000 reviews can be extracted at a time.
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col lg={6}>
+                      <Form.Group controlId="sortBy">
+                        <Form.Label aria-describedby="sortByHelpBlock">
+                          Sorts by
+                        </Form.Label>
+                        <Form.Control
+                          as={"select"}
+                          id="sortBy"
+                          required
+                          onChange={(e) => setSortBy(e.target.value)}
+                          disabled={loading || !isValidated}
+                        >
+                          <option value="Most relevant">Most relevant</option>
+                          <option value="Newest">Newest</option>
+                          <option value="Rating">Rating</option>
+                        </Form.Control>
+                        <Form.Text id="sortByHelpBlock">
+                          Sort reviews by most relevant, newest, or rating. By
+                          default, reviews are sorted by most relevant and less
+                          than 500 reviews can be extracted at a time.
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col md={12}>
+                      <Form.Group controlId="extractOptions">
+                        <Form.Label
+                          htmlFor="extractOptions"
+                          className="form-label"
+                        >
+                          Options
+                        </Form.Label>
+                        <Row className="g-3">
+                          {EXTRACT_OPTIONS.map((option, index) => (
+                            <Col lg={6} xxl={4} key={index}>
+                              <Card
                                 className={
-                                  "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                  "form-check position-relative p-0 rounded border " +
                                   (loading || !isValidated
                                     ? "text-body-tertiary bg-body-secondary"
                                     : extractOptions[option.id] === true
-                                      ? "border-primary"
+                                      ? "border-primary text-primary"
                                       : "border-light-subtle")
                                 }
                               >
-                                {extractOptions[option.id] === true ? (
-                                  <IconCheck size={20} className="m-1" />
-                                ) : (
-                                  <IconCircleDashed size={20} className="m-1" />
-                                )}
-                              </span>
-                              <label className="w-100 p-3" htmlFor={option.id}>
-                                <span className="fs-5">
-                                  {createElement(option.icon, {
-                                    size: 40,
-                                    className: "text-primary me-2",
-                                    strokeWidth: 2,
-                                  })}
-                                  {option.title}
+                                <FormCheck
+                                  type="checkbox"
+                                  className="position-absolute visually-hidden"
+                                  id={option.id}
+                                  value={option.id}
+                                  onChange={(e) =>
+                                    setExtractOptions({
+                                      ...extractOptions,
+                                      [option.id]: e.target.checked,
+                                    })
+                                  }
+                                  disabled={loading || !isValidated}
+                                  checked={extractOptions[option.id] || false}
+                                />
+                                <span
+                                  className={
+                                    "position-absolute top-0 end-0 rounded-circle mt-n2 me-n2 border bg-white " +
+                                    (loading || !isValidated
+                                      ? "text-body-tertiary bg-body-secondary"
+                                      : extractOptions[option.id] === true
+                                        ? "border-primary"
+                                        : "border-light-subtle")
+                                  }
+                                >
+                                  {extractOptions[option.id] === true ? (
+                                    <IconCheck size={20} className="m-1" />
+                                  ) : (
+                                    <IconCircleDashed
+                                      size={20}
+                                      className="m-1"
+                                    />
+                                  )}
                                 </span>
-                                <span className="d-block my-2">
-                                  {option.description}
-                                </span>
-                                <span className="d-block">
-                                  <IconCoin size={30} className="mb-3" />
-                                  <strong className="fs-1 mx-1">
-                                    {option.points}
-                                  </strong>
-                                  points per review
-                                </span>
-                              </label>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
+
+                                <CardBody
+                                  className="w-100 p-3"
+                                  // htmlFor={option.id}
+                                >
+                                  <CardTitle className="fs-5">
+                                    {createElement(option.icon, {
+                                      size: 40,
+                                      className: "text-primary me-2",
+                                      strokeWidth: 2,
+                                    })}
+                                    {option.title}
+                                  </CardTitle>
+                                  <CardText className="my-2">
+                                    {option.description}
+                                  </CardText>
+                                  <CardText className="d-block">
+                                    <IconCoin size={30} className="mb-3" />
+                                    <strong className="fs-1 mx-1">
+                                      {option.points}
+                                    </strong>
+                                    points per review
+                                  </CardText>
+                                </CardBody>
+                              </Card>
+                            </Col>
+                          ))}
+                        </Row>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Form>
+              </CardBody>
+            </Card>
             {/*---End: Extract Options---*/}
 
             {/*---Output Options---*/}
-            <div className="card">
-              <div className="card-body">
-                <h5>Output Options</h5>
-                <form noValidate className="needs-validation was-validated">
-                  <div className="row g-3">
-                    <div className="col-md-12">
-                      <label htmlFor="outputOptions" className="form-label">
+            <Card>
+              <CardBody>
+                <CardTitle as={"h5"}>Output Options</CardTitle>
+                <Form noValidate className="needs-validation was-validated">
+                  <Row className="g-3">
+                    <Col md={12}>
+                      <FormLabel htmlFor="outputOptions" className="form-label">
                         Result format
-                      </label>
-                      <div className="row g-3">
+                      </FormLabel>
+                      <Row className="g-3">
                         {OUTPUT_OPTIONS.map((option, index) => (
-                          <div className="col-lg-6" key={index}>
-                            <div
+                          <Col lg={6} key={index}>
+                            <Card
                               className={
                                 "form-check position-relative p-0 rounded border " +
                                 (loading || !isValidated
@@ -449,8 +470,7 @@ export const Scrap = () => {
                                     : "border-light-subtle")
                               }
                             >
-                              <input
-                                className="form-check-input position-absolute visually-hidden"
+                              <FormCheck
                                 type="checkbox"
                                 id={option.id}
                                 value={option.id}
@@ -461,6 +481,7 @@ export const Scrap = () => {
                                   })
                                 }
                                 disabled={loading || !isValidated}
+                                className="position-absolute visually-hidden"
                               />
                               <span
                                 className={
@@ -478,42 +499,45 @@ export const Scrap = () => {
                                   <IconCircleDashed size={20} className="m-1" />
                                 )}
                               </span>
-                              <label className="w-100 p-3" htmlFor={option.id}>
-                                <span className="fs-5">
+                              <CardBody className="w-100 p-3">
+                                <CardTitle className="fs-5">
                                   {createElement(option.icon, {
                                     size: 40,
                                     className: "me-2",
                                   })}
-                                </span>
-                                <span className="d-block my-2">
+                                </CardTitle>
+                                <CardText className="my-2">
                                   {option.description}
-                                </span>
-                              </label>
-                            </div>
-                          </div>
+                                </CardText>
+                              </CardBody>
+                            </Card>
+                          </Col>
                         ))}
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Form>
+              </CardBody>
+            </Card>
             {/*---End: Output Options---*/}
 
             {/*---Output Options---*/}
-            <div className="card">
-              <div className="card-body">
-                <h5>Notification Options</h5>
-                <form noValidate className="needs-validation was-validated">
-                  <div className="row g-3">
-                    <div className="col-md-12">
-                      <label htmlFor="notificationEmail" className="form-label">
+            <Card>
+              <CardBody className="card-body">
+                <CardTitle as={"h5"}>Notification Options</CardTitle>
+                <Form noValidate className="needs-validation was-validated">
+                  <Row className="g-3">
+                    <Col md={12} className="col-md-12">
+                      <FormLabel
+                        htmlFor="notificationEmail"
+                        className="form-label"
+                      >
                         Notification settings
-                      </label>
-                      <div className="row">
+                      </FormLabel>
+                      <Row>
                         {NOTIFICATION_OPTIONS.map((option, index) => (
-                          <div className="col-lg-6" key={index}>
-                            <div
+                          <Col lg={6} key={index}>
+                            <Card
                               className={
                                 "form-check position-relative p-0 rounded border " +
                                 (loading || !isValidated
@@ -523,8 +547,7 @@ export const Scrap = () => {
                                     : "border-light-subtle")
                               }
                             >
-                              <input
-                                className="form-check-input position-absolute visually-hidden"
+                              <FormCheck
                                 type="checkbox"
                                 id={option.id}
                                 value={option.id}
@@ -535,6 +558,7 @@ export const Scrap = () => {
                                   })
                                 }
                                 disabled={loading || !isValidated}
+                                className="form-check-input position-absolute visually-hidden"
                               />
                               <span
                                 className={
@@ -552,99 +576,96 @@ export const Scrap = () => {
                                   <IconCircleDashed size={20} className="m-1" />
                                 )}
                               </span>
-                              <label className="w-100 p-3" htmlFor={option.id}>
-                                <span className="fs-5">
+                              <CardBody className="w-100 p-3">
+                                <CardTitle className="fs-5">
                                   {createElement(option.icon, {
                                     size: 40,
                                     className: "me-2",
                                   })}
-                                </span>
-                                <span className="d-block my-2">
+                                </CardTitle>
+                                <CardText className="my-2">
                                   {option.description}
-                                </span>
-                              </label>
-                            </div>
-                          </div>
+                                </CardText>
+                              </CardBody>
+                            </Card>
+                          </Col>
                         ))}
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Form>
+              </CardBody>
+            </Card>
             {/*---End: Output Options---*/}
-          </div>
-        </div>
+          </Stack>
+        </Col>
         <div className="col-md-3">
           <PlaceInfo info={placeInfo} className="mb-3" />
 
           {/*---Expected Points---*/}
-          <div className="card">
-            <div className="card-body">
+          <Card>
+            <CardBody>
               {placeInfo?.rating && (
                 <>
-                  <h5 className="card-title">Expected Points:</h5>
-                  <div className="d-flex">
+                  <CardTitle as={"h5"}>Expected Points:</CardTitle>
+                  <Stack direction={"horizontal"}>
                     Reviews ({limit || 0})
                     <strong className="ms-auto">{limit * 1} points</strong>
-                  </div>
-                  <div className="d-flex">
+                  </Stack>
+                  <Stack direction={"horizontal"}>
                     Image URLs (~{limit * 10 || 0})
                     <strong className="ms-auto">
                       ~{limit * 2 * 10 || 0} points
                     </strong>
-                  </div>
-                  <div className="d-flex">
+                  </Stack>
+                  <Stack direction={"horizontal"}>
                     Video URLs (~{limit * 10 || 0})
                     <strong className="ms-auto">
                       ~{limit * 3 * 10 || 0} points
                     </strong>
-                  </div>
-                  <div className="d-flex">
+                  </Stack>
+                  <Stack direction={"horizontal"}>
                     Owner responses (~{limit || 0})
                     <strong className="ms-auto">
                       ~{limit * 1 || 0} points
                     </strong>
-                  </div>
+                  </Stack>
                   <hr />
-                  <div className="d-flex">
+                  <Stack direction={"horizontal"}>
                     Total
                     <strong className="ms-auto">
                       {limit * 1} ~ {limit * 6 * 10}
                       points
                     </strong>
-                  </div>
+                  </Stack>
                 </>
               )}
-              <div className="form-check mt-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="terms"
-                  required
-                  checked={isTermsAccepted}
-                  onChange={(e) => setIsTermsAccepted(e.target.checked)}
-                  disabled={loading || !isValidated}
-                />
-                <label className="form-check-label" htmlFor="terms">
-                  I agree to the{" "}
-                  <a href="#" target="_blank">
-                    terms and conditions
-                  </a>
-                </label>
-              </div>
-              <button
-                className="btn btn-primary w-100 mt-3"
+              <FormCheck
+                className="mt-3"
+                type="checkbox"
+                id="terms"
+                label={
+                  <>
+                    I agree to the{" "}
+                    <a href="#" target="_blank" rel="nooper noreferrer">
+                      terms and conditions
+                    </a>
+                  </>
+                }
+              ></FormCheck>
+              <Button
+                variant="primary"
+                className="w-100 mt-3"
                 disabled={loading || !isValidated || !isTermsAccepted}
                 onClick={handleStartScrap}
               >
                 Scrap
-              </button>
-            </div>
-          </div>
+              </Button>
+            </CardBody>
+          </Card>
           {/*---End: Expected Points---*/}
         </div>
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
