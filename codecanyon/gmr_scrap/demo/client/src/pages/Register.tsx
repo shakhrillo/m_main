@@ -9,6 +9,7 @@ import {
   Form,
   FormControl,
   FormGroup,
+  FormLabel,
   Image,
   Row,
   Stack,
@@ -103,7 +104,7 @@ export const Register = () => {
                 <Col md={8} className="mx-auto">
                   <Form onSubmit={handleRegister}>
                     <FormGroup className="mb-3" controlId="firstName">
-                      <Form.Label>First name</Form.Label>
+                      <FormLabel>First name</FormLabel>
                       <FormControl
                         type="text"
                         value={firstName}
@@ -113,7 +114,7 @@ export const Register = () => {
                       />
                     </FormGroup>
                     <FormGroup className="mb-3" controlId="lastName">
-                      <Form.Label>Last name</Form.Label>
+                      <FormLabel>Last name</FormLabel>
                       <FormControl
                         type="text"
                         value={lastName}
@@ -123,7 +124,7 @@ export const Register = () => {
                       />
                     </FormGroup>
                     <FormGroup className="mb-3" controlId="email">
-                      <Form.Label>Email</Form.Label>
+                      <FormLabel>Email</FormLabel>
                       <FormControl
                         type="email"
                         value={email}
@@ -140,7 +141,7 @@ export const Register = () => {
                       />
                     </FormGroup>
                     <FormGroup className="mb-3" controlId="password">
-                      <Form.Label>Password</Form.Label>
+                      <FormLabel>Password</FormLabel>
                       <FormControl
                         type="password"
                         value={password}
@@ -149,13 +150,13 @@ export const Register = () => {
                         pattern=".{6,}"
                         required
                       />
-                      <Form.Control.Feedback type={"invalid"}>
+                      <FormControl.Feedback type={"invalid"}>
                         <IconAlertCircle className="me-2" size={20} />
                         Password must be at least 6 characters long.
-                      </Form.Control.Feedback>
+                      </FormControl.Feedback>
                     </FormGroup>
-                    <FormGroup className="mb-3" controlId="password">
-                      <Form.Label>Confirm Password</Form.Label>
+                    <FormGroup className="mb-3" controlId="confirmPassword">
+                      <FormLabel>Confirm Password</FormLabel>
                       <FormControl
                         type="password"
                         value={confirmPassword}
@@ -164,10 +165,10 @@ export const Register = () => {
                         pattern=".{6,}"
                         required
                       />
-                      <Form.Control.Feedback type={"invalid"}>
+                      <FormControl.Feedback type={"invalid"}>
                         <IconAlertCircle className="me-2" size={20} />
                         Password must be at least 6 characters long.
-                      </Form.Control.Feedback>
+                      </FormControl.Feedback>
                     </FormGroup>
                     <Button variant="primary" className="w-100" type="submit">
                       Register

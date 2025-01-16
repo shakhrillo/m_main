@@ -16,6 +16,7 @@ import {
   Form,
   FormControl,
   FormGroup,
+  FormLabel,
   Image,
   Row,
   Stack,
@@ -92,7 +93,7 @@ export const Login: React.FC = () => {
                 <Col md={8} className="mx-auto">
                   <Form onSubmit={handleLogin}>
                     <FormGroup className="mb-3" controlId="email">
-                      <Form.Label>Email</Form.Label>
+                      <FormLabel>Email</FormLabel>
                       <FormControl
                         type="email"
                         value={email}
@@ -108,14 +109,14 @@ export const Login: React.FC = () => {
                         }
                       />
 
-                      <Form.Control.Feedback type={"invalid"}>
+                      <FormControl.Feedback type={"invalid"}>
                         <IconAlertCircle className="me-2" size={20} />
                         Please enter a valid email address.
-                      </Form.Control.Feedback>
+                      </FormControl.Feedback>
                     </FormGroup>
 
                     <FormGroup className="mb-3" controlId="password">
-                      <Form.Label>Password</Form.Label>
+                      <FormLabel>Password</FormLabel>
                       <FormControl
                         type="password"
                         value={password}
@@ -124,10 +125,10 @@ export const Login: React.FC = () => {
                         pattern=".{6,}"
                         required
                       />
-                      <Form.Control.Feedback type={"invalid"}>
+                      <FormControl.Feedback type={"invalid"}>
                         <IconAlertCircle className="me-2" size={20} />
                         Password must be at least 6 characters long.
-                      </Form.Control.Feedback>
+                      </FormControl.Feedback>
                     </FormGroup>
 
                     <Button variant="primary" className="w-100" type="submit">
