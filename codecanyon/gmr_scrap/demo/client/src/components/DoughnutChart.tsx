@@ -1,13 +1,9 @@
 import {
   ArcElement,
-  BarElement,
   CategoryScale,
   Chart as ChartJS,
-  Filler,
   Legend,
   LinearScale,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
 } from "chart.js";
@@ -18,14 +14,36 @@ ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Filler,
   Title,
   Tooltip,
   Legend,
 );
+
+// Custom plugin for drawing text in the center of the doughnut
+const textPlugin = {
+  id: "textPlugin",
+  beforeDraw(chart: any) {
+    const { width, height, options } = chart;
+    const ctx = chart.ctx;
+
+    const text = options.plugins?.textPlugin?.text || ""; // Safely access the text property
+    if (!text) return; // Exit early if no text is provided
+
+    ctx.save();
+    const fontSize = (height / 150).toFixed(2);
+    ctx.font = `${fontSize}em sans-serif`;
+    ctx.textBaseline = "middle";
+
+    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+    const textY = height / 2;
+
+    ctx.fillText(text, textX, textY);
+    ctx.restore();
+  },
+};
+
+// Register the custom plugin globally
+ChartJS.register(textPlugin);
 
 export const DoughnutChart = ({
   data,
@@ -35,42 +53,33 @@ export const DoughnutChart = ({
   total: number;
 }) => {
   return (
-    <div
-      className="position-relative"
-      // style={{ height: "100px", width: "100px" }}
-    >
-      <div className="position-absolute top-50 start-50 translate-middle text-center">
-        <strong className="fs-3">{total}</strong>
-        <p className="m-0 text-muted mt-n2">Total</p>
-      </div>
+    <div className="position-relative">
       <Doughnut
         data={{
           datasets: [
             {
               data,
               borderWidth: 0,
-              // bg-primary bg-success bg-info bg-warning
               backgroundColor: ["#3e2c41", "#a4c694", "#a1d6e2", "#f6e27f"],
               borderRadius: 20,
               borderAlign: "center",
               spacing: 10,
               circular: true,
-              // animation: {
-              //   duration: 0,
-              // },
             },
           ],
         }}
         options={{
-          // cutout: 50,
+          // cutout: "70%", // Customize the cutout for the doughnut
           layout: {
             padding: 10,
-            autoPadding: false,
           },
           plugins: {
             legend: {
               display: false,
             },
+            // ["textPlugin" as any]: {
+            //   text: 100, // Pass the text dynamically
+            // },
           },
         }}
       />

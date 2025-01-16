@@ -64,12 +64,12 @@ export const Dashboard: React.FC = () => {
       console.log("appStatistics", data);
       setStatistics(data);
 
-      setContainers([
-        data.filter((e: any) => e.id === "totalImages")[0].total,
-        data.filter((e: any) => e.id === "totalVideos")[0].total,
-        data.filter((e: any) => e.id === "totalReviews")[0].total,
-        data.filter((e: any) => e.id === "totalOwnerReviews")[0].total,
-      ]);
+      // setContainers([
+      //   data.filter((e: any) => e.id === "totalImages")[0].total,
+      //   data.filter((e: any) => e.id === "totalVideos")[0].total,
+      //   data.filter((e: any) => e.id === "totalReviews")[0].total,
+      //   data.filter((e: any) => e.id === "totalOwnerReviews")[0].total,
+      // ]);
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
@@ -152,9 +152,9 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <Container fluid>
+    <Container>
       <Row className="g-3">
-        <Col md={8}>
+        <Col md={6}>
           <Card id="dashboard">
             <Card.Body>
               <Card.Title>Total revenue</Card.Title>
@@ -200,7 +200,7 @@ export const Dashboard: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <Row className="row-cols-1 g-3">
             <Col>
               <Card>
