@@ -1,9 +1,4 @@
-import {
-  Map,
-  InfoWindow,
-  useMap,
-  AdvancedMarker,
-} from "@vis.gl/react-google-maps";
+import { Map, InfoWindow, useMap } from "@vis.gl/react-google-maps";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { type Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 
@@ -38,6 +33,14 @@ const ClusteredMarkers = ({
   useEffect(() => {
     if (!map || markers.length === 0) return;
 
+    // Set map bounds to fit all markers
+    const bounds = new google.maps.LatLngBounds();
+    locations.forEach(({ latitude, longitude }) => {
+      bounds.extend(new google.maps.LatLng(latitude, longitude));
+    });
+
+    map.fitBounds(bounds);
+
     const markerClusterer = new MarkerClusterer({
       markers,
       map,
@@ -46,7 +49,7 @@ const ClusteredMarkers = ({
     return () => {
       markerClusterer.clearMarkers();
     };
-  }, [map, markers]);
+  }, [map, markers, locations]);
 
   return (
     <>
