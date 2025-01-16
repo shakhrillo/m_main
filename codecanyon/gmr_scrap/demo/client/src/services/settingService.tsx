@@ -5,6 +5,29 @@ import { BehaviorSubject, Observable } from "rxjs";
 const startDate: Date = new Date();
 startDate.setMonth(startDate.getMonth() - 12);
 
+export const getSettings = () => {
+  const collectionRef = collection(firestore, "settings");
+  const settings$ = new BehaviorSubject({} as any);
+
+  const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    const settings = {} as any;
+    snapshot.docs.map((doc) => {
+      const data = doc.data() || {};
+      settings[doc.id] = data;
+    });
+    settings$.next(settings);
+  });
+
+  return new Observable<any>((subscriber) => {
+    const subscription = settings$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
 export const allUsers = (fromDate = startDate) => {
   const collectionRef = collection(firestore, "users");
   const users$ = new BehaviorSubject([] as any);

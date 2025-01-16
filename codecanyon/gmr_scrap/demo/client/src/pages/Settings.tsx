@@ -1,14 +1,139 @@
-import { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Card, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { getSettings } from "../services/settingService";
 
 export const Settings = () => {
   const [currency, setCurrency] = useState("usd");
   const [costs, setCosts] = useState("0.01");
   const [language, setLanguage] = useState("en");
+  const [coinSettings, setCoinSettings] = useState({
+    image: 2,
+    video: 3,
+    response: 1,
+    review: 1,
+    validation: 3,
+  });
+
+  useEffect(() => {
+    getSettings().subscribe((settings) => {
+      console.log(`settings`, settings);
+    });
+  }, []);
 
   return (
     <Container>
-      <Row>
+      <Row className="g-3">
+        <Col md={12}>
+          <Card>
+            <Card.Body>
+              <Tabs
+                defaultActiveKey="coinSettings"
+                id="mainSettings"
+                className="mb-3"
+              >
+                <Tab eventKey="generalSettings" title="General">
+                  General settings
+                </Tab>
+                <Tab eventKey="coinSettings" title="Coin">
+                  <Form>
+                    <Row className="g-3 row-cols-md-2">
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Image</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={coinSettings.image}
+                            onChange={(e) =>
+                              setCoinSettings({
+                                ...coinSettings,
+                                image: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The cost for each image in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Video</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={coinSettings.video}
+                            onChange={(e) =>
+                              setCoinSettings({
+                                ...coinSettings,
+                                video: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The cost for each video in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Response</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={coinSettings.response}
+                            onChange={(e) =>
+                              setCoinSettings({
+                                ...coinSettings,
+                                response: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The cost for each response in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Review</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={coinSettings.review}
+                            onChange={(e) =>
+                              setCoinSettings({
+                                ...coinSettings,
+                                review: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The cost for each review in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Validation</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={coinSettings.validation}
+                            onChange={(e) =>
+                              setCoinSettings({
+                                ...coinSettings,
+                                validation: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The cost for each validation in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Tab>
+              </Tabs>
+            </Card.Body>
+          </Card>
+        </Col>
         <Col>
           <div className="card">
             <div className="card-body">
