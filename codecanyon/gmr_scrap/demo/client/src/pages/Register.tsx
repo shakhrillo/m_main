@@ -101,8 +101,8 @@ export const Register = () => {
                   <div className="auth-divider my-3">or</div>
                 </Col>
                 <Col md={8} className="mx-auto">
-                  <Form>
-                    <FormGroup className="mb-3" controlId="email">
+                  <Form onSubmit={handleRegister}>
+                    <FormGroup className="mb-3" controlId="firstName">
                       <Form.Label>First name</Form.Label>
                       <FormControl
                         type="text"
@@ -112,7 +112,7 @@ export const Register = () => {
                         required
                       />
                     </FormGroup>
-                    <FormGroup className="mb-3" controlId="email">
+                    <FormGroup className="mb-3" controlId="lastName">
                       <Form.Label>Last name</Form.Label>
                       <FormControl
                         type="text"
@@ -173,7 +173,7 @@ export const Register = () => {
                       Register
                     </Button>
                     {error && (
-                      <Alert variant="danger" role="alert">
+                      <Alert className="mt-4" variant="danger" role="alert">
                         {error}
                       </Alert>
                     )}
@@ -202,81 +202,5 @@ export const Register = () => {
         </Col>
       </Row>
     </Container>
-    // <div className="main">
-    //   <Container>
-    //     <div className="content">
-    //       <h3>Register</h3>
-    //       <Card>
-    //         <CardBody>
-    //           <Form onSubmit={handleRegister}>
-    //             <FormGroup className="mb-3" controlId="firstName">
-    //               <Form.Label>First name</Form.Label>
-    //               <FormControl
-    //                 type="text"
-    //                 value={firstName}
-    //                 onChange={(e) => setFirstName(e.target.value)}
-    //                 placeholder="First name"
-    //               />
-    //             </FormGroup>
-    //             <FormGroup className="mb-3" controlId="lastName">
-    //               <Form.Label>Last name</Form.Label>
-    //               <FormControl
-    //                 type="text"
-    //                 value={lastName}
-    //                 onChange={(e) => setLastName(e.target.value)}
-    //                 placeholder="Last name"
-    //               />
-    //             </FormGroup>
-    //             <FormGroup className="mb-3" controlId="email">
-    //               <Form.Label>Email</Form.Label>
-    //               <FormControl
-    //                 type="email"
-    //                 value={email}
-    //                 placeholder="Enter email"
-    //                 onChange={(e) => setEmail(e.target.value)}
-    //               />
-    //             </FormGroup>
-    //             <FormGroup className="mb-3" controlId="">
-    //               <Form.Label>Password</Form.Label>
-    //               <FormControl
-    //                 type="password"
-    //                 value={password}
-    //                 placeholder="Password"
-    //                 onChange={(e) => setPassword(e.target.value)}
-    //               />
-    //             </FormGroup>
-    //             <FormGroup className="mb-3" controlId="">
-    //               <Form.Label>Confirm Password</Form.Label>
-    //               <FormControl
-    //                 type="password"
-    //                 value={confirmPassword}
-    //                 placeholder="Confirm password"
-    //                 onChange={(e) => setConfirmPassword(e.target.value)}
-    //               />
-    //             </FormGroup>
-    //             <Button variant="primary" type="submit">
-    //               Register
-    //             </Button>
-    //             {error && <Alert variant="danger">{error}</Alert>}
-    //           </Form>
-    //           <div className="mt-2">
-    //             <Button
-    //               className="button-google"
-    //               type="button"
-    //               onClick={handleGoogleLogin}
-    //             >
-    //               Continue with Google
-    //             </Button>
-    //           </div>
-    //           <div className="mt-2">
-    //             <span>
-    //               Already have an account? <Link to="/auth/login">Login</Link>
-    //             </span>
-    //           </div>
-    //         </CardBody>
-    //       </Card>
-    //     </div>
-    //   </Container>
-    // </div>
   );
 };

@@ -40,6 +40,7 @@ export const Login: React.FC = () => {
 
     try {
       await login(email, password);
+      window.location.reload();
     } catch (error) {
       setError("Email or password is incorrect.");
     }
@@ -89,7 +90,7 @@ export const Login: React.FC = () => {
                   <div className="auth-divider my-3">or</div>
                 </Col>
                 <Col md={8} className="mx-auto">
-                  <Form>
+                  <Form onSubmit={handleLogin}>
                     <FormGroup className="mb-3" controlId="email">
                       <Form.Label>Email</Form.Label>
                       <FormControl
@@ -127,16 +128,13 @@ export const Login: React.FC = () => {
                         <IconAlertCircle className="me-2" size={20} />
                         Password must be at least 6 characters long.
                       </Form.Control.Feedback>
-                      <div className="text-end">
-                        <NavLink to="#">Forgot password?</NavLink>
-                      </div>
                     </FormGroup>
 
                     <Button variant="primary" className="w-100" type="submit">
                       Login
                     </Button>
                     {error && (
-                      <Alert variant="danger" role="alert">
+                      <Alert variant="danger mt-4" role="alert">
                         {error}
                       </Alert>
                     )}
