@@ -80,5 +80,49 @@ exports.processContainerWritten = onDocumentWritten(
     });
   }
 
+  /*-------------------*/
+  /* Fake earnings     */
+  /*-------------------*/
+  const earningsRef = db.collection("earnings");
+  const earningsSnap = await earningsRef.get();
+  if (earningsSnap.empty) {
+    // Add dummy data for the last 6 months
+    // amount: number
+    // createdAt: admin.firestore.Timestamp
+    // paymentId: string
+    // userId: string
+    const months = 12;
+    const now = new Date();
+    const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    const earnings = [];
+    for (let i = 0; i < months; i++) {
+      const date = new Date(year, month - i, 1);
+      const timestamp = admin.firestore.Timestamp.fromDate(date);
+      const amount = Math.floor(Math.random() * 14000) + 1000;
+      earnings.push({
+        amount,
+        createdAt: timestamp,
+        paymentId: `payment-${i}`,
+        userId: "user",
+      });
+    }
+
+    for (const earning of earnings) {
+      const ref = earningsRef.doc(earning.paymentId);
+      batch.set(ref, earning);
+    }
+
+    // Add the total earnings to statistics
+    const totalEarningsRef = db.doc("statistics/earnings");
+    const totalEarningsSnap = await totalEarningsRef.get();
+    if (!totalEarningsSnap.exists) {
+      batch.set(totalEarningsRef, {
+        total: earnings.reduce((acc, curr) => acc + curr.amount, 0),
+      });
+    }
+  }
+
   await batch.commit();
 })();

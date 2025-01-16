@@ -74,36 +74,36 @@ export const Dashboard: React.FC = () => {
 
     const containersSubscription = allContainers().subscribe((data) => {
       console.log("data", data);
-      // const totalImages = data.reduce(
-      //   (acc: any, e: any) => acc + e.totalImages,
-      //   0,
-      // );
-      // const totalOwnerReviews = data.reduce(
-      //   (acc: any, e: any) => acc + e.totalOwnerReviews,
-      //   0,
-      // );
-      // const totalReviews = data.reduce(
-      //   (acc: any, e: any) => acc + e.totalReviews,
-      //   0,
-      // );
-      // const totalVideos = data.reduce(
-      //   (acc: any, e: any) => acc + e.totalVideos,
-      //   0,
-      // );
+      const totalImages = data.reduce(
+        (acc: any, e: any) => acc + e.totalImages,
+        0,
+      );
+      const totalOwnerReviews = data.reduce(
+        (acc: any, e: any) => acc + e.totalOwnerReviews,
+        0,
+      );
+      const totalReviews = data.reduce(
+        (acc: any, e: any) => acc + e.totalReviews,
+        0,
+      );
+      const totalVideos = data.reduce(
+        (acc: any, e: any) => acc + e.totalVideos,
+        0,
+      );
 
-      // console.log("d", [
-      //   totalImages,
-      //   totalVideos,
-      //   totalReviews,
-      //   totalOwnerReviews,
-      // ]);
+      console.log("d", [
+        totalImages,
+        totalVideos,
+        totalReviews,
+        totalOwnerReviews,
+      ]);
 
-      // setContainers([
-      //   totalImages,
-      //   totalVideos,
-      //   totalReviews,
-      //   totalOwnerReviews,
-      // ]);
+      setContainers([
+        totalImages,
+        totalVideos,
+        totalReviews,
+        totalOwnerReviews,
+      ]);
 
       // console.log("containers", formatTotalContainers(data));
       // console.log("containers", data);
@@ -262,9 +262,7 @@ export const Dashboard: React.FC = () => {
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Earnings</Card.Title>
-                  <div className="fs-1">
-                    ${earnings.reduce((acc, e) => acc + e.total, 0)}2.222.3
-                  </div>
+                  <div className="fs-1">$111</div>
                   <small className="mt-auto">
                     24% increase from last month
                   </small>

@@ -9,6 +9,7 @@ import {
 } from "chart.js";
 import "leaflet/dist/leaflet.css";
 import { Doughnut } from "react-chartjs-2";
+import formatNumber from "../utils/formatNumber";
 
 ChartJS.register(
   ArcElement,
@@ -52,6 +53,8 @@ export const DoughnutChart = ({
   data: number[];
   total: number;
 }) => {
+  console.log("doughnut chart data", data);
+
   return (
     <div className="position-relative">
       <Doughnut
@@ -69,7 +72,7 @@ export const DoughnutChart = ({
           ],
         }}
         options={{
-          // cutout: "70%", // Customize the cutout for the doughnut
+          cutout: "70%", // Customize the cutout for the doughnut
           layout: {
             padding: 10,
           },
@@ -77,9 +80,9 @@ export const DoughnutChart = ({
             legend: {
               display: false,
             },
-            // ["textPlugin" as any]: {
-            //   text: 100, // Pass the text dynamically
-            // },
+            ["textPlugin" as any]: {
+              text: formatNumber(total),
+            },
           },
         }}
       />
