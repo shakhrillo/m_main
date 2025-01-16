@@ -31,8 +31,6 @@ export const PlaceInfo = ({
             <StatusInfo info={info} />
             <Card.Title className="mt-3 text-primary">{info.title}</Card.Title>
             <Ratings info={info} />
-            <h3>{info.type}</h3>
-            <hr />
             {info.type === "comments" && (
               <>
                 <h5 className="mt-3">Options</h5>
@@ -69,10 +67,10 @@ export const PlaceInfo = ({
               <>
                 <Stack direction="horizontal" className="py-1">
                   <span className="me-auto">Comments:</span>{" "}
-                  <strong>
+                  <small>
                     {formatNumber(info.totalReviews)} reviews /{" "}
                     {formatNumber(info.totalOwnerReviews)} replies
-                  </strong>
+                  </small>
                 </Stack>
                 <Stack direction="horizontal" className="py-1">
                   <span className="me-auto">Media:</span>

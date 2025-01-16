@@ -110,9 +110,11 @@ export const validatedUrls = (
   {
     type = "info",
     search = "",
+    filter = "",
   }: {
     type: "info" | "comments";
     search?: string;
+    filter?: string;
   },
 ) => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
@@ -124,6 +126,7 @@ export const validatedUrls = (
       orderBy("createdAt", "desc"),
       where("type", "==", type),
       ...(search ? [where("keywords", "array-contains", search)] : []),
+      ...(filter ? [where("status", "==", filter)] : []),
     ),
     (snapshot) => {
       const scrapsData = snapshot.docs.map((doc) => ({

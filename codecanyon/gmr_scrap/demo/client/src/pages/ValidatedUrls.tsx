@@ -10,6 +10,7 @@ import {
   Card,
   Col,
   Container,
+  Dropdown,
   Form,
   InputGroup,
   Row,
@@ -22,7 +23,11 @@ import { IReview, validatedUrls } from "../services/scrapService";
 import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-
+const FILTER_OPTIONS = [
+  { value: "", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "error", label: "Failed" },
+];
 export const ValidatedURLs = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
@@ -31,6 +36,7 @@ export const ValidatedURLs = () => {
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
 
   const stats = [
     {
@@ -55,6 +61,7 @@ export const ValidatedURLs = () => {
     const reviewSubscription = validatedUrls(uid, {
       type: "info",
       search,
+      filter,
     }).subscribe((data) => {
       setReviews(data);
       setLoading(false);
@@ -63,7 +70,8 @@ export const ValidatedURLs = () => {
     return () => {
       reviewSubscription.unsubscribe();
     };
-  }, [search, uid]);
+  }, [search, uid, filter]);
+
   useEffect(() => {
     const statsSubscription = userData(uid).subscribe((data) => {
       setInfo(data);
@@ -118,6 +126,24 @@ export const ValidatedURLs = () => {
                   />
                 </InputGroup>
               </div>
+
+              <Dropdown>
+                <Dropdown.Toggle id="dropdown-filter" variant="secondary">
+                  Filter
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu aria-labelledby="dropdown-filter">
+                  {FILTER_OPTIONS.map((option) => (
+                    <Dropdown.Item
+                      key={option.value}
+                      onClick={() => setFilter(option.value)}
+                      className={filter === option.value ? "active" : ""}
+                    >
+                      {option.label}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
             </Stack>
           </Col>
 
