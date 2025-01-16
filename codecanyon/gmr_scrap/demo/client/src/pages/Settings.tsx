@@ -3,9 +3,10 @@ import { Card, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
 import { getSettings } from "../services/settingService";
 
 export const Settings = () => {
-  const [currency, setCurrency] = useState("usd");
-  const [costs, setCosts] = useState("0.01");
-  const [language, setLanguage] = useState("en");
+  const [generalSettings, setGeneralSettings] = useState({
+    logo: "",
+    newUserBonus: 100,
+  });
   const [coinSettings, setCoinSettings] = useState({
     image: 2,
     video: 3,
@@ -16,10 +17,16 @@ export const Settings = () => {
   const [scrapSettings, setScrapSettings] = useState({
     minimum: 1,
     maximum: 10,
-    retry: 3,
+    maxRetries: 50,
+  });
+  const [dockerSettings, setDockerSettings] = useState({
     minCpu: 2,
     minRam: 4,
     minStorage: 10,
+  });
+  const [stripeSettings, setStripeSettings] = useState({
+    secret: "",
+    webhook: "",
   });
 
   useEffect(() => {
@@ -41,7 +48,46 @@ export const Settings = () => {
                 className="mb-3"
               >
                 <Tab eventKey="generalSettings" title="General">
-                  General settings
+                  <Form>
+                    <Row className="g-3 row-cols-md-2">
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Logo</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={generalSettings.logo}
+                            onChange={(e) =>
+                              setGeneralSettings({
+                                ...generalSettings,
+                                logo: e.target.value,
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The URL for the logo.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>New User Bonus</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={generalSettings.newUserBonus}
+                            onChange={(e) =>
+                              setGeneralSettings({
+                                ...generalSettings,
+                                newUserBonus: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The bonus for new users.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Form>
                 </Tab>
                 <Tab eventKey="coinSettings" title="Coin">
                   <Form>
@@ -180,14 +226,14 @@ export const Settings = () => {
                       </Col>
                       <Col>
                         <Form.Group className="mb-3">
-                          <Form.Label>Retry</Form.Label>
+                          <Form.Label>Max Retries</Form.Label>
                           <Form.Control
                             type="number"
-                            value={scrapSettings.retry}
+                            value={scrapSettings.maxRetries}
                             onChange={(e) =>
                               setScrapSettings({
                                 ...scrapSettings,
-                                retry: parseInt(e.target.value),
+                                maxRetries: parseInt(e.target.value),
                               })
                             }
                           />
@@ -196,21 +242,27 @@ export const Settings = () => {
                           </Form.Text>
                         </Form.Group>
                       </Col>
+                    </Row>
+                  </Form>
+                </Tab>
+                <Tab eventKey="dockerSettings" title="Docker">
+                  <Form>
+                    <Row className="g-3 row-cols-md-2">
                       <Col>
                         <Form.Group className="mb-3">
                           <Form.Label>Minimum CPU</Form.Label>
                           <Form.Control
                             type="number"
-                            value={scrapSettings.minCpu}
+                            value={dockerSettings.minCpu}
                             onChange={(e) =>
-                              setScrapSettings({
-                                ...scrapSettings,
+                              setDockerSettings({
+                                ...dockerSettings,
                                 minCpu: parseInt(e.target.value),
                               })
                             }
                           />
                           <Form.Text className="text-muted">
-                            The minimum CPU usage.
+                            The minimum number of CPUs.
                           </Form.Text>
                         </Form.Group>
                       </Col>
@@ -219,16 +271,16 @@ export const Settings = () => {
                           <Form.Label>Minimum RAM</Form.Label>
                           <Form.Control
                             type="number"
-                            value={scrapSettings.minRam}
+                            value={dockerSettings.minRam}
                             onChange={(e) =>
-                              setScrapSettings({
-                                ...scrapSettings,
+                              setDockerSettings({
+                                ...dockerSettings,
                                 minRam: parseInt(e.target.value),
                               })
                             }
                           />
                           <Form.Text className="text-muted">
-                            The minimum RAM usage.
+                            The minimum amount of RAM.
                           </Form.Text>
                         </Form.Group>
                       </Col>
@@ -237,16 +289,58 @@ export const Settings = () => {
                           <Form.Label>Minimum Storage</Form.Label>
                           <Form.Control
                             type="number"
-                            value={scrapSettings.minStorage}
+                            value={dockerSettings.minStorage}
                             onChange={(e) =>
-                              setScrapSettings({
-                                ...scrapSettings,
+                              setDockerSettings({
+                                ...dockerSettings,
                                 minStorage: parseInt(e.target.value),
                               })
                             }
                           />
                           <Form.Text className="text-muted">
-                            The minimum storage usage.
+                            The minimum amount of storage.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Tab>
+                <Tab eventKey="stripeSettings" title="Stripe">
+                  <Form>
+                    <Row className="g-3 row-cols-md-2">
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Secret</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={stripeSettings.secret}
+                            onChange={(e) =>
+                              setStripeSettings({
+                                ...stripeSettings,
+                                secret: e.target.value,
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The secret key for stripe.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Webhook secret</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={stripeSettings.webhook}
+                            onChange={(e) =>
+                              setStripeSettings({
+                                ...stripeSettings,
+                                webhook: e.target.value,
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The webhook for stripe.
                           </Form.Text>
                         </Form.Group>
                       </Col>
@@ -256,97 +350,6 @@ export const Settings = () => {
               </Tabs>
             </Card.Body>
           </Card>
-        </Col>
-        <Col>
-          <div className="card">
-            <div className="card-body">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <div className="row mb-3 justify-content-center align-items-center">
-                  <Col>
-                    <label htmlFor="currency" className="form-label">
-                      Currency
-                    </label>
-                    <div className="row">
-                      <div
-                        className="btn-group w-auto"
-                        role="group"
-                        aria-label="Default button group"
-                      >
-                        <button
-                          type="button"
-                          onClick={() => setCurrency("all")}
-                          className={`btn btn-outline-primary ${currency === "usd" && "active"}`}
-                        >
-                          USD
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setCurrency("completed")}
-                          className={`btn btn-outline-primary ${currency === "eur" && "active"}`}
-                        >
-                          EUR
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setCurrency("pending")}
-                          className={`btn btn-outline-primary ${currency === "cad" && "active"}`}
-                        >
-                          CAD
-                        </button>
-                      </div>
-                    </div>
-                    <span className="form-text">Select your currency</span>
-                  </Col>
-                  <Col>
-                    <div className="mb-3">
-                      <label htmlFor="coin" className="form-label">
-                        1 coin costs in {currency}
-                      </label>
-                      <input
-                        type="text"
-                        name="coin"
-                        id="coin"
-                        className="form-control"
-                        placeholder="0.01"
-                        value={costs}
-                        onChange={(e) => setCosts(e.target.value)}
-                      />
-                      <a
-                        href="https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts"
-                        className="form-text"
-                      >
-                        Learn more about minimum charge
-                      </a>
-                    </div>
-                  </Col>
-                </div>
-                <div className="mb-3 col-6">
-                  <label htmlFor="language" className="form-label">
-                    Language
-                  </label>
-                  <select
-                    name="language"
-                    id="language"
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="en">English</option>
-                    <option value="fr">French</option>
-                    <option value="es">Spanish</option>
-                    <option value="de">German</option>
-                  </select>
-                </div>
-                <button className="btn btn-primary" type="submit">
-                  Save
-                </button>
-              </form>
-            </div>
-          </div>
         </Col>
       </Row>
     </Container>
