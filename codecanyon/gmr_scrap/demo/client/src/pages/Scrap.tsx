@@ -248,7 +248,7 @@ export const Scrap = () => {
             {/*---Validate Place Info---*/}
             <Card>
               <CardBody>
-                <Card.Title as="h5">Validate Place Info</Card.Title>
+                <CardTitle>Validate Place Info</CardTitle>
                 <Form
                   onSubmit={handleUrlValidation}
                   noValidate
@@ -307,7 +307,7 @@ export const Scrap = () => {
             {/*---Extract Options---*/}
             <Card>
               <CardBody>
-                <Card.Title as={"h5"}>Extract Options</Card.Title>
+                <CardTitle>Extract Options</CardTitle>
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col lg={6}>
@@ -416,7 +416,7 @@ export const Scrap = () => {
                                   className="w-100 p-3"
                                   // htmlFor={option.id}
                                 >
-                                  <CardTitle className="fs-5">
+                                  <CardTitle>
                                     {createElement(option.icon, {
                                       size: 40,
                                       className: "text-primary me-2",
@@ -450,7 +450,7 @@ export const Scrap = () => {
             {/*---Output Options---*/}
             <Card>
               <CardBody>
-                <CardTitle as={"h5"}>Output Options</CardTitle>
+                <CardTitle>Output Options</CardTitle>
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col md={12}>
@@ -500,7 +500,7 @@ export const Scrap = () => {
                                 )}
                               </span>
                               <CardBody className="w-100 p-3">
-                                <CardTitle className="fs-5">
+                                <CardTitle>
                                   {createElement(option.icon, {
                                     size: 40,
                                     className: "me-2",
@@ -524,7 +524,7 @@ export const Scrap = () => {
             {/*---Output Options---*/}
             <Card>
               <CardBody className="card-body">
-                <CardTitle as={"h5"}>Notification Options</CardTitle>
+                <CardTitle>Notification Options</CardTitle>
                 <Form noValidate className="needs-validation was-validated">
                   <Row className="g-3">
                     <Col md={12} className="col-md-12">
@@ -577,7 +577,7 @@ export const Scrap = () => {
                                 )}
                               </span>
                               <CardBody className="w-100 p-3">
-                                <CardTitle className="fs-5">
+                                <CardTitle>
                                   {createElement(option.icon, {
                                     size: 40,
                                     className: "me-2",
@@ -607,7 +607,7 @@ export const Scrap = () => {
             <CardBody>
               {placeInfo?.rating && (
                 <>
-                  <CardTitle as={"h5"}>Expected Points:</CardTitle>
+                  <CardTitle>Expected Points:</CardTitle>
                   <Stack direction={"horizontal"}>
                     Reviews ({limit || 0})
                     <strong className="ms-auto">{limit * 1} points</strong>
