@@ -60,6 +60,7 @@ exports.processContainerWritten = onDocumentWritten(
     "totalOwnerReviews",
     "totalValidateComments",
     "totalValidateInfo",
+    "earnings",
   ];
   for (const type of types) {
     const ref = statisticsRef.doc(type);

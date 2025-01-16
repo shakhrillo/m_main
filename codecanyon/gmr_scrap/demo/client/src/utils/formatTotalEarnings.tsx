@@ -20,7 +20,7 @@ export const formatTotalEarnings = (
   // Group data by month and calculate earnings
   const grouped = data.reduce((acc: Record<string, number>, item) => {
     const monthKey = format(new Date(item.createdAt.seconds * 1000), "MMM y");
-    acc[monthKey] = (acc[monthKey] || 0) + item.amount;
+    acc[monthKey] = (acc[monthKey] || 0) + item.amount / 100;
     return acc;
   }, {});
 

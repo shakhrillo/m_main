@@ -9,7 +9,7 @@ async function userTopUp(event) {
   const db = admin.firestore();
   const earningsRef = db.collection("earnings");
 
-  const statisticsRef = db.doc("statistics/userTopUp");
+  const statisticsRef = db.doc("statistics/earnings");
   const userRef = db.doc(`users/${userId}`);
   const batch = db.batch();
 

@@ -260,7 +260,7 @@ export const Dashboard: React.FC = () => {
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Earnings</Card.Title>
                   <div className="fs-1">
-                    ${formatNumber(statistics?.earnings)}
+                    ${formatNumber((statistics?.earnings || 0) / 100)}
                   </div>
                   <small className="mt-auto">
                     {checkEarningsTrend(earnings)}%{" "}

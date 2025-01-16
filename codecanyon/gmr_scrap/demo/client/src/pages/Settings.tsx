@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 
 export const Settings = () => {
   const [currency, setCurrency] = useState("usd");
@@ -6,9 +7,9 @@ export const Settings = () => {
   const [language, setLanguage] = useState("en");
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col">
+    <Container>
+      <Row>
+        <Col>
           <div className="card">
             <div className="card-body">
               <form
@@ -17,7 +18,7 @@ export const Settings = () => {
                 }}
               >
                 <div className="row mb-3 justify-content-center align-items-center">
-                  <div className="col">
+                  <Col>
                     <label htmlFor="currency" className="form-label">
                       Currency
                     </label>
@@ -51,8 +52,8 @@ export const Settings = () => {
                       </div>
                     </div>
                     <span className="form-text">Select your currency</span>
-                  </div>
-                  <div className="col">
+                  </Col>
+                  <Col>
                     <div className="mb-3">
                       <label htmlFor="coin" className="form-label">
                         1 coin costs in {currency}
@@ -73,7 +74,7 @@ export const Settings = () => {
                         Learn more about minimum charge
                       </a>
                     </div>
-                  </div>
+                  </Col>
                 </div>
                 <div className="mb-3 col-6">
                   <label htmlFor="language" className="form-label">
@@ -98,8 +99,8 @@ export const Settings = () => {
               </form>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
