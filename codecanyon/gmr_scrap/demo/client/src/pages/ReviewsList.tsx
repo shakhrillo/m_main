@@ -8,6 +8,7 @@ import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import {
   Card,
+  CardBody,
   Col,
   Container,
   Dropdown,
@@ -149,9 +150,9 @@ export const ReviewsList = () => {
           </Col>
 
           {/* Table for displaying reviews based on active filter */}
-          <div className="col-12">
-            <div className="card">
-              <div className="card-body">
+          <Col>
+            <Card>
+              <CardBody>
                 <Table hover>
                   <thead>
                     <tr>
@@ -188,9 +189,9 @@ export const ReviewsList = () => {
                     ))}
                   </tbody>
                 </Table>
-              </div>
-            </div>
-          </div>
+              </CardBody>
+            </Card>
+          </Col>
         </Row>
       )}
     </Container>
