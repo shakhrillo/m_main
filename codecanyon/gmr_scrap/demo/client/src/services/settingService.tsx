@@ -37,9 +37,9 @@ export const allContainers = (fromDate = startDate) => {
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      where("createdAt", ">", fromDate),
+      // where("createdAt", ">", fromDate),
       where("type", "==", "comments"),
-      where("status", "==", "completed"),
+      // where("status", "==", "completed"),
     ),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({

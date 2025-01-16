@@ -16,6 +16,12 @@ async function processContainerWritten(event) {
   const db = admin.firestore();
   const batch = db.batch();
   const userRef = db.doc(`users/${data.userId}`);
+  const userDoc = await userRef.get();
+
+  if (!userDoc.exists) {
+    console.error("User not found");
+    return;
+  }
 
   if (data.status === "completed") {
     /*-------------------*/

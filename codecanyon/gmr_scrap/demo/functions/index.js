@@ -12,6 +12,11 @@ const processReviewCreated = require("./src/containers/processReviewCreated");
 const processContainerWritten = require("./src/containers/processContainerWritten");
 const userTopUp = require("./src/user/userTopUp");
 
+// import json
+const fs = require("fs");
+const path = require("path");
+const jsonPath = path.join(__dirname, "assets/fake-data.json");
+
 admin.initializeApp();
 
 exports.processUserCreated = functions.auth.user().onCreate(processUserCreated);
@@ -86,11 +91,6 @@ exports.processContainerWritten = onDocumentWritten(
   const earningsRef = db.collection("earnings");
   const earningsSnap = await earningsRef.get();
   if (earningsSnap.empty) {
-    // Add dummy data for the last 6 months
-    // amount: number
-    // createdAt: admin.firestore.Timestamp
-    // paymentId: string
-    // userId: string
     const months = 12;
     const now = new Date();
     const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
@@ -122,6 +122,20 @@ exports.processContainerWritten = onDocumentWritten(
         total: earnings.reduce((acc, curr) => acc + curr.amount, 0),
       });
     }
+  }
+
+  /*-------------------*/
+  /* Fake data         */
+  /*-------------------*/
+  const data = JSON.parse(fs.readFileSync(jsonPath));
+  const containerRef = db.collection("containers");
+  for (const container of data) {
+    const ref = containerRef.doc(`${container.type}_${container.reviewId}`);
+    batch.set(ref, {
+      ...container,
+      createdAt: admin.firestore.Timestamp.now(),
+      updatedAt: admin.firestore.Timestamp.now(),
+    });
   }
 
   await batch.commit();
