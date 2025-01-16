@@ -19,6 +19,8 @@ RUN npm install -g firebase-tools
 # Set environment variable for Google Cloud authentication using the service account key
 # ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebasekeys.json
 
+COPY data ./data
+
 # Copy and install functions dependencies
 COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..

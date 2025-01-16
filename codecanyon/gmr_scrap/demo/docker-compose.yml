@@ -40,8 +40,6 @@ services:
       - ${SOURCE_PATH}/firebasekeys.json:/usr/src/app/firebasekeys.json
       - ${SOURCE_PATH}/machine:/usr/src/app
     working_dir: ${MACHINE_WORKING_DIR}
-    env_file:
-      - ${SOURCE_PATH}/.env
     environment:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IP}
@@ -60,8 +58,6 @@ services:
     build:
       context: ${FIREBASE_BUILD_CONTEXT}
       dockerfile: Dockerfile
-    env_file:
-      - ${SOURCE_PATH}/.env
     volumes:
       - ${SOURCE_PATH}/functions/index.js:/usr/src/app/functions/index.js
       - ${SOURCE_PATH}/functions/src:/usr/src/app/functions/src
