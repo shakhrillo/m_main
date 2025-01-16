@@ -30,6 +30,7 @@ import { Map } from "../components/Map";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { checkEarningsTrend } from "../utils/checkEarningsTrend";
 import formatNumber from "../utils/formatNumber";
+import { GoogleMap } from "../components/GoogleMap";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -69,7 +70,6 @@ export const Dashboard: React.FC = () => {
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
-      console.log("data", data);
       const totalImages = data.reduce(
         (acc: any, e: any) => acc + e.totalImages,
         0,
@@ -87,23 +87,12 @@ export const Dashboard: React.FC = () => {
         0,
       );
 
-      console.log("d", [
-        totalImages,
-        totalVideos,
-        totalReviews,
-        totalOwnerReviews,
-      ]);
-
       setContainers([
         totalImages,
         totalVideos,
         totalReviews,
         totalOwnerReviews,
       ]);
-
-      // console.log("containers", formatTotalContainers(data));
-      // console.log("containers", data);
-      // setContainers(formatTotalContainers(data));
     });
 
     const earningsSubscription = totalEarnings().subscribe((data) => {
@@ -128,11 +117,14 @@ export const Dashboard: React.FC = () => {
             review.location.longitude,
         )
         .map((review) => {
+          console.log("review", review);
           return [review.location?.latitude, review.location?.longitude] as [
             number,
             number,
           ];
         });
+
+      console.log("locations", locations);
 
       setMarkerLocations(locations);
     });
@@ -279,7 +271,7 @@ export const Dashboard: React.FC = () => {
         </Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>
-            <Map locations={markerLocations} />
+            <GoogleMap locations={markerLocations} />
           </Card>
         </Col>
       </Row>
