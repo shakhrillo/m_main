@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@googlemaps/markerclusterer": "^2.5.3",
     "eslint": "^8.57.1"
   }
 }

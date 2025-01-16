@@ -1,61 +1,80 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  Map,
+  InfoWindow,
+  useMap,
+  AdvancedMarker,
+} from "@vis.gl/react-google-maps";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { type Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
+
+const ClusteredMarkers = ({
+  locations,
+}: {
+  locations: { latitude: number; longitude: number }[];
+}) => {
+  const [selectedMarker, setSelectedMarker] = useState<{
+    position: { lat: number; lng: number };
+  } | null>(null);
+  const map = useMap();
+
+  const markers = useMemo(() => {
+    if (!map) return [];
+    return locations.map(({ latitude, longitude }) => {
+      const marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: map,
+      });
+
+      marker.addListener("click", () => {
+        setSelectedMarker({
+          position: { lat: latitude, lng: longitude },
+        });
+      });
+
+      return marker;
+    });
+  }, [locations, map]);
+
+  useEffect(() => {
+    if (!map || markers.length === 0) return;
+
+    const markerClusterer = new MarkerClusterer({
+      markers,
+      map,
+    });
+
+    return () => {
+      markerClusterer.clearMarkers();
+    };
+  }, [map, markers]);
+
+  return (
+    <>
+      {selectedMarker && (
+        <InfoWindow
+          position={selectedMarker.position}
+          onCloseClick={() => setSelectedMarker(null)}
+        >
+          <div>Info window content</div>
+        </InfoWindow>
+      )}
+    </>
+  );
+};
 
 export const GoogleMap = ({
   locations,
 }: {
   locations: { latitude: number; longitude: number }[];
 }) => {
-  // Handle empty locations array
-  if (!locations || locations.length === 0) return null;
-
-  const mapRef = useRef<HTMLDivElement | null>(null); // Ref for accessing the map container
-  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-
-  useEffect(() => {
-    if (mapRef.current && !mapInstance) {
-      const googleMap = new window.google.maps.Map(mapRef.current, {
-        zoom: 18, // Default zoom level
-        center: {
-          lat: locations[0].latitude,
-          lng: locations[0].longitude,
-        },
-        gestureHandling: "greedy",
-        disableDefaultUI: true,
-      });
-
-      setMapInstance(googleMap);
-    }
-  }, [mapRef, mapInstance, locations]);
-
-  // Add markers once the map instance is created
-  useEffect(() => {
-    if (mapInstance) {
-      const bounds = new window.google.maps.LatLngBounds();
-
-      // Create and add markers
-      locations.forEach((location) => {
-        const marker = new window.google.maps.Marker({
-          position: new window.google.maps.LatLng(
-            location.latitude,
-            location.longitude,
-          ),
-          map: mapInstance, // Add marker to map instance
-          title: "Clickable google.maps.Marker",
-        });
-
-        bounds.extend(marker.getPosition()!); // Extend bounds to include the marker
-      });
-
-      // Adjust the map to fit the bounds of all markers
-      mapInstance.fitBounds(bounds);
-    }
-  }, [locations, mapInstance]);
-
   return (
-    <div
-      ref={mapRef}
-      className="w-100 h-100"
-      style={{ position: "relative", height: "100%", width: "100%" }}
-    />
+    <Map
+      defaultZoom={10}
+      gestureHandling={"greedy"}
+      disableDefaultUI
+      mapId={"4cc6e874aae3dd3"}
+    >
+      <ClusteredMarkers locations={locations} />
+    </Map>
   );
 };
