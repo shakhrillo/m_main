@@ -24,6 +24,7 @@ import {
   ValidatedURLs,
 } from "../pages";
 import { AuthGuard } from "./AuthGuard";
+import { Containers } from "../pages/Containers";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
           { path: "dashboard", element: <Dashboard /> },
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
+          { path: "containers", element: <Containers /> },
         ],
       },
       { path: "register", element: <Register /> },

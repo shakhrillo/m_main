@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const scraperRoutes = require("./routes/scraperRoutes");
+const dockerRoutes = require("./routes/dockerRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
@@ -19,6 +20,7 @@ app.use("/stripe", stripeRoutes);
 
 app.use(express.json());
 app.use("/scrap", scraperRoutes);
+app.use("/docker", dockerRoutes);
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));

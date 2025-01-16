@@ -16,6 +16,7 @@ const userTopUp = require("./src/user/userTopUp");
 // import json
 const fs = require("fs");
 const path = require("path");
+const { updateDockerImages } = require("./src/services/mainService");
 const jsonPath = path.join(__dirname, "assets/fake-data.json");
 
 admin.initializeApp();
@@ -42,9 +43,42 @@ exports.processContainerWritten = onDocumentWritten(
   processContainerWritten
 );
 
-(async () => {
-  const db = admin.firestore();
+const init = async () => {
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
+  // wait emulators to be ready
+  const maxRetries = 10;
+  let retries = 0;
+  let db;
+  while (retries < maxRetries) {
+    try {
+      db = admin.firestore();
+      await db.collection("test").doc("test").set({ test: "test" });
+      console.log("Emulators are ready");
+      break;
+    } catch (error) {
+      console.log("Waiting for emulators to be ready...", error);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      retries++;
+    }
+  }
+
+  // const db = admin.firestore();
   const batch = db.batch();
+
+  /*-------------------*/
+  /* Docker            */
+  /*-------------------*/
+  // wait for JWT_SECRET to be available
+  // let retries = 0;
+  // while (!process.env.JWT_SECRET && retries < 10) {
+  //   console.log("Waiting for JWT_SECRET...", process.env);
+  //   await new Promise((resolve) => setTimeout(resolve, 1000));
+  //   retries++;
+  // }
+
+  console.log("JWT", process.env.JWT_SECRET);
+
+  await updateDockerImages();
 
   /*-------------------*/
   /* Statistics        */
@@ -141,4 +175,8 @@ exports.processContainerWritten = onDocumentWritten(
   }
 
   await batch.commit();
-})();
+};
+
+setTimeout(() => {
+  init().catch(console.error);
+}, 10000);

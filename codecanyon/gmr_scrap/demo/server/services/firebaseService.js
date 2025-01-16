@@ -9,6 +9,28 @@ async function createMachine(docId, data) {
   }
 }
 
+async function updateImages(data) {
+  try {
+    const batch = db.batch();
+    const imagesRef = db.collection("images");
+    data.forEach((image) => {
+      const docRef = imagesRef.doc(image.Id);
+      batch.set(
+        docRef,
+        {
+          ...image,
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true }
+      );
+    });
+
+    await batch.commit();
+  } catch (error) {
+    console.error("Error updating images:", error);
+  }
+}
+
 async function updateMachine(docId, data) {
   try {
     await db
@@ -59,4 +81,5 @@ module.exports = {
   updateMachine,
   updateDockerInfo,
   updateDockerImageInfo,
+  updateImages,
 };

@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 # Copy Firebase configuration files
-COPY firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
+COPY .env firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
 
 # Copy the Service Account Key (make sure it is already present in the build context)
 # COPY firebasekeys.json ./firebasekeys.json
@@ -22,6 +22,7 @@ RUN npm install -g firebase-tools
 # Copy and install functions dependencies
 COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..
+
 
 EXPOSE 5001
 EXPOSE 9100

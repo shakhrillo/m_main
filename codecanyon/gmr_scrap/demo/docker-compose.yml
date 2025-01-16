@@ -40,6 +40,8 @@ services:
       - ${SOURCE_PATH}/firebasekeys.json:/usr/src/app/firebasekeys.json
       - ${SOURCE_PATH}/machine:/usr/src/app
     working_dir: ${MACHINE_WORKING_DIR}
+    env_file:
+      - ${SOURCE_PATH}/.env
     environment:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IP}
@@ -53,9 +55,13 @@ services:
       - docker
     entrypoint: ["npm", "run", "init"]
   firebase:
+    depends_on:
+      - machine
     build:
       context: ${FIREBASE_BUILD_CONTEXT}
       dockerfile: Dockerfile
+    env_file:
+      - ${SOURCE_PATH}/.env
     volumes:
       - ${SOURCE_PATH}/functions/index.js:/usr/src/app/functions/index.js
       - ${SOURCE_PATH}/functions/src:/usr/src/app/functions/src
@@ -66,10 +72,6 @@ services:
       - "${VITE_STORAGE_EMULATOR_PORT}:9199"
       - "${VITE_FIREBASE_AUTH_EMULATOR_PORT}:9099"
       - "${VITE_UI_EMULATOR_PORT}:4000"
-    environment:
-      SERVER_IP: ${SERVER_IP}
-      SERVER_PORT: ${SERVER_PORT}
-      JWT_SECRET: ${JWT_SECRET}
     networks:
       gmrscrap-network:
         ipv4_address: ${FIREBASE_IP}

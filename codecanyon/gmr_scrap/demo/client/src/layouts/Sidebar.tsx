@@ -1,4 +1,6 @@
 import {
+  IconBox,
+  IconBoxMargin,
   IconCreditCard,
   IconDashboard,
   IconHelp,
@@ -10,6 +12,7 @@ import {
   IconServerBolt,
   IconSettings,
   IconShield,
+  IconTool,
   IconUser,
   IconWorldCheck,
 } from "@tabler/icons-react";
@@ -87,6 +90,36 @@ export const Sidebar = () => {
           </NavLink>
         </div>
 
+        <div className="sidebar-group">
+          <span className="sidebar-group-title">Docker</span>
+          <NavLink
+            to={"/containers"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconBox, { size: 20 })}
+            <span className="me-auto">Containers</span>
+          </NavLink>
+          <NavLink
+            to={"/images"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconBoxMargin, { size: 20 })}
+            <span className="me-auto">Images</span>
+          </NavLink>
+          <NavLink
+            to={"/builds"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconTool, { size: 20 })}
+            <span className="me-auto">Builds</span>
+          </NavLink>
+        </div>
         <div className="sidebar-group">
           <span className="sidebar-group-title">REPORTS</span>
           <NavLink

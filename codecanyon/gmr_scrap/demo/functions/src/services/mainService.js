@@ -41,7 +41,22 @@ const generateStripePaymentUrl = async (data) => {
   return results.data.url;
 };
 
+const updateDockerImages = async () => {
+  const token = createToken({});
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const config = {
+    headers,
+  };
+
+  await axiosInstance.post(`/docker/images`, {}, config);
+};
+
 module.exports = {
   executeScraping,
   generateStripePaymentUrl,
+  updateDockerImages,
 };
