@@ -13,10 +13,19 @@ export const Settings = () => {
     review: 1,
     validation: 3,
   });
+  const [scrapSettings, setScrapSettings] = useState({
+    minimum: 1,
+    maximum: 10,
+    retry: 3,
+    minCpu: 2,
+    minRam: 4,
+    minStorage: 10,
+  });
 
   useEffect(() => {
     getSettings().subscribe((settings) => {
       console.log(`settings`, settings);
+      setCoinSettings(settings?.prices || {});
     });
   }, []);
 
@@ -27,7 +36,7 @@ export const Settings = () => {
           <Card>
             <Card.Body>
               <Tabs
-                defaultActiveKey="coinSettings"
+                defaultActiveKey="scrapSettings"
                 id="mainSettings"
                 className="mb-3"
               >
@@ -124,6 +133,120 @@ export const Settings = () => {
                           />
                           <Form.Text className="text-muted">
                             The cost for each validation in coins.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Tab>
+                <Tab eventKey="scrapSettings" title="Scrap">
+                  <Form>
+                    <Row className="g-3 row-cols-md-2">
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Minimum</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.minimum}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                minimum: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The minimum number of scrapes.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Maximum</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.maximum}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                maximum: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The maximum number of scrapes.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Retry</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.retry}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                retry: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The number of retries.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Minimum CPU</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.minCpu}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                minCpu: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The minimum CPU usage.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Minimum RAM</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.minRam}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                minRam: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The minimum RAM usage.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Minimum Storage</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={scrapSettings.minStorage}
+                            onChange={(e) =>
+                              setScrapSettings({
+                                ...scrapSettings,
+                                minStorage: parseInt(e.target.value),
+                              })
+                            }
+                          />
+                          <Form.Text className="text-muted">
+                            The minimum storage usage.
                           </Form.Text>
                         </Form.Group>
                       </Col>
