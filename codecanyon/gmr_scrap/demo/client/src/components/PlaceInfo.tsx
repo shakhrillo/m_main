@@ -22,7 +22,7 @@ export const PlaceInfo = ({
               style={{ height: "300px" }}
               className="rounded-top overflow-hidden"
             >
-              <GoogleMap location={info?.location} />
+              <GoogleMap locations={[info.location]} />
             </div>
           ) : null}
         </Col>
