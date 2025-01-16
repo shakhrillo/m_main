@@ -87,14 +87,15 @@ export const totalEarnings = (fromDate = startDate) => {
 
 export const appStatistics = () => {
   const collectionRef = collection(firestore, "statistics");
-  const statistics$ = new BehaviorSubject([] as any);
+  const statistics$ = new BehaviorSubject({} as any);
 
   const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-    const statisticsData = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    statistics$.next(statisticsData);
+    const statistics = {} as any;
+    snapshot.docs.map((doc) => {
+      const data = doc.data() || {};
+      statistics[doc.id] = data["total"] || 0;
+    });
+    statistics$.next(statistics);
   });
 
   return new Observable<any>((subscriber) => {

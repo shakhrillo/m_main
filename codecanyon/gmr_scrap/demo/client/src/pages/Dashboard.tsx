@@ -1,9 +1,11 @@
 import {
+  IconArrowDown,
   IconArrowUp,
   IconCircle,
   IconCircle1,
   IconCircleFilled,
   IconMapPinFilled,
+  IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
@@ -26,6 +28,8 @@ import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { Map } from "../components/Map";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { checkEarningsTrend } from "../utils/checkEarningsTrend";
+import formatNumber from "../utils/formatNumber";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -57,19 +61,11 @@ export const Dashboard: React.FC = () => {
   const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
   const [containers, setContainers] = useState([] as any[]);
-  const [statistics, setStatistics] = useState([] as any[]);
+  const [statistics, setStatistics] = useState({} as any);
 
   useEffect(() => {
     const appStatisticsSubscription = appStatistics().subscribe((data) => {
-      console.log("appStatistics", data);
       setStatistics(data);
-
-      // setContainers([
-      //   data.filter((e: any) => e.id === "totalImages")[0].total,
-      //   data.filter((e: any) => e.id === "totalVideos")[0].total,
-      //   data.filter((e: any) => e.id === "totalReviews")[0].total,
-      //   data.filter((e: any) => e.id === "totalOwnerReviews")[0].total,
-      // ]);
     });
 
     const containersSubscription = allContainers().subscribe((data) => {
@@ -111,7 +107,6 @@ export const Dashboard: React.FC = () => {
     });
 
     const earningsSubscription = totalEarnings().subscribe((data) => {
-      console.log("earnings", formatTotalEarnings(data));
       setEarnings(formatTotalEarnings(data));
     });
 
@@ -262,12 +257,20 @@ export const Dashboard: React.FC = () => {
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Earnings</Card.Title>
-                  <div className="fs-1">$111</div>
+                  <div className="fs-1">
+                    ${formatNumber(statistics?.earnings)}
+                  </div>
                   <small className="mt-auto">
-                    24% increase from last month
+                    {checkEarningsTrend(earnings)}%{" "}
+                    {checkEarningsTrend(earnings) > 0 ? "increase" : "decrease"}{" "}
+                    in revenue since last month
                   </small>
-                  <div className="position-absolute p-1 top-0 end-0 bg-success-subtle mt-2 me-2 rounded">
-                    <IconTrendingUp size={24} className="text-success" />
+                  <div className="position-absolute p-1 top-0 end-0 mt-2 me-2 rounded bg-light">
+                    {checkEarningsTrend(earnings) > 0 ? (
+                      <IconTrendingUp size={24} className="text-success" />
+                    ) : (
+                      <IconTrendingDown size={24} className="text-danger" />
+                    )}
                   </div>
                 </Card.Body>
               </Card>
