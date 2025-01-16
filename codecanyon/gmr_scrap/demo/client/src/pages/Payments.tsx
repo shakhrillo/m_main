@@ -8,6 +8,24 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardText,
+  CardTitle,
+  Col,
+  Container,
+  Form,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormText,
+  ListGroup,
+  Row,
+  Stack,
+} from "react-bootstrap";
 
 export const Payments = () => {
   const { uid } = useOutletContext<User>();
@@ -58,53 +76,49 @@ export const Payments = () => {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-8">
-          <div className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Purchase Coins</h5>
-              <form noValidate id="validateForm" className="needs-validation">
-                <div className="mb-3">
-                  <label htmlFor="amount" className="form-label">
-                    Amount
-                  </label>
-                  <input
+    <Container fluid>
+      <Row>
+        <Col md={8}>
+          <Card className="mb-3">
+            <CardBody>
+              <CardTitle>Purchase Coins</CardTitle>
+              <Form noValidate id="validateForm" className="needs-validation">
+                <FormGroup className="mb-3" controlId="amount">
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl
                     type="text"
-                    id="amount"
                     value={amount}
                     onChange={(e) => {
                       const value = e.target.value;
                       setAmount(Number(value) ? value : "");
                     }}
-                    className="form-control"
                     pattern="^([1-9][0-9]|[1-9][0-9]{2}|1000)$"
                     placeholder="Enter amount"
                     required
                   />
-                  <small className="invalid-feedback">
+                  <FormControl.Feedback type={"invalid"}>
                     <IconAlertCircle className="me-2" size={20} />
                     Please enter a valid amount.
-                  </small>
-                  <div className="form-text">
+                  </FormControl.Feedback>
+                  <FormText>
                     The minimum amount you can purchase is between 10 and 1000.
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="card mb-3">
-            <div className="card-body">
-              <div className="row">
-                <div className="col col-auto">
+                  </FormText>
+                </FormGroup>
+              </Form>
+            </CardBody>
+          </Card>
+          <Card className="mb-3">
+            <CardBody>
+              <Row>
+                <Col xs="auto">
                   <IconCoins size={40} />
-                </div>
-                <div className="col">
-                  <h5 className="card-title">Coins explained</h5>
-                  <p className="card-text">
+                </Col>
+                <Col>
+                  <CardTitle>Coins explained</CardTitle>
+                  <CardText>
                     Coins are the currency used to purchase data from the
                     website. You can purchase coins in the following ways:
-                  </p>
+                  </CardText>
                   <ul>
                     <li>
                       <strong>Free Coins:</strong> You can earn coins by
@@ -115,92 +129,111 @@ export const Payments = () => {
                       using the payment methods provided.
                     </li>
                   </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <div className="row">
-                <div className="col col-auto">
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <Row>
+                <Col xs={"auto"}>
                   <IconInfoCircle size={40} />
-                </div>
-                <div className="col">
-                  <h5 className="card-title">Cancellation and Refund Policy</h5>
-                  <p className="card-text">
+                </Col>
+                <Col>
+                  <CardTitle>Cancellation and Refund Policy</CardTitle>
+                  <CardText>
                     Once you have purchased coins, you cannot cancel the
                     purchase or request a refund. Please be sure to purchase
                     coins after confirming the amount.
-                  </p>
-                  <p className="card-text">
+                  </CardText>
+                  <CardText>
                     If you have purchased coins by mistake, please contact us
                     immediately. We will refund the coins you purchased.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Summary</h5>
-              <div className="d-flex my-2">
-                <div className="me-auto">Coins</div>
-                <div className="d-flex align-items-center gap-1">
+                  </CardText>
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="mb-3">
+            <CardBody>
+              <CardTitle>Summary</CardTitle>
+              <Stack
+                direction="horizontal"
+                className="my-2 justify-content-between"
+              >
+                Coins
+                <Stack
+                  direction={"horizontal"}
+                  className="align-items-center gap-1"
+                >
                   {amount} <IconCoins size={20} />
-                </div>
-              </div>
-              <div className="d-flex my-2">
-                <div className="me-auto">USD</div>
-                <div className="d-flex align-items-center gap-1">
+                </Stack>
+              </Stack>
+              <Stack
+                direction={"horizontal"}
+                className="my-2 justify-content-between"
+              >
+                USD
+                <Stack
+                  direction={"horizontal"}
+                  className="align-items-center gap-1"
+                >
                   {Number(amount || 0) / 10} <IconCoin size={20} />
-                </div>
-              </div>
-              <div className="d-flex my-2">
-                <div className="me-auto">Discount</div>
-                <div>15%</div>
-              </div>
-              <div className="d-flex my-2">
-                <div className="me-auto">Tax</div>
-                <div>0%</div>
-              </div>
+                </Stack>
+              </Stack>
+              <Stack
+                direction={"horizontal"}
+                className="my-2 justify-content-between"
+              >
+                <span>Discount</span>
+                15%
+              </Stack>
+              <Stack
+                direction={"horizontal"}
+                className="my-2 justify-content-between"
+              >
+                <span>Tax</span>
+                0%
+              </Stack>
               <hr />
-              <div className="d-flex my-2">
-                <strong className="me-auto">Total</strong>
-                <div>500</div>
-              </div>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <div className="form-check mt-3">
-                <input
-                  className="form-check-input"
+              <Stack direction={"horizontal"} className="d-flex my-2">
+                <span>Total</span>
+                500
+              </Stack>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <FormGroup className="mt-3" controlId="terms">
+                <FormCheck
                   type="checkbox"
-                  id="terms"
+                  label={
+                    <>
+                      I agree to the{" "}
+                      <a href="#" target="_blank">
+                        terms and conditions
+                      </a>
+                    </>
+                  }
                   required
                   checked={isTermsAccepted}
                   onChange={(e) => setIsTermsAccepted(e.target.checked)}
                 />
-                <label className="form-check-label" htmlFor="terms">
-                  I agree to the{" "}
-                  <a href="#" target="_blank">
-                    terms and conditions
-                  </a>
-                </label>
-              </div>
-              <button
-                className="btn btn-primary w-100 mt-3"
+              </FormGroup>
+              <Button
+                variant="primary"
+                className="w-100 mt-3"
                 onClick={handlePurchase}
                 disabled={!isTermsAccepted || loading || !isFormValid}
               >
                 Purchase
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </Button>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
