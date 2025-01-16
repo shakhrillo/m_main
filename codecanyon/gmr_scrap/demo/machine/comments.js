@@ -278,8 +278,8 @@ let driver;
     console.error(error);
   } finally {
     updateMachineData(tag, {
-      csvUrl: data.csvUrl,
-      jsonUrl: data.jsonUrl,
+      csvUrl: data.csvUrl || "",
+      jsonUrl: data.jsonUrl || "",
       totalReviews: data.extractedReviews.length || 0,
       totalImages: data.extractedImageUrls.length || 0,
       totalVideos: data.extractedVideoUrls.length || 0,

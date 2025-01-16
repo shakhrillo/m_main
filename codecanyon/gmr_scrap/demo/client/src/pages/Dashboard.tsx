@@ -71,19 +71,19 @@ export const Dashboard: React.FC = () => {
 
     const containersSubscription = allContainers().subscribe((data) => {
       const totalImages = data.reduce(
-        (acc: any, e: any) => acc + e.totalImages,
+        (acc: number, e: any) => acc + (e.totalImages || 0),
         0,
       );
       const totalOwnerReviews = data.reduce(
-        (acc: any, e: any) => acc + e.totalOwnerReviews,
+        (acc: number, e: any) => acc + (e.totalOwnerReviews || 0),
         0,
       );
       const totalReviews = data.reduce(
-        (acc: any, e: any) => acc + e.totalReviews,
+        (acc: number, e: any) => acc + (e.totalReviews || 0),
         0,
       );
       const totalVideos = data.reduce(
-        (acc: any, e: any) => acc + e.totalVideos,
+        (acc: number, e: any) => acc + (e.totalVideos || 0),
         0,
       );
 
