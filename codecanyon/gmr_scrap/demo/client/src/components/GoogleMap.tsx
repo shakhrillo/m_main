@@ -1,52 +1,61 @@
-import { Map, Marker } from "@vis.gl/react-google-maps";
+import { useEffect, useRef, useState } from "react";
 
 export const GoogleMap = ({
   locations,
 }: {
   locations: { latitude: number; longitude: number }[];
 }) => {
-  if (!location) return null;
-  const defaultCenter = locations.reduce(
-    (acc, location) => {
-      acc.lat += location.latitude;
-      acc.lng += location.longitude;
-      return acc;
-    },
-    { lat: 0, lng: 0 },
-  );
+  // Handle empty locations array
+  if (!locations || locations.length === 0) return null;
+
+  const mapRef = useRef<HTMLDivElement | null>(null); // Ref for accessing the map container
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+
+  useEffect(() => {
+    if (mapRef.current && !mapInstance) {
+      const googleMap = new window.google.maps.Map(mapRef.current, {
+        zoom: 18, // Default zoom level
+        center: {
+          lat: locations[0].latitude,
+          lng: locations[0].longitude,
+        },
+        gestureHandling: "greedy",
+        disableDefaultUI: true,
+      });
+
+      setMapInstance(googleMap);
+    }
+  }, [mapRef, mapInstance, locations]);
+
+  // Add markers once the map instance is created
+  useEffect(() => {
+    if (mapInstance) {
+      const bounds = new window.google.maps.LatLngBounds();
+
+      // Create and add markers
+      locations.forEach((location) => {
+        const marker = new window.google.maps.Marker({
+          position: new window.google.maps.LatLng(
+            location.latitude,
+            location.longitude,
+          ),
+          map: mapInstance, // Add marker to map instance
+          title: "Clickable google.maps.Marker",
+        });
+
+        bounds.extend(marker.getPosition()!); // Extend bounds to include the marker
+      });
+
+      // Adjust the map to fit the bounds of all markers
+      mapInstance.fitBounds(bounds);
+    }
+  }, [locations, mapInstance]);
 
   return (
-    <Map
+    <div
+      ref={mapRef}
       className="w-100 h-100"
-      defaultCenter={{
-        lat: defaultCenter.lat / locations.length,
-        lng: defaultCenter.lng / locations.length,
-      }}
-      defaultZoom={18}
-      gestureHandling={"greedy"}
-      disableDefaultUI={true}
-    >
-      {locations.map((location, index) => (
-        <Marker
-          key={index}
-          position={{
-            lat: location.latitude,
-            lng: location.longitude,
-          }}
-          clickable={true}
-          onClick={() => console.log("marker was clicked!")}
-          title={"clickable google.maps.Marker"}
-        />
-      ))}
-      {/* <Marker
-        position={{
-          lat: location?.latitude,
-          lng: location?.longitude,
-        }}
-        clickable={true}
-        onClick={() => console.log("marker was clicked!")}
-        title={"clickable google.maps.Marker"}
-      /> */}
-    </Map>
+      style={{ position: "relative", height: "100%", width: "100%" }}
+    />
   );
 };

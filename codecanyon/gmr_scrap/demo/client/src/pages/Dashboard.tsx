@@ -57,7 +57,7 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState([] as IReview[]);
   const [markerLocations, setMarkerLocations] = useState(
-    [] as [number, number][],
+    [] as { latitude: number; longitude: number }[],
   );
   const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
@@ -93,6 +93,17 @@ export const Dashboard: React.FC = () => {
         totalReviews,
         totalOwnerReviews,
       ]);
+
+      const locations = data.map((container: any) => {
+        return {
+          latitude: container.location?.latitude,
+          longitude: container.location?.longitude,
+        };
+      });
+
+      console.log("locations", locations);
+
+      setMarkerLocations(locations);
     });
 
     const earningsSubscription = totalEarnings().subscribe((data) => {
@@ -104,36 +115,35 @@ export const Dashboard: React.FC = () => {
       setUsers(formatTotalUsers(data));
     });
 
-    const commentsSubscription = validatedUrls(uid, {
-      type: "info",
-    }).subscribe((data) => {
-      setReviews(data);
+    // const commentsSubscription = validatedUrls(uid, {
+    //   type: "info",
+    // }).subscribe((data) => {
+    //   setReviews(data);
 
-      const locations = data
-        .filter(
-          (review) =>
-            review.location &&
-            review.location.latitude &&
-            review.location.longitude,
-        )
-        .map((review) => {
-          console.log("review", review);
-          return [review.location?.latitude, review.location?.longitude] as [
-            number,
-            number,
-          ];
-        });
+    //   const locations = data
+    //     .filter(
+    //       (review) =>
+    //         review.location &&
+    //         review.location.latitude &&
+    //         review.location.longitude,
+    //     )
+    //     .map((review) => {
+    //       console.log("review", review);
+    //       return [review.location?.latitude, review.location?.longitude] as [
+    //         number,
+    //         number,
+    //       ];
+    //     });
 
-      console.log("locations", locations);
+    //   console.log("locations", locations);
 
-      setMarkerLocations(locations);
-    });
+    //   setMarkerLocations(locations);
+    // });
 
     return () => {
       appStatisticsSubscription.unsubscribe();
       earningsSubscription.unsubscribe();
       usersSubscription.unsubscribe();
-      commentsSubscription.unsubscribe();
       containersSubscription.unsubscribe();
     };
   }, []);

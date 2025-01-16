@@ -5,6 +5,7 @@ const {
   onDocumentCreated,
   onDocumentWritten,
 } = require("firebase-functions/v2/firestore");
+const { Timestamp, GeoPoint } = require("firebase-admin/firestore");
 const processBuyCoins = require("./src/payments/processBuyCoins");
 
 const processUserCreated = require("./src/user/processUserCreated");
@@ -93,13 +94,12 @@ exports.processContainerWritten = onDocumentWritten(
   if (earningsSnap.empty) {
     const months = 12;
     const now = new Date();
-    const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
     const month = now.getMonth();
     const year = now.getFullYear();
     const earnings = [];
     for (let i = 0; i < months; i++) {
       const date = new Date(year, month - i, 1);
-      const timestamp = admin.firestore.Timestamp.fromDate(date);
+      const timestamp = Timestamp.fromDate(date);
       const amount = Math.floor(Math.random() * 14000) + 1000;
       earnings.push({
         amount,
@@ -133,8 +133,9 @@ exports.processContainerWritten = onDocumentWritten(
     const ref = containerRef.doc(`${container.type}_${container.reviewId}`);
     batch.set(ref, {
       ...container,
-      createdAt: admin.firestore.Timestamp.now(),
-      updatedAt: admin.firestore.Timestamp.now(),
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      location: new GeoPoint(container.location[0], container.location[1]),
     });
   }
 
