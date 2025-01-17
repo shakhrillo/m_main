@@ -18,7 +18,7 @@ import {
   Stack,
   Table,
 } from "react-bootstrap";
-import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import { StatusInfo } from "../components/StatusInfo";
 import { IReview, validatedUrls } from "../services/scrapService";
 import { userData } from "../services/userService";
@@ -32,7 +32,7 @@ const FILTER_OPTIONS = [
   { value: "error", label: "Failed" },
 ];
 
-export const Containers = () => {
+export const DockerContainers = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -155,9 +155,10 @@ export const Containers = () => {
                   <thead>
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">Status</th>
+                      <th scope="col">Id</th>
                       <th scope="col">Type</th>
                       <th scope="col">From</th>
+                      <th scope="col">Updated</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -166,9 +167,19 @@ export const Containers = () => {
                         <td scope="row" style={{ width: "40px" }}>
                           {index + 1}
                         </td>
-                        <td style={{ width: "130px" }}>{container.status}</td>
+                        <td>
+                          <span
+                            style={{ maxWidth: "150px" }}
+                            className="d-inline-block text-truncate"
+                          >
+                            <NavLink to={`/containers/${container.id}`}>
+                              {container.id}
+                            </NavLink>
+                          </span>
+                        </td>
                         <td>{container.type}</td>
                         <td>{container.from}</td>
+                        <td>{formatTimestamp(container.updatedAt)}</td>
                       </tr>
                     ))}
                   </tbody>

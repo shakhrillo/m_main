@@ -24,9 +24,10 @@ import {
   ValidatedURLs,
 } from "../pages";
 import { AuthGuard } from "./AuthGuard";
-import { Containers } from "../pages/Containers";
+import { DockerContainers } from "../pages/DockerContainers";
 import { DockerImages } from "../pages/DockerImages";
 import { DockerImage } from "../pages/DockerImage";
+import { DockerContainer } from "../pages/DockerContainer";
 
 const router = createBrowserRouter([
   {
@@ -58,7 +59,8 @@ const router = createBrowserRouter([
           { path: "dashboard", element: <Dashboard /> },
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
-          { path: "containers", element: <Containers /> },
+          { path: "containers", element: <DockerContainers /> },
+          { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <DockerImages /> },
           { path: "images/:imgId", element: <DockerImage /> },
         ],

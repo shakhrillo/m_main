@@ -82,6 +82,21 @@ async function updateMachine(docId, data) {
   }
 }
 
+async function addMachineStats(docId, stats) {
+  try {
+    await db
+      .collection("machines")
+      .doc(docId)
+      .collection("stats")
+      .add({
+        ...stats,
+        updatedAt: Timestamp.now(),
+      });
+  } catch (error) {
+    console.error("Error updating machine stats:", error);
+  }
+}
+
 async function updateDockerInfo(info) {
   try {
     await db
@@ -116,4 +131,5 @@ module.exports = {
   updateDockerInfo,
   updateDockerImageInfo,
   updateImages,
+  addMachineStats,
 };

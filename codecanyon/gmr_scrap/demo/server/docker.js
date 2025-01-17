@@ -2,6 +2,7 @@ const Docker = require("dockerode");
 const {
   updateMachine,
   updateDockerInfo,
+  addMachineStats,
 } = require("./services/firebaseService");
 const docker = new Docker({
   protocol: "http",
@@ -9,14 +10,27 @@ const docker = new Docker({
   port: process.env.DOCKER_PORT || 2375,
 });
 
+/**
+ * Watch Docker events and update Firebase with the machine data
+ * @returns {Promise<void>}
+ */
 async function watchDockerEvents() {
   const activeStreams = new Map();
+  if (!docker) {
+    console.error("Docker not initialized");
+    return;
+  }
+
   const eventsStream = await docker.getEvents();
 
   eventsStream.setEncoding("utf8");
   eventsStream.on("data", (data) => {
-    const str = data.toString();
-    let status = str.match(/"status":"([^"]+)"/);
+    if (!data || typeof data !== "string") {
+      return;
+    }
+
+    const str = data.toString() || "";
+    let status = str.match(/"status":"([^"]+)"/) || [];
     status = status ? status[1] : "";
 
     const overviewPrefix = process.env.MACHINES_OVERVIEW_PREFIX || "info";
@@ -26,20 +40,15 @@ async function watchDockerEvents() {
     const type = isInfo ? "info" : isComments ? "comments" : "";
 
     if (type) {
-      console.log("Docker event:", str);
-
       try {
         const lines = str.trim().split("\n");
-        const parsedData = lines.map((line) => JSON.parse(line));
+        const parsedData = lines.map((line) => JSON.parse(line || "{}"));
         for (const data of parsedData) {
           const name = data.Actor.Attributes.name;
-          updateMachine(name, { ...data, type });
+          updateMachine(data.id, { ...data, type });
 
           if (status !== "destroy") {
             if (activeStreams.has(name)) {
-              console.log("---".repeat(100));
-              console.log(`Container: ${name} is already being watched`);
-              console.log("---".repeat(100));
               const stream = activeStreams.get(name);
               stream.removeAllListeners(); // Unsubscribe from the stream
               activeStreams.delete(name); // Remove from active streams
@@ -58,29 +67,37 @@ async function watchDockerEvents() {
                 stream.setEncoding("utf8");
                 stream.on("data", (data) => {
                   const stats = JSON.parse(data);
-                  // console.log("Stats:", stats);
-                  updateMachine(name, { stats });
+                  addMachineStats(data.id, stats);
                 });
 
                 activeStreams.set(name, stream); // Keep track of the stream
               });
             }
+          } else {
+            console.log(`Container: ${name} is being destroyed`);
+            console.log("Active Streams Count:", activeStreams.size);
           }
         }
 
         if (status === "destroy") {
-          docker.info(async (err, info) => {
-            if (err) {
-              console.error("Error fetching Docker info:", err);
-            } else {
-              console.log("Docker Engine Info:");
-              try {
-                updateDockerInfo(info);
-              } catch (error) {
-                console.error("Error saving Docker info:", error);
-              }
-            }
-          });
+          // const name = data.Actor.Attributes.name;
+          // if (name) {
+          //   updateMachine(name, { ...data, type });
+          // } else {
+          //   console.log("No name found in data:", data);
+          // }
+          // docker.info(async (err, info) => {
+          //   if (err) {
+          //     console.error("Error fetching Docker info:", err);
+          //   } else {
+          //     console.log("Docker Engine Info:");
+          //     try {
+          //       updateDockerInfo(info);
+          //     } catch (error) {
+          //       console.error("Error saving Docker info:", error);
+          //     }
+          //   }
+          // });
         }
       } catch (error) {
         console.log("Error saving machine data:", error);

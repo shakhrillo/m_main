@@ -1,4 +1,10 @@
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 
@@ -7,7 +13,7 @@ export const allContainers = () => {
   const collectionRef = collection(firestore, "machines");
 
   const unsubscribe = onSnapshot(
-    collectionRef,
+    query(collectionRef, orderBy("updatedAt", "desc")),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -24,6 +30,36 @@ export const allContainers = () => {
 
   return new Observable<any>((subscriber) => {
     const subscription = containers$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerContainerStats = (containerId: string) => {
+  const stats$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(firestore, "machines", containerId, "stats");
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const statsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("statsData", statsData);
+      stats$.next(statsData);
+    },
+    (error) => {
+      console.error("Error fetching stats data:", error);
+      stats$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = stats$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
