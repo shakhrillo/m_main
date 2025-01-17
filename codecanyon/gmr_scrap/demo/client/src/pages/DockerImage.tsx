@@ -7,6 +7,7 @@ import {
 import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
 import {
+  Button,
   Card,
   CardBody,
   Col,
@@ -53,6 +54,8 @@ export const DockerImage = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
+
+  const [activeTab, setActiveTab] = useState("images");
 
   const stats = [
     {
@@ -123,7 +126,129 @@ export const DockerImage = () => {
           <Col>
             <Card>
               <CardBody>
-                <Tabs
+                <Stack direction={"horizontal"} className="border-bottom">
+                  <button
+                    onClick={() => setActiveTab("images")}
+                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "images" ? "border-bottom border-black" : ""}`}
+                    type="button"
+                  >
+                    Images
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("details")}
+                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "details" ? "border-bottom border-black" : ""}`}
+                    type="button"
+                  >
+                    Details
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("layers")}
+                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "layers" ? "border-bottom border-black" : ""}`}
+                    type="button"
+                  >
+                    Layers
+                  </button>
+                </Stack>
+                {activeTab === "images" ? (
+                  <Table hover>
+                    <thead>
+                      <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(image).map(([key, value]) => (
+                        <tr key={key}>
+                          <td>{key}</td>
+                          <td style={{ maxWidth: "400px" }}>
+                            {Array.isArray(value) ? (
+                              <ul>
+                                {value.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : typeof value === "object" && value !== null ? (
+                              <pre>{JSON.stringify(value, null, 2)}</pre>
+                            ) : (
+                              value?.toString() || "N/A"
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : activeTab === "details" ? (
+                  <Table hover>
+                    <thead>
+                      <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(imageDetails).map(([key, value]) => (
+                        <tr key={key}>
+                          <td>{key}</td>
+                          <td style={{ maxWidth: "400px" }}>
+                            {Array.isArray(value) ? (
+                              <ul>
+                                {value.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : typeof value === "object" && value !== null ? (
+                              <pre>{JSON.stringify(value, null, 2)}</pre>
+                            ) : (
+                              value?.toString() || "N/A"
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <Table hover>
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Tags</th>
+                        <th scope="col">Created By</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {imageLayers.map((layer, index) => (
+                        <tr key={index}>
+                          <td scope="row" style={{ width: "40px" }}>
+                            {index + 1}
+                          </td>
+                          <td>
+                            <span
+                              style={{ maxWidth: "200px" }}
+                              className="text-truncate d-inline-block"
+                            >
+                              {layer.Id}
+                            </span>
+                          </td>
+                          <td>
+                            {layer.Tags
+                              ? layer.Tags.map((tag: string) => (
+                                  <div key={tag}>{tag}</div>
+                                ))
+                              : "No tags available"}
+                          </td>
+                          <td>{layer.createdBy}</td>
+                          <td>{formatSize(layer.Size)}</td>
+                          <td>{formatTimestamp(layer.updatedAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
+                {/* <Tabs
                   defaultActiveKey="image"
                   id="docker-image-tabs"
                   className="mb-3"
@@ -231,7 +356,7 @@ export const DockerImage = () => {
                       </tbody>
                     </Table>
                   </Tab>
-                </Tabs>
+                </Tabs> */}
               </CardBody>
             </Card>
           </Col>
