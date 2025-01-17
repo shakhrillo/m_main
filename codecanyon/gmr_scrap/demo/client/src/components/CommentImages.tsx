@@ -26,12 +26,12 @@ export const CommentImages = ({
       >
         {comment?.imageUrls.map((image, index) => (
           <Item
-            original={image.thumb}
+            original={image.original}
             key={`comment-${index}`}
             content={
               <div className="d-flex justify-content-center align-items-center h-100">
                 <Image
-                  src={image.thumb}
+                  src={image.original}
                   alt={`comment-${index}`}
                   style={{
                     height: "auto",

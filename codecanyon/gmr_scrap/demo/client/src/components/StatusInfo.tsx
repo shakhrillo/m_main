@@ -18,7 +18,7 @@ export const StatusInfo = ({
         : "danger";
 
   return (
-    <div {...rest} className="my-2">
+    <div {...rest}>
       <span className={`badge bg-${color} rounded-pill`}>
         {status === "completed" ? (
           <IconCheck size={18} className="me-1" />

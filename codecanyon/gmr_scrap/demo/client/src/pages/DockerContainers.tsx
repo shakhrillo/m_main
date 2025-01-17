@@ -156,6 +156,7 @@ export const DockerContainers = () => {
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Id</th>
+                      <th scope="col">Action</th>
                       <th scope="col">Type</th>
                       <th scope="col">From</th>
                       <th scope="col">Updated</th>
@@ -177,6 +178,7 @@ export const DockerContainers = () => {
                             </NavLink>
                           </span>
                         </td>
+                        <td>{container.Action}</td>
                         <td>{container.type}</td>
                         <td>{container.from}</td>
                         <td>{formatTimestamp(container.updatedAt)}</td>

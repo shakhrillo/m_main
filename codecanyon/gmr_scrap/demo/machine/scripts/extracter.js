@@ -165,7 +165,7 @@ function getReviewResponse(node) {
 /**
  * Extracts the review media from the review node
  * @param {HTMLElement} node
- * @returns {{thumb: string, videoUrl: string}[]}
+ * @returns {{thumb: string, original: string, videoUrl: string}[]}
  */
 function getReviewMedia(node) {
   const nodes = [];
@@ -183,7 +183,8 @@ function getReviewMedia(node) {
     if (style) {
       const urlMatch = style.split('url("')[1]?.split('");')[0];
       if (urlMatch) {
-        data["thumb"] = urlMatch.split("=")[0] + "=w1200";
+        data["thumb"] = urlMatch;
+        data["original"] = urlMatch.split("=")[0] + "=w1200";
       }
     }
     if (Object.keys(data).length) {
@@ -321,7 +322,7 @@ async function validateNode(node) {
       let nodeMedia = getReviewMedia(node);
 
       if (nodeMedia.length) {
-        for (const { thumb, button } of nodeMedia) {
+        for (const { thumb, original, button } of nodeMedia) {
           let videoUrl = "";
           if (button) {
             button.click();
@@ -342,11 +343,12 @@ async function validateNode(node) {
           if (videoUrl) {
             videoUrls.push({
               thumb,
+              original,
               videoUrl,
               id,
             });
           } else {
-            imageUrls.push({ thumb, id });
+            imageUrls.push({ thumb, original, id });
           }
         }
       }

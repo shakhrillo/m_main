@@ -21,7 +21,7 @@ export interface ICommentUser {
 export interface IComment {
   date: string;
   id: string;
-  imageUrls: { thumb: string; id: string }[];
+  imageUrls: { thumb: string; original: string; id: string }[];
   qa: string[];
   rating: number;
   response: string;

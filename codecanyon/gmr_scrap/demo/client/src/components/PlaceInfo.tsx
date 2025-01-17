@@ -33,9 +33,9 @@ export const PlaceInfo = ({
         </Col>
         <Col>
           <Card.Body>
-            <Card.Title className="mt-3 text-primary">{info.title}</Card.Title>
+            <Card.Title className="text-primary">{info.title}</Card.Title>
             <Ratings info={info} />
-            <StatusInfo info={info} />
+            <StatusInfo info={info} className="my-2" />
             {info.type === "comments" && (
               <>
                 <h5 className="mt-3">Options</h5>
