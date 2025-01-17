@@ -18,7 +18,7 @@ import {
   Stack,
   Table,
 } from "react-bootstrap";
-import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import { StatusInfo } from "../components/StatusInfo";
 import { IReview, validatedUrls } from "../services/scrapService";
 import { userData } from "../services/userService";
@@ -33,7 +33,7 @@ const FILTER_OPTIONS = [
   { value: "error", label: "Failed" },
 ];
 
-export const Images = () => {
+export const DockerImages = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
@@ -90,64 +90,6 @@ export const Images = () => {
         <div>Loading...</div>
       ) : (
         <Row className="g-3">
-          {/*---Extracted reviews status---*/}
-          {stats.map((stat, index) => (
-            <Col key={index} md={3}>
-              <Card>
-                <Card.Body>
-                  <Stack direction="horizontal" gap={3}>
-                    {createElement(stat.icon, { size: 48, strokeWidth: 1.5 })}
-                    <Stack direction="vertical">
-                      <Card.Title className="fs-3 m-0">
-                        {formatNumber(stat.value)}
-                      </Card.Title>
-                      <Card.Text>{stat.label}</Card.Text>
-                    </Stack>
-                  </Stack>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-          {/*---End: Extracted reviews status---*/}
-
-          <Col md={12}>
-            <Stack direction="horizontal">
-              <div className="d-inline-block me-auto">
-                <InputGroup>
-                  <InputGroup.Text id="search-icon">
-                    <IconSearch />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="search"
-                    id="search"
-                    placeholder="Search..."
-                    aria-label="Search"
-                    aria-describedby="search-icon"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </InputGroup>
-              </div>
-              <Dropdown>
-                <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-                  Filter
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu aria-labelledby="dropdown-filter">
-                  {FILTER_OPTIONS.map((option) => (
-                    <Dropdown.Item
-                      key={option.value}
-                      onClick={() => setFilter(option.value)}
-                      className={filter === option.value ? "active" : ""}
-                    >
-                      {option.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Stack>
-          </Col>
-
           {/* Table for displaying reviews based on active filter */}
           <Col>
             <Card>
@@ -168,11 +110,13 @@ export const Images = () => {
                           {index + 1}
                         </td>
                         <td>
-                          {image.RepoTags
-                            ? image.RepoTags.map((tag: string) => (
-                                <div key={tag}>{tag}</div>
-                              ))
-                            : "No tags available"}
+                          <NavLink to={`/images/${image.id}`}>
+                            {image.RepoTags
+                              ? image.RepoTags.map((tag: string) => (
+                                  <div key={tag}>{tag}</div>
+                                ))
+                              : "No tags available"}
+                          </NavLink>
                         </td>
                         <td>{formatSize(image.Size)}</td>
                         <td>{formatTimestamp(image.updatedAt)}</td>

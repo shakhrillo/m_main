@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 
@@ -54,6 +54,97 @@ export const allImages = () => {
 
   return new Observable<any>((subscriber) => {
     const subscription = images$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerImage = (imgId: string) => {
+  const image$ = new BehaviorSubject({} as any);
+  const docRef = doc(firestore, "images", imgId);
+
+  const unsubscribe = onSnapshot(
+    docRef,
+    (doc) => {
+      const imageData = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      console.log("imageData", imageData);
+      image$.next(imageData);
+    },
+    (error) => {
+      console.error("Error fetching image data:", error);
+      image$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = image$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerImageLayers = (imgId: string) => {
+  const image$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(firestore, "images", imgId, "layers");
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const layersData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("layersData", layersData);
+      image$.next(layersData);
+    },
+    (error) => {
+      console.error("Error fetching layers data:", error);
+      image$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = image$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerImageDetails = (imgId: string) => {
+  const details$ = new BehaviorSubject({} as any);
+  const collectionRef = collection(firestore, "images", imgId, "details");
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const detailsData =
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) || [];
+
+      details$.next(detailsData[0] || {});
+    },
+    (error) => {
+      console.error("Error fetching details data:", error);
+      details$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = details$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();

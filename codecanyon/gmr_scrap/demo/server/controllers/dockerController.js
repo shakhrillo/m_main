@@ -43,16 +43,36 @@ function startContainer(options) {
 }
 
 async function imagesDocker() {
+  console.log("Getting images request");
   return new Promise((resolve, reject) => {
-    docker.listImages(async function (err, images) {
-      if (err) {
-        reject(err);
-      } else {
-        console.log("images", images);
-        await updateImages(images);
-        resolve(images);
-      }
-    });
+    try {
+      docker.listImages(async function (err, images) {
+        if (err) {
+          reject(err);
+        } else {
+          const imageContent = [];
+          for (const image of images) {
+            const details = await docker.getImage(image.Id).inspect();
+            const layers = await docker.getImage(image.Id).history();
+
+            // console.log("Details", details);
+            // console.log("Layers", layers);
+
+            imageContent.push({
+              image: image || {},
+              details: details || {},
+              layers: layers || [],
+            });
+          }
+
+          await updateImages(imageContent);
+          resolve(images);
+        }
+      });
+    } catch (error) {
+      console.error("Error getting images:", error);
+      reject(error);
+    }
   });
 }
 

@@ -53,10 +53,8 @@ exports.processContainerWritten = onDocumentWritten(
     /*-------------------*/
     /* Docker            */
     /*-------------------*/
-    console.log("Updating docker images...");
+    // console.log("Updating docker images..");
     await updateDockerImages();
-
-    console.log("Creating fake data...");
 
     /*-------------------*/
     /* Statistics        */

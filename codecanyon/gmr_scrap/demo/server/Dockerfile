@@ -11,10 +11,10 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps --no-audit --progress=false
 
 # Copy the server source code into the container
-COPY . .
+# COPY . .
 
 # Expose the application port
 EXPOSE 1337
 
 # Specify the default command to start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

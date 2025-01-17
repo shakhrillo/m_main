@@ -12,9 +12,43 @@ async function createMachine(docId, data) {
 async function updateImages(data) {
   try {
     const batch = db.batch();
-    const imagesRef = db.collection("images");
-    data.forEach((image) => {
-      const docRef = imagesRef.doc(image.Id);
+    const imagesCollection = db.collection("images");
+    data.forEach(({ image, details, layers }) => {
+      console.log("Updating image:", image.Id);
+      console.log("Details:", details);
+      console.log("Layers:", layers);
+
+      const docRef = imagesCollection.doc(image.Id);
+      const imageDetailsRef = db
+        .collection("images")
+        .doc(image.Id)
+        .collection("details");
+      const imageLayersRef = db
+        .collection("images")
+        .doc(image.Id)
+        .collection("layers");
+
+      batch.set(
+        imageDetailsRef.doc("details"),
+        {
+          ...details,
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true }
+      );
+
+      layers.forEach(async (layer) => {
+        const layerRef = imageLayersRef.doc(layer.Id);
+        batch.set(
+          layerRef,
+          {
+            ...layer,
+            updatedAt: Timestamp.now(),
+          },
+          { merge: true }
+        );
+      });
+
       batch.set(
         docRef,
         {

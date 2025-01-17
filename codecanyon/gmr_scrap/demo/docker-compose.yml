@@ -103,6 +103,7 @@ services:
       dockerfile: Dockerfile
     container_name: ${SERVER_CONTAINER_NAME}
     volumes:
+      - ${SOURCE_PATH}/server:/usr/src/app
       - ${SOURCE_PATH}/stripe-secrets:/usr/src/app/secrets
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
