@@ -77,7 +77,10 @@ exports.processContainerWritten = onDocumentWritten(
     for (const type of types) {
       const ref = statisticsRef.doc(type);
       const doc = await ref.get();
-      if (doc.exists) continue;
+      if (doc.exists) {
+        console.log(`Statistics ${type} already exists`);
+        continue;
+      }
 
       batch.set(ref, {
         total: 0,
@@ -97,6 +100,8 @@ exports.processContainerWritten = onDocumentWritten(
         review: 1,
         validation: 3,
       });
+    } else {
+      console.log("Settings prices already exists");
     }
 
     /*-------------------*/
@@ -135,6 +140,8 @@ exports.processContainerWritten = onDocumentWritten(
           total: earnings.reduce((acc, curr) => acc + curr.amount, 0),
         });
       }
+    } else {
+      console.log("Earnings already exists");
     }
 
     /*-------------------*/
@@ -144,6 +151,12 @@ exports.processContainerWritten = onDocumentWritten(
     const containerRef = db.collection("containers");
     for (const container of data) {
       const ref = containerRef.doc(`${container.type}_${container.reviewId}`);
+      if ((await ref.get()).exists) {
+        console.log(
+          `Container ${container.type}_${container.reviewId} already exists`
+        );
+        continue;
+      }
       batch.set(ref, {
         ...container,
         createdAt: Timestamp.now(),

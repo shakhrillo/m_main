@@ -25,6 +25,7 @@ import {
 } from "../pages";
 import { AuthGuard } from "./AuthGuard";
 import { Containers } from "../pages/Containers";
+import { Images } from "../pages/Images";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
           { path: "containers", element: <Containers /> },
+          { path: "images", element: <Images /> },
         ],
       },
       { path: "register", element: <Register /> },

@@ -31,3 +31,33 @@ export const allContainers = () => {
     };
   });
 };
+
+export const allImages = () => {
+  const images$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(firestore, "images");
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const imagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("imagesData", imagesData);
+      images$.next(imagesData);
+    },
+    (error) => {
+      console.error("Error fetching images data:", error);
+      images$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = images$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
