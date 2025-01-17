@@ -43,61 +43,55 @@ export const PlaceInfo = ({
                   direction="horizontal"
                   className="justify-content-between"
                 >
-                  <small className="me-auto">Limit:</small>
-                  <small>
-                    <b>{info.limit} comments</b>
-                  </small>
+                  Limit:
+                  <b>{info.limit} comments</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
-                  <small className="me-auto">Sort:</small>
-                  <small>
-                    <b>{info.sortBy}</b>
-                  </small>
+                  Sort:
+                  <b>{info.sortBy}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
-                  <small className="me-auto">Extract Image Urls:</small>
-                  <small>
-                    <b>{info.extractImageUrls ? "Yes" : "No"}</b>
-                  </small>
+                  Extract Image Urls:
+                  <b>{info.extractImageUrls ? "Yes" : "No"}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
-                  <small className="me-auto">Extract Video Urls:</small>
-                  <small>
-                    <b>{info.extractVideoUrls ? "Yes" : "No"}</b>
-                  </small>
+                  Extract Video Urls:
+                  <b>{info.extractVideoUrls ? "Yes" : "No"}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
-                  <small className="me-auto">Extract Owner Replies:</small>
-                  <small>
-                    <b>{info.extractOwnerResponse ? "Yes" : "No"}</b>
-                  </small>
+                  Extract Owner Replies:
+                  <b>{info.extractOwnerResponse ? "Yes" : "No"}</b>
                 </Stack>
               </>
             )}
             {info.location && (
               <Stack gap={2}>
-                <h5 className="place-info-title mt-3">Details:</h5>
-                <Stack direction="horizontal" className="place-info-item">
-                  <small>Latitude:</small>
+                <h5 className="mt-3">Details:</h5>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  Latitude:
                   <b>{info.location?.latitude}</b>
                 </Stack>
-                <Stack direction="horizontal" className="place-info-item">
-                  <small className="me-auto">Longitude:</small>{" "}
-                  <small>
-                    <b>{info.location?.longitude}</b>
-                  </small>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  Longitude:
+                  <b>{info.location?.longitude}</b>
                 </Stack>
                 {info.type === "comments" && (
                   <>
@@ -105,39 +99,37 @@ export const PlaceInfo = ({
                       direction="horizontal"
                       className="justify-content-between"
                     >
-                      <small>Comments:</small>
-                      <small>
-                        <b>
-                          {formatNumber(info.totalReviews)} reviews /{" "}
-                          {formatNumber(info.totalOwnerReviews)} replies
-                        </b>
-                      </small>
+                      Comments:
+                      <b>
+                        {formatNumber(info.totalReviews)} reviews /{" "}
+                        {formatNumber(info.totalOwnerReviews)} replies
+                      </b>
                     </Stack>
                     <Stack
                       direction="horizontal"
                       className="justify-content-between"
                     >
-                      <small className="me-auto">Media:</small>
-                      <small>
-                        <b>
-                          {formatNumber(info.totalImages)} images /{" "}
-                          {formatNumber(info.totalVideos)} videos
-                        </b>
-                      </small>
+                      Media
+                      <b>
+                        {formatNumber(info.totalImages)} images /{" "}
+                        {formatNumber(info.totalVideos)} videos
+                      </b>
                     </Stack>
                   </>
                 )}
-                <Stack direction="horizontal" className="place-info-item">
-                  <small>Spent Time:</small>
-                  <small>
-                    <b>{spentTime(info)}</b>
-                  </small>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  Spent Time:
+                  <b>{spentTime(info)}</b>
                 </Stack>
-                <Stack direction="horizontal" className="place-info-item">
-                  <small>Created At:</small>
-                  <small>
-                    <b>{formatTimestamp(info.createdAt)}</b>
-                  </small>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  Created At:
+                  <b>{formatTimestamp(info.createdAt)}</b>
                 </Stack>
               </Stack>
             )}

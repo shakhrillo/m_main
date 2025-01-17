@@ -629,20 +629,31 @@ export const Scrap = () => {
                       Expected Points:
                     </CardTitle>
 
-                    <Stack direction={"horizontal"} className="place-info-item">
-                      <small>Reviews ({limit || 0})</small>
-                      <b>{limit * 1} points</b>
+                    <Stack
+                      direction={"horizontal"}
+                      className="justify-content-between"
+                    >
+                      Reviews ({limit || 0})<b>{limit * 1} points</b>
                     </Stack>
-                    <Stack direction={"horizontal"} className="place-info-item">
-                      <small>Image URLs (~{limit * 10 || 0})</small>
+                    <Stack
+                      direction={"horizontal"}
+                      className="justify-content-between"
+                    >
+                      Image URLs (~{limit * 10 || 0})
                       <b>~{limit * 2 * 10 || 0} points</b>
                     </Stack>
-                    <Stack direction={"horizontal"} className="place-info-item">
-                      <small>Video URLs (~{limit * 10 || 0})</small>
+                    <Stack
+                      direction={"horizontal"}
+                      className="justify-content-between"
+                    >
+                      Video URLs (~{limit * 10 || 0})
                       <b>~{limit * 3 * 10 || 0} points</b>
                     </Stack>
-                    <Stack direction={"horizontal"} className="place-info-item">
-                      <small>Owner responses (~{limit || 0})</small>
+                    <Stack
+                      direction={"horizontal"}
+                      className="justify-content-between"
+                    >
+                      Owner responses (~{limit || 0})
                       <b>~{limit * 1 || 0} points</b>
                     </Stack>
                     <hr />
@@ -663,12 +674,12 @@ export const Scrap = () => {
                   disabled={loading || !isValidated}
                   onChange={(e) => setIsTermsAccepted(!isTermsAccepted)}
                   label={
-                    <small>
+                    <>
                       I agree to the{" "}
                       <a href="#" target="_blank" rel="nooper noreferrer">
                         terms and conditions
                       </a>
-                    </small>
+                    </>
                   }
                 ></FormCheck>
                 <Button
