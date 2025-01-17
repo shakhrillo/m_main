@@ -19,6 +19,7 @@ import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { formatSize } from "../utils/formatSize";
+import { LineChart } from "../components/LineChart";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -63,7 +64,36 @@ export const DockerContainer = () => {
 
   return (
     <Container>
-      <Row>
+      <Row className="g-3">
+        <Col xs={12}>
+          <Card id="dashboard">
+            <CardBody>
+              <LineChart
+                labels={stats.map((stat) => formatTimestamp(stat?.updatedAt))}
+                datasets={[
+                  {
+                    label: "CPU",
+                    data: stats.map(
+                      (stat) => stat?.cpu_stats?.cpu_usage?.total_usage,
+                    ),
+                  },
+                  {
+                    label: "Memory",
+                    data: stats.map((stat) => stat?.memory_stats?.usage),
+                  },
+                  {
+                    label: "Network",
+                    data: stats.map(
+                      (stat) =>
+                        stat?.networks?.eth0?.rx_bytes +
+                        stat?.networks?.eth0?.tx_bytes,
+                    ),
+                  },
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </Col>
         <Col>
           <Card>
             <CardBody>
@@ -78,7 +108,7 @@ export const DockerContainer = () => {
                 </thead>
                 <tbody>
                   {stats.map((stat) => (
-                    <tr key={stat.id}>
+                    <tr key={stat.updatedAt}>
                       <td>{formatTimestamp(stat?.updatedAt)}</td>
                       <td>
                         {formatSize(stat?.cpu_stats?.cpu_usage?.total_usage)}

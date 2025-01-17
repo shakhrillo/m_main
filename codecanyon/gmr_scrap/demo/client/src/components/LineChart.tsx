@@ -41,6 +41,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
   useEffect(() => {
     const setWidth = () => {
       const dashboard = document.querySelector("#dashboard");
+      console.log("dashboard", dashboard?.clientWidth);
       setChartWidth((dashboard?.clientWidth || 0) - 40);
     };
 
