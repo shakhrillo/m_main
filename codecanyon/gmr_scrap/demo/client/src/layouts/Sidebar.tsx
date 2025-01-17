@@ -28,7 +28,7 @@ export const Sidebar = () => {
       <div className="sidebar-header">
         <img src={logo} alt="logo" className="sidebar-logo" />
         <button
-          className="ms-auto btn p-0"
+          className="ms-auto btn btn-primary p-0"
           onClick={() => setCollapsed(!collapsed)}
         >
           {createElement(
