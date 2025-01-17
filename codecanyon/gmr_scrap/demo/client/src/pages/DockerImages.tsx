@@ -1,8 +1,13 @@
 import {
+  IconClockHour7Filled,
+  IconDatabaseLeak,
+  IconDiscFilled,
+  IconGalaxy,
   IconMessageReply,
   IconMessages,
   IconPhoto,
   IconSearch,
+  IconSelectAll,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
@@ -91,7 +96,7 @@ export const DockerImages = () => {
       ) : (
         <Row className="g-3">
           {/* Table for displaying reviews based on active filter */}
-          <Col>
+          {/* <Col md={12}>
             <Card>
               <CardBody>
                 <Table hover>
@@ -126,7 +131,38 @@ export const DockerImages = () => {
                 </Table>
               </CardBody>
             </Card>
-          </Col>
+          </Col> */}
+          {images.map((image, index) => (
+            <Col md={4} key={index}>
+              <Card className="image-item">
+                <CardBody>
+                  <Stack direction={"horizontal"} gap={3}>
+                    <div className="image-item-logo">
+                      <IconSelectAll />
+                    </div>
+                    <Stack gap={1}>
+                      <h6>
+                        <NavLink to={`/images/${image.id}`}>
+                          {image.RepoTags
+                            ? image.RepoTags.map((tag: string) => (
+                                <div key={tag}>{tag}</div>
+                              ))
+                            : "No tags available"}
+                        </NavLink>
+                      </h6>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <IconDiscFilled size={14}></IconDiscFilled>
+                        <span className="image-item-subtitle">
+                          {formatSize(image.Size)}
+                        </span>
+                      </Stack>
+                      <p className="m-0">{formatTimestamp(image.updatedAt)}</p>
+                    </Stack>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </Col>
+          ))}
         </Row>
       )}
     </Container>
