@@ -235,3 +235,27 @@ body {
 .firebase-emulator-warning {
   display: none;
 }
+
+// Scrap page
+
+// Place info
+
+.place-info {
+  &-title {
+    margin: 0;
+    font-size: 16px;
+  }
+  &-item {
+    justify-content: space-between;
+    small {
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    b {
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+  }
+}

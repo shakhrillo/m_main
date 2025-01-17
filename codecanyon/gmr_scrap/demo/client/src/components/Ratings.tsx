@@ -24,11 +24,11 @@ export const Ratings = ({
   const fullStars = Math.floor(validRating);
   const halfStar = validRating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  const iconSize = "reviews" in info && info.reviews ? 24 : 16;
+  const iconSize = "reviews" in info && info.reviews ? 16 : 16;
 
   return (
     <Stack direction="horizontal" {...rest}>
-      <span className="me-2">{validRating.toFixed(1)}</span>
+      <small className="me-2">{validRating.toFixed(1)}</small>
 
       {Array.from({ length: fullStars }).map((_, i) => (
         <IconStarFilled key={`full-${i}`} size={iconSize} color="#FFD700" />
@@ -41,7 +41,7 @@ export const Ratings = ({
       ))}
 
       {"reviews" in info && info.reviews && (
-        <span className="ms-2">({formatNumber(info.reviews)} reviews)</span>
+        <small className="ms-2">({formatNumber(info.reviews)} reviews)</small>
       )}
     </Stack>
   );

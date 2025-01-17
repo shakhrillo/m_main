@@ -1,4 +1,4 @@
-import { Card, Col, Row, Stack } from "react-bootstrap";
+import { Alert, Card, Col, Row, Stack } from "react-bootstrap";
 import { IReview } from "../services/scrapService";
 import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp";
@@ -6,6 +6,11 @@ import { spentTime } from "../utils/spentTime";
 import { GoogleMap } from "./GoogleMap";
 import { Ratings } from "./Ratings";
 import { StatusInfo } from "./StatusInfo";
+import emptyFolder from "../assets/emptyFolder.png";
+import {
+  IconAlertSquareRoundedFilled,
+  IconInfoCircle,
+} from "@tabler/icons-react";
 
 export const PlaceInfo = ({
   info,
@@ -28,67 +33,124 @@ export const PlaceInfo = ({
         </Col>
         <Col>
           <Card.Body>
-            <StatusInfo info={info} />
             <Card.Title className="mt-3 text-primary">{info.title}</Card.Title>
             <Ratings info={info} />
+            <StatusInfo info={info} />
             {info.type === "comments" && (
               <>
                 <h5 className="mt-3">Options</h5>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Limit:</span>
-                  <strong>{info.limit} comments</strong>
-                </Stack>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Sort:</span>
-                  <strong>{info.sortBy}</strong>
-                </Stack>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Extract Image Urls:</span>
-                  <strong>{info.extractImageUrls ? "Yes" : "No"}</strong>
-                </Stack>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Extract Video Urls:</span>
-                  <strong>{info.extractVideoUrls ? "Yes" : "No"}</strong>
-                </Stack>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Extract Owner Replies:</span>
-                  <strong>{info.extractOwnerResponse ? "Yes" : "No"}</strong>
-                </Stack>
-              </>
-            )}
-            <h5 className="mt-3">Details </h5>
-            <Stack direction="horizontal" className="py-1">
-              <span className="me-auto">Coordinates:</span>{" "}
-              <strong>
-                {info.location?.latitude}, {info.location?.longitude}
-              </strong>
-            </Stack>
-            {info.type === "comments" && (
-              <>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Comments:</span>{" "}
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  <small className="me-auto">Limit:</small>
                   <small>
-                    {formatNumber(info.totalReviews)} reviews /{" "}
-                    {formatNumber(info.totalOwnerReviews)} replies
+                    <b>{info.limit} comments</b>
                   </small>
                 </Stack>
-                <Stack direction="horizontal" className="py-1">
-                  <span className="me-auto">Media:</span>
-                  <strong>
-                    {formatNumber(info.totalImages)} images /{" "}
-                    {formatNumber(info.totalVideos)} videos
-                  </strong>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  <small className="me-auto">Sort:</small>
+                  <small>
+                    <b>{info.sortBy}</b>
+                  </small>
+                </Stack>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  <small className="me-auto">Extract Image Urls:</small>
+                  <small>
+                    <b>{info.extractImageUrls ? "Yes" : "No"}</b>
+                  </small>
+                </Stack>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  <small className="me-auto">Extract Video Urls:</small>
+                  <small>
+                    <b>{info.extractVideoUrls ? "Yes" : "No"}</b>
+                  </small>
+                </Stack>
+                <Stack
+                  direction="horizontal"
+                  className="justify-content-between"
+                >
+                  <small className="me-auto">Extract Owner Replies:</small>
+                  <small>
+                    <b>{info.extractOwnerResponse ? "Yes" : "No"}</b>
+                  </small>
                 </Stack>
               </>
             )}
-            <Stack direction="horizontal" className="py-1">
-              <span className="me-auto">Spent Time:</span>
-              <strong>{spentTime(info)}</strong>
-            </Stack>
-            <Stack direction="horizontal" className="py-1">
-              <span className="me-auto">Created At:</span>
-              <strong>{formatTimestamp(info.createdAt)}</strong>
-            </Stack>
+            {info.location && (
+              <Stack gap={2}>
+                <h5 className="place-info-title mt-3">Details:</h5>
+                <Stack direction="horizontal" className="place-info-item">
+                  <small>Latitude:</small>
+                  <b>{info.location?.latitude}</b>
+                </Stack>
+                <Stack direction="horizontal" className="place-info-item">
+                  <small className="me-auto">Longitude:</small>{" "}
+                  <small>
+                    <b>{info.location?.longitude}</b>
+                  </small>
+                </Stack>
+                {info.type === "comments" && (
+                  <>
+                    <Stack
+                      direction="horizontal"
+                      className="justify-content-between"
+                    >
+                      <small>Comments:</small>
+                      <small>
+                        <b>
+                          {formatNumber(info.totalReviews)} reviews /{" "}
+                          {formatNumber(info.totalOwnerReviews)} replies
+                        </b>
+                      </small>
+                    </Stack>
+                    <Stack
+                      direction="horizontal"
+                      className="justify-content-between"
+                    >
+                      <small className="me-auto">Media:</small>
+                      <small>
+                        <b>
+                          {formatNumber(info.totalImages)} images /{" "}
+                          {formatNumber(info.totalVideos)} videos
+                        </b>
+                      </small>
+                    </Stack>
+                  </>
+                )}
+                <Stack direction="horizontal" className="place-info-item">
+                  <small>Spent Time:</small>
+                  <small>
+                    <b>{spentTime(info)}</b>
+                  </small>
+                </Stack>
+                <Stack direction="horizontal" className="place-info-item">
+                  <small>Created At:</small>
+                  <small>
+                    <b>{formatTimestamp(info.createdAt)}</b>
+                  </small>
+                </Stack>
+              </Stack>
+            )}
+            {!info.status && (
+              <Stack>
+                <Alert variant="info" className="d-flex">
+                  <div className="me-2">
+                    <IconInfoCircle></IconInfoCircle>
+                  </div>
+                  Please scrape something to display more information.
+                </Alert>
+              </Stack>
+            )}
           </Card.Body>
         </Col>
       </Row>

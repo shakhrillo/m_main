@@ -242,6 +242,7 @@ export const Scrap = () => {
       setLoading(false);
     }
   }
+  console.log("placeInfo", placeInfo);
 
   return (
     <Container>
@@ -616,75 +617,73 @@ export const Scrap = () => {
             {/*---End: Output Options---*/}
           </Stack>
         </Col>
-        <div className="col-md-3">
+        <Col md={3}>
           <PlaceInfo info={placeInfo} className="mb-3" />
-
           {/*---Expected Points---*/}
-          <Card>
-            <CardBody>
-              {placeInfo?.rating && (
-                <>
-                  <CardTitle>Expected Points:</CardTitle>
-                  <Stack direction={"horizontal"}>
-                    Reviews ({limit || 0})
-                    <strong className="ms-auto">{limit * 1} points</strong>
+          {placeInfo.rating && (
+            <Card>
+              <CardBody>
+                {placeInfo?.rating && (
+                  <Stack gap={2}>
+                    <CardTitle className="place-info-title">
+                      Expected Points:
+                    </CardTitle>
+
+                    <Stack direction={"horizontal"} className="place-info-item">
+                      <small>Reviews ({limit || 0})</small>
+                      <b>{limit * 1} points</b>
+                    </Stack>
+                    <Stack direction={"horizontal"} className="place-info-item">
+                      <small>Image URLs (~{limit * 10 || 0})</small>
+                      <b>~{limit * 2 * 10 || 0} points</b>
+                    </Stack>
+                    <Stack direction={"horizontal"} className="place-info-item">
+                      <small>Video URLs (~{limit * 10 || 0})</small>
+                      <b>~{limit * 3 * 10 || 0} points</b>
+                    </Stack>
+                    <Stack direction={"horizontal"} className="place-info-item">
+                      <small>Owner responses (~{limit || 0})</small>
+                      <b>~{limit * 1 || 0} points</b>
+                    </Stack>
+                    <hr />
+                    <Stack direction={"horizontal"}>
+                      Total
+                      <strong className="ms-auto">
+                        {limit * 1} ~ {limit * 6 * 10}
+                        points
+                      </strong>
+                    </Stack>
                   </Stack>
-                  <Stack direction={"horizontal"}>
-                    Image URLs (~{limit * 10 || 0})
-                    <strong className="ms-auto">
-                      ~{limit * 2 * 10 || 0} points
-                    </strong>
-                  </Stack>
-                  <Stack direction={"horizontal"}>
-                    Video URLs (~{limit * 10 || 0})
-                    <strong className="ms-auto">
-                      ~{limit * 3 * 10 || 0} points
-                    </strong>
-                  </Stack>
-                  <Stack direction={"horizontal"}>
-                    Owner responses (~{limit || 0})
-                    <strong className="ms-auto">
-                      ~{limit * 1 || 0} points
-                    </strong>
-                  </Stack>
-                  <hr />
-                  <Stack direction={"horizontal"}>
-                    Total
-                    <strong className="ms-auto">
-                      {limit * 1} ~ {limit * 6 * 10}
-                      points
-                    </strong>
-                  </Stack>
-                </>
-              )}
-              <FormCheck
-                className="mt-3"
-                type="checkbox"
-                id="terms"
-                checked={isTermsAccepted}
-                disabled={loading || !isValidated}
-                onChange={(e) => setIsTermsAccepted(!isTermsAccepted)}
-                label={
-                  <>
-                    I agree to the{" "}
-                    <a href="#" target="_blank" rel="nooper noreferrer">
-                      terms and conditions
-                    </a>
-                  </>
-                }
-              ></FormCheck>
-              <Button
-                variant="primary"
-                className="w-100 mt-3"
-                disabled={loading || !isValidated || !isTermsAccepted}
-                onClick={handleStartScrap}
-              >
-                Scrap
-              </Button>
-            </CardBody>
-          </Card>
+                )}
+                <FormCheck
+                  className="mt-3"
+                  type="checkbox"
+                  id="terms"
+                  checked={isTermsAccepted}
+                  disabled={loading || !isValidated}
+                  onChange={(e) => setIsTermsAccepted(!isTermsAccepted)}
+                  label={
+                    <small>
+                      I agree to the{" "}
+                      <a href="#" target="_blank" rel="nooper noreferrer">
+                        terms and conditions
+                      </a>
+                    </small>
+                  }
+                ></FormCheck>
+                <Button
+                  variant="primary"
+                  className="w-100 mt-3"
+                  disabled={loading || !isValidated || !isTermsAccepted}
+                  onClick={handleStartScrap}
+                >
+                  Scrap
+                </Button>
+              </CardBody>
+            </Card>
+          )}
           {/*---End: Expected Points---*/}
-        </div>
+        </Col>
       </Row>
     </Container>
   );
