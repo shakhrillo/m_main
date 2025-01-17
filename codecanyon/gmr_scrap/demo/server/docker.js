@@ -67,7 +67,7 @@ async function watchDockerEvents() {
                 stream.setEncoding("utf8");
                 stream.on("data", (data) => {
                   const stats = JSON.parse(data);
-                  addMachineStats(data.id, stats);
+                  addMachineStats(stats.id, stats);
                 });
 
                 activeStreams.set(name, stream); // Keep track of the stream

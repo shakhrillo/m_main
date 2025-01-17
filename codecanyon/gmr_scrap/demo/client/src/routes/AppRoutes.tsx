@@ -22,12 +22,12 @@ import {
   User,
   Users,
   ValidatedURLs,
+  DockerContainers,
+  DockerImages,
+  DockerImage,
+  DockerContainer,
 } from "../pages";
 import { AuthGuard } from "./AuthGuard";
-import { DockerContainers } from "../pages/DockerContainers";
-import { DockerImages } from "../pages/DockerImages";
-import { DockerImage } from "../pages/DockerImage";
-import { DockerContainer } from "../pages/DockerContainer";
 
 const router = createBrowserRouter([
   {

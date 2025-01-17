@@ -15,3 +15,7 @@ export * from "./SingleReview";
 export * from "./User";
 export * from "./Users";
 export * from "./ValidatedUrls";
+export * from "./DockerContainers";
+export * from "./DockerImages";
+export * from "./DockerImage";
+export * from "./DockerContainer";
