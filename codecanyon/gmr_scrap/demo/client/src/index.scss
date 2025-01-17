@@ -239,30 +239,3 @@ body {
 // Scrap page
 
 // Place info
-
-.place-info {
-}
-.image-item {
-  &-logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    background-color: #6c757d20;
-    width: 70px;
-    height: 70px;
-  }
-  h6 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 16px;
-  }
-  span {
-    font-weight: 600;
-    font-size: 12px;
-  }
-  p {
-    font-weight: 500;
-    font-size: 13px;
-  }
-}

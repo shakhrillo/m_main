@@ -1,36 +1,18 @@
 import {
-  IconClockHour7Filled,
-  IconDatabaseLeak,
-  IconDiscFilled,
-  IconGalaxy,
+  IconDeviceSdCard,
   IconMessageReply,
   IconMessages,
   IconPhoto,
-  IconSearch,
   IconSelectAll,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
-import {
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Dropdown,
-  Form,
-  InputGroup,
-  Row,
-  Stack,
-  Table,
-} from "react-bootstrap";
+import { useEffect, useState } from "react"; // React imports for state and effect handling
+import { Card, CardBody, Col, Container, Row, Stack } from "react-bootstrap";
 import { NavLink, useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
-import { StatusInfo } from "../components/StatusInfo";
-import { IReview, validatedUrls } from "../services/scrapService";
+import { allImages } from "../services/dockerService";
 import { userData } from "../services/userService";
-import formatNumber from "../utils/formatNumber";
-import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-import { allContainers, allImages } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
+import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -95,68 +77,40 @@ export const DockerImages = () => {
         <div>Loading...</div>
       ) : (
         <Row className="g-3">
-          {/* Table for displaying reviews based on active filter */}
-          {/* <Col md={12}>
-            <Card>
-              <CardBody>
-                <Table hover>
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Repo Tags</th>
-                      <th scope="col">Size</th>
-                      <th scope="col">Updated</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {images.map((image, index) => (
-                      <tr key={index}>
-                        <td scope="row" style={{ width: "40px" }}>
-                          {index + 1}
-                        </td>
-                        <td>
-                          <NavLink to={`/images/${image.id}`}>
-                            {image.RepoTags
-                              ? image.RepoTags.map((tag: string) => (
-                                  <div key={tag}>{tag}</div>
-                                ))
-                              : "No tags available"}
-                          </NavLink>
-                        </td>
-                        <td>{formatSize(image.Size)}</td>
-                        <td>{formatTimestamp(image.updatedAt)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col> */}
           {images.map((image, index) => (
             <Col md={4} key={index}>
-              <Card className="image-item">
+              <Card>
                 <CardBody>
                   <Stack direction={"horizontal"} gap={3}>
-                    <div className="image-item-logo">
-                      <IconSelectAll />
+                    <div className="d-flex rounded p-3 bg-primary-subtle">
+                      <IconSelectAll
+                        className="text-primary"
+                        size={40}
+                        strokeWidth={1.5}
+                      />
                     </div>
-                    <Stack gap={1}>
-                      <h6>
-                        <NavLink to={`/images/${image.id}`}>
-                          {image.RepoTags
-                            ? image.RepoTags.map((tag: string) => (
-                                <div key={tag}>{tag}</div>
-                              ))
-                            : "No tags available"}
-                        </NavLink>
-                      </h6>
-                      <Stack direction={"horizontal"} gap={1}>
-                        <IconDiscFilled size={14}></IconDiscFilled>
-                        <span className="image-item-subtitle">
-                          {formatSize(image.Size)}
-                        </span>
+                    <Stack>
+                      <NavLink
+                        to={`/images/${image.id}`}
+                        className={"h6 text-primary"}
+                      >
+                        {image.RepoTags && image.RepoTags.length > 0
+                          ? image.RepoTags.map((tag: string) => (
+                              <div key={tag}>{tag || "N/A"}</div>
+                            ))
+                          : "N/A"}
+                      </NavLink>
+                      <Stack
+                        direction={"horizontal"}
+                        gap={2}
+                        className="text-muted"
+                      >
+                        <IconDeviceSdCard size={20} />
+                        <p className="m-0">{formatSize(image.Size)}</p>
                       </Stack>
-                      <p className="m-0">{formatTimestamp(image.updatedAt)}</p>
+                      <small className="m-0">
+                        {formatTimestamp(image.updatedAt)}
+                      </small>
                     </Stack>
                   </Stack>
                 </CardBody>
