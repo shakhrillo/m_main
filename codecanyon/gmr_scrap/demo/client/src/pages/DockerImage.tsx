@@ -1,8 +1,17 @@
 import {
+  IconArrowLeft,
+  IconClockHour3,
+  IconDeviceSdCard,
+  IconGrid3x3,
+  IconGridPattern,
+  IconGridPatternFilled,
+  IconInfoCircle,
+  IconInfoOctagon,
   IconMessageReply,
   IconMessages,
   IconPhoto,
   IconSearch,
+  IconSelectAll,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
@@ -42,7 +51,7 @@ const FILTER_OPTIONS = [
   { value: "error", label: "Failed" },
 ];
 
-export const DockerImage = () => {
+export const DockerImage = ({ imageId }: { imageId: string }) => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
   const { imgId } = useParams() as { imgId: string };
@@ -125,31 +134,142 @@ export const DockerImage = () => {
           {/* Table for displaying reviews based on active filter */}
           <Col>
             <Card>
-              <CardBody>
-                <Stack direction={"horizontal"} className="border-bottom">
+              <CardBody className="py-4">
+                <Stack direction={"horizontal"}>
                   <button
-                    onClick={() => setActiveTab("images")}
-                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "images" ? "border-bottom border-black" : ""}`}
+                    onClick={() => navigate("/images")}
+                    className={`border-0 bg-transparent px-3 py-2`}
                     type="button"
                   >
-                    Images
+                    <IconArrowLeft />
                   </button>
-                  <button
-                    onClick={() => setActiveTab("details")}
-                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "details" ? "border-bottom border-black" : ""}`}
-                    type="button"
-                  >
-                    Details
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("layers")}
-                    className={`border-0 bg-transparent px-3 py-2 ${activeTab === "layers" ? "border-bottom border-black" : ""}`}
-                    type="button"
-                  >
-                    Layers
-                  </button>
+                  <Stack direction={"horizontal"} gap={3}>
+                    <div className="d-flex rounded p-2 bg-primary-subtle">
+                      <IconSelectAll
+                        className="text-primary"
+                        size={24}
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <div>
+                      <h6 className="m-0">alpine:3.19</h6>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <IconInfoCircle size={16} className="text-muted" />
+                        <span className="text-muted">
+                          sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
+                        </span>
+                      </Stack>
+                    </div>
+                  </Stack>
                 </Stack>
-                {activeTab === "images" ? (
+                {/* <Stack direction={"horizontal"} gap={2} className="mt-3">
+                  <div className="d-flex rounded p-2 bg-primary-subtle">
+                    <IconSelectAll
+                      className="text-primary"
+                      size={32}
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                  <Stack>
+                    <h6 className="m-0">alpine:3.19</h6>
+                    <p>
+                      sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
+                    </p>
+                  </Stack>
+                </Stack> */}
+                <Col md={12}>
+                  <Stack className="p-4">
+                    <Stack direction={"horizontal"} gap={3}>
+                      <button
+                        onClick={() => setActiveTab("images")}
+                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "images" ? "bg-transparent" : ""}`}
+                        type="button"
+                      >
+                        Images
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("details")}
+                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "details" ? "bg-transparent" : ""}`}
+                        type="button"
+                      >
+                        Details
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("layers")}
+                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "layers" ? "bg-transparent" : ""}`}
+                        type="button"
+                      >
+                        Layers
+                      </button>
+                    </Stack>
+                  </Stack>
+                </Col>
+                <Stack direction={"horizontal"} className="px-3">
+                  <Col md={3}>
+                    <Stack className="p-3 border" gap={1}>
+                      <Stack direction={"horizontal"}>
+                        <span className="text-muted">Created At</span>
+                      </Stack>
+                      <Stack direction="horizontal" gap={1}>
+                        <IconClockHour3 size={16} className="text-muted" />{" "}
+                        <Stack direction={"horizontal"} gap={3}>
+                          <span>
+                            {new Date(1736338002 * 1000)
+                              .toLocaleDateString("en-GB")
+                              .replace(/\//g, "-")}
+                          </span>
+                          <span>
+                            {new Date(1736338002 * 1000).toLocaleTimeString()}
+                          </span>
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </Col>
+                  <Col md={3}>
+                    <Stack className="p-3 border border-start-0" gap={1}>
+                      <Stack direction={"horizontal"}>
+                        <span className="text-muted">Updated At</span>
+                      </Stack>
+                      <Stack direction="horizontal" gap={1}>
+                        <IconClockHour3 size={16} className="text-muted" />{" "}
+                        <Stack direction={"horizontal"} gap={3}>
+                          <span>
+                            {new Date(1736338002 * 1000)
+                              .toLocaleDateString("en-GB")
+                              .replace(/\//g, "-")}
+                          </span>
+                          <span>
+                            {new Date(1737183175 * 1000).toLocaleTimeString()}
+                          </span>
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </Col>
+                  <Col md={3}>
+                    <Stack className="p-3 border border-start-0" gap={1}>
+                      <Stack direction={"horizontal"}>
+                        <span className="text-muted">Size</span>
+                      </Stack>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <IconDeviceSdCard size={16} className="text-muted" />{" "}
+                        {(7736621 / 1048576).toFixed(2)} MB
+                      </Stack>
+                    </Stack>
+                  </Col>
+                  <Col md={3}>
+                    <Stack className="p-3 border border-start-0" gap={1}>
+                      <Stack direction={"horizontal"}>
+                        <span className="text-muted">Parent ID</span>
+                      </Stack>
+                      <Stack direction={"horizontal"}>
+                        <span className="bg-black text-white px-2 rounded">
+                          NA
+                        </span>
+                      </Stack>
+                    </Stack>
+                  </Col>
+                </Stack>
+                {/* {activeTab === "images" ? (
                   <Table hover>
                     <thead>
                       <tr>
@@ -247,7 +367,7 @@ export const DockerImage = () => {
                       ))}
                     </tbody>
                   </Table>
-                )}
+                )} */}
                 {/* <Tabs
                   defaultActiveKey="image"
                   id="docker-image-tabs"
