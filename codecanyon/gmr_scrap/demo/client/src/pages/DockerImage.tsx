@@ -146,43 +146,31 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                     />
                   </div>
                   <div>
-                    <h6 className="m-0">alpine:3.19</h6>
+                    <h6 className="m-0">
+                      {(() => {
+                        const repoTags = Object.entries(imageDetails).find(
+                          ([key]) => key === "RepoTags",
+                        )?.[1];
+
+                        // If repoTags exists and is an array, join the elements into a string
+                        return Array.isArray(repoTags)
+                          ? repoTags.join(", ")
+                          : "No RepoTags available";
+                      })()}
+                    </h6>
                     <Stack direction={"horizontal"} gap={1}>
                       <IconInfoCircle size={16} className="text-muted" />
                       <span className="text-muted">
-                        sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
+                        {String(
+                          Object.entries(imageDetails).find(
+                            ([key]) => key === "Parent",
+                          )?.[1],
+                        )}
                       </span>
                     </Stack>
                   </div>
                 </Stack>
-                <Col md={12}>
-                  <Stack className="p-4">
-                    <Stack direction={"horizontal"} gap={3}>
-                      <button
-                        onClick={() => setActiveTab("images")}
-                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "images" ? "bg-transparent" : ""}`}
-                        type="button"
-                      >
-                        Images
-                      </button>
-                      <button
-                        onClick={() => setActiveTab("details")}
-                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "details" ? "bg-transparent" : ""}`}
-                        type="button"
-                      >
-                        Details
-                      </button>
-                      <button
-                        onClick={() => setActiveTab("layers")}
-                        className={`border-0 px-3 py-2 rounded-5 ${activeTab !== "layers" ? "bg-transparent" : ""}`}
-                        type="button"
-                      >
-                        Layers
-                      </button>
-                    </Stack>
-                  </Stack>
-                </Col>
-                <Stack direction={"horizontal"} className="px-3">
+                <Stack direction={"horizontal"} className="mt-4">
                   <Col md={3}>
                     <Stack className="p-3 border" gap={1}>
                       <Stack direction={"horizontal"}>
@@ -191,16 +179,30 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       <Stack direction="horizontal" gap={1}>
                         <IconClockHour3 size={16} className="text-muted" />{" "}
                         <Stack direction={"horizontal"} gap={3}>
+                          <Stack direction={"horizontal"} gap={1}>
+                            {(() => {
+                              const createdDate = Object.entries(
+                                imageDetails,
+                              ).find(([key]) => key === "Created")?.[1];
+                              if (
+                                typeof createdDate === "string" &&
+                                createdDate
+                              ) {
+                                const date = new Date(createdDate);
+                                return date.toISOString().split("T")[0];
+                              }
+                              return "";
+                            })()}
+                          </Stack>
                           <span>
-                            {new Date(1736338002 * 1000)
-                              .toLocaleDateString("en-GB")
-                              .replace(/\//g, "-")}
-                          </span>
-                          <span>
-                            {new Date(1736338002 * 1000).toLocaleTimeString(
-                              "en-GB",
-                              { hour12: false },
-                            )}
+                            {(() => {
+                              const dateStr = "2025-01-08T12:06:42Z";
+                              const date = new Date(dateStr);
+                              const time = date.toLocaleTimeString("en-GB", {
+                                hour12: false,
+                              });
+                              return time;
+                            })()}
                           </span>
                         </Stack>
                       </Stack>
@@ -213,254 +215,100 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       </Stack>
                       <Stack direction="horizontal" gap={1}>
                         <IconClockHour3 size={16} className="text-muted" />{" "}
-                        <Stack direction={"horizontal"} gap={3}>
-                          <span>
-                            {new Date(1736338002 * 1000)
-                              .toLocaleDateString("en-GB")
-                              .replace(/\//g, "-")}
-                          </span>
-                          <span>
-                            {new Date(1737183175 * 1000).toLocaleTimeString(
+                        {(() => {
+                          const updatedAt = Object.entries(imageDetails).find(
+                            ([key]) => key === "updatedAt",
+                          )?.[1];
+
+                          if (
+                            updatedAt &&
+                            (updatedAt as { seconds?: number }).seconds
+                          ) {
+                            const timestamp = (updatedAt as { seconds: number })
+                              .seconds;
+                            const date = new Date(timestamp * 1000);
+                            const dateString = date.toISOString().split("T")[0];
+                            const timeString = date.toLocaleTimeString(
                               "en-GB",
                               { hour12: false },
-                            )}
-                          </span>
+                            );
+
+                            return (
+                              <Stack direction={"horizontal"} gap={3}>
+                                <span>{dateString}</span>
+                                <span>{timeString}</span>
+                              </Stack>
+                            );
+                          }
+                          return <span>No date available</span>;
+                        })()}
+                      </Stack>
+                    </Stack>
+                  </Col>
+                  <Col md={3}>
+                    <Stack className="p-3 border border-start-0" gap={1}>
+                      <span className="text-muted">Size</span>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <IconDeviceSdCard size={16} className="text-muted" />{" "}
+                        <Stack direction={"horizontal"} gap={1}>
+                          {String(
+                            (() => {
+                              if (
+                                typeof imageDetails === "object" &&
+                                imageDetails !== null &&
+                                "Size" in imageDetails &&
+                                typeof (imageDetails as any).Size === "number"
+                              ) {
+                                const sizeInBytes = (imageDetails as any).Size;
+                                const sizeInMB = sizeInBytes / 1048576;
+
+                                if (sizeInMB > 999) {
+                                  const sizeInGB = sizeInMB / 1024;
+                                  return `${sizeInGB.toFixed(2)} GB`;
+                                }
+                                return `${sizeInMB.toFixed(2)} MB`;
+                              }
+                              return "0.00 MB";
+                            })(),
+                          )}
                         </Stack>
                       </Stack>
                     </Stack>
                   </Col>
                   <Col md={3}>
                     <Stack className="p-3 border border-start-0" gap={1}>
+                      <span className="text-muted">Parent ID</span>
                       <Stack direction={"horizontal"}>
-                        <span className="text-muted">Size</span>
-                      </Stack>
-                      <Stack direction={"horizontal"} gap={1}>
-                        <IconDeviceSdCard size={16} className="text-muted" />{" "}
-                        {(7736621 / 1048576).toFixed(2)} MB
-                      </Stack>
-                    </Stack>
-                  </Col>
-                  <Col md={3}>
-                    <Stack className="p-3 border border-start-0" gap={1}>
-                      <Stack direction={"horizontal"}>
-                        <span className="text-muted">Parent ID</span>
-                      </Stack>
-                      <Stack direction={"horizontal"}>
-                        <span className="bg-black text-white px-2 rounded">
-                          NA
-                        </span>
+                        {(() => {
+                          const parentValue = Object.entries(imageDetails).find(
+                            ([key]) => key === "Parent",
+                          )?.[1];
+
+                          // Ensure that we always return a valid ReactNode
+                          if (parentValue) {
+                            return (
+                              <span
+                                className="text-truncate"
+                                style={{
+                                  maxWidth: "200px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {parentValue}
+                              </span>
+                            );
+                          } else {
+                            return (
+                              <span className="bg-black text-white px-2 rounded">
+                                N/A
+                              </span>
+                            );
+                          }
+                        })()}
                       </Stack>
                     </Stack>
                   </Col>
                 </Stack>
-                {activeTab === "images" ? (
-                  <Table hover>
-                    <thead>
-                      <tr>
-                        <th scope="col">Key</th>
-                        <th scope="col">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(image).map(([key, value]) => (
-                        <tr key={key}>
-                          <td>{key}</td>
-                          <td style={{ maxWidth: "400px" }}>
-                            {Array.isArray(value) ? (
-                              <ul>
-                                {value.map((item, index) => (
-                                  <li key={index}>{item}</li>
-                                ))}
-                              </ul>
-                            ) : typeof value === "object" && value !== null ? (
-                              <pre>{JSON.stringify(value, null, 2)}</pre>
-                            ) : (
-                              value?.toString() || "N/A"
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                ) : activeTab === "details" ? (
-                  <Table hover>
-                    <thead>
-                      <tr>
-                        <th scope="col">Key</th>
-                        <th scope="col">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(imageDetails).map(([key, value]) => (
-                        <tr key={key}>
-                          <td>{key}</td>
-                          <td style={{ maxWidth: "400px" }}>
-                            {Array.isArray(value) ? (
-                              <ul>
-                                {value.map((item, index) => (
-                                  <li key={index}>{item}</li>
-                                ))}
-                              </ul>
-                            ) : typeof value === "object" && value !== null ? (
-                              <pre>{JSON.stringify(value, null, 2)}</pre>
-                            ) : (
-                              value?.toString() || "N/A"
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                ) : (
-                  <Table hover>
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Id</th>
-                        <th scope="col">Tags</th>
-                        <th scope="col">Created By</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Updated</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {imageLayers.map((layer, index) => (
-                        <tr key={index}>
-                          <td scope="row" style={{ width: "40px" }}>
-                            {index + 1}
-                          </td>
-                          <td>
-                            <span
-                              style={{ maxWidth: "200px" }}
-                              className="text-truncate d-inline-block"
-                            >
-                              {layer.Id}
-                            </span>
-                          </td>
-                          <td>
-                            {layer.Tags
-                              ? layer.Tags.map((tag: string) => (
-                                  <div key={tag}>{tag}</div>
-                                ))
-                              : "No tags available"}
-                          </td>
-                          <td>{layer.createdBy}</td>
-                          <td>{formatSize(layer.Size)}</td>
-                          <td>{formatTimestamp(layer.updatedAt)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                )}
-                <Tabs
-                  defaultActiveKey="image"
-                  id="docker-image-tabs"
-                  className="mb-3"
-                >
-                  <Tab eventKey="image" title="Image">
-                    <Table hover>
-                      <thead>
-                        <tr>
-                          <th scope="col">Key</th>
-                          <th scope="col">Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(image).map(([key, value]) => (
-                          <tr key={key}>
-                            <td>{key}</td>
-                            <td style={{ maxWidth: "400px" }}>
-                              {Array.isArray(value) ? (
-                                <ul>
-                                  {value.map((item, index) => (
-                                    <li key={index}>{item}</li>
-                                  ))}
-                                </ul>
-                              ) : typeof value === "object" &&
-                                value !== null ? (
-                                <pre>{JSON.stringify(value, null, 2)}</pre>
-                              ) : (
-                                value?.toString() || "N/A"
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Tab>
-                  <Tab eventKey="details" title="Details">
-                    <Table hover>
-                      <thead>
-                        <tr>
-                          <th scope="col">Key</th>
-                          <th scope="col">Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(imageDetails).map(([key, value]) => (
-                          <tr key={key}>
-                            <td>{key}</td>
-                            <td style={{ maxWidth: "400px" }}>
-                              {Array.isArray(value) ? (
-                                <ul>
-                                  {value.map((item, index) => (
-                                    <li key={index}>{item}</li>
-                                  ))}
-                                </ul>
-                              ) : typeof value === "object" &&
-                                value !== null ? (
-                                <pre>{JSON.stringify(value, null, 2)}</pre>
-                              ) : (
-                                value?.toString() || "N/A"
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Tab>
-                  <Tab eventKey="layers" title="Layers">
-                    <Table hover>
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Id</th>
-                          <th scope="col">Tags</th>
-                          <th scope="col">Created By</th>
-                          <th scope="col">Size</th>
-                          <th scope="col">Updated</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {imageLayers.map((layer, index) => (
-                          <tr key={index}>
-                            <td scope="row" style={{ width: "40px" }}>
-                              {index + 1}
-                            </td>
-                            <td>
-                              <span
-                                style={{ maxWidth: "200px" }}
-                                className="text-truncate d-inline-block"
-                              >
-                                {layer.Id}
-                              </span>
-                            </td>
-                            <td>
-                              {layer.Tags
-                                ? layer.Tags.map((tag: string) => (
-                                    <div key={tag}>{tag}</div>
-                                  ))
-                                : "No tags available"}
-                            </td>
-                            <td>{layer.createdBy}</td>
-                            <td>{formatSize(layer.Size)}</td>
-                            <td>{formatTimestamp(layer.updatedAt)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Tab>
-                </Tabs>
               </CardBody>
             </Card>
           </Col>
@@ -477,10 +325,22 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       />
                     </div>
                     <div>
-                      <h6 className="m-0">Apple</h6>
+                      <h6 className="m-0">
+                        {String(
+                          Object.entries(imageDetails).find(
+                            ([key]) => key === "Os",
+                          )?.[1] || "",
+                        )}
+                      </h6>
                       <Stack direction={"horizontal"} gap={1}>
                         <IconTexture size={16} className="text-muted" />
-                        <span className="text-muted">arm64</span>
+                        <span className="text-muted">
+                          {String(
+                            Object.entries(imageDetails).find(
+                              ([key]) => key === "Architecture",
+                            )?.[1] || "",
+                          )}
+                        </span>
                       </Stack>
                     </div>
                   </Stack>
@@ -491,7 +351,26 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                     >
                       <span className="text-muted">Size</span>
                       <Stack direction={"horizontal"} gap={1}>
-                        {(7736621 / 1048576).toFixed(2)} MB
+                        {String(
+                          (() => {
+                            if (
+                              typeof imageDetails === "object" &&
+                              imageDetails !== null &&
+                              "Size" in imageDetails &&
+                              typeof (imageDetails as any).Size === "number"
+                            ) {
+                              const sizeInBytes = (imageDetails as any).Size;
+                              const sizeInMB = sizeInBytes / 1048576;
+
+                              if (sizeInMB > 999) {
+                                const sizeInGB = sizeInMB / 1024;
+                                return `${sizeInGB.toFixed(2)} GB`;
+                              }
+                              return `${sizeInMB.toFixed(2)} MB`;
+                            }
+                            return "0.00 MB";
+                          })(),
+                        )}
                       </Stack>
                     </Stack>
                     <Stack
@@ -501,9 +380,32 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                     >
                       <span className="text-muted">Parent</span>
                       <Stack direction={"horizontal"}>
-                        <span className="bg-black text-white px-2 rounded">
-                          N/A
-                        </span>
+                        {(() => {
+                          const parentValue = Object.entries(imageDetails).find(
+                            ([key]) => key === "Parent",
+                          )?.[1];
+
+                          // Ensure that we always return a valid ReactNode
+                          if (parentValue) {
+                            return (
+                              <span
+                                className="text-truncate"
+                                style={{
+                                  maxWidth: "200px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {parentValue}
+                              </span>
+                            );
+                          } else {
+                            return (
+                              <span className="bg-black text-white px-2 rounded">
+                                N/A
+                              </span>
+                            );
+                          }
+                        })()}
                       </Stack>
                     </Stack>
                   </Stack>
@@ -515,9 +417,19 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       <span className="text-muted">Created At</span>
                       <Stack direction={"horizontal"} gap={1}>
                         <span>
-                          {new Date(1736338002 * 1000)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, "-")}
+                          {(() => {
+                            const createdDate = Object.entries(
+                              imageDetails,
+                            ).find(([key]) => key === "Created")?.[1];
+                            if (
+                              typeof createdDate === "string" &&
+                              createdDate
+                            ) {
+                              const date = new Date(createdDate);
+                              return date.toISOString().split("T")[0];
+                            }
+                            return "";
+                          })()}
                         </span>
                       </Stack>
                     </Stack>
@@ -529,9 +441,24 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       <span className="text-muted">Updated At</span>
                       <Stack direction={"horizontal"}>
                         <span>
-                          {new Date(1736338002 * 1000)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, "-")}
+                          {String(
+                            (() => {
+                              const updatedAt = Object.entries(
+                                imageDetails,
+                              ).find(([key]) => key === "updatedAt")?.[1];
+                              if (
+                                updatedAt &&
+                                (updatedAt as { seconds?: number }).seconds
+                              ) {
+                                const timestamp = (
+                                  updatedAt as { seconds: number }
+                                ).seconds;
+                                const date = new Date(timestamp * 1000);
+                                return date.toISOString().split("T")[0];
+                              }
+                              return "";
+                            })(),
+                          )}
                         </span>
                       </Stack>
                     </Stack>
