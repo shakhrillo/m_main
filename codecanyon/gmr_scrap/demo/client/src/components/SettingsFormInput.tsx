@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { settingValue, updateSettingValue } from "../services/settingService";
+import { filter, take } from "rxjs";
 
 export const SettingsFormInput = ({
   tag,
@@ -13,27 +14,33 @@ export const SettingsFormInput = ({
   label: string;
   helpText: string;
 }) => {
-  const [info, setInfo] = useState({} as any);
+  const [info, setInfo] = useState(null as any);
 
   useEffect(() => {
-    const settings$ = settingValue({ tag, type }).subscribe((data) => {
-      if (data) {
+    if (!tag || !type) return;
+
+    const subscription = settingValue({ tag, type })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
+      .subscribe((data) => {
+        console.log(data);
         setInfo(data);
-      }
-    });
+      });
 
     return () => {
-      settings$.unsubscribe();
+      subscription.unsubscribe();
     };
-  }, []);
+  }, [tag, type, setInfo]);
 
   useEffect(() => {
     if (!info || !info.id) return;
-    console.log("info", info);
+
     updateSettingValue(info.id, { value: info.value });
   }, [info]);
 
-  return (
+  return info ? (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
       <Form.Control
@@ -43,5 +50,7 @@ export const SettingsFormInput = ({
       />
       <Form.Text className="text-muted">{helpText}</Form.Text>
     </Form.Group>
+  ) : (
+    "Loading..."
   );
 };

@@ -37,7 +37,7 @@ export const getSettings = () => {
 
 export const settingValue = ({ tag, type }: { tag: string; type: string }) => {
   const collectionRef = collection(firestore, "settings");
-  const settings$ = new BehaviorSubject({} as any);
+  const settings$ = new BehaviorSubject<any>(null);
 
   const unsubscribe = onSnapshot(
     query(collectionRef, where("type", "==", type), where("tag", "==", tag)),
