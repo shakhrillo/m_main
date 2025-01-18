@@ -1,5 +1,6 @@
 import {
   IconArrowLeft,
+  IconBrandAppleFilled,
   IconClockHour3,
   IconDeviceSdCard,
   IconGrid3x3,
@@ -12,6 +13,7 @@ import {
   IconPhoto,
   IconSearch,
   IconSelectAll,
+  IconTexture,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
@@ -132,51 +134,27 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
       ) : (
         <Row className="g-3">
           {/* Table for displaying reviews based on active filter */}
-          <Col>
+          <Col md={9}>
             <Card>
-              <CardBody className="py-4">
-                <Stack direction={"horizontal"}>
-                  <button
-                    onClick={() => navigate("/images")}
-                    className={`border-0 bg-transparent px-3 py-2`}
-                    type="button"
-                  >
-                    <IconArrowLeft />
-                  </button>
-                  <Stack direction={"horizontal"} gap={3}>
-                    <div className="d-flex rounded p-2 bg-primary-subtle">
-                      <IconSelectAll
-                        className="text-primary"
-                        size={24}
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                    <div>
-                      <h6 className="m-0">alpine:3.19</h6>
-                      <Stack direction={"horizontal"} gap={1}>
-                        <IconInfoCircle size={16} className="text-muted" />
-                        <span className="text-muted">
-                          sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
-                        </span>
-                      </Stack>
-                    </div>
-                  </Stack>
-                </Stack>
-                {/* <Stack direction={"horizontal"} gap={2} className="mt-3">
+              <CardBody>
+                <Stack direction={"horizontal"} gap={3}>
                   <div className="d-flex rounded p-2 bg-primary-subtle">
                     <IconSelectAll
                       className="text-primary"
-                      size={32}
+                      size={24}
                       strokeWidth={1.5}
                     />
                   </div>
-                  <Stack>
+                  <div>
                     <h6 className="m-0">alpine:3.19</h6>
-                    <p>
-                      sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
-                    </p>
-                  </Stack>
-                </Stack> */}
+                    <Stack direction={"horizontal"} gap={1}>
+                      <IconInfoCircle size={16} className="text-muted" />
+                      <span className="text-muted">
+                        sha256:7e392738d458655f2f68bfaef9a10444f2116c5f999b116058acfde519617235
+                      </span>
+                    </Stack>
+                  </div>
+                </Stack>
                 <Col md={12}>
                   <Stack className="p-4">
                     <Stack direction={"horizontal"} gap={3}>
@@ -219,7 +197,10 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                               .replace(/\//g, "-")}
                           </span>
                           <span>
-                            {new Date(1736338002 * 1000).toLocaleTimeString()}
+                            {new Date(1736338002 * 1000).toLocaleTimeString(
+                              "en-GB",
+                              { hour12: false },
+                            )}
                           </span>
                         </Stack>
                       </Stack>
@@ -239,7 +220,10 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                               .replace(/\//g, "-")}
                           </span>
                           <span>
-                            {new Date(1737183175 * 1000).toLocaleTimeString()}
+                            {new Date(1737183175 * 1000).toLocaleTimeString(
+                              "en-GB",
+                              { hour12: false },
+                            )}
                           </span>
                         </Stack>
                       </Stack>
@@ -269,7 +253,7 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                     </Stack>
                   </Col>
                 </Stack>
-                {/* {activeTab === "images" ? (
+                {activeTab === "images" ? (
                   <Table hover>
                     <thead>
                       <tr>
@@ -367,8 +351,8 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       ))}
                     </tbody>
                   </Table>
-                )} */}
-                {/* <Tabs
+                )}
+                <Tabs
                   defaultActiveKey="image"
                   id="docker-image-tabs"
                   className="mb-3"
@@ -476,7 +460,83 @@ export const DockerImage = ({ imageId }: { imageId: string }) => {
                       </tbody>
                     </Table>
                   </Tab>
-                </Tabs> */}
+                </Tabs>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md={3}>
+            <Card>
+              <CardBody>
+                <Stack gap={2}>
+                  <Stack direction={"horizontal"} gap={2}>
+                    <div className="d-flex rounded p-2 bg-primary-subtle">
+                      <IconBrandAppleFilled
+                        className="text-primary"
+                        size={24}
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <div>
+                      <h6 className="m-0">Apple</h6>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <IconTexture size={16} className="text-muted" />
+                        <span className="text-muted">arm64</span>
+                      </Stack>
+                    </div>
+                  </Stack>
+                  <Stack direction={"horizontal"} gap={2}>
+                    <Stack
+                      className="border rounded px-2 py-1 w-50"
+                      direction={"vertical"}
+                    >
+                      <span className="text-muted">Size</span>
+                      <Stack direction={"horizontal"} gap={1}>
+                        {(7736621 / 1048576).toFixed(2)} MB
+                      </Stack>
+                    </Stack>
+                    <Stack
+                      className="border rounded px-2 py-1 w-50"
+                      direction={"vertical"}
+                      gap={1}
+                    >
+                      <span className="text-muted">Parent</span>
+                      <Stack direction={"horizontal"}>
+                        <span className="bg-black text-white px-2 rounded">
+                          N/A
+                        </span>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                  <Stack direction={"horizontal"} gap={2}>
+                    <Stack
+                      className="border rounded px-2 py-1 w-50"
+                      direction={"vertical"}
+                    >
+                      <span className="text-muted">Created At</span>
+                      <Stack direction={"horizontal"} gap={1}>
+                        <span>
+                          {new Date(1736338002 * 1000)
+                            .toLocaleDateString("en-GB")
+                            .replace(/\//g, "-")}
+                        </span>
+                      </Stack>
+                    </Stack>
+                    <Stack
+                      className="border rounded px-2 py-1 w-50"
+                      direction={"vertical"}
+                      gap={1}
+                    >
+                      <span className="text-muted">Updated At</span>
+                      <Stack direction={"horizontal"}>
+                        <span>
+                          {new Date(1736338002 * 1000)
+                            .toLocaleDateString("en-GB")
+                            .replace(/\//g, "-")}
+                        </span>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                </Stack>
               </CardBody>
             </Card>
           </Col>
