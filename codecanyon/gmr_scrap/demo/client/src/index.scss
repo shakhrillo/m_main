@@ -94,7 +94,6 @@ body {
   }
 
   .sidebar-logo {
-    filter: invert(1);
     margin: 0;
     height: 40px;
   }
@@ -111,7 +110,7 @@ body {
     align-items: center;
     transition: background-color 0.2s;
     // border: 1px solid;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     width: 100%;
     color: $secondary;
     font-size: 16px;
@@ -124,13 +123,14 @@ body {
     }
 
     &.active {
+      background-color: $light;
       color: var(--bs-primary);
     }
   }
 
   .sidebar-group {
     position: relative;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
     width: 100%;
     overflow: hidden;
 
@@ -152,6 +152,7 @@ body {
     display: inline;
     background-color: #fff;
     padding-right: 20px;
+    padding-left: 1rem;
     width: 100%;
     color: $secondary;
     font-weight: 600;
