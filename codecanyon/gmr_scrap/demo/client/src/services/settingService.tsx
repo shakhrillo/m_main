@@ -1,4 +1,11 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -26,6 +33,41 @@ export const getSettings = () => {
       unsubscribe();
     };
   });
+};
+
+export const settingValue = ({ tag, type }: { tag: string; type: string }) => {
+  const collectionRef = collection(firestore, "settings");
+  const settings$ = new BehaviorSubject({} as any);
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, where("type", "==", type), where("tag", "==", tag)),
+    (snapshot) => {
+      const settingData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      settings$.next(settingData[0]);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = settings$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const updateSettingValue = (id: string, data: any) => {
+  const docRef = doc(firestore, "settings", id);
+  return updateDoc(docRef, data);
+};
+
+export const updateCoinSettings = (id: string, data: any) => {
+  const docRef = doc(firestore, "settings", id);
+  return updateDoc(docRef, data);
 };
 
 export const allUsers = (fromDate = startDate) => {

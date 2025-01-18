@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import { getSettings } from "../services/settingService";
+import { IconAdjustmentsDollar, IconEyeDollar } from "@tabler/icons-react";
+import { SettingsFormInput } from "../components/SettingsFormInput";
 
 export const Settings = () => {
   const [generalSettings, setGeneralSettings] = useState({
@@ -8,6 +19,7 @@ export const Settings = () => {
     newUserBonus: 100,
   });
   const [coinSettings, setCoinSettings] = useState({
+    cost: 0.02,
     image: 2,
     video: 3,
     response: 1,
@@ -92,6 +104,37 @@ export const Settings = () => {
                 <Tab eventKey="coinSettings" title="Coin">
                   <Form>
                     <Row className="g-3 row-cols-md-2">
+                      <Col>
+                        <SettingsFormInput
+                          type="coin"
+                          tag="cost"
+                          label="Cost"
+                          helpText="Cost of each coin in USD."
+                        />
+                      </Col>
+                      <Col md={12}>
+                        <Form.Group>
+                          <Form.Label>Cost in USD</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text id="basic-addon1">
+                              <IconAdjustmentsDollar />
+                            </InputGroup.Text>
+                            <Form.Control
+                              type="number"
+                              value={coinSettings.cost}
+                              onChange={(e) =>
+                                setCoinSettings({
+                                  ...coinSettings,
+                                  cost: parseInt(e.target.value),
+                                })
+                              }
+                            />
+                          </InputGroup>
+                          <Form.Text className="text-muted">
+                            How much each coin is worth.
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
                       <Col>
                         <Form.Group className="mb-3">
                           <Form.Label>Image</Form.Label>

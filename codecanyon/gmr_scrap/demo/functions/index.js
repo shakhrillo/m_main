@@ -88,18 +88,47 @@ exports.processContainerWritten = onDocumentWritten(
     /*-------------------*/
     /* Settings          */
     /*-------------------*/
-    const settingsPricesRef = db.doc("settings/prices");
-    const settingsPricesSnap = await settingsPricesRef.get();
-    if (!settingsPricesSnap.exists) {
-      batch.set(settingsPricesRef, {
-        image: 2,
-        video: 3,
-        response: 1,
-        review: 1,
-        validation: 3,
-      });
-    } else {
-      console.log("Settings prices already exists");
+    const coinPriceArr = [
+      {
+        tag: "cost",
+        value: 0.02,
+        type: "coin",
+      },
+      {
+        tag: "image",
+        value: 2,
+        type: "coin",
+      },
+      {
+        tag: "video",
+        value: 3,
+        type: "coin",
+      },
+      {
+        tag: "response",
+        value: 1,
+        type: "coin",
+      },
+      {
+        tag: "review",
+        value: 1,
+        type: "coin",
+      },
+      {
+        tag: "validation",
+        value: 3,
+        type: "coin",
+      },
+    ];
+    for (const coinPrice of coinPriceArr) {
+      const ref = db.collection("settings").doc();
+      const doc = await ref.get();
+      if (doc.exists) {
+        console.log(`Settings ${coinPrice.id} already exists`);
+        continue;
+      }
+
+      batch.set(ref, coinPrice);
     }
 
     /*-------------------*/
