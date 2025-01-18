@@ -95,6 +95,11 @@ exports.processContainerWritten = onDocumentWritten(
         type: "coin",
       },
       {
+        tag: "bonus",
+        value: 100,
+        type: "coin",
+      },
+      {
         tag: "image",
         value: 2,
         type: "coin",
@@ -118,6 +123,81 @@ exports.processContainerWritten = onDocumentWritten(
         tag: "validation",
         value: 3,
         type: "coin",
+      },
+
+      // General settings
+      {
+        tag: "logo",
+        value: "https://picsum.photos/200",
+        type: "general",
+      },
+      {
+        tag: "favicon",
+        value: "https://picsum.photos/200",
+        type: "general",
+      },
+      {
+        tag: "title",
+        value: "GMR Scrap",
+        type: "general",
+      },
+      {
+        tag: "description",
+        value: "GMR Scrap",
+        type: "general",
+      },
+      {
+        tag: "keywords",
+        value: "GMR Scrap",
+        type: "general",
+      },
+
+      // Scrap settings
+      {
+        tag: "minimum",
+        value: 100,
+        type: "scrap",
+      },
+      {
+        tag: "maximum",
+        value: 1000,
+        type: "scrap",
+      },
+      {
+        tag: "retries",
+        value: 10,
+        type: "scrap",
+      },
+
+      // Docker settings
+      {
+        tag: "minimumCPU",
+        value: 2,
+        type: "docker",
+      },
+      {
+        tag: "minimumRAM",
+        value: 4,
+        type: "docker",
+      },
+      {
+        tag: "minimumStorage",
+        value: 10,
+        type: "docker",
+      },
+
+      // Stripe settings
+      {
+        tag: "publishableKey",
+        value:
+          "pk_test_51I9H7rGz9L9d5a7m9BcFJ9pZQ0q8VX8QX9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ",
+        type: "stripe",
+      },
+      {
+        tag: "secretKey",
+        value:
+          "sk_test_51I9H7rGz9L9d5a7m9BcFJ9pZQ0q8VX8QX9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ1tS1HgK0Q0J9Y1tG9tJ",
+        type: "stripe",
       },
     ];
     for (const coinPrice of coinPriceArr) {
