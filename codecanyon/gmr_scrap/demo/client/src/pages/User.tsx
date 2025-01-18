@@ -1,80 +1,118 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardBody,
+  Col,
+  Container,
+  FormControl,
+  FormLabel,
+  FormText,
+  Row,
+} from "react-bootstrap";
+import { Form, useParams } from "react-router-dom";
+import { userData } from "../services/userService";
 
 export const User = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { userId } = useParams() as { userId: string };
+  const [user, setUser] = useState<{
+    displayName: string;
+    email: string;
+    photoURL: string;
+    phone: number;
+  }>({
+    displayName: "",
+    email: "",
+    photoURL: "",
+    phone: 0,
+  });
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const user$ = userData(userId).subscribe((user) => {
+      console.log("user", user);
+      setUser(user as any);
+    });
+
+    return () => {
+      user$.unsubscribe();
+    };
+  }, [userId]);
 
   return (
-    <div>
-      <div className="d-flex align-items-center gap-3">
-        <h2>Account</h2>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <form>
-            <div className="form-wrap">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={true}
-                placeholder="Email"
-                type="text"
-                id="email"
-                className="form-input"
-              />
-            </div>
-            <div className="form-wrap">
-              <label htmlFor="firstName" className="form-label">
-                First name
-              </label>
-              <input
-                name="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First name"
-                type="text"
-                id="firstName"
-                className="form-input"
-              />
-            </div>
-            <div className="form-wrap">
-              <label htmlFor="lastName" className="form-label">
-                Last name
-              </label>
-              <input
-                name="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last name"
-                type="text"
-                id="lastName"
-                className="form-input"
-              />
-            </div>
-            <div className="form-wrap">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                type="password"
-                id="password"
-                className="form-input"
-              />
-            </div>
-            <button className="button button-primary">Save</button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <Card>
+            <CardBody>
+              <Form>
+                <Row className="row-cols-1 row-cols-md-2 g-3">
+                  <Col>
+                    <FormLabel htmlFor="displayName">Display Name</FormLabel>
+                    <FormControl
+                      type="text"
+                      id="displayName"
+                      aria-describedby="displayNameHelpBlock"
+                      value={user.displayName}
+                      onChange={(e) =>
+                        setUser({ ...user, displayName: e.target.value })
+                      }
+                    />
+                    <FormText id="displayNameHelpBlock" muted>
+                      The display name of the user.
+                    </FormText>
+                  </Col>
+                  <Col>
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormControl
+                      type="email"
+                      id="email"
+                      aria-describedby="emailHelpBlock"
+                      value={user.email}
+                      onChange={(e) =>
+                        setUser({ ...user, email: e.target.value })
+                      }
+                    />
+                    <FormText id="emailHelpBlock" muted>
+                      The email address of the user.
+                    </FormText>
+                  </Col>
+                  <Col>
+                    <FormLabel htmlFor="phone">Phone</FormLabel>
+                    <FormControl
+                      type="tel"
+                      id="phone"
+                      aria-describedby="phoneHelpBlock"
+                      value={user.phone}
+                      onChange={(e) =>
+                        setUser({ ...user, phone: parseInt(e.target.value) })
+                      }
+                    />
+                    <FormText id="phoneHelpBlock" muted>
+                      The phone number of the user.
+                    </FormText>
+                  </Col>
+                  <Col>
+                    <FormLabel htmlFor="photoURL">Photo URL</FormLabel>
+                    <FormControl
+                      type="url"
+                      id="photoURL"
+                      aria-describedby="photoURLHelpBlock"
+                      value={user.photoURL}
+                      onChange={(e) =>
+                        setUser({ ...user, photoURL: e.target.value })
+                      }
+                    />
+                    <FormText id="photoURLHelpBlock" muted>
+                      The URL of the user's profile picture.
+                    </FormText>
+                  </Col>
+                </Row>
+              </Form>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };

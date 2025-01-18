@@ -1,12 +1,15 @@
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { Card, CardBody, Col, Container, Row, Table } from "react-bootstrap";
 import { allUsers } from "../services/settingService";
+import { formatTimestamp } from "../utils/formatTimestamp";
+import { NavLink } from "react-router-dom";
 
 export const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
     const subscribtion = allUsers().subscribe((users) => {
+      console.log("users", users);
       setUsers(users);
     });
 
@@ -15,51 +18,42 @@ export const Users = () => {
     };
   }, []);
 
-  const tableHeader = [
-    {
-      text: "Display Name",
-      field: "displayName",
-      render: (row: any) => <span>{row.displayName}</span>,
-    },
-    {
-      text: "Email",
-      field: "email",
-      render: (row: any) => <span>{row.email}</span>,
-    },
-    {
-      text: "Coin",
-      field: "coin",
-      render: (row: any) => <span>{row.coin || "0"}</span>,
-    },
-  ];
   return (
-    <>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="card">
-            <div className="card-body">
-              <table className="table table-striped">
+    <Container>
+      <Row>
+        <Col>
+          <Card>
+            <CardBody>
+              <Table striped bordered hover>
                 <thead>
                   <tr>
-                    {tableHeader.map((header) => (
-                      <th key={header.text}>{header.text}</th>
-                    ))}
+                    <th>#</th>
+                    <th>Display Name</th>
+                    <th>Email</th>
+                    <th>Coin Balance</th>
+                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
-                    <tr key={user.uid}>
-                      {tableHeader.map((header) => (
-                        <td key={header.text}>{header.render(user)}</td>
-                      ))}
+                  {users.map((user, index) => (
+                    <tr key={user.id}>
+                      <td>{index}</td>
+                      <td>
+                        <NavLink to={`/users/${user.id}`}>
+                          {user.displayName}
+                        </NavLink>
+                      </td>
+                      <td>{user.email}</td>
+                      <td>{user.coinBalance}</td>
+                      <td>{formatTimestamp(user.createdAt)}</td>
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
