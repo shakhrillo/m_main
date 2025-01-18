@@ -47,18 +47,18 @@ export const buyCoinsData = (documentId: string, uid: string) => {
   });
 };
 
-export const paymentData = (sessionId: string) => {
+export const paymentData = (receiptId: string) => {
   const collectionRef = collection(firestore, `payments`);
   const paymentData$ = new BehaviorSubject({} as any);
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, where("id", "==", sessionId)),
+    query(collectionRef, where("id", "==", receiptId)),
     (snapshot) => {
       const paymentData = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      paymentData$.next(paymentData[0] || {});
+      paymentData$.next(paymentData[0]);
     },
   );
 

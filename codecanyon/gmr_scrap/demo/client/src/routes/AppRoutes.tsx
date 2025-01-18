@@ -27,7 +27,7 @@ import {
   Users,
   ValidatedURLs,
 } from "../pages";
-import { PaymentsSuccess } from "../pages/PaymentsSuccess";
+import { PaymentsInfo } from "../pages/PaymentsInfo";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -59,9 +59,8 @@ const router = createBrowserRouter([
           { path: "info", element: <Info /> },
           { path: "dashboard", element: <Dashboard /> },
           { path: "payments", element: <Payments /> },
-          { path: "payments/success", element: <PaymentsSuccess /> },
-          { path: "payments/cancel", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
+          { path: "receipts/:receiptId", element: <PaymentsInfo /> },
           { path: "containers", element: <DockerContainers /> },
           { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <DockerImages /> },

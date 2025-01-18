@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { NavLink, useOutletContext } from "react-router-dom";
 import { receiptData } from "../services/paymentService";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { formatAmount } from "../utils/formatAmount";
@@ -31,6 +31,7 @@ export const Receipts = () => {
                 <thead>
                   <tr>
                     <th>#</th>
+                    <th>Id</th>
                     <th>Created</th>
                     <th>Type</th>
                     <th>Status</th>
@@ -41,6 +42,11 @@ export const Receipts = () => {
                   {history.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
+                      <td>
+                        <NavLink to={`/receipts/${item.payment_intent}`}>
+                          {item.payment_intent}
+                        </NavLink>
+                      </td>
                       <td>{formatTimestamp(item.createdAt)}</td>
                       <td>{item.type}</td>
                       <td>

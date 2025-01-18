@@ -55,10 +55,8 @@ exports.createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url:
-        process.env.STRIPE_SUCCESS_URL + "?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url:
-        process.env.STRIPE_CANCEL_URL + "?session_id={CHECKOUT_SESSION_ID}",
+      success_url: `${process.env.STRIPE_SUCCESS_URL}/{CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.STRIPE_CANCEL_URL}/{CHECKOUT_SESSION_ID}`,
       payment_intent_data: { metadata: { userId } },
       customer: customerId,
     });
@@ -88,20 +86,15 @@ exports.webhookHandler = async (req, res) => {
           signature,
           endpointSecret
         );
+
+        console.log("-------------------");
+        console.log(`Type: ${event.type}`);
+        console.log("-------------------");
+
         const {
           type,
           data: { object: paymentIntent },
         } = event;
-
-        let paymentIntentId = paymentIntent.payment_intent;
-        if (type.includes("payment_intent")) {
-          paymentIntentId = paymentIntent.id;
-        }
-
-        console.log("--".repeat(20));
-        console.log(`Event type: ${type}`);
-        console.log(paymentIntentId);
-        console.log("--".repeat(20));
 
         const paymentsRef = db.collection("payments");
         await paymentsRef.add({
@@ -109,57 +102,6 @@ exports.webhookHandler = async (req, res) => {
           type,
           createdAt: Timestamp.now(),
         });
-
-        // console.log("--".repeat(20));
-        // console.log(`Event type: ${type}`);
-        // console.log("--".repeat(20));
-        // console.log("--".repeat(20));
-        // console.log(paymentIntent);
-        // console.log("--".repeat(20));
-
-        // if (type !== "payment_intent.succeeded") {
-        //   console.log(`Unhandled event type: ${type}`);
-        //   return res.status(200).send("Event ignored");
-        // }
-
-        // const payment_intent = event.data.object.payment_intent;
-
-        // if (type === "checkoutsession.completed") {
-        //   const sessionId = paymentIntent.id;
-        //   const paymentIntentId = paymentIntent.payment_intent;
-        //   const userId = paymentIntent.metadata.userId;
-        //   const customerEmail = paymentIntent.customer_email;
-        //   console.log("userId", userId);
-        //   console.log("paymentIntentId", paymentIntentId);
-        //   console.log("sessionId", sessionId);
-        // }
-
-        // if (type === "checkoutsession.completed") {
-        //   const id = paymentIntent.id;
-        //   console.log(id);
-        //   console.log("paymentIntent");
-        //   console.log(paymentIntent);
-
-        //   // const sessionId = paymentIntent.id;
-        //   // console.log("paymentIntent");
-        //   // console.log(paymentIntent);
-        //   // const chargeId = paymentIntent.charges.data[0].id;
-        //   // const charge = await stripe.charges.retrieve(chargeId);
-        //   // const userId = paymentIntent.metadata.userId;
-        //   // const userPaymentsRef = db.collection(`users/${userId}/payments`);
-        //   // const userRef = db.doc(`users/${userId}`);
-        //   // const batch = db.batch();
-        //   // // Add payment to user's payment collection
-        //   // batch.set(userPaymentsRef.doc(sessionId), {
-        //   //   // paymentIntent,
-        //   //   amount: paymentIntent.amount,
-        //   //   createdAt: Timestamp.now(),
-        //   //   payment_method: paymentIntent.payment_method,
-        //   //   status: paymentIntent.status,
-        //   //   charge,
-        //   // });
-        //   // await batch.commit();
-        // }
 
         res.status(200).send("Webhook received and processed");
       } catch (err) {
