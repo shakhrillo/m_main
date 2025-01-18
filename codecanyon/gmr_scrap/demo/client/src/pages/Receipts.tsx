@@ -2,6 +2,9 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { receiptData } from "../services/paymentService";
+import { formatTimestamp } from "../utils/formatTimestamp";
+import { formatAmount } from "../utils/formatAmount";
+import { Container } from "react-bootstrap";
 
 export const Receipts = () => {
   const { uid } = useOutletContext<User>();
@@ -19,7 +22,7 @@ export const Receipts = () => {
   }, []);
 
   return (
-    <div className="container-fluid">
+    <Container>
       <div className="row">
         <div className="col">
           <div className="card">
@@ -27,23 +30,27 @@ export const Receipts = () => {
               <table className="table table-striped">
                 <thead>
                   <tr>
+                    <th>#</th>
+                    <th>Created</th>
+                    <th>Type</th>
                     <th>Status</th>
                     <th>Amount</th>
-                    <th>Date</th>
-                    <th>Receipt</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((item) => (
+                  {history.map((item, index) => (
                     <tr key={item.id}>
-                      <td>{item.status}</td>
-                      <td>{item.amount}</td>
-                      <td>{item.id}</td>
+                      <td>{index + 1}</td>
+                      <td>{formatTimestamp(item.createdAt)}</td>
+                      <td>{item.type}</td>
                       <td>
-                        <a href={item.receiptUrl} target="_blank">
-                          View
-                        </a>
+                        {item.status === "succeeded" ? (
+                          <span className="text-success">Succeeded</span>
+                        ) : (
+                          <span className="text-danger">Failed</span>
+                        )}
                       </td>
+                      <td>{formatAmount(item.amount)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -52,6 +59,6 @@ export const Receipts = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };

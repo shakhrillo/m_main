@@ -55,8 +55,10 @@ exports.createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: process.env.STRIPE_SUCCESS_URL,
-      cancel_url: process.env.STRIPE_CANCEL_URL,
+      success_url:
+        process.env.STRIPE_SUCCESS_URL + "?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url:
+        process.env.STRIPE_CANCEL_URL + "?session_id={CHECKOUT_SESSION_ID}",
       payment_intent_data: { metadata: { userId } },
       customer: customerId,
     });
@@ -91,47 +93,74 @@ exports.webhookHandler = async (req, res) => {
           data: { object: paymentIntent },
         } = event;
 
-        if (type !== "payment_intent.succeeded") {
-          console.log(`Unhandled event type: ${type}`);
-          return res.status(200).send("Event ignored");
+        let paymentIntentId = paymentIntent.payment_intent;
+        if (type.includes("payment_intent")) {
+          paymentIntentId = paymentIntent.id;
         }
 
-        const chargeId = paymentIntent.charges.data[0].id;
-        const charge = await stripe.charges.retrieve(chargeId);
-        const userId = paymentIntent.metadata.userId;
-        const userPaymentsRef = db.collection(`users/${userId}/payments`);
-        const userRef = db.doc(`users/${userId}`);
-        const batch = db.batch();
+        console.log("--".repeat(20));
+        console.log(`Event type: ${type}`);
+        console.log(paymentIntentId);
+        console.log("--".repeat(20));
 
-        // Add payment to user's payment collection
-        batch.set(userPaymentsRef.doc(), {
-          amount: paymentIntent.amount,
+        const paymentsRef = db.collection("payments");
+        await paymentsRef.add({
+          ...paymentIntent,
+          type,
           createdAt: Timestamp.now(),
-          payment_method: paymentIntent.payment_method,
-          status: paymentIntent.status,
-          charge,
         });
 
-        // Update user's coin balance
-        // const userDoc = await userRef.get();
-        // const userDocData = userDoc.data() || {
-        //   coinBalance: 0,
-        //   totalSpent: 0,
-        // };
-        // const coinBalance =
-        //   userDocData.coinBalance + (paymentIntent.amount / 100) * 10;
-        // const totalSpent = userDocData.totalSpent + paymentIntent.amount;
+        // console.log("--".repeat(20));
+        // console.log(`Event type: ${type}`);
+        // console.log("--".repeat(20));
+        // console.log("--".repeat(20));
+        // console.log(paymentIntent);
+        // console.log("--".repeat(20));
 
-        // batch.set(
-        //   userRef,
-        //   {
-        //     coinBalance,
-        //     totalSpent,
-        //   },
-        //   { merge: true }
-        // );
+        // if (type !== "payment_intent.succeeded") {
+        //   console.log(`Unhandled event type: ${type}`);
+        //   return res.status(200).send("Event ignored");
+        // }
 
-        await batch.commit();
+        // const payment_intent = event.data.object.payment_intent;
+
+        // if (type === "checkoutsession.completed") {
+        //   const sessionId = paymentIntent.id;
+        //   const paymentIntentId = paymentIntent.payment_intent;
+        //   const userId = paymentIntent.metadata.userId;
+        //   const customerEmail = paymentIntent.customer_email;
+        //   console.log("userId", userId);
+        //   console.log("paymentIntentId", paymentIntentId);
+        //   console.log("sessionId", sessionId);
+        // }
+
+        // if (type === "checkoutsession.completed") {
+        //   const id = paymentIntent.id;
+        //   console.log(id);
+        //   console.log("paymentIntent");
+        //   console.log(paymentIntent);
+
+        //   // const sessionId = paymentIntent.id;
+        //   // console.log("paymentIntent");
+        //   // console.log(paymentIntent);
+        //   // const chargeId = paymentIntent.charges.data[0].id;
+        //   // const charge = await stripe.charges.retrieve(chargeId);
+        //   // const userId = paymentIntent.metadata.userId;
+        //   // const userPaymentsRef = db.collection(`users/${userId}/payments`);
+        //   // const userRef = db.doc(`users/${userId}`);
+        //   // const batch = db.batch();
+        //   // // Add payment to user's payment collection
+        //   // batch.set(userPaymentsRef.doc(sessionId), {
+        //   //   // paymentIntent,
+        //   //   amount: paymentIntent.amount,
+        //   //   createdAt: Timestamp.now(),
+        //   //   payment_method: paymentIntent.payment_method,
+        //   //   status: paymentIntent.status,
+        //   //   charge,
+        //   // });
+        //   // await batch.commit();
+        // }
+
         res.status(200).send("Webhook received and processed");
       } catch (err) {
         console.error(`Webhook Error: ${err.message}`);

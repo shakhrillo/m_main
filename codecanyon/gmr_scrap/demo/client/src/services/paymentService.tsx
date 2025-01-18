@@ -5,6 +5,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -46,12 +47,41 @@ export const buyCoinsData = (documentId: string, uid: string) => {
   });
 };
 
+export const paymentData = (sessionId: string) => {
+  const collectionRef = collection(firestore, `payments`);
+  const paymentData$ = new BehaviorSubject({} as any);
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, where("id", "==", sessionId)),
+    (snapshot) => {
+      const paymentData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      paymentData$.next(paymentData[0] || {});
+    },
+  );
+
+  return new Observable<{}>((subscriber) => {
+    const subscription = paymentData$.subscribe(subscriber);
+    return () => {
+      unsubscribe();
+      subscription.unsubscribe();
+    };
+  });
+};
+
 export const receiptData = (uid: string) => {
-  const collectionRef = collection(firestore, `users/${uid}/payments`);
+  const collectionRef = collection(firestore, `payments`);
   const receiptData$ = new BehaviorSubject([] as any[]);
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, orderBy("createdAt", "desc")),
+    query(
+      collectionRef,
+      where("metadata.userId", "==", uid),
+      where("type", "in", ["charge.succeeded", "charge.failed"]),
+      orderBy("createdAt", "desc"),
+    ),
     (snapshot) => {
       const historyData = snapshot.docs.map((doc) => ({
         ...doc.data(),

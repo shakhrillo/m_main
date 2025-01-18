@@ -6,6 +6,10 @@ import {
 import { DashboardLayout } from "../layouts";
 import {
   Dashboard,
+  DockerContainer,
+  DockerContainers,
+  DockerImage,
+  DockerImages,
   Help,
   Info,
   Login,
@@ -22,11 +26,8 @@ import {
   User,
   Users,
   ValidatedURLs,
-  DockerContainers,
-  DockerImages,
-  DockerImage,
-  DockerContainer,
 } from "../pages";
+import { PaymentsSuccess } from "../pages/PaymentsSuccess";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -58,6 +59,8 @@ const router = createBrowserRouter([
           { path: "info", element: <Info /> },
           { path: "dashboard", element: <Dashboard /> },
           { path: "payments", element: <Payments /> },
+          { path: "payments/success", element: <PaymentsSuccess /> },
+          { path: "payments/cancel", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
           { path: "containers", element: <DockerContainers /> },
           { path: "containers/:containerId", element: <DockerContainer /> },

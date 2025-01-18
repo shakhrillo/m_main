@@ -76,9 +76,9 @@ export const Payments = () => {
   }
 
   return (
-    <Container fluid>
+    <Container>
       <Row>
-        <Col md={8}>
+        <Col md={9}>
           <Card className="mb-3">
             <CardBody>
               <CardTitle>Purchase Coins</CardTitle>
@@ -105,10 +105,7 @@ export const Payments = () => {
                   </FormText>
                 </FormGroup>
               </Form>
-            </CardBody>
-          </Card>
-          <Card className="mb-3">
-            <CardBody>
+              <hr />
               <Row>
                 <Col xs="auto">
                   <IconCoins size={40} />
@@ -131,10 +128,7 @@ export const Payments = () => {
                   </ul>
                 </Col>
               </Row>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardBody>
+              <hr />
               <Row>
                 <Col xs={"auto"}>
                   <IconInfoCircle size={40} />
@@ -155,7 +149,7 @@ export const Payments = () => {
             </CardBody>
           </Card>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <Card className="mb-3">
             <CardBody>
               <CardTitle>Summary</CardTitle>
