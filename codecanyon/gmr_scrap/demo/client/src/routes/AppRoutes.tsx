@@ -30,6 +30,7 @@ import {
 import { PaymentsInfo } from "../pages/PaymentsInfo";
 import { AuthGuard } from "./AuthGuard";
 import { DockerInfo } from "../pages/DockerInfo";
+import { Documentation } from "../pages/Documentation";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
           { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <DockerImages /> },
           { path: "images/:imgId", element: <DockerImage /> },
+          { path: "documentation", element: <Documentation /> },
         ],
       },
       { path: "register", element: <Register /> },
