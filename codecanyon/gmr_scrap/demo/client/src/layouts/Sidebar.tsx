@@ -28,7 +28,7 @@ export const Sidebar = () => {
   return (
     <div className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
       <Scrollbar>
-        <div className="sidebar-header">
+        <div className="sidebar-header bg-primary">
           <img src={logo} alt="logo" className="sidebar-logo" />
           <button
             className="ms-auto btn btn-primary p-0"
