@@ -36,6 +36,7 @@
     "react-photoswipe-gallery": "^3.0.1",
     "react-player": "^2.16.0",
     "react-router-dom": "^7.1.1",
+    "react-scrollbars-custom": "^4.1.1",
     "react-syntax-highlighter": "^15.6.1",
     "rxjs": "^7.8.1"
   },
