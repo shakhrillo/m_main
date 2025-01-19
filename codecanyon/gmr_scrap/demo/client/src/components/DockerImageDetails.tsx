@@ -1,15 +1,11 @@
-import { useEffect, useState } from "react";
-import { dockerImageDetails } from "../services/dockerService";
-import { useParams } from "react-router-dom";
 import {
-  IconBrandAppleFilled,
   IconBrandDocker,
   IconBrandUbuntu,
   IconCpu,
   IconDeviceSdCard,
   IconTag,
-  IconTexture,
 } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -20,6 +16,8 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { dockerImageDetails } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
 
 export const DockerImageDetails = () => {
@@ -27,16 +25,12 @@ export const DockerImageDetails = () => {
   const [imageDetails, setImageDetails] = useState({} as any);
 
   useEffect(() => {
-    const imageDetailsSubscription = dockerImageDetails(imgId).subscribe(
-      (data) => {
-        console.log("___image details->", data);
-        setImageDetails(data);
-        // setLoading(false);
-      },
-    );
+    const subscription = dockerImageDetails(imgId).subscribe((data) => {
+      setImageDetails(data);
+    });
 
     return () => {
-      imageDetailsSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

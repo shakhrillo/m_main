@@ -133,7 +133,7 @@ export const dockerImageLayers = (imgId: string) => {
   const collectionRef = collection(firestore, "images", imgId, "layers");
 
   const unsubscribe = onSnapshot(
-    collectionRef,
+    query(collectionRef, orderBy("updatedAt", "asc")),
     (snapshot) => {
       const layersData = snapshot.docs.map((doc) => ({
         id: doc.id,
