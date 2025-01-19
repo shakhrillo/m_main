@@ -18,7 +18,10 @@ const processReviewCreated = require("./src/containers/processReviewCreated");
 const processContainerWritten = require("./src/containers/processContainerWritten");
 const userTopUp = require("./src/user/userTopUp");
 
-const { updateDockerImages } = require("./src/services/mainService");
+const {
+  updateDockerImages,
+  getDockerInfo,
+} = require("./src/services/mainService");
 const jsonPath = path.join(__dirname, "assets/fake-data.json");
 
 admin.initializeApp();
@@ -55,6 +58,7 @@ exports.processContainerWritten = onDocumentWritten(
     /*-------------------*/
     // console.log("Updating docker images..");
     await updateDockerImages();
+    await getDockerInfo();
 
     /*-------------------*/
     /* Statistics        */

@@ -1,6 +1,24 @@
 const { spawn } = require("child_process");
 const { docker } = require("../docker");
-const { updateImages } = require("../services/firebaseService");
+const { updateImages, addDockerInfo } = require("../services/firebaseService");
+
+function infoDocker() {
+  return new Promise((resolve, reject) => {
+    try {
+      docker.info(async function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          await addDockerInfo(data);
+          resolve(data);
+        }
+      });
+    } catch (error) {
+      console.error("Error getting docker info:", error);
+      reject(error);
+    }
+  });
+}
 
 function removeUnusedImages() {
   return new Promise((resolve, reject) => {
@@ -43,7 +61,6 @@ function startContainer(options) {
 }
 
 async function imagesDocker() {
-  console.log("Getting images request");
   return new Promise((resolve, reject) => {
     try {
       docker.listImages(async function (err, images) {
@@ -77,6 +94,7 @@ async function imagesDocker() {
 }
 
 module.exports = {
+  infoDocker,
   startContainer,
   imagesDocker,
   removeUnusedImages,

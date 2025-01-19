@@ -29,6 +29,7 @@ import {
 } from "../pages";
 import { PaymentsInfo } from "../pages/PaymentsInfo";
 import { AuthGuard } from "./AuthGuard";
+import { DockerInfo } from "../pages/DockerInfo";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
           { path: "receipts/:receiptId", element: <PaymentsInfo /> },
+          { path: "docker", element: <DockerInfo /> },
           { path: "containers", element: <DockerContainers /> },
           { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <DockerImages /> },

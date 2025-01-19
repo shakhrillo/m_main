@@ -1,6 +1,7 @@
 import {
   IconBox,
   IconBoxMargin,
+  IconBrandDocker,
   IconCreditCard,
   IconDashboard,
   IconHelp,
@@ -109,6 +110,15 @@ export const Sidebar = () => {
           >
             {createElement(IconBoxMargin, { size: 20 })}
             <span className="me-auto">Images</span>
+          </NavLink>
+          <NavLink
+            to={"/docker"}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            {createElement(IconBrandDocker, { size: 20 })}
+            <span className="me-auto">Docker</span>
           </NavLink>
         </div>
         <div className="sidebar-group">

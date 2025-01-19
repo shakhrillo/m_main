@@ -97,15 +97,13 @@ async function addMachineStats(docId, stats) {
   }
 }
 
-async function updateDockerInfo(info) {
+async function addDockerInfo(info) {
   try {
-    await db
-      .collection("docker")
-      .doc("info")
-      .set(
-        { info: JSON.stringify(info), updatedAt: Timestamp.now() },
-        { merge: true }
-      );
+    await db.collection("docker").add({
+      info: JSON.stringify(info),
+      updatedAt: Timestamp.now(),
+      type: "info",
+    });
   } catch (error) {
     console.error("Error saving Docker info:", error);
   }
@@ -128,7 +126,7 @@ async function updateDockerImageInfo(info) {
 module.exports = {
   createMachine,
   updateMachine,
-  updateDockerInfo,
+  addDockerInfo,
   updateDockerImageInfo,
   updateImages,
   addMachineStats,

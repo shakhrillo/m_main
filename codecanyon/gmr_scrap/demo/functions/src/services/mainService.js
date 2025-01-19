@@ -55,8 +55,23 @@ const updateDockerImages = async () => {
   await axiosInstance.post(`/docker/images`, {}, config);
 };
 
+const getDockerInfo = async () => {
+  const token = createToken({});
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const config = {
+    headers,
+  };
+
+  await axiosInstance.get(`/docker/info`, config);
+};
+
 module.exports = {
   executeScraping,
   generateStripePaymentUrl,
   updateDockerImages,
+  getDockerInfo,
 };

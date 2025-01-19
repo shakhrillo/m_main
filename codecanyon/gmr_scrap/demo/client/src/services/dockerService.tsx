@@ -4,9 +4,11 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
+import { DockerConfig } from "../types/dockerConfig";
 
 export const allContainers = () => {
   const containers$ = new BehaviorSubject([] as any);
@@ -60,6 +62,39 @@ export const dockerContainerStats = (containerId: string) => {
 
   return new Observable<any>((subscriber) => {
     const subscription = stats$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerInfo = () => {
+  const info$ = new BehaviorSubject({} as DockerConfig);
+  const docCollection = collection(firestore, "docker");
+
+  const unsubscribe = onSnapshot(
+    query(docCollection, where("type", "==", "info")),
+    (snapshot) => {
+      const infoData = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        if (!data) return {};
+        return {
+          type: data.type,
+          ...JSON.parse(data.info),
+        };
+      });
+      info$.next(infoData[0] as DockerConfig);
+    },
+    (error) => {
+      console.error("Error fetching info data:", error);
+      info$.error(error);
+    },
+  );
+
+  return new Observable<DockerConfig>((subscriber) => {
+    const subscription = info$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();

@@ -18,8 +18,6 @@ export const SettingsFormInput = ({
 
   useEffect(() => {
     if (!tag || !type) return;
-    console.log("tag", tag);
-    console.log("type", type);
 
     const subscription = settingValue({ tag, type })
       .pipe(
