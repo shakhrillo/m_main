@@ -1,9 +1,4 @@
-import {
-  IconCheck,
-  IconInfoCircle,
-  IconMessages,
-  IconSearch,
-} from "@tabler/icons-react";
+import { IconInfoCircle, IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react"; // React imports for state and effect handling
 import {
@@ -36,25 +31,14 @@ export const ValidatedURLs = () => {
 
   const [info, setInfo] = useState<any>({});
   const [reviews, setReviews] = useState<IReview[]>([]);
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
   const stats = [
     {
-      label: "All validates",
-      icon: IconCheck,
-      value: info.totalValidateInfo + info.totalValidateComments,
-    },
-    {
-      label: "Info",
+      label: "Total Validates",
       icon: IconInfoCircle,
       value: info.totalValidateInfo || "0",
-    },
-    {
-      label: "Comments",
-      icon: IconMessages,
-      value: info.totalValidateComments || "0",
     },
   ];
 
@@ -65,7 +49,6 @@ export const ValidatedURLs = () => {
       filter,
     }).subscribe((data) => {
       setReviews(data);
-      setLoading(false);
     });
 
     return () => {
@@ -74,13 +57,12 @@ export const ValidatedURLs = () => {
   }, [search, uid, filter]);
 
   useEffect(() => {
-    const statsSubscription = userData(uid).subscribe((data) => {
+    const subscription = userData(uid).subscribe((data) => {
       setInfo(data);
-      console.log("data", data);
     });
 
     return () => {
-      statsSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [uid]);
 
