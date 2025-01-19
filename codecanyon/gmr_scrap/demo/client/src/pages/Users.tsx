@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Card, CardBody, Col, Container, Row, Table } from "react-bootstrap";
+import {
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Image,
+  Row,
+  Stack,
+  Table,
+} from "react-bootstrap";
 import { allUsers } from "../services/settingService";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { NavLink } from "react-router-dom";
@@ -24,20 +33,20 @@ export const Users = () => {
         <Col>
           <Card>
             <CardBody>
-              <Table striped bordered hover>
+              <Table hover>
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Display Name</th>
-                    <th>Email</th>
-                    <th>Coin Balance</th>
-                    <th>Created At</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Display Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Coin Balance</th>
+                    <th scope="col">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
                   {users.map((user, index) => (
                     <tr key={user.id}>
-                      <td>{index}</td>
+                      <td>{index + 1}</td>
                       <td>
                         <NavLink to={`/users/${user.id}`}>
                           {user.displayName}

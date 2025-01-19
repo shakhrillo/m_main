@@ -7,13 +7,22 @@ import {
   FormControl,
   FormLabel,
   FormText,
+  Image,
   Row,
+  Stack,
 } from "react-bootstrap";
 import { Form, useParams } from "react-router-dom";
 import { userData } from "../services/userService";
+import {
+  IconCheck,
+  IconCopy,
+  IconUser,
+  IconUserFilled,
+} from "@tabler/icons-react";
 
 export const User = () => {
   const { userId } = useParams() as { userId: string };
+  const [copiedId, setCopiedId] = useState(false);
   const [user, setUser] = useState<{
     displayName: string;
     email: string;
@@ -39,10 +48,19 @@ export const User = () => {
     };
   }, [userId]);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(userId).then(() => {
+      setCopiedId(true);
+      setTimeout(() => {
+        setCopiedId(false);
+      }, 2000);
+    });
+  };
+
   return (
     <Container>
       <Row>
-        <Col>
+        <Col md={9}>
           <Card>
             <CardBody>
               <Form>
@@ -63,7 +81,7 @@ export const User = () => {
                     </FormText>
                   </Col>
                   <Col>
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel htmlFor="email">asdasdEmail</FormLabel>
                     <FormControl
                       type="email"
                       id="email"
@@ -109,6 +127,31 @@ export const User = () => {
                   </Col>
                 </Row>
               </Form>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md={3}>
+          <Card>
+            <CardBody>
+              <Stack gap={2}>
+                <div className="user-image mx-auto">
+                  {user.photoURL ? (
+                    <Image src={user.photoURL} />
+                  ) : (
+                    <IconUser className="text-muted" size={36} />
+                  )}
+                </div>
+                <h6 className="mx-auto">{user.displayName}</h6>
+
+                <div className="w-100 border rounded-4 px-2 p-1 user-id">
+                  <span>{userId}</span>
+                  {copiedId ? (
+                    <IconCheck size={16} className="text-success" />
+                  ) : (
+                    <IconCopy onClick={handleCopy} size={16} />
+                  )}
+                </div>
+              </Stack>
             </CardBody>
           </Card>
         </Col>

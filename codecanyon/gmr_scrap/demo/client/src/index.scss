@@ -261,3 +261,25 @@ body {
 // Scrap page
 
 // Place info
+
+// User
+.user-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  background-color: #6c757d30;
+  width: 80px;
+  height: 80px;
+}
+
+.user-id {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  overflow: hidden;
+  color: #6c757d;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
