@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
+  CardHeader,
   Col,
   Container,
+  Dropdown,
+  FormControl,
   Image,
+  InputGroup,
   Row,
   Stack,
   Table,
@@ -12,9 +16,26 @@ import {
 import { allUsers } from "../services/settingService";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { NavLink } from "react-router-dom";
+import { IconCheck, IconSearch } from "@tabler/icons-react";
+import { Statistics } from "../components/Statistics";
+const FILTER_OPTIONS = [
+  { value: "", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "error", label: "Failed" },
+];
 
 export const Users = () => {
   const [users, setUsers] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+
+  const stats = [
+    {
+      label: "Total Receipts",
+      icon: IconCheck,
+      value: 10,
+    },
+  ];
 
   useEffect(() => {
     const subscribtion = allUsers().subscribe((users) => {
@@ -29,9 +50,55 @@ export const Users = () => {
 
   return (
     <Container>
-      <Row>
-        <Col>
+      <Row className="g-3">
+        {/*---Extracted reviews status---*/}
+        {stats.map((stat, index) => (
+          <Col key={index}>
+            <Statistics {...stat} />
+          </Col>
+        ))}
+        {/*---End: Extracted reviews status---*/}
+
+        <Col xs={12}>
           <Card>
+            <CardHeader>
+              <Stack direction="horizontal">
+                <div className="d-inline-block me-auto">
+                  <InputGroup>
+                    <InputGroup.Text id="search-icon">
+                      <IconSearch />
+                    </InputGroup.Text>
+                    <FormControl
+                      type="search"
+                      id="search"
+                      placeholder="Search..."
+                      aria-label="Search"
+                      aria-describedby="search-icon"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </InputGroup>
+                </div>
+
+                <Dropdown>
+                  <Dropdown.Toggle id="dropdown-filter" variant="secondary">
+                    Filter
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu aria-labelledby="dropdown-filter">
+                    {FILTER_OPTIONS.map((option) => (
+                      <Dropdown.Item
+                        key={option.value}
+                        onClick={() => setFilter(option.value)}
+                        className={filter === option.value ? "active" : ""}
+                      >
+                        {option.label}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Stack>
+            </CardHeader>
             <CardBody>
               <Table hover>
                 <thead>

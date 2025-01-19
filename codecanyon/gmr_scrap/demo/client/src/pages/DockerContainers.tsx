@@ -1,29 +1,104 @@
+import { IconCheck, IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Card, CardBody, Col, Container, Row, Table } from "react-bootstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Dropdown,
+  FormControl,
+  InputGroup,
+  Row,
+  Stack,
+  Table,
+} from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
+import { Statistics } from "../components/Statistics";
 import { allContainers } from "../services/dockerService";
 import { formatTimestamp } from "../utils/formatTimestamp";
+const FILTER_OPTIONS = [
+  { value: "", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "error", label: "Failed" },
+];
 
 export const DockerContainers = () => {
   const { uid } = useOutletContext<User>();
   const [containers, setContainers] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+
+  const stats = [
+    {
+      label: "Total Containers",
+      icon: IconCheck,
+      value: 10,
+    },
+  ];
 
   useEffect(() => {
-    const containersSubscription = allContainers().subscribe((data) => {
+    const subscription = allContainers().subscribe((data) => {
       setContainers(data);
     });
 
     return () => {
-      containersSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [uid]);
 
   return (
     <Container>
-      <Row>
-        <Col>
+      <Row className="g-3">
+        {/*---Extracted reviews status---*/}
+        {stats.map((stat, index) => (
+          <Col key={index}>
+            <Statistics {...stat} />
+          </Col>
+        ))}
+        {/*---End: Extracted reviews status---*/}
+
+        <Col xs={12}>
           <Card>
+            <CardHeader>
+              <Stack direction="horizontal">
+                <div className="d-inline-block me-auto">
+                  <InputGroup>
+                    <InputGroup.Text id="search-icon">
+                      <IconSearch />
+                    </InputGroup.Text>
+                    <FormControl
+                      type="search"
+                      id="search"
+                      placeholder="Search..."
+                      aria-label="Search"
+                      aria-describedby="search-icon"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </InputGroup>
+                </div>
+
+                <Dropdown>
+                  <Dropdown.Toggle id="dropdown-filter" variant="secondary">
+                    Filter
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu aria-labelledby="dropdown-filter">
+                    {FILTER_OPTIONS.map((option) => (
+                      <Dropdown.Item
+                        key={option.value}
+                        onClick={() => setFilter(option.value)}
+                        className={filter === option.value ? "active" : ""}
+                      >
+                        {option.label}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Stack>
+            </CardHeader>
             <CardBody>
               <Table hover>
                 <thead>
