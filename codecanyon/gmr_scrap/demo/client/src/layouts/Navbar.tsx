@@ -25,8 +25,8 @@ export const AppNavbar = ({
 
   return (
     <div {...rest}>
-      <Navbar expand="lg" variant="dark" bg="dark">
-        <Container fluid>
+      <Navbar variant="dark" bg="primary" className="h-100">
+        <Container>
           <Navbar.Brand>GMRScrap</Navbar.Brand>
           <Navbar.Toggle aria-controls="user-navbar" />
 

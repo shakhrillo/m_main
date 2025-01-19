@@ -9,24 +9,29 @@ $enable-negative-margins: true;
 // $light: #f8f9fa;
 // $dark: #343a40;
 
-$primary: #305ef6;
-$secondary: #6c757d; /* Neutral gray */
-$success: #28a745; /* Green */
-$info: #17a2b8; /* Info blue */
-$warning: #ffc107; /* Yellow */
-$danger: #dc3545; /* Red */
-$light: #f8f9fa; /* Light gray */
-$dark: #343a40; /* Dark gray */
+// $primary: #305ef6;
+// $secondary: #6c757d; /* Neutral gray */
+// $success: #28a745; /* Green */
+// $info: #17a2b8; /* Info blue */
+// $warning: #ffc107; /* Yellow */
+// $danger: #dc3545; /* Red */
+// $light: #f8f9fa; /* Light gray */
+// $dark: #343a40; /* Dark gray */
 
 // $grid-columns:                12 !default;
 $grid-gutter-width: 1.5rem !default;
 // $grid-row-columns:            6 !default;
 
+// $card-border-width: 0;
+// $card-box-shadow:
+//   0 1px 3px rgba(0, 0, 0, 0.06),
+//   0 1px 2px rgba(0, 0, 0, 0.12);
+
 @import "bootstrap/scss/bootstrap";
 @import "photoswipe/dist/photoswipe.css";
 
 body {
-  background-color: $white;
+  background-color: $light;
 }
 
 .dashboard-layout {
@@ -47,6 +52,7 @@ body {
 }
 
 .dashboard-navbar {
+  min-height: 60px;
   // align-items: center;
   // background-color: $primary;
   // min-height: 60px;
@@ -78,6 +84,7 @@ body {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.12),
     0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #fff;
   // background-color: $primary;
   width: 260px;
   min-width: 260px;
@@ -126,7 +133,7 @@ body {
     // border: 1px solid;
     padding: 0.5rem 1rem;
     width: 100%;
-    // color: $light;
+    color: $secondary;
     font-size: 16px;
     text-decoration: none;
 
@@ -137,8 +144,8 @@ body {
     }
 
     &.active {
-      // background-color: $primary;
-      // color: $light;
+      background-color: $primary-bg-subtle;
+      color: $primary;
     }
   }
 
@@ -170,7 +177,7 @@ body {
     padding-right: 20px;
     padding-left: 1rem;
     width: 100%;
-    // color: $secondary;
+    color: $secondary;
     font-weight: 600;
     font-size: 12px;
     text-transform: uppercase;
