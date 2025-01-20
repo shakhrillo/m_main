@@ -14,6 +14,7 @@ import "leaflet/dist/leaflet.css";
 import { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import { hexToRgba } from "../utils/hexToRGB";
+import zoomPlugin from "chartjs-plugin-zoom";
 
 ChartJS.register(
   CategoryScale,
@@ -25,6 +26,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  zoomPlugin,
 );
 
 interface LineChartProps {
@@ -64,7 +66,9 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
               ...dataset,
               borderColor: hexToRgba(dataset["color"]),
               pointBackgroundColor: hexToRgba(dataset["color"]),
-              tension: 0.5,
+              tension: 0.4,
+              pointRadius: 0,
+              pointHoverRadius: 5,
               fill: true,
               backgroundColor: (context: any) => {
                 const { chart } = context;
@@ -110,6 +114,20 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
                 position: "bottom",
                 labels: {
                   usePointStyle: true,
+                },
+              },
+              zoom: {
+                zoom: {
+                  // wheel: {
+                  //   enabled: true,
+                  // },
+                  // pinch: {
+                  //   enabled: true,
+                  // },
+                  drag: {
+                    enabled: true,
+                  },
+                  mode: "x",
                 },
               },
             },

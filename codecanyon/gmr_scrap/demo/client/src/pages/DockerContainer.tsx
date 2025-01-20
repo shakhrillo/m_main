@@ -78,7 +78,11 @@ export const DockerContainer = () => {
               {
                 label: "CPU",
                 data: stats.map((stat) =>
-                  formatSize(stat?.cpu_stats?.cpu_usage?.total_usage, "num"),
+                  // const nsToSec = (ns) => (ns / 1e9).toFixed(2);
+                  formatSize(
+                    stat?.cpu_stats?.cpu_usage?.total_usage / 1e9,
+                    "num",
+                  ),
                 ),
                 color: "#3e2c41",
               },
