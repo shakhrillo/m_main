@@ -81,7 +81,7 @@ export const Payments = () => {
         <Col md={9}>
           <Card className="mb-3">
             <CardBody>
-              <CardTitle>Purchase Coins</CardTitle>
+              <CardTitle>Purchaseasd Coins</CardTitle>
               <Form noValidate id="validateForm" className="needs-validation">
                 <FormGroup className="mb-3" controlId="amount">
                   <FormLabel>Amount</FormLabel>
