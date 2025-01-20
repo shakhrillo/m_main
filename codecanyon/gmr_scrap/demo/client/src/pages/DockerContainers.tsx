@@ -16,8 +16,10 @@ import {
 } from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
 import { Statistics } from "../components/Statistics";
-import { allContainers } from "../services/dockerService";
+import { dockerContainers } from "../services/dockerService";
 import { formatTimestamp } from "../utils/formatTimestamp";
+import { IDockerContainer } from "../types/dockerContainer";
+import { formatDate } from "../utils/formatDate";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -26,7 +28,7 @@ const FILTER_OPTIONS = [
 
 export const DockerContainers = () => {
   const { uid } = useOutletContext<User>();
-  const [containers, setContainers] = useState<any[]>([]);
+  const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
@@ -39,7 +41,8 @@ export const DockerContainers = () => {
   ];
 
   useEffect(() => {
-    const subscription = allContainers().subscribe((data) => {
+    const subscription = dockerContainers().subscribe((data) => {
+      console.log(data);
       setContainers(data);
     });
 
@@ -104,7 +107,8 @@ export const DockerContainers = () => {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Duration</th>
                     <th scope="col">Action</th>
                     <th scope="col">Type</th>
                     <th scope="col">From</th>
@@ -123,14 +127,15 @@ export const DockerContainers = () => {
                           className="d-inline-block text-truncate"
                         >
                           <NavLink to={`/containers/${container.id}`}>
-                            {container.id}
+                            {container.Actor.Attributes.name}
                           </NavLink>
                         </span>
                       </td>
+                      <td>{container.Actor.Attributes.execDuration}s</td>
                       <td>{container.Action}</td>
                       <td>{container.type}</td>
                       <td>{container.from}</td>
-                      <td>{formatTimestamp(container.updatedAt)}</td>
+                      <td>{formatDate(container.time)}</td>
                     </tr>
                   ))}
                 </tbody>

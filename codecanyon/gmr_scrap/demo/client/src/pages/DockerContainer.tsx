@@ -14,12 +14,18 @@ import {
   Table,
 } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom"; // Hook for navigation
-import { dockerContainerStats } from "../services/dockerService";
+import {
+  dockerContainer,
+  dockerContainerStats,
+} from "../services/dockerService";
 import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { formatSize } from "../utils/formatSize";
 import { LineChart } from "../components/LineChart";
+import { DockerContainerDetails } from "../components/DockerContainerDetails";
+import { formatDate } from "../utils/formatDate";
+import { formatStringDate } from "../utils/formatStringDate";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -41,7 +47,7 @@ export const DockerContainer = () => {
   useEffect(() => {
     const containersSubscription = dockerContainerStats(containerId).subscribe(
       (data) => {
-        console.log("stats->", data);
+        // console.log("stats->", data);
         setStats(data);
         setLoading(false);
       },
@@ -65,67 +71,130 @@ export const DockerContainer = () => {
   return (
     <Container>
       <Row className="g-3">
-        <Col xs={12}>
+        <Col md={9}>
           <Card id="dashboard">
             <CardBody>
               <LineChart
-                labels={stats.map((stat) => formatTimestamp(stat?.updatedAt))}
+                labels={stats.map((stat) =>
+                  formatStringDate(stat?.read, "HH:mm:ss"),
+                )}
                 datasets={[
                   {
                     label: "CPU",
-                    data: stats.map(
-                      (stat) => stat?.cpu_stats?.cpu_usage?.total_usage,
+                    data: stats.map((stat) =>
+                      formatSize(
+                        stat?.cpu_stats?.cpu_usage?.total_usage,
+                        "num",
+                      ),
                     ),
+                    borderWidth: 2,
+                    borderColor: "#3e2c41",
+                    pointRadius: 3,
+                    pointBackgroundColor: "#3e2c41",
+                    tension: 0.5,
+                    fill: true,
+                    backgroundColor: (context: any) => {
+                      const { chart } = context;
+                      const { ctx, chartArea } = chart;
+
+                      if (!chartArea) {
+                        return;
+                      }
+
+                      const { top, bottom } = chartArea;
+
+                      // Create a linear gradient
+                      const gradient = ctx.createLinearGradient(
+                        0,
+                        top,
+                        0,
+                        bottom,
+                      );
+                      gradient.addColorStop(0, "rgba(0, 0, 0, 0.1)");
+                      gradient.addColorStop(1, "rgba(62, 44, 65, 0)");
+
+                      return gradient;
+                    },
                   },
                   {
                     label: "Memory",
-                    data: stats.map((stat) => stat?.memory_stats?.usage),
+                    data: stats.map((stat) =>
+                      formatSize(stat?.memory_stats?.usage, "num"),
+                    ),
+                    borderWidth: 2,
+                    borderColor: "#ff4c30",
+                    pointRadius: 3,
+                    pointBackgroundColor: "#ff4c30",
+                    tension: 0.5,
+                    fill: true,
+                    backgroundColor: (context: any) => {
+                      const { chart } = context;
+                      const { ctx, chartArea } = chart;
+
+                      if (!chartArea) {
+                        return;
+                      }
+
+                      const { top, bottom } = chartArea;
+
+                      // Create a linear gradient
+                      const gradient = ctx.createLinearGradient(
+                        0,
+                        top,
+                        0,
+                        bottom,
+                      );
+                      gradient.addColorStop(0, "rgba(255, 76, 48, 1)");
+                      gradient.addColorStop(1, "rgba(255, 76, 48, 0)");
+
+                      return gradient;
+                    },
                   },
                   {
                     label: "Network",
-                    data: stats.map(
-                      (stat) =>
+                    data: stats.map((stat) =>
+                      formatSize(
                         stat?.networks?.eth0?.rx_bytes +
-                        stat?.networks?.eth0?.tx_bytes,
+                          stat?.networks?.eth0?.tx_bytes,
+                        "num",
+                      ),
                     ),
+                    borderWidth: 2,
+                    borderColor: "#825e5c",
+                    pointRadius: 3,
+                    pointBackgroundColor: "#825e5c",
+                    tension: 0.5,
+                    fill: true,
+                    backgroundColor: (context: any) => {
+                      const { chart } = context;
+                      const { ctx, chartArea } = chart;
+
+                      if (!chartArea) {
+                        return;
+                      }
+
+                      const { top, bottom } = chartArea;
+
+                      // Create a linear gradient
+                      const gradient = ctx.createLinearGradient(
+                        0,
+                        top,
+                        0,
+                        bottom,
+                      );
+                      gradient.addColorStop(0, "rgba(130, 94, 92, 1)");
+                      gradient.addColorStop(1, "rgba(130, 94, 92, 0)");
+
+                      return gradient;
+                    },
                   },
                 ]}
               />
             </CardBody>
           </Card>
         </Col>
-        <Col>
-          <Card>
-            <CardBody>
-              <Table hover>
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>CPU</th>
-                    <th>Memory</th>
-                    <th>Network</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.map((stat) => (
-                    <tr key={stat.updatedAt}>
-                      <td>{formatTimestamp(stat?.updatedAt)}</td>
-                      <td>
-                        {formatSize(stat?.cpu_stats?.cpu_usage?.total_usage)}
-                      </td>
-                      <td>{formatSize(stat?.memory_stats?.usage)}</td>
-                      <td>
-                        {formatSize(
-                          stat?.networks?.eth0?.rx_bytes +
-                            stat?.networks?.eth0?.tx_bytes,
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </CardBody>
-          </Card>
+        <Col md={3}>
+          <DockerContainerDetails containerId={containerId} />
         </Col>
       </Row>
     </Container>

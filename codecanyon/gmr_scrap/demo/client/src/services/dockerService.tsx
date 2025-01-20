@@ -8,21 +8,25 @@ import {
 } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
-import { DockerConfig } from "../types/dockerConfig";
+import { IDockerConfig } from "../types/dockerConfig";
+import { IDockerContainer } from "../types/dockerContainer";
 
-export const allContainers = () => {
-  const containers$ = new BehaviorSubject([] as any);
+/**
+ * Fetches all docker containers
+ * @returns Observable<IDockerContainer[]>
+ */
+export const dockerContainers = () => {
+  const containers$ = new BehaviorSubject<IDockerContainer[]>([]);
   const collectionRef = collection(firestore, "machines");
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, orderBy("updatedAt", "desc")),
+    query(collectionRef, orderBy("time", "desc")),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("containersData", containersData);
-      containers$.next(containersData);
+      containers$.next(containersData as IDockerContainer[]);
     },
     (error) => {
       console.error("Error fetching containers data:", error);
@@ -30,8 +34,42 @@ export const allContainers = () => {
     },
   );
 
-  return new Observable<any>((subscriber) => {
+  return new Observable<IDockerContainer[]>((subscriber) => {
     const subscription = containers$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ */
+export const dockerContainer = (containerId: string) => {
+  const container$ = new BehaviorSubject({} as IDockerContainer);
+  const docRef = doc(firestore, "machines", containerId);
+
+  const unsubscribe = onSnapshot(
+    docRef,
+    (doc) => {
+      const containerData = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      container$.next(containerData as IDockerContainer);
+    },
+    (error) => {
+      console.error("Error fetching container data:", error);
+      container$.error(error);
+    },
+  );
+
+  return new Observable<IDockerContainer>((subscriber) => {
+    const subscription = container$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
@@ -71,7 +109,7 @@ export const dockerContainerStats = (containerId: string) => {
 };
 
 export const dockerInfo = () => {
-  const info$ = new BehaviorSubject({} as DockerConfig);
+  const info$ = new BehaviorSubject({} as IDockerConfig);
   const docCollection = collection(firestore, "docker");
 
   const unsubscribe = onSnapshot(
@@ -85,7 +123,7 @@ export const dockerInfo = () => {
           ...JSON.parse(data.info),
         };
       });
-      info$.next(infoData[0] as DockerConfig);
+      info$.next(infoData[0] as IDockerConfig);
     },
     (error) => {
       console.error("Error fetching info data:", error);
@@ -93,7 +131,7 @@ export const dockerInfo = () => {
     },
   );
 
-  return new Observable<DockerConfig>((subscriber) => {
+  return new Observable<IDockerConfig>((subscriber) => {
     const subscription = info$.subscribe(subscriber);
 
     return () => {

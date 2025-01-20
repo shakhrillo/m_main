@@ -18,9 +18,9 @@ import {
   Stack,
 } from "react-bootstrap";
 import { formatSize } from "../utils/formatSize";
-import { DockerConfig } from "../types/dockerConfig";
+import { IDockerConfig } from "../types/dockerConfig";
 
-export const DockerDetails = ({ info }: { info: DockerConfig }) => {
+export const DockerDetails = ({ info }: { info: IDockerConfig }) => {
   return (
     <Card>
       <CardHeader className="d-flex align-items-center gap-3">

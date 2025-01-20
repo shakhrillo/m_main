@@ -1,4 +1,4 @@
-export interface DockerConfig {
+export interface IDockerConfig {
   Architecture: string;
   BridgeNfIp6tables: boolean;
   BridgeNfIptables: boolean;

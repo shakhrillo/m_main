@@ -31,9 +31,6 @@ interface LineChartProps {
   datasets: any[];
 }
 
-// let dashboard = document.querySelector("#dashboard");
-// alert(dashboard?.clientWidth);
-
 export const LineChart = ({ labels, datasets }: LineChartProps) => {
   const [chartWidth, setChartWidth] = useState(0);
   const chartHeight = 300;

@@ -6,6 +6,10 @@ import { format } from "date-fns";
  * @returns The formatted timestamp.
  */
 export const formatDate = (timestamp: number): string => {
+  if (!timestamp) {
+    return "";
+  }
+
   const date = new Date(timestamp * 1000);
   return `${format(date, "MMM dd, yyyy")} ${format(date, "HH:mm:ss a")}`;
 };
