@@ -4,6 +4,7 @@ import { createElement, useEffect, useState } from "react"; // React imports for
 import {
   Card,
   CardBody,
+  CardHeader,
   Col,
   Container,
   Dropdown,
@@ -72,45 +73,53 @@ export const DockerContainer = () => {
     <Container>
       <Row className="g-3">
         <Col md={9}>
-          <Card id="dashboard">
-            <CardBody>
-              <LineChart
-                labels={stats.map((stat) =>
-                  formatStringDate(stat?.read, "HH:mm:ss"),
-                )}
-                datasets={[
-                  {
-                    label: "CPU",
-                    data: stats.map((stat) =>
-                      formatSize(
-                        stat?.cpu_stats?.cpu_usage?.total_usage,
-                        "num",
-                      ),
-                    ),
-                    color: "#3e2c41",
-                  },
-                  {
-                    label: "Memory",
-                    data: stats.map((stat) =>
-                      formatSize(stat?.memory_stats?.usage, "num"),
-                    ),
-                    color: "#ff4c30",
-                  },
-                  {
-                    label: "Network",
-                    data: stats.map((stat) =>
-                      formatSize(
-                        stat?.networks?.eth0?.rx_bytes +
-                          stat?.networks?.eth0?.tx_bytes,
-                        "num",
-                      ),
-                    ),
-                    color: "#825e5c",
-                  },
-                ]}
-              />
-            </CardBody>
-          </Card>
+          <Row className="g-3 row-cols-1">
+            {[
+              {
+                label: "CPU",
+                data: stats.map((stat) =>
+                  formatSize(stat?.cpu_stats?.cpu_usage?.total_usage, "num"),
+                ),
+                color: "#3e2c41",
+              },
+              {
+                label: "Memory",
+                data: stats.map((stat) =>
+                  formatSize(stat?.memory_stats?.usage, "num"),
+                ),
+                color: "#ff4c30",
+              },
+              {
+                label: "Network",
+                data: stats.map((stat) =>
+                  formatSize(
+                    stat?.networks?.eth0?.rx_bytes +
+                      stat?.networks?.eth0?.tx_bytes,
+                    "num",
+                  ),
+                ),
+                color: "#825e5c",
+              },
+            ].map((stat) => (
+              <Col key={stat.label}>
+                <Card>
+                  <CardHeader>
+                    <span className="fw-bold fs-5 text-decoration-none">
+                      {stat.label}
+                    </span>
+                  </CardHeader>
+                  <CardBody>
+                    <LineChart
+                      labels={stats.map((stat) =>
+                        formatStringDate(stat?.read, "HH:mm:ss"),
+                      )}
+                      datasets={[stat]}
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </Col>
         <Col md={3}>
           <DockerContainerDetails containerId={containerId} />

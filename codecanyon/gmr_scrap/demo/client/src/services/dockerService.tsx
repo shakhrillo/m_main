@@ -10,17 +10,24 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 import { IDockerConfig } from "../types/dockerConfig";
 import { IDockerContainer } from "../types/dockerContainer";
+import { IDockerQuery } from "../types/dockerQuery";
 
 /**
  * Fetches all docker containers
  * @returns Observable<IDockerContainer[]>
  */
-export const dockerContainers = () => {
+export const dockerContainers = (q: IDockerQuery = {}) => {
   const containers$ = new BehaviorSubject<IDockerContainer[]>([]);
-  const collectionRef = collection(firestore, "machines");
+  const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, orderBy("time", "desc")),
+    query(
+      collectionRef,
+      orderBy("createdAt", "desc"),
+      ...(q.type ? [where("type", "==", q.type)] : []),
+      ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
+      ...(q.filter ? [where("status", "==", q.filter)] : []),
+    ),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({
         id: doc.id,

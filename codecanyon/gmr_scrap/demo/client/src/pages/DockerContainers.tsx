@@ -42,6 +42,7 @@ export const DockerContainers = () => {
 
   useEffect(() => {
     const subscription = dockerContainers().subscribe((data) => {
+      console.log("++++");
       console.log(data);
       setContainers(data);
     });
@@ -126,16 +127,18 @@ export const DockerContainers = () => {
                           style={{ maxWidth: "150px" }}
                           className="d-inline-block text-truncate"
                         >
-                          <NavLink to={`/containers/${container.id}`}>
-                            {container.Actor.Attributes.name}
+                          <NavLink to={`/containers/${container?.machine?.id}`}>
+                            {container?.title}
                           </NavLink>
                         </span>
                       </td>
-                      <td>{container.Actor.Attributes.execDuration}s</td>
-                      <td>{container.Action}</td>
-                      <td>{container.type}</td>
-                      <td>{container.from}</td>
-                      <td>{formatDate(container.time)}</td>
+                      <td>
+                        {container?.machine?.Actor?.Attributes?.execDuration}s
+                      </td>
+                      <td>{container?.machine?.Action}</td>
+                      <td>{container?.machine?.type}</td>
+                      <td>{container?.machine?.from}</td>
+                      <td>{formatDate(container?.machine?.time)}</td>
                     </tr>
                   ))}
                 </tbody>

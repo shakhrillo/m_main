@@ -1,23 +1,22 @@
-import { Timestamp } from "firebase/firestore";
+import { GeoPoint, Timestamp } from "firebase/firestore";
+import { IDockerMachine } from "./dockerMachine";
 
 export interface IDockerContainer {
-  Action: "create" | "start" | "stop" | "destroy";
-  Actor: {
-    Attributes: {
-      execDuration: string;
-      exitCode: string;
-      image: string;
-      name: string;
-    };
-  };
-  ID: string;
-  Type: string;
-  from: string;
+  address: string;
+  createdAt: Timestamp;
+  extendedUrl: string;
   id: string;
-  scope: string;
+  keywords: string[];
+  location: GeoPoint;
+  machine: IDockerMachine;
+  rating: number;
+  reviewId: string;
+  reviews: number;
+  screenshot: string;
   status: string;
-  time: number;
-  timeNano: number;
-  type: string;
+  title: string;
+  type: "info" | "comments";
   updatedAt: Timestamp;
+  url: string;
+  userId: string;
 }

@@ -28,7 +28,7 @@ export const DockerContainerDetails = ({
   containerId: string;
 }) => {
   const navigate = useNavigate();
-  const [container, setContainer] = useState<any>();
+  const [container, setContainer] = useState<IDockerContainer>();
 
   useEffect(() => {
     const subscription = dockerContainer(containerId)
@@ -52,7 +52,11 @@ export const DockerContainerDetails = ({
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              navigate(`/reviews/${container.reviewId}`);
+              if (container.type === "info") {
+                navigate(`/scrap/${container.reviewId}`);
+              } else if (container.type === "comments") {
+                navigate(`/reviews/${container.reviewId}`);
+              }
             }}
             className="fw-bold fs-5 text-decoration-none"
           >
