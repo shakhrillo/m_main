@@ -70,21 +70,7 @@ export const PaymentsInfo = () => {
                       <IconReceipt size={24} />
                       <CardTitle className="m-0">Receipts</CardTitle>
                     </Stack>
-                    {/* <div
-                      className={`rounded-circle ${
-                        payment.status === "succeeded"
-                          ? "bg-success-subtle text-success"
-                          : "bg-danger-subtle text-danger"
-                      }`}
-                    >
-                      {payment.status === "succeeded" ? (
-                        <IconCheck size={48} />
-                      ) : (
-                        <IconX size={48} />
-                      )}
-                    </div> */}
                   </Stack>
-                  {/* <hr /> */}
                   <Stack className="mt-3">
                     {payment.status === "succeeded" ? (
                       <p>
@@ -143,41 +129,6 @@ export const PaymentsInfo = () => {
                       <span>N/A</span>
                     )}
                   </Stack>
-                  {/* <Table
-                    border={0}
-                    bordered={false}
-                    striped={false}
-                    borderless={false}
-                    hover
-                    className="mt-4"
-                  > */}
-                  {/* <thead>
-                      <tr>
-                        <th scope="col">Key</th>
-                        <th scope="col">Value</th>
-                      </tr>
-                    </thead> */}
-                  {/* <tbody>
-                      {Object.entries(payment).map(([key, value]) => (
-                        <tr key={key}>
-                          <td>{key}</td>
-                          <td style={{ maxWidth: "400px" }}>
-                            {Array.isArray(value) ? (
-                              <ul>
-                                {value.map((item, index) => (
-                                  <li key={index}>{item}</li>
-                                ))}
-                              </ul>
-                            ) : typeof value === "object" && value !== null ? (
-                              <pre>{JSON.stringify(value, null, 2)}</pre>
-                            ) : (
-                              value?.toString() || "N/A"
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table> */}
                 </CardBody>
               </Card>
             </Col>
@@ -189,13 +140,20 @@ export const PaymentsInfo = () => {
                     <Stack className="my-auto">
                       <CardSubtitle>Total</CardSubtitle>
                       <CardTitle className="text-capitalize text-primary m-0">
-                        2 USD
+                        {formatAmount(payment.amount)}{" "}
+                        {String(payment.currency).toUpperCase()}
                       </CardTitle>
                     </Stack>
                   </Stack>
-                  <Badge pill bg="success">
-                    Success
-                  </Badge>
+                  {payment.status === "succeeded" ? (
+                    <Badge pill bg="success">
+                      Success
+                    </Badge>
+                  ) : (
+                    <Badge pill bg="danger">
+                      Canceled
+                    </Badge>
+                  )}
                 </CardHeader>
                 <CardBody>
                   <Stack>
@@ -207,7 +165,7 @@ export const PaymentsInfo = () => {
                           </div>
                           <Stack direction={"vertical"}>
                             <strong className="text-muted">Date</strong>
-                            <span>Jan 16, 2025 11:25:03 AM</span>
+                            <span>{formatDate(payment.created)}</span>
                           </Stack>
                         </Stack>
                       </Col>
