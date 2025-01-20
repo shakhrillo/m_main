@@ -51,16 +51,19 @@ export const dockerContainers = () => {
  */
 export const dockerContainer = (containerId: string) => {
   const container$ = new BehaviorSubject({} as IDockerContainer);
-  const docRef = doc(firestore, "machines", containerId);
+  const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
-    docRef,
+    query(collectionRef, where("machine.id", "==", containerId)),
     (doc) => {
-      const containerData = {
+      const results = doc.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      };
-      container$.next(containerData as IDockerContainer);
+      }));
+
+      if (results.length > 0) {
+        container$.next(results[0] as IDockerContainer);
+      }
     },
     (error) => {
       console.error("Error fetching container data:", error);

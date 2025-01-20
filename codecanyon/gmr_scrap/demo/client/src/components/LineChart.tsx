@@ -11,8 +11,9 @@ import {
   Tooltip,
 } from "chart.js";
 import "leaflet/dist/leaflet.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
+import { hexToRgba } from "../utils/hexToRGB";
 
 ChartJS.register(
   CategoryScale,
@@ -34,63 +35,87 @@ interface LineChartProps {
 export const LineChart = ({ labels, datasets }: LineChartProps) => {
   const [chartWidth, setChartWidth] = useState(0);
   const chartHeight = 300;
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const setWidth = () => {
-      const dashboard = document.querySelector("#dashboard");
-      console.log("dashboard", dashboard?.clientWidth);
-      setChartWidth((dashboard?.clientWidth || 0) - 40);
+      if (containerRef.current) {
+        setChartWidth(containerRef.current.clientWidth - 40);
+      }
     };
 
     setWidth();
+
+    window.addEventListener("resize", setWidth);
+    return () => {
+      window.removeEventListener("resize", setWidth);
+    };
   }, []);
 
   return (
-    chartWidth > 0 && (
-      <Line
-        height={chartHeight}
-        width={chartWidth}
-        data={{
-          labels,
-          datasets,
-        }}
-        options={{
-          // responsive: false,
-          // maintainAspectRatio: false,
-          scales: {
-            x: {
-              grid: {
-                color: "#fff",
+    <div ref={containerRef} style={{ width: "100%" }}>
+      {chartWidth > 0 && (
+        <Line
+          height={chartHeight}
+          width={chartWidth}
+          data={{
+            labels,
+            datasets: datasets.map((dataset) => ({
+              ...dataset,
+              borderColor: hexToRgba(dataset["color"]),
+              pointBackgroundColor: hexToRgba(dataset["color"]),
+              tension: 0.5,
+              fill: true,
+              backgroundColor: (context: any) => {
+                const { chart } = context;
+                const { ctx, chartArea } = chart;
+
+                if (!chartArea) {
+                  return;
+                }
+
+                const { top, bottom } = chartArea;
+
+                // Create a linear gradient
+                const gradient = ctx.createLinearGradient(0, top, 0, bottom);
+                gradient.addColorStop(0, hexToRgba(dataset["color"], 1));
+                gradient.addColorStop(1, hexToRgba(dataset["color"], 0));
+
+                return gradient;
               },
-              // display: false,
-              // backgroundColor: "#eee",
-              border: {
-                color: "transparent",
+            })),
+          }}
+          options={{
+            scales: {
+              x: {
+                grid: {
+                  color: "#fff",
+                },
+                border: {
+                  color: "transparent",
+                },
+              },
+              y: {
+                grid: {
+                  color: "#f5f5f5",
+                },
+                border: {
+                  color: "transparent",
+                },
               },
             },
-            y: {
-              // display: false,
-              // backgroundColor: "#eee",
-              grid: {
-                // tickBorderDash: [15],
-                color: "#f5f5f5",
-              },
-              border: {
-                color: "transparent",
+            plugins: {
+              legend: {
+                display: false,
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                },
               },
             },
-          },
-          plugins: {
-            legend: {
-              display: false,
-              position: "bottom",
-              labels: {
-                usePointStyle: true,
-              },
-            },
-          },
-        }}
-      />
-    )
+          }}
+        />
+      )}
+    </div>
   );
 };

@@ -87,68 +87,14 @@ export const DockerContainer = () => {
                         "num",
                       ),
                     ),
-                    borderWidth: 2,
-                    borderColor: "#3e2c41",
-                    pointRadius: 3,
-                    pointBackgroundColor: "#3e2c41",
-                    tension: 0.5,
-                    fill: true,
-                    backgroundColor: (context: any) => {
-                      const { chart } = context;
-                      const { ctx, chartArea } = chart;
-
-                      if (!chartArea) {
-                        return;
-                      }
-
-                      const { top, bottom } = chartArea;
-
-                      // Create a linear gradient
-                      const gradient = ctx.createLinearGradient(
-                        0,
-                        top,
-                        0,
-                        bottom,
-                      );
-                      gradient.addColorStop(0, "rgba(0, 0, 0, 0.1)");
-                      gradient.addColorStop(1, "rgba(62, 44, 65, 0)");
-
-                      return gradient;
-                    },
+                    color: "#3e2c41",
                   },
                   {
                     label: "Memory",
                     data: stats.map((stat) =>
                       formatSize(stat?.memory_stats?.usage, "num"),
                     ),
-                    borderWidth: 2,
-                    borderColor: "#ff4c30",
-                    pointRadius: 3,
-                    pointBackgroundColor: "#ff4c30",
-                    tension: 0.5,
-                    fill: true,
-                    backgroundColor: (context: any) => {
-                      const { chart } = context;
-                      const { ctx, chartArea } = chart;
-
-                      if (!chartArea) {
-                        return;
-                      }
-
-                      const { top, bottom } = chartArea;
-
-                      // Create a linear gradient
-                      const gradient = ctx.createLinearGradient(
-                        0,
-                        top,
-                        0,
-                        bottom,
-                      );
-                      gradient.addColorStop(0, "rgba(255, 76, 48, 1)");
-                      gradient.addColorStop(1, "rgba(255, 76, 48, 0)");
-
-                      return gradient;
-                    },
+                    color: "#ff4c30",
                   },
                   {
                     label: "Network",
@@ -159,34 +105,7 @@ export const DockerContainer = () => {
                         "num",
                       ),
                     ),
-                    borderWidth: 2,
-                    borderColor: "#825e5c",
-                    pointRadius: 3,
-                    pointBackgroundColor: "#825e5c",
-                    tension: 0.5,
-                    fill: true,
-                    backgroundColor: (context: any) => {
-                      const { chart } = context;
-                      const { ctx, chartArea } = chart;
-
-                      if (!chartArea) {
-                        return;
-                      }
-
-                      const { top, bottom } = chartArea;
-
-                      // Create a linear gradient
-                      const gradient = ctx.createLinearGradient(
-                        0,
-                        top,
-                        0,
-                        bottom,
-                      );
-                      gradient.addColorStop(0, "rgba(130, 94, 92, 1)");
-                      gradient.addColorStop(1, "rgba(130, 94, 92, 0)");
-
-                      return gradient;
-                    },
+                    color: "#825e5c",
                   },
                 ]}
               />

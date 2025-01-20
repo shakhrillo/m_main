@@ -22,6 +22,7 @@ const {
   updateDockerImages,
   getDockerInfo,
 } = require("./src/services/mainService");
+const processMachineWritten = require("./src/machines/processMachineWritten");
 const jsonPath = path.join(__dirname, "assets/fake-data.json");
 
 admin.initializeApp();
@@ -46,6 +47,12 @@ exports.processReviewCreated = onDocumentCreated(
 exports.processContainerWritten = onDocumentWritten(
   "containers/{containerId}",
   processContainerWritten
+);
+
+// collection(firestore, "machines", containerId, "stats");
+exports.processMachineWritten = onDocumentWritten(
+  "machines/{machineId}",
+  processMachineWritten
 );
 
 (async () => {
