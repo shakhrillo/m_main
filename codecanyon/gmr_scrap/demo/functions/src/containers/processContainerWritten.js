@@ -2,6 +2,7 @@ require("dotenv").config();
 const admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 const capitalizeText = require("../utils/capitalizeText");
+const updateStatistics = require("../services/statisticsService");
 
 /**
  * Once a container is written, this function will be triggered.
@@ -11,6 +12,7 @@ const capitalizeText = require("../utils/capitalizeText");
  * @returns {Promise<void>}
  */
 async function processContainerWritten(event) {
+  const ref = event.data.after.ref;
   const data = event.data.after.data();
 
   const db = admin.firestore();
@@ -48,28 +50,37 @@ async function processContainerWritten(event) {
     /*-------------------*/
     /* Update statistics */
     /*-------------------*/
-    ["totalReviews", "totalImages", "totalVideos", "totalOwnerReviews"].forEach(
-      (type) => {
-        const statisticsRef = db.doc(`statistics/${type}`);
-        batch.update(statisticsRef, {
-          total: FieldValue.increment(data[type] || 0),
-        });
-      }
-    );
+    [
+      `totalValidate${capitalizeText(data.type)}`,
+      "totalReviews",
+      "totalImages",
+      "totalVideos",
+      "totalOwnerReviews",
+    ].forEach((type) => {
+      // const statisticsRef = db.doc(`statistics/${type}`);
+      // batch.update(statisticsRef, {
+      //   total: FieldValue.increment(data[type] || 0),
+      // });
+      updateStatistics(db, batch, type, data);
+    });
 
-    batch.update(
-      db.doc(`statistics/totalValidate${capitalizeText(data.type)}`),
-      {
-        total: FieldValue.increment(1),
-      }
-    );
+    // batch.update(
+    //   db.doc(`statistics/totalValidate${capitalizeText(data.type)}`),
+    //   {
+    //     total: FieldValue.increment(1),
+    //   }
+    // );
   }
 
   /*-------------------*/
   /* Update container  */
   /*-------------------*/
-  const docRef = db.doc(`users/${data.userId}/reviews/${data.reviewId}`);
-  batch.update(docRef, {
+  // const docRef = db.doc(`users/${data.userId}/reviews/${data.reviewId}`);
+  // batch.update(docRef, {
+  //   ...data,
+  //   updatedAt: Timestamp.now(),
+  // });
+  batch.update(ref, {
     ...data,
     updatedAt: Timestamp.now(),
   });

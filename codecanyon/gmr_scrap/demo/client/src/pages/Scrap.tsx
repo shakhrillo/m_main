@@ -40,6 +40,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
+import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 
 const EXTRACT_OPTIONS = [
   {
@@ -121,6 +122,9 @@ export const Scrap = () => {
   const [documentId, setDocumentId] = useState("");
 
   useEffect(() => {
+    console.log("-+-".repeat(20));
+    console.log(scrapId);
+    console.log("-+-".repeat(20));
     if (!scrapId) return;
   }, [scrapId]);
 
@@ -154,23 +158,23 @@ export const Scrap = () => {
     };
   }, [scrapId, uid]);
 
-  /**
-   * Validation URL
-   * @param e Form event
-   */
-  async function handleUrlValidation(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const target = e.currentTarget as HTMLFormElement;
-    target.classList.add("was-validated");
-    if (!target.checkValidity()) return;
+  // /**
+  //  * Validation URL
+  //  * @param e Form event
+  //  */
+  // async function handleUrlValidation(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault();
+  //   const target = e.currentTarget as HTMLFormElement;
+  //   target.classList.add("was-validated");
+  //   if (!target.checkValidity()) return;
 
-    try {
-      const id = await validateUrl(url, uid);
-      navigate(`/scrap/${id}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //   try {
+  //     const id = await validateUrl(url, uid);
+  //     navigate(`/scrap/${id}`);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   /**
    * Clear results and reset the form
@@ -231,7 +235,8 @@ export const Scrap = () => {
         <Col md={9}>
           <Stack direction={"vertical"} gap={3}>
             {/*---Validate Place Info---*/}
-            <Card>
+            <ScrapValidateURL />
+            {/* <Card>
               <CardBody>
                 <CardTitle>Validate Place Info</CardTitle>
                 <Form
@@ -286,7 +291,7 @@ export const Scrap = () => {
                   </Stack>
                 </Form>
               </CardBody>
-            </Card>
+            </Card> */}
             {/*---End: Validate Place Info---*/}
 
             {/*---Extract Options---*/}
@@ -599,7 +604,7 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col md={3}>
-          <PlaceInfo reviewId={scrapId} className="mb-3" />
+          <PlaceInfo containerId={scrapId} className="mb-3" />
           {/*---Expected Points---*/}
           {placeInfo.rating && (
             <Card>

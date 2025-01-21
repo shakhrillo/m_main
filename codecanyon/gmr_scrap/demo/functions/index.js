@@ -14,7 +14,7 @@ const { Timestamp, GeoPoint } = require("firebase-admin/firestore");
 const processBuyCoins = require("./src/payments/processBuyCoins");
 
 const processUserCreated = require("./src/user/processUserCreated");
-const processReviewCreated = require("./src/containers/processReviewCreated");
+const processContainerCreated = require("./src/containers/processContainerCreated");
 const processContainerWritten = require("./src/containers/processContainerWritten");
 const userTopUp = require("./src/user/userTopUp");
 
@@ -39,9 +39,9 @@ exports.userTopUp = onDocumentCreated(
   userTopUp
 );
 
-exports.processReviewCreated = onDocumentCreated(
-  "users/{userId}/reviews/{reviewId}",
-  processReviewCreated
+exports.processContainerCreated = onDocumentCreated(
+  "containers/{containerId}",
+  processContainerCreated
 );
 
 exports.processContainerWritten = onDocumentWritten(

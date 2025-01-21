@@ -12,12 +12,15 @@ async function processMachineWritten(event) {
     const { machineId } = event.params;
 
     const db = admin.firestore();
-    const tag = data.Actor.Attributes.name;
-    const container = db.collection("containers").doc(tag);
+    const container = db.collection("containers").doc(machineId);
 
-    await container.update({
-      machine: data,
-    });
+    await container.set(
+      {
+        machine: data,
+        machineId,
+      },
+      { merge: true }
+    );
   } catch (error) {
     console.error("Error processing machine written", error);
   }

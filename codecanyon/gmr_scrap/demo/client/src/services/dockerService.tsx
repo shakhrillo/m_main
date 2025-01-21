@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   doc,
   onSnapshot,
@@ -12,6 +13,23 @@ import { IDockerConfig } from "../types/dockerConfig";
 import { IDockerContainer } from "../types/dockerContainer";
 import { IDockerQuery } from "../types/dockerQuery";
 import { IDockerStats } from "../types/dockerStats";
+
+/**
+ * Create a new docker container
+ * @param data
+ */
+export const createDockerContainer = (data: any) => {
+  return new Promise<any>((resolve, reject) => {
+    addDoc(collection(firestore, "containers"), data)
+      .then((docRef) => {
+        resolve({
+          id: docRef.id,
+          ...data,
+        });
+      })
+      .catch((error) => reject(error));
+  });
+};
 
 /**
  * Fetches all docker containers
@@ -29,7 +47,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(q.status ? [where("status", "==", q.status)] : []),
-      ...(q.reviewId ? [where("reviewId", "==", q.reviewId)] : []),
+      ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({

@@ -1,9 +1,5 @@
 const Docker = require("dockerode");
-const {
-  updateMachine,
-  updateDockerInfo,
-  addMachineStats,
-} = require("./services/firebaseService");
+const { updateMachine } = require("./services/firebaseService");
 const docker = new Docker({
   protocol: "http",
   host: process.env.DOCKER_HOST || "host.docker.internal",
@@ -15,93 +11,23 @@ const docker = new Docker({
  * @returns {Promise<void>}
  */
 async function watchDockerEvents() {
-  const activeStreams = new Map();
   if (!docker) {
     console.error("Docker not initialized");
     return;
   }
-
   const eventsStream = await docker.getEvents();
-
   eventsStream.setEncoding("utf8");
   eventsStream.on("data", (data) => {
-    if (!data || typeof data !== "string") {
-      return;
-    }
-
+    if (!data || typeof data !== "string") return;
     const str = data.toString() || "";
-    let status = str.match(/"status":"([^"]+)"/) || [];
-    status = status ? status[1] : "";
+    const lines = str.trim().split("\n");
+    const parsedData = lines.map((line) => JSON.parse(line || "{}"));
 
-    const overviewPrefix = process.env.MACHINES_OVERVIEW_PREFIX || "info";
-    const reviewsPrefix = process.env.MACHINES_REVIEWS_PREFIX || "comments";
-    const isInfo = new RegExp(`${overviewPrefix}_`).test(str);
-    const isComments = new RegExp(`${reviewsPrefix}_`).test(str);
-    const type = isInfo ? "info" : isComments ? "comments" : "";
+    for (const data of parsedData) {
+      const name = data?.Actor?.Attributes?.name;
+      if (!name) return;
 
-    if (type) {
-      try {
-        const lines = str.trim().split("\n");
-        const parsedData = lines.map((line) => JSON.parse(line || "{}"));
-        for (const data of parsedData) {
-          const name = data.Actor.Attributes.name;
-          updateMachine(data.id, { ...data, type });
-
-          if (status !== "destroy") {
-            if (activeStreams.has(name)) {
-              const stream = activeStreams.get(name);
-              stream.removeAllListeners(); // Unsubscribe from the stream
-              activeStreams.delete(name); // Remove from active streams
-              console.log(`Unsubscribed from container: ${name}`);
-            }
-
-            const container = docker.getContainer(name);
-            if (status === "die") {
-              container.remove();
-            } else if (container) {
-              container.stats((err, stream) => {
-                if (err) {
-                  console.error(err);
-                  return;
-                }
-                stream.setEncoding("utf8");
-                stream.on("data", (data) => {
-                  const stats = JSON.parse(data);
-                  addMachineStats(stats.id, stats);
-                });
-
-                activeStreams.set(name, stream); // Keep track of the stream
-              });
-            }
-          } else {
-            console.log(`Container: ${name} is being destroyed`);
-            console.log("Active Streams Count:", activeStreams.size);
-          }
-        }
-
-        if (status === "destroy") {
-          // const name = data.Actor.Attributes.name;
-          // if (name) {
-          //   updateMachine(name, { ...data, type });
-          // } else {
-          //   console.log("No name found in data:", data);
-          // }
-          // docker.info(async (err, info) => {
-          //   if (err) {
-          //     console.error("Error fetching Docker info:", err);
-          //   } else {
-          //     console.log("Docker Engine Info:");
-          //     try {
-          //       updateDockerInfo(info);
-          //     } catch (error) {
-          //       console.error("Error saving Docker info:", error);
-          //     }
-          //   }
-          // });
-        }
-      } catch (error) {
-        console.log("Error saving machine data:", error);
-      }
+      updateMachine(name, data);
     }
   });
 }

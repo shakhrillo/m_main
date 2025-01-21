@@ -93,19 +93,19 @@ const LocationDetails = ({ container }: { container: IDockerContainer }) => (
 );
 
 export const PlaceInfo = ({
-  reviewId,
+  containerId,
   ...rest
 }: {
-  reviewId: string;
+  containerId: string;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
   );
 
   useEffect(() => {
-    if (!reviewId) return;
+    if (!containerId) return;
 
-    const subscription = dockerContainers({ reviewId })
+    const subscription = dockerContainers({ containerId })
       .pipe(
         map((data) => (Array.isArray(data) ? data[0] : null)),
         filter((data) => !!data),
@@ -117,7 +117,7 @@ export const PlaceInfo = ({
     return () => {
       subscription.unsubscribe();
     };
-  }, [reviewId]);
+  }, [containerId]);
 
   return (
     <Card {...rest}>
