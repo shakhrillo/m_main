@@ -154,22 +154,6 @@ export const Scrap = () => {
     };
   }, [scrapId, uid]);
 
-  useEffect(() => {
-    if (!documentId) return;
-
-    const unsubscribe = validateUrlData(documentId, uid).subscribe((data) => {
-      setPlaceInfo(data);
-      if (data?.reviews > 0) {
-        setIsValidated(true);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      unsubscribe.unsubscribe();
-    };
-  }, [documentId]);
-
   /**
    * Validation URL
    * @param e Form event
@@ -177,15 +161,12 @@ export const Scrap = () => {
   async function handleUrlValidation(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const target = e.currentTarget as HTMLFormElement;
-
     target.classList.add("was-validated");
     if (!target.checkValidity()) return;
 
-    setLoading(true);
-
     try {
       const id = await validateUrl(url, uid);
-      setDocumentId(id);
+      navigate(`/scrap/${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -618,7 +599,7 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col md={3}>
-          <PlaceInfo info={placeInfo} className="mb-3" />
+          <PlaceInfo reviewId={scrapId} className="mb-3" />
           {/*---Expected Points---*/}
           {placeInfo.rating && (
             <Card>
