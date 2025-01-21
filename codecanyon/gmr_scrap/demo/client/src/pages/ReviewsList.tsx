@@ -29,6 +29,7 @@ import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { Statistics } from "../components/Statistics";
+import { dockerContainers } from "../services/dockerService";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -42,7 +43,6 @@ export const ReviewsList = () => {
 
   const [info, setInfo] = useState<any>({});
   const [reviews, setReviews] = useState<IReview[]>([]);
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
@@ -66,19 +66,18 @@ export const ReviewsList = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = validatedUrls(uid, {
-      type: "comments",
+    const reviewSubscription = dockerContainers({
       search,
-      filter,
+      userId: uid,
+      type: "comments",
     }).subscribe((data) => {
       setReviews(data);
-      setLoading(false);
     });
 
     return () => {
       reviewSubscription.unsubscribe();
     };
-  }, [search, uid, filter]);
+  }, [search, uid]);
 
   useEffect(() => {
     const statsSubscription = userData(uid).subscribe((data) => {
@@ -165,7 +164,7 @@ export const ReviewsList = () => {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/reviews/${review.id}`);
+                            navigate(`/reviews/${review.reviewId}`);
                           }}
                         >
                           {review.title}

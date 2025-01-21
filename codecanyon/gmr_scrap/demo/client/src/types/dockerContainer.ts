@@ -19,4 +19,18 @@ export interface IDockerContainer {
   updatedAt: Timestamp;
   url: string;
   userId: string;
+
+  limit?: number;
+  sortBy?: string;
+  extractImageUrls?: boolean;
+  extractVideoUrls?: boolean;
+  extractOwnerResponse?: boolean;
+
+  totalReviews?: number;
+  totalImages?: number;
+  totalVideos?: number;
+  totalOwnerReviews?: number;
+
+  csvUrl?: string;
+  jsonUrl?: string;
 }

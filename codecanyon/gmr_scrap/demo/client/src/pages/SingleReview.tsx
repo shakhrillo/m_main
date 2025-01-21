@@ -42,8 +42,8 @@ const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {
   const { uid } = useOutletContext<User>();
-  const { place } = useParams() as { place: string };
-  const [info, setPlaceInfo] = useState<any>({});
+  const { reviewId } = useParams() as { reviewId: string };
+  // const [info, setPlaceInfo] = useState<any>({});
   const [reviews, setReviews] = useState<IComment[]>([]);
   const [images, setImages] = useState<any[]>([]);
   const [videos, setVideos] = useState<any[]>([]);
@@ -60,18 +60,18 @@ export const SingleReview = () => {
   });
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
-      (data) => {
-        console.log("info", data);
-        setPlaceInfo(data);
-      },
-    );
+  // useEffect(() => {
+  //   const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
+  //     (data) => {
+  //       console.log("info", data);
+  //       setPlaceInfo(data);
+  //     },
+  //   );
 
-    return () => {
-      placeInfoSubbscription.unsubscribe();
-    };
-  }, [place, uid]);
+  //   return () => {
+  //     placeInfoSubbscription.unsubscribe();
+  //   };
+  // }, [place, uid]);
 
   useEffect(() => {
     const subscription = searchSubject
@@ -88,7 +88,7 @@ export const SingleReview = () => {
 
   useEffect(() => {
     const reviewsSubscription = scrapData(
-      place,
+      reviewId,
       uid,
       filterOptions,
       search,
@@ -100,19 +100,19 @@ export const SingleReview = () => {
     return () => {
       reviewsSubscription.unsubscribe();
     };
-  }, [place, filterOptions, search, uid]);
+  }, [reviewId, filterOptions, search, uid]);
 
-  useEffect(() => {
-    const imagesSubscription = scrapImages(place, uid).subscribe((data) => {
-      console.log("images", data);
-      setImages(data);
-    });
+  // useEffect(() => {
+  //   const imagesSubscription = scrapImages(place, uid).subscribe((data) => {
+  //     console.log("images", data);
+  //     setImages(data);
+  //   });
 
-    const videosSubscription = scrapVideos(place, uid).subscribe((data) => {
-      console.log("videos", data);
-      setVideos(data);
-    });
-  }, [place, filterOptions, uid]);
+  //   const videosSubscription = scrapVideos(place, uid).subscribe((data) => {
+  //     console.log("videos", data);
+  //     setVideos(data);
+  //   });
+  // }, [place, filterOptions, uid]);
 
   return (
     <Container>
@@ -337,8 +337,8 @@ export const SingleReview = () => {
           </Tabs>
         </Col>
         <Col md={3}>
-          <PlaceInfo info={info} />
-          <Card className="mt-3">
+          <PlaceInfo reviewId={reviewId} />
+          {/* <Card className="mt-3">
             <Card.Body>
               <Stack gap={3} direction="horizontal">
                 <Button
@@ -373,7 +373,7 @@ export const SingleReview = () => {
                 </Button>
               </Stack>
             </Card.Body>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
     </Container>

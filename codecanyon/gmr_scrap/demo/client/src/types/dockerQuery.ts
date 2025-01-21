@@ -1,5 +1,7 @@
 export interface IDockerQuery {
   type?: string;
   search?: string;
-  filter?: string;
+  status?: string;
+  reviewId?: string;
+  userId?: string;
 }

@@ -47,7 +47,7 @@ const router = createBrowserRouter([
             element: <ReviewsList />,
           },
           {
-            path: "reviews/:place",
+            path: "reviews/:reviewId",
             element: <SingleReview />,
           },
           { path: "validates", element: <ValidatedURLs /> },

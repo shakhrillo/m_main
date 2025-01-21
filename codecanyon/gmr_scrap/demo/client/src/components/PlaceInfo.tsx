@@ -1,3 +1,4 @@
+import { IconInfoCircle } from "@tabler/icons-react";
 import { Alert, Card, Col, Row, Stack } from "react-bootstrap";
 import { IReview } from "../services/scrapService";
 import formatNumber from "../utils/formatNumber";
@@ -6,37 +7,90 @@ import { spentTime } from "../utils/spentTime";
 import { GoogleMap } from "./GoogleMap";
 import { Ratings } from "./Ratings";
 import { StatusInfo } from "./StatusInfo";
-import emptyFolder from "../assets/emptyFolder.png";
-import {
-  IconAlertSquareRoundedFilled,
-  IconInfoCircle,
-} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { dockerContainers } from "../services/dockerService";
+import { filter, map } from "rxjs";
+import { IDockerContainer } from "../types/dockerContainer";
+import { formatDate } from "../utils/formatDate";
 
 export const PlaceInfo = ({
-  info,
+  reviewId,
   ...rest
 }: {
-  info?: IReview;
+  reviewId: string;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  return info ? (
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
+
+  useEffect(() => {
+    const subscription = dockerContainers({
+      reviewId,
+    })
+      .pipe(
+        map((data) => {
+          if (Array.isArray(data)) {
+            return data[0];
+          }
+          return null;
+        }),
+        filter((data) => !!data),
+      )
+      .subscribe((data) => {
+        console.log("data", data);
+        setContainer(data);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [reviewId]);
+
+  return (
     <Card {...rest}>
       <Row className="g-0 row-cols-1">
         <Col>
-          {info?.location ? (
+          {container?.location ? (
             <div
               style={{ height: "300px" }}
               className="rounded-top overflow-hidden"
             >
-              <GoogleMap locations={[info.location]} />
+              <GoogleMap locations={[container.location]} />
             </div>
           ) : null}
         </Col>
         <Col>
           <Card.Body>
-            <Card.Title className="text-primary">{info.title}</Card.Title>
-            <Ratings info={info} />
-            <StatusInfo info={info} className="my-2" />
-            {info.type === "comments" && (
+            <Card.Title className="text-primary">{container.title}</Card.Title>
+            <Ratings info={container} />
+            <StatusInfo info={container} className="my-2" />
+            <hr />
+            <h5>Machine</h5>
+            <Stack direction="horizontal" className="justify-content-between">
+              Status:
+              <span className="badge bg-info">{container.machine?.Action}</span>
+            </Stack>
+            <Stack direction="horizontal" className="justify-content-between">
+              Execution Duration:
+              <span className="fw-bold">
+                {container.machine?.Actor?.Attributes?.execDuration}s
+              </span>
+            </Stack>
+            <Stack direction="horizontal" className="justify-content-between">
+              Image:
+              <span className="fw-bold">
+                {container.machine?.Actor?.Attributes?.image}
+              </span>
+            </Stack>
+            <Stack direction="horizontal" className="justify-content-between">
+              Time:
+              <span className="fw-bold">
+                {formatDate(container.machine?.time)}
+              </span>
+            </Stack>
+            <hr />
+
+            {container.type === "comments" && (
               <>
                 <h5 className="mt-3">Options</h5>
                 <Stack
@@ -44,39 +98,40 @@ export const PlaceInfo = ({
                   className="justify-content-between"
                 >
                   Limit:
-                  <b>{info.limit} comments</b>
+                  <b>{container.limit} comments</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Sort:
-                  <b>{info.sortBy}</b>
+                  <b>{container.sortBy}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Extract Image Urls:
-                  <b>{info.extractImageUrls ? "Yes" : "No"}</b>
+                  <b>{container.extractImageUrls ? "Yes" : "No"}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Extract Video Urls:
-                  <b>{info.extractVideoUrls ? "Yes" : "No"}</b>
+                  <b>{container.extractVideoUrls ? "Yes" : "No"}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Extract Owner Replies:
-                  <b>{info.extractOwnerResponse ? "Yes" : "No"}</b>
+                  <b>{container.extractOwnerResponse ? "Yes" : "No"}</b>
                 </Stack>
               </>
             )}
-            {info.location && (
+            <hr />
+            {container.location && (
               <Stack gap={2}>
                 <h5 className="mt-3">Details:</h5>
                 <Stack
@@ -84,16 +139,16 @@ export const PlaceInfo = ({
                   className="justify-content-between"
                 >
                   Latitude:
-                  <b>{info.location?.latitude}</b>
+                  <b>{container.location?.latitude}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Longitude:
-                  <b>{info.location?.longitude}</b>
+                  <b>{container.location?.longitude}</b>
                 </Stack>
-                {info.type === "comments" && (
+                {container.type === "comments" && (
                   <>
                     <Stack
                       direction="horizontal"
@@ -101,8 +156,8 @@ export const PlaceInfo = ({
                     >
                       Comments:
                       <b>
-                        {formatNumber(info.totalReviews)} reviews /{" "}
-                        {formatNumber(info.totalOwnerReviews)} replies
+                        {formatNumber(container.totalReviews)} reviews /{" "}
+                        {formatNumber(container.totalOwnerReviews)} replies
                       </b>
                     </Stack>
                     <Stack
@@ -111,8 +166,8 @@ export const PlaceInfo = ({
                     >
                       Media
                       <b>
-                        {formatNumber(info.totalImages)} images /{" "}
-                        {formatNumber(info.totalVideos)} videos
+                        {formatNumber(container.totalImages)} images /{" "}
+                        {formatNumber(container.totalVideos)} videos
                       </b>
                     </Stack>
                   </>
@@ -122,18 +177,18 @@ export const PlaceInfo = ({
                   className="justify-content-between"
                 >
                   Spent Time:
-                  <b>{spentTime(info)}</b>
+                  <b>{spentTime(container)}</b>
                 </Stack>
                 <Stack
                   direction="horizontal"
                   className="justify-content-between"
                 >
                   Created At:
-                  <b>{formatTimestamp(info.createdAt)}</b>
+                  <b>{formatTimestamp(container.createdAt)}</b>
                 </Stack>
               </Stack>
             )}
-            {!info.status && (
+            {!container.status && (
               <Stack>
                 <Alert variant="info" className="d-flex">
                   <div className="me-2">
@@ -147,5 +202,5 @@ export const PlaceInfo = ({
         </Col>
       </Row>
     </Card>
-  ) : null;
+  );
 };

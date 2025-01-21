@@ -17,7 +17,6 @@ import {
 import { NavLink, useOutletContext } from "react-router-dom";
 import { Statistics } from "../components/Statistics";
 import { dockerContainers } from "../services/dockerService";
-import { formatTimestamp } from "../utils/formatTimestamp";
 import { IDockerContainer } from "../types/dockerContainer";
 import { formatDate } from "../utils/formatDate";
 const FILTER_OPTIONS = [
@@ -42,8 +41,6 @@ export const DockerContainers = () => {
 
   useEffect(() => {
     const subscription = dockerContainers().subscribe((data) => {
-      console.log("++++");
-      console.log(data);
       setContainers(data);
     });
 

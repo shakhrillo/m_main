@@ -25,9 +25,11 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
+      ...(q.userId ? [where("userId", "==", q.userId)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
-      ...(q.filter ? [where("status", "==", q.filter)] : []),
+      ...(q.status ? [where("status", "==", q.status)] : []),
+      ...(q.reviewId ? [where("reviewId", "==", q.reviewId)] : []),
     ),
     (snapshot) => {
       const containersData = snapshot.docs.map((doc) => ({
