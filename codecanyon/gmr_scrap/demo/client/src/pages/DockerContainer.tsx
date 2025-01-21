@@ -1,4 +1,3 @@
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -8,105 +7,107 @@ import {
   Container,
   Row,
 } from "react-bootstrap";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { DockerContainerDetails } from "../components/DockerContainerDetails";
 import { LineChart } from "../components/LineChart";
 import { dockerContainerStats } from "../services/dockerService";
+import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 
 export const DockerContainer = () => {
-  const { uid } = useOutletContext<User>();
-  const { containerId } = useParams() as { containerId: string };
-
-  const [stats, setStats] = useState<any[]>([]);
+  const { containerId } = useParams<{ containerId: string }>();
+  const [stats, setStats] = useState<IDockerStats[]>([]);
 
   useEffect(() => {
-    const subscription = dockerContainerStats(containerId).subscribe((data) =>
-      setStats(data),
-    );
+    if (!containerId) {
+      return;
+    }
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [uid]);
+    const subscription = dockerContainerStats(containerId).subscribe({
+      next: (data) => setStats(data),
+      error: (error) => console.error("Error fetching stats data:", error),
+    });
+
+    return () => subscription.unsubscribe();
+  }, [containerId]);
+
+  const chartData = [
+    {
+      label: "CPU",
+      datasets: [
+        {
+          label: "Usage (GHz)",
+          data: stats.map((stat) =>
+            formatSize(
+              stat?.cpu_stats?.cpu_usage?.total_usage ?? 0 / 1e9,
+              "num",
+            ),
+          ),
+          color: "#3e2c41",
+        },
+      ],
+    },
+    {
+      label: "Memory",
+      datasets: [
+        {
+          label: "Usage (GB)",
+          data: stats.map((stat) =>
+            formatSize(stat?.memory_stats?.usage ?? 0, "num"),
+          ),
+          color: "#ff4c30",
+        },
+      ],
+    },
+    {
+      label: "Network",
+      datasets: [
+        {
+          label: "Downloaded Data",
+          data: stats.map((stat) =>
+            formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num"),
+          ),
+          color: "#e33d94",
+        },
+        {
+          label: "Uploaded Data",
+          data: stats.map((stat) =>
+            formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num"),
+          ),
+          color: "#825e5c",
+        },
+      ],
+    },
+    {
+      label: "PIDs",
+      datasets: [
+        {
+          label: "PIDs Count",
+          data: stats.map((stat) => stat?.pids_stats?.current ?? 0),
+          color: "#5a228b",
+        },
+      ],
+    },
+  ];
 
   return (
     <Container>
       <Row className="g-3">
         <Col md={9}>
           <Row className="g-3 row-cols-1">
-            {[
-              {
-                label: "CPU",
-                data: [
-                  {
-                    label: "Usage (GHz)",
-                    data: stats.map((stat) =>
-                      formatSize(
-                        stat?.cpu_stats?.cpu_usage?.total_usage / 1e9, // Convert to GHz
-                        "num",
-                      ),
-                    ),
-                    color: "#3e2c41",
-                  },
-                ],
-              },
-              {
-                label: "Memory",
-                data: [
-                  {
-                    label: "Usage (GB)",
-                    data: stats.map(
-                      (stat) => formatSize(stat?.memory_stats?.usage, "num"), // Convert to readable size
-                    ),
-                    color: "#ff4c30",
-                  },
-                ],
-              },
-              {
-                label: "Network",
-                data: [
-                  {
-                    label: "Downloaded Data",
-                    data: stats.map((stat) =>
-                      formatSize(stat?.networks?.eth0?.rx_bytes, "num"),
-                    ),
-                    color: "#e33d94",
-                  },
-                  {
-                    label: "Uploaded Data",
-                    data: stats.map((stat) =>
-                      formatSize(stat?.networks?.eth0?.tx_bytes, "num"),
-                    ),
-                    color: "#825e5c",
-                  },
-                ],
-              },
-              {
-                label: "PIDs",
-                data: [
-                  {
-                    label: "PIDs Count",
-                    data: stats.map((stat) => stat?.pids_stats?.current),
-                    color: "#5a228b",
-                  },
-                ],
-              },
-            ].map((stat) => (
-              <Col key={stat.label}>
+            {chartData.map((chart) => (
+              <Col key={chart.label}>
                 <Card>
                   <CardHeader>
-                    <span className="fw-bold fs-5 text-decoration-none">
-                      {stat.label}
-                    </span>
+                    <span className="fw-bold fs-5">{chart.label}</span>
                   </CardHeader>
                   <CardBody>
                     <LineChart
                       labels={stats.map((stat) =>
-                        formatStringDate(stat?.read, "HH:mm:ss"),
+                        formatStringDate(stat?.read ?? "", "HH:mm:ss"),
                       )}
-                      datasets={stat.data}
+                      datasets={chart.datasets}
                     />
                   </CardBody>
                 </Card>

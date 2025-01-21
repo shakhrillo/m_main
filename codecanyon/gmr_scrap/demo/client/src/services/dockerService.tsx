@@ -11,6 +11,7 @@ import { firestore } from "../firebaseConfig";
 import { IDockerConfig } from "../types/dockerConfig";
 import { IDockerContainer } from "../types/dockerContainer";
 import { IDockerQuery } from "../types/dockerQuery";
+import { IDockerStats } from "../types/dockerStats";
 
 /**
  * Fetches all docker containers
@@ -88,8 +89,13 @@ export const dockerContainer = (containerId: string) => {
   });
 };
 
+/**
+ * Fetches docker container stats
+ * @param containerId
+ * @returns Observable<IDockerStats[]>
+ */
 export const dockerContainerStats = (containerId: string) => {
-  const stats$ = new BehaviorSubject([] as any);
+  const stats$ = new BehaviorSubject([] as IDockerStats[]);
   const collectionRef = collection(firestore, "machines", containerId, "stats");
 
   const unsubscribe = onSnapshot(
@@ -98,8 +104,7 @@ export const dockerContainerStats = (containerId: string) => {
       const statsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
-      console.log("statsData", statsData);
+      })) as IDockerStats[];
       stats$.next(statsData);
     },
     (error) => {
@@ -108,7 +113,7 @@ export const dockerContainerStats = (containerId: string) => {
     },
   );
 
-  return new Observable<any>((subscriber) => {
+  return new Observable<IDockerStats[]>((subscriber) => {
     const subscription = stats$.subscribe(subscriber);
 
     return () => {

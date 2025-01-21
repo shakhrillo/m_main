@@ -25,12 +25,16 @@ import { useNavigate } from "react-router-dom";
 export const DockerContainerDetails = ({
   containerId,
 }: {
-  containerId: string;
+  containerId: string | undefined;
 }) => {
   const navigate = useNavigate();
   const [container, setContainer] = useState<IDockerContainer>();
 
   useEffect(() => {
+    if (!containerId) {
+      return;
+    }
+
     const subscription = dockerContainer(containerId)
       .pipe(filter((data) => JSON.stringify(data) !== "{}"))
       .subscribe((data) => {
@@ -42,7 +46,7 @@ export const DockerContainerDetails = ({
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [containerId]);
 
   return (
     container && (
