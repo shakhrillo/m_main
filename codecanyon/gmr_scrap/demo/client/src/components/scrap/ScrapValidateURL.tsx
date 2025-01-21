@@ -10,6 +10,8 @@ import {
   Button,
   Card,
   CardBody,
+  CardSubtitle,
+  CardTitle,
   FormControl,
   FormGroup,
   FormLabel,
@@ -57,61 +59,59 @@ export const ScrapValidateURL = () => {
   }
 
   return (
-    <Card text="primary">
+    <Card text="light" bg="primary">
       <CardBody>
-        <Stack direction="horizontal" gap={3} className="mb-3">
+        <Stack direction="horizontal" gap={3} className="align-items-start">
           <IconBrandGoogleMaps size={48} />
           <Stack direction="vertical">
-            <h5 className="m-0 fs-3">Share a Google Maps URL to validate</h5>
-            <span className="text-muted">
+            <CardTitle>Share a Google Maps URL to validate</CardTitle>
+            <CardSubtitle>
               Validate a Google Maps URL to get information about the location.
-            </span>
+            </CardSubtitle>
+            <Form onSubmit={handleSubmit} noValidate>
+              <FormGroup className="mb-3" controlId="url">
+                <FormLabel>Google Maps URL</FormLabel>
+                <FormControl
+                  type="url"
+                  value={url}
+                  placeholder="https://maps.app.goo.gl/..."
+                  onChange={(e) => setUrl(e.target.value)}
+                  pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
+                  required
+                  autoFocus
+                  disabled={loading}
+                />
+                <FormText className="invalid-feedback bg-danger-subtle">
+                  <IconAlertCircle className="me-2" size={20} />
+                  Please provide a valid Google Maps URL. Example:
+                  https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
+                </FormText>
+              </FormGroup>
+              {error && (
+                <div className="alert alert-danger mt-3">
+                  <IconAlertCircle className="me-2" size={20} />
+                  {error}
+                </div>
+              )}
+              <Stack direction="horizontal">
+                <Button
+                  variant="light"
+                  type="submit"
+                  className="ms-auto"
+                  disabled={loading || !url}
+                >
+                  <Stack direction="horizontal" gap={2}>
+                    <IconCircleCheck />
+                    Validate URL
+                    <Badge bg="dark" text="light" className="top-0" pill>
+                      3 points
+                    </Badge>
+                  </Stack>
+                </Button>
+              </Stack>
+            </Form>
           </Stack>
         </Stack>
-        <Form onSubmit={handleSubmit} noValidate>
-          <FormGroup className="mb-3" controlId="url">
-            <FormLabel>Google Maps URL</FormLabel>
-            <FormControl
-              type="url"
-              value={url}
-              placeholder="https://maps.app.goo.gl/..."
-              onChange={(e) => setUrl(e.target.value)}
-              pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
-              required
-              size="lg"
-              autoFocus
-              disabled={loading}
-            />
-            <FormText className="invalid-feedback">
-              <IconAlertCircle className="me-2" size={20} />
-              Please provide a valid Google Maps URL. Example:
-              https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
-            </FormText>
-          </FormGroup>
-          {error && (
-            <div className="alert alert-danger mt-3">
-              <IconAlertCircle className="me-2" size={20} />
-              {error}
-            </div>
-          )}
-          <Stack direction="horizontal">
-            <Button
-              variant="primary"
-              type="submit"
-              size="lg"
-              className="ms-auto"
-              disabled={loading || !url}
-            >
-              <Stack direction="horizontal" gap={2}>
-                <IconCircleCheck />
-                Validate URL
-                <Badge bg="dark" text="light" className="top-0" pill>
-                  3 points
-                </Badge>
-              </Stack>
-            </Button>
-          </Stack>
-        </Form>
       </CardBody>
     </Card>
   );

@@ -17,6 +17,7 @@ import {
   FormSelect,
   FormText,
 } from "react-bootstrap";
+import { ScrapExtractOption } from "./ScrapExtractOption";
 
 // Define extraction options
 const EXTRACT_OPTIONS = [
@@ -46,24 +47,29 @@ const EXTRACT_OPTIONS = [
   },
 ];
 
-export const ScrapExtractOptions = () => {
+export const ScrapExtractOptions = ({
+  containerId,
+}: {
+  containerId: string;
+}) => {
   return (
     <>
       {EXTRACT_OPTIONS.map((option) => (
-        <Card key={option.id}>
-          <CardBody className="d-flex align-items-start gap-3">
-            {createElement(option.icon, {
-              className: "text-body-secondary",
-            })}
-            <span className="d-inline">
-              {option.title}
-              <Badge bg="secondary" className="ms-2">
-                {option.points} points
-              </Badge>
-            </span>
-            <IconCheck className="ms-auto" />
-          </CardBody>
-        </Card>
+        <ScrapExtractOption option={option} containerId={containerId} />
+        // <Card key={option.id}>
+        //   <CardBody className="d-flex align-items-start gap-3">
+        //     {createElement(option.icon, {
+        //       className: "text-body-secondary",
+        //     })}
+        //     <span className="d-inline">
+        //       {option.title}
+        //       <Badge bg="secondary" className="ms-2">
+        //         {option.points} points
+        //       </Badge>
+        //     </span>
+        //     <IconCheck className="ms-auto" />
+        //   </CardBody>
+        // </Card>
       ))}
 
       <Card>
