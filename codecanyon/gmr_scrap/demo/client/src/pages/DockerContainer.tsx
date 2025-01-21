@@ -39,9 +39,11 @@ export const DockerContainer = () => {
         {
           label: "Usage (GHz)",
           data: stats.map((stat) =>
-            formatSize(
-              stat?.cpu_stats?.cpu_usage?.total_usage ?? 0 / 1e9,
-              "num",
+            Number(
+              formatSize(
+                stat?.cpu_stats?.cpu_usage?.total_usage ?? 0 / 1e9,
+                "num",
+              ),
             ),
           ),
           color: "#3e2c41",
@@ -54,7 +56,7 @@ export const DockerContainer = () => {
         {
           label: "Usage (GB)",
           data: stats.map((stat) =>
-            formatSize(stat?.memory_stats?.usage ?? 0, "num"),
+            Number(formatSize(stat?.memory_stats?.usage ?? 0, "num")),
           ),
           color: "#ff4c30",
         },
@@ -66,14 +68,14 @@ export const DockerContainer = () => {
         {
           label: "Downloaded Data",
           data: stats.map((stat) =>
-            formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num"),
+            Number(formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num")),
           ),
           color: "#e33d94",
         },
         {
           label: "Uploaded Data",
           data: stats.map((stat) =>
-            formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num"),
+            Number(formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num")),
           ),
           color: "#825e5c",
         },
