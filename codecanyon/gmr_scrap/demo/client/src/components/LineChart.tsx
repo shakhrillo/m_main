@@ -29,119 +29,118 @@ ChartJS.register(
   zoomPlugin,
 );
 
+interface Dataset {
+  label: string;
+  data: number[];
+  color: string;
+}
+
 interface LineChartProps {
   labels: string[];
-  datasets: any[];
+  datasets: Dataset[];
 }
 
 export const LineChart = ({ labels, datasets }: LineChartProps) => {
-  const [chartWidth, setChartWidth] = useState(0);
-  const chartHeight = 300;
+  const [chartWidth, setChartWidth] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const chartHeight = 300;
 
   useEffect(() => {
-    const setWidth = () => {
+    const updateChartWidth = () => {
       if (containerRef.current) {
         setChartWidth(containerRef.current.clientWidth - 40);
       }
     };
 
-    setWidth();
+    updateChartWidth();
+    window.addEventListener("resize", updateChartWidth);
 
-    window.addEventListener("resize", setWidth);
     return () => {
-      window.removeEventListener("resize", setWidth);
+      window.removeEventListener("resize", updateChartWidth);
     };
   }, []);
+
+  const createGradient = (
+    ctx: CanvasRenderingContext2D,
+    chartArea: any,
+    color: string,
+  ) => {
+    if (!chartArea) return null;
+
+    const { top, bottom } = chartArea;
+    const gradient = ctx.createLinearGradient(0, top, 0, bottom);
+    gradient.addColorStop(0, hexToRgba(color, 1));
+    gradient.addColorStop(1, hexToRgba(color, 0));
+    return gradient;
+  };
+
+  const chartData = {
+    labels,
+    datasets: datasets.map((dataset) => ({
+      label: dataset.label,
+      data: dataset.data,
+      borderColor: hexToRgba(dataset.color, 1),
+      pointBackgroundColor: hexToRgba(dataset.color, 1),
+      backgroundColor: (context: any) => {
+        const { chart } = context;
+        const { ctx, chartArea } = chart;
+        return (
+          createGradient(ctx, chartArea, dataset.color) ||
+          hexToRgba(dataset.color, 0.5)
+        );
+      },
+      tension: 0.5,
+      pointRadius: 0,
+      fill: true,
+      borderWidth: 2,
+    })),
+  };
+
+  const chartOptions = {
+    animation: {
+      duration: 0,
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: {
+          color: "#999",
+          font: { size: 12 },
+        },
+      },
+      y: {
+        grid: { color: "#ccc", lineWidth: 0.5 },
+        border: { display: false },
+        ticks: {
+          color: "#999",
+          font: { size: 12 },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+        position: "bottom" as const,
+        labels: { usePointStyle: true },
+      },
+      zoom: {
+        zoom: {
+          drag: { enabled: true },
+          mode: "x" as "x" | "y" | "xy",
+        },
+      },
+    },
+  };
 
   return (
     <div ref={containerRef} style={{ width: "100%" }}>
       {chartWidth > 0 && (
         <Line
-          height={chartHeight}
+          data={chartData}
+          options={chartOptions}
           width={chartWidth}
-          data={{
-            labels,
-            datasets: datasets.map((dataset) => ({
-              ...dataset,
-              borderColor: hexToRgba(dataset["color"]),
-              pointBackgroundColor: hexToRgba(dataset["color"]),
-              tension: 0.4,
-              pointRadius: 0,
-              fill: true,
-              borderWidth: 2,
-              backgroundColor: (context: any) => {
-                const { chart } = context;
-                const { ctx, chartArea } = chart;
-
-                if (!chartArea) {
-                  return;
-                }
-
-                const { top, bottom } = chartArea;
-
-                // Create a linear gradient
-                const gradient = ctx.createLinearGradient(0, top, 0, bottom);
-                gradient.addColorStop(0, hexToRgba(dataset["color"], 1));
-                gradient.addColorStop(1, hexToRgba(dataset["color"], 0));
-
-                return gradient;
-              },
-            })),
-          }}
-          options={{
-            animation: {
-              duration: 0,
-            },
-            scales: {
-              x: {
-                grid: {
-                  display: false,
-                },
-                border: {
-                  display: false,
-                },
-                ticks: {
-                  color: "#999",
-                  font: {
-                    size: 12,
-                  },
-                },
-              },
-              y: {
-                grid: {
-                  color: "#ccc",
-                  lineWidth: 0.5,
-                },
-                border: {
-                  display: false,
-                },
-                ticks: {
-                  color: "#999",
-                  font: {
-                    size: 12,
-                  },
-                },
-              },
-            },
-            plugins: {
-              legend: {
-                display: false,
-                position: "bottom",
-                labels: {
-                  usePointStyle: true,
-                },
-              },
-              zoom: {
-                zoom: {
-                  drag: {
-                    enabled: true,
-                  },
-                  mode: "x",
-                },
-              },
-            },
-          }}
+          height={chartHeight}
         />
       )}
     </div>
