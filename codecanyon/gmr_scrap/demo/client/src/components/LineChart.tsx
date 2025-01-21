@@ -68,8 +68,8 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
               pointBackgroundColor: hexToRgba(dataset["color"]),
               tension: 0.4,
               pointRadius: 0,
-              pointHoverRadius: 5,
               fill: true,
+              borderWidth: 2,
               backgroundColor: (context: any) => {
                 const { chart } = context;
                 const { ctx, chartArea } = chart;
@@ -90,21 +90,37 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
             })),
           }}
           options={{
+            animation: {
+              duration: 0,
+            },
             scales: {
               x: {
                 grid: {
-                  color: "#fff",
+                  display: false,
                 },
                 border: {
-                  color: "transparent",
+                  display: false,
+                },
+                ticks: {
+                  color: "#999",
+                  font: {
+                    size: 12,
+                  },
                 },
               },
               y: {
                 grid: {
-                  color: "#f5f5f5",
+                  color: "#ccc",
+                  lineWidth: 0.5,
                 },
                 border: {
-                  color: "transparent",
+                  display: false,
+                },
+                ticks: {
+                  color: "#999",
+                  font: {
+                    size: 12,
+                  },
                 },
               },
             },
@@ -118,12 +134,6 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
               },
               zoom: {
                 zoom: {
-                  // wheel: {
-                  //   enabled: true,
-                  // },
-                  // pinch: {
-                  //   enabled: true,
-                  // },
                   drag: {
                     enabled: true,
                   },
