@@ -42,6 +42,7 @@ import {
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
+import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 
 const EXTRACT_OPTIONS = [
   {
@@ -239,6 +240,7 @@ export const Scrap = () => {
           <Stack direction={"vertical"} gap={3}>
             {/*---Validate Place Info---*/}
             <ScrapValidateURL />
+            <ScrapExtractOptions />
             {/* <Card>
               <CardBody>
                 <CardTitle>Validate Place Info</CardTitle>
@@ -609,81 +611,6 @@ export const Scrap = () => {
         <Col md={3}>
           <PlaceInfo containerId={scrapId} className="mb-3" />
           <ScrapExpectedPoints containerId={scrapId} />
-          {/*---Expected Points---*/}
-          {/* {placeInfo.rating && (
-            <Card>
-              <CardBody>
-                {placeInfo?.rating && (
-                  <Stack gap={2}>
-                    <CardTitle className="place-info-title">
-                      Expected Points:
-                    </CardTitle>
-
-                    <Stack
-                      direction={"horizontal"}
-                      className="justify-content-between"
-                    >
-                      Reviews ({limit || 0})<b>{limit * 1} points</b>
-                    </Stack>
-                    <Stack
-                      direction={"horizontal"}
-                      className="justify-content-between"
-                    >
-                      Image URLs (~{limit * 10 || 0})
-                      <b>~{limit * 2 * 10 || 0} points</b>
-                    </Stack>
-                    <Stack
-                      direction={"horizontal"}
-                      className="justify-content-between"
-                    >
-                      Video URLs (~{limit * 10 || 0})
-                      <b>~{limit * 3 * 10 || 0} points</b>
-                    </Stack>
-                    <Stack
-                      direction={"horizontal"}
-                      className="justify-content-between"
-                    >
-                      Owner responses (~{limit || 0})
-                      <b>~{limit * 1 || 0} points</b>
-                    </Stack>
-                    <hr />
-                    <Stack direction={"horizontal"}>
-                      Total
-                      <strong className="ms-auto">
-                        {limit * 1} ~ {limit * 6 * 10}
-                        points
-                      </strong>
-                    </Stack>
-                  </Stack>
-                )}
-                <FormCheck
-                  className="mt-3"
-                  type="checkbox"
-                  id="terms"
-                  checked={isTermsAccepted}
-                  disabled={loading || !isValidated}
-                  onChange={(e) => setIsTermsAccepted(!isTermsAccepted)}
-                  label={
-                    <>
-                      I agree to the{" "}
-                      <a href="#" target="_blank" rel="nooper noreferrer">
-                        terms and conditions
-                      </a>
-                    </>
-                  }
-                ></FormCheck>
-                <Button
-                  variant="primary"
-                  className="w-100 mt-3"
-                  disabled={loading || !isValidated || !isTermsAccepted}
-                  onClick={handleStartScrap}
-                >
-                  Scrap
-                </Button>
-              </CardBody>
-            </Card>
-          )} */}
-          {/*---End: Expected Points---*/}
         </Col>
       </Row>
     </Container>
