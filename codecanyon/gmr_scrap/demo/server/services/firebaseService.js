@@ -14,9 +14,9 @@ async function updateImages(data) {
     const batch = db.batch();
     const imagesCollection = db.collection("images");
     data.forEach(({ image, details, layers }) => {
-      console.log("Updating image:", image.Id);
-      console.log("Details:", details);
-      console.log("Layers:", layers);
+      // console.log("Updating image:", image.Id);
+      // console.log("Details:", details);
+      // console.log("Layers:", layers);
 
       const docRef = imagesCollection.doc(image.Id);
       const imageDetailsRef = db

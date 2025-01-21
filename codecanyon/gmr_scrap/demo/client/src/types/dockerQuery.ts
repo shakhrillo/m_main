@@ -3,5 +3,5 @@ export interface IDockerQuery {
   search?: string;
   status?: string;
   containerId?: string;
-  userId?: string;
+  uid?: string;
 }

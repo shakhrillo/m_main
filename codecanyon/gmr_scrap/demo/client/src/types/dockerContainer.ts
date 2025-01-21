@@ -18,7 +18,7 @@ export interface IDockerContainer {
   type: "info" | "comments";
   updatedAt: Timestamp;
   url: string;
-  userId: string;
+  uid: string;
 
   limit?: number;
   sortBy?: string;

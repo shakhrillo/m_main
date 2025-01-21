@@ -1,21 +1,20 @@
 import { IconAlertCircle } from "@tabler/icons-react";
+import { User } from "firebase/auth";
+import { useState } from "react";
 import {
+  Badge,
+  Button,
   Card,
   CardBody,
   CardTitle,
+  FormControl,
   FormGroup,
   FormLabel,
-  FormControl,
   FormText,
   Stack,
-  Button,
-  Badge,
 } from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
-import { validateUrl } from "../../services/scrapService";
-import { User } from "firebase/auth";
 import { createDockerContainer } from "../../services/dockerService";
-import { useState } from "react";
 
 export const ScrapValidateURL = () => {
   const { uid } = useOutletContext<User>();
@@ -33,10 +32,8 @@ export const ScrapValidateURL = () => {
     target.classList.add("was-validated");
     if (!target.checkValidity()) return;
 
-    // const tag = [type, uid, reviewId].join("_").toLowerCase(); // e.g. "info_123_456"
     try {
       const { id } = await createDockerContainer({ url, uid, type: "info" });
-      // const id = await validateUrl(url, uid);
       navigate(`/scrap/${id}`);
     } catch (error) {
       console.log(error);

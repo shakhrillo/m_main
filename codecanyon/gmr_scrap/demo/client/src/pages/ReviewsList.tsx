@@ -30,6 +30,7 @@ import formatNumber from "../utils/formatNumber";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import { Statistics } from "../components/Statistics";
 import { dockerContainers } from "../services/dockerService";
+import { IDockerContainer } from "../types/dockerContainer";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -41,8 +42,8 @@ export const ReviewsList = () => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
-  const [info, setInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [containers, setContainers] = useState<IDockerContainer[]>([]);
+  // const [reviews, setReviews] = useState<IReview[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
@@ -50,28 +51,34 @@ export const ReviewsList = () => {
     {
       label: "All comments",
       icon: IconCheck,
-      value: info.totalReviews || "0",
+      // value: containers.totalReviews || "0",
     },
     {
       label: "Owner responses",
       icon: IconMessageReply,
-      value: info.totalOwnerReviews || "0",
+      // value: containers.totalOwnerReviews || "0",
     },
     {
-      label: "User comments",
+      label: "Videos",
       icon: IconMessages,
-      value: info.totalUserReviews || "0",
+      // value: containers.totalVideos || "0",
     },
-    { label: "Images", icon: IconPhoto, value: info.totalImages || "0" },
+    {
+      label: "Images",
+      icon: IconPhoto,
+      // value: containers.totalImages || "0"
+    },
   ];
 
   useEffect(() => {
     const reviewSubscription = dockerContainers({
       search,
-      userId: uid,
+      uid: uid,
       type: "comments",
     }).subscribe((data) => {
-      setReviews(data);
+      console.log("data", data);
+      // setReviews(data);
+      setContainers(data);
     });
 
     return () => {
@@ -81,7 +88,7 @@ export const ReviewsList = () => {
 
   useEffect(() => {
     const statsSubscription = userData(uid).subscribe((data) => {
-      setInfo(data);
+      // setInfo(data);
     });
 
     return () => {
@@ -94,9 +101,7 @@ export const ReviewsList = () => {
       <Row className="g-3">
         {/*---Extracted reviews status---*/}
         {stats.map((stat, index) => (
-          <Col key={index}>
-            <Statistics {...stat} />
-          </Col>
+          <Col key={index}>{/* <Statistics {...stat} /> */}</Col>
         ))}
         {/*---End: Extracted reviews status---*/}
 
@@ -151,27 +156,27 @@ export const ReviewsList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {reviews.map((review, index) => (
+                  {containers.map((container, index) => (
                     <tr key={index}>
                       <td scope="row" style={{ width: "40px" }}>
                         {index + 1}
                       </td>
                       <td style={{ width: "130px" }}>
-                        <StatusInfo info={review} />
+                        {/* <StatusInfo info={review} /> */}
                       </td>
                       <td>
                         <a
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/reviews/${review.reviewId}`);
+                            navigate(`/reviews/${container.id}`);
                           }}
                         >
-                          {review.title}
+                          {container.title}
                         </a>
                       </td>
                       <td style={{ width: "250px" }}>
-                        {formatTimestamp(review.createdAt)}
+                        {formatTimestamp(container.createdAt)}
                       </td>
                     </tr>
                   ))}

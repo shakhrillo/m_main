@@ -156,7 +156,11 @@ async function batchWriteLargeArray(collectionPath, data) {
  * } | undefined>}
  */
 async function getMachineData(tag) {
-  return (await db.collection("containers").doc(tag).get()).data();
+  const collectionRef = db.collection("containers");
+  const doc = await collectionRef.doc(tag).get();
+  const data = doc.data();
+  const id = doc.id;
+  return { ...data, id };
 }
 
 /**

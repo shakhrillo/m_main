@@ -79,7 +79,7 @@ const scrollToContainer = getScriptContent("scrollToContainer.js", "scripts");
  *   extractOwnerResponse: boolean,
  *   createdAt: number,
  *   updatedAt: number,
- *   userId: string,
+ *   uid: string,
  *   reviewId: string,
  *   address: string,
  *   reviews: number,
@@ -261,15 +261,15 @@ let driver;
     }
 
     await batchWriteLargeArray(
-      `users/${data.userId}/reviews/${data.reviewId}/reviews`,
+      `users/${data.uid}/reviews/${data.id}/reviews`,
       data.extractedReviews
     );
     await batchWriteLargeArray(
-      `users/${data.userId}/reviews/${data.reviewId}/images`,
+      `users/${data.uid}/reviews/${data.id}/images`,
       data.extractedImageUrls
     );
     await batchWriteLargeArray(
-      `users/${data.userId}/reviews/${data.reviewId}/videos`,
+      `users/${data.uid}/reviews/${data.id}/videos`,
       data.extractedVideoUrls
     );
   } catch (error) {

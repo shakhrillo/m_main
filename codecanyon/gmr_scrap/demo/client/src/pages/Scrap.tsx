@@ -41,6 +41,7 @@ import {
 } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
+import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
 
 const EXTRACT_OPTIONS = [
   {
@@ -103,13 +104,15 @@ export const Scrap = () => {
   const [url, setUrl] = useState("");
   const [limit, setLimit] = useState(10);
   const [sortBy, setSortBy] = useState("Most relevant");
-  const [extractOptions, setExtractOptions] = useState<Record<string, boolean>>(
-    {
-      extractImageUrls: false,
-      extractVideoUrls: false,
-      extractOwnerResponse: false,
-    },
-  );
+  const [extractOptions, setExtractOptions] = useState<{
+    extractImageUrls: boolean;
+    extractVideoUrls: boolean;
+    extractOwnerResponse: boolean;
+  }>({
+    extractImageUrls: false,
+    extractVideoUrls: false,
+    extractOwnerResponse: false,
+  });
   const [outputOptions, setOutputOptions] = useState<Record<string, boolean>>({
     json: true,
     csv: false,
@@ -351,7 +354,7 @@ export const Scrap = () => {
                       <FormGroup controlId="extractOptions">
                         <FormLabel className="form-label">Options</FormLabel>
                         <Row className="g-3">
-                          {EXTRACT_OPTIONS.map((option, index) => (
+                          {/* {EXTRACT_OPTIONS.map((option, index) => (
                             <Col lg={6} xxl={4} key={index}>
                               <FormCheck
                                 type="checkbox"
@@ -425,7 +428,7 @@ export const Scrap = () => {
                                 </Card>
                               </FormCheckLabel>
                             </Col>
-                          ))}
+                          ))} */}
                         </Row>
                       </FormGroup>
                     </Col>
@@ -605,8 +608,9 @@ export const Scrap = () => {
         </Col>
         <Col md={3}>
           <PlaceInfo containerId={scrapId} className="mb-3" />
+          <ScrapExpectedPoints containerId={scrapId} />
           {/*---Expected Points---*/}
-          {placeInfo.rating && (
+          {/* {placeInfo.rating && (
             <Card>
               <CardBody>
                 {placeInfo?.rating && (
@@ -678,7 +682,7 @@ export const Scrap = () => {
                 </Button>
               </CardBody>
             </Card>
-          )}
+          )} */}
           {/*---End: Expected Points---*/}
         </Col>
       </Row>

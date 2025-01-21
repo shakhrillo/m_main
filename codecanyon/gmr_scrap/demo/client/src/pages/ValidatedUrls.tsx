@@ -20,6 +20,8 @@ import { StatusInfo } from "../components/StatusInfo";
 import { IReview, validatedUrls } from "../services/scrapService";
 import { userData } from "../services/userService";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
+import { dockerContainers } from "../services/dockerService";
+import { IDockerContainer } from "../types/dockerContainer";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -30,7 +32,7 @@ export const ValidatedURLs = () => {
   const navigate = useNavigate();
 
   const [info, setInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [reviews, setReviews] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
@@ -43,16 +45,12 @@ export const ValidatedURLs = () => {
   ];
 
   useEffect(() => {
-    const reviewSubscription = validatedUrls(uid, {
-      type: "info",
-      search,
-      filter,
-    }).subscribe((data) => {
+    const subscription = dockerContainers().subscribe((data) => {
       setReviews(data);
     });
 
     return () => {
-      reviewSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [search, uid, filter]);
 
@@ -135,7 +133,7 @@ export const ValidatedURLs = () => {
                         {index + 1}
                       </td>
                       <td style={{ width: "130px" }}>
-                        <StatusInfo info={review} />
+                        <StatusInfo container={review} />
                       </td>
                       <td>
                         <a

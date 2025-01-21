@@ -43,7 +43,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
-      ...(q.userId ? [where("userId", "==", q.userId)] : []),
+      ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(q.status ? [where("status", "==", q.status)] : []),
@@ -54,6 +54,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
         id: doc.id,
         ...doc.data(),
       }));
+      console.log("containersData", containersData);
       containers$.next(containersData as IDockerContainer[]);
     },
     (error) => {

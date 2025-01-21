@@ -87,13 +87,14 @@ export const SingleReview = () => {
   }, []);
 
   useEffect(() => {
+    console.log("reviewId", reviewId);
     const reviewsSubscription = scrapData(
       reviewId,
       uid,
       filterOptions,
       search,
     ).subscribe((data) => {
-      console.log("data", data);
+      console.log("s review data", data);
       setReviews(data);
     });
 

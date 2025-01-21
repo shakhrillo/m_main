@@ -1,15 +1,15 @@
 import { IconCheck, IconX } from "@tabler/icons-react";
-import { IReview } from "../services/scrapService";
+import { IDockerContainer } from "../types/dockerContainer";
 
 export const StatusInfo = ({
-  info,
+  container,
   ...rest
 }: {
-  info?: IReview;
+  container?: IDockerContainer;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  if (!info || !info.status) return null;
+  if (!container || !container.status) return null;
 
-  const status = info.status.toLowerCase();
+  const status = container.status.toLowerCase();
   const color =
     status === "completed"
       ? "success"
