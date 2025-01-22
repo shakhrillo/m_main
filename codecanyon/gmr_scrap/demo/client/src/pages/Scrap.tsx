@@ -97,13 +97,8 @@ export const Scrap = () => {
       <Row className="g-3">
         <Col md={9}>
           <Stack direction={"vertical"} gap={3}>
-            <ScrapValidateURL />
-            {scrapId ? (
-              container &&
-              container.id && <ScrapExtractOptions container={container} />
-            ) : (
-              <ScrapExtractOptions container={container} />
-            )}
+            <ScrapValidateURL containerId={scrapId} container={container} />
+            <ScrapExtractOptions container={container} />
           </Stack>
         </Col>
         <Col md={3}>

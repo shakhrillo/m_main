@@ -35,10 +35,11 @@ export const ScrapExtractOptions = ({
   const [extractOwnerResponse, setExtractOwnerResponse] = useState<boolean>(
     container.extractOwnerResponse || false,
   );
-  const [limit, setLimit] = useState<number | undefined>(container.limit || 0);
+  const [limit, setLimit] = useState<number | undefined>(container.limit || 10);
   const [sortBy, setSortBy] = useState<
     "Most relevant" | "Newest" | "Highest rating" | "Lowest rating"
   >("Most relevant");
+  const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
 
   useEffect(() => {
     if (!container.id) return;
@@ -49,6 +50,7 @@ export const ScrapExtractOptions = ({
       extractImageUrls,
       extractVideoUrls,
       extractOwnerResponse,
+      outputAs,
     }).catch((error) => {
       console.error("Error updating container limit:", error);
     });
@@ -59,6 +61,7 @@ export const ScrapExtractOptions = ({
     extractImageUrls,
     extractVideoUrls,
     extractOwnerResponse,
+    outputAs,
   ]);
   return (
     <>
@@ -196,7 +199,10 @@ export const ScrapExtractOptions = ({
           })}
           <div className="w-100">
             <FormLabel>Output as</FormLabel>
-            <FormSelect>
+            <FormSelect
+              value={outputAs}
+              onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
+            >
               <option value="json">JSON</option>
               <option value="csv">CSV</option>
             </FormSelect>

@@ -73,7 +73,7 @@ export const PlaceInfoOptions = ({
         <PlaceInfoRow
           icon={<IconFile />}
           label="Output Format"
-          value={"JSON"}
+          value={container.outputAs || "Default"}
         />
       </Col>
     </Row>

@@ -4,7 +4,7 @@ import {
   IconCircleCheck,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -16,20 +16,34 @@ import {
   FormGroup,
   FormLabel,
   FormText,
+  Spinner,
   Stack,
 } from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 /**
  * Component for validating Google Maps URL.
  */
-export const ScrapValidateURL = () => {
+export const ScrapValidateURL = ({
+  containerId,
+  container,
+}: {
+  containerId: string | undefined;
+  container: IDockerContainer;
+}) => {
   const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [url, setUrl] = useState<string>("");
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>(container.url || "");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsDisabled(
+      container?.machine?.Action !== "die" && containerId !== undefined,
+    );
+  }, [container, containerId]);
 
   /**
    * Handles form submission for URL validation.
@@ -44,7 +58,7 @@ export const ScrapValidateURL = () => {
       return;
     }
 
-    setLoading(true);
+    setIsDisabled(true);
 
     try {
       setError(null);
@@ -54,7 +68,7 @@ export const ScrapValidateURL = () => {
       console.error(err);
       setError("An error occurred while validating the URL. Please try again.");
     } finally {
-      setLoading(false);
+      setIsDisabled(false);
     }
   }
 
@@ -79,7 +93,7 @@ export const ScrapValidateURL = () => {
                   pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
                   required
                   autoFocus
-                  disabled={loading}
+                  disabled={isDisabled}
                 />
                 <FormText className="invalid-feedback bg-danger-subtle">
                   <IconAlertCircle className="me-2" size={20} />
@@ -98,14 +112,23 @@ export const ScrapValidateURL = () => {
                   variant="light"
                   type="submit"
                   className="ms-auto"
-                  disabled={loading || !url}
+                  disabled={isDisabled}
                 >
                   <Stack direction="horizontal" gap={2}>
-                    <IconCircleCheck />
-                    Validate URL
-                    <Badge bg="dark" text="light" className="top-0" pill>
-                      3 points
-                    </Badge>
+                    {container?.machine?.Action === "die" ? (
+                      <>
+                        <IconCircleCheck />
+                        Validate URL
+                        <Badge bg="dark" text="light" className="top-0" pill>
+                          3 points
+                        </Badge>
+                      </>
+                    ) : (
+                      <>
+                        <Spinner animation="border" size="sm" />
+                        Validating URL...
+                      </>
+                    )}
                   </Stack>
                 </Button>
               </Stack>
