@@ -95,13 +95,13 @@ export const Scrap = () => {
   return (
     <Container>
       <Row className="g-3">
-        <Col md={9}>
+        <Col md={8}>
           <Stack direction={"vertical"} gap={3}>
             <ScrapValidateURL containerId={scrapId} container={container} />
-            <ScrapExtractOptions container={container} />
+            <ScrapExtractOptions containerId={scrapId} container={container} />
           </Stack>
         </Col>
-        <Col md={3}>
+        <Col md={4}>
           <PlaceInfo containerId={scrapId} className="mb-3" />
           <ScrapExpectedPoints containerId={scrapId} />
         </Col>

@@ -22,8 +22,10 @@ import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
 export const ScrapExtractOptions = ({
+  containerId,
   container,
 }: {
+  containerId: string | undefined;
   container: IDockerContainer;
 }) => {
   const [extractImageUrls, setExtractImageUrls] = useState<boolean>(
@@ -42,7 +44,16 @@ export const ScrapExtractOptions = ({
   const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
 
   useEffect(() => {
-    if (!container.id) return;
+    setExtractImageUrls(container.extractImageUrls || false);
+    setExtractVideoUrls(container.extractVideoUrls || false);
+    setExtractOwnerResponse(container.extractOwnerResponse || false);
+    setLimit(container.limit || 10);
+    setSortBy(container.sortBy || "Most relevant");
+    setOutputAs(container.outputAs || "json");
+  }, [container]);
+
+  useEffect(() => {
+    if (!container.id || !containerId) return;
 
     updateDockerContainer(container.id, {
       limit,
@@ -68,7 +79,7 @@ export const ScrapExtractOptions = ({
       <Card>
         <CardBody
           className="d-flex align-items-start gap-3"
-          onClick={() => setExtractImageUrls(!extractImageUrls)}
+          onClick={() => containerId && setExtractImageUrls(!extractImageUrls)}
         >
           {createElement(IconPhoto, {
             className: "text-body-secondary",
@@ -85,7 +96,7 @@ export const ScrapExtractOptions = ({
           {extractImageUrls ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            <IconCircleDashedCheck />
+            containerId && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -93,7 +104,7 @@ export const ScrapExtractOptions = ({
       <Card>
         <CardBody
           className="d-flex align-items-start gap-3"
-          onClick={() => setExtractVideoUrls(!extractVideoUrls)}
+          onClick={() => containerId && setExtractVideoUrls(!extractVideoUrls)}
         >
           {createElement(IconVideo, {
             className: "text-body-secondary",
@@ -110,7 +121,7 @@ export const ScrapExtractOptions = ({
           {extractVideoUrls ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            <IconCircleDashedCheck />
+            containerId && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -118,7 +129,9 @@ export const ScrapExtractOptions = ({
       <Card>
         <CardBody
           className="d-flex align-items-start gap-3"
-          onClick={() => setExtractOwnerResponse(!extractOwnerResponse)}
+          onClick={() =>
+            containerId && setExtractOwnerResponse(!extractOwnerResponse)
+          }
         >
           {createElement(IconMessageReply, {
             className: "text-body-secondary",
@@ -135,7 +148,7 @@ export const ScrapExtractOptions = ({
           {extractOwnerResponse ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            <IconCircleDashedCheck />
+            containerId && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -151,6 +164,7 @@ export const ScrapExtractOptions = ({
               placeholder="Review limit"
               value={limit}
               onChange={(e) => setLimit(+e.target.value)}
+              disabled={!containerId}
             />
             <FormText>
               Limit the number of reviews to extract. Leave empty to extract all
@@ -178,6 +192,7 @@ export const ScrapExtractOptions = ({
                     | "Lowest rating",
                 )
               }
+              disabled={!containerId}
             >
               <option value="Most relevant">Most relevant</option>
               <option value="Newest">Newest</option>
@@ -202,6 +217,7 @@ export const ScrapExtractOptions = ({
             <FormSelect
               value={outputAs}
               onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
+              disabled={!containerId}
             >
               <option value="json">JSON</option>
               <option value="csv">CSV</option>

@@ -21,7 +21,7 @@ export interface IDockerContainer {
   uid?: string;
 
   limit?: number;
-  sortBy?: string;
+  sortBy?: "Most relevant" | "Newest" | "Highest rating" | "Lowest rating";
   extractImageUrls?: boolean;
   extractVideoUrls?: boolean;
   extractOwnerResponse?: boolean;

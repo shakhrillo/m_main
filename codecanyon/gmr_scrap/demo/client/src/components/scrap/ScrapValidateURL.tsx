@@ -45,6 +45,10 @@ export const ScrapValidateURL = ({
     );
   }, [container, containerId]);
 
+  useEffect(() => {
+    setUrl(container.url || "");
+  }, [container]);
+
   /**
    * Handles form submission for URL validation.
    * @param e Form submission event.
@@ -115,18 +119,18 @@ export const ScrapValidateURL = ({
                   disabled={isDisabled}
                 >
                   <Stack direction="horizontal" gap={2}>
-                    {container?.machine?.Action === "die" ? (
+                    {container?.machine?.Action !== "die" && containerId ? (
+                      <>
+                        <Spinner animation="border" size="sm" />
+                        Validating URL...
+                      </>
+                    ) : (
                       <>
                         <IconCircleCheck />
                         Validate URL
                         <Badge bg="dark" text="light" className="top-0" pill>
                           3 points
                         </Badge>
-                      </>
-                    ) : (
-                      <>
-                        <Spinner animation="border" size="sm" />
-                        Validating URL...
                       </>
                     )}
                   </Stack>
