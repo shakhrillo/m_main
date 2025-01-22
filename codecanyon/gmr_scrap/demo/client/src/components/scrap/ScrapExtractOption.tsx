@@ -23,47 +23,27 @@ import {
   updateContainerSettings,
 } from "../../services/dockerService";
 import { filter, take } from "rxjs";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 export const ScrapExtractOption = ({
   option,
-  containerId,
+  container,
 }: {
-  option: any;
-  containerId: string;
+  container: IDockerContainer;
 }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [type, setType] = useState("");
 
-  useEffect(() => {
-    if (!containerId) {
-      return;
-    }
-
-    const subscription = getContainerSettings(containerId, option.id)
-      .pipe(
-        filter((settings) => !!settings && !!settings.id),
-        take(1),
-      )
-      .subscribe((settings) => {
-        setType(settings.id);
-        setIsSelected(settings.isSelected);
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [containerId]);
-
   return (
     <Card>
       <CardBody
-        className="d-flex align-items-start gap-3"
+        className="d-flex bg-secondary align-items-start gap-3"
         onClick={() => {
           setIsSelected(!isSelected);
-          updateContainerSettings(containerId, type, {
-            type: option.id,
-            isSelected: !isSelected,
-          });
+          // updateContainerSettings(containerId, type, {
+          //   type: option.id,
+          //   isSelected: !isSelected,
+          // });
         }}
       >
         {createElement(option.icon, {

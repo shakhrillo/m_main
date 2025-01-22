@@ -33,56 +33,6 @@ export const createDockerContainer = (data: any) => {
   });
 };
 
-export const getContainerSettings = (containerId: string, type: string) => {
-  const collectionRef = collection(
-    firestore,
-    "containers",
-    containerId,
-    "settings",
-  );
-  const settings$ = new BehaviorSubject({} as any);
-
-  const unsubscribe = onSnapshot(
-    query(collectionRef, where("type", "==", type)),
-    (snapshot) => {
-      const settingsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      settings$.next(settingsData[0]);
-    },
-    (error) => {
-      console.error("Error fetching settings data:", error);
-      settings$.error(error);
-    },
-  );
-
-  return new Observable<any>((subscriber) => {
-    const subscription = settings$.subscribe(subscriber);
-
-    return () => {
-      subscription.unsubscribe();
-      unsubscribe();
-    };
-  });
-};
-
-export const updateContainerSettings = (
-  containerId: string,
-  id: string | undefined,
-  data: any,
-) => {
-  const collectionRef = collection(
-    firestore,
-    "containers",
-    containerId,
-    "settings",
-  );
-  const docRef = id ? doc(collectionRef, id) : doc(collectionRef);
-
-  return id ? updateDoc(docRef, data) : setDoc(docRef, data);
-};
-
 /**
  * Fetches all docker containers
  * @returns Observable<IDockerContainer[]>
@@ -123,6 +73,16 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       unsubscribe();
     };
   });
+};
+
+/**
+ * Update an existing docker container
+ * @param containerId
+ * @param data
+ */
+export const updateDockerContainer = (containerId: string, data: any) => {
+  const containerRef = doc(firestore, "containers", containerId);
+  return updateDoc(containerRef, data);
 };
 
 /**

@@ -49,7 +49,11 @@ exports.processContainerWritten = onDocumentWritten(
   processContainerWritten
 );
 
-// collection(firestore, "machines", containerId, "stats");
+// firestore,
+//     "containers",
+//     containerId,
+//     "settings",
+
 exports.processMachineWritten = onDocumentWritten(
   "machines/{machineId}",
   processMachineWritten

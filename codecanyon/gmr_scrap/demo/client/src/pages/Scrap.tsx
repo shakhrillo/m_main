@@ -14,6 +14,10 @@ import { PlaceInfo } from "../components/place/PlaceInfo";
 import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
 import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
+import { useEffect, useState } from "react";
+import { dockerContainers } from "../services/dockerService";
+import { filter, map } from "rxjs";
+import { IDockerContainer } from "../types/dockerContainer";
 
 const EXTRACT_OPTIONS = [
   {
@@ -66,6 +70,27 @@ const NOTIFICATION_OPTIONS = [
 export const Scrap = () => {
   const { uid } = useOutletContext<User>();
   const { scrapId } = useParams() as { scrapId: string };
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
+
+  useEffect(() => {
+    if (!scrapId) return;
+
+    const subscription = dockerContainers({ containerId: scrapId })
+      .pipe(
+        map((data) => (Array.isArray(data) ? data[0] : null)),
+        filter((data) => !!data),
+      )
+      .subscribe((data) => {
+        console.log("__data__", data);
+        setContainer(data);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [scrapId]);
 
   return (
     <Container>
@@ -73,7 +98,12 @@ export const Scrap = () => {
         <Col md={9}>
           <Stack direction={"vertical"} gap={3}>
             <ScrapValidateURL />
-            <ScrapExtractOptions containerId={scrapId} />
+            {scrapId ? (
+              container &&
+              container.id && <ScrapExtractOptions container={container} />
+            ) : (
+              <ScrapExtractOptions container={container} />
+            )}
           </Stack>
         </Col>
         <Col md={3}>

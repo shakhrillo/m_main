@@ -13,8 +13,8 @@ const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
   <div className="d-flex align-items-center">
     {icon}
     <div className="ms-3">
-      <div className="fw-bold">{label}</div>
-      <div>{value ?? "N/A"}</div>
+      <div className="text-break fw-bold">{label}</div>
+      <div className="text-break">{value ?? "N/A"}</div>
     </div>
   </div>
 );
