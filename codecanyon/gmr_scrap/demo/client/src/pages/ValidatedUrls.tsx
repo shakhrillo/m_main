@@ -45,7 +45,9 @@ export const ValidatedURLs = () => {
   ];
 
   useEffect(() => {
-    const subscription = dockerContainers().subscribe((data) => {
+    const subscription = dockerContainers({
+      type: "info",
+    }).subscribe((data) => {
       setReviews(data);
     });
 
