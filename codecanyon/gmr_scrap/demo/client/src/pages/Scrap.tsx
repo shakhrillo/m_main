@@ -47,6 +47,8 @@ export const Scrap = () => {
     };
   }, [scrapId]);
 
+  console.log("====reload====");
+
   return (
     <Container>
       <Row className="g-3">
@@ -57,11 +59,7 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col md={4}>
-          <PlaceInfo
-            containerId={scrapId}
-            container={container}
-            className="mb-3"
-          />
+          <PlaceInfo containerId={scrapId} className="mb-3" />
           <ScrapExpectedPoints containerId={scrapId} />
         </Col>
       </Row>

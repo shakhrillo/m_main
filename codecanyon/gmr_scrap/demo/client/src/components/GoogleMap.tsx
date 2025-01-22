@@ -80,7 +80,6 @@ export const GoogleMap = React.memo(
   }: {
     locations: { latitude: number; longitude: number }[] | undefined;
   }) => {
-    console.log("GoogleMap render");
     return (
       <Map
         defaultZoom={10}

@@ -15,12 +15,14 @@ import {
 import { useEffect, useState } from "react";
 import { map, filter } from "rxjs";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { useNavigate } from "react-router-dom";
 
 export const ScrapExpectedPoints = ({
   containerId,
 }: {
   containerId: string;
 }) => {
+  const navigate = useNavigate();
   const [container, setContainer] = useState<IDockerContainer>();
 
   useEffect(() => {

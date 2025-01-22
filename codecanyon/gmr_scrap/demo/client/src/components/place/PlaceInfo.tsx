@@ -4,15 +4,59 @@ import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";
 import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
+import { useState, useEffect } from "react";
+import { map, filter, take } from "rxjs";
+import { dockerContainers } from "../../services/dockerService";
+import { GeoPoint } from "firebase/firestore";
+
+import { useMemo } from "react";
 
 export const PlaceInfo = ({
   containerId,
-  container,
   ...rest
 }: {
   containerId: string;
-  container: IDockerContainer;
 } & React.HTMLAttributes<HTMLDivElement>) => {
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
+  const [location, setLocation] = useState<GeoPoint | undefined>(undefined);
+
+  useEffect(() => {
+    if (!containerId) {
+      setContainer({} as IDockerContainer);
+      return;
+    }
+
+    const subscription = dockerContainers({ containerId })
+      .pipe(
+        map((data) => (Array.isArray(data) ? data[0] : null)),
+        filter((data) => !!data),
+      )
+      .subscribe((data) => {
+        setContainer(data);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [containerId]);
+
+  useEffect(() => {
+    if (!container?.location) {
+      return;
+    }
+    setLocation(container?.location);
+  }, [container?.location?.latitude, container?.location?.longitude]);
+
+  // Memoize locations to prevent unnecessary updates
+  const memoizedLocations = useMemo(
+    () => (location ? [location] : undefined),
+    [location],
+  );
+
+  console.log("-reload--");
+
   return (
     <Card {...rest}>
       <Row className="g-0 row-cols-1">
@@ -21,7 +65,7 @@ export const PlaceInfo = ({
             style={{ height: "300px" }}
             className="rounded-top overflow-hidden"
           >
-            <GoogleMap locations={container.location && [container.location]} />
+            <GoogleMap locations={memoizedLocations} />
           </div>
         </Col>
         <Col>
