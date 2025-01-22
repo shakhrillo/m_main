@@ -8,7 +8,7 @@ export const CommentResponseView = ({
 }: {
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  const textLimit = 150;
+  const textLimit = 30;
   const [isVisible, setIsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     middleware: [offset(8), flip(), shift()],

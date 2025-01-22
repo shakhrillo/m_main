@@ -37,7 +37,9 @@ import { CommentQAView } from "../components/CommentQAView";
 import { CommentResponseView } from "../components/CommentResponseView";
 import { CommentImages } from "../components/CommentImages";
 import { CommentVideos } from "../components/CommentVideos";
-import { Subject, debounceTime } from "rxjs";
+import { Subject, debounceTime, filter, map } from "rxjs";
+import { IDockerContainer } from "../types/dockerContainer";
+import { dockerContainers } from "../services/dockerService";
 const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {
@@ -59,42 +61,38 @@ export const SingleReview = () => {
     onlyResponse: false,
   });
   const [search, setSearch] = useState("");
-
-  // useEffect(() => {
-  //   const placeInfoSubbscription = validateUrlData(place, uid).subscribe(
-  //     (data) => {
-  //       console.log("info", data);
-  //       setPlaceInfo(data);
-  //     },
-  //   );
-
-  //   return () => {
-  //     placeInfoSubbscription.unsubscribe();
-  //   };
-  // }, [place, uid]);
+  const [container, setContainer] = useState<IDockerContainer>({});
 
   useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        console.log("search", value);
-        setSearch(value);
+    const subscription = dockerContainers({
+      containerId: reviewId,
+    })
+      .pipe(
+        map((data) => {
+          if (data.length > 0) {
+            return data[0];
+          }
+
+          return null;
+        }),
+        filter((data) => !!data),
+      )
+      .subscribe((data) => {
+        setContainer(data);
       });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [reviewId]);
 
   useEffect(() => {
-    console.log("reviewId", reviewId);
     const reviewsSubscription = scrapData(
       reviewId,
       uid,
       filterOptions,
       search,
     ).subscribe((data) => {
-      console.log("s review data", data);
       setReviews(data);
     });
 
@@ -103,22 +101,10 @@ export const SingleReview = () => {
     };
   }, [reviewId, filterOptions, search, uid]);
 
-  // useEffect(() => {
-  //   const imagesSubscription = scrapImages(place, uid).subscribe((data) => {
-  //     console.log("images", data);
-  //     setImages(data);
-  //   });
-
-  //   const videosSubscription = scrapVideos(place, uid).subscribe((data) => {
-  //     console.log("videos", data);
-  //     setVideos(data);
-  //   });
-  // }, [place, filterOptions, uid]);
-
   return (
     <Container>
       <Row>
-        <Col md={9}>
+        <Col md={8}>
           <Tabs
             defaultActiveKey="comments"
             id="scrap-tabs"
@@ -250,7 +236,9 @@ export const SingleReview = () => {
                       {reviews.map((review, index) => (
                         <tr key={review.id}>
                           <td>{index + 1}</td>
-                          <td>{/* <Ratings info={review} /> */}</td>
+                          <td>
+                            <Ratings container={review} />
+                          </td>
                           <td>
                             <CommentView comment={review} />
                           </td>
@@ -335,44 +323,8 @@ export const SingleReview = () => {
             </Tab>
           </Tabs>
         </Col>
-        <Col md={3}>
-          {/* <PlaceInfo reviewId={reviewId} /> */}
-          {/* <Card className="mt-3">
-            <Card.Body>
-              <Stack gap={3} direction="horizontal">
-                <Button
-                  variant="secondary"
-                  className="w-100"
-                  onClick={() => {
-                    const url = info.csvUrl;
-                    if (url) {
-                      const a = document.createElement("a");
-                      a.href = url;
-                      a.download = "data.csv";
-                      a.click();
-                    }
-                  }}
-                >
-                  Download CSV
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  className="w-100"
-                  onClick={() => {
-                    const url = info.jsonUrl;
-                    if (url) {
-                      const a = document.createElement("a");
-                      a.href = url;
-                      a.download = "data.json";
-                      a.click();
-                    }
-                  }}
-                >
-                  Download JSON
-                </Button>
-              </Stack>
-            </Card.Body>
-          </Card> */}
+        <Col md={4}>
+          <PlaceInfo container={container} containerId={reviewId} />
         </Col>
       </Row>
     </Container>
