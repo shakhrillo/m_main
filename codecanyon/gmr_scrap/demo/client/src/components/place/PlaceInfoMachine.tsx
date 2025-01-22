@@ -6,7 +6,7 @@ import { IDockerContainer } from "../../types/dockerContainer";
 type MachineInfoRowProps = {
   icon: JSX.Element;
   label: string;
-  value: string | number | undefined;
+  value: JSX.Element | string; // Allow string for convenience.
 };
 
 const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
@@ -14,7 +14,7 @@ const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
     {icon}
     <div className="ms-3">
       <div className="text-break fw-bold">{label}</div>
-      <div className="text-break">{value ?? "N/A"}</div>
+      <div className="text-break">{value}</div>
     </div>
   </div>
 );
@@ -24,30 +24,31 @@ export const PlaceInfoMachine = ({
 }: {
   container: IDockerContainer;
 }) => {
-  const machine = container?.machine || {};
-  const attributes = machine?.Actor?.Attributes || {};
-
   return (
     <Row className="row-cols-1 g-3">
       <Col>
         <MachineInfoRow
           icon={<IconBox />}
           label="Machine ID"
-          value={attributes.name}
+          value={container?.machine?.Actor?.Attributes?.name || "N/A"}
         />
       </Col>
       <Col>
         <MachineInfoRow
           icon={<IconCheck />}
           label="Machine Status"
-          value={machine?.status}
+          value={
+            <span className="text-capitalize">
+              {container?.machine?.status || "unknown"}
+            </span>
+          }
         />
       </Col>
       <Col>
         <MachineInfoRow
           icon={<IconStopwatch />}
           label="Execution Duration"
-          value={`${attributes.execDuration ?? 0}s`}
+          value={`${container?.machine?.Actor?.Attributes?.execDuration ?? 0}s`}
         />
       </Col>
     </Row>
