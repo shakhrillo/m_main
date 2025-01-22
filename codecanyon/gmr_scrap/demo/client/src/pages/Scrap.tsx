@@ -16,7 +16,7 @@ import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 import { useEffect, useState } from "react";
 import { dockerContainers } from "../services/dockerService";
-import { filter, map } from "rxjs";
+import { filter, map, take } from "rxjs";
 import { IDockerContainer } from "../types/dockerContainer";
 
 export const Scrap = () => {
@@ -36,6 +36,7 @@ export const Scrap = () => {
       .pipe(
         map((data) => (Array.isArray(data) ? data[0] : null)),
         filter((data) => !!data),
+        take(1),
       )
       .subscribe((data) => {
         setContainer(data);

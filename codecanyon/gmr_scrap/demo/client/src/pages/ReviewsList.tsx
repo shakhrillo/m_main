@@ -162,21 +162,21 @@ export const ReviewsList = () => {
                         {index + 1}
                       </td>
                       <td style={{ width: "130px" }}>
-                        {/* <StatusInfo info={review} /> */}
+                        <StatusInfo container={container} />
                       </td>
                       <td>
                         <a
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/reviews/${container.id}`);
+                            navigate(`/reviews/${container.machineId}`);
                           }}
                         >
                           {container.title}
                         </a>
                       </td>
                       <td style={{ width: "250px" }}>
-                        {formatTimestamp(container.createdAt)}
+                        {formatTimestamp(container.updatedAt)}
                       </td>
                     </tr>
                   ))}

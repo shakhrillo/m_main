@@ -125,7 +125,7 @@ export const DockerContainers = () => {
                           style={{ maxWidth: "150px" }}
                           className="d-inline-block text-truncate"
                         >
-                          <NavLink to={`/containers/${container?.id}`}>
+                          <NavLink to={`/containers/${container?.machineId}`}>
                             {container?.title}
                           </NavLink>
                         </span>

@@ -250,9 +250,7 @@ export const SingleReview = () => {
                       {reviews.map((review, index) => (
                         <tr key={review.id}>
                           <td>{index + 1}</td>
-                          <td>
-                            <Ratings info={review} />
-                          </td>
+                          <td>{/* <Ratings info={review} /> */}</td>
                           <td>
                             <CommentView comment={review} />
                           </td>
@@ -338,7 +336,7 @@ export const SingleReview = () => {
           </Tabs>
         </Col>
         <Col md={3}>
-          <PlaceInfo reviewId={reviewId} />
+          {/* <PlaceInfo reviewId={reviewId} /> */}
           {/* <Card className="mt-3">
             <Card.Body>
               <Stack gap={3} direction="horizontal">

@@ -6,7 +6,9 @@ import { format } from "date-fns";
  * @param timestamp The Firestore timestamp to format.
  * @returns The formatted timestamp.
  */
-export const formatTimestamp = (timestamp: Timestamp | null): string => {
+export const formatTimestamp = (
+  timestamp: Timestamp | null | undefined,
+): string => {
   if (!timestamp) return "";
 
   const date = timestamp.toDate();
