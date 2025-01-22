@@ -6,7 +6,7 @@ import { IDockerContainer } from "../../types/dockerContainer";
 type MachineInfoRowProps = {
   icon: JSX.Element;
   label: string;
-  value: JSX.Element | string; // Allow string for convenience.
+  value: JSX.Element | string;
 };
 
 const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (

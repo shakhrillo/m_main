@@ -19,54 +19,6 @@ import { dockerContainers } from "../services/dockerService";
 import { filter, map } from "rxjs";
 import { IDockerContainer } from "../types/dockerContainer";
 
-const EXTRACT_OPTIONS = [
-  {
-    title: "Image URLs",
-    description:
-      "Extract image URLs from reviews, assigning 2 points to each URL. Accurately count and total the points based on the number of images found.",
-    points: 2,
-    id: "extractImageUrls",
-    icon: IconPhoto,
-  },
-  {
-    title: "Video URLs",
-    description:
-      "Extract video URLs from reviews, assigning 3 points to each URL. Accurately count and total the points based on the number of videos found.",
-    points: 3,
-    id: "extractVideoUrls",
-    icon: IconVideo,
-  },
-  {
-    title: "Owner response",
-    description:
-      "Extract owner responses from reviews, assigning 1 point to each response. Accurately count and total the points based on the number of responses found.",
-    points: 1,
-    id: "extractOwnerResponse",
-    icon: IconMessageReply,
-  },
-];
-
-const OUTPUT_OPTIONS = [
-  {
-    description: "Output the extracted data in JSON format.",
-    id: "json",
-    icon: IconJson,
-  },
-  {
-    description: "Output the extracted data in CSV format.",
-    id: "csv",
-    icon: IconCsv,
-  },
-];
-
-const NOTIFICATION_OPTIONS = [
-  {
-    description: "Send email notification when the extraction is complete.",
-    id: "notificationEmail",
-    icon: IconMail,
-  },
-];
-
 export const Scrap = () => {
   const { uid } = useOutletContext<User>();
   const { scrapId } = useParams() as { scrapId: string };
@@ -75,7 +27,10 @@ export const Scrap = () => {
   );
 
   useEffect(() => {
-    if (!scrapId) return;
+    if (!scrapId) {
+      setContainer({} as IDockerContainer);
+      return;
+    }
 
     const subscription = dockerContainers({ containerId: scrapId })
       .pipe(
@@ -83,7 +38,6 @@ export const Scrap = () => {
         filter((data) => !!data),
       )
       .subscribe((data) => {
-        console.log("__data__", data);
         setContainer(data);
       });
 
@@ -102,7 +56,11 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col md={4}>
-          <PlaceInfo containerId={scrapId} className="mb-3" />
+          <PlaceInfo
+            containerId={scrapId}
+            container={container}
+            className="mb-3"
+          />
           <ScrapExpectedPoints containerId={scrapId} />
         </Col>
       </Row>

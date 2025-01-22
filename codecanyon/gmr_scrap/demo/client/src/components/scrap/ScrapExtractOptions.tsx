@@ -53,7 +53,7 @@ export const ScrapExtractOptions = ({
   }, [container]);
 
   useEffect(() => {
-    if (!container.id || !containerId) return;
+    if (!container.rating || !container.id || !containerId) return;
 
     updateDockerContainer(container.id, {
       limit,
@@ -79,7 +79,9 @@ export const ScrapExtractOptions = ({
       <Card>
         <CardBody
           className="d-flex align-items-start gap-3"
-          onClick={() => containerId && setExtractImageUrls(!extractImageUrls)}
+          onClick={() =>
+            container.rating && setExtractImageUrls(!extractImageUrls)
+          }
         >
           {createElement(IconPhoto, {
             className: "text-body-secondary",
@@ -96,7 +98,7 @@ export const ScrapExtractOptions = ({
           {extractImageUrls ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            containerId && <IconCircleDashedCheck />
+            container.rating && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -104,7 +106,9 @@ export const ScrapExtractOptions = ({
       <Card>
         <CardBody
           className="d-flex align-items-start gap-3"
-          onClick={() => containerId && setExtractVideoUrls(!extractVideoUrls)}
+          onClick={() =>
+            container.rating && setExtractVideoUrls(!extractVideoUrls)
+          }
         >
           {createElement(IconVideo, {
             className: "text-body-secondary",
@@ -121,7 +125,7 @@ export const ScrapExtractOptions = ({
           {extractVideoUrls ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            containerId && <IconCircleDashedCheck />
+            container.rating && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -130,7 +134,7 @@ export const ScrapExtractOptions = ({
         <CardBody
           className="d-flex align-items-start gap-3"
           onClick={() =>
-            containerId && setExtractOwnerResponse(!extractOwnerResponse)
+            container.rating && setExtractOwnerResponse(!extractOwnerResponse)
           }
         >
           {createElement(IconMessageReply, {
@@ -148,7 +152,7 @@ export const ScrapExtractOptions = ({
           {extractOwnerResponse ? (
             <IconCircleCheck className="text-success" />
           ) : (
-            containerId && <IconCircleDashedCheck />
+            container.rating && <IconCircleDashedCheck />
           )}
         </CardBody>
       </Card>
@@ -164,7 +168,7 @@ export const ScrapExtractOptions = ({
               placeholder="Review limit"
               value={limit}
               onChange={(e) => setLimit(+e.target.value)}
-              disabled={!containerId}
+              disabled={!container.rating}
             />
             <FormText>
               Limit the number of reviews to extract. Leave empty to extract all
@@ -192,7 +196,7 @@ export const ScrapExtractOptions = ({
                     | "Lowest rating",
                 )
               }
-              disabled={!containerId}
+              disabled={!container.rating}
             >
               <option value="Most relevant">Most relevant</option>
               <option value="Newest">Newest</option>
@@ -217,7 +221,7 @@ export const ScrapExtractOptions = ({
             <FormSelect
               value={outputAs}
               onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
-              disabled={!containerId}
+              disabled={!container.rating}
             >
               <option value="json">JSON</option>
               <option value="csv">CSV</option>

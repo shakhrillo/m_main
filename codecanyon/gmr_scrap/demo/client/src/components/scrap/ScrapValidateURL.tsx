@@ -77,7 +77,7 @@ export const ScrapValidateURL = ({
   }
 
   return (
-    <Card text="light" bg="primary">
+    <Card text="primary" bg="bg-light">
       <CardBody>
         <Stack direction="horizontal" gap={3} className="align-items-start">
           <IconBrandGoogleMaps size={48} />
@@ -113,7 +113,7 @@ export const ScrapValidateURL = ({
               )}
               <Stack direction="horizontal">
                 <Button
-                  variant="light"
+                  variant="primary"
                   type="submit"
                   className="ms-auto"
                   disabled={isDisabled}
@@ -128,7 +128,7 @@ export const ScrapValidateURL = ({
                       <>
                         <IconCircleCheck />
                         Validate URL
-                        <Badge bg="dark" text="light" className="top-0" pill>
+                        <Badge bg="light" text="dark" className="top-0" pill>
                           3 points
                         </Badge>
                       </>

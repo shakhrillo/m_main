@@ -68,7 +68,7 @@ const ClusteredMarkers = ({
 export const GoogleMap = ({
   locations,
 }: {
-  locations: { latitude: number; longitude: number }[];
+  locations: { latitude: number; longitude: number }[] | undefined;
 }) => {
   return (
     <Map
@@ -77,7 +77,7 @@ export const GoogleMap = ({
       disableDefaultUI
       mapId={"4cc6e874aae3dd3"}
     >
-      <ClusteredMarkers locations={locations} />
+      {locations && <ClusteredMarkers locations={locations} />}
     </Map>
   );
 };

@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
-import { filter, map } from "rxjs";
-import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";
@@ -10,48 +7,29 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 
 export const PlaceInfo = ({
   containerId,
+  container,
   ...rest
 }: {
   containerId: string;
+  container: IDockerContainer;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  const [container, setContainer] = useState<IDockerContainer>(
-    {} as IDockerContainer,
-  );
-
-  useEffect(() => {
-    if (!containerId) return;
-
-    const subscription = dockerContainers({ containerId })
-      .pipe(
-        map((data) => (Array.isArray(data) ? data[0] : null)),
-        filter((data) => !!data),
-      )
-      .subscribe((data) => {
-        setContainer(data);
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [containerId]);
-
   return (
     <Card {...rest}>
       <Row className="g-0 row-cols-1">
         <Col>
-          {container?.location && (
-            <div
-              style={{ height: "300px" }}
-              className="rounded-top overflow-hidden"
-            >
-              <GoogleMap locations={[container.location]} />
-            </div>
-          )}
+          <div
+            style={{ height: "300px" }}
+            className="rounded-top overflow-hidden"
+          >
+            <GoogleMap locations={container.location && [container.location]} />
+          </div>
         </Col>
         <Col>
           <Card.Body>
-            <Card.Title className="text-primary">{container.title}</Card.Title>
-            <Ratings container={container} />
+            <Card.Title className="text-primary">
+              {container.title || "N/A"}
+            </Card.Title>
+            {container.rating && <Ratings container={container} />}
             <Accordion defaultActiveKey="0" flush className="mt-3 mx-n3">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Machine</Accordion.Header>
