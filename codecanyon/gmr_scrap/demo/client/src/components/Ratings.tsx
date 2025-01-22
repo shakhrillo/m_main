@@ -6,6 +6,7 @@ import {
 import { Stack } from "react-bootstrap";
 import { IComment, IReview } from "../services/scrapService";
 import formatNumber from "../utils/formatNumber";
+import { IDockerContainer } from "../types/dockerContainer";
 
 /**
  * Display the ratings of a review
@@ -13,18 +14,18 @@ import formatNumber from "../utils/formatNumber";
  * @returns The ratings component
  */
 export const Ratings = ({
-  info,
+  container,
   ...rest
 }: {
-  info?: IReview | IComment;
+  container?: IDockerContainer;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  if (!info || typeof info.rating !== "number") return null;
+  if (!container || typeof container.rating !== "number") return null;
 
-  const validRating = Math.max(0, Math.min(info.rating, 5));
+  const validRating = Math.max(0, Math.min(container.rating, 5));
   const fullStars = Math.floor(validRating);
   const halfStar = validRating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  const iconSize = "reviews" in info && info.reviews ? 16 : 16;
+  const iconSize = "reviews" in container && container.reviews ? 16 : 16;
 
   return (
     <Stack direction="horizontal" {...rest}>
@@ -40,8 +41,10 @@ export const Ratings = ({
         <IconStar key={`empty-${i}`} size={iconSize} color="#FFD700" />
       ))}
 
-      {"reviews" in info && info.reviews && (
-        <small className="ms-2">({formatNumber(info.reviews)} reviews)</small>
+      {"reviews" in container && container.reviews && (
+        <small className="ms-2">
+          ({formatNumber(container.reviews)} reviews)
+        </small>
       )}
     </Stack>
   );

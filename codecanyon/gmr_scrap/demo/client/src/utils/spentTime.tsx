@@ -1,13 +1,12 @@
-import { Timestamp } from "firebase/firestore";
 import { differenceInSeconds } from "date-fns";
-import { IReview } from "../services/scrapService";
+import { IDockerContainer } from "../types/dockerContainer";
 
-export const spentTime = (info: IReview) => {
-  if (!info.createdAt || !info.updatedAt) return "00:00:00";
+export const spentTime = (container: IDockerContainer) => {
+  if (!container.createdAt || !container.updatedAt) return "00:00:00";
 
   const diffInSeconds = differenceInSeconds(
-    new Date(info.updatedAt.seconds * 1000),
-    new Date(info.createdAt.seconds * 1000),
+    new Date(container.updatedAt.seconds * 1000),
+    new Date(container.createdAt.seconds * 1000),
   );
 
   if (diffInSeconds < 0)

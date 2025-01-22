@@ -24,7 +24,7 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
 import { CommentView } from "../components/CommentView";
-import { PlaceInfo } from "../components/PlaceInfo";
+import { PlaceInfo } from "../components/place/PlaceInfo";
 import { Ratings } from "../components/Ratings";
 import {
   IComment,

@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { Col, Container, Row, Stack } from "react-bootstrap";
-import { PlaceInfo } from "../components/PlaceInfo";
+import { PlaceInfo } from "../components/place/PlaceInfo";
 import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
 import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
