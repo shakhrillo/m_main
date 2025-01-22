@@ -41,6 +41,7 @@ export const DockerContainers = () => {
 
   useEffect(() => {
     const subscription = dockerContainers().subscribe((data) => {
+      console.log("___", data);
       setContainers(data);
     });
 
@@ -124,7 +125,7 @@ export const DockerContainers = () => {
                           style={{ maxWidth: "150px" }}
                           className="d-inline-block text-truncate"
                         >
-                          <NavLink to={`/containers/${container?.machine?.id}`}>
+                          <NavLink to={`/containers/${container?.id}`}>
                             {container?.title}
                           </NavLink>
                         </span>

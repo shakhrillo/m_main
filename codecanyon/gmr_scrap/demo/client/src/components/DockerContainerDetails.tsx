@@ -37,11 +37,7 @@ export const DockerContainerDetails = ({
 
     const subscription = dockerContainer(containerId)
       .pipe(filter((data) => JSON.stringify(data) !== "{}"))
-      .subscribe((data) => {
-        console.log("=");
-        console.log(data);
-        setContainer(data);
-      });
+      .subscribe((data) => setContainer(data));
 
     return () => {
       subscription.unsubscribe();

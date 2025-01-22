@@ -8,9 +8,14 @@ import {
   Row,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { DockerContainerDetails } from "../components/DockerContainerDetails";
+import { filter, map } from "rxjs";
 import { LineChart } from "../components/LineChart";
-import { dockerContainerStats } from "../services/dockerService";
+import { PlaceInfo } from "../components/place/PlaceInfo";
+import {
+  dockerContainers,
+  dockerContainerStats,
+} from "../services/dockerService";
+import { IDockerContainer } from "../types/dockerContainer";
 import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
@@ -18,18 +23,37 @@ import { formatStringDate } from "../utils/formatStringDate";
 export const DockerContainer = () => {
   const { containerId } = useParams<{ containerId: string }>();
   const [stats, setStats] = useState<IDockerStats[]>([]);
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
 
   useEffect(() => {
     if (!containerId) {
       return;
     }
 
-    const subscription = dockerContainerStats(containerId).subscribe({
-      next: (data) => setStats(data),
+    const containerStatsSubscription = dockerContainerStats(
+      containerId,
+    ).subscribe({
+      next: (data) => {
+        setStats(data);
+      },
       error: (error) => console.error("Error fetching stats data:", error),
     });
 
-    return () => subscription.unsubscribe();
+    const containerSubscription = dockerContainers({ containerId })
+      .pipe(
+        map((data) => (Array.isArray(data) ? data[0] : null)),
+        filter((data) => !!data),
+      )
+      .subscribe((data) => {
+        setContainer(data);
+      });
+
+    return () => {
+      containerStatsSubscription.unsubscribe();
+      containerSubscription.unsubscribe();
+    };
   }, [containerId]);
 
   const chartData = [
@@ -96,7 +120,7 @@ export const DockerContainer = () => {
   return (
     <Container>
       <Row className="g-3">
-        <Col md={9}>
+        <Col md={8}>
           <Row className="g-3 row-cols-1">
             {chartData.map((chart) => (
               <Col key={chart.label}>
@@ -117,8 +141,8 @@ export const DockerContainer = () => {
             ))}
           </Row>
         </Col>
-        <Col md={3}>
-          <DockerContainerDetails containerId={containerId} />
+        <Col md={4}>
+          <PlaceInfo containerId={containerId || ""} container={container} />
         </Col>
       </Row>
     </Container>

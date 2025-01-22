@@ -1,5 +1,8 @@
 const Docker = require("dockerode");
-const { updateMachine } = require("./services/firebaseService");
+const {
+  updateMachine,
+  addMachineStats,
+} = require("./services/firebaseService");
 const docker = new Docker({
   protocol: "http",
   host: process.env.DOCKER_HOST || "host.docker.internal",
@@ -15,6 +18,7 @@ async function watchDockerEvents() {
     console.error("Docker not initialized");
     return;
   }
+  const activeStreams = new Map();
   const eventsStream = await docker.getEvents();
   eventsStream.setEncoding("utf8");
   eventsStream.on("data", (data) => {
@@ -25,9 +29,58 @@ async function watchDockerEvents() {
 
     for (const data of parsedData) {
       const name = data?.Actor?.Attributes?.name;
-      if (!name) return;
+      const status = data?.status;
+      if (!name || name === "bridge") continue;
 
       updateMachine(name, data);
+
+      if (status === "die") {
+        console.log("Container died, removing from active streams");
+        if (activeStreams.has(name)) {
+          const stream = activeStreams.get(name);
+          stream.destroy(); // Properly close the stream
+          activeStreams.delete(name);
+        }
+
+        return;
+      }
+
+      // Clean up existing stream
+      console.log("-".repeat(50));
+      console.log("Name: ", name);
+      console.log("-".repeat(50));
+      if (activeStreams.has(name)) {
+        const stream = activeStreams.get(name);
+        stream.destroy(); // Properly close the stream
+        activeStreams.delete(name);
+      }
+
+      const container = docker.getContainer(name);
+      container.stats((err, stream) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        stream.setEncoding("utf8");
+        stream.on("data", (data) => {
+          try {
+            const stats = JSON.parse(data);
+            addMachineStats(name, stats);
+          } catch (err) {
+            console.error("Error parsing stats data:", err);
+          }
+        });
+
+        stream.on("end", () => {
+          console.log(`Stats stream ended for container ${name}`);
+        });
+
+        stream.on("error", (err) => {
+          console.error(`Stats stream error for container ${name}:`, err);
+        });
+
+        activeStreams.set(name, stream); // Track the new stream
+      });
     }
   });
 }
