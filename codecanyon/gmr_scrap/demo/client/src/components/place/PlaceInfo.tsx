@@ -9,6 +9,7 @@ import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";
 import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
+import { StatusInfo } from "../StatusInfo";
 
 export const PlaceInfo = ({ containerId }: { containerId: string }) => {
   const [container, setContainer] = useState<IDockerContainer>(
@@ -42,8 +43,12 @@ export const PlaceInfo = ({ containerId }: { containerId: string }) => {
     <div className="place">
       {geojson && <GoogleMap geojson={geojson} />}
       <div className="place-info">
+        <StatusInfo container={container} />
         <h3>{container.title || "N/A"}</h3>
         {container.rating && <Ratings container={container} />}
+        <a href={container.url} target="_blank" rel="noreferrer">
+          {container.address || "N/A"}
+        </a>
       </div>
       <Accordion defaultActiveKey="0" flush alwaysOpen>
         <Accordion.Item eventKey="0">

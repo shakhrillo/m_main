@@ -5,7 +5,7 @@ import {
   IconStopwatch,
 } from "@tabler/icons-react";
 import { JSX } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Badge, Col, Row } from "react-bootstrap";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -49,9 +49,13 @@ export const PlaceInfoMachine = ({
           icon={<IconCheck />}
           label="Machine Status"
           value={
-            <span className="text-capitalize">
-              {container?.machine?.status || "unknown"}
-            </span>
+            <Badge
+              className="text-capitalize"
+              pill
+              bg={container?.machine?.status === "die" ? "danger" : "info"}
+            >
+              {container?.machine?.status}
+            </Badge>
           }
         />
       </Col>
