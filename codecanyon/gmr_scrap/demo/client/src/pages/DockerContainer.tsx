@@ -33,8 +33,6 @@ export const DockerContainer = () => {
     };
   }, [containerId]);
 
-  console.log("wh");
-
   return (
     <Container>
       <Row className="g-3">

@@ -9,6 +9,7 @@ export interface IDockerContainer {
   keywords?: string[];
   location?: GeoPoint;
   machine?: IDockerMachine;
+  machineId?: string;
   rating?: number;
   reviewId?: string;
   reviews?: number;

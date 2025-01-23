@@ -7,6 +7,7 @@ import {
 import { JSX } from "react";
 import { Col, Row } from "react-bootstrap";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { NavLink, useNavigate } from "react-router-dom";
 
 type MachineInfoRowProps = {
   icon: JSX.Element;
@@ -29,13 +30,18 @@ export const PlaceInfoMachine = ({
 }: {
   container: IDockerContainer;
 }) => {
+  const navigate = useNavigate();
   return (
     <Row className="row-cols-1 g-3">
       <Col>
         <MachineInfoRow
           icon={<IconFrame />}
           label="Machine ID"
-          value={container?.machine?.Actor?.Attributes?.name || "N/A"}
+          value={
+            <NavLink to={`/containers/${container?.machineId}`}>
+              {container?.machine?.Actor?.Attributes?.name}
+            </NavLink>
+          }
         />
       </Col>
       <Col>

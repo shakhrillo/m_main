@@ -53,8 +53,6 @@ export const DoughnutChart = ({
   data: number[];
   total: number;
 }) => {
-  console.log("doughnut chart data", data);
-
   return (
     <div className="position-relative">
       <Doughnut

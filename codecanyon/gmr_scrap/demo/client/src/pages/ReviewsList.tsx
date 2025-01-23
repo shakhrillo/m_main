@@ -76,8 +76,6 @@ export const ReviewsList = () => {
       uid: uid,
       type: "comments",
     }).subscribe((data) => {
-      console.log("data", data);
-      // setReviews(data);
       setContainers(data);
     });
 

@@ -47,8 +47,6 @@ export const Scrap = () => {
     };
   }, [scrapId]);
 
-  console.log("====reload====");
-
   return (
     <Container>
       <Row className="g-3">
