@@ -1,14 +1,10 @@
-import React, { useCallback } from "react";
+import { IconPin } from "@tabler/icons-react";
 import {
   AdvancedMarker,
   AdvancedMarkerAnchorPoint,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import {
-  IconBuildingCastle,
-  IconPinned,
-  IconPinnedFilled,
-} from "@tabler/icons-react";
+import { useCallback } from "react";
 
 type TreeMarkerProps = {
   position: google.maps.LatLngLiteral;
@@ -36,8 +32,10 @@ export const FeatureMarker = ({
       position={position}
       onClick={handleClick}
       anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+      style={{ width: 48, height: 48 }}
+      className="bg-primary d-flex align-items-center p-1 justify-content-center rounded-circle shadow"
     >
-      <IconPinnedFilled className="text-primary" />
+      <IconPin className="text-white" />
     </AdvancedMarker>
   );
 };

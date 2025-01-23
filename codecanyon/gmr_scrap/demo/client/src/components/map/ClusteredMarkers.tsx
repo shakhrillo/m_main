@@ -44,27 +44,7 @@ export const ClusteredMarkers = ({
         const [lng, lat] = leaf.geometry.coordinates;
         bounds.extend({ lat, lng });
       });
-      // disable animation
       map?.fitBounds(bounds);
-
-      // console.log("handleClusterClick", clusterId);
-      // console.log("marker", marker);
-      // const allLeaves = getLeaves(clusterId);
-      // console.log("allLeaves", allLeaves);
-
-      // const leaves = getLeaves(clusterId);
-
-      // // Zoom in
-      // const bounds = new google.maps.LatLngBounds();
-      // leaves.forEach((leaf) => {
-      //   const [lng, lat] = leaf.geometry.coordinates;
-      //   bounds.extend({ lat, lng });
-      // });
-      // console.log({ bounds, marker });
-      // // marker.getMap().fitBounds(bounds);
-
-      // console.log({ anchor: marker, features: leaves });
-      // setInfowindowData({anchor: marker, features: leaves});
     },
     [getLeaves],
   );
@@ -77,9 +57,6 @@ export const ClusteredMarkers = ({
         const [lng, lat] = feature.geometry.coordinates;
         const clusterProperties = feature.properties as ClusterProperties;
         const isCluster: boolean = clusterProperties.cluster;
-
-        console.log("feature", feature);
-        console.log("clusterProperties", clusterProperties);
 
         return isCluster ? (
           <FeaturesClusterMarker

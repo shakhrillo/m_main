@@ -29,10 +29,16 @@ export const GoogleMap = ({
     setBounds(bounds);
   }, [geojson, map]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (!map || !bounds) return;
     map.fitBounds(bounds);
-  }, [bounds, map]);
+  }, [
+    map,
+    bounds?.toJSON().west,
+    bounds?.toJSON().south,
+    bounds?.toJSON().east,
+    bounds?.toJSON().north,
+  ]);
 
   return (
     <Map

@@ -1,11 +1,9 @@
-import React, { useCallback } from "react";
 import {
   AdvancedMarker,
   AdvancedMarkerAnchorPoint,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { IconBuildingCastle } from "@tabler/icons-react";
-import { Badge } from "react-bootstrap";
+import { useCallback } from "react";
 
 type TreeClusterMarkerProps = {
   clusterId: number;
