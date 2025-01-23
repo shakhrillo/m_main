@@ -1,94 +1,126 @@
-import { Map, InfoWindow, useMap } from "@vis.gl/react-google-maps";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { type Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Supercluster, { ClusterProperties } from "supercluster";
+import {
+  Map,
+  AdvancedMarker,
+  MapCameraChangedEvent,
+} from "@vis.gl/react-google-maps";
+import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
+import { FeatureMarker } from "./map/FeatureMarker";
+import { FeaturesClusterMarker } from "./map/FeaturesClusterMarker";
+import { BehaviorSubject, filter } from "rxjs";
+const zoom$ = new BehaviorSubject<MapCameraChangedEvent>(null as any);
 
-// Memoize the ClusteredMarkers component
-const ClusteredMarkers = React.memo(
-  ({ locations }: { locations: { latitude: number; longitude: number }[] }) => {
-    const [selectedMarker, setSelectedMarker] = useState<{
-      position: { lat: number; lng: number };
-    } | null>(null);
-    const map = useMap();
+const ClusteredMarkers = ({
+  geojson,
+}: {
+  geojson: FeatureCollection<Point, any>;
+}) => {
+  const [clusters, setClusters] = useState<any[]>([]);
 
-    const handleMarkerClick = useCallback(
-      (latitude: number, longitude: number) => {
-        setSelectedMarker({
-          position: { lat: latitude, lng: longitude },
-        });
-      },
-      [],
-    );
+  const clusterer = useMemo(() => {
+    return new Supercluster({
+      radius: 40,
+      maxZoom: 16,
+      extent: 256,
+    });
+  }, []);
 
-    const markers = useMemo(() => {
-      if (!map) return [];
-      return locations.map(({ latitude, longitude }) => {
-        const marker = new google.maps.Marker({
-          position: { lat: latitude, lng: longitude },
-          map: map,
-        });
-
-        marker.addListener("click", () =>
-          handleMarkerClick(latitude, longitude),
+  useEffect(() => {
+    const subscription = zoom$
+      .pipe(
+        filter((zoom) => zoom !== null),
+        filter(() => geojson !== null),
+      )
+      .subscribe((zoom) => {
+        clusterer.load(geojson.features);
+        const clustersData = clusterer.getClusters(
+          [-180, -85, 180, 85],
+          zoom.detail.zoom,
         );
-        return marker;
+        setClusters(clustersData);
       });
-    }, [locations, map, handleMarkerClick]);
 
-    const bounds = useMemo(() => {
-      if (!map || locations.length === 0) return null;
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [geojson, clusterer]);
+
+  const getLeaves = useCallback(
+    (clusterId: number) => clusterer.getLeaves(clusterId, Infinity),
+    [clusterer],
+  );
+
+  const handleClusterClick = useCallback(
+    (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
+      console.log("handleClusterClick", clusterId);
+      const leaves = getLeaves(clusterId);
+
+      // Zoom in
       const bounds = new google.maps.LatLngBounds();
-      locations.forEach(({ latitude, longitude }) => {
-        bounds.extend(new google.maps.LatLng(latitude, longitude));
+      leaves.forEach((leaf) => {
+        const [lng, lat] = leaf.geometry.coordinates;
+        bounds.extend({ lat, lng });
       });
-      return bounds;
-    }, [locations, map]);
+      console.log({ bounds, marker });
+      // marker.getMap().fitBounds(bounds);
 
-    useEffect(() => {
-      if (!map || !bounds) return;
+      console.log({ anchor: marker, features: leaves });
+      // setInfowindowData({anchor: marker, features: leaves});
+    },
+    [getLeaves],
+  );
 
-      map.fitBounds(bounds);
+  const handleMarkerClick = () => {};
 
-      const markerClusterer = new MarkerClusterer({
-        markers,
-        map,
-      });
+  return (
+    <>
+      {clusters.map((feature) => {
+        const [lng, lat] = feature.geometry.coordinates;
+        const clusterProperties = feature.properties as ClusterProperties;
+        const isCluster: boolean = clusterProperties.cluster;
 
-      return () => {
-        markerClusterer.clearMarkers();
-      };
-    }, [map, markers, bounds]);
+        console.log("feature", feature);
+        console.log("clusterProperties", clusterProperties);
 
-    return (
-      <>
-        {selectedMarker && (
-          <InfoWindow
-            position={selectedMarker.position}
-            onCloseClick={() => setSelectedMarker(null)}
-          >
-            <div>Info window content</div>
-          </InfoWindow>
-        )}
-      </>
-    );
-  },
-);
+        return isCluster ? (
+          <FeaturesClusterMarker
+            key={feature.id}
+            clusterId={clusterProperties.cluster_id}
+            position={{ lat, lng }}
+            size={clusterProperties.point_count}
+            sizeAsText={String(clusterProperties.point_count_abbreviated)}
+            onMarkerClick={handleClusterClick}
+          />
+        ) : (
+          <FeatureMarker
+            key={feature.id}
+            featureId={feature.id as string}
+            position={{ lat, lng }}
+            onMarkerClick={handleMarkerClick}
+          />
+        );
+      })}
+    </>
+  );
+};
 
-// Memoize the GoogleMap component
-export const GoogleMap = React.memo(
-  ({
-    locations,
-  }: {
-    locations: { latitude: number; longitude: number }[] | undefined;
-  }) => {
-    return (
-      <Map
-        defaultZoom={10}
-        gestureHandling={"greedy"}
-        disableDefaultUI
-        mapId={"4cc6e874aae3dd3"}
-      >
-        {locations && <ClusteredMarkers locations={locations} />}
-      </Map>
-    );
-  },
-);
+export const GoogleMap = ({
+  geojson,
+}: {
+  geojson: FeatureCollection<Point, GeoJsonProperties>;
+}) => {
+  console.log("geojson", geojson);
+  return (
+    <Map
+      defaultZoom={10}
+      gestureHandling="greedy"
+      mapId="4cc6e874aae3dd3"
+      // defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
+      defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
+      onZoomChanged={(zoom) => zoom$.next(zoom)}
+    >
+      <ClusteredMarkers geojson={geojson} />
+    </Map>
+  );
+};

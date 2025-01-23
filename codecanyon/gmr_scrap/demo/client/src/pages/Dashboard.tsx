@@ -281,7 +281,21 @@ export const Dashboard: React.FC = () => {
         </Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>
-            <GoogleMap locations={markerLocations} />
+            <GoogleMap
+              geojson={{
+                type: "FeatureCollection",
+                features: markerLocations.map((location) => {
+                  return {
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [location.longitude, location.latitude],
+                    },
+                    properties: {}, // Add an empty properties object
+                  };
+                }),
+              }}
+            />
           </Card>
         </Col>
       </Row>

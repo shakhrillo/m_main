@@ -20,7 +20,18 @@ export const PlaceInfo = ({
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
   );
-  const [location, setLocation] = useState<GeoPoint | undefined>(undefined);
+  // const [location, setLocation] = useState<GeoPoint | undefined>(undefined);
+  // const location = useMemo(
+  //   () => container.location,
+  //   [container?.location?.latitude, container?.location?.longitude],
+  // );
+  const latitude = useMemo(() => {
+    return container?.location?.latitude || 0;
+  }, [container?.location?.latitude]);
+  const longitude = useMemo(
+    () => container?.location?.longitude || 0,
+    [container?.location?.longitude],
+  );
 
   useEffect(() => {
     if (!containerId) {
@@ -42,32 +53,46 @@ export const PlaceInfo = ({
     };
   }, [containerId]);
 
-  useEffect(() => {
-    if (!container?.location) {
-      return;
-    }
-    setLocation(container?.location);
-  }, [container?.location?.latitude, container?.location?.longitude]);
+  // useEffect(() => {
+  //   if (!container?.location) {
+  //     return;
+  //   }
+  //   setLocation(container.location);
+  // }, [container?.location?.latitude, container?.location?.longitude]);
 
   // Memoize locations to prevent unnecessary updates
-  const memoizedLocations = useMemo(
-    () => (location ? [location] : undefined),
-    [location],
-  );
-
-  console.log("-reload--");
+  // const memoizedLocations = useMemo(
+  //   () => (location ? [location] : undefined),
+  //   [location],
+  // );
 
   return (
     <Card {...rest}>
       <Row className="g-0 row-cols-1">
-        <Col>
-          <div
-            style={{ height: "300px" }}
-            className="rounded-top overflow-hidden"
-          >
-            <GoogleMap locations={memoizedLocations} />
-          </div>
-        </Col>
+        {
+          <Col>
+            <div
+              style={{ height: "300px" }}
+              className="rounded-top overflow-hidden"
+            >
+              <GoogleMap
+                geojson={{
+                  type: "FeatureCollection",
+                  features: [
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "Point",
+                        coordinates: [longitude, latitude],
+                      },
+                      properties: {}, // Add an empty properties object
+                    },
+                  ],
+                }}
+              />
+            </div>
+          </Col>
+        }
         <Col>
           <Card.Body>
             <Card.Title className="text-primary">
