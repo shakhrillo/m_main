@@ -1,15 +1,12 @@
+import { useEffect, useState } from "react";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
+import { filter, map } from "rxjs";
+import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";
 import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
-import { useState, useEffect } from "react";
-import { map, filter, take } from "rxjs";
-import { dockerContainers } from "../../services/dockerService";
-import { GeoPoint } from "firebase/firestore";
-
-import { useMemo } from "react";
 
 export const PlaceInfo = ({
   containerId,
@@ -19,18 +16,6 @@ export const PlaceInfo = ({
 } & React.HTMLAttributes<HTMLDivElement>) => {
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
-  );
-  // const [location, setLocation] = useState<GeoPoint | undefined>(undefined);
-  // const location = useMemo(
-  //   () => container.location,
-  //   [container?.location?.latitude, container?.location?.longitude],
-  // );
-  const latitude = useMemo(() => {
-    return container?.location?.latitude || 0;
-  }, [container?.location?.latitude]);
-  const longitude = useMemo(
-    () => container?.location?.longitude || 0,
-    [container?.location?.longitude],
   );
 
   useEffect(() => {
@@ -53,23 +38,10 @@ export const PlaceInfo = ({
     };
   }, [containerId]);
 
-  // useEffect(() => {
-  //   if (!container?.location) {
-  //     return;
-  //   }
-  //   setLocation(container.location);
-  // }, [container?.location?.latitude, container?.location?.longitude]);
-
-  // Memoize locations to prevent unnecessary updates
-  // const memoizedLocations = useMemo(
-  //   () => (location ? [location] : undefined),
-  //   [location],
-  // );
-
   return (
     <Card {...rest}>
       <Row className="g-0 row-cols-1">
-        {
+        {containerId && (
           <Col>
             <div
               style={{ height: "300px" }}
@@ -83,16 +55,19 @@ export const PlaceInfo = ({
                       type: "Feature",
                       geometry: {
                         type: "Point",
-                        coordinates: [longitude, latitude],
+                        coordinates: [
+                          container.location?.longitude || 0,
+                          container.location?.latitude || 0,
+                        ],
                       },
-                      properties: {}, // Add an empty properties object
+                      properties: {},
                     },
                   ],
                 }}
               />
             </div>
           </Col>
-        }
+        )}
         <Col>
           <Card.Body>
             <Card.Title className="text-primary">
