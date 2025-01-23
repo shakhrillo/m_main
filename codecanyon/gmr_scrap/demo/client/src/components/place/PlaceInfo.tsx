@@ -1,22 +1,20 @@
+import { IconBox, IconSettings } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Accordion, Card, Col, Row } from "react-bootstrap";
-import { filter, map } from "rxjs";
+import { Accordion } from "react-bootstrap";
+import { map } from "rxjs";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { locationsToGeoJSON } from "../../utils/locationsToGeoJSON";
 import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";
 import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
 
-export const PlaceInfo = ({
-  containerId,
-  ...rest
-}: {
-  containerId: string;
-} & React.HTMLAttributes<HTMLDivElement>) => {
+export const PlaceInfo = ({ containerId }: { containerId: string }) => {
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
   );
+  const [geojson, setGeojson] = useState<any>(null);
 
   useEffect(() => {
     if (!containerId) {
@@ -25,12 +23,14 @@ export const PlaceInfo = ({
     }
 
     const subscription = dockerContainers({ containerId })
-      .pipe(
-        map((data) => (Array.isArray(data) ? data[0] : null)),
-        filter((data) => !!data),
-      )
+      .pipe(map((data) => (Array.isArray(data) ? data[0] : null)))
       .subscribe((data) => {
+        if (!data || !data.location) {
+          setContainer({} as IDockerContainer);
+          return;
+        }
         setContainer(data);
+        setGeojson(locationsToGeoJSON([data.location]));
       });
 
     return () => {
@@ -39,58 +39,32 @@ export const PlaceInfo = ({
   }, [containerId]);
 
   return (
-    <Card {...rest}>
-      <Row className="g-0 row-cols-1">
-        {containerId && (
-          <Col>
-            <div
-              style={{ height: "300px" }}
-              className="rounded-top overflow-hidden"
-            >
-              <GoogleMap
-                geojson={{
-                  type: "FeatureCollection",
-                  features: [
-                    {
-                      type: "Feature",
-                      geometry: {
-                        type: "Point",
-                        coordinates: [
-                          container.location?.longitude || 0,
-                          container.location?.latitude || 0,
-                        ],
-                      },
-                      properties: {},
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </Col>
-        )}
-        <Col>
-          <Card.Body>
-            <Card.Title className="text-primary">
-              {container.title || "N/A"}
-            </Card.Title>
-            {container.rating && <Ratings container={container} />}
-            <Accordion defaultActiveKey="0" flush className="mt-3 mx-n3">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Machine</Accordion.Header>
-                <Accordion.Body>
-                  <PlaceInfoMachine container={container} />
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>Options</Accordion.Header>
-                <Accordion.Body>
-                  <PlaceInfoOptions container={container} />
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </Card.Body>
-        </Col>
-      </Row>
-    </Card>
+    <div className="place">
+      {geojson && <GoogleMap geojson={geojson} />}
+      <div className="place-info">
+        <h3>{container.title || "N/A"}</h3>
+        {container.rating && <Ratings container={container} />}
+      </div>
+      <Accordion defaultActiveKey="0" flush alwaysOpen>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>
+            <IconBox className="me-3" />
+            Container Info
+          </Accordion.Header>
+          <Accordion.Body>
+            <PlaceInfoMachine container={container} />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>
+            <IconSettings className="me-3" />
+            Options
+          </Accordion.Header>
+          <Accordion.Body>
+            <PlaceInfoOptions container={container} />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </div>
   );
 };

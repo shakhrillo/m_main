@@ -1,0 +1,17 @@
+.ratings {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &-stars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &-star {
+    width: 1rem;
+    height: 1rem;
+    color: $warning;
+  }
+}

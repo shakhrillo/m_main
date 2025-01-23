@@ -50,6 +50,7 @@ export const GoogleMap = ({
       onZoomChanged={(e: MapCameraChangedEvent) => {
         setZoom(e.detail.zoom);
       }}
+      className="google-map"
     >
       <ClusteredMarkers geojson={geojson} zoom={zoom} />
     </Map>

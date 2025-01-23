@@ -4,48 +4,41 @@ import {
   IconStarHalfFilled,
 } from "@tabler/icons-react";
 import { Stack } from "react-bootstrap";
-import { IComment, IReview } from "../services/scrapService";
-import formatNumber from "../utils/formatNumber";
 import { IDockerContainer } from "../types/dockerContainer";
+import formatNumber from "../utils/formatNumber";
 
 /**
  * Display the ratings of a review
  * @param info The review information
  * @returns The ratings component
  */
-export const Ratings = ({
-  container,
-  ...rest
-}: {
-  container?: IDockerContainer;
-} & React.HTMLAttributes<HTMLDivElement>) => {
+export const Ratings = ({ container }: { container?: IDockerContainer }) => {
   if (!container || typeof container.rating !== "number") return null;
 
   const validRating = Math.max(0, Math.min(container.rating, 5));
   const fullStars = Math.floor(validRating);
   const halfStar = validRating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  const iconSize = "reviews" in container && container.reviews ? 16 : 16;
 
   return (
-    <Stack direction="horizontal" {...rest}>
-      <small className="me-2">{validRating.toFixed(1)}</small>
+    <div className="ratings">
+      <span>{validRating.toFixed(1)}</span>
 
-      {Array.from({ length: fullStars }).map((_, i) => (
-        <IconStarFilled key={`full-${i}`} size={iconSize} color="#FFD700" />
-      ))}
+      <div className="ratings-stars">
+        {Array.from({ length: fullStars }).map((_, i) => (
+          <IconStarFilled key={`full-${i}`} className="ratings-star" />
+        ))}
 
-      {halfStar && <IconStarHalfFilled size={iconSize} color="#FFD700" />}
+        {halfStar && <IconStarHalfFilled className="ratings-star" />}
 
-      {Array.from({ length: emptyStars }).map((_, i) => (
-        <IconStar key={`empty-${i}`} size={iconSize} color="#FFD700" />
-      ))}
+        {Array.from({ length: emptyStars }).map((_, i) => (
+          <IconStar key={`empty-${i}`} className="ratings-star" />
+        ))}
+      </div>
 
-      {"reviews" in container && container.reviews && (
-        <small className="ms-2">
-          ({formatNumber(container.reviews)} reviews)
-        </small>
-      )}
-    </Stack>
+      {"reviews" in container &&
+        container.reviews &&
+        `${formatNumber(container.reviews)} reviews`}
+    </div>
   );
 };

@@ -56,7 +56,6 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("containersData", containersData);
       containers$.next(containersData as IDockerContainer[]);
     },
     (error) => {

@@ -1,4 +1,9 @@
-import { IconBox, IconCheck, IconStopwatch } from "@tabler/icons-react";
+import {
+  IconBox,
+  IconCheck,
+  IconFrame,
+  IconStopwatch,
+} from "@tabler/icons-react";
 import { JSX } from "react";
 import { Col, Row } from "react-bootstrap";
 import { IDockerContainer } from "../../types/dockerContainer";
@@ -28,7 +33,7 @@ export const PlaceInfoMachine = ({
     <Row className="row-cols-1 g-3">
       <Col>
         <MachineInfoRow
-          icon={<IconBox />}
+          icon={<IconFrame />}
           label="Machine ID"
           value={container?.machine?.Actor?.Attributes?.name || "N/A"}
         />
