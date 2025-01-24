@@ -1,14 +1,14 @@
 import { useFloating, offset, flip, shift, useHover } from "@floating-ui/react";
 import { useState } from "react";
-import { IComment } from "../services/scrapService";
+import { IComment } from "../../services/scrapService";
 
-export const CommentView = ({
+export const CommentUser = ({
   comment,
   ...rest
 }: {
   comment?: IComment;
 } & React.HTMLAttributes<HTMLDivElement>) => {
-  const textLimit = 30;
+  const textLimit = 200;
   const [isVisible, setIsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     middleware: [offset(8), flip(), shift()],

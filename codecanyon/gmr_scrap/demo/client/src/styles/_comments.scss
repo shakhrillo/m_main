@@ -1,0 +1,13 @@
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer;
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: $spacer;
+}

@@ -23,7 +23,7 @@ import {
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
-import { CommentView } from "../components/CommentView";
+import { CommentView } from "../components/comments/CommentUser";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { Ratings } from "../components/Ratings";
 import {
@@ -40,6 +40,7 @@ import { CommentVideos } from "../components/CommentVideos";
 import { Subject, debounceTime, filter, map, pipe, take } from "rxjs";
 import { IDockerContainer } from "../types/dockerContainer";
 import { dockerContainers } from "../services/dockerService";
+import { CommentsList } from "../components/comments/CommentsList";
 const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {
@@ -86,25 +87,10 @@ export const SingleReview = () => {
     };
   }, [reviewId]);
 
-  useEffect(() => {
-    const reviewsSubscription = scrapData(
-      reviewId,
-      uid,
-      filterOptions,
-      search,
-    ).subscribe((data) => {
-      setReviews(data);
-    });
-
-    return () => {
-      reviewsSubscription.unsubscribe();
-    };
-  }, [reviewId, filterOptions, search, uid]);
-
   return (
     <Container>
       <Row>
-        <Col md={8}>
+        <Col md={9}>
           <Tabs
             defaultActiveKey="comments"
             id="scrap-tabs"
@@ -218,48 +204,12 @@ export const SingleReview = () => {
                   </Dropdown.Menu>
                 </Dropdown>
               </Stack>
-              <Card className="mt-3">
-                <Card.Body>
-                  <Table responsive hover>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Rating</th>
-                        <th>Review</th>
-                        <th>QA</th>
-                        <th>Response</th>
-                        <th>Images</th>
-                        <th>Videos</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {reviews.map((review, index) => (
-                        <tr key={review.id}>
-                          <td>{index + 1}</td>
-                          <td>
-                            <Ratings container={review} />
-                          </td>
-                          <td>
-                            <CommentView comment={review} />
-                          </td>
-                          <td>
-                            <CommentQAView comment={review} />
-                          </td>
-                          <td>
-                            <CommentResponseView comment={review} />
-                          </td>
-                          <td style={{ width: "60px" }}>
-                            <CommentImages comment={review} />
-                          </td>
-                          <td style={{ width: "60px" }}>
-                            <CommentVideos comment={review} />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
+              <CommentsList
+                reviewId={reviewId}
+                uid={uid}
+                filterOptions={filterOptions}
+                search={search}
+              />
             </Tab>
             <Tab
               eventKey="images"
@@ -323,8 +273,8 @@ export const SingleReview = () => {
             </Tab>
           </Tabs>
         </Col>
-        <Col md={4}>
-          <PlaceInfo container={container} containerId={reviewId} />
+        <Col md={3}>
+          <PlaceInfo containerId={reviewId} />
         </Col>
       </Row>
     </Container>

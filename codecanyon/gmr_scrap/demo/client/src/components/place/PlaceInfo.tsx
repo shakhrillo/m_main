@@ -10,6 +10,7 @@ import { Ratings } from "../Ratings";
 import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
+import { NavLink } from "react-router-dom";
 
 export const PlaceInfo = ({ containerId }: { containerId: string }) => {
   const [container, setContainer] = useState<IDockerContainer>(
@@ -44,7 +45,12 @@ export const PlaceInfo = ({ containerId }: { containerId: string }) => {
       {geojson && <GoogleMap geojson={geojson} />}
       <div className="place-info">
         <StatusInfo container={container} />
-        <h3>{container.title || "N/A"}</h3>
+        <NavLink
+          to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
+          className="h3 d-block text-decoration-none text-primary"
+        >
+          {container.title || "N/A"}
+        </NavLink>
         {container.rating && <Ratings container={container} />}
         <a href={container.url} target="_blank" rel="noreferrer">
           {container.address || "N/A"}

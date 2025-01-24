@@ -36,7 +36,7 @@ export const Scrap = () => {
       .pipe(
         map((data) => (Array.isArray(data) ? data[0] : null)),
         filter((data) => !!data),
-        take(1),
+        // take(1),
       )
       .subscribe((data) => {
         setContainer(data);
@@ -57,7 +57,7 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col md={4}>
-          <PlaceInfo containerId={scrapId} className="mb-3" />
+          <PlaceInfo containerId={scrapId} />
           <ScrapExpectedPoints containerId={scrapId} />
         </Col>
       </Row>
