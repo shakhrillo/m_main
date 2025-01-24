@@ -1,30 +1,40 @@
-import { Stack, Table } from "react-bootstrap";
-import { CommentImages } from "./CommentImages";
-import { CommentResponseView } from "../CommentResponseView";
-import { CommentVideos } from "./CommentVideos";
-import { CommentReview } from "./CommentReview";
-import { Ratings } from "../Ratings";
-import { useEffect, useState } from "react";
+import { IconSearch } from "@tabler/icons-react";
+import { User } from "firebase/auth";
+import { useEffect, useRef, useState } from "react";
+import { Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { useOutletContext } from "react-router-dom";
+import { debounceTime, Subject } from "rxjs";
 import { IComment, scrapData } from "../../services/scrapService";
-import { CommentQA } from "./CommentQA";
+import { Comment } from "./Comment";
 
-export const CommentsList = ({
-  reviewId,
-  uid,
-  filterOptions,
-  search,
-}: {
+interface ICommentsListProps {
   reviewId: string;
-  uid: string;
-  filterOptions: {
-    onlyImages: boolean;
-    onlyVideos: boolean;
-    onlyQA: boolean;
-    onlyResponse: boolean;
-  };
-  search: string;
-}) => {
+}
+
+export const CommentsList = ({ reviewId }: ICommentsListProps) => {
+  const commentsRef = useRef<HTMLDivElement>(null);
+  const { uid } = useOutletContext<User>();
   const [comments, setComments] = useState([] as IComment[]);
+  const [filterOptions, setFilterOptions] = useState({
+    onlyImages: false,
+    onlyVideos: false,
+    onlyQA: false,
+    onlyResponse: false,
+  });
+  const [search, setSearch] = useState("");
+  const [searchSubject] = useState(new Subject<string>());
+
+  useEffect(() => {
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        setSearch(value);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const subscription = scrapData(
@@ -33,7 +43,6 @@ export const CommentsList = ({
       filterOptions,
       search,
     ).subscribe((data) => {
-      console.log("comments", data);
       setComments(data);
     });
 
@@ -43,25 +52,109 @@ export const CommentsList = ({
   }, [reviewId, filterOptions, search, uid]);
 
   return (
-    <div className="comments">
-      {comments.map((review, index) => (
-        <div className="comment" key={`comment-${index}`}>
-          <div className="comment-user">
-            <img src={review.user.image} alt={review.user.name} />
-            <div className="comment-user-info">
-              <a href={review.user.url} target="_blank" rel="noreferrer">
-                {review.user.name}
-              </a>
-              <Ratings container={review} />
-            </div>
-            <span>{review.date}</span>
-          </div>
-          <CommentReview comment={review} />
-          <CommentQA comment={review} />
-          <CommentImages comment={review} />
-          <CommentVideos comment={review} />
-          <CommentResponseView comment={review} />
+    <div className="comments" ref={commentsRef}>
+      <Stack direction="horizontal">
+        <div className="d-inline-block me-auto">
+          <InputGroup>
+            <InputGroup.Text id="search-icon">
+              <IconSearch />
+            </InputGroup.Text>
+            <Form.Control
+              type="search"
+              id="search"
+              placeholder="Search..."
+              aria-label="Search"
+              aria-describedby="search-icon"
+              onChange={(e) => {
+                searchSubject.next(e.target.value);
+              }}
+              // value={search}
+            />
+          </InputGroup>
         </div>
+        <Dropdown autoClose="outside">
+          <Dropdown.Toggle id="dropdown-filter" variant="secondary">
+            Filter
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={(e) => {
+                e.preventDefault();
+                setFilterOptions({
+                  ...filterOptions,
+                  onlyImages: !filterOptions.onlyImages,
+                });
+              }}
+            >
+              <Form>
+                <Form.Check
+                  type="checkbox"
+                  id="filter-image-checkbox"
+                  label="Image comments"
+                  checked={filterOptions.onlyImages}
+                />
+              </Form>
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={(e) => {
+                e.preventDefault();
+                setFilterOptions({
+                  ...filterOptions,
+                  onlyVideos: !filterOptions.onlyVideos,
+                });
+              }}
+            >
+              <Form>
+                <Form.Check
+                  type="checkbox"
+                  id="filter-video-checkbox"
+                  label="Video comments"
+                  checked={filterOptions.onlyVideos}
+                />
+              </Form>
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={(e) => {
+                e.preventDefault();
+                setFilterOptions({
+                  ...filterOptions,
+                  onlyQA: !filterOptions.onlyQA,
+                });
+              }}
+            >
+              <Form>
+                <Form.Check
+                  type="checkbox"
+                  id="filter-qa-checkbox"
+                  label="QA comments"
+                  checked={filterOptions.onlyQA}
+                />
+              </Form>
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={(e) => {
+                e.preventDefault();
+                setFilterOptions({
+                  ...filterOptions,
+                  onlyResponse: !filterOptions.onlyResponse,
+                });
+              }}
+            >
+              <Form>
+                <Form.Check
+                  type="checkbox"
+                  id="filter-response-checkbox"
+                  label="Response comments"
+                  checked={filterOptions.onlyResponse}
+                />
+              </Form>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Stack>
+      {comments.map((review, index) => (
+        <Comment review={review} key={index} />
       ))}
     </div>
   );

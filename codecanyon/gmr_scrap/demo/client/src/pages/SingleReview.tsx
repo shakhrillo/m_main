@@ -75,7 +75,7 @@ export const SingleReview = () => {
   return (
     <Container>
       <Row>
-        <Col md={9}>
+        <Col md={8}>
           <Tabs
             defaultActiveKey="comments"
             id="scrap-tabs"
@@ -91,110 +91,7 @@ export const SingleReview = () => {
                 </>
               }
             >
-              <Stack direction="horizontal" className="mt-3">
-                <div className="d-inline-block me-auto">
-                  <InputGroup>
-                    <InputGroup.Text id="search-icon">
-                      <IconSearch />
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="search"
-                      id="search"
-                      placeholder="Search..."
-                      aria-label="Search"
-                      aria-describedby="search-icon"
-                      onChange={(e) => searchSubject.next(e.target.value)}
-                      // value={search}
-                    />
-                  </InputGroup>
-                </div>
-                <Dropdown autoClose="outside">
-                  <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-                    Filter
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setFilterOptions({
-                          ...filterOptions,
-                          onlyImages: !filterOptions.onlyImages,
-                        });
-                      }}
-                    >
-                      <Form>
-                        <Form.Check
-                          type="checkbox"
-                          id="filter-image-checkbox"
-                          label="Image comments"
-                          checked={filterOptions.onlyImages}
-                        />
-                      </Form>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setFilterOptions({
-                          ...filterOptions,
-                          onlyVideos: !filterOptions.onlyVideos,
-                        });
-                      }}
-                    >
-                      <Form>
-                        <Form.Check
-                          type="checkbox"
-                          id="filter-video-checkbox"
-                          label="Video comments"
-                          checked={filterOptions.onlyVideos}
-                        />
-                      </Form>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setFilterOptions({
-                          ...filterOptions,
-                          onlyQA: !filterOptions.onlyQA,
-                        });
-                      }}
-                    >
-                      <Form>
-                        <Form.Check
-                          type="checkbox"
-                          id="filter-qa-checkbox"
-                          label="QA comments"
-                          checked={filterOptions.onlyQA}
-                        />
-                      </Form>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setFilterOptions({
-                          ...filterOptions,
-                          onlyResponse: !filterOptions.onlyResponse,
-                        });
-                      }}
-                    >
-                      <Form>
-                        <Form.Check
-                          type="checkbox"
-                          id="filter-response-checkbox"
-                          label="Response comments"
-                          checked={filterOptions.onlyResponse}
-                        />
-                      </Form>
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Stack>
-              <CommentsList
-                reviewId={reviewId}
-                uid={uid}
-                filterOptions={filterOptions}
-                search={search}
-              />
+              <CommentsList reviewId={reviewId} />
             </Tab>
             <Tab
               eventKey="images"
@@ -258,7 +155,7 @@ export const SingleReview = () => {
             </Tab>
           </Tabs>
         </Col>
-        <Col md={3}>
+        <Col md={4}>
           <PlaceInfo containerId={reviewId} />
         </Col>
       </Row>

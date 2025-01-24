@@ -2,15 +2,36 @@
   display: flex;
   flex-direction: column;
   gap: $spacer;
+  padding: $spacer 0;
 }
+
 .comment {
   display: flex;
+  position: relative;
   flex-direction: column;
   gap: 0.5rem;
   border: 1px solid #e1e1e1;
   border-radius: 6px;
   background-color: #fff;
   padding: $spacer;
+  max-height: 200px;
+  overflow: hidden;
+
+  &-expand {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #e1e1e1;
+    background-color: #fff;
+    width: 100%;
+  }
+
+  &.expanded {
+    max-height: none;
+  }
 
   &-user {
     display: flex;
@@ -44,6 +65,24 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  &-response {
+    display: flex;
+    position: relative;
+    padding-left: $spacer;
+
+    &::before {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 6px 0 0 6px;
+      background-color: $secondary;
+      width: 4px;
+      height: 100%;
+      content: "";
+    }
   }
 
   &-media {
