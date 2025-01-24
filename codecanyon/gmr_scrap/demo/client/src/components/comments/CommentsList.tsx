@@ -1,7 +1,7 @@
 import { Stack, Table } from "react-bootstrap";
 import { CommentImages } from "./CommentImages";
 import { CommentResponseView } from "../CommentResponseView";
-import { CommentVideos } from "../CommentVideos";
+import { CommentVideos } from "./CommentVideos";
 import { CommentReview } from "./CommentReview";
 import { Ratings } from "../Ratings";
 import { useEffect, useState } from "react";
@@ -60,7 +60,6 @@ export const CommentsList = ({
           <CommentQA comment={review} />
           <CommentImages comment={review} />
           <CommentVideos comment={review} />
-          <hr />
           <CommentResponseView comment={review} />
         </div>
       ))}

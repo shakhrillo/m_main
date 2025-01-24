@@ -49,41 +49,52 @@
   &-media {
     display: flex;
     flex-wrap: nowrap;
-    border-bottom: 1px solid #e1e1e1;
     width: 100%;
-    height: 120px;
+    height: 100px;
     overflow: auto;
 
     .ScrollbarsCustom-Content {
       display: flex;
       flex-wrap: nowrap;
-      gap: 0.5rem;
+      gap: $spacer;
     }
   }
 
+  &-video,
   &-image {
     display: block;
     position: relative;
-    top: 50%;
+    top: calc(50% + 10px);
     right: 0;
     left: 0;
     transform: translateY(-50%);
     margin: 0 auto;
     max-width: 90%;
-    height: auto;
-    max-height: 100vh;
+    height: 100% !important;
+    max-height: 100vh !important;
     object-fit: contain;
   }
 
   &-thumb {
     cursor: pointer;
     border-radius: 6px;
-    width: 60px;
-    height: 100px;
+    width: 70px;
+    height: 90px;
     object-fit: cover;
 
-    &:hover {
+    &-container {
+      position: relative;
+    }
+
+    &-icon {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
       opacity: 0.8;
+      cursor: pointer;
+      color: $white;
     }
   }
 }
