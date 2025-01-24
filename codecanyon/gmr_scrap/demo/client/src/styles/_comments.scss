@@ -48,7 +48,17 @@
 
   &-media {
     display: flex;
-    gap: 1rem;
+    flex-wrap: nowrap;
+    border-bottom: 1px solid #e1e1e1;
+    width: 100%;
+    height: 120px;
+    overflow: auto;
+
+    .ScrollbarsCustom-Content {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.5rem;
+    }
   }
 
   &-image {

@@ -1,6 +1,7 @@
 import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { IComment } from "../../services/scrapService";
+import Scrollbar from "react-scrollbars-custom";
 
 interface ICommentImagesProps {
   comment?: IComment;
@@ -8,32 +9,34 @@ interface ICommentImagesProps {
 
 export const CommentImages = ({ comment }: ICommentImagesProps) => {
   return (
-    <div className="comment-media">
-      <Gallery>
-        {comment?.imageUrls.map((image, index) => (
-          <Item
-            original={image.original}
-            key={`comment-${index}`}
-            content={
-              <Image
-                src={image.original}
-                alt={`comment-${index}`}
-                className="comment-image"
-              />
-            }
-          >
-            {({ ref, open }) => (
-              <Image
-                src={image.thumb}
-                alt={`comment-thumb-${index}`}
-                className="comment-thumb"
-                ref={ref}
-                onClick={open}
-              />
-            )}
-          </Item>
-        ))}
-      </Gallery>
-    </div>
+    <Gallery>
+      <div className="comment-media">
+        <Scrollbar>
+          {comment?.imageUrls.map((image, index) => (
+            <Item
+              original={image.original}
+              key={`comment-${index}`}
+              content={
+                <Image
+                  src={image.original}
+                  alt={`comment-${index}`}
+                  className="comment-image"
+                />
+              }
+            >
+              {({ ref, open }) => (
+                <Image
+                  src={image.thumb}
+                  alt={`comment-thumb-${index}`}
+                  className="comment-thumb"
+                  ref={ref}
+                  onClick={open}
+                />
+              )}
+            </Item>
+          ))}
+        </Scrollbar>
+      </div>
+    </Gallery>
   );
 };
