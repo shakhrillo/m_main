@@ -6,8 +6,40 @@
 .comment {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
   border: 1px solid #e1e1e1;
   border-radius: 6px;
   background-color: #fff;
   padding: $spacer;
+
+  &-user {
+    display: flex;
+    align-items: center;
+    gap: $spacer;
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    img {
+      border-radius: 50%;
+      width: 50px;
+      min-width: 50px;
+      max-width: 50px;
+      height: 50px;
+    }
+  }
+
+  &-review {
+    button {
+      display: block;
+    }
+  }
+
+  &-qa {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

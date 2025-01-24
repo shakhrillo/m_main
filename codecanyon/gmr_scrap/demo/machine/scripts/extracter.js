@@ -38,8 +38,8 @@ function getReviewUser(node) {
   if (btnEl) {
     return {
       url: btnEl.getAttribute("data-href"),
-      name: btnEl.firstChild.textContent,
-      info: btnEl.lastChild.textContent.split("·").map((item) => item.trim()),
+      name: btnEl.getAttribute("aria-label")?.replace("Photo of ", "").trim(),
+      image: (btnEl.firstElementChild?.src || "").split("=")[0],
     };
   }
 
@@ -140,6 +140,15 @@ function getReviewQA(node) {
     qaEls,
     (questionContainer) => questionContainer.innerText
   );
+
+  extractedQA = extractedQA.map((qa) => {
+    const splitByNewline = qa.split("\n");
+    if (splitByNewline.length === 2) {
+      return splitByNewline;
+    }
+
+    return qa.split(": ");
+  });
 
   return extractedQA;
 }

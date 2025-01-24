@@ -3,7 +3,7 @@ import { CommentImages } from "../CommentImages";
 import { CommentQAView } from "../CommentQAView";
 import { CommentResponseView } from "../CommentResponseView";
 import { CommentVideos } from "../CommentVideos";
-import { CommentUser } from "./CommentUser";
+import { CommentReview } from "./CommentReview";
 import { Ratings } from "../Ratings";
 import { useEffect, useState } from "react";
 import { IComment, scrapData } from "../../services/scrapService";
@@ -46,9 +46,16 @@ export const CommentsList = ({
     <div className="comments">
       {comments.map((review, index) => (
         <div className="comment" key={`comment-${index}`}>
-          <Ratings container={review} />
-          <h5>{review.user.url}</h5>
-          <CommentUser comment={review} />
+          <div className="comment-user">
+            <img src={review.user.image} alt={review.user.name} />
+            <div className="comment-user-info">
+              <a href={review.user.url} target="_blank" rel="noreferrer">
+                {review.user.name}
+              </a>
+              <Ratings container={review} />
+            </div>
+          </div>
+          <CommentReview comment={review} />
           <CommentQAView comment={review} />
           <CommentImages comment={review} />
           <CommentVideos comment={review} />

@@ -1,7 +1,7 @@
 import { useFloating, offset, flip, shift, useHover } from "@floating-ui/react";
 import { useState } from "react";
 import { IComment } from "../services/scrapService";
-import { Col, Stack } from "react-bootstrap";
+import { Col, Stack, Table } from "react-bootstrap";
 
 export const CommentQAView = ({
   comment,
@@ -22,8 +22,21 @@ export const CommentQAView = ({
   });
 
   return (
-    <div {...rest} ref={refs.setReference} style={{ display: "inline-block" }}>
-      {comment?.qa && comment?.qa.length > 0 ? (
+    <div ref={refs.setReference} className="comment-qa">
+      <Table>
+        <tbody>
+          {comment?.qa.map((qa, index) => (
+            <tr key={"qa-" + index}>
+              {qa.split("\n").map((line, i) => (
+                <td key={i}>
+                  <span>{line}</span>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      {/* {comment?.qa && comment?.qa.length > 0 ? (
         <span className="d-inline-block">
           {comment?.qa.map((qa, index) => {
             return (
@@ -58,7 +71,7 @@ export const CommentQAView = ({
         >
           <small>No QA</small>
         </Col>
-      )}
+      )} */}
       {isVisible && (
         <div
           ref={refs.setFloating}

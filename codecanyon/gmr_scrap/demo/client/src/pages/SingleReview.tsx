@@ -23,7 +23,7 @@ import {
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
-import { CommentView } from "../components/comments/CommentUser";
+import { CommentView } from "../components/comments/CommentReview";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { Ratings } from "../components/Ratings";
 import {

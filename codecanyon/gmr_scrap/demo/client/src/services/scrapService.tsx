@@ -13,9 +13,9 @@ import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export interface ICommentUser {
-  info: string[];
   url: string;
   name: string;
+  image: string;
 }
 
 export interface IComment {
