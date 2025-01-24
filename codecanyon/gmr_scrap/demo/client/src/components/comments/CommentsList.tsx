@@ -1,12 +1,12 @@
-import { Table } from "react-bootstrap";
-import { CommentImages } from "../CommentImages";
-import { CommentQAView } from "../CommentQAView";
+import { Stack, Table } from "react-bootstrap";
+import { CommentImages } from "./CommentImages";
 import { CommentResponseView } from "../CommentResponseView";
 import { CommentVideos } from "../CommentVideos";
 import { CommentReview } from "./CommentReview";
 import { Ratings } from "../Ratings";
 import { useEffect, useState } from "react";
 import { IComment, scrapData } from "../../services/scrapService";
+import { CommentQA } from "./CommentQA";
 
 export const CommentsList = ({
   reviewId,
@@ -54,9 +54,10 @@ export const CommentsList = ({
               </a>
               <Ratings container={review} />
             </div>
+            <span>{review.date}</span>
           </div>
           <CommentReview comment={review} />
-          <CommentQAView comment={review} />
+          <CommentQA comment={review} />
           <CommentImages comment={review} />
           <CommentVideos comment={review} />
           <hr />

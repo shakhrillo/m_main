@@ -7,8 +7,6 @@ import {
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
-  Button,
-  Card,
   Col,
   Container,
   Dropdown,
@@ -17,30 +15,17 @@ import {
   Row,
   Stack,
   Tab,
-  Table,
   Tabs,
 } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import { useOutletContext, useParams } from "react-router-dom";
-import { CommentView } from "../components/comments/CommentReview";
-import { PlaceInfo } from "../components/place/PlaceInfo";
-import { Ratings } from "../components/Ratings";
-import {
-  IComment,
-  scrapData,
-  scrapImages,
-  scrapVideos,
-  validateUrlData,
-} from "../services/scrapService";
-import { CommentQAView } from "../components/CommentQAView";
-import { CommentResponseView } from "../components/CommentResponseView";
-import { CommentImages } from "../components/CommentImages";
-import { CommentVideos } from "../components/CommentVideos";
-import { Subject, debounceTime, filter, map, pipe, take } from "rxjs";
-import { IDockerContainer } from "../types/dockerContainer";
-import { dockerContainers } from "../services/dockerService";
+import { Subject, filter, map } from "rxjs";
 import { CommentsList } from "../components/comments/CommentsList";
+import { PlaceInfo } from "../components/place/PlaceInfo";
+import { dockerContainers } from "../services/dockerService";
+import { IComment } from "../services/scrapService";
+import { IDockerContainer } from "../types/dockerContainer";
 const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {

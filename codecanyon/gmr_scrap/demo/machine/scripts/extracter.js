@@ -119,6 +119,7 @@ function getReviewComment(node) {
 function getReviewQA(node) {
   const divEls = node.querySelectorAll(".MyEned");
   let qaEls = [];
+  const results = [];
 
   if (divEls.length) {
     const divElChildren = divEls[0].querySelectorAll(":scope > *");
@@ -141,16 +142,25 @@ function getReviewQA(node) {
     (questionContainer) => questionContainer.innerText
   );
 
-  extractedQA = extractedQA.map((qa) => {
+  extractedQA.map((qa) => {
     const splitByNewline = qa.split("\n");
     if (splitByNewline.length === 2) {
-      return splitByNewline;
+      results.push({
+        question: splitByNewline[0],
+        answer: splitByNewline[1],
+      });
     }
 
-    return qa.split(": ");
+    const splitByColon = qa.split(": ");
+    if (splitByColon.length === 2) {
+      results.push({
+        question: splitByColon[0],
+        answer: splitByColon[1],
+      });
+    }
   });
 
-  return extractedQA;
+  return results;
 }
 
 /**

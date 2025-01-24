@@ -18,11 +18,16 @@ export interface ICommentUser {
   image: string;
 }
 
+export interface ICommentQA {
+  question: string;
+  answer: string;
+}
+
 export interface IComment {
   date: string;
   id: string;
   imageUrls: { thumb: string; original: string; id: string }[];
-  qa: string[];
+  qa: ICommentQA[];
   rating: number;
   response: string;
   review: string;
