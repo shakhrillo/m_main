@@ -6,7 +6,7 @@ import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
 import { IComment, scrapData } from "../../services/scrapService";
 import { Comment } from "./Comment";
-import { reviews } from "../../services/reviewsService";
+import { reviewComments } from "../../services/reviewService";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -38,7 +38,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   }, []);
 
   useEffect(() => {
-    const subscription = reviews(
+    const subscription = reviewComments(
       reviewId,
       uid,
       filterOptions,

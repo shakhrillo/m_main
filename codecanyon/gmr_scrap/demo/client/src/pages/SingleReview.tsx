@@ -26,6 +26,7 @@ import { PlaceInfo } from "../components/place/PlaceInfo";
 import { dockerContainers } from "../services/dockerService";
 import { IComment } from "../services/scrapService";
 import { IDockerContainer } from "../types/dockerContainer";
+import { ImagesList } from "../components/images/ImagesList";
 const searchSubject = new Subject<string>();
 
 export const SingleReview = () => {
@@ -97,7 +98,8 @@ export const SingleReview = () => {
                 </>
               }
             >
-              <div className="row row-cols-6 g-2">
+              <ImagesList reviewId={reviewId} />
+              <div className="d-none row row-cols-6 g-2">
                 <Gallery
                   options={{
                     zoom: false,
