@@ -1,82 +1,17 @@
-import {
-  IconLibraryPhoto,
-  IconMessage,
-  IconSearch,
-  IconVideo,
-} from "@tabler/icons-react";
-import { User } from "firebase/auth";
-import { useEffect, useState } from "react";
-import {
-  Col,
-  Container,
-  Dropdown,
-  Form,
-  InputGroup,
-  Row,
-  Stack,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
-import { Gallery, Item } from "react-photoswipe-gallery";
-import ReactPlayer from "react-player";
-import { useOutletContext, useParams } from "react-router-dom";
-import { Subject, filter, map } from "rxjs";
+import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
+import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { CommentsList } from "../components/comments/CommentsList";
-import { PlaceInfo } from "../components/place/PlaceInfo";
-import { dockerContainers } from "../services/dockerService";
-import { IComment } from "../services/scrapService";
-import { IDockerContainer } from "../types/dockerContainer";
 import { ImagesList } from "../components/images/ImagesList";
-const searchSubject = new Subject<string>();
+import { PlaceInfo } from "../components/place/PlaceInfo";
+import { VideosList } from "../components/videos/VideosList";
 
 export const SingleReview = () => {
-  const { uid } = useOutletContext<User>();
   const { reviewId } = useParams() as { reviewId: string };
-  // const [info, setPlaceInfo] = useState<any>({});
-  const [reviews, setReviews] = useState<IComment[]>([]);
-  const [images, setImages] = useState<any[]>([]);
-  const [videos, setVideos] = useState<any[]>([]);
-  const [filterOptions, setFilterOptions] = useState<{
-    onlyImages: boolean;
-    onlyVideos: boolean;
-    onlyQA: boolean;
-    onlyResponse: boolean;
-  }>({
-    onlyImages: false,
-    onlyVideos: false,
-    onlyQA: false,
-    onlyResponse: false,
-  });
-  const [search, setSearch] = useState("");
-  const [container, setContainer] = useState<IDockerContainer>({});
-
-  useEffect(() => {
-    const subscription = dockerContainers({
-      containerId: reviewId,
-    })
-      .pipe(
-        map((data) => {
-          if (data.length > 0) {
-            return data[0];
-          }
-
-          return null;
-        }),
-        filter((data) => !!data),
-      )
-      .subscribe((data) => {
-        setContainer(data);
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [reviewId]);
-
   return (
-    <Container>
+    <Container className="single-review">
       <Row>
-        <Col md={8}>
+        <Col md={9}>
           <Tabs defaultActiveKey="comments" id="scrap-tabs" variant="underline">
             <Tab
               eventKey="comments"
@@ -99,34 +34,6 @@ export const SingleReview = () => {
               }
             >
               <ImagesList reviewId={reviewId} />
-              <div className="d-none row row-cols-6 g-2">
-                <Gallery
-                  options={{
-                    zoom: false,
-                    showHideAnimationType: "none",
-                    hideAnimationDuration: 0,
-                    showAnimationDuration: 0,
-                    zoomAnimationDuration: 0,
-                    bgOpacity: 0.9,
-                  }}
-                >
-                  {images.map((img, index) => (
-                    <Item original={img.thumb || img.videoUrl} key={index}>
-                      {({ ref, open }) => (
-                        <div className="col">
-                          <img
-                            ref={ref}
-                            onClick={open}
-                            src={img.thumb || img.videoUrl}
-                            alt={`Review ${index}`}
-                            className="img-fluid img-thumbnail rounded"
-                          />
-                        </div>
-                      )}
-                    </Item>
-                  ))}
-                </Gallery>
-              </div>
             </Tab>
             <Tab
               eventKey="videos"
@@ -137,22 +44,11 @@ export const SingleReview = () => {
                 </>
               }
             >
-              <div className="row row-cols-6 g-2">
-                {videos.map((video, index) => (
-                  <div className="col" key={index}>
-                    <ReactPlayer
-                      url={video.videoUrl}
-                      controls
-                      width="100%"
-                      height="100%"
-                    />
-                  </div>
-                ))}
-              </div>
+              <VideosList reviewId={reviewId} />
             </Tab>
           </Tabs>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <PlaceInfo containerId={reviewId} />
         </Col>
       </Row>

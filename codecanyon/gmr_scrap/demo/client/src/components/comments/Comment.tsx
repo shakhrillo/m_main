@@ -30,7 +30,7 @@ export const Comment = ({ review }: { review: IComment }) => {
           </a>
           <Ratings container={review} />
         </div>
-        <span>{review.date}</span>
+        <small>{review.date}</small>
       </div>
       <CommentReview comment={review} />
       <CommentQA comment={review} />

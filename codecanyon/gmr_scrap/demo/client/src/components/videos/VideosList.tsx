@@ -1,19 +1,20 @@
-import { IconPhoto } from "@tabler/icons-react";
+import { IconPhoto, IconPlayerPlay } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
-import { reviewImages } from "../../services/reviewService";
+import { reviewVideos } from "../../services/reviewService";
+import ReactPlayer from "react-player";
 
-interface IImagesListProps {
+interface IVideosListProps {
   reviewId: string;
 }
 
-export const ImagesList = ({ reviewId }: IImagesListProps) => {
+export const VideosList = ({ reviewId }: IVideosListProps) => {
   const { uid } = useOutletContext<User>();
-  const [images, setImages] = useState([] as any[]);
+  const [videos, setVideos] = useState([] as any[]);
   const [filterOptions, setFilterOptions] = useState({
     onlyImages: false,
     onlyVideos: false,
@@ -36,13 +37,13 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   }, []);
 
   useEffect(() => {
-    const subscription = reviewImages(
+    const subscription = reviewVideos(
       reviewId,
       uid,
       filterOptions,
       search,
     ).subscribe((data) => {
-      setImages(data);
+      setVideos(data);
     });
 
     return () => {
@@ -52,27 +53,24 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
 
   return (
     <Gallery>
-      <div className="images">
-        {images.map((image, index) => (
+      <div className="videos">
+        {videos.map((video, index) => (
           <Item
-            original={image.original}
-            key={`image-${index}`}
+            key={`video-${index}`}
+            original={video.videoUrl}
+            thumbnail={video.thumb}
             content={
-              <Image
-                src={image.original}
-                alt={`image-${index}`}
-                className="image"
-              />
+              <ReactPlayer url={video.videoUrl} controls className="video" />
             }
           >
             {({ ref, open }) => (
-              <div className="image-thumb-container" ref={ref} onClick={open}>
+              <div className="video-thumb-container" ref={ref} onClick={open}>
                 <Image
-                  src={image.thumb}
-                  alt={`image-thumb-${index}`}
-                  className="image-thumb"
+                  src={video.thumb}
+                  alt={`video-thumb-${index}`}
+                  className="video-thumb"
                 />
-                <IconPhoto size={24} className="image-thumb-icon" />
+                <IconPlayerPlay size={24} className="comment-thumb-icon" />
               </div>
             )}
           </Item>

@@ -1,18 +1,25 @@
 .place {
   margin-bottom: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
+  border: $card-border-width solid $card-border-color;
+  border-radius: $card-border-radius;
   background-color: #fff;
   overflow: hidden;
 
   .google-map {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: $card-border-width solid $card-border-color;
     width: 100%;
     height: 300px;
   }
 
   &-info {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: $card-border-width solid $card-border-color;
     padding: $spacer;
+  }
+
+  &-title {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 20px;
   }
 }

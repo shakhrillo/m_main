@@ -47,7 +47,7 @@ export const PlaceInfo = ({ containerId }: { containerId: string }) => {
         <StatusInfo container={container} />
         <NavLink
           to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
-          className="h3 d-block text-decoration-none text-primary"
+          className="place-title"
         >
           {container.title || "N/A"}
         </NavLink>
