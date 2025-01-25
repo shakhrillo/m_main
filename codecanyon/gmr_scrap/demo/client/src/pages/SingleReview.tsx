@@ -76,19 +76,14 @@ export const SingleReview = () => {
     <Container>
       <Row>
         <Col md={8}>
-          <Tabs
-            defaultActiveKey="comments"
-            id="scrap-tabs"
-            variant="underline"
-            className="border-bottom"
-          >
+          <Tabs defaultActiveKey="comments" id="scrap-tabs" variant="underline">
             <Tab
               eventKey="comments"
               title={
-                <>
-                  <IconMessage size={24} />
+                <div>
+                  <IconMessage />
                   <span className="ms-2">Comments</span>
-                </>
+                </div>
               }
             >
               <CommentsList reviewId={reviewId} />

@@ -6,6 +6,7 @@ import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
 import { IComment, scrapData } from "../../services/scrapService";
 import { Comment } from "./Comment";
+import { reviews } from "../../services/reviewsService";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -37,12 +38,13 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   }, []);
 
   useEffect(() => {
-    const subscription = scrapData(
+    const subscription = reviews(
       reviewId,
       uid,
       filterOptions,
       search,
     ).subscribe((data) => {
+      console.log("))", data);
       setComments(data);
     });
 
@@ -68,7 +70,6 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
               onChange={(e) => {
                 searchSubject.next(e.target.value);
               }}
-              // value={search}
             />
           </InputGroup>
         </div>

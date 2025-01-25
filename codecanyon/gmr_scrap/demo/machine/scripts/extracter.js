@@ -365,9 +365,17 @@ async function validateNode(node) {
               original,
               videoUrl,
               id,
+              uid: gmrScrap.uid,
+              machineId: gmrScrap.machineId,
             });
           } else {
-            imageUrls.push({ thumb, original, id });
+            imageUrls.push({
+              thumb,
+              original,
+              id,
+              uid: gmrScrap.uid,
+              machineId: gmrScrap.machineId,
+            });
           }
         }
       }
@@ -387,7 +395,7 @@ async function validateNode(node) {
       imageUrls,
       videoUrls,
       time: +Date.now(),
-      keywords: generateSearchKeywords(review),
+      keywords: review.split(" "),
     };
   }
 
@@ -413,7 +421,11 @@ window.fetchVisibleElements = async () => {
     try {
       const validatedElement = await validateNode(node);
       if (validatedElement) {
-        gmrScrap.extractedReviews.push(validatedElement);
+        gmrScrap.extractedReviews.push({
+          ...validatedElement,
+          uid: gmrScrap.uid,
+          machineId: gmrScrap.machineId,
+        });
       }
     } catch (error) {
       console.error("Error processing node:", error);
