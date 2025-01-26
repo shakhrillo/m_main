@@ -28,6 +28,7 @@ import { IDockerContainer } from "../types/dockerContainer";
 import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
 import paginationFactory from "react-bootstrap-table2-paginator";
 import BootstrapTable from "react-bootstrap-table-next";
+import { ContainersList } from "../components/containers/ContainersList";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -104,70 +105,7 @@ export const ReviewsList = () => {
 
         {/* Table for displaying reviews based on active filter */}
         <Col xs={12}>
-          <Card>
-            <CardHeader>
-              <Stack direction="horizontal">
-                <div className="d-inline-block me-auto">
-                  <InputGroup>
-                    <InputGroup.Text id="search-icon">
-                      <IconSearch />
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="search"
-                      id="search"
-                      placeholder="Search..."
-                      aria-label="Search"
-                      aria-describedby="search-icon"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
-                  </InputGroup>
-                </div>
-                <Dropdown>
-                  <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-                    Filter
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu aria-labelledby="dropdown-filter">
-                    {FILTER_OPTIONS.map((option) => (
-                      <Dropdown.Item
-                        key={option.value}
-                        onClick={() => setFilter(option.value)}
-                        className={filter === option.value ? "active" : ""}
-                      >
-                        {option.label}
-                      </Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Stack>
-            </CardHeader>
-            <CardBody>
-              <BootstrapTable
-                bordered={false}
-                hover
-                keyField="id"
-                data={containers.map((comment) => ({
-                  title: (
-                    <NavLink to={`/reviews/${comment.machineId}`}>
-                      {comment.title}
-                    </NavLink>
-                  ),
-                  status: <StatusInfo container={comment} />,
-                  date: formatTimestamp(comment.createdAt),
-                }))}
-                columns={[
-                  { dataField: "title", text: "Title" },
-                  { dataField: "status", text: "Comment" },
-                  { dataField: "date", text: "Date" },
-                ]}
-                pagination={paginationFactory({
-                  sizePerPage: 10,
-                  hideSizePerPage: true,
-                })}
-              />
-            </CardBody>
-          </Card>
+          <ContainersList type="comments" path="reviews" />
         </Col>
       </Row>
     </Container>
