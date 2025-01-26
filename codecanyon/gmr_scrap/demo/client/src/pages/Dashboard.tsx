@@ -1,36 +1,31 @@
 import {
-  IconArrowDown,
-  IconArrowUp,
-  IconCircle,
-  IconCircle1,
   IconCircleFilled,
   IconMapPinFilled,
   IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import L, { point } from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { useMap } from "react-leaflet";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { DoughnutChart } from "../components/DoughnutChart";
+import { GoogleMap } from "../components/GoogleMap";
 import { LineChart } from "../components/LineChart";
-import { IReview, validatedUrls } from "../services/scrapService";
+import { IReview } from "../services/scrapService";
 import {
   allContainers,
   allUsers,
   appStatistics,
   totalEarnings,
 } from "../services/settingService";
-import { formatTotalEarnings } from "../utils/formatTotalEarnings";
-import { formatTotalUsers } from "../utils/formatTotalUsers";
-import { Map } from "../components/Map";
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { checkEarningsTrend } from "../utils/checkEarningsTrend";
 import formatNumber from "../utils/formatNumber";
-import { GoogleMap } from "../components/GoogleMap";
+import { formatTotalEarnings } from "../utils/formatTotalEarnings";
+import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
@@ -109,31 +104,6 @@ export const Dashboard: React.FC = () => {
       console.log("users", formatTotalUsers(data));
       setUsers(formatTotalUsers(data));
     });
-
-    // const commentsSubscription = validatedUrls(uid, {
-    //   type: "info",
-    // }).subscribe((data) => {
-    //   setReviews(data);
-
-    //   const locations = data
-    //     .filter(
-    //       (review) =>
-    //         review.location &&
-    //         review.location.latitude &&
-    //         review.location.longitude,
-    //     )
-    //     .map((review) => {
-    //       console.log("review", review);
-    //       return [review.location?.latitude, review.location?.longitude] as [
-    //         number,
-    //         number,
-    //       ];
-    //     });
-
-    //   console.log("locations", locations);
-
-    //   setMarkerLocations(locations);
-    // });
 
     return () => {
       appStatisticsSubscription.unsubscribe();
