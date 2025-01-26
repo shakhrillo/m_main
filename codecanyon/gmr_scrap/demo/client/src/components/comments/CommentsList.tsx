@@ -7,6 +7,8 @@ import { debounceTime, Subject } from "rxjs";
 import { reviewComments } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -44,7 +46,6 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
       filterOptions,
       search,
     ).subscribe((data) => {
-      console.log("))", data);
       setComments(data);
     });
 

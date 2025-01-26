@@ -6,13 +6,11 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
-import { createElement, useEffect, useState } from "react"; // React imports for state and effect handling
+import { useEffect, useState } from "react"; // React imports for state and effect handling
 import {
   Card,
   CardBody,
   CardHeader,
-  CardText,
-  CardTitle,
   Col,
   Container,
   Dropdown,
@@ -22,15 +20,14 @@ import {
   Stack,
   Table,
 } from "react-bootstrap";
-import { useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom"; // Hook for navigation
 import { StatusInfo } from "../components/StatusInfo";
-import { IReview, validatedUrls } from "../services/scrapService";
-import { userData } from "../services/userService";
-import formatNumber from "../utils/formatNumber";
-import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
-import { Statistics } from "../components/Statistics";
 import { dockerContainers } from "../services/dockerService";
+import { userData } from "../services/userService";
 import { IDockerContainer } from "../types/dockerContainer";
+import { formatTimestamp } from "../utils/formatTimestamp"; // Utility to format timestamps
+import paginationFactory from "react-bootstrap-table2-paginator";
+import BootstrapTable from "react-bootstrap-table-next";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -98,9 +95,11 @@ export const ReviewsList = () => {
     <Container>
       <Row className="g-3">
         {/*---Extracted reviews status---*/}
-        {stats.map((stat, index) => (
-          <Col key={index}>{/* <Statistics {...stat} /> */}</Col>
-        ))}
+        {/* {stats.map((stat, index) => (
+          <Col key={index}>
+            <Statistics {...stat} />
+          </Col>
+        ))} */}
         {/*---End: Extracted reviews status---*/}
 
         {/* Table for displaying reviews based on active filter */}
@@ -144,42 +143,29 @@ export const ReviewsList = () => {
               </Stack>
             </CardHeader>
             <CardBody>
-              <Table hover>
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {containers.map((container, index) => (
-                    <tr key={index}>
-                      <td scope="row" style={{ width: "40px" }}>
-                        {index + 1}
-                      </td>
-                      <td style={{ width: "130px" }}>
-                        <StatusInfo container={container} />
-                      </td>
-                      <td>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            navigate(`/reviews/${container.machineId}`);
-                          }}
-                        >
-                          {container.title}
-                        </a>
-                      </td>
-                      <td style={{ width: "250px" }}>
-                        {formatTimestamp(container.updatedAt)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+              <BootstrapTable
+                bordered={false}
+                hover
+                keyField="id"
+                data={containers.map((comment) => ({
+                  title: (
+                    <NavLink to={`/reviews/${comment.machineId}`}>
+                      {comment.title}
+                    </NavLink>
+                  ),
+                  status: <StatusInfo container={comment} />,
+                  date: formatTimestamp(comment.createdAt),
+                }))}
+                columns={[
+                  { dataField: "title", text: "Title" },
+                  { dataField: "status", text: "Comment" },
+                  { dataField: "date", text: "Date" },
+                ]}
+                pagination={paginationFactory({
+                  sizePerPage: 10,
+                  hideSizePerPage: true,
+                })}
+              />
             </CardBody>
           </Card>
         </Col>

@@ -36,13 +36,13 @@ export const DockerContainer = () => {
   return (
     <Container>
       <Row className="g-3">
-        <Col md={8}>
+        <Col md={9}>
           <Row className="g-3 row-cols-1">
             <ContainerCharts containerId={containerId} />
           </Row>
         </Col>
-        <Col md={4}>
-          <PlaceInfo containerId={containerId || ""} container={container} />
+        <Col md={3}>
+          <PlaceInfo containerId={containerId || ""} />
         </Col>
       </Row>
     </Container>
