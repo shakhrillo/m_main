@@ -9,7 +9,7 @@ export const DashboardLayout = () => {
     <div className="dashboard-layout">
       <Sidebar />
       <main className="dashboard-main">
-        <AppNavbar className="dashboard-navbar" />
+        <AppNavbar />
         <div className="dashboard-content">
           <Outlet context={user} />
         </div>

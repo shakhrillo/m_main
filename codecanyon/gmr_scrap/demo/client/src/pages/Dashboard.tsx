@@ -31,6 +31,7 @@ import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { checkEarningsTrend } from "../utils/checkEarningsTrend";
 import formatNumber from "../utils/formatNumber";
 import { GoogleMap } from "../components/GoogleMap";
+import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 
 const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
 
@@ -63,6 +64,7 @@ export const Dashboard: React.FC = () => {
   const [users, setUsers] = useState([] as any[]);
   const [containers, setContainers] = useState([] as any[]);
   const [statistics, setStatistics] = useState({} as any);
+  const [geojson, setGeojson] = useState<any>(null);
 
   useEffect(() => {
     const appStatisticsSubscription = appStatistics().subscribe((data) => {
@@ -94,16 +96,9 @@ export const Dashboard: React.FC = () => {
         totalOwnerReviews,
       ]);
 
-      const locations = data.map((container: any) => {
-        return {
-          latitude: container.location?.latitude,
-          longitude: container.location?.longitude,
-        };
-      });
-
-      console.log("locations", locations);
-
-      setMarkerLocations(locations);
+      setGeojson(
+        locationsToGeoJSON(data.map((container: any) => container.location)),
+      );
     });
 
     const earningsSubscription = totalEarnings().subscribe((data) => {
@@ -161,36 +156,7 @@ export const Dashboard: React.FC = () => {
                   {
                     label: "Total revenue",
                     data: earnings.map((e) => e.total),
-                    borderColor: "#3e2c41",
-                    // backgroundColor: "rgba(62, 44, 65, 0.1)",
-                    borderWidth: 2,
-                    pointRadius: 2,
-                    pointBackgroundColor: "#3e2c41",
-                    tension: 0.2,
-                    fill: true,
-                    backgroundColor: (context: any) => {
-                      const { chart } = context;
-                      const { ctx, chartArea } = chart;
-
-                      // Check if chartArea is defined to avoid rendering issues during animation
-                      if (!chartArea) {
-                        return;
-                      }
-
-                      const { top, bottom } = chartArea;
-
-                      // Create a linear gradient
-                      const gradient = ctx.createLinearGradient(
-                        0,
-                        top,
-                        0,
-                        bottom,
-                      );
-                      gradient.addColorStop(0, "rgba(0, 0, 0, 0.1)");
-                      gradient.addColorStop(1, "rgba(62, 44, 65, 0)");
-
-                      return gradient;
-                    },
+                    color: "#3e2c41",
                   },
                 ]}
               />
@@ -281,21 +247,7 @@ export const Dashboard: React.FC = () => {
         </Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>
-            <GoogleMap
-              geojson={{
-                type: "FeatureCollection",
-                features: markerLocations.map((location) => {
-                  return {
-                    type: "Feature",
-                    geometry: {
-                      type: "Point",
-                      coordinates: [location.longitude, location.latitude],
-                    },
-                    properties: {}, // Add an empty properties object
-                  };
-                }),
-              }}
-            />
+            {geojson && <GoogleMap geojson={geojson} />}
           </Card>
         </Col>
       </Row>

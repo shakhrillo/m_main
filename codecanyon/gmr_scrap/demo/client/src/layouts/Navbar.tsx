@@ -22,7 +22,7 @@ export const AppNavbar = () => {
   }, []);
 
   return (
-    <Navbar className="navbar h-100">
+    <Navbar expand="lg" className="navbar">
       <Container>
         <Navbar.Brand>GMRScrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />
