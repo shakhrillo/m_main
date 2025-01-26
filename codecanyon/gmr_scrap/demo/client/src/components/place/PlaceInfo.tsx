@@ -12,7 +12,11 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 
-export const PlaceInfo = ({ containerId }: { containerId: string }) => {
+export const PlaceInfo = ({
+  containerId,
+}: {
+  containerId: string | undefined;
+}) => {
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
   );

@@ -10,11 +10,11 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import zoomPlugin from "chartjs-plugin-zoom";
 import "leaflet/dist/leaflet.css";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { hexToRgba } from "../utils/hexToRGB";
-import zoomPlugin from "chartjs-plugin-zoom";
 
 ChartJS.register(
   CategoryScale,
@@ -98,7 +98,9 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
   const chartOptions = {
     animation: {
-      duration: 0,
+      duration: 1000,
+      delay: 0,
+      easing: "easeInOutQuart" as const,
     },
     scales: {
       x: {
@@ -110,7 +112,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
         },
       },
       y: {
-        grid: { color: "#ccc", lineWidth: 0.5 },
+        grid: { color: "#fff", lineWidth: 0.5 },
         border: { display: false },
         ticks: {
           color: "#999",
@@ -134,7 +136,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
   };
 
   return (
-    <div ref={containerRef} style={{ width: "100%" }}>
+    <div ref={containerRef} className="w-100">
       {chartWidth > 0 && (
         <Line
           data={chartData}

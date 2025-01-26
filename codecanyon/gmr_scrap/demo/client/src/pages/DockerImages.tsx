@@ -1,3 +1,4 @@
+import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
@@ -17,8 +18,6 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { allImages } from "../services/dockerService";
 import { formatDate } from "../utils/formatDate";
 import { formatSize } from "../utils/formatSize";
-import { IconCheck, IconSearch } from "@tabler/icons-react";
-import { Statistics } from "../components/Statistics";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -30,14 +29,6 @@ export const DockerImages = () => {
   const [images, setImages] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
-
-  const stats = [
-    {
-      label: "Total Images",
-      icon: IconCheck,
-      value: 10,
-    },
-  ];
 
   useEffect(() => {
     const subscription = allImages().subscribe((data) => {
@@ -52,14 +43,6 @@ export const DockerImages = () => {
   return (
     <Container>
       <Row className="g-3">
-        {/*---Extracted reviews status---*/}
-        {stats.map((stat, index) => (
-          <Col key={index}>
-            <Statistics {...stat} />
-          </Col>
-        ))}
-        {/*---End: Extracted reviews status---*/}
-
         <Col md={12}>
           <Card>
             <CardHeader>
