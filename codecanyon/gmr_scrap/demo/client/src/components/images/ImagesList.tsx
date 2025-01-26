@@ -1,7 +1,7 @@
 import { IconPhoto } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Image } from "react-bootstrap";
+import { Alert, Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
@@ -51,8 +51,8 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   }, [reviewId, filterOptions, search, uid]);
 
   return (
-    <Gallery>
-      <div className="images">
+    <div className="images">
+      <Gallery>
         {images.map((image, index) => (
           <Item
             original={image.original}
@@ -77,7 +77,12 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
             )}
           </Item>
         ))}
-      </div>
-    </Gallery>
+      </Gallery>
+      {!images.length && (
+        <Alert className="w-100" variant="info">
+          No images found
+        </Alert>
+      )}
+    </div>
   );
 };

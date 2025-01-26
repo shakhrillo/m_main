@@ -1,12 +1,12 @@
 import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
-import { Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { Alert, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
-import { IComment, scrapData } from "../../services/scrapService";
-import { Comment } from "./Comment";
 import { reviewComments } from "../../services/reviewService";
+import { IComment } from "../../services/scrapService";
+import { Comment } from "./Comment";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -157,6 +157,11 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
       {comments.map((review, index) => (
         <Comment review={review} key={index} />
       ))}
+      {!comments.length && (
+        <Alert className="w-100" variant="info">
+          No comments found
+        </Alert>
+      )}
     </div>
   );
 };

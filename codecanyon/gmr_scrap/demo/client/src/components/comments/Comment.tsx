@@ -1,4 +1,10 @@
-import { IconArrowNarrowDownDashed, IconArrowUp } from "@tabler/icons-react";
+import {
+  IconArrowNarrowDownDashed,
+  IconArrowUp,
+  IconCaretDown,
+  IconChevronDown,
+  IconChevronUp,
+} from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { IComment } from "../../services/scrapService";
@@ -16,7 +22,7 @@ export const Comment = ({ review }: { review: IComment }) => {
   useEffect(() => {
     if (commentRef.current) {
       const commentHeight = commentRef.current.clientHeight;
-      setExpanded(commentHeight <= 250);
+      setExpanded(commentHeight <= 200);
     }
   }, []);
 
@@ -40,7 +46,7 @@ export const Comment = ({ review }: { review: IComment }) => {
       {!expanded && (
         <div className="comment-expand">
           <Button variant="link" onClick={() => setExpanded(!expanded)}>
-            {expanded ? <IconArrowUp /> : <IconArrowNarrowDownDashed />}
+            {expanded ? <IconChevronUp /> : <IconChevronDown />}
           </Button>
         </div>
       )}

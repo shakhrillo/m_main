@@ -1,21 +1,20 @@
-import { limit } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   CardBody,
-  Stack,
   CardTitle,
-  FormCheck,
-  Button,
   Form,
+  FormCheck,
+  Stack,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { filter, map } from "rxjs";
 import {
   createDockerContainer,
   dockerContainers,
 } from "../../services/dockerService";
-import { useEffect, useState } from "react";
-import { map, filter } from "rxjs";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { useNavigate } from "react-router-dom";
 
 export const ScrapExpectedPoints = ({
   containerId,
@@ -24,6 +23,7 @@ export const ScrapExpectedPoints = ({
 }) => {
   const navigate = useNavigate();
   const [container, setContainer] = useState<IDockerContainer>();
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
 
   useEffect(() => {
     if (!containerId) return;
@@ -34,8 +34,6 @@ export const ScrapExpectedPoints = ({
         filter((data) => !!data),
       )
       .subscribe((data) => {
-        console.log("-".repeat(50));
-        console.log(data);
         setContainer(data);
       });
 
@@ -44,20 +42,27 @@ export const ScrapExpectedPoints = ({
     };
   }, [containerId]);
 
+  useEffect(() => {
+    if (container?.machineId && container?.type === "comments") {
+      navigate(`/reviews/${container?.machineId}`);
+    }
+  }, [container]);
+
   /**
    * Validation URL
    * @param e Form event
    */
   async function handleScrap(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const target = e.currentTarget as HTMLFormElement;
-    target.classList.add("was-validated");
-    if (!target.checkValidity()) return;
 
     try {
       const { id } = await createDockerContainer({
-        ...container,
+        title: container?.title,
+        rating: container?.rating,
         url: container?.url,
+        reviews: container?.reviews,
+        location: container?.location,
+        address: container?.address,
         uid: container?.uid,
         type: "comments",
         limit: container?.limit || 10,
@@ -66,8 +71,7 @@ export const ScrapExpectedPoints = ({
         extractVideoUrls: container?.extractVideoUrls || false,
         extractOwnerResponse: container?.extractOwnerResponse || false,
       });
-      console.log(id);
-      // navigate(`/scrap/${id}`);
+      navigate(`/scrap/${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -88,6 +92,8 @@ export const ScrapExpectedPoints = ({
             className="mt-3"
             type="checkbox"
             id="terms"
+            checked={isTermsChecked}
+            onChange={(e) => setIsTermsChecked(e.target.checked)}
             label={
               <>
                 I agree to the{" "}
@@ -97,7 +103,12 @@ export const ScrapExpectedPoints = ({
               </>
             }
           ></FormCheck>
-          <Button variant="primary" className="w-100 mt-3" type="submit">
+          <Button
+            variant="primary"
+            className="w-100 mt-3"
+            type="submit"
+            disabled={!isTermsChecked}
+          >
             Scrap
           </Button>
         </Form>

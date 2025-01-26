@@ -14,9 +14,8 @@
   border-radius: $card-border-radius;
   background-color: #fff;
   padding: $spacer;
-  max-height: 200px;
+  max-height: 150px;
   overflow: hidden;
-  // font-size: 14px;
 
   &-expand {
     display: flex;
@@ -77,8 +76,6 @@
   &-response {
     display: flex;
     position: relative;
-    // border-radius: $border-radius;
-    // background-color: $secondary-bg-subtle;
     padding-left: 0.75rem;
     overflow: hidden;
     font-weight: 600;
@@ -100,7 +97,6 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     width: 100%;
-    overflow: auto;
   }
 
   &-video,

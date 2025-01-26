@@ -1,7 +1,7 @@
 import { IconPhoto, IconPlayerPlay } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Image } from "react-bootstrap";
+import { Alert, Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
@@ -52,8 +52,8 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
   }, [reviewId, filterOptions, search, uid]);
 
   return (
-    <Gallery>
-      <div className="videos">
+    <div className="videos">
+      <Gallery>
         {videos.map((video, index) => (
           <Item
             key={`video-${index}`}
@@ -75,7 +75,12 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
             )}
           </Item>
         ))}
-      </div>
-    </Gallery>
+      </Gallery>
+      {!videos.length && (
+        <Alert className="w-100" variant="info">
+          No videos found
+        </Alert>
+      )}
+    </div>
   );
 };
