@@ -12,14 +12,13 @@ import {
 } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { NavLink, useOutletContext } from "react-router-dom"; // Hook for navigation
+import { NavLink, useOutletContext } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { formatTimestamp } from "../../utils/formatTimestamp"; // Utility to format timestamps
 import { formatDate } from "../../utils/formatDate";
-import { formatAmount } from "../../utils/formatAmount";
 import formatNumber from "../../utils/formatNumber";
+import { formatTimestamp } from "../../utils/formatTimestamp";
 import { Ratings } from "../Ratings";
 
 const FILTER_OPTIONS = [
