@@ -21,6 +21,7 @@ import { createElement, useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { Scrollbar } from "react-scrollbars-custom";
+import { Button } from "react-bootstrap";
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,26 +29,23 @@ export const Sidebar = () => {
   return (
     <div className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
       <Scrollbar>
-        <div className="sidebar-header bg-primary">
+        <div className="sidebar-header">
           <img src={logo} alt="logo" className="sidebar-logo" />
-          <button
-            className="ms-auto btn btn-primary p-0"
+          <Button
+            variant="link"
+            className="ms-auto p-0"
             onClick={() => setCollapsed(!collapsed)}
           >
             {createElement(
               collapsed
                 ? IconLayoutSidebarLeftExpand
                 : IconLayoutSidebarLeftCollapse,
-              {
-                size: 30,
-                stroke: 1.5,
-              },
             )}
-          </button>
+          </Button>
         </div>
         <div className="sidebar-menu">
           <div className="sidebar-group">
-            <span className="sidebar-group-title">MAIN</span>
+            <span className="sidebar-group-title">Main</span>
             <NavLink
               to={"/dashboard"}
               className={({ isActive }) =>
@@ -70,7 +68,7 @@ export const Sidebar = () => {
           </div>
 
           <div className="sidebar-group">
-            <span className="sidebar-group-title">REVIEWS</span>
+            <span className="sidebar-group-title">Reviews</span>
             <NavLink
               to={"/reviews"}
               className={({ isActive }) =>
@@ -124,7 +122,7 @@ export const Sidebar = () => {
             </NavLink>
           </div>
           <div className="sidebar-group">
-            <span className="sidebar-group-title">REPORTS</span>
+            <span className="sidebar-group-title">Reports</span>
             <NavLink
               to={"/payments"}
               className={({ isActive }) =>
@@ -147,7 +145,7 @@ export const Sidebar = () => {
           </div>
 
           <div className="sidebar-group">
-            <span className="sidebar-group-title">SETTINGS</span>
+            <span className="sidebar-group-title">Settings</span>
             <NavLink
               to={"/users"}
               className={({ isActive }) =>
@@ -170,7 +168,7 @@ export const Sidebar = () => {
           </div>
 
           <div className="sidebar-group">
-            <span className="sidebar-group-title">HELP</span>
+            <span className="sidebar-group-title">Help</span>
             <NavLink
               to={"/security"}
               className={({ isActive }) =>
@@ -203,7 +201,7 @@ export const Sidebar = () => {
           </div>
 
           <div className="sidebar-group">
-            <span className="sidebar-group-title">DOCUMENTATION</span>
+            <span className="sidebar-group-title">Documentation</span>
             <NavLink
               to={"/documentation"}
               className={({ isActive }) =>

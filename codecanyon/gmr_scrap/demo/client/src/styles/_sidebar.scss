@@ -1,0 +1,166 @@
+// Sidebar
+.sidebar {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  // z-index: 1000;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #fff;
+  // background-color: $primary;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  height: 100%;
+  // color: $light;
+  // color: $light;
+  // overflow: hidden;
+  // overflow: auto;
+  font-size: 16px;
+
+  .ScrollbarsCustom-Track {
+    background-color: transparent !important;
+  }
+
+  .ScrollbarsCustom-Thumb {
+    // background-color: lighter(#000, 20%) !important;
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    // color: var(--bs-primary);
+    border-bottom: $card-border-width solid $card-border-color;
+    // background-color: $primary;
+    padding: 0.5rem 1rem;
+    height: 60px;
+  }
+
+  .sidebar-logo {
+    margin: 0;
+    height: 40px;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sidebar-item {
+    display: flex;
+    position: relative;
+    align-items: center;
+    z-index: 2;
+    transition: background-color 0.2s;
+    // border: 1px solid;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    color: $secondary;
+    font-size: 14px;
+    text-decoration: none;
+
+    svg {
+      margin-right: 1rem;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.active {
+      background-color: $primary-bg-subtle;
+      color: $primary;
+    }
+  }
+
+  .sidebar-group {
+    position: relative;
+    // padding: 0.5rem 0;
+    width: 100%;
+    overflow: hidden;
+
+    // &::after {
+    //   display: block;
+    //   position: absolute;
+    //   top: 20px;
+    //   left: 30px;
+    //   opacity: 0.2;
+    //   z-index: 1;
+    //   background-color: $warning;
+    //   width: 100%;
+    //   height: 1px;
+    //   content: "";
+    // }
+  }
+
+  .sidebar-group-title {
+    display: inline;
+    position: relative;
+    z-index: 2;
+    // background-color: #fff;
+    padding-right: 20px;
+    padding-left: 1rem;
+    width: 100%;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 12px;
+    // text-transform: uppercase;
+  }
+
+  &.sidebar-collapsed {
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+
+    .sidebar-group-title,
+    .sidebar-logo {
+      display: none;
+    }
+
+    .sidebar-item {
+      justify-content: center;
+      margin: 0;
+      padding: 0.5rem 0;
+
+      svg {
+        margin: 0;
+        width: 24px;
+        height: 24px;
+      }
+
+      span,
+      .badge {
+        display: none;
+      }
+    }
+  }
+}
+
+// Add media query for sidebar collapse
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 60px;
+
+    .sidebar-group-title,
+    .sidebar-logo {
+      display: none;
+    }
+
+    .sidebar-item {
+      justify-content: center;
+      margin: 0;
+      padding: 0.5rem 0;
+
+      svg {
+        margin: 0;
+        width: 24px;
+        height: 24px;
+      }
+
+      span,
+      .badge {
+        display: none;
+      }
+    }
+  }
+}

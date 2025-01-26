@@ -16,7 +16,7 @@
   padding: $spacer;
   max-height: 200px;
   overflow: hidden;
-  font-size: 14px;
+  // font-size: 14px;
 
   &-expand {
     display: flex;
@@ -38,7 +38,7 @@
   &-user {
     display: flex;
     align-items: start;
-    gap: 0.75rem;
+    gap: $spacer;
 
     &-info {
       display: flex;
@@ -52,12 +52,13 @@
     }
 
     img {
-      border-radius: $border-radius;
+      align-self: center;
+      border-radius: 50%;
       background-color: $secondary;
-      width: 40px;
-      min-width: 40px;
-      max-width: 40px;
-      height: 40px;
+      width: 35px;
+      min-width: 35px;
+      max-width: 35px;
+      height: 35px;
       object-fit: cover;
     }
   }
@@ -76,10 +77,11 @@
   &-response {
     display: flex;
     position: relative;
-    border-radius: $border-radius;
-    background-color: $secondary-bg-subtle;
+    // border-radius: $border-radius;
+    // background-color: $secondary-bg-subtle;
     padding-left: 0.75rem;
     overflow: hidden;
+    font-weight: 600;
 
     &::before {
       display: block;
@@ -95,16 +97,10 @@
 
   &-media {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     width: 100%;
-    height: 100px;
     overflow: auto;
-
-    .ScrollbarsCustom-Content {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: $spacer;
-    }
   }
 
   &-video,
@@ -125,23 +121,40 @@
   &-thumb {
     cursor: pointer;
     border-radius: 6px;
-    width: 70px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
 
     &-container {
       position: relative;
+      border-radius: $border-radius;
+      overflow: hidden;
+
+      &::after {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        content: "";
+      }
     }
 
     &-icon {
       position: absolute;
       top: 50%;
       right: 0;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.8;
+      left: 0;
+      transform: translateY(-50%);
+      opacity: 1;
+      z-index: 1;
       cursor: pointer;
-      color: $white;
+      margin: 0 auto;
+      width: 16px;
+      height: 16px;
+      color: #fff;
     }
   }
 }
