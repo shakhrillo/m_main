@@ -12,12 +12,16 @@ import {
   InputGroup,
   Row,
   Stack,
-  Table,
 } from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
-import { allImages } from "../services/dockerService";
-import { formatDate } from "../utils/formatDate";
+// import { dockerImages } from "../services/dockerService";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import { map } from "rxjs";
+import { docker } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
+import { formatStringDate } from "../utils/formatStringDate";
+import { formatTimestamp } from "../utils/formatTimestamp";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -31,9 +35,22 @@ export const DockerImages = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const subscription = allImages().subscribe((data) => {
-      setImages(data);
-    });
+    const subscription = docker({
+      type: "image",
+    })
+      .pipe(
+        map((data) => {
+          return data.map((image: any) => ({
+            ...JSON.parse(typeof image.data === "string" ? image.data : "{}"),
+            id: image.id,
+            updatedAt: image.updatedAt,
+          }));
+        }),
+      )
+      .subscribe((data) => {
+        console.log("docker images", data);
+        setImages(data);
+      });
 
     return () => {
       subscription.unsubscribe();
@@ -41,7 +58,7 @@ export const DockerImages = () => {
   }, [uid]);
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
         <Col md={12}>
           <Card>
@@ -84,7 +101,65 @@ export const DockerImages = () => {
               </Stack>
             </CardHeader>
             <CardBody>
-              <Table hover responsive>
+              <BootstrapTable
+                bordered={false}
+                hover
+                keyField="key"
+                data={images.map((image) => ({
+                  id: image.id,
+                  Tags:
+                    image.RepoTags && image.RepoTags.length > 0 ? (
+                      <NavLink to={`/images/${image.id}`}>
+                        {image.RepoTags.map((tag: string) => (
+                          <div key={tag}>{tag || "N/A"}</div>
+                        ))}
+                      </NavLink>
+                    ) : (
+                      "N/A"
+                    ),
+                  Created: formatStringDate(image.Created),
+                  Size: formatSize(image.Size),
+                  Os: image.Os,
+                  Architecture: image.Architecture,
+                  Variant: image.Variant,
+                  updatedAt: formatTimestamp(image.updatedAt),
+                }))}
+                columns={[
+                  {
+                    dataField: "Tags",
+                    text: "Tags",
+                  },
+                  {
+                    dataField: "Size",
+                    text: "Size",
+                  },
+                  {
+                    dataField: "Os",
+                    text: "OS",
+                  },
+                  {
+                    dataField: "Architecture",
+                    text: "Architecture",
+                  },
+                  {
+                    dataField: "Variant",
+                    text: "Variant",
+                  },
+                  {
+                    dataField: "Created",
+                    text: "Created",
+                  },
+                  {
+                    dataField: "updatedAt",
+                    text: "Updated",
+                  },
+                ]}
+                pagination={paginationFactory({
+                  sizePerPage: 15,
+                  hideSizePerPage: true,
+                })}
+              />
+              {/* <Table hover responsive>
                 <thead>
                   <tr>
                     <th>#</th>
@@ -111,7 +186,7 @@ export const DockerImages = () => {
                     </tr>
                   ))}
                 </tbody>
-              </Table>
+              </Table> */}
             </CardBody>
           </Card>
         </Col>

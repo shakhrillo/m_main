@@ -114,9 +114,9 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
-        <Col md={6}>
+        <Col md={8}>
           <Card id="dashboard">
             <Card.Body>
               <Card.Title>Total revenue</Card.Title>
@@ -133,7 +133,7 @@ export const Dashboard: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <Row className="row-cols-1 g-3">
             <Col>
               <Card>

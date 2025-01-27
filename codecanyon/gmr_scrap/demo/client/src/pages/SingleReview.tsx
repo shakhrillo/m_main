@@ -9,7 +9,7 @@ import { VideosList } from "../components/videos/VideosList";
 export const SingleReview = () => {
   const { reviewId } = useParams() as { reviewId: string };
   return (
-    <Container className="single-review">
+    <Container fluid>
       <Row>
         <Col md={9}>
           <Tabs defaultActiveKey="comments" id="scrap-tabs" variant="underline">

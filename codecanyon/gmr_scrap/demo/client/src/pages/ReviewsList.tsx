@@ -3,7 +3,7 @@ import { ContainersList } from "../components/containers/ContainersList";
 
 export const ReviewsList = () => {
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
         <Col xs={12}>
           <ContainersList type="comments" path="reviews" />

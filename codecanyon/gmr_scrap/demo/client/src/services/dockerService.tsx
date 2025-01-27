@@ -155,22 +155,29 @@ export const dockerContainerStats = (containerId: string) => {
   });
 };
 
-export const dockerInfo = () => {
-  const info$ = new BehaviorSubject({} as IDockerConfig);
+export const docker = ({
+  type,
+  imageId,
+}: {
+  type?: string;
+  imageId?: string;
+}) => {
+  const info$ = new BehaviorSubject([] as any);
   const docCollection = collection(firestore, "docker");
 
   const unsubscribe = onSnapshot(
-    query(docCollection, where("type", "==", "info")),
+    query(
+      docCollection,
+      orderBy("updatedAt", "desc"),
+      ...(type ? [where("type", "==", type)] : []),
+      ...(imageId ? [where("imageId", "==", imageId)] : []),
+    ),
     (snapshot) => {
-      const infoData = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        if (!data) return {};
-        return {
-          type: data.type,
-          ...JSON.parse(data.info),
-        };
-      });
-      info$.next(infoData[0] as IDockerConfig);
+      const infoData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      info$.next(infoData);
     },
     (error) => {
       console.error("Error fetching info data:", error);
@@ -178,7 +185,7 @@ export const dockerInfo = () => {
     },
   );
 
-  return new Observable<IDockerConfig>((subscriber) => {
+  return new Observable<any>((subscriber) => {
     const subscription = info$.subscribe(subscriber);
 
     return () => {
@@ -188,65 +195,65 @@ export const dockerInfo = () => {
   });
 };
 
-export const allImages = () => {
-  const images$ = new BehaviorSubject([] as any);
-  const collectionRef = collection(firestore, "images");
+// export const dockerImages = () => {
+//   const images$ = new BehaviorSubject([] as any);
+//   const collectionRef = collection(firestore, "docker");
 
-  const unsubscribe = onSnapshot(
-    collectionRef,
-    (snapshot) => {
-      const imagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log("imagesData", imagesData);
-      images$.next(imagesData);
-    },
-    (error) => {
-      console.error("Error fetching images data:", error);
-      images$.error(error);
-    },
-  );
+//   const unsubscribe = onSnapshot(
+//     collectionRef,
+//     (snapshot) => {
+//       const imagesData = snapshot.docs.map((doc) => ({
+//         key: doc.id,
+//         ...doc.data(),
+//       }));
+//       console.log("imagesData", imagesData);
+//       images$.next(imagesData);
+//     },
+//     (error) => {
+//       console.error("Error fetching images data:", error);
+//       images$.error(error);
+//     },
+//   );
 
-  return new Observable<any>((subscriber) => {
-    const subscription = images$.subscribe(subscriber);
+//   return new Observable<any>((subscriber) => {
+//     const subscription = images$.subscribe(subscriber);
 
-    return () => {
-      subscription.unsubscribe();
-      unsubscribe();
-    };
-  });
-};
+//     return () => {
+//       subscription.unsubscribe();
+//       unsubscribe();
+//     };
+//   });
+// };
 
-export const dockerImage = (imgId: string) => {
-  const image$ = new BehaviorSubject({} as any);
-  const docRef = doc(firestore, "images", imgId);
+// export const dockerImage = (imgId: string) => {
+//   const image$ = new BehaviorSubject({} as any);
+//   const docRef = doc(firestore, "images", imgId);
 
-  const unsubscribe = onSnapshot(
-    docRef,
-    (doc) => {
-      const imageData = {
-        id: doc.id,
-        ...doc.data(),
-      };
-      console.log("imageData", imageData);
-      image$.next(imageData);
-    },
-    (error) => {
-      console.error("Error fetching image data:", error);
-      image$.error(error);
-    },
-  );
+//   const unsubscribe = onSnapshot(
+//     docRef,
+//     (doc) => {
+//       const imageData = {
+//         id: doc.id,
+//         ...doc.data(),
+//       };
+//       console.log("imageData", imageData);
+//       image$.next(imageData);
+//     },
+//     (error) => {
+//       console.error("Error fetching image data:", error);
+//       image$.error(error);
+//     },
+//   );
 
-  return new Observable<any>((subscriber) => {
-    const subscription = image$.subscribe(subscriber);
+//   return new Observable<any>((subscriber) => {
+//     const subscription = image$.subscribe(subscriber);
 
-    return () => {
-      subscription.unsubscribe();
-      unsubscribe();
-    };
-  });
-};
+//     return () => {
+//       subscription.unsubscribe();
+//       unsubscribe();
+//     };
+//   });
+// };
 
 export const dockerImageLayers = (imgId: string) => {
   const image$ = new BehaviorSubject([] as any);

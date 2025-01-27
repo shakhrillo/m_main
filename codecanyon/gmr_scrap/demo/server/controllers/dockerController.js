@@ -1,6 +1,6 @@
 const { spawn } = require("child_process");
 const { docker } = require("../docker");
-const { updateImages, addDockerInfo } = require("../services/firebaseService");
+const { addDockerInfo } = require("../services/firebaseService");
 
 function infoDocker() {
   return new Promise((resolve, reject) => {
@@ -67,22 +67,25 @@ async function imagesDocker() {
         if (err) {
           reject(err);
         } else {
-          const imageContent = [];
           for (const image of images) {
-            const details = await docker.getImage(image.Id).inspect();
-            const layers = await docker.getImage(image.Id).history();
+            const details = (await docker.getImage(image.Id).inspect()) || {};
+            const layers = (await docker.getImage(image.Id).history()) || [];
 
-            // console.log("Details", details);
-            // console.log("Layers", layers);
+            const id = await addDockerInfo({
+              ...image,
+              data: details,
+              type: "image",
+            });
 
-            imageContent.push({
-              image: image || {},
-              details: details || {},
-              layers: layers || [],
+            layers.forEach(async (layer) => {
+              await addDockerInfo({
+                imageId: id,
+                data: layer,
+                type: "layer",
+              });
             });
           }
 
-          await updateImages(imageContent);
           resolve(images);
         }
       });

@@ -3,7 +3,7 @@ import { ContainersList } from "../components/containers/ContainersList";
 
 export const DockerContainers = () => {
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
         <Col xs={12}>
           <ContainersList path="containers" />

@@ -48,7 +48,7 @@ export const Scrap = () => {
   }, [scrapId]);
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
         <Col md={9}>
           <Stack direction={"vertical"} gap={3}>

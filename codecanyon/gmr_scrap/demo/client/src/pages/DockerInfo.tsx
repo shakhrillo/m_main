@@ -10,7 +10,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { DockerDetails } from "../components/DockerDetails";
-import { dockerInfo } from "../services/dockerService";
+import { docker } from "../services/dockerService";
 import { camelCaseToSentence } from "../utils/camelCaseToSentence";
 import { parseISO } from "date-fns";
 import { formatDate } from "../utils/formatDate";
@@ -74,15 +74,15 @@ function renderValue(key: string, value: any) {
 export const DockerInfo = () => {
   const [info, setInfo] = useState<any>({});
 
-  useEffect(() => {
-    const subscription = dockerInfo().subscribe((data) => {
-      setInfo(data);
-    });
+  // useEffect(() => {
+  //   const subscription = dockerInfo().subscribe((data) => {
+  //     setInfo(data);
+  //   });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, []);
 
   return (
     <Container>

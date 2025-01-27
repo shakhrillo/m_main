@@ -9,61 +9,61 @@ async function createMachine(docId, data) {
   }
 }
 
-async function updateImages(data) {
-  try {
-    const batch = db.batch();
-    const imagesCollection = db.collection("images");
-    data.forEach(({ image, details, layers }) => {
-      // console.log("Updating image:", image.Id);
-      // console.log("Details:", details);
-      // console.log("Layers:", layers);
+// async function updateImages(data) {
+//   try {
+//     const batch = db.batch();
+//     const imagesCollection = db.collection("images");
+//     data.forEach(({ image, details, layers }) => {
+//       // console.log("Updating image:", image.Id);
+//       // console.log("Details:", details);
+//       // console.log("Layers:", layers);
 
-      const docRef = imagesCollection.doc(image.Id);
-      const imageDetailsRef = db
-        .collection("images")
-        .doc(image.Id)
-        .collection("details");
-      const imageLayersRef = db
-        .collection("images")
-        .doc(image.Id)
-        .collection("layers");
+//       const docRef = imagesCollection.doc(image.Id);
+//       const imageDetailsRef = db
+//         .collection("images")
+//         .doc(image.Id)
+//         .collection("details");
+//       const imageLayersRef = db
+//         .collection("images")
+//         .doc(image.Id)
+//         .collection("layers");
 
-      batch.set(
-        imageDetailsRef.doc("details"),
-        {
-          ...details,
-          updatedAt: Timestamp.now(),
-        },
-        { merge: true }
-      );
+//       batch.set(
+//         imageDetailsRef.doc("details"),
+//         {
+//           ...details,
+//           updatedAt: Timestamp.now(),
+//         },
+//         { merge: true }
+//       );
 
-      layers.forEach(async (layer) => {
-        const layerRef = imageLayersRef.doc(layer.Id);
-        batch.set(
-          layerRef,
-          {
-            ...layer,
-            updatedAt: Timestamp.now(),
-          },
-          { merge: true }
-        );
-      });
+//       layers.forEach(async (layer) => {
+//         const layerRef = imageLayersRef.doc(layer.Id);
+//         batch.set(
+//           layerRef,
+//           {
+//             ...layer,
+//             updatedAt: Timestamp.now(),
+//           },
+//           { merge: true }
+//         );
+//       });
 
-      batch.set(
-        docRef,
-        {
-          ...image,
-          updatedAt: Timestamp.now(),
-        },
-        { merge: true }
-      );
-    });
+//       batch.set(
+//         docRef,
+//         {
+//           ...image,
+//           updatedAt: Timestamp.now(),
+//         },
+//         { merge: true }
+//       );
+//     });
 
-    await batch.commit();
-  } catch (error) {
-    console.error("Error updating images:", error);
-  }
-}
+//     await batch.commit();
+//   } catch (error) {
+//     console.error("Error updating images:", error);
+//   }
+// }
 
 async function updateMachine(docId, data) {
   try {
@@ -97,13 +97,16 @@ async function addMachineStats(docId, stats) {
   }
 }
 
-async function addDockerInfo(info) {
+async function addDockerInfo({ data, type, imageId }) {
   try {
-    await db.collection("docker").add({
-      info: JSON.stringify(info),
+    const { id } = await db.collection("docker").add({
+      data: JSON.stringify(data),
       updatedAt: Timestamp.now(),
-      type: "info",
+      type,
+      ...(imageId && { imageId }),
     });
+
+    return id;
   } catch (error) {
     console.error("Error saving Docker info:", error);
   }
@@ -128,6 +131,5 @@ module.exports = {
   updateMachine,
   addDockerInfo,
   updateDockerImageInfo,
-  updateImages,
   addMachineStats,
 };
