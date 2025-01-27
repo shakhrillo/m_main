@@ -3,6 +3,9 @@
 $font-size-base: 0.875rem;
 $enable-negative-margins: true;
 $card-border-color: rgb(235, 235, 235);
+$pagination-border-width: 0;
+// $pagination-padding-x: 0;
+// $pagination-padding-y: 0;
 @import "bootstrap/scss/bootstrap";
 @import "photoswipe/dist/photoswipe.css";
 @import "styles/navbar";
@@ -12,6 +15,7 @@ $card-border-color: rgb(235, 235, 235);
 @import "styles/comments";
 @import "styles/images";
 @import "styles/videos";
+@import "styles/pagination";
 
 // a,
 .nav-link {

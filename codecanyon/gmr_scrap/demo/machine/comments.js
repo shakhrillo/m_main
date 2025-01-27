@@ -217,9 +217,14 @@ let driver;
       } catch (error) {
         data.error = JSON.stringify(error);
         // Get browser logs
-        let logs = await driver.manage().logs().get("browser");
-        logs.forEach(({ level, message }) => log(`[${level}] ${message}`));
-        await driver.sleep(1000);
+        try {
+          let logs = await driver.manage().logs().get("browser");
+          logs.forEach(({ level, message }) => log(`[${level}] ${message}`));
+          data.browserLogs = JSON.stringify(logs);
+          await driver.sleep(1000);
+        } catch (error) {
+          log(`Error fetching browser logs: ${error.message}`);
+        }
 
         retries += 1;
       } finally {

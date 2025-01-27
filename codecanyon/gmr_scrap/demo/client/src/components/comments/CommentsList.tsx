@@ -1,7 +1,20 @@
-import { IconSearch } from "@tabler/icons-react";
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconSearch,
+} from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Card,
+  CardBody,
+  Dropdown,
+  Form,
+  InputGroup,
+  Pagination,
+  Stack,
+} from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { debounceTime, Subject } from "rxjs";
 import { reviewComments } from "../../services/reviewService";
@@ -18,6 +31,9 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const commentsRef = useRef<HTMLDivElement>(null);
   const { uid } = useOutletContext<User>();
   const [comments, setComments] = useState([] as IComment[]);
+  const [limit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [filterOptions, setFilterOptions] = useState({
     onlyImages: false,
     onlyVideos: false,
@@ -26,6 +42,24 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   });
   const [search, setSearch] = useState("");
   const [searchSubject] = useState(new Subject<string>());
+  const [paginationLength, setPaginationLength] = useState(5);
+  const paginationRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const updatePagination = () => {
+      if (paginationRef.current) {
+        const width = paginationRef.current.clientWidth;
+        setPaginationLength(Math.floor(width / 100) - 2);
+      }
+    };
+
+    updatePagination();
+    window.addEventListener("resize", updatePagination);
+
+    return () => {
+      window.removeEventListener("resize", updatePagination);
+    };
+  }, []);
 
   useEffect(() => {
     const subscription = searchSubject
@@ -40,6 +74,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   }, []);
 
   useEffect(() => {
+    setPage(1);
     const subscription = reviewComments(
       reviewId,
       uid,
@@ -47,6 +82,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
       search,
     ).subscribe((data) => {
       setComments(data);
+      setTotal(Math.ceil(data.length / limit));
     });
 
     return () => {
@@ -155,9 +191,71 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
-      {comments.map((review, index) => (
+      {comments.slice((page - 1) * limit, page * limit).map((review, index) => (
         <Comment review={review} key={index} />
       ))}
+
+      {comments.length > limit && (
+        <Card>
+          <CardBody
+            ref={paginationRef}
+            className="d-flex justify-content-center w-100"
+          >
+            <Pagination className="m-0">
+              <Pagination.Prev
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                disabled={page === 1}
+              />
+
+              {page > Math.floor(paginationLength / 2) + 1 && (
+                <Pagination.Item onClick={() => setPage(1)}>1</Pagination.Item>
+              )}
+
+              {page > Math.floor(paginationLength / 2) + 1 && (
+                <Pagination.Ellipsis />
+              )}
+
+              {Array.from({ length: paginationLength })
+                .map((_, index) => {
+                  const start = Math.max(
+                    1,
+                    Math.min(
+                      page - Math.floor(paginationLength / 2),
+                      total - paginationLength + 1,
+                    ),
+                  );
+                  return start + index;
+                })
+                .filter((p) => p >= 1 && p <= total)
+                .map((p) => (
+                  <Pagination.Item
+                    key={p}
+                    active={p === page}
+                    onClick={() => setPage(p)}
+                  >
+                    {p}
+                  </Pagination.Item>
+                ))}
+
+              {page < total - Math.floor(paginationLength / 2) && (
+                <Pagination.Ellipsis />
+              )}
+
+              {page < total - Math.floor(paginationLength / 2) && (
+                <Pagination.Item onClick={() => setPage(total)}>
+                  {total}
+                </Pagination.Item>
+              )}
+
+              <Pagination.Next
+                onClick={() => setPage((prev) => Math.min(prev + 1, total))}
+                disabled={page === total}
+              />
+            </Pagination>
+          </CardBody>
+        </Card>
+      )}
+
       {!comments.length && (
         <Alert className="w-100" variant="info">
           No comments found

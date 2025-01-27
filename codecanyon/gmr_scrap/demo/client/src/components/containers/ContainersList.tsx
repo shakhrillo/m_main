@@ -2,6 +2,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react"; // React imports for state and effect handling
 import {
+  Badge,
   Card,
   CardBody,
   CardHeader,
@@ -110,15 +111,39 @@ export const ContainersList = ({
             totalOwnerReviews: formatNumber(comment.totalOwnerReviews),
             totalImages: formatNumber(comment.totalImages),
             totalVideos: formatNumber(comment.totalVideos),
-            machineAction: comment.machine?.Action,
+            machineAction: (
+              <Badge
+                bg={
+                  comment.machine?.Action === "die"
+                    ? "danger"
+                    : comment.machine?.Action === "start"
+                      ? "success"
+                      : "secondary"
+                }
+                className="text-capitalize"
+              >
+                {comment.machine?.Action}
+              </Badge>
+            ),
             machineTime: formatDate(comment?.machine?.time || 0),
             machineExecDuration:
               (comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s",
             machineImage: comment?.machine?.Actor?.Attributes?.image,
             machineName: (
-              <NavLink to={`/${path}/${comment.machineId}`}>
-                {comment?.machine?.Actor?.Attributes?.name}
-              </NavLink>
+              <span className="d-flex flex-column">
+                <NavLink to={`/${path}/${comment.machineId}`}>
+                  {comment.title}
+                  {
+                    <Badge
+                      className="text-capitalize ms-2"
+                      bg={comment.type === "info" ? "info" : "primary"}
+                    >
+                      {comment.type === "info" ? "Validate" : "Review"}
+                    </Badge>
+                  }
+                </NavLink>
+                #{comment?.machine?.Actor?.Attributes?.name}
+              </span>
             ),
           }))}
           columns={[
@@ -138,9 +163,7 @@ export const ContainersList = ({
             ...(type === "comments"
               ? [{ dataField: "totalOwnerReviews", text: "Owner response" }]
               : []),
-            ...(!type
-              ? [{ dataField: "machineName", text: "Machine ID" }]
-              : []),
+            ...(!type ? [{ dataField: "machineName", text: "Machine" }] : []),
             ...(!type
               ? [{ dataField: "machineAction", text: "Machine Action" }]
               : []),
