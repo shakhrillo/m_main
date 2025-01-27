@@ -9,15 +9,15 @@ exports.createCheckoutSession = async (req, res) => {
 
   try {
     // Fetch app settings and set defaults
-    const settings = await db.doc("app/settings").get();
-    const { currency = "usd", costs = 1 } = settings.exists
-      ? settings.data()
-      : {};
+    // const settings = await db.doc("app/settings").get();
+    // const { currency = "usd", costs = 1 } = settings.exists
+    //   ? settings.data()
+    //   : {};
 
-    const unit_amount = amount * Number(costs);
+    // const unit_amount = amount * Number(costs);
 
     // Log for debugging
-    console.log({ currency, costs, unit_amount });
+    // console.log({ currency, costs, unit_amount });
 
     const user = await db.doc(`users/${userId}`).get();
     const userEmail = user.exists ? user.data().email : null;
@@ -47,9 +47,9 @@ exports.createCheckoutSession = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency,
+            currency: "usd",
             product_data: { name: "Custom Amount" },
-            unit_amount,
+            unit_amount: amount * 100,
           },
           quantity: 1,
         },
@@ -63,7 +63,7 @@ exports.createCheckoutSession = async (req, res) => {
 
     res.status(200).json({ url });
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     res.status(500).json({ error: error.message });
   }
 };

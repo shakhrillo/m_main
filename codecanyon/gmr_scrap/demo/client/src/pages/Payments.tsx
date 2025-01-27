@@ -3,6 +3,8 @@ import {
   IconCoin,
   IconCoins,
   IconInfoCircle,
+  IconMoneybag,
+  IconUserDollar,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -26,23 +28,54 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
+import { settingValue } from "../services/settingService";
+import { filter, take } from "rxjs";
 
 export const Payments = () => {
   const { uid } = useOutletContext<User>();
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [amount, setAmount] = useState("");
   const [coinId, setCoinId] = useState("");
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [cost, setCost] = useState(0);
+
+  useEffect(() => {
+    const subscription = settingValue({ tag: "cost", type: "coin" })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
+      .subscribe((data) => {
+        setCost(data.value);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (!coinId) return;
 
     const unsubscribe = buyCoinsData(coinId, uid).subscribe((data) => {
       const url = data?.url;
+      const error = data?.error;
+
+      console.log(data);
+
       if (url) {
         window.location.href = url;
+      }
+
+      if (error) {
+        setError(error);
+        setLoading(false);
+        setCoinId("");
+        setAmount("");
+        setIsFormValid(false);
       }
     });
 
@@ -68,7 +101,7 @@ export const Payments = () => {
   async function handlePurchase() {
     setLoading(true);
     try {
-      const id = await buyCoins(uid, Number(amount) * 100);
+      const id = await buyCoins(uid, Number(amount) * cost);
       setCoinId(id);
     } catch (error) {
       console.log(error);
@@ -76,7 +109,7 @@ export const Payments = () => {
   }
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col md={9}>
           <Card className="mb-3">
@@ -92,16 +125,19 @@ export const Payments = () => {
                       const value = e.target.value;
                       setAmount(Number(value) ? value : "");
                     }}
-                    pattern="^([1-9][0-9]|[1-9][0-9]{2}|1000)$"
+                    pattern="^[1-9]\d*$"
                     placeholder="Enter amount"
+                    className="mb-2"
                     required
                   />
                   <FormControl.Feedback type={"invalid"}>
-                    <IconAlertCircle className="me-2" size={20} />
-                    Please enter a valid amount.
+                    <IconAlertCircle className="me-2" />
+                    {error || "Please enter a valid amount."}
                   </FormControl.Feedback>
-                  <FormText>
-                    The minimum amount you can purchase is between 10 and 1000.
+                  <FormText className={error ? "d-none" : ""}>
+                    <IconInfoCircle className="me-2" />
+                    There might be restrictions on the minimum and maximum from
+                    the Stripe API.
                   </FormText>
                 </FormGroup>
               </Form>
@@ -163,6 +199,7 @@ export const Payments = () => {
                   className="align-items-center gap-1"
                 >
                   {amount} <IconCoins size={20} />
+                  {/* {amount * (1 / cost)} <IconCoins size={20} /> */}
                 </Stack>
               </Stack>
               <Stack
@@ -174,7 +211,8 @@ export const Payments = () => {
                   direction={"horizontal"}
                   className="align-items-center gap-1"
                 >
-                  {Number(amount || 0) / 10} <IconCoin size={20} />
+                  {(Number(amount || 0) * cost).toFixed(2)}
+                  <IconCoin size={20} />
                 </Stack>
               </Stack>
               <Stack

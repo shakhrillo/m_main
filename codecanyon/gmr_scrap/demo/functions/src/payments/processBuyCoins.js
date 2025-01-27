@@ -10,9 +10,17 @@ const processBuyCoins = async (event) => {
   const { amount } = event.data.data();
   const { userId } = event.params;
 
-  await ref.update({
-    url: await generateStripePaymentUrl({ userId, amount }),
-  });
+  try {
+    await ref.update({
+      url: await generateStripePaymentUrl({ userId, amount }),
+    });
+  } catch (error) {
+    const data = error.response.data;
+    console.error(data);
+    await ref.update({
+      ...data,
+    });
+  }
 };
 
 module.exports = processBuyCoins;

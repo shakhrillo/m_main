@@ -13,6 +13,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 interface IBuyCoins {
   amount: number;
   url?: string;
+  error?: string;
 }
 
 export const buyCoins = async (uid: string, amount: number) => {
@@ -32,7 +33,6 @@ export const buyCoinsData = (documentId: string, uid: string) => {
 
   const unsubscribe = onSnapshot(docRef, (doc) => {
     const data = doc.data() as IBuyCoins;
-    console.log(data);
     if (data) {
       buyCoins$.next(data);
     }
