@@ -1,22 +1,21 @@
+import { IconReload } from "@tabler/icons-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
-  CardHeader,
   Col,
   Container,
   Row,
   Stack,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { PlaceInfo } from "../components/place/PlaceInfo";
-import { useState, useMemo, useEffect } from "react";
 import { LineChart } from "../components/LineChart";
+import { PlaceInfo } from "../components/place/PlaceInfo";
 import { dockerContainerStats } from "../services/dockerService";
 import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
-import { IconDownload, IconReload, IconZoomIn } from "@tabler/icons-react";
 
 export const DockerContainer = () => {
   const { containerId } = useParams<{ containerId: string }>();
@@ -112,7 +111,7 @@ export const DockerContainer = () => {
   }, [containerId]);
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
         <Col md={9}>
           <Row className="g-3 row-cols-1">

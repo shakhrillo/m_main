@@ -1,27 +1,84 @@
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import {
   Card,
   CardBody,
-  CardSubtitle,
   CardTitle,
   Col,
   Container,
   Row,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import SyntaxHighlighter, { Light, PrismLight } from "react-syntax-highlighter";
-import { vsDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import { map } from "rxjs";
-import { DockerImageDetails } from "../components/DockerImageDetails";
+import {
+  IconBrandUbuntu,
+  IconClock,
+  IconDeviceSdCard,
+  IconHierarchy,
+  IconTag,
+  IconTriangle,
+} from "@tabler/icons-react";
+import { a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { docker } from "../services/dockerService";
 import { formatDate } from "../utils/formatDate";
 import { formatSize } from "../utils/formatSize";
+import { formatStringDate } from "../utils/formatStringDate";
 import { formatTimestamp } from "../utils/formatTimestamp";
-import { a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+type DockerImageInfoRowProps = {
+  icon: JSX.Element;
+  label: string;
+  value: JSX.Element | string | number;
+};
+
+const DockerImageInfoRow = ({
+  icon,
+  label,
+  value,
+}: DockerImageInfoRowProps) => (
+  <div className="d-flex align-items-center">
+    {icon}
+    <div className="ms-3">
+      <div className="text-break fw-bold">{label}</div>
+      <div className="text-break">{value}</div>
+    </div>
+  </div>
+);
 
 export const DockerImage = () => {
   const { imgId } = useParams() as { imgId: string };
   const [imageLayers, setImageLayers] = useState([] as any);
+  const [imageDetails, setImageDetails] = useState({} as any);
+
+  useEffect(() => {
+    const subscription = docker({
+      type: "image",
+    })
+      .pipe(
+        map((data) => {
+          const images = data
+            .filter((image: any) => image.id === imgId)
+            .map((image: any) => ({
+              ...JSON.parse(typeof image.data === "string" ? image.data : "{}"),
+              id: image.id,
+              updatedAt: image.updatedAt,
+            }));
+
+          if (images.length) {
+            return images[0];
+          }
+
+          return {};
+        }),
+      )
+      .subscribe((data) => {
+        setImageDetails(data);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [imgId]);
 
   useEffect(() => {
     const subscription = docker({
@@ -80,7 +137,66 @@ export const DockerImage = () => {
           </Card>
         </Col>
         <Col md={3}>
-          <DockerImageDetails />
+          <Card>
+            <CardBody>
+              <CardTitle>Image Info</CardTitle>
+              <Row className="g-3 row-cols-1">
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconTag />}
+                    label="Tags"
+                    value={
+                      imageDetails.RepoTags
+                        ? imageDetails.RepoTags.join(", ")
+                        : "N/A"
+                    }
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconClock />}
+                    label="Created"
+                    value={formatStringDate(imageDetails.Created)}
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconClock />}
+                    label="Updated"
+                    value={formatTimestamp(imageDetails.updatedAt)}
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconDeviceSdCard />}
+                    label="Size"
+                    value={formatSize(imageDetails.Size || 0)}
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconBrandUbuntu />}
+                    label="OS"
+                    value={imageDetails.Os || "N/A"}
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconHierarchy />}
+                    label="Architecture"
+                    value={imageDetails.Architecture || "N/A"}
+                  />
+                </Col>
+                <Col>
+                  <DockerImageInfoRow
+                    icon={<IconTriangle />}
+                    label="Variant"
+                    value={imageDetails.Variant || "N/A"}
+                  />
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
         </Col>
       </Row>
     </Container>
