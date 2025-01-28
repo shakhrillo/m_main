@@ -17,6 +17,9 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { receiptData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatTimestamp } from "../utils/formatTimestamp";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import { formatDate } from "../utils/formatDate";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -30,7 +33,10 @@ export const Receipts = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const unsubscribe = receiptData({}).subscribe((data) => {
+    const unsubscribe = receiptData({
+      uid,
+      type: ["charge.succeeded", "charge.failed"],
+    }).subscribe((data) => {
       console.log(data);
       setHistory(data);
     });
@@ -84,7 +90,43 @@ export const Receipts = () => {
               </Stack>
             </CardHeader>
             <CardBody>
-              <table className="table table-striped">
+              <BootstrapTable
+                bordered={false}
+                hover
+                keyField="created"
+                data={history.map((item, index) => ({
+                  ...item,
+                  amount: (
+                    <NavLink to={`/receipts/${item.id}`}>
+                      {formatAmount(item.amount, item.currency)}
+                    </NavLink>
+                  ),
+                  customer: (
+                    <NavLink to={`/users/${item.metadata.userId}`}>
+                      {item.customer}
+                    </NavLink>
+                  ),
+                  key: index,
+                }))}
+                columns={[
+                  {
+                    dataField: "amount",
+                    text: "Amount",
+                  },
+                  { dataField: "customer", text: "Customer" },
+                  {
+                    dataField: "created",
+                    text: "Created",
+                    formatter: (cell: number | undefined) => formatDate(cell),
+                  },
+                  { dataField: "status", text: "Status" },
+                ]}
+                pagination={paginationFactory({
+                  sizePerPage: 10,
+                  hideSizePerPage: true,
+                })}
+              />
+              <table className="table table-striped d-none">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -111,7 +153,7 @@ export const Receipts = () => {
                           <span className="text-danger">Failed</span>
                         )}
                       </td>
-                      <td>{formatAmount(item.amount)}</td>
+                      <td>{formatAmount(item.amount, item.currency)}</td>
                     </tr>
                   ))}
                 </tbody>

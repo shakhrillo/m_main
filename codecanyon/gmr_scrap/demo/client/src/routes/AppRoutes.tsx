@@ -29,7 +29,7 @@ import {
 } from "../pages";
 import { DockerInfo } from "../pages/DockerInfo";
 import { Documentation } from "../pages/Documentation";
-import { Receipt } from "../pages/PaymentsInfo";
+import { Receipt } from "../pages/Receipt";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([

@@ -5,7 +5,7 @@ import { format } from "date-fns";
  * @param timestamp The Unix timestamp to format.
  * @returns The formatted timestamp.
  */
-export const formatDate = (timestamp: number): string => {
+export const formatDate = (timestamp: number | undefined): string => {
   if (!timestamp) {
     return "";
   }

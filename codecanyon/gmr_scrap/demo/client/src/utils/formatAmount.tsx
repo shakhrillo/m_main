@@ -5,7 +5,10 @@ import formatNumber from "./formatNumber";
  * @param amount
  * @returns formatted amount
  */
-export const formatAmount = (amount: number | string | undefined) => {
+export const formatAmount = (
+  amount: number | string | undefined,
+  currency?: string,
+) => {
   if (!amount) {
     return 0;
   }
@@ -14,5 +17,9 @@ export const formatAmount = (amount: number | string | undefined) => {
     amount = parseFloat(amount);
   }
 
-  return formatNumber(amount / 100);
+  if (!currency) {
+    return formatNumber(amount / 100);
+  }
+
+  return `${formatNumber(amount / 100)} ${currency}`.toUpperCase();
 };
