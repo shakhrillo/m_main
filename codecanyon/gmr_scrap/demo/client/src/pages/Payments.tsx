@@ -189,51 +189,30 @@ export const Payments = () => {
           <Card className="mb-3">
             <CardBody>
               <CardTitle>Summary</CardTitle>
-              <Stack
-                direction="horizontal"
-                className="my-2 justify-content-between"
-              >
-                Coins
-                <Stack
-                  direction={"horizontal"}
-                  className="align-items-center gap-1"
-                >
-                  {amount} <IconCoins size={20} />
-                  {/* {amount * (1 / cost)} <IconCoins size={20} /> */}
-                </Stack>
-              </Stack>
-              <Stack
-                direction={"horizontal"}
-                className="my-2 justify-content-between"
-              >
-                USD
-                <Stack
-                  direction={"horizontal"}
-                  className="align-items-center gap-1"
-                >
-                  {(Number(amount || 0) * cost).toFixed(2)}
-                  <IconCoin size={20} />
-                </Stack>
-              </Stack>
-              <Stack
-                direction={"horizontal"}
-                className="my-2 justify-content-between"
-              >
-                <span>Discount</span>
-                15%
-              </Stack>
-              <Stack
-                direction={"horizontal"}
-                className="my-2 justify-content-between"
-              >
-                <span>Tax</span>
-                0%
-              </Stack>
-              <hr />
+
+              <div className="d-flex flex-column gap-3">
+                <div className="d-flex align-items-center">
+                  <IconCoins size={30} />
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">{amount || 0}</div>
+                    <div className="text-break">Coins</div>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center">
+                  <IconCoin size={30} />
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">
+                      {(Number(amount || 0) * cost).toFixed(2)}
+                    </div>
+                    <div className="text-break">Price</div>
+                  </div>
+                </div>
+              </div>
+              {/* <hr />
               <Stack direction={"horizontal"} className="d-flex my-2">
                 <span>Total</span>
                 500
-              </Stack>
+              </Stack> */}
             </CardBody>
           </Card>
           <Card>

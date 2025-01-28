@@ -10,7 +10,7 @@ import {
   ListGroup,
   Row,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { filter, map } from "rxjs";
 import { receiptData } from "../services/paymentService";
 import { formatDate } from "../utils/formatDate";
@@ -23,6 +23,7 @@ import {
   IconCreditCard,
   IconNumber,
   IconReceipt,
+  IconUser,
   IconX,
 } from "@tabler/icons-react";
 
@@ -55,7 +56,7 @@ export const Receipt = () => {
           <Card>
             <CardBody>
               <CardTitle>Payment Receipt</CardTitle>
-              <CardSubtitle>#{receiptId}</CardSubtitle>
+              <CardSubtitle>#{receipt?.payment_intent}</CardSubtitle>
               <hr />
               <div className="d-flex flex-column gap-3">
                 <div className="d-flex align-items-center">
@@ -123,6 +124,17 @@ export const Receipt = () => {
                       )}
                     </div>
                     <div className="text-break">Payment Status</div>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center">
+                  <IconUser />
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">
+                      <NavLink to={`/users/${receipt?.metadata?.userId}`}>
+                        {receipt?.customer || "N/A"}
+                      </NavLink>
+                    </div>
+                    <div className="text-break">Customer</div>
                   </div>
                 </div>
               </div>

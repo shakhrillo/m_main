@@ -49,7 +49,7 @@ exports.createCheckoutSession = async (req, res) => {
           price_data: {
             currency: "usd",
             product_data: { name: "Custom Amount" },
-            unit_amount: amount * 100,
+            unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
         },

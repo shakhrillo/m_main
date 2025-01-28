@@ -2,6 +2,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
+  Badge,
   Card,
   CardBody,
   CardHeader,
@@ -13,12 +14,11 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink, useOutletContext } from "react-router-dom";
 import { receiptData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
-import { formatTimestamp } from "../utils/formatTimestamp";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { formatDate } from "../utils/formatDate";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -37,7 +37,6 @@ export const Receipts = () => {
       uid,
       type: ["charge.succeeded", "charge.failed"],
     }).subscribe((data) => {
-      console.log(data);
       setHistory(data);
     });
 
@@ -101,11 +100,20 @@ export const Receipts = () => {
                       {formatAmount(item.amount, item.currency)}
                     </NavLink>
                   ),
-                  customer: (
-                    <NavLink to={`/users/${item.metadata.userId}`}>
-                      {item.customer}
-                    </NavLink>
+                  method: (
+                    <>
+                      {item.payment_method_details.card?.brand}{" "}
+                      {item.payment_method_details.card?.last4}
+                    </>
                   ),
+                  status: (
+                    <Badge
+                      bg={item.status === "succeeded" ? "success" : "danger"}
+                    >
+                      {item.status}
+                    </Badge>
+                  ),
+
                   key: index,
                 }))}
                 columns={[
@@ -113,7 +121,11 @@ export const Receipts = () => {
                     dataField: "amount",
                     text: "Amount",
                   },
-                  { dataField: "customer", text: "Customer" },
+                  { dataField: "number", text: "Payment ID" },
+                  {
+                    dataField: "method",
+                    text: "Method",
+                  },
                   {
                     dataField: "created",
                     text: "Created",
@@ -126,38 +138,6 @@ export const Receipts = () => {
                   hideSizePerPage: true,
                 })}
               />
-              <table className="table table-striped d-none">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Id</th>
-                    <th>Created</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((item, index) => (
-                    <tr key={item.key}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <NavLink to={`/receipts/${item.id}`}>{item.id}</NavLink>
-                      </td>
-                      <td>{formatTimestamp(item.createdAt)}</td>
-                      <td>{item.type}</td>
-                      <td>
-                        {item.status === "succeeded" ? (
-                          <span className="text-success">Succeeded</span>
-                        ) : (
-                          <span className="text-danger">Failed</span>
-                        )}
-                      </td>
-                      <td>{formatAmount(item.amount, item.currency)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </CardBody>
           </Card>
         </Col>
