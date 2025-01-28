@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Card,
   CardBody,
   Col,
@@ -86,6 +87,10 @@ export const DockerInfo = () => {
 
   return (
     <Container>
+      <Breadcrumb>
+        <Breadcrumb.Item>Docker</Breadcrumb.Item>
+        <Breadcrumb.Item active>Docker info</Breadcrumb.Item>
+      </Breadcrumb>
       <Row>
         <Col md={9}>
           <Card>

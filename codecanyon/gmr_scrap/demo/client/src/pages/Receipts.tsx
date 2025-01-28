@@ -3,6 +3,7 @@ import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
   Badge,
+  Breadcrumb,
   Card,
   CardBody,
   CardHeader,
@@ -47,6 +48,10 @@ export const Receipts = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Reports</Breadcrumb.Item>
+        <Breadcrumb.Item active>Receipts</Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col xs={12}>
           <Card>

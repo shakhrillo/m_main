@@ -8,7 +8,7 @@ import { User } from "firebase/auth";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import { useMap } from "react-leaflet";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -115,6 +115,10 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Main</Breadcrumb.Item>
+        <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col md={8}>
           <Card id="dashboard">

@@ -1,33 +1,32 @@
+import {
+  IconCheck,
+  IconClock,
+  IconCoin,
+  IconCreditCard,
+  IconReceipt,
+  IconUser,
+  IconX,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import {
   Badge,
+  Breadcrumb,
   Card,
   CardBody,
   CardSubtitle,
   CardTitle,
   Col,
   Container,
-  ListGroup,
   Row,
 } from "react-bootstrap";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { filter, map } from "rxjs";
 import { receiptData } from "../services/paymentService";
-import { formatDate } from "../utils/formatDate";
 import { formatAmount } from "../utils/formatAmount";
-import {
-  IconCards,
-  IconCheck,
-  IconClock,
-  IconCoin,
-  IconCreditCard,
-  IconNumber,
-  IconReceipt,
-  IconUser,
-  IconX,
-} from "@tabler/icons-react";
+import { formatDate } from "../utils/formatDate";
 
 export const Receipt = () => {
+  const navigate = useNavigate();
   const { receiptId } = useParams() as { receiptId: string };
   const [receipt, setReceipt] = useState({} as any);
 
@@ -40,7 +39,6 @@ export const Receipt = () => {
         map((data) => data[0]),
       )
       .subscribe((data) => {
-        console.log("--->", data);
         setReceipt(data);
       });
 
@@ -51,6 +49,19 @@ export const Receipt = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Reports</Breadcrumb.Item>
+        <Breadcrumb.Item
+          onClick={() => {
+            navigate("/receipts");
+          }}
+        >
+          Receipts
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>
+          {receipt?.payment_intent || "N/A"}
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <Row>
         <Col>
           <Card>

@@ -1,6 +1,7 @@
 import { IconReload } from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Card,
   CardBody,
@@ -9,7 +10,7 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { dockerContainerStats } from "../services/dockerService";
@@ -18,6 +19,7 @@ import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 
 export const DockerContainer = () => {
+  const navigate = useNavigate();
   const { containerId } = useParams<{ containerId: string }>();
 
   const [stats, setStats] = useState<IDockerStats[]>([]);
@@ -96,9 +98,7 @@ export const DockerContainer = () => {
       return;
     }
 
-    const containerStatsSubscription = dockerContainerStats(
-      containerId,
-    ).subscribe({
+    const subscription = dockerContainerStats(containerId).subscribe({
       next: (data) => {
         setStats(data);
       },
@@ -106,12 +106,23 @@ export const DockerContainer = () => {
     });
 
     return () => {
-      containerStatsSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [containerId]);
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Docker</Breadcrumb.Item>
+        <Breadcrumb.Item
+          onClick={() => {
+            navigate("/containers");
+          }}
+        >
+          Containers
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>{containerId || "N/A"}</Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col md={9}>
           <Row className="g-3 row-cols-1">

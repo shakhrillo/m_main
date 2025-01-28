@@ -1,5 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Card,
   CardBody,
   CardTitle,
@@ -7,7 +8,7 @@ import {
   Container,
   Row,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { map } from "rxjs";
 import {
@@ -47,6 +48,7 @@ const DockerImageInfoRow = ({
 
 export const DockerImage = () => {
   const { imgId } = useParams() as { imgId: string };
+  const navigate = useNavigate();
   const [imageLayers, setImageLayers] = useState([] as any);
   const [imageDetails, setImageDetails] = useState({} as any);
 
@@ -95,7 +97,6 @@ export const DockerImage = () => {
         }),
       )
       .subscribe((data) => {
-        console.log("docker image layers", data);
         setImageLayers(data);
       });
 
@@ -106,6 +107,19 @@ export const DockerImage = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Docker</Breadcrumb.Item>
+        <Breadcrumb.Item
+          onClick={() => {
+            navigate("/images");
+          }}
+        >
+          Images
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>
+          {imageDetails.RepoTags?.[0] || imgId}
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col md={9}>
           <Card>

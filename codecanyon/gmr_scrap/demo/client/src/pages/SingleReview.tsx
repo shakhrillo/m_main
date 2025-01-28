@@ -1,15 +1,28 @@
 import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
-import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { CommentsList } from "../components/comments/CommentsList";
 import { ImagesList } from "../components/images/ImagesList";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { VideosList } from "../components/videos/VideosList";
 
 export const SingleReview = () => {
+  const navigate = useNavigate();
   const { reviewId } = useParams() as { reviewId: string };
+
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Reviews</Breadcrumb.Item>
+        <Breadcrumb.Item
+          onClick={() => {
+            navigate("/reviews");
+          }}
+        >
+          Reviews list
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>{reviewId || "Review"}</Breadcrumb.Item>
+      </Breadcrumb>
       <Row>
         <Col md={9}>
           <Tabs defaultActiveKey="comments" id="scrap-tabs" variant="underline">

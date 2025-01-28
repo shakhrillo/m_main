@@ -2,6 +2,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Card,
   CardBody,
   CardHeader,
@@ -59,6 +60,10 @@ export const DockerImages = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Docker</Breadcrumb.Item>
+        <Breadcrumb.Item active>Images</Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col md={12}>
           <Card>

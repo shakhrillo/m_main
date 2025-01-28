@@ -3,14 +3,11 @@ import {
   IconCoin,
   IconCoins,
   IconInfoCircle,
-  IconMoneybag,
-  IconUserDollar,
 } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { buyCoins, buyCoinsData } from "../services/paymentService";
 import {
+  Breadcrumb,
   Button,
   Card,
   CardBody,
@@ -24,12 +21,12 @@ import {
   FormGroup,
   FormLabel,
   FormText,
-  ListGroup,
   Row,
-  Stack,
 } from "react-bootstrap";
-import { settingValue } from "../services/settingService";
+import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
+import { buyCoins, buyCoinsData } from "../services/paymentService";
+import { settingValue } from "../services/settingService";
 
 export const Payments = () => {
   const { uid } = useOutletContext<User>();
@@ -110,6 +107,10 @@ export const Payments = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Reports</Breadcrumb.Item>
+        <Breadcrumb.Item active>Buy Coins</Breadcrumb.Item>
+      </Breadcrumb>
       <Row>
         <Col md={9}>
           <Card className="mb-3">
@@ -208,11 +209,6 @@ export const Payments = () => {
                   </div>
                 </div>
               </div>
-              {/* <hr />
-              <Stack direction={"horizontal"} className="d-flex my-2">
-                <span>Total</span>
-                500
-              </Stack> */}
             </CardBody>
           </Card>
           <Card>
