@@ -2,7 +2,7 @@ import { Card, CardBody, Col, Container, Row } from "react-bootstrap";
 
 export const Security = () => {
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
           <Card>

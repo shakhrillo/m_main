@@ -2,7 +2,7 @@ import { Container, Row, Col, Card, CardBody } from "react-bootstrap";
 
 export const Info: React.FC = () => {
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
           <Card>

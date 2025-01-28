@@ -15,7 +15,6 @@ import {
   Stack,
 } from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
-// import { dockerImages } from "../services/dockerService";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { map } from "rxjs";

@@ -1,6 +1,7 @@
 import { IconSearch } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Card,
   CardBody,
   CardHeader,
@@ -40,6 +41,10 @@ export const Users = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item active>Users</Breadcrumb.Item>
+      </Breadcrumb>
       <Row className="g-3">
         <Col xs={12}>
           <Card>

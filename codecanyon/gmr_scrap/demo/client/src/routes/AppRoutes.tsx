@@ -28,7 +28,6 @@ import {
   ValidatedURLs,
 } from "../pages";
 import { DockerInfo } from "../pages/DockerInfo";
-import { Documentation } from "../pages/Documentation";
 import { Receipt } from "../pages/Receipt";
 import { AuthGuard } from "./AuthGuard";
 
@@ -68,7 +67,6 @@ const router = createBrowserRouter([
           { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <DockerImages /> },
           { path: "images/:imgId", element: <DockerImage /> },
-          { path: "documentation", element: <Documentation /> },
         ],
       },
       { path: "register", element: <Register /> },

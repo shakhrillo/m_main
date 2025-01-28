@@ -2,6 +2,7 @@ import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 import { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Card,
   CardBody,
   CardTitle,
@@ -11,7 +12,7 @@ import {
   Image,
   Row,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile } from "../services/uploadService";
 import { updateUser, userData } from "../services/userService";
 import { UserInfo } from "../types/userInfo";
@@ -22,6 +23,7 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
 }
 
 export const User = () => {
+  const navigate = useNavigate();
   const { userId } = useParams() as { userId: string };
   const [user, setUser] = useState<UserInfo>({} as UserInfo);
   const [buffer, setBuffer] = useState<Buffer | null>(null);
@@ -74,6 +76,17 @@ export const User = () => {
 
   return (
     <Container fluid>
+      <Breadcrumb>
+        <Breadcrumb.Item>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item
+          onClick={() => {
+            navigate("/users");
+          }}
+        >
+          Users
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>{user.displayName}</Breadcrumb.Item>
+      </Breadcrumb>
       <Row>
         <Col md={9}>
           <Card>

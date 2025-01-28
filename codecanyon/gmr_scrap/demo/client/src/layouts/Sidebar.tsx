@@ -199,19 +199,6 @@ export const Sidebar = () => {
               <span className="me-auto">Info</span>
             </NavLink>
           </div>
-
-          <div className="sidebar-group">
-            <span className="sidebar-group-title">Documentation</span>
-            <NavLink
-              to={"/documentation"}
-              className={({ isActive }) =>
-                `sidebar-item ${isActive ? "active" : ""}`
-              }
-            >
-              {createElement(IconTool, { size: 20 })}
-              <span className="me-auto">Documentation</span>
-            </NavLink>
-          </div>
         </div>
       </Scrollbar>
     </div>
