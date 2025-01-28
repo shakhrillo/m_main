@@ -1,3 +1,8 @@
+import {
+  IconCalendarEvent,
+  IconCurrencyDollar,
+  IconReceipt,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import {
   Badge,
@@ -10,41 +15,26 @@ import {
   Container,
   Row,
   Stack,
-  Table,
 } from "react-bootstrap";
-import { useOutletContext, useParams, useSearchParams } from "react-router-dom";
-import { paymentData } from "../services/paymentService";
-import {
-  IconBrandDocker,
-  IconCalendarEvent,
-  IconCheck,
-  IconCurrencyDollar,
-  IconDeviceDesktop,
-  IconDeviceSdCard,
-  IconNetwork,
-  IconReceipt,
-  IconServer,
-  IconTerminal,
-  IconVersions,
-  IconX,
-} from "@tabler/icons-react";
+import { useParams } from "react-router-dom";
+import { paymentData, receiptData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
 
-export const PaymentsInfo = () => {
+export const Receipt = () => {
   const { receiptId } = useParams() as { receiptId: string };
   const [payment, setPayment] = useState({} as any);
 
   useEffect(() => {
     if (!receiptId) return;
 
-    const paymentDataSubscription = paymentData(receiptId).subscribe((data) => {
-      console.log(data);
+    const subscription = receiptData({ receiptId }).subscribe((data) => {
+      console.log("--->", data);
       setPayment(data);
     });
 
     return () => {
-      paymentDataSubscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [receiptId]);
 

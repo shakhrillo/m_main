@@ -87,19 +87,17 @@ exports.webhookHandler = async (req, res) => {
           endpointSecret
         );
 
-        console.log("-------------------");
-        console.log(`Type: ${event.type}`);
-        console.log("-------------------");
-
         const {
           type,
           data: { object: paymentIntent },
         } = event;
 
         const paymentsRef = db.collection("payments");
-        await paymentsRef.add({
+        const key = paymentsRef.doc().id;
+        await paymentsRef.doc(key).set({
           ...paymentIntent,
           type,
+          key: [key, paymentIntent.id],
           createdAt: Timestamp.now(),
         });
 

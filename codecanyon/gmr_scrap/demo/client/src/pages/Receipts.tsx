@@ -1,9 +1,6 @@
+import { IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { NavLink, useOutletContext } from "react-router-dom";
-import { receiptData } from "../services/paymentService";
-import { formatTimestamp } from "../utils/formatTimestamp";
-import { formatAmount } from "../utils/formatAmount";
 import {
   Card,
   CardBody,
@@ -16,8 +13,10 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
-import { IconCalendarEvent, IconCheck, IconSearch } from "@tabler/icons-react";
-import { Statistics } from "../components/Statistics";
+import { NavLink, useOutletContext } from "react-router-dom";
+import { receiptData } from "../services/paymentService";
+import { formatAmount } from "../utils/formatAmount";
+import { formatTimestamp } from "../utils/formatTimestamp";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -30,16 +29,8 @@ export const Receipts = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
-  const stats = [
-    {
-      label: "Total Receipts",
-      icon: IconCheck,
-      value: 10,
-    },
-  ];
-
   useEffect(() => {
-    const unsubscribe = receiptData(uid).subscribe((data) => {
+    const unsubscribe = receiptData({}).subscribe((data) => {
       console.log(data);
       setHistory(data);
     });
@@ -50,16 +41,8 @@ export const Receipts = () => {
   }, []);
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="g-3">
-        {/*---Extracted reviews status---*/}
-        {stats.map((stat, index) => (
-          <Col key={index}>
-            <Statistics {...stat} />
-          </Col>
-        ))}
-        {/*---End: Extracted reviews status---*/}
-
         <Col xs={12}>
           <Card>
             <CardHeader>
@@ -114,12 +97,10 @@ export const Receipts = () => {
                 </thead>
                 <tbody>
                   {history.map((item, index) => (
-                    <tr key={item.id}>
+                    <tr key={item.key}>
                       <td>{index + 1}</td>
                       <td>
-                        <NavLink to={`/receipts/${item.payment_intent}`}>
-                          {item.payment_intent}
-                        </NavLink>
+                        <NavLink to={`/receipts/${item.id}`}>{item.id}</NavLink>
                       </td>
                       <td>{formatTimestamp(item.createdAt)}</td>
                       <td>{item.type}</td>

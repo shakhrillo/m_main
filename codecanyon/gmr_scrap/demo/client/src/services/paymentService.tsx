@@ -71,21 +71,29 @@ export const paymentData = (receiptId: string) => {
   });
 };
 
-export const receiptData = (uid: string) => {
+export const receiptData = ({
+  uid,
+  receiptId,
+}: {
+  uid?: string;
+  receiptId?: string;
+}): Observable<any[]> => {
   const collectionRef = collection(firestore, `payments`);
   const receiptData$ = new BehaviorSubject([] as any[]);
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      where("metadata.userId", "==", uid),
-      where("type", "in", ["charge.succeeded", "charge.failed"]),
+      ...(uid ? [where("metadata.userId", "==", uid)] : []),
+      ...(uid
+        ? [where("type", "in", ["charge.succeeded", "charge.failed"])]
+        : []),
+      ...(receiptId ? [where("key", "array-contains", receiptId)] : []),
       orderBy("createdAt", "desc"),
     ),
     (snapshot) => {
       const historyData = snapshot.docs.map((doc) => ({
         ...doc.data(),
-        id: doc.id,
       }));
       receiptData$.next(historyData);
     },
