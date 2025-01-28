@@ -49,7 +49,6 @@ export const DockerImages = () => {
         }),
       )
       .subscribe((data) => {
-        console.log("docker images", data);
         setImages(data);
       });
 

@@ -9,7 +9,10 @@ function infoDocker() {
         if (err) {
           reject(err);
         } else {
-          await addDockerInfo(data);
+          await addDockerInfo({
+            type: "info",
+            data,
+          });
           resolve(data);
         }
       });

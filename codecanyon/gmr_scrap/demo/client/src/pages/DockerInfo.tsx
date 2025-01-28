@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import {
   Breadcrumb,
@@ -5,19 +6,14 @@ import {
   CardBody,
   Col,
   Container,
-  ListGroup,
   Row,
-  Stack,
   Table,
 } from "react-bootstrap";
+import { filter, map } from "rxjs";
 import { DockerDetails } from "../components/DockerDetails";
 import { docker } from "../services/dockerService";
 import { camelCaseToSentence } from "../utils/camelCaseToSentence";
-import { parseISO } from "date-fns";
-import { formatDate } from "../utils/formatDate";
 import { formatSize } from "../utils/formatSize";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 function renderValue(key: string, value: any) {
   if (
@@ -39,11 +35,19 @@ function renderValue(key: string, value: any) {
         return <span className="d-flex">{`${v[0]}: ${v[1]}`}</span>;
       });
     }
-    return (
-      <SyntaxHighlighter language="json" style={docco}>
-        {JSON.stringify(value, null, 2)}
-      </SyntaxHighlighter>
-    );
+
+    if (Array.isArray(value)) {
+      return value.join("\n ");
+    }
+
+    return Object.entries(value).map(([k, v], index) => {
+      return (
+        <div key={index}>
+          <span className="text-capitalize">{camelCaseToSentence(k)}</span>:{" "}
+          {renderValue(k, v)}
+        </div>
+      );
+    });
   }
 
   if (typeof value === "boolean" || typeof value === "string") {
@@ -75,18 +79,30 @@ function renderValue(key: string, value: any) {
 export const DockerInfo = () => {
   const [info, setInfo] = useState<any>({});
 
-  // useEffect(() => {
-  //   const subscription = dockerInfo().subscribe((data) => {
-  //     setInfo(data);
-  //   });
+  useEffect(() => {
+    const subscription = docker({
+      type: "info",
+    })
+      .pipe(
+        filter((data) => data && data.length > 0),
+        map((data) => {
+          return data[0];
+        }),
+        map(({ data }) => {
+          return JSON.parse(data);
+        }),
+      )
+      .subscribe((data) => {
+        setInfo(data);
+      });
 
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, []);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
-    <Container>
+    <Container fluid>
       <Breadcrumb>
         <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item active>Docker info</Breadcrumb.Item>
