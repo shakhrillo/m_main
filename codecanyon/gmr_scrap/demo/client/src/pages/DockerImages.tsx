@@ -163,34 +163,6 @@ export const DockerImages = () => {
                   hideSizePerPage: true,
                 })}
               />
-              {/* <Table hover responsive>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Image</th>
-                    <th>Size</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {images.map((image, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <NavLink to={`/images/${image.id}`}>
-                          {image.RepoTags && image.RepoTags.length > 0
-                            ? image.RepoTags.map((tag: string) => (
-                                <div key={tag}>{tag || "N/A"}</div>
-                              ))
-                            : "N/A"}
-                        </NavLink>
-                      </td>
-                      <td>{formatSize(image.Size)}</td>
-                      <td>{formatDate(image.Created)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table> */}
             </CardBody>
           </Card>
         </Col>

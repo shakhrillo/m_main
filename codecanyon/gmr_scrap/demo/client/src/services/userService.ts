@@ -1,7 +1,8 @@
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
 import { User } from "firebase/auth";
+import { UserInfo } from "../types/userInfo";
 
 export interface IUser {
   photoURL?: string;
@@ -49,4 +50,12 @@ export const userData = (uid: string): Observable<IUser> => {
       unsubscribe();
     };
   });
+};
+
+export const updateUser = (
+  id: string,
+  data: Partial<UserInfo>,
+): Promise<void> => {
+  const docRef = doc(firestore, "users", id);
+  return updateDoc(docRef, data);
 };

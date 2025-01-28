@@ -1,131 +1,127 @@
+import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
+import { Buffer } from "buffer";
 import { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
+  CardTitle,
   Col,
   Container,
-  FormControl,
-  FormLabel,
-  FormText,
+  Form,
   Image,
   Row,
-  Stack,
 } from "react-bootstrap";
-import { Form, useParams } from "react-router-dom";
-import { userData } from "../services/userService";
-import {
-  IconCheck,
-  IconCopy,
-  IconUser,
-  IconUserFilled,
-} from "@tabler/icons-react";
+import { useParams } from "react-router-dom";
+import { uploadFile } from "../services/uploadService";
+import { updateUser, userData } from "../services/userService";
+import { UserInfo } from "../types/userInfo";
+import formatNumber from "../utils/formatNumber";
+
+interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
+  target: HTMLInputElement & EventTarget;
+}
 
 export const User = () => {
   const { userId } = useParams() as { userId: string };
-  const [copiedId, setCopiedId] = useState(false);
-  const [user, setUser] = useState<{
-    displayName: string;
-    email: string;
-    photoURL: string;
-    phone: number;
-  }>({
-    displayName: "",
-    email: "",
-    photoURL: "",
-    phone: 0,
-  });
+  const [user, setUser] = useState<UserInfo>({} as UserInfo);
+  const [buffer, setBuffer] = useState<Buffer | null>(null);
 
   useEffect(() => {
     if (!userId) return;
 
-    const user$ = userData(userId).subscribe((user) => {
-      console.log("user", user);
+    const subscription = userData(userId).subscribe((user) => {
       setUser(user as any);
     });
 
     return () => {
-      user$.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [userId]);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(userId).then(() => {
-      setCopiedId(true);
-      setTimeout(() => {
-        setCopiedId(false);
-      }, 2000);
-    });
+  const changeUserPhoto = (event: ChangeUserPhotoEvent): void => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const arrayBuffer = reader.result as ArrayBuffer;
+        const buf = Buffer.from(new Uint8Array(arrayBuffer));
+        setBuffer(buf);
+      };
+
+      reader.onerror = (err) => {
+        console.error("Error reading the file:", err);
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
   };
 
+  useEffect(() => {
+    const uploadPhoto = async () => {
+      if (!buffer) return;
+
+      try {
+        const photoURL = await uploadFile(buffer as any, "users");
+        updateUser(userId, { photoURL });
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    };
+
+    uploadPhoto();
+  }, [buffer, userId]);
+
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col md={9}>
           <Card>
             <CardBody>
               <Form>
-                <Row className="row-cols-1 row-cols-md-2 g-3">
-                  <Col>
-                    <FormLabel htmlFor="displayName">Display Name</FormLabel>
-                    <FormControl
-                      type="text"
-                      id="displayName"
-                      aria-describedby="displayNameHelpBlock"
-                      value={user.displayName}
-                      onChange={(e) =>
-                        setUser({ ...user, displayName: e.target.value })
-                      }
-                    />
-                    <FormText id="displayNameHelpBlock" muted>
-                      The display name of the user.
-                    </FormText>
-                  </Col>
-                  <Col>
-                    <FormLabel htmlFor="email">asdasdEmail</FormLabel>
-                    <FormControl
-                      type="email"
-                      id="email"
-                      aria-describedby="emailHelpBlock"
-                      value={user.email}
-                      onChange={(e) =>
-                        setUser({ ...user, email: e.target.value })
-                      }
-                    />
-                    <FormText id="emailHelpBlock" muted>
-                      The email address of the user.
-                    </FormText>
-                  </Col>
-                  <Col>
-                    <FormLabel htmlFor="phone">Phone</FormLabel>
-                    <FormControl
-                      type="tel"
-                      id="phone"
-                      aria-describedby="phoneHelpBlock"
-                      value={user.phone}
-                      onChange={(e) =>
-                        setUser({ ...user, phone: parseInt(e.target.value) })
-                      }
-                    />
-                    <FormText id="phoneHelpBlock" muted>
-                      The phone number of the user.
-                    </FormText>
-                  </Col>
-                  <Col>
-                    <FormLabel htmlFor="photoURL">Photo URL</FormLabel>
-                    <FormControl
-                      type="url"
-                      id="photoURL"
-                      aria-describedby="photoURLHelpBlock"
-                      value={user.photoURL}
-                      onChange={(e) =>
-                        setUser({ ...user, photoURL: e.target.value })
-                      }
-                    />
-                    <FormText id="photoURLHelpBlock" muted>
-                      The URL of the user's profile picture.
-                    </FormText>
-                  </Col>
-                </Row>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="name@example.com"
+                    value={user.email}
+                    readOnly
+                    disabled
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Display Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Display Name"
+                    value={user.displayName}
+                    onChange={async (e) => {
+                      await updateUser(userId, { displayName: e.target.value });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Photo URL</Form.Label>
+                  <Form.Control
+                    type="file"
+                    placeholder="Photo URL"
+                    onChange={changeUserPhoto}
+                    accept="image/*"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Phone"
+                    value={user.phone}
+                    onChange={async (e) => {
+                      await updateUser(userId, {
+                        phone: Number(e.target.value),
+                      });
+                    }}
+                  />
+                </Form.Group>
               </Form>
             </CardBody>
           </Card>
@@ -133,25 +129,50 @@ export const User = () => {
         <Col md={3}>
           <Card>
             <CardBody>
-              <Stack gap={2}>
-                <div className="user-image mx-auto">
-                  {user.photoURL ? (
-                    <Image src={user.photoURL} />
-                  ) : (
-                    <IconUser className="text-muted" size={36} />
-                  )}
+              <CardTitle>User Profile</CardTitle>
+              <Image src={user.photoURL} rounded fluid />
+              <div className="d-flex flex-column mt-3 gap-3">
+                <div className="d-flex align-items-center">
+                  <span>
+                    <IconMail size={30} />
+                  </span>
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">{user.email}</div>
+                    <div className="text-break">Email</div>
+                  </div>
                 </div>
-                <h6 className="mx-auto">{user.displayName}</h6>
-
-                <div className="w-100 border rounded-4 px-2 p-1 user-id">
-                  <span>{userId}</span>
-                  {copiedId ? (
-                    <IconCheck size={16} className="text-success" />
-                  ) : (
-                    <IconCopy onClick={handleCopy} size={16} />
-                  )}
+                <div className="d-flex align-items-center">
+                  <span>
+                    <IconLabel size={30} />
+                  </span>
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">{user.displayName}</div>
+                    <div className="text-break">Display Name</div>
+                  </div>
                 </div>
-              </Stack>
+                <div className="d-flex align-items-center">
+                  <span>
+                    <IconCoin size={30} />
+                  </span>
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">
+                      {formatNumber(user.coinBalance)}
+                    </div>
+                    <div className="text-break">Coin Balance</div>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center">
+                  <span>
+                    <IconStars size={30} />
+                  </span>
+                  <div className="ms-3">
+                    <div className="text-break fw-bold">
+                      {user.totalReviews}
+                    </div>
+                    <div className="text-break">Total Reviews</div>
+                  </div>
+                </div>
+              </div>
             </CardBody>
           </Card>
         </Col>

@@ -1,0 +1,18 @@
+import { Timestamp } from "firebase/firestore";
+
+export interface UserInfo {
+  coinBalance: number;
+  createdAt: Timestamp;
+  displayName: string;
+  email: string;
+  notifications: number;
+  phone: number;
+  photoURL: string;
+  totalImages: number;
+  totalOwnerReviews: number;
+  totalReviews: number;
+  totalValidateComments: number;
+  totalValidateInfo: number;
+  totalVideos: number;
+  uid: string;
+}

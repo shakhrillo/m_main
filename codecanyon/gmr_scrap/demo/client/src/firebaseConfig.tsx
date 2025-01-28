@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const firestore = getFirestore();
+const storage = getStorage(app);
 
 if (import.meta.env.VITE_ENV === "development") {
   connectAuthEmulator(
@@ -25,6 +27,11 @@ if (import.meta.env.VITE_ENV === "development") {
     "localhost",
     import.meta.env.VITE_FIRESTORE_EMULATOR_PORT,
   );
+  connectStorageEmulator(
+    storage,
+    "localhost",
+    import.meta.env.VITE_STORAGE_EMULATOR_PORT,
+  );
 }
 
-export { app, auth, firestore };
+export { app, auth, firestore, storage };

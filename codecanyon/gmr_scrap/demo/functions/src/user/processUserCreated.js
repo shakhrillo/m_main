@@ -23,8 +23,9 @@ async function processUserCreated(user) {
   /*-------------------*/
   /* Create user       */
   /*-------------------*/
-  const userRef = db.doc(`users/${user.uid}`);
+  const userRef = db.collection("users").doc();
   batch.set(userRef, {
+    uid: user.uid,
     displayName: user.displayName,
     email: user.email,
     photoURL: user.photoURL,
