@@ -26,11 +26,23 @@ COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..
 
 
-EXPOSE 5001
-EXPOSE 9100
-EXPOSE 9199
-EXPOSE 9099
-EXPOSE 4000
+# EXPOSE 5001
+# EXPOSE 9100
+# EXPOSE 9199
+# EXPOSE 9099
+# EXPOSE 4000
+
+# EXPOSE 9099
+# EXPOSE 5002
+# EXPOSE 4000
+# EXPOSE 5001
+# EXPOSE 9299
+# EXPOSE 9000
+# EXPOSE 8080
+# EXPOSE 9199
+# EXPOSE 5000
+# EXPOSE 8085
+# EXPOSE 4400
 
 # Run emulators
 CMD ["firebase", "emulators:start", "--import=./data", "--export-on-exit", "--project", "fir-scrapp"]

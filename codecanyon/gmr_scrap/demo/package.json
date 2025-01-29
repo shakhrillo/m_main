@@ -1,6 +1,21 @@
 {
+  "name": "gmr_scrap",
+  "version": "1.0.0",
+  "description": "GMR Scrap",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.5.3",
-    "eslint": "^8.57.1"
+    "axios": "^1.7.9",
+    "docker-compose": "^1.1.0",
+    "dockerode": "^4.0.4",
+    "dotenv": "^16.4.7",
+    "eslint": "^8.57.1",
+    "express": "^4.21.2",
+    "inquirer": "^12.3.2",
+    "socket.io": "^4.8.1",
+    "ws": "^8.18.0"
   }
 }

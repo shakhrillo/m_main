@@ -55,6 +55,8 @@ exports.processMachineWritten = onDocumentWritten(
 );
 
 (async () => {
+  return;
+
   const db = admin.firestore();
   const batch = db.batch();
 

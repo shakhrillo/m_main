@@ -20,8 +20,6 @@ services:
     image: ${DOCKER_IMAGE}
     container_name: ${DOCKER_CONTAINER_NAME}
     privileged: true
-    # volumes:
-    #   - ${DOCKER_PATH}
     environment:
       DOCKER_TLS_CERTDIR: ""
     ports:
@@ -53,8 +51,8 @@ services:
       - docker
     entrypoint: ["npm", "run", "init"]
   firebase:
-    depends_on:
-      - machine
+    # depends_on:
+    #   - machine
     build:
       context: ${FIREBASE_BUILD_CONTEXT}
       dockerfile: Dockerfile
@@ -63,11 +61,22 @@ services:
       - ${SOURCE_PATH}/functions/src:/usr/src/app/functions/src
     container_name: ${FIREBASE_CONTAINER_NAME}
     ports:
-      - "${VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"
-      - "${VITE_FIRESTORE_EMULATOR_PORT}:9100"
-      - "${VITE_STORAGE_EMULATOR_PORT}:9199"
-      - "${VITE_FIREBASE_AUTH_EMULATOR_PORT}:9099"
-      - "${VITE_UI_EMULATOR_PORT}:4000"
+      - "9099:9099"
+      - "5002:5002"
+      - "4000:4000"
+      - "5001:5001"
+      - "9299:9299"
+      - "9000:9000"
+      - "8080:8080"
+      - "9199:9199"
+      # - "5000:5000"
+      - "8085:8085"
+      - "4400:4400"
+    # - "${VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"
+    # - "${VITE_FIRESTORE_EMULATOR_PORT}:9100"
+    # - "${VITE_STORAGE_EMULATOR_PORT}:9199"
+    # - "${VITE_FIREBASE_AUTH_EMULATOR_PORT}:9099"
+    # - "${VITE_UI_EMULATOR_PORT}:4000"
     networks:
       gmrscrap-network:
         ipv4_address: ${FIREBASE_IP}
