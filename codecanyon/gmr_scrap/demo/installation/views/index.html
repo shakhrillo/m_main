@@ -25,28 +25,121 @@
             Please enter your email and password to install the application.
           </p>
           <div class="card mb-3">
+            <div
+              class="card-body d-flex align-items-center justify-content-between"
+            >
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Start server now
+                </label>
+              </div>
+              <div>
+                <button class="btn btn-danger">Cancel</button>
+                <button class="btn btn-primary">Start</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
             <div class="card-body">
               <button class="btn btn-primary" id="dockerComposeAction">
                 Run script
               </button>
+              <button class="btn btn-danger" id="dockerComposeAction">
+                Cancel
+              </button>
+              <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
               <button class="btn btn-primary" id="dockerComposeStart">
                 Start script
               </button>
+              <button class="btn btn-danger" id="dockerComposeAction">
+                Cancel
+              </button>
+              <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
               <button class="btn btn-primary" id="dockerCheck">
                 Check Docker
               </button>
-              <button class="btn btn-primary" id="firebaseCheck">
-                Check Firebase
+              <button class="btn btn-danger" id="dockerComposeAction">
+                Cancel
               </button>
+              <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
               <button class="btn btn-primary" id="stripeCheck">
                 Check Stripe
               </button>
+              <button class="btn btn-danger" id="dockerComposeAction">
+                Cancel
+              </button>
+              <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
               <button class="btn btn-primary" id="validateCheck">
                 Validate All
               </button>
-              <pre><code class="shell" id="dockerCompose"></code></pre>
+              <button class="btn btn-danger" id="dockerComposeAction">
+                Cancel
+              </button>
+              <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
             </div>
           </div>
+          <!-- <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3">
+                  <div
+                    class="d-flex flex-column justify-content-center align-items-start gap-2"
+                  >
+                    <button class="btn btn-primary" id="dockerComposeAction">
+                      Run script
+                    </button>
+                    <button class="btn btn-primary" id="dockerComposeStart">
+                      Start script
+                    </button>
+                    <button class="btn btn-primary" id="dockerCheck">
+                      Check Docker
+                    </button>
+                    <button class="btn btn-primary" id="firebaseCheck">
+                      Check Firebase
+                    </button>
+                    <button class="btn btn-primary" id="stripeCheck">
+                      Check Stripe
+                    </button>
+                    <button class="btn btn-primary" id="validateCheck">
+                      Validate All
+                    </button>
+                  </div>
+                </div>
+                <div class="col-9">
+                  <pre>
+                    <code class="shell" id="dockerCompose"></code></pre>
+                </div>
+              </div>
+            </div>
+          </div> -->
         </div>
       </div>
     </div>
