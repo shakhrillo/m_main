@@ -1,5 +1,9 @@
+const fs = require("fs");
+const path = require("path");
 const compose = require("docker-compose");
 const env = require("./env");
+const sourcePath = path.resolve(__dirname, "../../");
+const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 /**
  * Build Docker Compose services
@@ -10,12 +14,17 @@ const env = require("./env");
  */
 const dockerBuild = async (req, res) => {
   try {
+    await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
+    await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
+
     await compose.buildAll({
       env,
       callback: (chunk) => {
         global.io.emit("docker-build", chunk.toString());
       },
     });
+
+    global.io.emit("docker-build", "Docker Compose executed successfully");
 
     res.send({
       message: "Docker Compose executed successfully",
