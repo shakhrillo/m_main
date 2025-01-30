@@ -50,26 +50,18 @@ const docker = new Docker({
 });
 
 /**
- * Retries an action until it succeeds or the maximum number of retries is reached.
- * @param {Function} action The action to retry.
- * @param {number} retries The maximum number of retries.
- * @param {number} delay The delay between retries in milliseconds.
- * @returns {Promise} The result of the action.
- * @throws {Error} If the maximum number of retries is reached.
+ * Checks if Docker is available.
+ * @returns {Promise} The result of the check.
  */
-async function retryDockerAction(action, retries = 15, delay = 2000) {
-  let attempt = 0;
-  while (attempt < retries) {
+async function checkDockerAvailable() {
+  while (true) {
     try {
-      return await action();
-    } catch (err) {
-      attempt++;
-      if (attempt >= retries) {
-        throw new Error("Maximum retries reached");
-      }
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    } finally {
-      console.log(`Attempt ${attempt} of ${retries}`);
+      await docker.ping();
+      console.log("Docker is available.");
+      return;
+    } catch (error) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("Waiting for Docker to become available...");
     }
   }
 }
@@ -81,8 +73,7 @@ async function retryDockerAction(action, retries = 15, delay = 2000) {
  */
 (async () => {
   try {
-    console.log("Building Docker image...");
-    await retryDockerAction(() => docker.listContainers());
+    await checkDockerAvailable();
 
     const buildStream = await docker.buildImage(
       {
