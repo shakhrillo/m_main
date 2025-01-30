@@ -23,13 +23,3 @@ document
       "#dockerStats"
     )
   );
-
-document
-  .querySelector("#startContainers")
-  .addEventListener("click", () =>
-    handleButtonAction(
-      document.querySelector("#startContainers"),
-      startContainersService,
-      "#containerStats"
-    )
-  );

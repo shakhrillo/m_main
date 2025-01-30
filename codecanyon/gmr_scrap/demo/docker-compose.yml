@@ -16,6 +16,40 @@ services:
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IP}:${SERVER_PORT}/stripe/webhook
       "
+  docker:
+    image: docker:27.0-dind
+    container_name: ${PROJECT_ID}-docker
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    ports:
+      - "${DOCKER_PORT}:2375"
+    working_dir: /usr/src/app
+    networks:
+      gmrscrap-network:
+        ipv4_address: ${DOCKER_IP}
+  machine:
+    build:
+      context: ./machine
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_ID}-machine
+    volumes:
+      - ./firebase.json:/usr/src/app/firebase.json
+      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ./machine:/usr/src/app
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: development
+      DOCKER_HOST: ${DOCKER_IP}
+      DOCKER_PORT: ${DOCKER_PORT}
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
+    networks:
+      gmrscrap-network:
+        ipv4_address: ${MACHINE_IP}
+    restart: "no"
+    depends_on:
+      - docker
+    entrypoint: ["npm", "run", "init"]
 
 networks:
   gmrscrap-network:

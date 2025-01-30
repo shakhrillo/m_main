@@ -81,6 +81,7 @@ async function retryDockerAction(action, retries = 15, delay = 2000) {
  */
 (async () => {
   try {
+    console.log("Building Docker image...");
     await retryDockerAction(() => docker.listContainers());
 
     const buildStream = await docker.buildImage(
