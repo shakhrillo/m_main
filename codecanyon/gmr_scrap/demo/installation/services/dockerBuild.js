@@ -1,4 +1,5 @@
 const compose = require("docker-compose");
+const env = require("./env");
 
 /**
  * Build Docker Compose services
@@ -10,7 +11,7 @@ const compose = require("docker-compose");
 const dockerBuild = async (req, res) => {
   try {
     await compose.buildAll({
-      env: process.env,
+      env,
       callback: (chunk) => {
         global.io.emit("docker-build", chunk.toString());
       },
@@ -21,8 +22,11 @@ const dockerBuild = async (req, res) => {
       status: "success",
     });
   } catch (err) {
-    console.error("Error:", err);
-    res.status(500).send("Error executing Docker Compose");
+    console.error("Error executing Docker Compose:", err);
+    res.status(500).send({
+      message: "Error executing Docker Compose",
+      error: err.toString(),
+    });
   }
 };
 
