@@ -32,6 +32,163 @@
         <div class="col">
           <div class="card">
             <div class="card-header d-flex gap-3 align-items-center">
+              <i class="ti ti-brand-stripe fs-1"></i>
+              <h5 class="card-title m-0">Stripe configuration</h5>
+              <button class="ms-auto btn btn-primary" id="saveStripe">
+                <i class="ti ti-device-floppy"></i> Save
+              </button>
+            </div>
+            <div class="card-body">
+              <form id="stripeForm">
+                <div class="row g-3 row-cols-1 row-cols-md-2">
+                  <div class="col">
+                    <label for="stripe" class="form-label">
+                      Stripe secret key
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="stripe"
+                      name="stripe"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="stripeDeviceName" class="form-label">
+                      Stripe device name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="stripeDeviceName"
+                      name="stripeDeviceName"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="stripeSuccessUrl" class="form-label">
+                      Stripe success URL
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="stripeSuccessUrl"
+                      name="stripeSuccessUrl"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="stripeCancelUrl" class="form-label">
+                      Stripe cancel URL
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="stripeCancelUrl"
+                      name="stripeCancelUrl"
+                      required
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header d-flex gap-3 align-items-center">
+              <i class="ti ti-brand-firebase fs-1"></i>
+              <h5 class="card-title m-0">Firebase configuration</h5>
+              <button class="ms-auto btn btn-primary" id="saveFirebase">
+                <i class="ti ti-device-floppy"></i> Save
+              </button>
+            </div>
+            <div class="card-body">
+              <form id="firebaseForm">
+                <div class="row g-3 row-cols-1 row-cols-md-2">
+                  <div class="col">
+                    <label
+                      for="firebaseEmulatorAuthentication"
+                      class="form-label"
+                    >
+                      Firebase emulator authentication
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorAuthentication"
+                      name="firebaseEmulatorAuthentication"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="firebaseEmulatorUI" class="form-label">
+                      Firebase emulator UI
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorUI"
+                      name="firebaseEmulatorUI"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="firebaseEmulatorFunctions" class="form-label">
+                      Firebase emulator functions
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorFunctions"
+                      name="firebaseEmulatorFunctions"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="firebaseEmulatorFirestore" class="form-label">
+                      Firebase emulator firestore
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorFirestore"
+                      name="firebaseEmulatorFirestore"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="firebaseEmulatorStorage" class="form-label">
+                      Firebase emulator storage
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorStorage"
+                      name="firebaseEmulatorStorage"
+                      required
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="firebaseEmulatorHub" class="form-label">
+                      Firebase emulator hub
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firebaseEmulatorHub"
+                      name="firebaseEmulatorHub"
+                      required
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header d-flex gap-3 align-items-center">
               <i class="ti ti-brand-docker fs-1"></i>
               <h5 class="card-title m-0">Build docker</h5>
               <button class="ms-auto btn btn-primary" id="buildDocker">
@@ -63,108 +220,6 @@
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
-
-    <script>
-      // ------------------------------------------------
-      // ------------------ Services --------------------
-      // ------------------------------------------------
-      const buildDockerService = async function () {
-        try {
-          const response = await fetch("/docker-build", { method: "POST" });
-
-          if (!response.ok) {
-            const message = await response.text();
-            return Promise.reject(message);
-          }
-
-          return await response.json();
-        } catch (error) {
-          return Promise.reject(error.message);
-        }
-      };
-
-      const startContainersService = async function () {
-        try {
-          const response = await fetch("/containers-start", { method: "POST" });
-
-          if (!response.ok) {
-            const message = await response.text();
-            return Promise.reject(message);
-          }
-
-          return await response.json();
-        } catch (error) {
-          return Promise.reject(error.message);
-        }
-      };
-
-      // ------------------------------------------------
-      // ----------------- Event Listeners --------------
-      // ------------------------------------------------
-      const buildDockerBtn = document.querySelector("#buildDocker");
-      buildDockerBtn.addEventListener("click", async () => {
-        try {
-          buildDockerBtn.disabled = true;
-          buildDockerBtn.innerHTML = `<i class="ti ti-loader"></i> Building...`;
-          await buildDockerService();
-          buildDockerBtn.innerHTML = `<i class="ti ti-circle-check"></i> Done`;
-        } catch (error) {
-          buildDockerBtn.disabled = false;
-          buildDockerBtn.classList.remove("btn-primary");
-          buildDockerBtn.classList.add("btn-danger");
-          buildDockerBtn.innerHTML = `<i class="ti ti-circle-x"></i> Rerun`;
-          document.querySelector(
-            "#dockerStats"
-          ).innerHTML = `<li class="list-group-item text-danger small p-1">${error}</li>`;
-        }
-      });
-
-      const startContainersBtn = document.querySelector("#startContainers");
-      startContainersBtn.addEventListener("click", async () => {
-        try {
-          startContainersBtn.disabled = true;
-          startContainersBtn.innerHTML = `<i class="ti ti-loader"></i> Starting...`;
-          await startContainersService();
-          startContainersBtn.innerHTML = `<i class="ti ti-circle-check"></i> Done`;
-        } catch (error) {
-          startContainersBtn.disabled = false;
-          startContainersBtn.classList.remove("btn-primary");
-          startContainersBtn.classList.add("btn-danger");
-          startContainersBtn.innerHTML = `<i class="ti ti-circle-x"></i> Rerun`;
-          document.querySelector(
-            "#containerStats"
-          ).innerHTML = `<li class="list-group-item text-danger small p-1">${error}</li>`;
-        }
-      });
-
-      // ------------------------------------------------
-      // ----------------- Socket.io ---------------------
-      // ------------------------------------------------
-      const socket = io();
-      let logsDockerBuild = "";
-      let logsDockerStart = "";
-
-      socket.on("docker-build", (log) => {
-        logsDockerBuild += log;
-        document.querySelector("#dockerStats").innerHTML = logsDockerBuild
-          .split("\n")
-          .filter((line) => line)
-          .map((line) => {
-            return `<li class="list-group-item small p-1">${line}</li>`;
-          })
-          .join("");
-      });
-
-      socket.on("containers-start", (log) => {
-        logsDockerStart += log;
-        document.querySelector("#containerStats").innerHTML = logsDockerStart
-          .split("\n")
-          .filter((line) => line)
-          .map((line) => {
-            return `<li class="list-group-item small p-1">${line}</li>`;
-          })
-          .join("");
-      });
-    </script>
+    <script src="/js/index.js"></script>
   </body>
 </html>

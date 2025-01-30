@@ -1,92 +1,82 @@
 services:
   stripe-cli:
     image: stripe/stripe-cli
-    container_name: ${STRIPE_CONTAINER_NAME}
+    container_name: ${PROJECT_ID}-stripe-cli
     working_dir: /usr/src/app
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME}
-    networks:
-      gmrscrap-network:
-        ipv4_address: ${STRIPE_IP}
+    # networks:
+    #   gmrscrap-network:
+    #     ipv4_address: ${STRIPE_IP}
     volumes:
-      - ${SOURCE_PATH}/stripe-secrets:/usr/src/app/secrets
+      - ./stripe-secrets:/usr/src/app/secrets
     entrypoint: >
       sh -c "
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IP}:${SERVER_PORT}/stripe/webhook
       "
   docker:
-    image: ${DOCKER_IMAGE}
-    container_name: ${DOCKER_CONTAINER_NAME}
+    image: docker:27.0-dind
+    container_name: ${PROJECT_ID}-docker
     privileged: true
     environment:
       DOCKER_TLS_CERTDIR: ""
     ports:
       - "${DOCKER_PORT}:2375"
-    working_dir: ${DOCKER_WORKING_DIR}
+    working_dir: /usr/src/app
     networks:
       gmrscrap-network:
         ipv4_address: ${DOCKER_IP}
   machine:
     build:
-      context: ${MACHINE_BUILD_CONTEXT}
+      context: ./machine
       dockerfile: Dockerfile
-    container_name: ${MACHINE_CONTAINER_NAME}
+    container_name: ${PROJECT_ID}-machine
     volumes:
-      - ${SOURCE_PATH}/firebase.json:/usr/src/app/firebase.json
-      - ${SOURCE_PATH}/firebasekeys.json:/usr/src/app/firebasekeys.json
-      - ${SOURCE_PATH}/machine:/usr/src/app
-    working_dir: ${MACHINE_WORKING_DIR}
+      - ./firebase.json:/usr/src/app/firebase.json
+      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ./machine:/usr/src/app
+    working_dir: /usr/src/app
     environment:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IP}
       DOCKER_PORT: ${DOCKER_PORT}
-      MACHINE_BUILD_IMAGE_NAME: ${MACHINE_BUILD_IMAGE_NAME}
-    networks:
-      gmrscrap-network:
-        ipv4_address: ${MACHINE_IP}
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
+    # networks:
+    #   gmrscrap-network:
+    #     ipv4_address: ${MACHINE_IP}
     restart: "no"
     depends_on:
       - docker
     entrypoint: ["npm", "run", "init"]
   firebase:
-    # depends_on:
-    #   - machine
     build:
-      context: ${FIREBASE_BUILD_CONTEXT}
+      context: .
       dockerfile: Dockerfile
     volumes:
-      - ${SOURCE_PATH}/functions/index.js:/usr/src/app/functions/index.js
-      - ${SOURCE_PATH}/functions/src:/usr/src/app/functions/src
-    container_name: ${FIREBASE_CONTAINER_NAME}
+      - ./functions/index.js:/usr/src/app/functions/index.js
+      - ./functions/src:/usr/src/app/functions/src
+    container_name: ${PROJECT_ID}-firebase
     ports:
-      - "9099:9099"
-      - "5002:5002"
-      - "4000:4000"
-      - "5001:5001"
-      - "9299:9299"
-      - "9000:9000"
-      - "8080:8080"
-      - "9199:9199"
-      # - "5000:5000"
-      - "8085:8085"
-      - "4400:4400"
-    # - "${VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT}:5001"
-    # - "${VITE_FIRESTORE_EMULATOR_PORT}:9100"
-    # - "${VITE_STORAGE_EMULATOR_PORT}:9199"
-    # - "${VITE_FIREBASE_AUTH_EMULATOR_PORT}:9099"
-    # - "${VITE_UI_EMULATOR_PORT}:4000"
+      - "${FIREBASE_EMULATOR_AUTHENTICATION}:9099"
+      - "${FIREBASE_EMULATOR_UI}:4000"
+      - "${FIREBASE_EMULATOR_FUNCTIONS}:5001"
+      - "${FIREBASE_EMULATOR_FIRESTORE}:8080"
+      - "${FIREBASE_EMULATOR_STORAGE}:9199"
+      - "${FIREBASE_EMULATOR_HUB}:4400"
+    depends_on:
+      - machine
     networks:
       gmrscrap-network:
         ipv4_address: ${FIREBASE_IP}
   client:
     build:
-      context: ${CLIENT_BUILD_CONTEXT}
+      context: ./client
       dockerfile: Dockerfile
     volumes:
-      - ${SOURCE_PATH}/client/src:/usr/src/app/src
-    container_name: ${CLIENT_CONTAINER_NAME}
+      - ./client/src:/usr/src/app/src
+    container_name: ${PROJECT_ID}-client
     environment:
       VITE_ENV: development
       VITE_FIRESTORE_EMULATOR_PORT: ${VITE_FIRESTORE_EMULATOR_PORT}
@@ -101,6 +91,9 @@ services:
       VITE_FIREBASE_APP_ID: ${VITE_FIREBASE_APP_ID}
       VITE_FIREBASE_MEASUREMENT_ID: ${VITE_FIREBASE_MEASUREMENT_ID}
       VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
+    depends_on:
+      - firebase
+      - machine
     ports:
       - "${CLIENT_PORT}:4200"
     networks:
@@ -108,12 +101,12 @@ services:
         ipv4_address: ${CLIENT_IP}
   server:
     build:
-      context: ${SERVER_BUILD_CONTEXT}
+      context: ./server
       dockerfile: Dockerfile
-    container_name: ${SERVER_CONTAINER_NAME}
+    container_name: ${PROJECT_ID}-server
     volumes:
-      - ${SOURCE_PATH}/server:/usr/src/app
-      - ${SOURCE_PATH}/stripe-secrets:/usr/src/app/secrets
+      - ./server:/usr/src/app
+      - ./stripe-secrets:/usr/src/app/secrets
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
@@ -131,6 +124,9 @@ services:
       STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL}
       STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL}
       JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - firebase
+      - machine
     ports:
       - "${SERVER_PORT}:1337"
     networks:

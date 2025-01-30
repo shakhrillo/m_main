@@ -2,6 +2,8 @@ const express = require("express");
 const axios = require("axios");
 const path = require("path");
 const compose = require("docker-compose");
+const fs = require("fs");
+
 const os = require("os");
 const { createServer } = require("node:http");
 
@@ -28,6 +30,7 @@ const containersStart = require("./installation/services/containersStart");
 dotenv.config({ path: path.join(__dirname, ".env.dev") });
 
 const app = express();
+app.use(express.json());
 app.use(connectLivereload());
 
 const server = createServer(app);
@@ -53,26 +56,30 @@ app.post("/docker-build", dockerBuild);
 
 app.post("/containers-start", containersStart);
 
-app.post("/firebase", async (req, res) => {
-  try {
-    const response = await axios.get("http://0.0.0.0:4400/emulators");
-    const data = response.data;
+app.get("/load-env", (req, res) => {
+  const envFiles = fs
+    .readdirSync(__dirname)
+    .filter((file) => file.startsWith(".env."));
+  const envs = envFiles.map((file) => {
+    const name = file.replace(".env.", "");
+    const content = fs.readFileSync(path.join(__dirname, file), "utf-8");
+    const env = content.split("\n").reduce((acc, line) => {
+      const [key, value] = line.split("=");
+      acc[key] = value;
+      return acc;
+    }, {});
+    return { name, env };
+  });
+  res.send(envs);
+});
 
-    if (typeof data === "object" && data.auth) {
-      res.send({
-        message: "Firebase emulators are running",
-        status: "success",
-      });
-    } else {
-      // throw an error if the response is not as expected
-      throw new Error("Unexpected response from Firebase emulators");
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Error checking Firebase emulators",
-      error: error.message,
-    });
-  }
+app.post("/save-env", (req, res) => {
+  const { env, name } = req.body;
+  const envContent = Object.keys(env)
+    .map((key) => `${key}=${env[key]}`)
+    .join("\n");
+  fs.writeFileSync(path.join(__dirname, `.env.${name}`), envContent);
+  res.send("OK");
 });
 
 server.listen(PORT, () => {

@@ -1,7 +1,14 @@
 const compose = require("docker-compose");
+const path = require("path");
 const checkMachine = require("../utils/machine");
 const checkFirebase = require("../utils/firebase");
 const checkServer = require("../utils/server");
+
+const stripeEnv = require("dotenv").config({
+  path: path.join(__dirname, "../../", ".env.stripe"),
+});
+
+console.log("stripeEnv", stripeEnv.parsed);
 
 const containersStart = async (req, res) => {
   try {
