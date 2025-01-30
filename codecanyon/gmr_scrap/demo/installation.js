@@ -10,8 +10,6 @@ const connectLivereload = require("connect-livereload");
 const liveReloadServer = livereload.createServer();
 liveReloadServer.watch(path.join(__dirname, "installation/views"));
 
-const { Server } = require("socket.io");
-
 const Docker = require("dockerode");
 let dockerSocketPath = "/var/run/docker.sock";
 if (os.platform() === "win32") {
@@ -24,12 +22,16 @@ const docker = new Docker({
 });
 
 const dotenv = require("dotenv");
+const dockerBuild = require("./installation/services/dockerBuild");
+const { initializeSocket } = require("./installation/utils/socket");
+const containersStart = require("./installation/services/containersStart");
 dotenv.config({ path: path.join(__dirname, ".env.dev") });
 
 const app = express();
 app.use(connectLivereload());
+
 const server = createServer(app);
-const io = new Server(server);
+global.io = initializeSocket(server);
 
 const PORT = 3000;
 
@@ -47,62 +49,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "installation/views", "index.html"));
 });
 
-app.post("/docker-build", async (req, res) => {
-  try {
-    await compose.buildAll({
-      env: process.env,
-      callback: (chunk) => {
-        io.emit("docker-build", chunk.toString());
-      },
-    });
-    res.send({
-      message: "Docker Compose executed successfully",
-      status: "success",
-    });
-  } catch (err) {
-    console.error("Error:", err);
-    res.status(500).send("Error executing Docker Compose");
-  }
-});
+app.post("/docker-build", dockerBuild);
 
-app.post("/containers-start", async (req, res) => {
-  try {
-    await compose.upAll({
-      env: process.env,
-      callback: (chunk) => {
-        io.emit("containers-start", chunk.toString());
-      },
-    });
-    let check = true;
-    while (check) {
-      io.emit("containers-start", "Waiting for 5 seconds... \n");
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      try {
-        const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
-        const image = docker.getImage(machineBuildImageName);
-        const imageDetails = await image.inspect();
-        io.emit("containers-start", "Checking if the image is ready... \n");
-        if (imageDetails.RepoTags[0].includes(machineBuildImageName)) {
-          io.emit("containers-start", "Image is ready! \n");
-          check = false;
-        }
-      } catch (error) {
-        io.emit(
-          "containers-start",
-          "Error checking the image: " + error + "\n"
-        );
-      }
-    }
-    res.send({
-      message: "Containers started successfully",
-      status: "success",
-    });
-  } catch (err) {
-    console.error("Error:", err);
-    res.status(500).send("Error starting containers");
-  }
-});
+app.post("/containers-start", containersStart);
 
 app.post("/firebase", async (req, res) => {
   try {
@@ -124,10 +73,6 @@ app.post("/firebase", async (req, res) => {
       error: error.message,
     });
   }
-});
-
-io.on("connection", (socket) => {
-  console.log("a user connected");
 });
 
 server.listen(PORT, () => {
