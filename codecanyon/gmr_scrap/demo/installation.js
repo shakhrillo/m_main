@@ -4,6 +4,12 @@ const path = require("path");
 const compose = require("docker-compose");
 const os = require("os");
 const { createServer } = require("node:http");
+
+const livereload = require("livereload");
+const connectLivereload = require("connect-livereload");
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(path.join(__dirname, "installation/views"));
+
 const { Server } = require("socket.io");
 
 const Docker = require("dockerode");
@@ -21,10 +27,17 @@ const dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, ".env.dev") });
 
 const app = express();
+app.use(connectLivereload());
 const server = createServer(app);
 const io = new Server(server);
 
 const PORT = 3000;
+
+liveReloadServer.server.once("connection", () => {
+  setTimeout(() => {
+    liveReloadServer.refresh("/");
+  }, 100);
+});
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, "installation/public")));
@@ -34,13 +47,12 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "installation/views", "index.html"));
 });
 
-app.post("/docker-compose", async (req, res) => {
+app.post("/docker-build", async (req, res) => {
   try {
     await compose.buildAll({
-      // cwd: path.join(__dirname, "installation"),
       env: process.env,
-      callback: (chunk, streamSource) => {
-        io.emit("docker-compose", chunk.toString());
+      callback: (chunk) => {
+        io.emit("docker-build", chunk.toString());
       },
     });
     res.send({
@@ -53,46 +65,42 @@ app.post("/docker-compose", async (req, res) => {
   }
 });
 
-app.post("/docker-start", async (req, res) => {
+app.post("/containers-start", async (req, res) => {
   try {
     await compose.upAll({
-      // cwd: path.join(__dirname, "installation"),
       env: process.env,
-      callback: (chunk, streamSource) => {
-        io.emit("docker-compose", chunk.toString());
+      callback: (chunk) => {
+        io.emit("containers-start", chunk.toString());
       },
     });
+    let check = true;
+    while (check) {
+      io.emit("containers-start", "Waiting for 5 seconds... \n");
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      try {
+        const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
+        const image = docker.getImage(machineBuildImageName);
+        const imageDetails = await image.inspect();
+        io.emit("containers-start", "Checking if the image is ready... \n");
+        if (imageDetails.RepoTags[0].includes(machineBuildImageName)) {
+          io.emit("containers-start", "Image is ready! \n");
+          check = false;
+        }
+      } catch (error) {
+        io.emit(
+          "containers-start",
+          "Error checking the image: " + error + "\n"
+        );
+      }
+    }
     res.send({
-      message: "Docker Start executed successfully",
+      message: "Containers started successfully",
       status: "success",
     });
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).send("Error executing Docker Compose");
-  }
-});
-
-app.post("/docker-check", async (req, res) => {
-  try {
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
-
-    if (!machineBuildImageName) {
-      return res
-        .status(400)
-        .json({ status: "error", message: "Image name is missing" });
-    }
-
-    const image = docker.getImage(machineBuildImageName);
-    const imageDetails = await image.inspect(); // Fetch image details
-
-    res.json({
-      imgName: machineBuildImageName,
-      status: "success",
-      imageDetails,
-    });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    res.status(500).send("Error starting containers");
   }
 });
 

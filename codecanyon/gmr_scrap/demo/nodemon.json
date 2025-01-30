@@ -1,0 +1,4 @@
+{
+  "watch": ["server.js", "installation/views/index.html"],
+  "ext": "js,html"
+}
