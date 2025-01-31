@@ -4,10 +4,10 @@ const dotenv = require("dotenv");
 const createNetworkEnv = () => {
   const network = Math.floor(Math.random() * 256);
   return {
-    NETWORK_SUBNET: `172.18.${network}.0/24`,
-    DOCKER_IPV4_ADDRESS: `172.18.${network}.2`,
-    MACHINE_IPV4_ADDRESS: `172.18.${network}.3`,
-    FIREBASE_IPV4_ADDRESS: `172.18.${network}.4`,
+    NETWORK_SUBNET: `1.0.${network}.0/24`,
+    DOCKER_IPV4_ADDRESS: `1.0.${network}.2`,
+    MACHINE_IPV4_ADDRESS: `1.0.${network}.3`,
+    FIREBASE_IPV4_ADDRESS: `1.0.${network}.4`,
   };
 };
 
