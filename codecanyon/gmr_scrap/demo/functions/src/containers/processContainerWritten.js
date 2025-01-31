@@ -16,6 +16,7 @@ async function processContainerWritten(event) {
   const data = event.data.after.data();
 
   const db = admin.firestore();
+  db.settings({ ignoreUndefinedProperties: true });
   const batch = db.batch();
   const userRef = db.doc(`users/${data.userId}`);
   const userDoc = await userRef.get();

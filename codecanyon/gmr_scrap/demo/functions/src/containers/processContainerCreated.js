@@ -24,6 +24,7 @@ async function processContainerCreated(event) {
   const updatedAt = createdAt;
 
   const db = admin.firestore();
+  db.settings({ ignoreUndefinedProperties: true });
   const batch = db.batch();
 
   /*-------------------*/

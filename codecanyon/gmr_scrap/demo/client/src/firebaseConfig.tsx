@@ -20,17 +20,17 @@ const storage = getStorage(app);
 if (import.meta.env.VITE_ENV === "development") {
   connectAuthEmulator(
     auth,
-    `http://localhost:${import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_PORT}`,
+    `http://localhost:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
   connectFirestoreEmulator(
     firestore,
     "localhost",
-    import.meta.env.VITE_FIRESTORE_EMULATOR_PORT,
+    import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE,
   );
   connectStorageEmulator(
     storage,
     "localhost",
-    import.meta.env.VITE_STORAGE_EMULATOR_PORT,
+    import.meta.env.VITE_FIREBASE_EMULATOR_STORAGE,
   );
 }
 

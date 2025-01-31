@@ -12,6 +12,7 @@ async function processMachineWritten(event) {
     const { machineId } = event.params;
 
     const db = admin.firestore();
+    db.settings({ ignoreUndefinedProperties: true });
     const container = db.collection("containers").doc(machineId);
 
     await container.set(

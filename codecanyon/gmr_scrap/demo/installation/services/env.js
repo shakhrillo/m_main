@@ -9,6 +9,7 @@ const createNetworkEnv = () => {
     MACHINE_IPV4_ADDRESS: `1.0.${network}.3`,
     FIREBASE_IPV4_ADDRESS: `1.0.${network}.4`,
     SERVER_IPV4_ADDRESS: `1.0.${network}.5`,
+    CLIENT_IPV4_ADDRESS: `1.0.${network}.6`,
   };
 };
 
