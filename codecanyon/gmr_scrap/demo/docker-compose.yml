@@ -6,9 +6,6 @@ services:
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME}
-    # networks:
-    #   gmrscrap-network:
-    #     ipv4_address: ${STRIPE_IP}
     volumes:
       - ./stripe-secrets:/usr/src/app/secrets
     entrypoint: >
@@ -26,8 +23,8 @@ services:
       - "${DOCKER_PORT}:2375"
     working_dir: /usr/src/app
     networks:
-      gmrscrap-network:
-        ipv4_address: ${DOCKER_IP}
+      gmrs-network:
+        ipv4_address: ${DOCKER_IPV4_ADDRESS}
   machine:
     build:
       context: ./machine
@@ -40,19 +37,39 @@ services:
     working_dir: /usr/src/app
     environment:
       NODE_ENV: development
-      DOCKER_HOST: ${DOCKER_IP}
+      DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
       DOCKER_PORT: ${DOCKER_PORT}
       MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
-    networks:
-      gmrscrap-network:
-        ipv4_address: ${MACHINE_IP}
-    restart: "no"
     depends_on:
       - docker
+    networks:
+      gmrs-network:
+        ipv4_address: ${MACHINE_IPV4_ADDRESS}
+    restart: "no"
     entrypoint: ["npm", "run", "init"]
+  firebase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_ID}-firebase
+    volumes:
+      - ./functions/index.js:/usr/src/app/functions/index.js
+      - ./functions/src:/usr/src/app/functions/src
+    ports:
+      - "${firebaseEmulatorAuthentication}:9099"
+      - "${firebaseEmulatorUI}:4000"
+      - "${firebaseEmulatorFunctions}:5001"
+      - "${firebaseEmulatorFirestore}:8080"
+      - "${firebaseEmulatorStorage}:9199"
+      - "${firebaseEmulatorHub}:4400"
+    depends_on:
+      - machine
+    networks:
+      gmrs-network:
+        ipv4_address: ${FIREBASE_IPV4_ADDRESS}
 
 networks:
-  gmrscrap-network:
+  gmrs-network:
     driver: bridge
     ipam:
       config:

@@ -4,7 +4,7 @@
   "description": "GMR Scrap Installation",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon installation.js -L"
+    "start": "node index.js"
   },
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.5.3",

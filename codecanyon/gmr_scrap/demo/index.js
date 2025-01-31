@@ -1,10 +1,8 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const { createServer } = require("node:http");
 const dockerBuild = require("./installation/services/dockerBuild");
 const { initializeSocket } = require("./installation/utils/socket");
-const containersStart = require("./installation/services/containersStart");
 const loadEnv = require("./installation/services/loadEnv");
 const saveEnv = require("./installation/services/saveEnv");
 
@@ -21,7 +19,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/docker-build", dockerBuild);
-app.post("/containers-start", containersStart);
 app.get("/load-env", loadEnv);
 app.post("/save-env", saveEnv);
 
