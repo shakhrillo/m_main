@@ -9,9 +9,12 @@ const handleButtonAction = async (btn, serviceFn, statusContainer) => {
     btn.disabled = false;
     btn.classList.replace("btn-primary", "btn-danger");
     btn.innerHTML = `<i class="ti ti-circle-x"></i> Rerun`;
+    const statusContainerInnerHtml =
+      document.querySelector(statusContainer).innerHTML;
     document.querySelector(
       statusContainer
-    ).innerHTML = `<li class="list-group-item text-danger small p-1">${error}</li>`;
+    ).innerHTML = `${statusContainerInnerHtml}<li class="list-group
+    -item text-danger small p-1">${error}</li>`;
   }
 };
 

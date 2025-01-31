@@ -1,0 +1,25 @@
+services:
+  machine:
+    build:
+      context: ./machine
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_ID}-machine
+    volumes:
+      - ./firebase.json:/usr/src/app/firebase.json
+      - ./firebasekeys.json:/usr/src/app/firebasekeys.json
+      - ./machine:/usr/src/app
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: development
+      DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
+      DOCKER_PORT: ${DOCKER_PORT}
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
+    networks:
+      gmrs-network:
+        ipv4_address: ${MACHINE_IPV4_ADDRESS}
+    restart: "no"
+    entrypoint: ["npm", "run", "init"]
+
+networks:
+  gmrs-network:
+    external: true

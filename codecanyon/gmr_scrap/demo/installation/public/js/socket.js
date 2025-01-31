@@ -1,6 +1,5 @@
 const socket = io();
 let logsDockerBuild = "";
-let logsDockerStart = "";
 
 const updateLogs = (selector, logs, log) => {
   logs += log;
@@ -16,9 +15,4 @@ const updateLogs = (selector, logs, log) => {
 socket.on("docker-build", (log) => {
   logsDockerBuild += log;
   updateLogs("#dockerStats", logsDockerBuild, log);
-});
-
-socket.on("containers-start", (log) => {
-  logsDockerStart += log;
-  updateLogs("#containerStats", logsDockerStart, log);
 });
