@@ -10,7 +10,12 @@ const createNetwork = async (env) => {
       `docker-build`,
       `✅ Docker network "${networkName}" found.\n`
     );
-    return;
+
+    await network.remove();
+    global.io.emit(
+      `docker-build`,
+      `✅ Docker network "${networkName}" removed.\n`
+    );
   } catch (error) {
     global.io.emit(
       `docker-build`,
