@@ -64,22 +64,34 @@ async function createMachine(docId, data) {
 //     console.error("Error updating images:", error);
 //   }
 // }
+let pendingNotUpdatedMachines = [];
+async function processPendingUpdates() {
+  console.log("Processing pending updates");
+  console.log("Pending updates:", pendingNotUpdatedMachines.length);
+  while (pendingNotUpdatedMachines.length > 0) {
+    const { docId, data } = pendingNotUpdatedMachines.shift();
+
+    try {
+      await db
+        .collection("machines")
+        .doc(docId)
+        .set(
+          {
+            ...data,
+            updatedAt: Timestamp.now(),
+          },
+          { merge: true }
+        );
+    } catch (error) {
+      console.error(`Error updating machine ${docId}:`, error);
+      pendingNotUpdatedMachines.push({ docId, data });
+    }
+  }
+}
 
 async function updateMachine(docId, data) {
-  try {
-    await db
-      .collection("machines")
-      .doc(docId)
-      .set(
-        {
-          ...data,
-          updatedAt: Timestamp.now(),
-        },
-        { merge: true }
-      );
-  } catch (error) {
-    console.error("Error updating machine:", error);
-  }
+  pendingNotUpdatedMachines.push({ docId, data });
+  processPendingUpdates();
 }
 
 async function addMachineStats(docId, stats) {
