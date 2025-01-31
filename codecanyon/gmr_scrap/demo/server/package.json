@@ -18,6 +18,7 @@
     "firebase-admin": "^13.0.1",
     "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
+    "kefir": "^3.8.8",
     "nodemon": "^3.1.7",
     "stripe": "^17.4.0",
     "winston": "^3.17.0"
