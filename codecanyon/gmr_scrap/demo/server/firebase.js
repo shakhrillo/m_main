@@ -20,7 +20,7 @@ const db = admin.firestore();
 
 if (environment === "development") {
   db.settings({
-    host: `${process.env.FIREBASE_IP}:${process.env.FIRESTORE_EMULATOR_PORT}`,
+    host: `${process.env.FIREBASE_IP}:${process.env.FIREBASE_EMULATOR_FIRESTORE}`,
     ssl: false,
   });
 }

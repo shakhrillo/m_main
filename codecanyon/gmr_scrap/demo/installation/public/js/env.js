@@ -29,10 +29,17 @@ const setupSaveButton = (formId, buttonId, type, saveService) => {
   const button = document.querySelector(buttonId);
   if (!button) return;
 
+  const toUpperSnakeCase = (str) => {
+    return str.replace(/([a-z])([A-Z])/g, "$1_$2").toUpperCase();
+  };
+
   button.addEventListener("click", async () => {
     const stripeForm = document.querySelector(formId);
     const formData = new FormData(stripeForm);
-    const data = Object.fromEntries(formData.entries());
+    const data = [...formData.entries()].reduce((acc, [key, value]) => {
+      acc[toUpperSnakeCase(key)] = value;
+      return acc;
+    }, {});
 
     try {
       button.disabled = true;
