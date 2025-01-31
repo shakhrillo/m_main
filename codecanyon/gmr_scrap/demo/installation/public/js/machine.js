@@ -3,6 +3,7 @@ const handleButtonAction = async (btn, serviceFn, statusContainer) => {
     btn.disabled = true;
     btn.innerHTML = `<i class="ti ti-loader"></i> Processing...`;
     await serviceFn();
+    btn.disabled = false;
     btn.innerHTML = `<i class="ti ti-circle-check"></i> Done`;
   } catch (error) {
     btn.disabled = false;
