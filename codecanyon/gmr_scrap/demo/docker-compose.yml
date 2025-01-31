@@ -56,12 +56,12 @@ services:
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
     ports:
-      - "${firebaseEmulatorAuthentication}:9099"
-      - "${firebaseEmulatorUI}:4000"
-      - "${firebaseEmulatorFunctions}:5001"
-      - "${firebaseEmulatorFirestore}:8080"
-      - "${firebaseEmulatorStorage}:9199"
-      - "${firebaseEmulatorHub}:4400"
+      - "${FIREBASE_EMULATOR_AUTHENTICATION}:9099"
+      - "${FIREBASE_EMULATOR_UI}:4000"
+      - "${FIREBASE_EMULATOR_FUNCTIONS}:5001"
+      - "${FIREBASE_EMULATOR_FIRESTORE}:8080"
+      - "${FIREBASE_EMULATOR_STORAGE}:9199"
+      - "${FIREBASE_EMULATOR_HUB}:4400"
     depends_on:
       - machine
     networks:
@@ -98,7 +98,7 @@ services:
     ports:
       - "${SERVER_PORT}:1337"
     networks:
-      gmrscrap-network:
+      gmrs-network:
         ipv4_address: ${SERVER_IPV4_ADDRESS}
 
 networks:
