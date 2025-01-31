@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 // Watch Docker events
-watchDockerEvents();
+(async () => await watchDockerEvents())();
 
 // Start the server
 app.listen(PORT, () => {

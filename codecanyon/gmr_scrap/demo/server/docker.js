@@ -10,14 +10,29 @@ const docker = new Docker({
 });
 
 /**
+ * Check for Docker
+ * @returns {Promise<boolean>}
+ */
+const checkDocker = async () => {
+  while (true) {
+    try {
+      await docker.ping();
+      console.log("Docker is ready");
+      return true;
+    } catch (error) {
+      console.log("Waiting for Docker");
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+  }
+};
+
+/**
  * Watch Docker events and update Firebase with the machine data
  * @returns {Promise<void>}
  */
 async function watchDockerEvents() {
-  if (!docker) {
-    console.error("Docker not initialized");
-    return;
-  }
+  await checkDocker();
+
   const activeStreams = new Map();
   const eventsStream = await docker.getEvents();
   eventsStream.setEncoding("utf8");
