@@ -20,26 +20,24 @@ const dockerBuild = async (req, res) => {
     await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
 
-    console.log("DOCKER_IP", env.DOCKER_IP);
+    await compose.down({
+      env,
+      callback: (chunk) => {
+        global.io.emit("docker-build", `🗑️ ${chunk.toString()}`);
+      },
+    });
 
     await compose.buildAll({
       env,
       callback: (chunk) => {
-        global.io.emit("docker-build", chunk.toString());
-      },
-    });
-
-    await compose.down({
-      env,
-      callback: (chunk) => {
-        global.io.emit("docker-build", chunk.toString());
+        global.io.emit("docker-build", `🔨 ${chunk.toString()}`);
       },
     });
 
     await compose.upAll({
       env,
       callback: (chunk) => {
-        global.io.emit("docker-build", chunk.toString());
+        global.io.emit("docker-build", `🚀 ${chunk.toString()}`);
       },
     });
 

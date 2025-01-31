@@ -14,6 +14,10 @@ const localDocker = new Docker({
   socketPath: dockerSocketPath,
 });
 
+/**
+ * Check for Docker
+ * @returns {Promise<boolean>}
+ */
 const checkDocker = async () => {
   while (true) {
     try {
@@ -22,7 +26,7 @@ const checkDocker = async () => {
       return true;
     } catch (error) {
       global.io.emit("docker-build", "Waiting for Docker \n");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
 };
