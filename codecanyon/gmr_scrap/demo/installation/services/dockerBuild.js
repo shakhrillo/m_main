@@ -12,24 +12,24 @@ const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const executeCompose = async (config) => {
-  await compose.downAll({
-    cwd: sourcePath,
-    config,
-    env,
-    callback: (chunk, streamSource) => {
-      const data = chunk.toString();
-      console.log(`[${streamSource}]: ${data.trim()}`);
-      global.io.emit("docker-build", data);
-    },
-    log: true,
-  });
+  // await compose.downAll({
+  //   cwd: sourcePath,
+  //   config,
+  //   env,
+  //   callback: (chunk, streamSource) => {
+  //     const data = chunk.toString();
+  //     console.log(`rm [${streamSource}]: ${data.trim()}`);
+  //     global.io.emit("docker-build", data);
+  //   },
+  //   log: true,
+  // });
   await compose.buildAll({
     cwd: sourcePath,
     config,
     env,
     callback: (chunk, streamSource) => {
       const data = chunk.toString();
-      console.log(`[${streamSource}]: ${data.trim()}`);
+      console.log(`build [${streamSource}]: ${data.trim()}`);
       global.io.emit("docker-build", data);
     },
     log: true,
@@ -40,7 +40,7 @@ const executeCompose = async (config) => {
     env,
     callback: (chunk, streamSource) => {
       const data = chunk.toString();
-      console.log(`[${streamSource}]: ${data.trim()}`);
+      console.log(`up [${streamSource}]: ${data.trim()}`);
       global.io.emit("docker-build", data);
     },
     log: true,
@@ -49,8 +49,8 @@ const executeCompose = async (config) => {
 
 const dockerBuild = async (req, res) => {
   try {
-    await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
-    await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
+    // await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
+    // await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
