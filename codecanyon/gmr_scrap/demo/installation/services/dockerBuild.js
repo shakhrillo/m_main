@@ -12,17 +12,17 @@ const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const executeCompose = async (config) => {
-  // await compose.downAll({
-  //   cwd: sourcePath,
-  //   config,
-  //   env,
-  //   callback: (chunk, streamSource) => {
-  //     const data = chunk.toString();
-  //     console.log(`rm [${streamSource}]: ${data.trim()}`);
-  //     global.io.emit("docker-build", data);
-  //   },
-  //   log: true,
-  // });
+  await compose.downAll({
+    cwd: sourcePath,
+    config,
+    env,
+    callback: (chunk, streamSource) => {
+      const data = chunk.toString();
+      console.log(`rm [${streamSource}]: ${data.trim()}`);
+      global.io.emit("docker-build", data);
+    },
+    log: true,
+  });
   await compose.buildAll({
     cwd: sourcePath,
     config,
