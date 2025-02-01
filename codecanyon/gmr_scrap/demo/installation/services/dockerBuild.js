@@ -49,15 +49,13 @@ const executeCompose = async (config) => {
 
 const dockerBuild = async (req, res) => {
   try {
-    // await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
-    // await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
+    await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
+    await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
     await checkFirebase();
     await checkDocker();
-
-    // await Promise.all([checkStripe(), checkFirebase(), checkDocker()]);
 
     await executeCompose("docker-compose-machine.yml");
     await checkMachine();
