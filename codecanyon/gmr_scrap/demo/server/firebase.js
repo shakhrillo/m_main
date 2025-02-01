@@ -18,13 +18,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-console.log("-".repeat(50));
-console.log(environment);
-console.log(firebaseProjectId);
-console.log(
-  process.env.FIREBASE_IP + ":" + process.env.FIREBASE_EMULATOR_FIRESTORE
-);
-console.log("-".repeat(50));
 if (environment === "development") {
   db.settings({
     host: `${process.env.FIREBASE_IP}:${process.env.FIREBASE_EMULATOR_FIRESTORE}`,

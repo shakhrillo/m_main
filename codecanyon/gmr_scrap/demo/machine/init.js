@@ -73,7 +73,7 @@ async function checkDockerAvailable() {
  */
 (async () => {
   try {
-    await checkDockerAvailable();
+    // await checkDockerAvailable();
 
     const buildStream = await docker.buildImage(
       {

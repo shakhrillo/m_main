@@ -4,9 +4,8 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const { startContainer } = require("../controllers/dockerController");
 
 const environment = process.env.NODE_ENV || "development";
-const machineBuildImageName =
-  process.env.FIREBASE_PROJECT_ID || "gmr_scrap_machine";
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "fir-scrapp";
+const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
+const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 
 const handleContainerOperations = async (req, res) => {
   try {

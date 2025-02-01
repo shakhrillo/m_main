@@ -55,6 +55,7 @@ const dockerBuild = async (req, res) => {
 
     await executeCompose("docker-compose.yml");
     await checkFirebase();
+    await checkDocker();
 
     // await Promise.all([checkStripe(), checkFirebase(), checkDocker()]);
 

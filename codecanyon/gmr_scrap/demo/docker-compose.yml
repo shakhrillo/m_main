@@ -46,6 +46,38 @@ services:
     networks:
       gmrs-network:
         ipv4_address: ${FIREBASE_IPV4_ADDRESS}
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_ID}-server
+    volumes:
+      - ./server:/usr/src/app
+      - ./stripe-secrets:/usr/src/app/secrets
+      - ./firebase.json:/usr/src/firebase.json
+      - ./firebasekeys.json:/usr/src/firebasekeys.json
+    environment:
+      NODE_ENV: development
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}
+
+      DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
+      DOCKER_PORT: ${DOCKER_PORT}
+
+      FIREBASE_IP: ${FIREBASE_IPV4_ADDRESS}
+      FIREBASE_PROJECT_ID: demo-${PROJECT_ID}
+      FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
+
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET_FILE: /usr/src/app/secrets/stripe_webhook_secret
+      STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL}
+      STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL}
+
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "${SERVER_PORT}:1337"
+    networks:
+      gmrs-network:
+        ipv4_address: ${SERVER_IPV4_ADDRESS}
   client:
     build:
       context: ./client
@@ -58,7 +90,7 @@ services:
       VITE_FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
       VITE_FIREBASE_EMULATOR_STORAGE: ${FIREBASE_EMULATOR_STORAGE}
       VITE_FIREBASE_EMULATOR_AUTHENTICATION: ${FIREBASE_EMULATOR_AUTHENTICATION}
-      VITE_FIREBASE_PROJECT_ID: ${PROJECT_ID}
+      VITE_FIREBASE_PROJECT_ID: demo-${PROJECT_ID}
 
       VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY}
       VITE_FIREBASE_AUTH_DOMAIN: ${VITE_FIREBASE_AUTH_DOMAIN}

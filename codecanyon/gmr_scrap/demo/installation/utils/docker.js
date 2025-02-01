@@ -19,16 +19,45 @@ const localDocker = new Docker({
  * @returns {Promise<boolean>}
  */
 const checkDocker = async () => {
-  while (true) {
-    try {
-      await dinDocker.ping();
-      global.io.emit("docker-build", "Docker is ready \n");
-      return true;
-    } catch (error) {
-      global.io.emit("docker-build", "Waiting for Docker \n");
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
-  }
+  return new Promise(async (resolve, reject) => {
+    const container = localDocker.getContainer("gmrsx-docker");
+
+    container.inspect(async (err, data) => {
+      if (err) {
+        console.error("Error inspecting Docker container:", err);
+        reject(err);
+        return;
+      }
+
+      container.logs(
+        {
+          follow: true,
+          stdout: true,
+          stderr: true,
+        },
+        (err, stream) => {
+          if (err) {
+            console.error("Error getting Docker container logs:", err);
+            reject(err);
+            return;
+          }
+
+          const handleData = (chunk) => {
+            const data = chunk.toString();
+            global.io.emit("docker-build", data);
+
+            if (data.includes("Daemon has completed initialization")) {
+              stream.removeListener("data", handleData);
+              stream.destroy();
+              resolve("Docker daemon is ready.");
+            }
+          };
+
+          stream.on("data", handleData);
+        }
+      );
+    });
+  });
 };
 
 module.exports = {
