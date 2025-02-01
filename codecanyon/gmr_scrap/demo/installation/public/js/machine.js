@@ -1,4 +1,21 @@
 const handleButtonAction = async (btn, serviceFn, statusContainer) => {
+  console.log("handleButtonAction", statusContainer);
+  document
+    .querySelector(statusContainer)
+    .parentElement.classList.remove("d-none");
+  // #stripeConfigCollapse
+  ["#firebaseConfigCollapse", "#stripeConfigCollapse"].forEach((collapse) => {
+    document.getElementById("stripeConfigCollapse").classList.remove("show");
+    const stripeConfigCollapse = document.querySelector(
+      `[data-bs-target='${collapse}']`
+    );
+    if (stripeConfigCollapse) {
+      stripeConfigCollapse.classList.remove("show");
+      stripeConfigCollapse.classList.add("bg-light");
+      stripeConfigCollapse.setAttribute("disabled", "true");
+    }
+  });
+
   try {
     btn.disabled = true;
     btn.innerHTML = `<i class="ti ti-loader"></i> Processing...`;

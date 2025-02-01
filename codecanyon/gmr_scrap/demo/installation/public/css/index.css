@@ -5,7 +5,7 @@ body {
 
 #dockerStats,
 #containerStats {
-  height: 200px;
-  border-radius: 5px;
+  height: calc(100vh - 400px);
   overflow: auto;
+  background-color: #fff;
 }

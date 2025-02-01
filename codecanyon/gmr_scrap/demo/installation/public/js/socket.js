@@ -6,7 +6,7 @@ const updateLogs = (selector, logs, log) => {
   document.querySelector(selector).innerHTML = logs
     .split("\n")
     .filter((line) => line)
-    .map((line) => `<li class="list-group-item small p-1">${line}</li>`)
+    .map((line) => `<li class="list-group-item small">${line}</li>`)
     .join("");
   document.querySelector(selector).scrollTop =
     document.querySelector(selector).scrollHeight;
