@@ -47,7 +47,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       collectionRef,
       // orderBy("createdAt", "desc"),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
-      ...(q.type ? [where("type", "==", q.type)] : []),
+      ...(q.type ? [where("machine.Type", "==", q.type)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(q.status ? [where("status", "==", q.status)] : []),
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),

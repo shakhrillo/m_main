@@ -18,7 +18,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { map } from "rxjs";
-import { docker } from "../services/dockerService";
+import { docker, dockerContainers } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { formatTimestamp } from "../utils/formatTimestamp";
@@ -35,19 +35,20 @@ export const DockerImages = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const subscription = docker({
+    const subscription = dockerContainers({
       type: "image",
     })
       .pipe(
         map((data) => {
           return data.map((image: any) => ({
-            ...JSON.parse(typeof image.data === "string" ? image.data : "{}"),
+            ...image,
             id: image.id,
             updatedAt: image.updatedAt,
           }));
         }),
       )
       .subscribe((data) => {
+        console.log("images--->", data);
         setImages(data);
       });
 
@@ -110,16 +111,7 @@ export const DockerImages = () => {
                 keyField="key"
                 data={images.map((image) => ({
                   id: image.id,
-                  Tags:
-                    image.RepoTags && image.RepoTags.length > 0 ? (
-                      <NavLink to={`/images/${image.id}`}>
-                        {image.RepoTags.map((tag: string) => (
-                          <div key={tag}>{tag || "N/A"}</div>
-                        ))}
-                      </NavLink>
-                    ) : (
-                      "N/A"
-                    ),
+                  name: image?.machine?.Actor?.Attributes?.name || "N/A",
                   Created: formatStringDate(image.Created),
                   Size: formatSize(image.Size),
                   Os: image.Os,
@@ -129,8 +121,8 @@ export const DockerImages = () => {
                 }))}
                 columns={[
                   {
-                    dataField: "Tags",
-                    text: "Tags",
+                    dataField: "name",
+                    text: "Name",
                   },
                   {
                     dataField: "Size",
