@@ -13,8 +13,8 @@ services:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
       DOCKER_PORT: ${DOCKER_PORT}
-      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
-      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}
+      FIREBASE_PROJECT_ID: ${PROJECT_ID}
     networks:
       gmrs-network:
         ipv4_address: ${MACHINE_IPV4_ADDRESS}

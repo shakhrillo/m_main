@@ -22,6 +22,7 @@ if (import.meta.env.VITE_ENV === "development") {
     auth,
     `http://localhost:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
+  console.log("0", import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE);
   connectFirestoreEmulator(
     firestore,
     "localhost",

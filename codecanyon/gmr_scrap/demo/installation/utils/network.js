@@ -3,42 +3,39 @@ const { localDocker } = require("./docker");
 const createNetwork = async (env) => {
   const networkName = "gmrs-network";
   const networkSubnet = env.NETWORK_SUBNET || "";
-  const network = localDocker.getNetwork(networkName);
+
   try {
+    const network = localDocker.getNetwork(networkName);
     await network.inspect();
     global.io.emit(
-      `docker-build`,
-      `✅ Docker network "${networkName}" found.\n`
+      "docker-build",
+      `✅ Docker network "${networkName}" already exists.\n`
     );
 
-    await network.remove();
+    return false;
+  } catch {
     global.io.emit(
-      `docker-build`,
-      `✅ Docker network "${networkName}" removed.\n`
-    );
-  } catch (error) {
-    global.io.emit(
-      `docker-build`,
+      "docker-build",
       `⚠️ Docker network "${networkName}" not found. Creating...\n`
     );
   }
 
-  await localDocker.createNetwork({
-    Name: networkName,
-    Driver: "bridge",
-    IPAM: {
-      Config: [
-        {
-          Subnet: networkSubnet,
-        },
-      ],
-    },
-  });
-
-  global.io.emit(
-    `docker-build`,
-    `✅ Docker network "${networkName}" created.\n`
-  );
+  try {
+    await localDocker.createNetwork({
+      Name: networkName,
+      Driver: "bridge",
+      IPAM: { Config: [{ Subnet: networkSubnet }] },
+    });
+    global.io.emit(
+      "docker-build",
+      `✅ Docker network "${networkName}" created.\n`
+    );
+  } catch (error) {
+    global.io.emit(
+      "docker-build",
+      `❌ Failed to create Docker network: ${error.message}\n`
+    );
+  }
 };
 
 module.exports = createNetwork;
