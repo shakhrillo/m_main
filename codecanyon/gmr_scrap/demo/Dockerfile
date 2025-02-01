@@ -26,4 +26,4 @@ COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..
 
 # Run emulators
-CMD ["firebase", "emulators:start", "--import=./data", "--export-on-exit", "--project", "gmrsx"]
+CMD ["firebase", "emulators:start", "--import=./data", "--export-on-exit", "--project", "demo-gmrsx"]

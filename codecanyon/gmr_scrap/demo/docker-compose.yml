@@ -34,8 +34,7 @@ services:
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
     environment:
-      FIREBASE_PROJECT_ID: ${PROJECT_ID}
-      FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
+      FIREBASE_PROJECT_ID: demo-${PROJECT_ID}
       SERVER_IP: ${SERVER_IPV4_ADDRESS}
     ports:
       - "${FIREBASE_EMULATOR_AUTHENTICATION}:9099"

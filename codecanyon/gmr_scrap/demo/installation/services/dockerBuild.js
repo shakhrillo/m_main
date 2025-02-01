@@ -2,19 +2,49 @@ const fs = require("fs");
 const path = require("path");
 const compose = require("docker-compose");
 const env = require("./env");
-const { checkDocker } = require("../utils/docker");
+const { checkDocker, localDocker } = require("../utils/docker");
 const createNetwork = require("../utils/network");
 const checkStripe = require("../utils/stripe");
-const checkFirebase = require("../utils/firebase");
 const checkMachine = require("../utils/machine");
+const checkFirebase = require("../utils/firebase");
 
 const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const executeCompose = async (config) => {
-  await compose.down({ cwd: sourcePath, config, env });
-  await compose.buildAll({ cwd: sourcePath, config, env });
-  await compose.upAll({ cwd: sourcePath, config, env });
+  await compose.downAll({
+    cwd: sourcePath,
+    config,
+    env,
+    callback: (chunk, streamSource) => {
+      const data = chunk.toString();
+      console.log(`[${streamSource}]: ${data.trim()}`);
+      global.io.emit("docker-build", data);
+    },
+    log: true,
+  });
+  await compose.buildAll({
+    cwd: sourcePath,
+    config,
+    env,
+    callback: (chunk, streamSource) => {
+      const data = chunk.toString();
+      console.log(`[${streamSource}]: ${data.trim()}`);
+      global.io.emit("docker-build", data);
+    },
+    log: true,
+  });
+  await compose.upAll({
+    cwd: sourcePath,
+    config,
+    env,
+    callback: (chunk, streamSource) => {
+      const data = chunk.toString();
+      console.log(`[${streamSource}]: ${data.trim()}`);
+      global.io.emit("docker-build", data);
+    },
+    log: true,
+  });
 };
 
 const dockerBuild = async (req, res) => {
@@ -24,7 +54,9 @@ const dockerBuild = async (req, res) => {
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
-    await Promise.all([checkStripe(), checkFirebase(), checkDocker()]);
+    await checkFirebase();
+
+    // await Promise.all([checkStripe(), checkFirebase(), checkDocker()]);
 
     await executeCompose("docker-compose-machine.yml");
     await checkMachine();
