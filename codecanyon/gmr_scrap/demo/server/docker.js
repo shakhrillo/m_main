@@ -31,9 +31,8 @@ const docker = new Docker({
  * @returns {Promise<void>}
  */
 async function watchDockerEvents() {
-  // await checkDocker();
-
   const activeStreams = new Map();
+
   const eventsStream = await docker.getEvents();
   eventsStream.setEncoding("utf8");
   eventsStream.on("data", (data) => {
@@ -44,106 +43,88 @@ async function watchDockerEvents() {
 
     for (const data of parsedData) {
       const name = data?.Actor?.Attributes?.name;
+
       const isContainer = data?.Type === "container";
+      const isNetwork = data?.Type === "network";
+      const isImage = data?.Type === "image";
+
       const action = data?.Action;
       const status = data?.status;
 
-      console.log("-".repeat(50));
-      console.log({
-        name,
-        data: JSON.stringify(data, null, 2),
-      });
-      console.log("-".repeat(50));
+      updateMachine(name, data);
 
-      if (data?.Type === "image") {
+      if (isImage && action !== "pull") {
         docker.getImage(name).inspect((err, data) => {
           if (err) {
             console.error(err);
             return;
           }
-
-          updateMachine(name, data);
         });
       }
 
-      if (data?.Type === "network") {
+      if (isNetwork) {
         docker.getNetwork(name).inspect((err, data) => {
           if (err) {
             console.error(err);
             return;
           }
-
-          updateMachine(name, data);
         });
       }
 
-      updateMachine(name, data);
-
-      if (!name || name === "bridge" || !isContainer) continue;
-
-      if (status === "die") {
-        console.log("Container died, removing from active streams");
+      if (isContainer) {
         if (activeStreams.has(name)) {
           const stream = activeStreams.get(name);
-          stream.destroy(); // Properly close the stream
+          stream.destroy();
           activeStreams.delete(name);
         }
 
-        return;
-      }
+        if (action === "destroy" || status === "destroy" || status === "die") {
+          console.log("Container destroyed, removing from active streams");
+          return;
+        }
 
-      if (activeStreams.has(name)) {
-        const stream = activeStreams.get(name);
-        stream.destroy(); // Properly close the stream
-        activeStreams.delete(name);
-      }
-
-      if (action === "destroy" || status === "destroy") {
-        console.log(`Container ${name} was destroyed.`);
-        return;
-      }
-
-      try {
-        const container = docker.getContainer(name);
-        container.inspect((err, data) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-
-          if (data.State.Running === false) {
-            console.error(`Container ${name} is not running.`);
-            return;
-          }
-
-          container.stats((err, stream) => {
+        try {
+          const container = docker.getContainer(name);
+          container.inspect((err, data) => {
             if (err) {
               console.error(err);
               return;
             }
-            stream.setEncoding("utf8");
-            stream.on("data", (data) => {
-              try {
-                const stats = JSON.parse(data);
-                addMachineStats(name, stats);
-              } catch (err) {
-                console.error("Error parsing stats data:", err);
+
+            if (data.State.Running === false) {
+              console.error(`Container ${name} is not running.`);
+              return;
+            }
+
+            container.stats((err, stream) => {
+              if (err) {
+                console.error(err);
+                return;
               }
-            });
+              stream.setEncoding("utf8");
+              stream.on("data", (data) => {
+                try {
+                  const stats = JSON.parse(data);
+                  addMachineStats(name, stats);
+                } catch (err) {
+                  console.error("Error parsing stats data:", err);
+                }
+              });
 
-            stream.on("end", () => {
-              console.log(`Stats stream ended for container ${name}`);
-            });
+              stream.on("end", () => {
+                console.log(`Stats stream ended for container ${name}`);
+              });
 
-            stream.on("error", (err) => {
-              console.error(`Stats stream error for container ${name}:`, err);
-            });
+              stream.on("error", (err) => {
+                console.error(`Stats stream error for container ${name}:`, err);
+              });
 
-            activeStreams.set(name, stream); // Track the new stream
+              activeStreams.set(name, stream); // Track the new stream
+            });
           });
-        });
-      } catch (err) {
-        console.log("Error getting container stats:", err);
+        } catch (err) {
+          console.log("Error getting container stats:", err);
+        }
       }
     }
   });
