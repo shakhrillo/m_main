@@ -95,6 +95,12 @@ async function updateMachine(docId, data) {
 }
 
 async function addMachineStats(docId, stats) {
+  console.log("-".repeat(50));
+  console.log("Adding machine stats");
+  console.log("DocId:", docId);
+  console.log("Stats:", stats);
+  console.log("-".repeat(50));
+  return;
   try {
     await db
       .collection("machines")

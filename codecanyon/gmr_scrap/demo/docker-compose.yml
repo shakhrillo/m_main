@@ -25,28 +25,6 @@ services:
     networks:
       gmrs-network:
         ipv4_address: ${DOCKER_IPV4_ADDRESS}
-  # machine:
-  #   build:
-  #     context: ./machine
-  #     dockerfile: Dockerfile
-  #   container_name: ${PROJECT_ID}-machine
-  #   volumes:
-  #     - ./firebase.json:/usr/src/app/firebase.json
-  #     - ./firebasekeys.json:/usr/src/app/firebasekeys.json
-  #     - ./machine:/usr/src/app
-  #   working_dir: /usr/src/app
-  #   environment:
-  #     NODE_ENV: development
-  #     DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
-  #     DOCKER_PORT: ${DOCKER_PORT}
-  #     MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}-machine
-  #   depends_on:
-  #     - docker
-  #   networks:
-  #     gmrs-network:
-  #       ipv4_address: ${MACHINE_IPV4_ADDRESS}
-  #   restart: "no"
-  #   entrypoint: ["npm", "run", "init"]
   firebase:
     build:
       context: .
@@ -58,6 +36,7 @@ services:
     environment:
       FIREBASE_PROJECT_ID: ${PROJECT_ID}
       FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
+      SERVER_IP: ${SERVER_IPV4_ADDRESS}
     ports:
       - "${FIREBASE_EMULATOR_AUTHENTICATION}:9099"
       - "${FIREBASE_EMULATOR_UI}:4000"
@@ -65,8 +44,6 @@ services:
       - "${FIREBASE_EMULATOR_FIRESTORE}:8080"
       - "${FIREBASE_EMULATOR_STORAGE}:9199"
       - "${FIREBASE_EMULATOR_HUB}:4400"
-    # depends_on:
-    #   - machine
     networks:
       gmrs-network:
         ipv4_address: ${FIREBASE_IPV4_ADDRESS}
@@ -82,6 +59,7 @@ services:
       - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
       NODE_ENV: development
+      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}
 
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
       DOCKER_PORT: ${DOCKER_PORT}
@@ -115,10 +93,10 @@ services:
       VITE_FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
       VITE_FIREBASE_EMULATOR_STORAGE: ${FIREBASE_EMULATOR_STORAGE}
       VITE_FIREBASE_EMULATOR_AUTHENTICATION: ${FIREBASE_EMULATOR_AUTHENTICATION}
+      VITE_FIREBASE_PROJECT_ID: ${PROJECT_ID}
 
       VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY}
       VITE_FIREBASE_AUTH_DOMAIN: ${VITE_FIREBASE_AUTH_DOMAIN}
-      VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
       VITE_FIREBASE_STORAGE_BUCKET: ${VITE_FIREBASE_STORAGE_BUCKET}
       VITE_FIREBASE_MESSAGING_SENDER_ID: ${VITE_FIREBASE_MESSAGING_SENDER_ID}
       VITE_FIREBASE_APP_ID: ${VITE_FIREBASE_APP_ID}

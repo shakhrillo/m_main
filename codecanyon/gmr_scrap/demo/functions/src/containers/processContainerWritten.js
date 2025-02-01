@@ -12,20 +12,33 @@ const updateStatistics = require("../services/statisticsService");
  * @returns {Promise<void>}
  */
 async function processContainerWritten(event) {
+  console.log("processContainerWritten");
+  return;
   const ref = event.data.after.ref;
   const data = event.data.after.data();
 
   const db = admin.firestore();
   const batch = db.batch();
-  const userRef = db.doc(`users/${data.userId}`);
-  const userDoc = await userRef.get();
+  // const userRef = db.doc(`users/${data.userId}`);
+  // const userDoc = await userRef.get();
 
-  if (!userDoc.exists) {
-    console.error("User not found");
-    return;
-  }
+  // if (!userDoc.exists) {
+  //   console.error("User not found");
+  //   return;
+  // }
 
   if (data.status === "completed") {
+    const user = await db
+      .collection("users")
+      .where("uid", "==", data.userId)
+      .get();
+
+    if (user.empty) {
+      console.error("User not found");
+      return;
+    }
+
+    const userRef = user.docs[0].ref;
     /*-------------------*/
     /* Update user stats */
     /*-------------------*/

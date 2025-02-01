@@ -6,7 +6,7 @@ const { dinDocker } = require("./docker");
  * @returns {Promise<import("dockerode").ImageInspectInfo>}
  */
 const checkMachine = async (retryInterval = 5000) => {
-  const imageName = `${process.env.PROJECT_ID}-machine`;
+  const imageName = `${process.env.PROJECT_ID}`;
 
   while (true) {
     try {

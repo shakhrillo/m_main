@@ -14,62 +14,75 @@ const updateStatistics = require("../services/statisticsService");
  * @returns {Promise<void>}
  */
 async function processContainerCreated(event) {
-  const ref = event.data.ref;
-  const data = event.data.data();
-  const { containerId } = event.params;
-  const { type, uid } = data;
+  try {
+    const ref = event.data.ref;
+    const data = event.data.data();
+    const { containerId } = event.params;
+    const { type, uid } = data;
 
-  const tag = [type, uid, containerId].join("_").toLowerCase();
-  const createdAt = Timestamp.now();
-  const updatedAt = createdAt;
+    const tag = [type, uid, containerId].join("_").toLowerCase();
+    const createdAt = Timestamp.now();
+    const updatedAt = createdAt;
 
-  const db = admin.firestore();
-  const batch = db.batch();
+    console.log("processContainerCreated", {
+      ref,
+      data,
+      containerId,
+      tag,
+      createdAt,
+      updatedAt,
+    });
 
-  /*-------------------*/
-  /* Update statistics */
-  /*-------------------*/
-  await updateStatistics(db, batch, type, data);
-  // const statisticsCollection = db.collection("statistics");
-  // const statisticsQuery = await statisticsCollection
-  //   .where("type", "==", type)
-  //   .get();
-  // let statisticsDoc;
-  // if (statisticsQuery.empty) {
-  //   statisticsDoc = statisticsCollection.doc(type);
-  //   batch.set(statisticsDoc, {
-  //     type,
-  //     total: 0,
-  //   });
-  // } else {
-  //   statisticsDoc = statisticsQuery.docs[0].ref;
-  // }
+    const db = admin.firestore();
+    const batch = db.batch();
 
-  // batch.update(statisticsDoc, {
-  //   total: FieldValue.increment(1),
-  // });
+    /*-------------------*/
+    /* Update statistics */
+    /*-------------------*/
+    await updateStatistics(db, batch, type, data);
+    // const statisticsCollection = db.collection("statistics");
+    // const statisticsQuery = await statisticsCollection
+    //   .where("type", "==", type)
+    //   .get();
+    // let statisticsDoc;
+    // if (statisticsQuery.empty) {
+    //   statisticsDoc = statisticsCollection.doc(type);
+    //   batch.set(statisticsDoc, {
+    //     type,
+    //     total: 0,
+    //   });
+    // } else {
+    //   statisticsDoc = statisticsQuery.docs[0].ref;
+    // }
 
-  /*-------------------*/
-  /* Create container  */
-  /*-------------------*/
-  batch.set(ref, {
-    ...data,
-    containerId,
-    status: "pending",
-    tag,
-    createdAt,
-    updatedAt,
-  });
+    // batch.update(statisticsDoc, {
+    //   total: FieldValue.increment(1),
+    // });
 
-  await batch.commit();
+    /*-------------------*/
+    /* Create container  */
+    /*-------------------*/
+    batch.set(ref, {
+      ...data,
+      containerId,
+      status: "pending",
+      tag,
+      createdAt,
+      updatedAt,
+    });
 
-  /*-------------------*/
-  /* Execute scraping  */
-  /*-------------------*/
-  await executeScraping({
-    tag: containerId,
-    type,
-  });
+    await batch.commit();
+
+    /*-------------------*/
+    /* Execute scraping  */
+    /*-------------------*/
+    await executeScraping({
+      tag: containerId,
+      type,
+    });
+  } catch (error) {
+    console.error("processContainerCreated", error);
+  }
 }
 
 module.exports = processContainerCreated;
