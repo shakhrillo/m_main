@@ -100,6 +100,7 @@ export const DockerContainer = () => {
 
     const subscription = dockerContainerStats(containerId).subscribe({
       next: (data) => {
+        console.log(data);
         setStats(data);
       },
       error: (error) => console.error("Error fetching stats data:", error),

@@ -45,7 +45,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      orderBy("createdAt", "desc"),
+      // orderBy("createdAt", "desc"),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
@@ -53,7 +53,8 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => {
-      const containersData = snapshot.docs.map((doc) => ({
+      const containersData = snapshot.docs.map((doc, index) => ({
+        key: index,
         id: doc.id,
         ...doc.data(),
       }));

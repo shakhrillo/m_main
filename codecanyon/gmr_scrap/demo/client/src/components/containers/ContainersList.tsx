@@ -43,9 +43,10 @@ export const ContainersList = ({
   useEffect(() => {
     const subscription = dockerContainers({
       search,
-      uid: uid,
-      type,
+      // uid: uid,
+      // type,
     }).subscribe((data) => {
+      console.log(data);
       setContainers(data);
     });
 
@@ -97,7 +98,7 @@ export const ContainersList = ({
         <BootstrapTable
           bordered={false}
           hover
-          keyField="id"
+          keyField="key"
           data={containers.map((comment) => ({
             title: (
               <NavLink to={`/${path}/${comment.machineId}`}>
