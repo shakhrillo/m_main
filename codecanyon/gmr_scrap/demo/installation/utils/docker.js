@@ -43,7 +43,7 @@ const checkDocker = async () => {
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString().trim();
+            const data = chunk.toString().replace(/\s+/g, " ").trim();
             data && global.io.emit("docker-build", data);
 
             if (data.includes("Daemon has completed initialization")) {

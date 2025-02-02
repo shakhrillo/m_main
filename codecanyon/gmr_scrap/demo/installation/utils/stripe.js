@@ -1,29 +1,48 @@
-const path = require("path");
-const fs = require("fs");
-const sourcePath = path.resolve(__dirname, "../../");
-const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
+const { localDocker } = require("./docker");
 
 /**
  * Check for Stripe secrets
  * @returns {Promise<boolean>}
  */
 const checkStripe = async () => {
-  global.io.emit("docker-build", "Checking for Stripe secrets \n");
-  const checkFile = async () =>
-    (await fs.promises.readdir(stripeSecretsPath)).includes(
-      "stripe_webhook_secret"
-    );
+  return new Promise(async (resolve, reject) => {
+    const container = localDocker.getContainer("gmrsx-stripe-cli");
 
-  return new Promise((resolve) => {
-    const interval = setInterval(async () => {
-      if (await checkFile()) {
-        global.io.emit("docker-build", "Stripe secrets found \n");
-        clearInterval(interval);
-        resolve(true);
+    container.inspect(async (err, data) => {
+      if (err) {
+        console.error("Error inspecting Stripe container:", err);
+        reject(err);
+        return;
       }
 
-      global.io.emit("docker-build", "Waiting for Stripe secrets \n");
-    }, 5000);
+      container.logs(
+        {
+          follow: true,
+          stdout: true,
+          stderr: true,
+        },
+        (err, stream) => {
+          if (err) {
+            console.error("Error getting Stripe container logs:", err);
+            reject(err);
+            return;
+          }
+
+          const handleData = (chunk) => {
+            const data = chunk.toString().replace(/\s+/g, " ").trim();
+            data && global.io.emit("docker-build", data);
+
+            if (data.includes("Ready!")) {
+              stream.removeListener("data", handleData);
+              stream.destroy();
+              resolve("Stripe CLI is ready.");
+            }
+          };
+
+          stream.on("data", handleData);
+        }
+      );
+    });
   });
 };
 

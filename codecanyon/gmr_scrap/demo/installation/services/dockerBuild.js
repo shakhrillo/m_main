@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const compose = require("docker-compose");
 const env = require("./env");
-const { checkDocker, localDocker } = require("../utils/docker");
+const { checkDocker } = require("../utils/docker");
 const createNetwork = require("../utils/network");
 const checkStripe = require("../utils/stripe");
 const checkMachine = require("../utils/machine");
@@ -18,8 +18,8 @@ const executeCompose = async (config) => {
     config,
     env,
     callback: (chunk, streamSource) => {
-      const data = chunk.toString();
-      global.io.emit("docker-build", data);
+      const data = chunk.toString().replace(/\s+/g, " ").trim();
+      data && global.io.emit("docker-build", data);
     },
   });
   await compose.buildAll({
@@ -27,8 +27,8 @@ const executeCompose = async (config) => {
     config,
     env,
     callback: (chunk, streamSource) => {
-      const data = chunk.toString();
-      global.io.emit("docker-build", data);
+      const data = chunk.toString().replace(/\s+/g, " ").trim();
+      data && global.io.emit("docker-build", data);
     },
   });
   await compose.upAll({
@@ -36,8 +36,8 @@ const executeCompose = async (config) => {
     config,
     env,
     callback: (chunk, streamSource) => {
-      const data = chunk.toString();
-      global.io.emit("docker-build", data);
+      const data = chunk.toString().replace(/\s+/g, " ").trim();
+      data && global.io.emit("docker-build", data);
     },
   });
 };
@@ -49,7 +49,12 @@ const dockerBuild = async (req, res) => {
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
-    await Promise.all([checkFirebase(), checkDocker(), checkServer()]);
+    await Promise.all([
+      checkStripe(),
+      checkFirebase(),
+      checkDocker(),
+      checkServer(),
+    ]);
 
     await executeCompose("docker-compose-machine.yml");
     await checkMachine();

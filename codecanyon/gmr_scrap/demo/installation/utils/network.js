@@ -1,4 +1,8 @@
+const fs = require("fs");
+const path = require("path");
 const { localDocker } = require("./docker");
+const sourcePath = path.resolve(__dirname, "../../");
+const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const createNetwork = async (env) => {
   const networkName = "gmrs-network";
