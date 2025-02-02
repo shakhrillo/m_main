@@ -1,7 +1,7 @@
 const { localDocker } = require("./docker");
 
 const createNetwork = async ({ emitMessage, env }) => {
-  const networkName = "gmrs-network_ss";
+  const networkName = `${env.PROJECT_ID}_network`;
   const networkSubnet = env.NETWORK_SUBNET || "";
 
   try {
