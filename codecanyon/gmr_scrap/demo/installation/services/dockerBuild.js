@@ -1,5 +1,3 @@
-var Convert = require("ansi-to-html");
-var convert = new Convert();
 const fs = require("fs/promises");
 const path = require("path");
 const compose = require("docker-compose");
@@ -15,8 +13,9 @@ const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const emitMessage = (chunk) => {
-  const msg = chunk.toString().trim().replace(/\s+/g, " ");
-  msg && global.io.emit("docker-build", convert.toHtml(msg));
+  // .trim().replace(/\s+/g, " ");
+  const msg = chunk.toString();
+  msg && global.io.emit("docker-build", msg);
 };
 
 const executeCompose = async (config) => {
