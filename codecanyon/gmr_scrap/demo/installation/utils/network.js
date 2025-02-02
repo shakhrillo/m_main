@@ -9,15 +9,12 @@ const createNetwork = async (env) => {
     await network.inspect();
     global.io.emit(
       "docker-build",
-      `✅ Docker network "${networkName}" already exists.\n`
+      `Docker network "${networkName}" already exists.\n`
     );
 
     return false;
   } catch {
-    global.io.emit(
-      "docker-build",
-      `⚠️ Docker network "${networkName}" not found. Creating...\n`
-    );
+    console.log("Network does not exist");
   }
 
   try {
@@ -28,13 +25,10 @@ const createNetwork = async (env) => {
     });
     global.io.emit(
       "docker-build",
-      `✅ Docker network "${networkName}" created.\n`
+      `Docker network "${networkName}" created.\n`
     );
   } catch (error) {
-    global.io.emit(
-      "docker-build",
-      `❌ Failed to create Docker network: ${error.message}\n`
-    );
+    global.io.emit("docker-build", error);
   }
 };
 

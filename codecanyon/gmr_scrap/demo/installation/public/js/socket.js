@@ -1,18 +1,35 @@
 const socket = io();
-let logsDockerBuild = "";
+let logsDockerBuild = [];
 
+/**
+ * Update logs in the DOM.
+ * @param {string} selector - The selector of the container.
+ * @param {Array} logs - The logs array.
+ * @param {string} log - The log to add.
+ * @returns {void}
+ */
 const updateLogs = (selector, logs, log) => {
-  logs += log;
-  document.querySelector(selector).innerHTML = logs
-    .split("\n")
-    .filter((line) => line)
-    .map((line) => `<li class="list-group-item small">${line}</li>`)
-    .join("");
-  document.querySelector(selector).scrollTop =
-    document.querySelector(selector).scrollHeight;
+  const container = document.querySelector(selector);
+  if (!container) return;
+
+  const isUserAtBottom =
+    container.scrollHeight - container.scrollTop === container.clientHeight;
+
+  logs.push(log);
+
+  const fragment = document.createDocumentFragment();
+  const logItem = document.createElement("li");
+  logItem.className = "list-group-item small";
+  logItem.textContent = log;
+  fragment.appendChild(logItem);
+
+  container.appendChild(fragment);
+
+  if (isUserAtBottom) {
+    container.scrollTop = container.scrollHeight;
+  }
 };
 
-socket.on("docker-build", (log) => {
-  logsDockerBuild += log;
-  updateLogs("#dockerStats", logsDockerBuild, log);
-});
+socket.on("docker-build", (log) =>
+  updateLogs("#dockerStats", logsDockerBuild, log)
+);

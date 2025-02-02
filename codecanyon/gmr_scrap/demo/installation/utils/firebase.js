@@ -25,8 +25,8 @@ const checkFirebase = async () => {
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString();
-            global.io.emit("docker-build", data);
+            const data = chunk.toString().trim();
+            data && global.io.emit("docker-build", data);
 
             if (data.includes("All emulators ready!")) {
               stream.removeListener("data", handleData);

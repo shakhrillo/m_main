@@ -1,25 +1,45 @@
-const axios = require("axios");
 const { localDocker } = require("./docker");
 
 const checkServer = async () => {
-  const SERVER_PORT = process.env.SERVER_PORT;
+  return new Promise(async (resolve, reject) => {
+    const container = localDocker.getContainer("gmrsx-server");
 
-  if (!SERVER_PORT) {
-    throw new Error("SERVER_PORT is not defined");
-  }
+    container.inspect(async (err, data) => {
+      if (err) {
+        console.error("Error inspecting Server container:", err);
+        reject(err);
+        return;
+      }
 
-  try {
-    const container = localDocker.getContainer("gmrsx_server");
-    await container.restart();
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const response = await axios.get(`http://0.0.0.0:${SERVER_PORT}`);
+      container.logs(
+        {
+          follow: true,
+          stdout: true,
+          stderr: true,
+        },
+        (err, stream) => {
+          if (err) {
+            console.error("Error getting Server container logs:", err);
+            reject(err);
+            return;
+          }
 
-    if (response.status === 200) {
-      return true;
-    }
-  } catch (error) {
-    throw new Error(`Error checking server: ${error.message}`);
-  }
+          const handleData = (chunk) => {
+            const data = chunk.toString().trim();
+            data && global.io.emit("docker-build", data);
+
+            if (data.includes("Server is running on port")) {
+              stream.removeListener("data", handleData);
+              stream.destroy();
+              resolve("Server is ready.");
+            }
+          };
+
+          stream.on("data", handleData);
+        }
+      );
+    });
+  });
 };
 
 module.exports = checkServer;

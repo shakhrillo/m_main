@@ -1,5 +1,16 @@
 const { localDocker } = require("./docker");
 
+function isStringObject(str) {
+  if (typeof str !== "string") return false;
+
+  try {
+    const obj = JSON.parse(str);
+    return typeof obj === "object" && obj !== null;
+  } catch (e) {
+    return false;
+  }
+}
+
 const checkMachine = async () => {
   return new Promise(async (resolve, reject) => {
     const container = localDocker.getContainer("gmrsx-machine");
@@ -25,8 +36,8 @@ const checkMachine = async () => {
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString();
-            global.io.emit("docker-build", data);
+            const data = chunk.toString().trim();
+            data && global.io.emit("docker-build", data);
 
             if (data.includes("Image build complete.")) {
               stream.removeListener("data", handleData);

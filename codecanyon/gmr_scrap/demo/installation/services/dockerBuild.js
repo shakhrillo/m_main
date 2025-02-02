@@ -7,6 +7,7 @@ const createNetwork = require("../utils/network");
 const checkStripe = require("../utils/stripe");
 const checkMachine = require("../utils/machine");
 const checkFirebase = require("../utils/firebase");
+const checkServer = require("../utils/server");
 
 const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
@@ -18,10 +19,8 @@ const executeCompose = async (config) => {
     env,
     callback: (chunk, streamSource) => {
       const data = chunk.toString();
-      console.log(`rm [${streamSource}]: ${data.trim()}`);
       global.io.emit("docker-build", data);
     },
-    log: true,
   });
   await compose.buildAll({
     cwd: sourcePath,
@@ -29,10 +28,8 @@ const executeCompose = async (config) => {
     env,
     callback: (chunk, streamSource) => {
       const data = chunk.toString();
-      console.log(`build [${streamSource}]: ${data.trim()}`);
       global.io.emit("docker-build", data);
     },
-    log: true,
   });
   await compose.upAll({
     cwd: sourcePath,
@@ -40,10 +37,8 @@ const executeCompose = async (config) => {
     env,
     callback: (chunk, streamSource) => {
       const data = chunk.toString();
-      console.log(`up [${streamSource}]: ${data.trim()}`);
       global.io.emit("docker-build", data);
     },
-    log: true,
   });
 };
 
@@ -54,8 +49,7 @@ const dockerBuild = async (req, res) => {
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
-    await checkFirebase();
-    await checkDocker();
+    await Promise.all([checkFirebase(), checkDocker(), checkServer()]);
 
     await executeCompose("docker-compose-machine.yml");
     await checkMachine();
