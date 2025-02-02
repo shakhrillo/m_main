@@ -49,226 +49,219 @@
       </div>
     </nav>
     <div class="container">
-      <div class="row g-3 row-cols-1">
-        <div class="col">
+      <div class="row g-3">
+        <div class="col col-md-9">
           <div class="card">
-            <div class="accordion accordion-flush" id="stripeConfigAccardion">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#stripeConfigCollapse"
-                    aria-expanded="false"
-                    aria-controls="stripeConfigCollapse"
-                  >
-                    <i class="ti ti-brand-stripe me-3"></i>
-                    Stripe configuration
-                  </button>
-                </h2>
-                <div
-                  id="stripeConfigCollapse"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#stripeConfigAccardion"
+            <div class="card-body">
+              <h5 class="card-title">Build docker</h5>
+              <hr />
+              <pre><code class="language-bash" id="dockerStats"></code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-3">
+          <div class="accordion" id="stripeConfigAccardion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#stripeConfigCollapse"
+                  aria-expanded="true"
+                  aria-controls="stripeConfigCollapse"
                 >
-                  <div class="accordion-body">
-                    <form id="stripeForm">
-                      <div class="row g-3 row-cols-1 row-cols-md-2">
-                        <div class="col">
-                          <label for="stripeApiKey" class="form-label">
-                            Stripe API key
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="stripeApiKey"
-                            name="stripeApiKey"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label for="stripeDeviceName" class="form-label">
-                            Stripe device name
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="stripeDeviceName"
-                            name="stripeDeviceName"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label for="stripeSuccessUrl" class="form-label">
-                            Stripe success URL
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="stripeSuccessUrl"
-                            name="stripeSuccessUrl"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label for="stripeCancelUrl" class="form-label">
-                            Stripe cancel URL
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="stripeCancelUrl"
-                            name="stripeCancelUrl"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <button
-                            class="ms-auto btn btn-primary"
-                            id="saveStripe"
-                          >
-                            <i class="ti ti-device-floppy"></i> Save
-                          </button>
-                        </div>
+                  <i class="ti ti-brand-stripe me-3"></i>
+                  Stripe configuration
+                </button>
+              </h2>
+              <div
+                id="stripeConfigCollapse"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#stripeConfigAccardion"
+              >
+                <div class="accordion-body">
+                  <form id="stripeForm">
+                    <div class="row g-3 row-cols-1">
+                      <div class="col">
+                        <label for="stripeApiKey" class="form-label">
+                          Stripe API key
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="stripeApiKey"
+                          name="stripeApiKey"
+                          required
+                        />
                       </div>
-                    </form>
-                  </div>
+                      <div class="col">
+                        <label for="stripeDeviceName" class="form-label">
+                          Stripe device name
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="stripeDeviceName"
+                          name="stripeDeviceName"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="stripeSuccessUrl" class="form-label">
+                          Stripe success URL
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="stripeSuccessUrl"
+                          name="stripeSuccessUrl"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="stripeCancelUrl" class="form-label">
+                          Stripe cancel URL
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="stripeCancelUrl"
+                          name="stripeCancelUrl"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <button class="ms-auto btn btn-primary" id="saveStripe">
+                          <i class="ti ti-device-floppy"></i> Save
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#firebaseConfigCollapse"
-                    aria-expanded="false"
-                    aria-controls="firebaseConfigCollapse"
-                  >
-                    <i class="ti ti-brand-firebase me-3"></i>
-                    Firebase configuration
-                  </button>
-                </h2>
-                <div
-                  id="firebaseConfigCollapse"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#stripeConfigAccardion"
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#firebaseConfigCollapse"
+                  aria-expanded="false"
+                  aria-controls="firebaseConfigCollapse"
                 >
-                  <div class="accordion-body">
-                    <form id="firebaseForm">
-                      <div class="row g-3 row-cols-1 row-cols-md-2">
-                        <div class="col">
-                          <label
-                            for="firebaseEmulatorAuthentication"
-                            class="form-label"
-                          >
-                            Firebase emulator authentication port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorAuthentication"
-                            name="firebaseEmulatorAuthentication"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label for="firebaseEmulatorUI" class="form-label">
-                            Firebase emulator UI port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorUI"
-                            name="firebaseEmulatorUI"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label
-                            for="firebaseEmulatorFunctions"
-                            class="form-label"
-                          >
-                            Firebase emulator functions port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorFunctions"
-                            name="firebaseEmulatorFunctions"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label
-                            for="firebaseEmulatorFirestore"
-                            class="form-label"
-                          >
-                            Firebase emulator firestore port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorFirestore"
-                            name="firebaseEmulatorFirestore"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label
-                            for="firebaseEmulatorStorage"
-                            class="form-label"
-                          >
-                            Firebase emulator storage port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorStorage"
-                            name="firebaseEmulatorStorage"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <label for="firebaseEmulatorHub" class="form-label">
-                            Firebase emulator hub port
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firebaseEmulatorHub"
-                            name="firebaseEmulatorHub"
-                            required
-                          />
-                        </div>
-                        <div class="col">
-                          <button
-                            class="ms-auto btn btn-primary"
-                            id="saveFirebase"
-                          >
-                            <i class="ti ti-device-floppy"></i> Save
-                          </button>
-                        </div>
+                  <i class="ti ti-brand-firebase me-3"></i>
+                  Firebase configuration
+                </button>
+              </h2>
+              <div
+                id="firebaseConfigCollapse"
+                class="accordion-collapse collapse"
+                data-bs-parent="#stripeConfigAccardion"
+              >
+                <div class="accordion-body">
+                  <form id="firebaseForm">
+                    <div class="row g-3 row-cols-1 row-cols-md-2">
+                      <div class="col">
+                        <label
+                          for="firebaseEmulatorAuthentication"
+                          class="form-label"
+                        >
+                          Firebase emulator authentication port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorAuthentication"
+                          name="firebaseEmulatorAuthentication"
+                          required
+                        />
                       </div>
-                    </form>
-                  </div>
+                      <div class="col">
+                        <label for="firebaseEmulatorUI" class="form-label">
+                          Firebase emulator UI port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorUI"
+                          name="firebaseEmulatorUI"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label
+                          for="firebaseEmulatorFunctions"
+                          class="form-label"
+                        >
+                          Firebase emulator functions port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorFunctions"
+                          name="firebaseEmulatorFunctions"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label
+                          for="firebaseEmulatorFirestore"
+                          class="form-label"
+                        >
+                          Firebase emulator firestore port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorFirestore"
+                          name="firebaseEmulatorFirestore"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseEmulatorStorage" class="form-label">
+                          Firebase emulator storage port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorStorage"
+                          name="firebaseEmulatorStorage"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseEmulatorHub" class="form-label">
+                          Firebase emulator hub port
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseEmulatorHub"
+                          name="firebaseEmulatorHub"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <button
+                          class="ms-auto btn btn-primary"
+                          id="saveFirebase"
+                        >
+                          <i class="ti ti-device-floppy"></i> Save
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="col">
-          <div class="d-flex gap-3 align-items-center mb-3">
-            <h5 class="card-title m-0">Build docker</h5>
-            <button class="ms-auto btn btn-primary" id="buildDocker">
-              <i class="ti ti-player-play"></i> Build
-            </button>
-          </div>
-          <div class="card">
-            <pre><code class="language-bash" id="dockerStats"></code></pre>
-          </div>
+          <button class="ms-auto btn btn-primary w-100 mt-3" id="buildDocker">
+            <i class="ti ti-player-play"></i> Start build
+          </button>
         </div>
       </div>
     </div>

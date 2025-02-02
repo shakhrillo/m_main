@@ -3,13 +3,10 @@ body {
   background-color: #fafafa;
 }
 
-#dockerStats,
-#containerStats {
-  height: calc(100vh - 400px);
+#dockerStats {
+  min-height: 400px;
+  height: calc(100vh - 200px);
   overflow: auto;
   background-color: #fff;
-}
-
-.card {
-  overflow: hidden;
+  display: block;
 }
