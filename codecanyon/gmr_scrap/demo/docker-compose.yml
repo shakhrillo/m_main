@@ -30,6 +30,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ${PROJECT_ID}-firebase
+    image: ${PROJECT_ID}-firebase
     volumes:
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
@@ -51,6 +52,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     container_name: ${PROJECT_ID}-server
+    image: ${PROJECT_ID}-server
     volumes:
       - ./server:/usr/src/app
       - ./stripe-secrets:/usr/src/app/secrets
@@ -85,6 +87,7 @@ services:
     volumes:
       - ./client/src:/usr/src/app/src
     container_name: ${PROJECT_ID}-client
+    image: ${PROJECT_ID}-client
     environment:
       VITE_ENV: development
       VITE_FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}

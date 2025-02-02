@@ -8,6 +8,7 @@ const saveEnv = require("./installation/services/saveEnv");
 
 const app = express();
 app.use(express.json());
+app.use("/node_modules", express.static(path.join(__dirname, "node_modules")));
 
 const server = createServer(app);
 global.io = initializeSocket(server);

@@ -7,19 +7,24 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@highlightjs/cdn-assets": "^11.11.1",
     "axios": "^1.7.9",
-    "docker-compose": "^1.1.0",
+    "bootstrap": "^5.3.3",
     "dockerode": "^4.0.4",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
     "express": "^4.21.2",
+    "highlight.js": "^11.11.1",
+    "highlightjs-structured-text": "^1.4.9",
     "inquirer": "^12.3.2",
     "nodemon": "^3.1.9",
     "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "ws": "^8.18.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.6.1",
+    "docker-compose": "^1.1.0",
     "livereload": "^0.9.3"
   }
 }

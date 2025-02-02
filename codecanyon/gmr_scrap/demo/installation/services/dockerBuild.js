@@ -13,7 +13,6 @@ const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
 const emitMessage = (chunk) => {
-  // .trim().replace(/\s+/g, " ");
   const msg = chunk.toString();
   msg && global.io.emit("docker-build", msg);
 };
@@ -33,7 +32,7 @@ const dockerBuild = async (req, res) => {
   try {
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
-    await createNetwork(env);
+    await createNetwork({ emitMessage, env });
 
     await executeCompose("docker-compose.yml");
     await Promise.all([

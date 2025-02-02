@@ -1,14 +1,24 @@
 const path = require("path");
 const dotenv = require("dotenv");
 
+const generateRandomBaseIp = () => {
+  return `${Math.floor(Math.random() * 256)}.${Math.floor(
+    Math.random() * 256
+  )}.${Math.floor(Math.random() * 256)}`;
+};
+
 const createNetworkEnv = () => {
+  const subnetBase = generateRandomBaseIp();
+  const subnet = `${subnetBase}.0/24`;
+  console.log("Network subnet:", subnet);
+
   return {
-    NETWORK_SUBNET: `9.9.0.0/24`,
-    DOCKER_IPV4_ADDRESS: `9.9.0.2`,
-    MACHINE_IPV4_ADDRESS: `9.9.0.3`,
-    FIREBASE_IPV4_ADDRESS: `9.9.0.4`,
-    SERVER_IPV4_ADDRESS: `9.9.0.5`,
-    CLIENT_IPV4_ADDRESS: `9.9.0.6`,
+    NETWORK_SUBNET: subnet,
+    DOCKER_IPV4_ADDRESS: `${subnetBase}.2`,
+    MACHINE_IPV4_ADDRESS: `${subnetBase}.3`,
+    FIREBASE_IPV4_ADDRESS: `${subnetBase}.4`,
+    SERVER_IPV4_ADDRESS: `${subnetBase}.5`,
+    CLIENT_IPV4_ADDRESS: `${subnetBase}.6`,
   };
 };
 

@@ -4,6 +4,7 @@ services:
       context: ./machine
       dockerfile: Dockerfile
     container_name: ${PROJECT_ID}-machine
+    image: ${PROJECT_ID}-machine
     volumes:
       - ./firebase.json:/usr/src/app/firebase.json
       - ./firebasekeys.json:/usr/src/app/firebasekeys.json
