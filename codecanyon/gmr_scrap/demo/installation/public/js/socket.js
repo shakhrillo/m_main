@@ -15,19 +15,25 @@ const updateLogs = (selector, logs, log) => {
   const isUserAtBottom =
     container.scrollHeight - container.scrollTop === container.clientHeight;
 
-  logs.push(log);
+  // logs.push(log);
 
-  const fragment = document.createDocumentFragment();
-  const logItem = document.createElement("li");
-  logItem.className = "list-group-item small";
-  logItem.textContent = log;
-  fragment.appendChild(logItem);
+  // const fragment = document.createDocumentFragment();
+  // const logItem = document.createElement("span");
+  // logItem.className = "d-block small";
+  // logItem.textContent = log;
+  // fragment.appendChild(document.createTextNode(`${log}\n`));
 
-  container.appendChild(fragment);
+  // container.appendChild(fragment);
+
+  container.textContent += log + "\n";
 
   if (isUserAtBottom) {
     container.scrollTop = container.scrollHeight;
   }
+
+  // const codeElement = document.getElementById("dockerStats");
+  delete container.dataset.highlighted;
+  hljs.highlightElement(container);
 };
 
 socket.on("docker-build", (log) =>

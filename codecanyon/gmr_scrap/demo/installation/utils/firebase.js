@@ -1,12 +1,12 @@
 const { localDocker } = require("./docker");
 
-const checkFirebase = async () => {
+const checkFirebase = async ({ emitMessage }) => {
   return new Promise(async (resolve, reject) => {
     const container = localDocker.getContainer("gmrsx-firebase");
 
     container.inspect(async (err, data) => {
       if (err) {
-        console.error("Error inspecting Firebase container:", err);
+        emitMessage(err);
         reject(err);
         return;
       }
@@ -19,16 +19,15 @@ const checkFirebase = async () => {
         },
         (err, stream) => {
           if (err) {
-            console.error("Error getting Firebase container logs:", err);
+            emitMessage(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString().replace(/\s+/g, " ").trim();
-            data && global.io.emit("docker-build", data);
+            emitMessage(chunk);
 
-            if (data.includes("All emulators ready!")) {
+            if (chunk.toString().includes("All emulators ready!")) {
               stream.removeListener("data", handleData);
               stream.destroy();
               resolve("Firebase emulator is ready. You can now run the tests.");

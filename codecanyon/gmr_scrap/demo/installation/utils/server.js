@@ -1,12 +1,12 @@
 const { localDocker } = require("./docker");
 
-const checkServer = async () => {
+const checkServer = async ({ emitMessage }) => {
   return new Promise(async (resolve, reject) => {
     const container = localDocker.getContainer("gmrsx-server");
 
     container.inspect(async (err, data) => {
       if (err) {
-        console.error("Error inspecting Server container:", err);
+        emitMessage(err);
         reject(err);
         return;
       }
@@ -19,16 +19,15 @@ const checkServer = async () => {
         },
         (err, stream) => {
           if (err) {
-            console.error("Error getting Server container logs:", err);
+            emitMessage(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString().replace(/\s+/g, " ").trim();
-            data && global.io.emit("docker-build", data);
+            emitMessage(chunk);
 
-            if (data.includes("Server is running on port")) {
+            if (chunk.toString().includes("Server is running on port")) {
               stream.removeListener("data", handleData);
               stream.destroy();
               resolve("Server is ready.");

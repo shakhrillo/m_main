@@ -1,4 +1,6 @@
-const fs = require("fs");
+var Convert = require("ansi-to-html");
+var convert = new Convert();
+const fs = require("fs/promises");
 const path = require("path");
 const compose = require("docker-compose");
 const env = require("./env");
@@ -12,54 +14,40 @@ const checkServer = require("../utils/server");
 const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 
+const emitMessage = (chunk) => {
+  const msg = chunk.toString().trim().replace(/\s+/g, " ");
+  msg && global.io.emit("docker-build", convert.toHtml(msg));
+};
+
 const executeCompose = async (config) => {
-  await compose.downAll({
-    cwd: sourcePath,
-    config,
-    env,
-    callback: (chunk, streamSource) => {
-      const data = chunk.toString().replace(/\s+/g, " ").trim();
-      data && global.io.emit("docker-build", data);
-    },
-  });
-  await compose.buildAll({
-    cwd: sourcePath,
-    config,
-    env,
-    callback: (chunk, streamSource) => {
-      const data = chunk.toString().replace(/\s+/g, " ").trim();
-      data && global.io.emit("docker-build", data);
-    },
-  });
-  await compose.upAll({
-    cwd: sourcePath,
-    config,
-    env,
-    callback: (chunk, streamSource) => {
-      const data = chunk.toString().replace(/\s+/g, " ").trim();
-      data && global.io.emit("docker-build", data);
-    },
-  });
+  for (const action of ["downAll", "buildAll", "upAll"]) {
+    await compose[action]({
+      cwd: sourcePath,
+      config,
+      env,
+      callback: (chunk) => emitMessage(chunk),
+    });
+  }
 };
 
 const dockerBuild = async (req, res) => {
   try {
-    await fs.promises.rm(stripeSecretsPath, { recursive: true, force: true });
-    await fs.promises.mkdir(stripeSecretsPath, { recursive: true });
+    await fs.rm(stripeSecretsPath, { recursive: true, force: true });
+    await fs.mkdir(stripeSecretsPath, { recursive: true });
     await createNetwork(env);
 
     await executeCompose("docker-compose.yml");
     await Promise.all([
-      checkStripe(),
-      checkFirebase(),
-      checkDocker(),
-      checkServer(),
+      checkStripe({ emitMessage }),
+      checkFirebase({ emitMessage }),
+      checkDocker({ emitMessage }),
+      checkServer({ emitMessage }),
     ]);
 
     await executeCompose("docker-compose-machine.yml");
-    await checkMachine();
+    await checkMachine({ emitMessage });
 
-    global.io.emit("docker-build", "Docker Compose executed successfully \n");
+    emitMessage("Docker Compose executed successfully");
     res.send({
       message: "Docker Compose executed successfully",
       status: "success",

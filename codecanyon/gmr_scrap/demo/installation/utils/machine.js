@@ -11,13 +11,13 @@ function isStringObject(str) {
   }
 }
 
-const checkMachine = async () => {
+const checkMachine = async ({ emitMessage }) => {
   return new Promise(async (resolve, reject) => {
     const container = localDocker.getContainer("gmrsx-machine");
 
     container.inspect(async (err, data) => {
       if (err) {
-        console.error("Error machine container:", err);
+        emitMessage(err);
         reject(err);
         return;
       }
@@ -30,16 +30,15 @@ const checkMachine = async () => {
         },
         (err, stream) => {
           if (err) {
-            console.error("Error getting machine container logs:", err);
+            emitMessage(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            const data = chunk.toString().replace(/\s+/g, " ").trim();
-            data && global.io.emit("docker-build", data);
+            emitMessage(chunk);
 
-            if (data.includes("Image build complete.")) {
+            if (chunk.toString().includes("Image build complete.")) {
               stream.removeListener("data", handleData);
               stream.destroy();
               resolve("Machine image is ready.");
