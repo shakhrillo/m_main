@@ -1,3 +1,4 @@
+name: ${PROJECT_ID}
 services:
   stripe-cli:
     image: stripe/stripe-cli
