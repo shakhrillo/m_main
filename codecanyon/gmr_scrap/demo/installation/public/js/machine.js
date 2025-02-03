@@ -3,14 +3,18 @@ const toUpperSnakeCase = (str) => {
 };
 
 const saveEnv = async (formId, type) => {
-  const stripeForm = document.querySelector(formId);
-  const formData = new FormData(stripeForm);
-  const data = [...formData.entries()].reduce((acc, [key, value]) => {
-    acc[toUpperSnakeCase(key)] = value;
-    return acc;
-  }, {});
+  try {
+    const stripeForm = document.querySelector(formId);
+    const formData = new FormData(stripeForm);
+    const data = [...formData.entries()].reduce((acc, [key, value]) => {
+      acc[toUpperSnakeCase(key)] = value;
+      return acc;
+    }, {});
 
-  await saveEnvService(type, data);
+    await saveEnvService(type, data);
+  } catch (error) {
+    console.error("Error saving env:", error);
+  }
 };
 
 document
@@ -20,8 +24,13 @@ document
     btn.disabled = true;
     btn.innerHTML = `<i class="ti ti-loader"></i> Processing...`;
 
+    await saveEnv("#generalForm", "main");
+    await saveEnv("#googleMapsForm", "maps");
+    await saveEnv("#jwtForm", "jwt");
     await saveEnv("#stripeForm", "stripe");
     await saveEnv("#firebaseForm", "firebase");
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
       await buildDockerService();

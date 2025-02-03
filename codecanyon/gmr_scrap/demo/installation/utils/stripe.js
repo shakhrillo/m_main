@@ -4,13 +4,13 @@ const { localDocker } = require("./docker");
  * Check for Stripe secrets
  * @returns {Promise<boolean>}
  */
-const checkStripe = async ({ emitMessage }) => {
+const checkStripe = async ({ env, emitMessage }) => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer("gmrsx-stripe-cli");
+    const container = localDocker.getContainer(`${env.APP_ID}-stripe-cli`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        emitMessage(err);
+        emitMessage("[stripe]: " + err);
         reject(err);
         return;
       }
@@ -23,13 +23,13 @@ const checkStripe = async ({ emitMessage }) => {
         },
         (err, stream) => {
           if (err) {
-            emitMessage(err);
+            emitMessage("[stripe]: " + err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            emitMessage(chunk);
+            emitMessage("[stripe]: " + chunk);
 
             if (chunk.toString().includes("Ready!")) {
               stream.removeListener("data", handleData);

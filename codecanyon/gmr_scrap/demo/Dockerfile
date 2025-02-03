@@ -25,5 +25,12 @@ COPY data ./data
 COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..
 
+# Copy env to workdir
+COPY .env.main .env
+
+COPY firebase.sh /usr/src/app/firebase.sh
+RUN chmod +x /usr/src/app/firebase.sh
+CMD ["/usr/src/app/firebase.sh"]
+
 # Run emulators
-CMD ["firebase", "emulators:start", "--import=./data", "--export-on-exit", "--project", "demo-gmrsx"]
+# CMD ["firebase", "emulators:start", "--import=./data", "--export-on-exit", "--project", "demo-${process.env.APP_ID}"]

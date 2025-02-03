@@ -1,5 +1,4 @@
 loadEnvService().then((env) => {
-  console.log(env);
   if (typeof env === "object" && Array.isArray(env)) {
     env.forEach((data) => {
       if (data.name === "main") {

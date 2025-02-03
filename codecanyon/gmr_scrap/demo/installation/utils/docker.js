@@ -18,13 +18,13 @@ const localDocker = new Docker({
  * Check for Docker
  * @returns {Promise<boolean>}
  */
-const checkDocker = async ({ emitMessage }) => {
+const checkDocker = async ({ env, emitMessage }) => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer("gmrsx-docker");
+    const container = localDocker.getContainer(`${env.APP_ID}-docker`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        emitMessage(err);
+        emitMessage("[docker]: " + err);
         reject(err);
         return;
       }
@@ -37,13 +37,13 @@ const checkDocker = async ({ emitMessage }) => {
         },
         (err, stream) => {
           if (err) {
-            emitMessage(err);
+            emitMessage("[docker]: " + err);
             reject(err);
             return;
           }
 
           const handleData = async (chunk) => {
-            emitMessage(chunk);
+            emitMessage("[docker]: " + chunk);
 
             if (
               chunk.toString().includes("Daemon has completed initialization")
@@ -65,12 +65,11 @@ const checkDocker = async ({ emitMessage }) => {
                 await dinDocker.pruneNetworks({
                   force: true,
                 });
-                emitMessage("Docker daemon is ready.");
+                emitMessage("[docker]: " + "Docker daemon is ready.");
+                resolve(true);
               } catch (err) {
-                emitMessage(err);
+                emitMessage("[docker]: " + err);
                 reject(err);
-              } finally {
-                resolve("Docker daemon is ready.");
               }
             }
           };

@@ -1,19 +1,8 @@
 const { localDocker } = require("./docker");
 
-function isStringObject(str) {
-  if (typeof str !== "string") return false;
-
-  try {
-    const obj = JSON.parse(str);
-    return typeof obj === "object" && obj !== null;
-  } catch (e) {
-    return false;
-  }
-}
-
-const checkMachine = async ({ emitMessage }) => {
+const checkMachine = async ({ env, emitMessage }) => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer("gmrsx-machine");
+    const container = localDocker.getContainer(`${env.APP_ID}-machine`);
 
     container.inspect(async (err, data) => {
       if (err) {

@@ -1,12 +1,12 @@
 const { localDocker } = require("./docker");
 
-const checkServer = async ({ emitMessage }) => {
+const checkServer = async ({ env, emitMessage }) => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer("gmrsx-server");
+    const container = localDocker.getContainer(`${env.APP_ID}-server`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        emitMessage(err);
+        emitMessage("[server]: " + err);
         reject(err);
         return;
       }
@@ -19,13 +19,13 @@ const checkServer = async ({ emitMessage }) => {
         },
         (err, stream) => {
           if (err) {
-            emitMessage(err);
+            emitMessage("[server]: " + err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            emitMessage(chunk);
+            emitMessage("[server]: " + chunk);
 
             if (chunk.toString().includes("Server is running on port")) {
               stream.removeListener("data", handleData);

@@ -5,7 +5,7 @@ const { startContainer } = require("../controllers/dockerController");
 
 const environment = process.env.NODE_ENV || "development";
 const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
+const firebaseProjectId = process.env.FIREBASE_APP_ID;
 
 const handleContainerOperations = async (req, res) => {
   try {
@@ -18,7 +18,7 @@ const handleContainerOperations = async (req, res) => {
       Env: [
         `TAG=${tag}`,
         `NODE_ENV=${environment}`,
-        `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
+        `FIREBASE_APP_ID=${firebaseProjectId}`,
         `FIREBASE_URL=${process.env.FIREBASE_IP}`,
         `CHROME_PATH=/usr/bin/chromium-browser`,
       ],

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const environment = process.env.NODE_ENV || "development";
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
+const firebaseProjectId = process.env.FIREBASE_APP_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
 
 const firebasekeysPath = path.resolve(__dirname, "../firebasekeys.json");

@@ -1,7 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 const compose = require("docker-compose");
-const env = require("./env");
+const { getEnv } = require("./env");
 const { checkDocker, localDocker } = require("../utils/docker");
 const createNetwork = require("../utils/network");
 const checkStripe = require("../utils/stripe");
@@ -17,7 +17,7 @@ const emitMessage = (chunk) => {
   msg && global.io.emit("docker-build", msg);
 };
 
-const executeCompose = async (config) => {
+const executeCompose = async ({ env, config }) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {
     if (action === "buildAll" && config === "docker-compose.yml") {
       await createNetwork({ emitMessage, env });
@@ -28,15 +28,15 @@ const executeCompose = async (config) => {
       cwd: sourcePath,
       config,
       env,
-      callback: (chunk) => emitMessage(chunk),
+      callback: (chunk) => emitMessage(`[${action}]: ` + chunk),
     });
 
     if (action === "downAll" && config === "docker-compose.yml") {
       for (const img of [
-        `${process.env.PROJECT_ID}-firebase`,
-        `${process.env.PROJECT_ID}-client`,
-        `${process.env.PROJECT_ID}-server`,
-        `${process.env.PROJECT_ID}-machine`,
+        `${env.APP_ID}-firebase`,
+        `${env.APP_ID}-client`,
+        `${env.APP_ID}-server`,
+        `${env.APP_ID}-machine`,
       ]) {
         try {
           const image = localDocker.getImage(img);
@@ -57,19 +57,33 @@ const executeCompose = async (config) => {
 
 const dockerBuild = async (req, res) => {
   try {
+    const env = getEnv();
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
 
-    await executeCompose("docker-compose.yml");
-    await Promise.all([
-      checkStripe({ emitMessage }),
-      checkFirebase({ emitMessage }),
-      checkDocker({ emitMessage }),
-      checkServer({ emitMessage }),
-    ]);
+    await executeCompose({
+      env,
+      config: "docker-compose.yml",
+    });
 
-    await executeCompose("docker-compose-machine.yml");
-    await checkMachine({ emitMessage });
+    emitMessage("Main is done!");
+
+    // await Promise.all([
+    await checkStripe({ env, emitMessage });
+    console.log("checkStripe done!");
+    await checkFirebase({ env, emitMessage });
+    console.log("checkFirebase done!");
+    await checkDocker({ env, emitMessage });
+    console.log("checkDocker done!");
+    await checkServer({ env, emitMessage });
+    console.log("checkServer done!");
+    // ]);
+
+    await executeCompose({
+      env,
+      config: "docker-compose-machine.yml",
+    });
+    await checkMachine({ env, emitMessage });
 
     emitMessage("Docker Compose executed successfully");
     res.send({
