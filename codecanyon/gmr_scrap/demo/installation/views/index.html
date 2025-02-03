@@ -58,9 +58,85 @@
         <div class="col col-md-3">
           <div class="accordion" id="stripeConfigAccardion">
             <div class="accordion-item">
-              <h2 class="accordion-header">
+              <div class="accordion-header">
                 <button
                   class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#googleMapsConfigCollapse"
+                  aria-expanded="true"
+                  aria-controls="googleMapsConfigCollapse"
+                >
+                  Google Maps configuration
+                </button>
+              </div>
+              <div
+                id="googleMapsConfigCollapse"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#stripeConfigAccardion"
+              >
+                <div class="accordion-body">
+                  <form id="googleMapsForm">
+                    <div class="row g-3 row-cols-1">
+                      <div class="col">
+                        <label for="googleMapsApiKey" class="form-label">
+                          Google Maps API key
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="googleMapsApiKey"
+                          name="googleMapsApiKey"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#jwtConfigCollapse"
+                  aria-expanded="true"
+                  aria-controls="jwtConfigCollapse"
+                >
+                  JWT configuration
+                </button>
+              </div>
+              <div
+                id="jwtConfigCollapse"
+                class="accordion-collapse collapse"
+                data-bs-parent="#stripeConfigAccardion"
+              >
+                <div class="accordion-body">
+                  <form id="jwtForm">
+                    <div class="row g-3 row-cols-1">
+                      <div class="col">
+                        <label for="jwtSecret" class="form-label">
+                          JWT secret
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="jwtSecret"
+                          name="jwtSecret"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#stripeConfigCollapse"
@@ -69,10 +145,10 @@
                 >
                   Stripe configuration
                 </button>
-              </h2>
+              </div>
               <div
                 id="stripeConfigCollapse"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
                 data-bs-parent="#stripeConfigAccardion"
               >
                 <div class="accordion-body">
@@ -132,7 +208,7 @@
               </div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header">
+              <div class="accordion-header">
                 <button
                   class="accordion-button collapsed"
                   type="button"
@@ -143,7 +219,7 @@
                 >
                   Firebase configuration
                 </button>
-              </h2>
+              </div>
               <div
                 id="firebaseConfigCollapse"
                 class="accordion-collapse collapse"

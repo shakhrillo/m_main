@@ -2,6 +2,15 @@ loadEnvService().then((env) => {
   console.log(env);
   if (typeof env === "object" && Array.isArray(env)) {
     env.forEach((data) => {
+      if (data.name === "maps") {
+        document.querySelector("#googleMapsApiKey").value =
+          data.env.GOOGLE_MAPS_API_KEY;
+      }
+
+      if (data.name === "jwt") {
+        document.querySelector("#jwtSecret").value = data.env.JWT_SECRET;
+      }
+
       if (data.name === "stripe") {
         document.querySelector("#stripeApiKey").value = data.env.STRIPE_API_KEY;
         document.querySelector("#stripeDeviceName").value =
