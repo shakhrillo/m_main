@@ -2,6 +2,16 @@ loadEnvService().then((env) => {
   console.log(env);
   if (typeof env === "object" && Array.isArray(env)) {
     env.forEach((data) => {
+      if (data.name === "main") {
+        document.querySelector("#appId").value = data.env.APP_ID;
+        document.querySelector("#appDockerPort").value =
+          data.env.APP_DOCKER_PORT;
+        document.querySelector("#appClientPort").value =
+          data.env.APP_CLIENT_PORT;
+        document.querySelector("#appServerPort").value =
+          data.env.APP_SERVER_PORT;
+      }
+
       if (data.name === "maps") {
         document.querySelector("#googleMapsApiKey").value =
           data.env.GOOGLE_MAPS_API_KEY;

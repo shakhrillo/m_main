@@ -63,6 +63,78 @@
                   class="accordion-button"
                   type="button"
                   data-bs-toggle="collapse"
+                  data-bs-target="#generalConfigCollapse"
+                  aria-expanded="true"
+                  aria-controls="generalConfigCollapse"
+                >
+                  General configuration
+                </button>
+              </div>
+              <div
+                id="generalConfigCollapse"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#stripeConfigAccardion"
+              >
+                <div class="accordion-body">
+                  <form id="generalForm">
+                    <div class="row g-3 row-cols-1">
+                      <div class="col">
+                        <label for="appId" class="form-label">App Id</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="appId"
+                          name="appId"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="appDockerPort" class="form-label"
+                          >App docker port</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="appDockerPort"
+                          name="appDockerPort"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="appClientPort" class="form-label"
+                          >App client port</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="appClientPort"
+                          name="appClientPort"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="appServerPort" class="form-label"
+                          >App server port</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="appServerPort"
+                          name="appServerPort"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
                   data-bs-target="#googleMapsConfigCollapse"
                   aria-expanded="true"
                   aria-controls="googleMapsConfigCollapse"
@@ -72,7 +144,7 @@
               </div>
               <div
                 id="googleMapsConfigCollapse"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
                 data-bs-parent="#stripeConfigAccardion"
               >
                 <div class="accordion-body">

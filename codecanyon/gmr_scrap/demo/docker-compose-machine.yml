@@ -3,8 +3,8 @@ services:
     build:
       context: ./machine
       dockerfile: Dockerfile
-    container_name: ${PROJECT_ID}-machine
-    image: ${PROJECT_ID}-machine
+    container_name: ${APP_ID}-machine
+    image: ${APP_ID}-machine
     volumes:
       - ./firebase.json:/usr/src/app/firebase.json
       - ./firebasekeys.json:/usr/src/app/firebasekeys.json
@@ -13,9 +13,9 @@ services:
     environment:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
-      DOCKER_PORT: ${DOCKER_PORT}
-      MACHINE_BUILD_IMAGE_NAME: ${PROJECT_ID}
-      FIREBASE_PROJECT_ID: demo-${PROJECT_ID}
+      DOCKER_PORT: ${APP_DOCKER_PORT}
+      MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
+      FIREBASE_APP_ID: demo-${APP_ID}
     networks:
       gmrs-network:
         ipv4_address: ${MACHINE_IPV4_ADDRESS}

@@ -31,6 +31,7 @@ const envPaths = {
   default: path.join(__dirname, "../../.env.dev"),
   stripe: path.join(__dirname, "../../.env.stripe"),
   firebase: path.join(__dirname, "../../.env.firebase"),
+  main: path.join(__dirname, "../../.env.main"),
 };
 
 const env = {
@@ -38,6 +39,7 @@ const env = {
   ...loadEnv(envPaths.default),
   ...loadEnv(envPaths.stripe),
   ...loadEnv(envPaths.firebase),
+  ...loadEnv(envPaths.main),
   ...createNetworkEnv(),
 };
 
