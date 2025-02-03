@@ -19,6 +19,10 @@ const emitMessage = (chunk) => {
 
 const executeCompose = async (config) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {
+    if (action === "buildAll" && config === "docker-compose.yml") {
+      await createNetwork({ emitMessage, env });
+    }
+
     emitMessage(`Executing ${action}...`);
     await compose[action]({
       cwd: sourcePath,
@@ -55,7 +59,6 @@ const dockerBuild = async (req, res) => {
   try {
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
-    await createNetwork({ emitMessage, env });
 
     await executeCompose("docker-compose.yml");
     await Promise.all([
