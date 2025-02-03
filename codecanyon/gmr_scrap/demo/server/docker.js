@@ -10,6 +10,9 @@ const docker = new Docker({
   port: process.env.DOCKER_PORT || 2375,
 });
 
+console.log("Docker host:", process.env.DOCKER_HOST);
+console.log("Docker port:", process.env.DOCKER_PORT);
+
 /**
  * Check for Docker
  * @returns {Promise<boolean>}
@@ -64,6 +67,11 @@ async function watchDockerEvents() {
     const isContainer = data?.Type === "container";
     const isNetwork = data?.Type === "network";
     const isImage = data?.Type === "image";
+
+    if (!name) {
+      console.error("No name found in data:", data);
+      return;
+    }
 
     updateMachine(name, data);
 

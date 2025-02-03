@@ -1,37 +1,67 @@
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
-import { getStorage, connectStorageEmulator } from "firebase/storage";
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  initializeFirestore,
+} from "firebase/firestore";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_APP_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    "AIzaSyAic1Mo91OQaofpFE8VISIAmvZ1azQ-lmc",
+  projectId: import.meta.env.VITE_FIREBASE_APP_ID || "test",
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    `${import.meta.env.VITE_FIREBASE_APP_ID}.firebasestorage.app`,
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    `${import.meta.env.VITE_FIREBASE_APP_ID}.firebaseapp.com`,
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 668777922282,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "test",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Y0Y82432TG",
 };
-console.log(firebaseConfig);
+
+console.log("firebaseConfig", firebaseConfig);
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const firestore = getFirestore();
+// const firestore = initializeFirestore(app, {
+//   experimentalForceLongPolling: true,
+//   useFetchStreams: false,
+// });
 const storage = getStorage(app);
 
 if (import.meta.env.VITE_ENV === "development") {
+  console.log(
+    "connectAuthEmulator",
+    import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION,
+  );
   connectAuthEmulator(
     auth,
-    `http://localhost:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
+    `http://0.0.0.0:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
-  console.log("0", import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE);
+
+  console.log(
+    "connectFirestoreEmulator",
+    import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE,
+  );
   connectFirestoreEmulator(
     firestore,
-    "localhost",
+    "http://0.0.0.0",
     import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE,
+  );
+
+  console.log(
+    "connectStorageEmulator",
+    import.meta.env.VITE_FIREBASE_EMULATOR_STORAGE,
   );
   connectStorageEmulator(
     storage,
-    "localhost",
+    "0.0.0.0",
     import.meta.env.VITE_FIREBASE_EMULATOR_STORAGE,
   );
 }

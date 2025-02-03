@@ -1,3 +1,4 @@
+name: ${APP_ID}
 services:
   machine:
     build:
