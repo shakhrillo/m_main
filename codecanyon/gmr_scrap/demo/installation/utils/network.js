@@ -1,22 +1,36 @@
 const { localDocker } = require("./docker");
 
 const createNetwork = async ({ emitMessage, env }) => {
-  const networkName = `${env.PROJECT_ID}_network`;
+  const networkName = "gmrs-network";
   const networkSubnet = env.NETWORK_SUBNET || "";
 
   try {
     const network = localDocker.getNetwork(networkName);
-    await network
-      .inspect()
-      .then(() => network.remove())
-      .catch(() => {});
-    emitMessage(`**Info:** Removing existing network ${networkName}`);
+    const details = await network.inspect();
+
+    // Disconnect active containers before removal
+    if (details.Containers && Object.keys(details.Containers).length > 0) {
+      emitMessage(`**Info:** Disconnecting containers from ${networkName}`);
+      for (const containerId of Object.keys(details.Containers)) {
+        try {
+          await network.disconnect({ Container: containerId, Force: true });
+          emitMessage(`**Info:** Disconnected container ${containerId}`);
+        } catch (err) {
+          console.error(`Error disconnecting container ${containerId}:`, err);
+        }
+      }
+    }
+
+    await network.remove();
+    emitMessage(`**Info:** Removed existing network ${networkName}`);
   } catch (error) {
-    console.error("Error removing network:", error);
+    if (error.statusCode !== 404) {
+      console.error("Error removing network:", error);
+    }
   }
 
   try {
-    emitMessage("> Checking for existing networks with the same subnet...");
+    emitMessage("Checking for existing networks with the same subnet...");
     const existingNetworks = await localDocker.listNetworks();
     const overlappingNetwork = existingNetworks.find((net) =>
       net.IPAM?.Config?.some((cfg) => cfg.Subnet === networkSubnet)

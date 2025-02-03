@@ -11,7 +11,7 @@ COPY .env firebase.json firestore.indexes.json firestore.rules package*.json sto
 # COPY firebasekeys.json ./firebasekeys.json
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Install Firebase CLI
 RUN npm install -g firebase-tools

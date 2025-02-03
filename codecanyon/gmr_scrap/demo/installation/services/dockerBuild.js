@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const compose = require("docker-compose");
 const env = require("./env");
-const { checkDocker } = require("../utils/docker");
+const { checkDocker, localDocker } = require("../utils/docker");
 const createNetwork = require("../utils/network");
 const checkStripe = require("../utils/stripe");
 const checkMachine = require("../utils/machine");
@@ -19,12 +19,35 @@ const emitMessage = (chunk) => {
 
 const executeCompose = async (config) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {
+    emitMessage(`Executing ${action}...`);
     await compose[action]({
       cwd: sourcePath,
       config,
       env,
       callback: (chunk) => emitMessage(chunk),
     });
+
+    if (action === "downAll" && config === "docker-compose.yml") {
+      for (const img of [
+        `${process.env.PROJECT_ID}-firebase`,
+        `${process.env.PROJECT_ID}-client`,
+        `${process.env.PROJECT_ID}-server`,
+        `${process.env.PROJECT_ID}-machine`,
+      ]) {
+        try {
+          const image = localDocker.getImage(img);
+          const imageInfo = await image.inspect();
+
+          if (imageInfo) {
+            await image.remove({ force: true });
+            emitMessage(`Removed image ${img}`);
+          }
+        } catch (err) {
+          console.log("No image found for", img);
+          emitMessage(`No image found for ${img}`);
+        }
+      }
+    }
   }
 };
 

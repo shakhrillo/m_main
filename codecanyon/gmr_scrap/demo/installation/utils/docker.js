@@ -42,7 +42,7 @@ const checkDocker = async ({ emitMessage }) => {
             return;
           }
 
-          const handleData = (chunk) => {
+          const handleData = async (chunk) => {
             emitMessage(chunk);
 
             if (
@@ -50,7 +50,28 @@ const checkDocker = async ({ emitMessage }) => {
             ) {
               stream.removeListener("data", handleData);
               stream.destroy();
-              resolve("Docker daemon is ready.");
+              try {
+                await dinDocker.pruneContainers({
+                  all: true,
+                  force: true,
+                });
+                await dinDocker.pruneImages({
+                  all: true,
+                  force: true,
+                });
+                await dinDocker.pruneVolumes({
+                  force: true,
+                });
+                await dinDocker.pruneNetworks({
+                  force: true,
+                });
+                emitMessage("Docker daemon is ready.");
+              } catch (err) {
+                emitMessage(err);
+                reject(err);
+              } finally {
+                resolve("Docker daemon is ready.");
+              }
             }
           };
 
