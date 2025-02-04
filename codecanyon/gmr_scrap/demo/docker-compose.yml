@@ -56,7 +56,7 @@ services:
     container_name: ${APP_ID}-server
     image: ${APP_ID}-server
     volumes:
-      - ./server:/usr/src/app
+      # - ./server:/usr/src/app
       - ./stripe-secrets:/usr/src/app/secrets
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
