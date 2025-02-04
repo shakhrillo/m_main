@@ -15,24 +15,10 @@ async function processContainerWritten(event) {
   const ref = event.data.after.ref;
   const data = event.data.after.data();
 
-  const db = admin.firestore();
-  const batch = db.batch();
+  if (false && data.status === "completed") {
+    const db = admin.firestore();
+    const batch = db.batch();
 
-  console.log("processContainerWritten", {
-    // ref,
-    data,
-  });
-
-  // return;
-  // const userRef = db.doc(`users/${data.userId}`);
-  // const userDoc = await userRef.get();
-
-  // if (!userDoc.exists) {
-  //   console.error("User not found");
-  //   return;
-  // }
-
-  if (data.status === "completed") {
     const user = await db
       .collection("users")
       .where("uid", "==", data.userId)
@@ -47,23 +33,23 @@ async function processContainerWritten(event) {
     /*-------------------*/
     /* Update user stats */
     /*-------------------*/
-    const settingsPricesRef = db.doc("settings/prices");
-    const settingsPricesSnap = await settingsPricesRef.get();
-    const settingsPrices = settingsPricesSnap.data();
+    // const settingsPricesRef = db.doc("settings/prices");
+    // const settingsPricesSnap = await settingsPricesRef.get();
+    // const settingsPrices = settingsPricesSnap.data();
 
-    let cost = data.totalReviews * settingsPrices.review;
-    cost += data.totalImages * settingsPrices.image;
-    cost += data.totalVideos * settingsPrices.video;
-    cost += data.totalOwnerReviews * settingsPrices.response;
+    // let cost = data.totalReviews * settingsPrices.review;
+    // cost += data.totalImages * settingsPrices.image;
+    // cost += data.totalVideos * settingsPrices.video;
+    // cost += data.totalOwnerReviews * settingsPrices.response;
 
-    batch.update(userRef, {
-      coinBalance: FieldValue.increment(-cost || 0),
-      totalReviews: FieldValue.increment(data.totalReviews || 0),
-      totalImages: FieldValue.increment(data.totalImages || 0),
-      totalVideos: FieldValue.increment(data.totalVideos || 0),
-      totalOwnerReviews: FieldValue.increment(data.totalOwnerReviews || 0),
-      [`totalValidate${capitalizeText(data.type)}`]: FieldValue.increment(1),
-    });
+    // batch.update(userRef, {
+    //   coinBalance: FieldValue.increment(-cost || 0),
+    //   totalReviews: FieldValue.increment(data.totalReviews || 0),
+    //   totalImages: FieldValue.increment(data.totalImages || 0),
+    //   totalVideos: FieldValue.increment(data.totalVideos || 0),
+    //   totalOwnerReviews: FieldValue.increment(data.totalOwnerReviews || 0),
+    //   [`totalValidate${capitalizeText(data.type)}`]: FieldValue.increment(1),
+    // });
 
     /*-------------------*/
     /* Update statistics */
@@ -79,7 +65,7 @@ async function processContainerWritten(event) {
       // batch.update(statisticsRef, {
       //   total: FieldValue.increment(data[type] || 0),
       // });
-      updateStatistics(db, batch, type, data);
+      // updateStatistics(db, batch, type, data);
     });
 
     // batch.update(
@@ -88,25 +74,12 @@ async function processContainerWritten(event) {
     //     total: FieldValue.increment(1),
     //   }
     // );
-  }
 
-  /*-------------------*/
-  /* Update container  */
-  /*-------------------*/
-  // const docRef = db.doc(`users/${data.userId}/reviews/${data.reviewId}`);
-  // batch.update(docRef, {
-  //   ...data,
-  //   updatedAt: Timestamp.now(),
-  // });
-  // batch.update(ref, {
-  //   ...data,
-  //   updatedAt: Timestamp.now(),
-  // });
-
-  try {
-    await batch.commit();
-  } catch (error) {
-    console.error("Error updating container", error);
+    try {
+      await batch.commit();
+    } catch (error) {
+      console.error("Error updating container", error);
+    }
   }
 }
 
