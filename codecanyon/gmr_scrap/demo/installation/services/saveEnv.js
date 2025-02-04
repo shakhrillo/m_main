@@ -19,12 +19,10 @@ const saveEnv = (req, res) => {
 
     res.json({ message: "Environment file saved successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Failed to save environment file",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Failed to save environment file",
+      details: error.message,
+    });
   }
 };
 

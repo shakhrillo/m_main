@@ -5,6 +5,7 @@ const dockerBuild = require("./installation/services/dockerBuild");
 const { initializeSocket } = require("./installation/utils/socket");
 const loadEnv = require("./installation/services/loadEnv");
 const saveEnv = require("./installation/services/saveEnv");
+const saveJSON = require("./installation/services/saveJSON");
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,21 @@ app.get("/", (req, res) => {
 app.post("/docker-build", dockerBuild);
 app.get("/load-env", loadEnv);
 app.post("/save-env", saveEnv);
+app.post("/save-json", saveJSON);
+app.get("/load-json/:name", (req, res) => {
+  const { name } = req.params;
+  const filePath = path.join(__dirname, `${name}.json`);
+
+  try {
+    const json = require(filePath);
+    res.json(json);
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to load JSON file",
+      details: error.message,
+    });
+  }
+});
 
 server.listen(3000, () => {
   console.log(`Server is running on http://localhost:3000`);

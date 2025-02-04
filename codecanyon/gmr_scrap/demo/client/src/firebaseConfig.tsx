@@ -13,14 +13,10 @@ const firebaseConfig = {
   measurementId: `${import.meta.env.VITE_FIREBASE_MEASUREMENT_ID}`,
 };
 
-console.log("firebaseConfig", firebaseConfig);
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const firestore = getFirestore();
 const storage = getStorage(app);
-
-console.log("import.meta.env", import.meta.env);
 
 if (import.meta.env.VITE_ENV === "development") {
   connectAuthEmulator(

@@ -21,4 +21,7 @@ const buildDockerService = () => fetchService("/docker-build");
 const startContainersService = () => fetchService("/containers-start");
 const saveEnvService = (name, env) =>
   fetchService("/save-env", "POST", { name, env });
+const saveJSONService = (name, json) =>
+  fetchService("/save-json", "POST", { name, json });
 const loadEnvService = () => fetchService(`/load-env`, "GET");
+const loadJSONService = (name) => fetchService(`/load-json/${name}`, "GET");

@@ -2,7 +2,6 @@ const admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 const { executeScraping } = require("../services/mainService");
 const updateStatistics = require("../services/statisticsService");
-1;
 
 /**
  * Once a review is created, this function will be triggered.
@@ -23,15 +22,6 @@ async function processContainerCreated(event) {
     const tag = [type, uid, containerId].join("_").toLowerCase();
     const createdAt = Timestamp.now();
     const updatedAt = createdAt;
-
-    // console.log("processContainerCreated", {
-    //   ref,
-    //   data,
-    //   containerId,
-    //   tag,
-    //   createdAt,
-    //   updatedAt,
-    // });
 
     const db = admin.firestore();
     const batch = db.batch();
