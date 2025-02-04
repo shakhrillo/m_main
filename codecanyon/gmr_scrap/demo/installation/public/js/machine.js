@@ -69,8 +69,11 @@ document
     await saveEnv("#jwtForm", "jwt");
     await saveEnv("#stripeForm", "stripe");
     await saveEnv("#firebaseEmulatorForm", "firebase");
-    await saveJSON("#firebaseConfigForm", "firebaseConfig");
-    await saveJSON("#firebaseServiceAccountForm", "firebaseServiceAccount");
+    await saveJSON("#firebaseConfigForm", "client/firebaseConfig.json");
+    await saveJSON(
+      "#firebaseServiceAccountForm",
+      "firebaseServiceAccount.json"
+    );
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

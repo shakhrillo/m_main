@@ -24,4 +24,4 @@ const saveEnvService = (name, env) =>
 const saveJSONService = (name, json) =>
   fetchService("/save-json", "POST", { name, json });
 const loadEnvService = () => fetchService(`/load-env`, "GET");
-const loadJSONService = (name) => fetchService(`/load-json/${name}`, "GET");
+const loadJSONService = (name) => fetchService(`/load-json`, "POST", { name });

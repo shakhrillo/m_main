@@ -9,7 +9,7 @@ const saveJSON = (req, res) => {
     }
 
     const sourcePath = path.resolve(__dirname, "../../");
-    const filePath = path.join(sourcePath, `${name}.json`);
+    const filePath = path.join(sourcePath, name);
 
     fs.writeFileSync(filePath, JSON.stringify(json, null, 2), "utf-8");
 

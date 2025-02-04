@@ -24,9 +24,9 @@ app.post("/docker-build", dockerBuild);
 app.get("/load-env", loadEnv);
 app.post("/save-env", saveEnv);
 app.post("/save-json", saveJSON);
-app.get("/load-json/:name", (req, res) => {
-  const { name } = req.params;
-  const filePath = path.join(__dirname, `${name}.json`);
+app.post("/load-json", (req, res) => {
+  const { name } = req.body;
+  const filePath = path.join(__dirname, name);
 
   try {
     const json = require(filePath);

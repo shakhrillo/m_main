@@ -54,7 +54,7 @@ loadEnvService().then((env) => {
   }
 });
 
-loadJSONService("firebaseConfig").then((json) => {
+loadJSONService("client/firebaseConfig.json").then((json) => {
   if (typeof json === "object") {
     document.querySelector("#firebaseConfig").value = JSON.stringify(
       json,
@@ -64,7 +64,7 @@ loadJSONService("firebaseConfig").then((json) => {
   }
 });
 
-loadJSONService("firebaseServiceAccount").then((json) => {
+loadJSONService("firebaseServiceAccount.json").then((json) => {
   if (typeof json === "object") {
     document.querySelector("#firebaseServiceAccount").value = JSON.stringify(
       json,
