@@ -17,4 +17,4 @@ RUN npm install --legacy-peer-deps --no-audit --progress=false
 EXPOSE 1337
 
 # Specify the default command to start the application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
