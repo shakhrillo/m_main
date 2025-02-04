@@ -172,7 +172,3 @@ reviews/*.json
 reviews/**/*.json
 
 .vscode/
-border_app/
-BORDER_POINTS/
-FB/
-FOLIUM_BACK
