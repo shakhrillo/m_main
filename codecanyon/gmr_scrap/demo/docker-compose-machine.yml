@@ -16,7 +16,7 @@ services:
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
       DOCKER_PORT: ${APP_DOCKER_PORT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
-      FIREBASE_APP_ID: demo-${APP_ID}
+      FIREBASE_APP_ID: ${FIREBASE_APP_ID}
     networks:
       gmrs-network:
         ipv4_address: ${MACHINE_IPV4_ADDRESS}

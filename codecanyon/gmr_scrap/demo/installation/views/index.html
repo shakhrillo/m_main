@@ -79,6 +79,18 @@
                   <form id="generalForm">
                     <div class="row g-3 row-cols-1">
                       <div class="col">
+                        <label for="appEnvionment" class="form-label"
+                          >Environment</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="appEnvionment"
+                          name="appEnvionment"
+                          required
+                        />
+                      </div>
+                      <div class="col">
                         <label for="appId" class="form-label">App Id</label>
                         <input
                           type="text"
@@ -301,6 +313,96 @@
                   <form id="firebaseForm">
                     <div class="row g-3 row-cols-1">
                       <div class="col">
+                        <label for="firebaseApiKey" class="form-label">
+                          Firebase API key
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseApiKey"
+                          name="firebaseApiKey"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseAuthDomain" class="form-label">
+                          Firebase auth domain
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseAuthDomain"
+                          name="firebaseAuthDomain"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseProjectId" class="form-label">
+                          Firebase project ID
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseProjectId"
+                          name="firebaseProjectId"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseStorageBucket" class="form-label">
+                          Firebase storage bucket
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseStorageBucket"
+                          name="firebaseStorageBucket"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label
+                          for="firebaseMessagingSenderId"
+                          class="form-label"
+                        >
+                          Firebase messaging sender ID
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseMessagingSenderId"
+                          name="firebaseMessagingSenderId"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseAppId" class="form-label">
+                          Firebase app ID
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseAppId"
+                          name="firebaseAppId"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <label for="firebaseMeasurementId" class="form-label">
+                          Firebase measurement ID
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firebaseMeasurementId"
+                          name="firebaseMeasurementId"
+                          required
+                        />
+                      </div>
+                      <div class="col">
+                        <hr />
+                      </div>
+                      <div class="col">
                         <label
                           for="firebaseEmulatorAuthentication"
                           class="form-label"
@@ -388,9 +490,26 @@
             </div>
           </div>
 
-          <button class="ms-auto btn btn-primary w-100 mt-3" id="buildDocker">
-            Start build
-          </button>
+          <div class="card mt-3">
+            <div class="card-body">
+              <form id="buildForm">
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="enableEmulator"
+                  />
+                  <label class="form-check-label" for="enableEmulator">
+                    Enable emulator
+                  </label>
+                </div>
+                <button class="ms-auto btn btn-primary" id="buildDocker">
+                  Start build
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>

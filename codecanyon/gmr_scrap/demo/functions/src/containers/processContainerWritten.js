@@ -12,13 +12,18 @@ const updateStatistics = require("../services/statisticsService");
  * @returns {Promise<void>}
  */
 async function processContainerWritten(event) {
-  console.log("processContainerWritten");
-  return;
   const ref = event.data.after.ref;
   const data = event.data.after.data();
 
   const db = admin.firestore();
   const batch = db.batch();
+
+  console.log("processContainerWritten", {
+    // ref,
+    data,
+  });
+
+  // return;
   // const userRef = db.doc(`users/${data.userId}`);
   // const userDoc = await userRef.get();
 
@@ -93,10 +98,10 @@ async function processContainerWritten(event) {
   //   ...data,
   //   updatedAt: Timestamp.now(),
   // });
-  batch.update(ref, {
-    ...data,
-    updatedAt: Timestamp.now(),
-  });
+  // batch.update(ref, {
+  //   ...data,
+  //   updatedAt: Timestamp.now(),
+  // });
 
   try {
     await batch.commit();

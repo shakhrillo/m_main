@@ -24,14 +24,14 @@ async function processContainerCreated(event) {
     const createdAt = Timestamp.now();
     const updatedAt = createdAt;
 
-    console.log("processContainerCreated", {
-      ref,
-      data,
-      containerId,
-      tag,
-      createdAt,
-      updatedAt,
-    });
+    // console.log("processContainerCreated", {
+    //   ref,
+    //   data,
+    //   containerId,
+    //   tag,
+    //   createdAt,
+    //   updatedAt,
+    // });
 
     const db = admin.firestore();
     const batch = db.batch();
@@ -63,6 +63,15 @@ async function processContainerCreated(event) {
     /* Create container  */
     /*-------------------*/
     batch.set(ref, {
+      ...data,
+      containerId,
+      status: "pending",
+      tag,
+      createdAt,
+      updatedAt,
+    });
+
+    console.log("processContainerCreated", {
       ...data,
       containerId,
       status: "pending",

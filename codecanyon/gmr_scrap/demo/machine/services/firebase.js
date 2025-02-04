@@ -9,7 +9,7 @@
  *
  * Environment Variables:
  * - `NODE_ENV` - Specifies the environment mode.
- * - `FIREBASE_APP_ID` - Specifies the Firebase project ID.
+ * - `FIREBASE_PROJECT_ID` - Specifies the Firebase project ID.
  * - `FIREBASE_URL` - Specifies the Firebase URL.
  * - `FIREBASE_KEYS_PATH` - Specifies the path to the Firebase keys file.
  *
@@ -34,7 +34,7 @@ const path = require("path");
 
 // Constants
 const environment = process.env.NODE_ENV || "development";
-const firebaseProjectId = process.env.FIREBASE_APP_ID;
+const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const firebaseUrl = process.env.FIREBASE_URL || "127.0.0.1";
 const firebasekeysPath = path.resolve(__dirname, "../firebasekeys.json");
 

@@ -2,6 +2,12 @@ loadEnvService().then((env) => {
   if (typeof env === "object" && Array.isArray(env)) {
     env.forEach((data) => {
       if (data.name === "main") {
+        document
+          .querySelector("#enableEmulator")
+          .setAttribute("checked", data.env.APP_ENVIONMENT === "development");
+
+        document.querySelector("#appEnvionment").value =
+          data.env.APP_ENVIONMENT;
         document.querySelector("#appId").value = data.env.APP_ID;
         document.querySelector("#appDockerPort").value =
           data.env.APP_DOCKER_PORT;
@@ -31,6 +37,20 @@ loadEnvService().then((env) => {
       }
 
       if (data.name === "firebase") {
+        document.querySelector("#firebaseApiKey").value =
+          data.env.FIREBASE_API_KEY;
+        document.querySelector("#firebaseAuthDomain").value =
+          data.env.FIREBASE_AUTH_DOMAIN;
+        document.querySelector("#firebaseProjectId").value =
+          data.env.FIREBASE_PROJECT_ID;
+        document.querySelector("#firebaseStorageBucket").value =
+          data.env.FIREBASE_STORAGE_BUCKET;
+        document.querySelector("#firebaseMessagingSenderId").value =
+          data.env.FIREBASE_MESSAGING_SENDER_ID;
+        document.querySelector("#firebaseAppId").value =
+          data.env.FIREBASE_APP_ID;
+        document.querySelector("#firebaseMeasurementId").value =
+          data.env.FIREBASE_MEASUREMENT_ID;
         document.querySelector("#firebaseEmulatorAuthentication").value =
           data.env.FIREBASE_EMULATOR_AUTHENTICATION;
         document.querySelector("#firebaseEmulatorUI").value =

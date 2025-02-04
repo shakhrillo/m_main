@@ -42,3 +42,21 @@ document
       btn.innerHTML = `<i class="ti ti-circle-x"></i> Rerun`;
     }
   });
+
+document
+  .querySelector("#enableEmulator")
+  .addEventListener("click", async (event) => {
+    const appEnvionment = document.querySelector("#appEnvionment");
+    const isChecked = event.target.checked;
+    const firebaseForm = document.querySelector("#firebaseForm");
+    const children = firebaseForm.querySelectorAll("input");
+
+    // children.forEach((child) => {
+    //   const id = child.getAttribute("id").toUpperCase();
+    //   if (id.includes("EMULATOR")) {
+    //     child.disabled = isChecked;
+    //   }
+    // });
+
+    appEnvionment.value = isChecked ? "development" : "production";
+  });

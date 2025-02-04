@@ -5,7 +5,8 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 # Copy Firebase configuration files
-COPY .env firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
+# COPY .env.firestore .env.firestore
+COPY .env.firebase firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
 
 # Copy the Service Account Key (make sure it is already present in the build context)
 # COPY firebasekeys.json ./firebasekeys.json
@@ -26,7 +27,7 @@ COPY functions ./functions
 RUN cd functions && npm install --legacy-peer-deps && cd ..
 
 # Copy env to workdir
-COPY .env.main .env
+# COPY .env.firebase .env
 
 COPY firebase.sh /usr/src/app/firebase.sh
 RUN chmod +x /usr/src/app/firebase.sh
