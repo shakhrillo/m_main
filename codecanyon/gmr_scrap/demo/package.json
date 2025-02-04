@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "connect-livereload": "^0.6.1",
+    "cross-env": "^7.0.3",
     "docker-compose": "^1.1.0",
     "livereload": "^0.9.3"
   }
