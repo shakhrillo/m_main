@@ -27,7 +27,10 @@ const checkFirebase = async ({ env, emitMessage }) => {
           const handleData = (chunk) => {
             emitMessage("[firebase]: " + chunk);
 
-            if (chunk.toString().includes("All emulators ready!")) {
+            if (
+              chunk.toString().includes("All emulators ready!") ||
+              chunk.toString().includes("Deploy complete!")
+            ) {
               stream.removeListener("data", handleData);
               stream.destroy();
               resolve("Firebase emulator is ready. You can now run the tests.");

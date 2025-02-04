@@ -2,38 +2,41 @@ loadEnvService().then((env) => {
   if (typeof env === "object" && Array.isArray(env)) {
     env.forEach((data) => {
       if (data.name === "main") {
-        document
-          .querySelector("#enableEmulator")
-          .setAttribute("checked", data.env.APP_ENVIONMENT === "development");
+        const enableEmulator = document.querySelector("#enableEmulator");
+        if (data.env.APP_ENVIRONMENT === "development") {
+          enableEmulator.setAttribute("checked", true);
+        }
 
-        document.querySelector("#appEnvionment").value =
-          data.env.APP_ENVIONMENT;
-        document.querySelector("#appId").value = data.env.APP_ID;
+        document.querySelector("#appEnvironment").value =
+          data.env.APP_ENVIRONMENT || "development";
+        document.querySelector("#appId").value = data.env.APP_ID || "gmr_scrap";
         document.querySelector("#appDockerPort").value =
-          data.env.APP_DOCKER_PORT;
+          data.env.APP_DOCKER_PORT || 3000;
         document.querySelector("#appClientPort").value =
-          data.env.APP_CLIENT_PORT;
+          data.env.APP_CLIENT_PORT || 3001;
         document.querySelector("#appServerPort").value =
-          data.env.APP_SERVER_PORT;
+          data.env.APP_SERVER_PORT || 3002;
       }
 
       if (data.name === "maps") {
         document.querySelector("#googleMapsApiKey").value =
-          data.env.GOOGLE_MAPS_API_KEY;
+          data.env.GOOGLE_MAPS_API_KEY || "";
       }
 
       if (data.name === "jwt") {
-        document.querySelector("#jwtSecret").value = data.env.JWT_SECRET;
+        document.querySelector("#jwtSecret").value =
+          data.env.JWT_SECRET || new Date().getTime();
       }
 
       if (data.name === "stripe") {
-        document.querySelector("#stripeApiKey").value = data.env.STRIPE_API_KEY;
+        document.querySelector("#stripeApiKey").value =
+          data.env.STRIPE_API_KEY || "";
         document.querySelector("#stripeDeviceName").value =
-          data.env.STRIPE_DEVICE_NAME;
+          data.env.STRIPE_DEVICE_NAME || "";
         document.querySelector("#stripeSuccessUrl").value =
-          data.env.STRIPE_SUCCESS_URL;
+          data.env.STRIPE_SUCCESS_URL || "";
         document.querySelector("#stripeCancelUrl").value =
-          data.env.STRIPE_CANCEL_URL;
+          data.env.STRIPE_CANCEL_URL || "";
       }
 
       if (data.name === "firebase") {

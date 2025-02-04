@@ -91,10 +91,10 @@ document
 document
   .querySelector("#enableEmulator")
   .addEventListener("click", async (event) => {
-    const appEnvionment = document.querySelector("#appEnvionment");
+    const appEnvionment = document.querySelector("#appEnvironment");
     const isChecked = event.target.checked;
-    const firebaseForm = document.querySelector("#firebaseForm");
-    const children = firebaseForm.querySelectorAll("input");
+    // const firebaseForm = document.querySelector("#firebaseForm");
+    // const children = firebaseForm.querySelectorAll("input");
 
     // children.forEach((child) => {
     //   const id = child.getAttribute("id").toUpperCase();

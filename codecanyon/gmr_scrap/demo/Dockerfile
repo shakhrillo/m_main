@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 # Copy Firebase configuration files
 # COPY .env.firestore .env.firestore
-COPY .env.firebase firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
+COPY .env.firebase .env.main firebaseServiceAccount.json firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
 
 # Copy the Service Account Key (make sure it is already present in the build context)
 # COPY firebasekeys.json ./firebasekeys.json
@@ -24,7 +24,14 @@ COPY data ./data
 
 # Copy and install functions dependencies
 COPY functions ./functions
+# Delete node_modules to avoid conflicts
+RUN rm -rf functions/node_modules
+# Remove package-lock.json to avoid conflicts
 RUN cd functions && npm install --legacy-peer-deps && cd ..
+
+
+RUN rm package-lock.json
+RUN rm functions/package-lock.json
 
 # Copy env to workdir
 # COPY .env.firebase .env

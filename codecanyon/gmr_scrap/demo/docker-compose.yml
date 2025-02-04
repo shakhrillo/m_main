@@ -36,7 +36,6 @@ services:
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
     environment:
-      FIREBASE_APP_ID: ${FIREBASE_APP_ID}
       SERVER_IP: ${SERVER_IPV4_ADDRESS}
       SERVER_PORT: ${APP_SERVER_PORT}
       JWT_SECRET: ${JWT_SECRET}
@@ -62,7 +61,7 @@ services:
       - ./firebase.json:/usr/src/firebase.json
       - ./firebasekeys.json:/usr/src/firebasekeys.json
     environment:
-      NODE_ENV: ${APP_ENVIONMENT}
+      NODE_ENV: ${APP_ENVIRONMENT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
 
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
@@ -93,7 +92,7 @@ services:
     container_name: ${APP_ID}-client
     image: ${APP_ID}-client
     environment:
-      VITE_ENV: ${APP_ENVIONMENT}
+      VITE_ENV: ${APP_ENVIRONMENT}
       VITE_FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
       VITE_FIREBASE_EMULATOR_STORAGE: ${FIREBASE_EMULATOR_STORAGE}
       VITE_FIREBASE_EMULATOR_AUTHENTICATION: ${FIREBASE_EMULATOR_AUTHENTICATION}
