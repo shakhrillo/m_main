@@ -78,7 +78,7 @@ document
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      // await buildDockerService();
+      await buildDockerService();
       btn.innerHTML = `<i class="ti ti-circle-check"></i> Done`;
     } catch (error) {
       console.error("Error building Docker:", error);
