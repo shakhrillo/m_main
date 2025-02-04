@@ -36,7 +36,10 @@ const path = require("path");
 const environment = process.env.NODE_ENV || "development";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const firebaseUrl = process.env.FIREBASE_URL || "127.0.0.1";
-const firebasekeysPath = path.resolve(__dirname, "../firebasekeys.json");
+const firebasekeysPath = path.resolve(
+  __dirname,
+  "../firebaseServiceAccount.json"
+);
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({

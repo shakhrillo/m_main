@@ -59,7 +59,7 @@ services:
       # - ./server:/usr/src/app
       - ./stripe-secrets:/usr/src/app/secrets
       - ./firebase.json:/usr/src/firebase.json
-      - ./firebasekeys.json:/usr/src/firebasekeys.json
+      - ./firebaseServiceAccount.json:/usr/src/firebaseServiceAccount.json
     environment:
       NODE_ENV: ${APP_ENVIRONMENT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}

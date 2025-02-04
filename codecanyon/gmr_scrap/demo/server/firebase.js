@@ -6,7 +6,10 @@ const environment = process.env.NODE_ENV || "development";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
 
-const firebasekeysPath = path.resolve(__dirname, "../firebasekeys.json");
+const firebasekeysPath = path.resolve(
+  __dirname,
+  "../firebaseServiceAccount.json"
+);
 
 admin.initializeApp({
   projectId: firebaseProjectId,
