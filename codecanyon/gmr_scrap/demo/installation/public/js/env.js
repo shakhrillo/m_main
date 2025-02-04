@@ -37,32 +37,18 @@ loadEnvService().then((env) => {
       }
 
       if (data.name === "firebase") {
-        // document.querySelector("#firebaseApiKey").value =
-        //   data.env.FIREBASE_API_KEY;
-        // document.querySelector("#firebaseAuthDomain").value =
-        //   data.env.FIREBASE_AUTH_DOMAIN;
-        // document.querySelector("#firebaseProjectId").value =
-        //   data.env.FIREBASE_PROJECT_ID;
-        // document.querySelector("#firebaseStorageBucket").value =
-        //   data.env.FIREBASE_STORAGE_BUCKET;
-        // document.querySelector("#firebaseMessagingSenderId").value =
-        //   data.env.FIREBASE_MESSAGING_SENDER_ID;
-        // document.querySelector("#firebaseAppId").value =
-        //   data.env.FIREBASE_APP_ID;
-        // document.querySelector("#firebaseMeasurementId").value =
-        //   data.env.FIREBASE_MEASUREMENT_ID;
-        // document.querySelector("#firebaseEmulatorAuthentication").value =
-        //   data.env.FIREBASE_EMULATOR_AUTHENTICATION;
-        // document.querySelector("#firebaseEmulatorUI").value =
-        //   data.env.FIREBASE_EMULATOR_UI;
-        // document.querySelector("#firebaseEmulatorFunctions").value =
-        //   data.env.FIREBASE_EMULATOR_FUNCTIONS;
-        // document.querySelector("#firebaseEmulatorFirestore").value =
-        //   data.env.FIREBASE_EMULATOR_FIRESTORE;
-        // document.querySelector("#firebaseEmulatorStorage").value =
-        //   data.env.FIREBASE_EMULATOR_STORAGE;
-        // document.querySelector("#firebaseEmulatorHub").value =
-        //   data.env.FIREBASE_EMULATOR_HUB;
+        document.querySelector("#firebaseEmulatorAuthentication").value =
+          data.env.FIREBASE_EMULATOR_AUTHENTICATION || 9099;
+        document.querySelector("#firebaseEmulatorUI").value =
+          data.env.FIREBASE_EMULATOR_UI || 4000;
+        document.querySelector("#firebaseEmulatorFunctions").value =
+          data.env.FIREBASE_EMULATOR_FUNCTIONS || 5001;
+        document.querySelector("#firebaseEmulatorFirestore").value =
+          data.env.FIREBASE_EMULATOR_FIRESTORE || 8080;
+        document.querySelector("#firebaseEmulatorStorage").value =
+          data.env.FIREBASE_EMULATOR_STORAGE || 9199;
+        document.querySelector("#firebaseEmulatorHub").value =
+          data.env.FIREBASE_EMULATOR_HUB || 4400;
       }
     });
   }
@@ -71,6 +57,16 @@ loadEnvService().then((env) => {
 loadJSONService("firebaseConfig").then((json) => {
   if (typeof json === "object") {
     document.querySelector("#firebaseConfig").value = JSON.stringify(
+      json,
+      null,
+      2
+    );
+  }
+});
+
+loadJSONService("firebaseServiceAccount").then((json) => {
+  if (typeof json === "object") {
+    document.querySelector("#firebaseServiceAccount").value = JSON.stringify(
       json,
       null,
       2

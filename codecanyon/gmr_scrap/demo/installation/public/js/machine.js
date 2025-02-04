@@ -68,6 +68,7 @@ document
     await saveEnv("#googleMapsForm", "maps");
     await saveEnv("#jwtForm", "jwt");
     await saveEnv("#stripeForm", "stripe");
+    await saveEnv("#firebaseEmulatorForm", "firebase");
     await saveJSON("#firebaseConfigForm", "firebaseConfig");
     await saveJSON("#firebaseServiceAccountForm", "firebaseServiceAccount");
 
