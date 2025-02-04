@@ -1,14 +1,12 @@
 {
-  "name": "server",
+  "name": "gmrs_server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server for GMR Scrap",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "shakhrillo",
   "dependencies": {
     "@google-cloud/compute": "^4.8.0",
     "cors": "^2.8.5",
