@@ -4,8 +4,8 @@
   "description": "GMR Scrap Installation",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "server": "NODE_ENV=server node index.js"
+    "dev": "node index.js",
+    "start": "NODE_ENV=server node index.js"
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.11.1",
