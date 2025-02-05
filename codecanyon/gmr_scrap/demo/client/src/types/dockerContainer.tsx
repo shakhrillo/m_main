@@ -35,4 +35,6 @@ export interface IDockerContainer {
   outputAs?: "json" | "csv";
   csvUrl?: string;
   jsonUrl?: string;
+
+  Action?: string;
 }

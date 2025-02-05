@@ -7,23 +7,25 @@ import { IDockerContainer } from "../types/dockerContainer";
  */
 export const DockerContainerAction = ({ info }: { info: IDockerContainer }) => {
   return (
-    <div className="d-flex">
-      <span
-        className={
-          `badge ` +
-          (info.Action === "start"
-            ? "bg-success"
+    info.Action && (
+      <div className="d-flex">
+        <span
+          className={
+            `badge ` +
+            (info.Action === "start"
+              ? "bg-success"
+              : info.Action === "destroy"
+                ? "bg-danger"
+                : "bg-primary")
+          }
+        >
+          {info.Action === "start"
+            ? "Started"
             : info.Action === "destroy"
-              ? "bg-danger"
-              : "bg-primary")
-        }
-      >
-        {info.Action === "start"
-          ? "Started"
-          : info.Action === "destroy"
-            ? "Deleted"
-            : info.Action}
-      </span>
-    </div>
+              ? "Deleted"
+              : info.Action}
+        </span>
+      </div>
+    )
   );
 };
