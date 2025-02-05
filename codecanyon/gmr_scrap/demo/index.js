@@ -19,7 +19,6 @@ global.io = initializeSocket(server);
 
 app.use("/node_modules", express.static(path.join(__dirname, "node_modules")));
 app.use(express.static(publicPath));
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });

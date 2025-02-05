@@ -1,6 +1,7 @@
 const fetchService = async (url, method = "POST", body) => {
+  const currentUrl = window.location.href;
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`${currentUrl}${url}`, {
       method,
       headers: body ? { "Content-Type": "application/json" } : undefined,
       body: body ? JSON.stringify(body) : undefined,
@@ -17,11 +18,11 @@ const fetchService = async (url, method = "POST", body) => {
   }
 };
 
-const buildDockerService = () => fetchService("/docker-build");
-const startContainersService = () => fetchService("/containers-start");
+const buildDockerService = () => fetchService("docker-build");
+const startContainersService = () => fetchService("containers-start");
 const saveEnvService = (name, env) =>
-  fetchService("/save-env", "POST", { name, env });
+  fetchService("save-env", "POST", { name, env });
 const saveJSONService = (name, json) =>
-  fetchService("/save-json", "POST", { name, json });
-const loadEnvService = () => fetchService(`/load-env`, "GET");
-const loadJSONService = (name) => fetchService(`/load-json`, "POST", { name });
+  fetchService("save-json", "POST", { name, json });
+const loadEnvService = () => fetchService("load-env", "GET");
+const loadJSONService = (name) => fetchService("load-json", "POST", { name });
