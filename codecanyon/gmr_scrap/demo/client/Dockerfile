@@ -5,6 +5,6 @@ RUN npm install --legacy-peer-deps --no-audit --progress=false
 COPY . .
 EXPOSE 4200
 
-RUN echo "Starting the client"
+RUN echo "Starting start script"
 
 CMD ["npm", "run", "start"]
