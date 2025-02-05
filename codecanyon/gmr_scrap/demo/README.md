@@ -34,3 +34,8 @@ sudo ln -s /opt/homebrew/etc/nginx/sites-available/demo /opt/homebrew/etc/nginx/
 
 <!-- sudo ln -s /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/nginx.conf /etc/nginx/sites-available/demo
 sudo ln -s /etc/nginx/sites-available/demo /etc/nginx/sites-enabled/ -->
+
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /root/m_main/codecanyon/gmr_scrap/demo/nginx.conf /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
