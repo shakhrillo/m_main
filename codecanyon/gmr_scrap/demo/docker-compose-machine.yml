@@ -21,8 +21,6 @@ services:
       gmrs-network:
         ipv4_address: ${MACHINE_IPV4_ADDRESS}
     restart: "no"
-    # Need to run inside docker
-    entrypoint: ["npm", "run", "init"]
 
 networks:
   gmrs-network:

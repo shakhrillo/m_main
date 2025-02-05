@@ -1,7 +1,13 @@
 const axios = require("axios");
-const baseURL = `http://${process.env.SERVER_IP || "host.docker.internal"}:${
+
+let baseURL = `http://${process.env.SERVER_IP || "host.docker.internal"}:${
   process.env.SERVER_PORT || 1337
 }`;
+
+if (process.env.APP_ENVIRONMENT === "production") {
+  baseURL = `https://api.example.com`;
+} else {
+}
 
 const axiosInstance = axios.create({
   baseURL,

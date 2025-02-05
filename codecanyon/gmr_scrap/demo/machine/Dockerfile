@@ -17,4 +17,4 @@ COPY package.json .
 RUN npm install
 
 COPY . .
-# COPY firebase.json firebasekeys.json ../
+CMD ["npm", "run", "init"]

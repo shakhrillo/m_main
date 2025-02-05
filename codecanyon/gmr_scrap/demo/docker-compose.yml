@@ -36,6 +36,7 @@ services:
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
     environment:
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       SERVER_IP: ${SERVER_IPV4_ADDRESS}
       SERVER_PORT: ${APP_SERVER_PORT}
       JWT_SECRET: ${JWT_SECRET}
