@@ -6,18 +6,22 @@ const { initializeSocket } = require("./installation/utils/socket");
 const loadEnv = require("./installation/services/loadEnv");
 const saveEnv = require("./installation/services/saveEnv");
 const saveJSON = require("./installation/services/saveJSON");
+const loadAssets = require("./installation/services/assets");
+
+loadAssets();
+const publicPath = path.join(__dirname, "installation", "public");
 
 const app = express();
 app.use(express.json());
-app.use("/node_modules", express.static(path.join(__dirname, "node_modules")));
 
 const server = createServer(app);
 global.io = initializeSocket(server);
 
-const sourcePath = path.join(__dirname, "installation");
-app.use(express.static(path.join(sourcePath, "public")));
+app.use("/node_modules", express.static(path.join(__dirname, "node_modules")));
+app.use(express.static(publicPath));
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(sourcePath, "views", "index.html"));
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 app.post("/docker-build", dockerBuild);
