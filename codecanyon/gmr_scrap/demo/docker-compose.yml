@@ -92,6 +92,7 @@ services:
     container_name: ${APP_ID}-client
     image: ${APP_ID}-client
     environment:
+      NODE_ENV: ${APP_ENVIRONMENT}
       VITE_ENV: ${APP_ENVIRONMENT}
       VITE_FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
       VITE_FIREBASE_EMULATOR_STORAGE: ${FIREBASE_EMULATOR_STORAGE}
