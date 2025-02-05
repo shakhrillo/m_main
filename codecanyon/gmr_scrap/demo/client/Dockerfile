@@ -4,4 +4,7 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps --no-audit --progress=false
 COPY . .
 EXPOSE 4200
+
+RUN echo "Starting the client"
+
 CMD ["npm", "run", "start"]
