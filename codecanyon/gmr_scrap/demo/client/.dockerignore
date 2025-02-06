@@ -19,7 +19,7 @@ vendor/
 .env.*.local
 
 # Build output
-dist/
+# dist/
 build/
 *.out
 *.class
