@@ -19,8 +19,12 @@ const spinner = ora({
  * @param {string} message The message to log.
  */
 function log(message) {
-  if (!spinner.isSpinning || !message || typeof message !== "string") {
+  if (!spinner.isSpinning || !message) {
     return;
+  }
+
+  if (typeof message !== "string") {
+    message = JSON.stringify(message);
   }
 
   try {
