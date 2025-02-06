@@ -47,7 +47,8 @@ function removeUnusedImages() {
 
 function startContainer(options) {
   return new Promise((resolve, reject) => {
-    docker.createContainer(options, (err, container) => {
+    const d = getDocker();
+    d.createContainer(options, (err, container) => {
       if (err) {
         console.log(err);
         reject(err);
