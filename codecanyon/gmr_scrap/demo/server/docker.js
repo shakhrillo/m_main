@@ -4,10 +4,15 @@ const {
   updateMachine,
   addMachineStats,
 } = require("./services/firebaseService");
+const fs = require("fs");
+
 const docker = new Docker({
   protocol: "http",
   host: process.env.DOCKER_HOST || "host.docker.internal",
   port: process.env.DOCKER_PORT || 2375,
+  ca: fs.readFileSync("/certs/client/ca.pem"),
+  cert: fs.readFileSync("/certs/client/cert.pem"),
+  key: fs.readFileSync("/certs/client/key.pem"),
 });
 
 console.log("Docker host:", process.env.DOCKER_HOST);
