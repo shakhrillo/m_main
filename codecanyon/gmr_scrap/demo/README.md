@@ -40,6 +40,7 @@ sudo ln -s /root/m_main/codecanyon/gmr_scrap/demo/nginx.conf /etc/nginx/sites-en
 sudo nginx -t
 sudo systemctl reload nginx
 
+sudo rm /etc/nginx/sites-enabled/nginx.api.conf
 sudo ln -s /root/m_main/codecanyon/gmr_scrap/demo/nginx.api.conf /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
