@@ -1,6 +1,4 @@
-const socket = io({
-  path: "/setup/socket.io",
-});
+const socket = io();
 
 const updateLogs = (selector, log) => {
   const container = document.querySelector(selector);

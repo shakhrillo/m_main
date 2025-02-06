@@ -7,7 +7,7 @@ const loadAssets = () => {
   const publicPath = path.join(basePath, "public");
   const indexHtmlPath = path.join(basePath, "views", "index.html");
 
-  const prefix = process.env.NODE_ENV === "server" ? "/setup" : "";
+  const prefix = "";
   const assets = (files) => files.map((file) => `${prefix}${file}`);
 
   const styles = assets([
