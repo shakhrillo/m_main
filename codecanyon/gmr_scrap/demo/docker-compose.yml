@@ -21,7 +21,7 @@ services:
     environment:
       DOCKER_TLS_CERTDIR: "/certs"
     ports:
-      - "${APP_DOCKER_PORT}:2375"
+      - "${APP_DOCKER_PORT}:2376"
     volumes:
       - ./certs:/certs
     working_dir: /usr/src/app

@@ -6,14 +6,15 @@ const {
 } = require("./services/firebaseService");
 const fs = require("fs");
 
-const docker = new Docker({
-  protocol: "http",
-  host: process.env.DOCKER_HOST || "host.docker.internal",
-  port: process.env.DOCKER_PORT || 2375,
-  ca: fs.readFileSync("/certs/client/ca.pem"),
-  cert: fs.readFileSync("/certs/client/cert.pem"),
-  key: fs.readFileSync("/certs/client/key.pem"),
-});
+let docker;
+// const docker = new Docker({
+//   protocol: "https",
+//   host: process.env.DOCKER_HOST || "host.docker.internal",
+//   port: process.env.DOCKER_PORT || 2376,
+//   ca: fs.readFileSync("/certs/client/ca.pem"),
+//   cert: fs.readFileSync("/certs/client/cert.pem"),
+//   key: fs.readFileSync("/certs/client/key.pem"),
+// });
 
 console.log("Docker host:", process.env.DOCKER_HOST);
 console.log("Docker port:", process.env.DOCKER_PORT);
@@ -25,10 +26,25 @@ console.log("Docker port:", process.env.DOCKER_PORT);
 const checkDocker = async () => {
   while (true) {
     try {
+      console.log(
+        "Docker host:",
+        process.env.DOCKER_HOST || "host.docker.internal"
+      );
+      console.log("Docker port:", process.env.DOCKER_PORT || 2376);
+
+      docker = new Docker({
+        protocol: "https",
+        host: process.env.DOCKER_HOST || "host.docker.internal",
+        port: process.env.DOCKER_PORT || 2376,
+        ca: fs.readFileSync("/certs/client/ca.pem"),
+        cert: fs.readFileSync("/certs/client/cert.pem"),
+        key: fs.readFileSync("/certs/client/key.pem"),
+      });
       await docker.ping();
       console.log("Docker is ready");
       return true;
     } catch (error) {
+      console.error("Error connecting to Docker:", error);
       console.log("Waiting for Docker");
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
