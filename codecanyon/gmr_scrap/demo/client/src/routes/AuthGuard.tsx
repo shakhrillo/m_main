@@ -16,7 +16,7 @@ export const AuthGuard = () => {
       setUser(user);
 
       if (!user) {
-        navigate("/login");
+        // navigate("/login");
       }
     };
 
