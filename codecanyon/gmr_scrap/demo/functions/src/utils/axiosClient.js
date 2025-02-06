@@ -5,7 +5,7 @@ let baseURL = `http://${process.env.SERVER_IP || "host.docker.internal"}:${
 }`;
 
 if (process.env.APP_ENVIRONMENT === "production") {
-  baseURL = `https://api.example.com`;
+  baseURL = `https://api.gmrscrap.store`;
 } else {
 }
 
