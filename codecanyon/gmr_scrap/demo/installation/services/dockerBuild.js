@@ -58,6 +58,8 @@ const executeCompose = async ({ env, config }) => {
 const dockerBuild = async (req, res) => {
   try {
     const env = getEnv();
+    console.log("Env:", env);
+    return;
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
 
