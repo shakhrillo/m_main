@@ -40,6 +40,10 @@ function startLog() {
     return;
   }
 
+  console.log(
+    "\u001b[1m\u001b[35mGMRS: Building Docker containers...\u001b[0m"
+  );
+
   startTime = Date.now();
   spinner.start();
 }
@@ -51,6 +55,11 @@ function stopLog() {
 
   endTime = Date.now();
   spinner.stop();
+  console.log(
+    `\u001b[1m\u001b[35mGMRS: Docker containers built in ${Math.round(
+      (endTime - startTime) / 1000
+    )}s\u001b[0m`
+  );
 }
 
 module.exports = {

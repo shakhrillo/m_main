@@ -52,9 +52,6 @@ const executeCompose = async ({ env, config }) => {
 
 const dockerBuild = async () => {
   try {
-    console.log(
-      "\u001b[1m\u001b[35mGMRS: Building Docker containers...\u001b[0m"
-    );
     startLog();
     const env = getEnv();
 
@@ -65,8 +62,6 @@ const dockerBuild = async () => {
       env,
       config: "docker-compose.yml",
     });
-
-    log("Main is done!");
 
     await Promise.all([
       await checkStripe({ env }),
@@ -79,9 +74,8 @@ const dockerBuild = async () => {
       env,
       config: "docker-compose-machine.yml",
     });
-    await checkMachine({ env });
 
-    log("Docker Compose executed successfully");
+    await checkMachine({ env });
   } catch (err) {
     throw err;
   } finally {
