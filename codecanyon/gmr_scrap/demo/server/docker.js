@@ -6,6 +6,17 @@ const {
 } = require("./services/firebaseService");
 const fs = require("fs");
 
+const getDocker = () => {
+  return new Docker({
+    protocol: "https",
+    host: process.env.DOCKER_HOST || "host.docker.internal",
+    port: process.env.DOCKER_PORT || 2376,
+    ca: fs.readFileSync("/certs/client/ca.pem"),
+    cert: fs.readFileSync("/certs/client/cert.pem"),
+    key: fs.readFileSync("/certs/client/key.pem"),
+  });
+};
+
 let docker;
 
 console.log("Docker host:", process.env.DOCKER_HOST);
@@ -150,6 +161,7 @@ async function watchDockerEvents() {
 }
 
 module.exports = {
+  getDocker,
   docker,
   watchDockerEvents,
 };

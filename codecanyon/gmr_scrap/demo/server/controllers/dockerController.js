@@ -1,11 +1,12 @@
 const { spawn } = require("child_process");
-const { docker } = require("../docker");
+const { docker, getDocker } = require("../docker");
 const { addDockerInfo } = require("../services/firebaseService");
 
 function infoDocker() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      docker.info(async function (err, data) {
+      const d = await getDocker();
+      d.info(async function (err, data) {
         if (err) {
           reject(err);
         } else {
