@@ -8,7 +8,7 @@
  *
  * Environment Variables:
  * - `DOCKER_HOST`: Specifies the Docker host. Defaults to `host.docker.internal`.
- * - `DOCKER_PORT`: Specifies the Docker port. Defaults to `2375`.
+ * - `DOCKER_PORT`: Specifies the Docker port. Defaults to `2376`.
  * - `MACHINE_BUILD_IMAGE_NAME`: Specifies the name of the Docker image to build.
  *
  * Dependencies:
@@ -39,6 +39,7 @@
 "use strict";
 
 // Load environment variables from the .env file
+const fs = require("fs");
 require("dotenv").config();
 
 // Import dependencies

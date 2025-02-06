@@ -6,11 +6,12 @@ services:
       dockerfile: Dockerfile
     container_name: ${APP_ID}-machine
     image: ${APP_ID}-machine
+    working_dir: /usr/src/app
     volumes:
+      - ./certs:/certs
       - ./firebase.json:/usr/src/app/firebase.json
       - ./firebaseServiceAccount.json:/usr/src/app/firebaseServiceAccount.json
       - ./machine:/usr/src/app
-    working_dir: /usr/src/app
     environment:
       NODE_ENV: development
       DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}

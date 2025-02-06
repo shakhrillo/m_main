@@ -1,18 +1,40 @@
+const fs = require("fs");
 const os = require("os");
 const Docker = require("dockerode");
 let dockerSocketPath = "/var/run/docker.sock";
 if (os.platform() === "win32") {
   dockerSocketPath = "tcp://localhost:2375";
 }
-const dinDocker = new Docker({
-  protocol: "http",
-  host: process.env.DOCKER_HOST || "localhost",
-  port: process.env.DOCKER_PORT || 2375,
-});
+let dinDocker;
 
 const localDocker = new Docker({
   socketPath: dockerSocketPath,
 });
+
+const checkDockerConnection = async () => {
+  console.log("Waiting for Docker...");
+  while (true) {
+    try {
+      dinDocker = new Docker({
+        protocol: "https",
+        host: process.env.DOCKER_HOST || "localhost",
+        port: process.env.DOCKER_PORT || 2376,
+        ca: fs.readFileSync("./certs/client/ca.pem"),
+        cert: fs.readFileSync("./certs/client/cert.pem"),
+        key: fs.readFileSync("./certs/client/key.pem"),
+      });
+
+      await dinDocker.ping();
+
+      console.log("Connected to Docker");
+      return true;
+    } catch (error) {
+      console.error("Error connecting to Docker:", error);
+      console.log("Waiting for Docker...");
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+  }
+};
 
 /**
  * Check for Docker
@@ -20,6 +42,10 @@ const localDocker = new Docker({
  */
 const checkDocker = async ({ env, emitMessage }) => {
   return new Promise(async (resolve, reject) => {
+    console.log("Checking Docker...");
+    emitMessage("[docker]: " + "Checking Docker...");
+    await checkDockerConnection();
+
     const container = localDocker.getContainer(`${env.APP_ID}-docker`);
 
     container.inspect(async (err, data) => {
