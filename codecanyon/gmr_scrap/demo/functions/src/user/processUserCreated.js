@@ -15,10 +15,10 @@ async function processUserCreated(user) {
   /*-------------------*/
   /* Update statistics */
   /*-------------------*/
-  const statisticsRef = db.doc(`statistics/users`);
-  batch.update(statisticsRef, {
-    total: FieldValue.increment(1),
-  });
+  // const statisticsRef = db.doc(`statistics/users`);
+  // batch.update(statisticsRef, {
+  //   total: FieldValue.increment(1),
+  // });
 
   /*-------------------*/
   /* Create user       */
