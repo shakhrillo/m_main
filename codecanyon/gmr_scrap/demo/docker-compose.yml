@@ -90,8 +90,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    # volumes:
-    #   - ./client/src:/usr/src/app/src
+    volumes:
+      - ./client/dist:/usr/src/app/dist
     container_name: ${APP_ID}-client
     image: ${APP_ID}-client
     environment:

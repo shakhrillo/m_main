@@ -10,4 +10,4 @@ RUN rm -rf node_modules/.vite
 
 RUN echo "Starting start script"
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "build"]
