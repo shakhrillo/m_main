@@ -7,6 +7,9 @@ export default defineConfig({
     port: 4200,
     host: true,
     open: false,
+    hmr: {
+      protocol: "wss", // Change to "ws" if using HTTP
+    },
   },
   envDir: "../",
   css: {
