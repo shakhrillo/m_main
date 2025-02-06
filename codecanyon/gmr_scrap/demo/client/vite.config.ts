@@ -9,7 +9,6 @@ export default defineConfig({
     open: false,
   },
   envDir: "../",
-  base: "/client/",
   css: {
     preprocessorOptions: {
       scss: {
