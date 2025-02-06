@@ -11,10 +11,15 @@ const checkServer = require("../utils/server");
 
 const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
+const ora = require("ora");
+const spinner = ora({
+  spinner: "dots",
+  color: "cyan",
+});
 
 const emitMessage = (chunk) => {
-  const msg = chunk.toString();
-  msg && global.io.emit("docker-build", msg);
+  spinner.text = chunk;
+  fs.appendFile(path.join(sourcePath, "docker-build.log"), chunk);
 };
 
 const executeCompose = async ({ env, config }) => {
@@ -47,7 +52,6 @@ const executeCompose = async ({ env, config }) => {
             emitMessage(`Removed image ${img}`);
           }
         } catch (err) {
-          console.log("No image found for", img);
           emitMessage(`No image found for ${img}`);
         }
       }
@@ -55,11 +59,10 @@ const executeCompose = async ({ env, config }) => {
   }
 };
 
-const dockerBuild = async (req, res) => {
+const dockerBuild = async () => {
   try {
+    spinner.start("Building Docker containers...");
     const env = getEnv();
-    console.log("Env:", env);
-    return;
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
 
@@ -70,16 +73,10 @@ const dockerBuild = async (req, res) => {
 
     emitMessage("Main is done!");
 
-    // await Promise.all([
     await checkStripe({ env, emitMessage });
-    console.log("checkStripe done!");
     await checkFirebase({ env, emitMessage });
-    console.log("checkFirebase done!");
     await checkDocker({ env, emitMessage });
-    console.log("checkDocker done!");
     await checkServer({ env, emitMessage });
-    console.log("checkServer done!");
-    // ]);
 
     await executeCompose({
       env,
@@ -88,16 +85,10 @@ const dockerBuild = async (req, res) => {
     await checkMachine({ env, emitMessage });
 
     emitMessage("Docker Compose executed successfully");
-    res.send({
-      message: "Docker Compose executed successfully",
-      status: "success",
-    });
   } catch (err) {
-    console.error("Error executing Docker Compose:", err);
-    res.status(500).send({
-      message: "Error executing Docker Compose",
-      error: err.toString(),
-    });
+    throw err;
+  } finally {
+    spinner.stop();
   }
 };
 
