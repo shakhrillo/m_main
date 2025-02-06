@@ -8,32 +8,23 @@ const checkStripe = require("../utils/stripe");
 const checkMachine = require("../utils/machine");
 const checkFirebase = require("../utils/firebase");
 const checkServer = require("../utils/server");
+const { log, startLog, stopLog } = require("./logger");
 
 const sourcePath = path.resolve(__dirname, "../../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
-const ora = require("ora");
-const spinner = ora({
-  spinner: "dots",
-  color: "cyan",
-});
-
-const emitMessage = (chunk) => {
-  spinner.text = chunk;
-  fs.appendFile(path.join(sourcePath, "docker-build.log"), chunk);
-};
 
 const executeCompose = async ({ env, config }) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {
     if (action === "buildAll" && config === "docker-compose.yml") {
-      await createNetwork({ emitMessage, env });
+      await createNetwork({ log, env });
     }
 
-    emitMessage(`Executing ${action}...`);
+    log(`Executing ${action}...`);
     await compose[action]({
       cwd: sourcePath,
       config,
       env,
-      callback: (chunk) => emitMessage(`[${action}]: ` + chunk),
+      callback: (chunk) => log(`[${action}]: ` + chunk),
     });
 
     if (action === "downAll" && config === "docker-compose.yml") {
@@ -49,10 +40,10 @@ const executeCompose = async ({ env, config }) => {
 
           if (imageInfo) {
             await image.remove({ force: true });
-            emitMessage(`Removed image ${img}`);
+            log(`Removed image ${img}`);
           }
         } catch (err) {
-          emitMessage(`No image found for ${img}`);
+          log(`No image found for ${img}`);
         }
       }
     }
@@ -61,8 +52,12 @@ const executeCompose = async ({ env, config }) => {
 
 const dockerBuild = async () => {
   try {
-    spinner.start("Building Docker containers...");
+    console.log(
+      "\u001b[1m\u001b[35mGMRS: Building Docker containers...\u001b[0m"
+    );
+    startLog();
     const env = getEnv();
+
     await fs.rm(stripeSecretsPath, { recursive: true, force: true });
     await fs.mkdir(stripeSecretsPath, { recursive: true });
 
@@ -71,24 +66,26 @@ const dockerBuild = async () => {
       config: "docker-compose.yml",
     });
 
-    emitMessage("Main is done!");
+    log("Main is done!");
 
-    await checkStripe({ env, emitMessage });
-    await checkFirebase({ env, emitMessage });
-    await checkDocker({ env, emitMessage });
-    await checkServer({ env, emitMessage });
+    await Promise.all([
+      await checkStripe({ env }),
+      await checkFirebase({ env }),
+      await checkDocker({ env }),
+      await checkServer({ env }),
+    ]);
 
     await executeCompose({
       env,
       config: "docker-compose-machine.yml",
     });
-    await checkMachine({ env, emitMessage });
+    await checkMachine({ env });
 
-    emitMessage("Docker Compose executed successfully");
+    log("Docker Compose executed successfully");
   } catch (err) {
     throw err;
   } finally {
-    spinner.stop();
+    stopLog();
   }
 };
 

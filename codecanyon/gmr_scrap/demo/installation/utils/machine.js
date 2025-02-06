@@ -1,12 +1,13 @@
+const { log } = require("../services/logger");
 const { localDocker } = require("./docker");
 
-const checkMachine = async ({ env, emitMessage }) => {
+const checkMachine = async ({ env }) => {
   return new Promise(async (resolve, reject) => {
     const container = localDocker.getContainer(`${env.APP_ID}-machine`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        emitMessage(err);
+        log(err);
         reject(err);
         return;
       }
@@ -19,13 +20,13 @@ const checkMachine = async ({ env, emitMessage }) => {
         },
         (err, stream) => {
           if (err) {
-            emitMessage(err);
+            log(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            emitMessage(chunk);
+            log(chunk);
 
             if (chunk.toString().includes("Image build complete.")) {
               stream.removeListener("data", handleData);

@@ -1,6 +1,7 @@
+const { log } = require("../services/logger");
 const { localDocker } = require("./docker");
 
-const createNetwork = async ({ emitMessage, env }) => {
+const createNetwork = async ({ env }) => {
   const networkName = "gmrs-network";
   const networkSubnet = env.NETWORK_SUBNET || "";
 
@@ -10,48 +11,48 @@ const createNetwork = async ({ emitMessage, env }) => {
 
     // Disconnect active containers before removal
     if (details.Containers && Object.keys(details.Containers).length > 0) {
-      emitMessage(`**Info:** Disconnecting containers from ${networkName}`);
+      log(`**Info:** Disconnecting containers from ${networkName}`);
       for (const containerId of Object.keys(details.Containers)) {
         try {
           await network.disconnect({ Container: containerId, Force: true });
-          emitMessage(`**Info:** Disconnected container ${containerId}`);
+          log(`**Info:** Disconnected container ${containerId}`);
         } catch (err) {
-          console.error(`Error disconnecting container ${containerId}:`, err);
+          log(`Error disconnecting container ${containerId}:`, err);
         }
       }
     }
 
     await network.remove();
-    emitMessage(`**Info:** Removed existing network ${networkName}`);
+    log(`**Info:** Removed existing network ${networkName}`);
   } catch (error) {
     if (error.statusCode !== 404) {
-      console.error("Error removing network:", error);
+      log("Error removing network:", error);
     }
   }
 
   try {
-    emitMessage("Checking for existing networks with the same subnet...");
+    log("Checking for existing networks with the same subnet...");
     const existingNetworks = await localDocker.listNetworks();
     const overlappingNetwork = existingNetworks.find((net) =>
       net.IPAM?.Config?.some((cfg) => cfg.Subnet === networkSubnet)
     );
 
     if (overlappingNetwork) {
-      console.error(
+      log(
         `Error: Subnet ${networkSubnet} is already used by ${overlappingNetwork.Name}`
       );
       return;
     }
 
-    emitMessage("**Info:** Creating network...");
+    log("**Info:** Creating network...");
     await localDocker.createNetwork({
       Name: networkName,
       Driver: "bridge",
       IPAM: { Config: networkSubnet ? [{ Subnet: networkSubnet }] : [] },
     });
-    emitMessage(`**Info:** Network ${networkName} created`);
+    log(`**Info:** Network ${networkName} created`);
   } catch (error) {
-    console.error("> Error creating network:", error);
+    log("> Error creating network:", error);
   }
 };
 

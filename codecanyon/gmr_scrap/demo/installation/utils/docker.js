@@ -1,6 +1,7 @@
 const fs = require("fs");
 const os = require("os");
 const Docker = require("dockerode");
+const { log } = require("../services/logger");
 let dockerSocketPath = "/var/run/docker.sock";
 if (os.platform() === "win32") {
   dockerSocketPath = "tcp://localhost:2375";
@@ -12,7 +13,7 @@ const localDocker = new Docker({
 });
 
 const checkDockerConnection = async () => {
-  console.log("Waiting for Docker...");
+  log("Waiting for Docker...");
   while (true) {
     try {
       dinDocker = new Docker({
@@ -26,11 +27,11 @@ const checkDockerConnection = async () => {
 
       await dinDocker.ping();
 
-      console.log("Connected to Docker");
+      log("Connected to Docker");
       return true;
     } catch (error) {
       console.error("Error connecting to Docker:", error);
-      console.log("Waiting for Docker...");
+      log("Waiting for Docker...");
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
@@ -40,17 +41,16 @@ const checkDockerConnection = async () => {
  * Check for Docker
  * @returns {Promise<boolean>}
  */
-const checkDocker = async ({ env, emitMessage }) => {
+const checkDocker = async ({ env }) => {
   return new Promise(async (resolve, reject) => {
-    console.log("Checking Docker...");
-    emitMessage("[docker]: " + "Checking Docker...");
+    log("[docker]: " + "Checking Docker...");
     await checkDockerConnection();
 
     const container = localDocker.getContainer(`${env.APP_ID}-docker`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        emitMessage("[docker]: " + err);
+        log("[docker]: " + err);
         reject(err);
         return;
       }
@@ -63,13 +63,13 @@ const checkDocker = async ({ env, emitMessage }) => {
         },
         (err, stream) => {
           if (err) {
-            emitMessage("[docker]: " + err);
+            log("[docker]: " + err);
             reject(err);
             return;
           }
 
           const handleData = async (chunk) => {
-            emitMessage("[docker]: " + chunk);
+            log("[docker]: " + chunk);
 
             if (
               chunk.toString().includes("Daemon has completed initialization")
@@ -91,10 +91,10 @@ const checkDocker = async ({ env, emitMessage }) => {
                 await dinDocker.pruneNetworks({
                   force: true,
                 });
-                emitMessage("[docker]: " + "Docker daemon is ready.");
+                log("[docker]: " + "Docker daemon is ready.");
                 resolve(true);
               } catch (err) {
-                emitMessage("[docker]: " + err);
+                log("[docker]: " + err);
                 reject(err);
               }
             }
