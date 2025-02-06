@@ -1,5 +1,6 @@
+import { Link } from "react-router";
 import documentationBanner from "../img/documentation.png";
-function Documnetation() {
+function DocumnetationSection() {
   return (
     <section id="documentation" className="documentation-section">
       <div className="section__area overflow-hidden">
@@ -19,12 +20,12 @@ function Documnetation() {
                   strongly advise reviewing the guide thoroughly before
                   beginning your project with our template.
                 </p>
-                <a
+                <Link
                   className="geo-btn geo-btn__default"
-                  href="./documentation.html"
+                  to={"/documentation"}
                 >
                   Read Full Documentation
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -34,4 +35,4 @@ function Documnetation() {
   );
 }
 
-export default Documnetation;
+export default DocumnetationSection;

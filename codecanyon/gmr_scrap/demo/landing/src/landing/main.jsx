@@ -11,7 +11,7 @@ function Main() {
             <div className="col-lg-6 col-md-12">
               <div className="home-section__content">
                 <h1 className="home-section__content--title">
-                  Google Maps Scraper
+                  Google Maps Review Scraper
                 </h1>
                 <p className="home-section__content--subtitle">
                   An excellent Google Places API alternative to easily scrape

@@ -1,29 +1,19 @@
 import "./App.css";
+import Documentation from "./documentation";
+import { BrowserRouter, Routes, Route } from "react-router";
 
-import Main from "./sections/main";
-import CanGet from "./sections/canGet";
-import Testimonal from "./sections/testimonal";
-import Documnetation from "./sections/documentation";
-import Integration from "./sections/integration";
-import Faq from "./sections/faq";
-import Footer from "./sections/footer";
-import Pricing from "./sections/pricing";
-import Navbar from "./sections/navbar";
+import Landing from "./landing";
 
 function App() {
   return (
-    <div className="main">
-      <Navbar />
-      <Main />
-      <CanGet />
-      <Testimonal />
-      <Documnetation />
-      <Integration />
-      <Pricing />
-      <Faq />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/documentation" element={<Documentation />} />
+      </Routes>
+    </BrowserRouter>
   );
+  // <Documentation />;
 }
 
 export default App;
