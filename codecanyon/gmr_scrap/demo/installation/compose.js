@@ -1,8 +1,9 @@
 const path = require("path");
 const compose = require("docker-compose");
+const { log } = require("./logger");
+
 const { localDocker } = require("./docker");
 const createNetwork = require("./network");
-const { log } = require("./logger");
 
 const sourcePath = path.resolve(__dirname, "../");
 
@@ -16,7 +17,7 @@ const executeCompose = async ({ env, config }) => {
       cwd: sourcePath,
       config,
       env,
-      callback: (chunk) => log(`[${action}]: ` + chunk),
+      callback: (chunk) => log(chunk),
     });
 
     if (action === "downAll" && config === "docker-compose.yml") {

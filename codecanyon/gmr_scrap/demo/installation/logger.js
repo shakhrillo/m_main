@@ -24,7 +24,10 @@ function log(message) {
     return;
   }
 
-  if (typeof message !== "string") {
+  if (typeof message !== "string" && message instanceof Buffer) {
+    const buffer = Buffer.from(message);
+    message = buffer.toString("utf8");
+  } else if (typeof message !== "string") {
     message = JSON.stringify(message);
   }
 
