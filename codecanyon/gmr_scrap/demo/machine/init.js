@@ -7,8 +7,8 @@
  * - Retries the build process until it succeeds or the maximum number of retries is reached.
  *
  * Environment Variables:
- * - `DOCKER_HOST`: Specifies the Docker host. Defaults to `host.docker.internal`.
- * - `DOCKER_PORT`: Specifies the Docker port. Defaults to `2376`.
+ * - `DOCKER_IPV4_ADDRESS`: Specifies the Docker host. Defaults to `host.docker.internal`.
+ * - `APP_DOCKER_PORT`: Specifies the Docker port. Defaults to `2376`.
  * - `MACHINE_BUILD_IMAGE_NAME`: Specifies the name of the Docker image to build.
  *
  * Dependencies:
@@ -46,15 +46,15 @@ require("dotenv").config();
 const Docker = require("dockerode");
 const docker = new Docker({
   protocol: "https",
-  host: process.env.DOCKER_HOST || "host.docker.internal",
-  port: process.env.DOCKER_PORT || 2376,
+  host: process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal",
+  port: process.env.APP_DOCKER_PORT || 2376,
   ca: fs.readFileSync("/certs/client/ca.pem"),
   cert: fs.readFileSync("/certs/client/cert.pem"),
   key: fs.readFileSync("/certs/client/key.pem"),
 });
 
-console.log("Docker host:", process.env.DOCKER_HOST);
-console.log("Docker port:", process.env.DOCKER_PORT);
+console.log("Docker host:", process.env.DOCKER_IPV4_ADDRESS);
+console.log("Docker port:", process.env.APP_DOCKER_PORT);
 
 /**
  * Checks if Docker is available.

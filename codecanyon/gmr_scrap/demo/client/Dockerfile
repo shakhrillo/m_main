@@ -7,4 +7,4 @@ EXPOSE 4200
 
 RUN echo "Starting start script"
 
-CMD ["npm", "run", "build"]
+CMD ["npm", "run", "start"]

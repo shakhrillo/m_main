@@ -9,12 +9,12 @@ const auth = getAuth();
 const firestore = getFirestore();
 const storage = getStorage(app);
 
-if (import.meta.env.VITE_ENV === "development") {
+if (import.meta.env.VITE_APP_ENVIRONMENT === "development") {
   connectAuthEmulator(
     auth,
     `http://localhost:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
-  connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
+  connectFirestoreEmulator(firestore, "localhost", 8080);
   connectStorageEmulator(
     storage,
     "localhost",

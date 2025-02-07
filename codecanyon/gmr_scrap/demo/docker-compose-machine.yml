@@ -13,10 +13,12 @@ services:
       - ./firebaseServiceAccount.json:/usr/src/app/firebaseServiceAccount.json
       - ./machine:/usr/src/app
     environment:
-      NODE_ENV: development
-      DOCKER_HOST: ${DOCKER_IPV4_ADDRESS}
-      DOCKER_PORT: ${APP_DOCKER_PORT}
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT}
+      DOCKER_IPV4_ADDRESS: ${DOCKER_IPV4_ADDRESS}
+      APP_DOCKER_PORT: ${APP_DOCKER_PORT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_IPV4_ADDRESS: ${FIREBASE_IPV4_ADDRESS}
     networks:
       gmrs-network:
         ipv4_address: ${MACHINE_IPV4_ADDRESS}

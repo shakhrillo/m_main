@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "VITE_ENV=development vite",
-    "build": "VITE_ENV=development tsc && vite build --mode development",
+    "start": "vite",
+    "build": "tsc && vite build --mode development",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "prettier --write .",

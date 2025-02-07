@@ -8,9 +8,9 @@
  * - `path` - For path operations.
  *
  * Environment Variables:
- * - `NODE_ENV` - Specifies the environment mode.
+ * - `APP_ENVIRONMENT` - Specifies the environment mode.
  * - `FIREBASE_PROJECT_ID` - Specifies the Firebase project ID.
- * - `FIREBASE_URL` - Specifies the Firebase URL.
+ * - `FIREBASE_IPV4_ADDRESS` - Specifies the Firebase URL.
  * - `FIREBASE_KEYS_PATH` - Specifies the path to the Firebase keys file.
  *
  * Version History:
@@ -33,9 +33,10 @@ const fs = require("fs");
 const path = require("path");
 
 // Constants
-const environment = process.env.NODE_ENV || "development";
+const environment = process.env.APP_ENVIRONMENT;
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
-const firebaseUrl = process.env.FIREBASE_URL || "127.0.0.1";
+const firebaseUrl = process.env.FIREBASE_IPV4_ADDRESS;
+
 const firebasekeysPath = path.resolve(
   __dirname,
   "../firebaseServiceAccount.json"
@@ -66,8 +67,7 @@ if (environment === "development") {
     throw new Error("Firebase keys file not found");
   }
 
-  const firestoreEmulatorPort =
-    serviceAccountJson.emulators?.firestore?.port || 9100;
+  const firestoreEmulatorPort = process.env.FIREBASE_EMULATOR_FIRESTORE;
   db.settings({ host: `${firebaseUrl}:${firestoreEmulatorPort}`, ssl: false });
 }
 
