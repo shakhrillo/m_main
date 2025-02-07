@@ -12,7 +12,7 @@ services:
     entrypoint: >
       sh -c "
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
-        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IP}:${APP_SERVER_PORT}/stripe/webhook
+        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IPV4_ADDRESS}:${APP_SERVER_PORT}/stripe/webhook
       "
   docker:
     image: docker:27.0-dind
@@ -35,11 +35,14 @@ services:
     container_name: ${APP_ID}-firebase
     image: ${APP_ID}-firebase
     volumes:
+      - ./.env:/usr/src/app/functions/.env
       - ./functions/index.js:/usr/src/app/functions/index.js
       - ./functions/src:/usr/src/app/functions/src
+      - ./firebase.sh:/usr/src/app/firebase.sh
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
-      SERVER_IP: ${SERVER_IPV4_ADDRESS}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      SERVER_IPV4_ADDRESS: ${SERVER_IPV4_ADDRESS}
       SERVER_PORT: ${APP_SERVER_PORT}
       JWT_SECRET: ${JWT_SECRET}
     ports:

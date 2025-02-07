@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 # Copy Firebase configuration files
 # COPY .env.firestore .env.firestore
-COPY .env.firebase .env.main firebaseServiceAccount.json firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
+COPY .env firebaseServiceAccount.json firebase.json firestore.indexes.json firestore.rules package*.json storage.rules ./
 
 # Copy the Service Account Key (make sure it is already present in the build context)
 # COPY firebasekeys.json ./firebasekeys.json
@@ -23,7 +23,8 @@ RUN npm install -g firebase-tools
 # COPY data ./data
 
 # Copy and install functions dependencies
-COPY functions ./functions
+# COPY .env ./functions/.env
+# COPY functions ./functions
 # Delete node_modules to avoid conflicts
 RUN rm -rf functions/node_modules
 # Remove package-lock.json to avoid conflicts
@@ -36,8 +37,8 @@ RUN rm functions/package-lock.json
 # Copy env to workdir
 # COPY .env.firebase .env
 
-COPY firebase.sh /usr/src/app/firebase.sh
-RUN chmod +x /usr/src/app/firebase.sh
+# COPY firebase.sh /usr/src/app/firebase.sh
+# RUN chmod +x /usr/src/app/firebase.sh
 CMD ["/usr/src/app/firebase.sh"]
 
 # Run emulators

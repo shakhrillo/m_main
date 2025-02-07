@@ -27,6 +27,8 @@ const dockerBuild = async () => {
       config: "docker-compose.yml",
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 500000000));
+
     await Promise.all([
       await checkDocker(),
       await checkStripe(),
