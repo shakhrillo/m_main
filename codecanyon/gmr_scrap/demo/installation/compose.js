@@ -1,10 +1,10 @@
 const path = require("path");
 const compose = require("docker-compose");
-const { localDocker } = require("../utils/docker");
-const createNetwork = require("../utils/network");
+const { localDocker } = require("./docker");
+const createNetwork = require("./network");
 const { log } = require("./logger");
 
-const sourcePath = path.resolve(__dirname, "../../");
+const sourcePath = path.resolve(__dirname, "../");
 
 const executeCompose = async ({ env, config }) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {

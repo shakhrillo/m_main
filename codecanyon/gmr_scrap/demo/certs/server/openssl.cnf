@@ -1,2 +1,2 @@
 [ x509_exts ]
-subjectAltName = DNS:docker,DNS:e2fa6228d577,DNS:localhost,IP:127.0.0.1,IP:192.168.224.2,IP:::1
+subjectAltName = DNS:c744d994fcba,DNS:docker,DNS:localhost,IP:127.0.0.1,IP:192.168.94.2,IP:::1

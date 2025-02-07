@@ -1,4 +1,4 @@
-const { log } = require("../services/logger");
+const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
 const checkFirebase = async ({ env }) => {

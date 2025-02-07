@@ -1,13 +1,17 @@
-const { log } = require("../services/logger");
+const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
-const checkServer = async ({ env }) => {
+/**
+ * Check for Stripe secrets
+ * @returns {Promise<boolean>}
+ */
+const checkStripe = async ({ env }) => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer(`${env.APP_ID}-server`);
+    const container = localDocker.getContainer(`${env.APP_ID}-stripe-cli`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        log("[server]: " + err);
+        log("[stripe]: " + err);
         reject(err);
         return;
       }
@@ -20,18 +24,18 @@ const checkServer = async ({ env }) => {
         },
         (err, stream) => {
           if (err) {
-            log("[server]: " + err);
+            log("[stripe]: " + err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            log("[server]: " + chunk);
+            log("[stripe]: " + chunk);
 
-            if (chunk.toString().includes("Server is running on port")) {
+            if (chunk.toString().includes("Ready!")) {
               stream.removeListener("data", handleData);
               stream.destroy();
-              resolve("Server is ready.");
+              resolve("Stripe CLI is ready.");
             }
           };
 
@@ -42,4 +46,4 @@ const checkServer = async ({ env }) => {
   });
 };
 
-module.exports = checkServer;
+module.exports = checkStripe;

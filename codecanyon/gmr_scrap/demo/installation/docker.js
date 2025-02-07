@@ -1,16 +1,18 @@
 const fs = require("fs");
 const os = require("os");
 const Docker = require("dockerode");
-const { log } = require("../services/logger");
+const { log } = require("./logger");
+
 let dockerSocketPath = "/var/run/docker.sock";
 if (os.platform() === "win32") {
   dockerSocketPath = "tcp://localhost:2375";
 }
-let dinDocker;
 
 const localDocker = new Docker({
   socketPath: dockerSocketPath,
 });
+
+let dinDocker;
 
 const checkDockerConnection = async () => {
   log("Waiting for Docker...");
@@ -30,7 +32,6 @@ const checkDockerConnection = async () => {
       log("Connected to Docker");
       return true;
     } catch (error) {
-      console.error("Error connecting to Docker:", error);
       log("Waiting for Docker...");
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }

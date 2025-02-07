@@ -1,6 +1,7 @@
 const path = require("path");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const sourcePath = path.resolve(__dirname, "../");
 
 const generateRandomBaseIp = () => {
   const firstOctet = 192;
@@ -25,7 +26,7 @@ const createNetworkEnv = () => {
 };
 
 const loadEnv = () => {
-  const envPath = path.join(__dirname, "../../.env");
+  const envPath = path.join(sourcePath, ".env");
   const file = dotenv.config({ path: envPath });
 
   if (file.error) {

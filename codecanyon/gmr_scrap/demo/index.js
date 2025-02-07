@@ -1,4 +1,4 @@
-const dockerBuild = require("./installation/services/dockerBuild");
+const dockerBuild = require("./installation/dockerBuild");
 
 (async () => {
   try {
