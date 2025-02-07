@@ -44,7 +44,9 @@ const firebasekeysPath = path.resolve(
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
-  projectId: firebaseProjectId,
+  projectId: firebaseProjectId
+    ? `demo-${firebaseProjectId}`
+    : firebaseProjectId,
   ...(environment === "production" && {
     credential: admin.credential.cert(firebasekeysPath),
     storageBucket: `gs://${firebaseProjectId}.firebasestorage.app`,

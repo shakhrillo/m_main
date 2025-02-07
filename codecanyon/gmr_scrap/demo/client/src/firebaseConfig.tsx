@@ -4,7 +4,12 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import firebaseConfig from "../firebaseConfig.json";
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp({
+  ...firebaseConfig,
+  ...(import.meta.env.VITE_APP_ENVIRONMENT === "development" && {
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  }),
+});
 const auth = getAuth();
 const firestore = getFirestore();
 const storage = getStorage(app);
