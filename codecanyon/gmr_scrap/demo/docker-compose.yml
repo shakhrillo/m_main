@@ -36,8 +36,6 @@ services:
     image: ${APP_ID}-firebase
     volumes:
       - ./.env:/usr/src/app/functions/.env
-      - ./functions/index.js:/usr/src/app/functions/index.js
-      - ./functions/src:/usr/src/app/functions/src
       - ./firebase.sh:/usr/src/app/firebase.sh
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
@@ -75,7 +73,6 @@ services:
 
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
       FIREBASE_IP: ${FIREBASE_IPV4_ADDRESS}
-      FIREBASE_APP_ID: ${FIREBASE_APP_ID}
       FIREBASE_EMULATOR_FIRESTORE: ${FIREBASE_EMULATOR_FIRESTORE}
 
       STRIPE_API_KEY: ${STRIPE_API_KEY}
