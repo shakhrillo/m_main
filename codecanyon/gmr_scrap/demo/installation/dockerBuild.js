@@ -1,7 +1,6 @@
 const purge = require("./purge");
 const envManager = require("./envManager");
-const executeCompose = require("./compose");
-
+const executeCompose = require("./composeRunner");
 const { checkDocker } = require("./docker");
 const checkStripe = require("./stripe");
 const checkMachine = require("./machine");
@@ -9,6 +8,13 @@ const checkFirebase = require("./firebase");
 const checkServer = require("./server");
 const { startLog, stopLog } = require("./logger");
 
+/**
+ * Build the Docker containers
+ *
+ * @returns {Promise<void>}
+ * @throws {Error}
+ *
+ */
 const dockerBuild = async () => {
   startLog();
 
@@ -22,10 +28,10 @@ const dockerBuild = async () => {
     });
 
     await Promise.all([
-      await checkStripe({ env }),
-      await checkFirebase({ env }),
-      await checkDocker({ env }),
-      await checkServer({ env }),
+      await checkDocker(),
+      await checkStripe(),
+      await checkFirebase(),
+      await checkServer(),
     ]);
 
     await executeCompose({

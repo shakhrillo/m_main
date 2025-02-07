@@ -1,13 +1,15 @@
 const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
-const checkFirebase = async ({ env }) => {
+const checkFirebase = async () => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer(`${env.APP_ID}-firebase`);
+    const container = localDocker.getContainer(
+      `${process.env.APP_ID}-firebase`
+    );
 
     container.inspect(async (err, data) => {
       if (err) {
-        log("[firebase]: " + err);
+        log(err);
         reject(err);
         return;
       }
@@ -20,13 +22,13 @@ const checkFirebase = async ({ env }) => {
         },
         (err, stream) => {
           if (err) {
-            log("[firebase]: " + err);
+            log(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            log("[firebase]: " + chunk);
+            log(chunk);
 
             if (
               chunk.toString().includes("All emulators ready!") ||

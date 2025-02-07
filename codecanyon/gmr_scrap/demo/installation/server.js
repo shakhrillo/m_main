@@ -1,13 +1,13 @@
 const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
-const checkServer = async ({ env }) => {
+const checkServer = async () => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer(`${env.APP_ID}-server`);
+    const container = localDocker.getContainer(`${process.env.APP_ID}-server`);
 
     container.inspect(async (err, data) => {
       if (err) {
-        log("[server]: " + err);
+        log(err);
         reject(err);
         return;
       }
@@ -20,13 +20,13 @@ const checkServer = async ({ env }) => {
         },
         (err, stream) => {
           if (err) {
-            log("[server]: " + err);
+            log(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            log("[server]: " + chunk);
+            log(chunk);
 
             if (chunk.toString().includes("Server is running on port")) {
               stream.removeListener("data", handleData);

@@ -5,13 +5,15 @@ const { localDocker } = require("./docker");
  * Check for Stripe secrets
  * @returns {Promise<boolean>}
  */
-const checkStripe = async ({ env }) => {
+const checkStripe = async () => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer(`${env.APP_ID}-stripe-cli`);
+    const container = localDocker.getContainer(
+      `${process.env.APP_ID}-stripe-cli`
+    );
 
     container.inspect(async (err, data) => {
       if (err) {
-        log("[stripe]: " + err);
+        log(err);
         reject(err);
         return;
       }
@@ -24,13 +26,13 @@ const checkStripe = async ({ env }) => {
         },
         (err, stream) => {
           if (err) {
-            log("[stripe]: " + err);
+            log(err);
             reject(err);
             return;
           }
 
           const handleData = (chunk) => {
-            log("[stripe]: " + chunk);
+            log(chunk);
 
             if (chunk.toString().includes("Ready!")) {
               stream.removeListener("data", handleData);

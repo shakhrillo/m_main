@@ -4,6 +4,7 @@ const path = require("path");
 const sourcePath = path.resolve(__dirname, "../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
 const installLogPath = path.join(sourcePath, "install.log");
+const certsPath = path.join(sourcePath, "certs");
 
 /**
  * Safely removes a directory and its contents.
@@ -33,6 +34,20 @@ const createStripeSecretsDirectory = async () => {
 };
 
 /**
+ * Creates the certs directory if it doesn't exist.
+ * @returns {Promise<void>}
+ */
+const createCertsDirectory = async () => {
+  try {
+    await fs.mkdir(certsPath, { recursive: true });
+  } catch (error) {
+    console.error(
+      `Failed to create directory at ${certsPath}: ${error.message}`
+    );
+  }
+};
+
+/**
  * Removes the install log file.
  * @returns {Promise<void>}
  */
@@ -52,7 +67,9 @@ const removeInstallLog = async () => {
  */
 const purge = async () => {
   await removeDirectory(stripeSecretsPath);
+  await removeDirectory(certsPath);
   await createStripeSecretsDirectory();
+  await createCertsDirectory();
   await removeInstallLog();
 };
 

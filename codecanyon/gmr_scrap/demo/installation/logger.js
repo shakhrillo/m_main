@@ -1,13 +1,6 @@
-/**
- * @fileoverview Logger service.
- * This service provides logging functionality for the script using log4js.
- */
-
-// Dependencies
 const fs = require("fs");
 const log4js = require("log4js");
 
-// Constants
 log4js.configure({
   appenders: {
     file: { type: "file", filename: "install.log" },
@@ -17,10 +10,7 @@ log4js.configure({
     default: { appenders: ["file", "console"], level: "info" },
   },
 });
-
 const logger = log4js.getLogger();
-
-// Time tracking
 let startTime = Date.now();
 let endTime = Date.now();
 
