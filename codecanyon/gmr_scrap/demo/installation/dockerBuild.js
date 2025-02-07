@@ -1,6 +1,4 @@
-const fs = require("fs/promises");
-const path = require("path");
-const { getEnv } = require("./env");
+const envManager = require("./envManager");
 const { checkDocker } = require("./docker");
 const checkStripe = require("./stripe");
 const checkMachine = require("./machine");
@@ -8,17 +6,14 @@ const checkFirebase = require("./firebase");
 const checkServer = require("./server");
 const { startLog, stopLog } = require("./logger");
 const executeCompose = require("./compose");
-
-const sourcePath = path.resolve(__dirname, "../");
-const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");
+const purge = require("./purge");
 
 const dockerBuild = async () => {
-  try {
-    startLog();
-    const env = getEnv();
+  startLog();
 
-    await fs.rm(stripeSecretsPath, { recursive: true, force: true });
-    await fs.mkdir(stripeSecretsPath, { recursive: true });
+  try {
+    await purge();
+    const env = envManager.getEnv();
 
     await executeCompose({
       env,

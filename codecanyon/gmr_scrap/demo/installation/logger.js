@@ -4,6 +4,7 @@
  */
 
 // Dependencies
+const fs = require("fs");
 const ora = require("ora");
 let startTime = Date.now();
 let endTime = Date.now();
@@ -36,6 +37,8 @@ function log(message) {
     spinner.text = formattedMessage;
   } catch (err) {
     console.error(err);
+  } finally {
+    fs.appendFileSync("install.log", message + "\n");
   }
 }
 
