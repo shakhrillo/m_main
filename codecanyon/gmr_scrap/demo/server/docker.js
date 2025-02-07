@@ -9,8 +9,8 @@ const fs = require("fs");
 const getDocker = () => {
   return new Docker({
     protocol: "https",
-    host: process.env.DOCKER_HOST || "host.docker.internal",
-    port: process.env.DOCKER_PORT || 2376,
+    host: process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal",
+    port: process.env.APP_DOCKER_PORT || 2376,
     ca: fs.readFileSync("/certs/client/ca.pem"),
     cert: fs.readFileSync("/certs/client/cert.pem"),
     key: fs.readFileSync("/certs/client/key.pem"),
@@ -19,26 +19,34 @@ const getDocker = () => {
 
 let docker;
 
-console.log("Docker host:", process.env.DOCKER_HOST);
-console.log("Docker port:", process.env.DOCKER_PORT);
+console.log("Docker host:", process.env.DOCKER_IPV4_ADDRESS);
+console.log("Docker port:", process.env.APP_DOCKER_PORT);
 
 /**
  * Check for Docker
  * @returns {Promise<boolean>}
  */
 const checkDocker = async () => {
+  console.log(
+    "Docker host:",
+    process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal"
+  );
+  console.log("Docker port:", process.env.APP_DOCKER_PORT || 2376);
+
   while (true) {
     try {
-      console.log(
-        "Docker host:",
-        process.env.DOCKER_HOST || "host.docker.internal"
-      );
-      console.log("Docker port:", process.env.DOCKER_PORT || 2376);
+      try {
+        fs.readdirSync("/certs/client");
+      } catch (error) {
+        console.log("Waiting for /certs/client directory to be mounted");
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        continue;
+      }
 
       docker = new Docker({
         protocol: "https",
-        host: process.env.DOCKER_HOST || "host.docker.internal",
-        port: process.env.DOCKER_PORT || 2376,
+        host: process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal",
+        port: process.env.APP_DOCKER_PORT || 2376,
         ca: fs.readFileSync("/certs/client/ca.pem"),
         cert: fs.readFileSync("/certs/client/cert.pem"),
         key: fs.readFileSync("/certs/client/key.pem"),

@@ -4,8 +4,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const { startContainer } = require("../controllers/dockerController");
 
 const environment = process.env.NODE_ENV || "development";
-const machineBuildImageName = process.env.MACHINE_BUILD_IMAGE_NAME;
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 
 const handleContainerOperations = async (req, res) => {
   try {
@@ -13,13 +11,13 @@ const handleContainerOperations = async (req, res) => {
     console.log("tag", tag);
     console.log("type", type);
     await startContainer({
-      Image: machineBuildImageName,
+      Image: process.env.MACHINE_BUILD_IMAGE_NAME,
       name: tag,
       Env: [
         `TAG=${tag}`,
         `NODE_ENV=${environment}`,
-        `FIREBASE_PROJECT_ID=${firebaseProjectId}`,
-        `FIREBASE_URL=${process.env.FIREBASE_IP}`,
+        `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
+        `FIREBASE_URL=${process.env.FIREBASE_IPV4_ADDRESS}`,
         `CHROME_PATH=/usr/bin/chromium-browser`,
       ],
       Cmd: ["npm", "run", type],
