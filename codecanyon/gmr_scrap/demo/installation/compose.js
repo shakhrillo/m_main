@@ -12,7 +12,6 @@ const executeCompose = async ({ env, config }) => {
       await createNetwork({ log, env });
     }
 
-    log(`Executing ${action}...`);
     await compose[action]({
       cwd: sourcePath,
       config,
@@ -33,7 +32,6 @@ const executeCompose = async ({ env, config }) => {
 
           if (imageInfo) {
             await image.remove({ force: true });
-            log(`Removed image ${img}`);
           }
         } catch (err) {
           log(`No image found for ${img}`);
