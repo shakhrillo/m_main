@@ -43,7 +43,7 @@ app.listen(PORT, () => {
   console.log("");
   console.log(
     "\x1b[1m\x1b[32m%s\x1b[0m",
-    `\u2713 GMR Scrap Server [${process.env.NODE_ENV}]`
+    `\u2713 GMR Scrap Server [${process.env.APP_ENVIRONMENT}]`
   );
   console.log(
     "\x1b[1m\x1b[32m%s\x1b[0m",

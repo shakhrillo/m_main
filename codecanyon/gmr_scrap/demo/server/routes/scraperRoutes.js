@@ -3,8 +3,6 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const { startContainer } = require("../controllers/dockerController");
 
-const environment = process.env.NODE_ENV || "development";
-
 const handleContainerOperations = async (req, res) => {
   try {
     const { tag, type } = req.data;
@@ -15,7 +13,7 @@ const handleContainerOperations = async (req, res) => {
       name: tag,
       Env: [
         `TAG=${tag}`,
-        `NODE_ENV=${environment}`,
+        `NODE_ENV=${process.env.APP_ENVIRONMENT}`,
         `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
         `FIREBASE_URL=${process.env.FIREBASE_IPV4_ADDRESS}`,
         `CHROME_PATH=/usr/bin/chromium-browser`,

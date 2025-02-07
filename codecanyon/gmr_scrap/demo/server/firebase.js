@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
-const environment = process.env.NODE_ENV || "development";
+const environment = process.env.APP_ENVIRONMENT || "development";
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
 

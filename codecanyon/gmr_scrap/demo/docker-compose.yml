@@ -65,7 +65,7 @@ services:
       - ./firebase.json:/usr/src/firebase.json
       - ./firebaseServiceAccount.json:/usr/src/firebaseServiceAccount.json
     environment:
-      NODE_ENV: ${APP_ENVIRONMENT}
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
 
       DOCKER_IPV4_ADDRESS: ${DOCKER_IPV4_ADDRESS}
