@@ -77,18 +77,17 @@ export const ScrapValidateURL = ({
   }
 
   return (
-    <Card text="primary" bg="bg-light">
+    <Card text="light" bg="primary">
       <CardBody>
         <Stack direction="horizontal" gap={3} className="align-items-start">
           <IconBrandGoogleMaps size={48} />
           <Stack direction="vertical">
-            <CardTitle>Share a Google Maps URL to validate</CardTitle>
+            <CardTitle>Google Maps URL</CardTitle>
             <CardSubtitle>
               Validate a Google Maps URL to get information about the location.
             </CardSubtitle>
-            <Form onSubmit={handleSubmit} noValidate>
+            <Form className="mt-3" onSubmit={handleSubmit} noValidate>
               <FormGroup className="mb-3" controlId="url">
-                <FormLabel>Google Maps URL</FormLabel>
                 <FormControl
                   type="url"
                   value={url}
@@ -97,6 +96,7 @@ export const ScrapValidateURL = ({
                   pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
                   required
                   autoFocus
+                  size="lg"
                   disabled={isDisabled}
                 />
                 <FormText className="invalid-feedback bg-danger-subtle">
@@ -113,10 +113,11 @@ export const ScrapValidateURL = ({
               )}
               <Stack direction="horizontal">
                 <Button
-                  variant="primary"
+                  variant="light"
                   type="submit"
                   className="ms-auto"
                   disabled={isDisabled}
+                  size="lg"
                 >
                   <Stack direction="horizontal" gap={2}>
                     {container?.machine?.Action !== "die" && containerId ? (
@@ -128,7 +129,7 @@ export const ScrapValidateURL = ({
                       <>
                         <IconCircleCheck />
                         Validate URL
-                        <Badge bg="light" text="dark" className="top-0" pill>
+                        <Badge bg="warning" className="top-0" pill>
                           3 points
                         </Badge>
                       </>

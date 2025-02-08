@@ -1,6 +1,5 @@
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Breadcrumb, Col, Container, Row, Stack } from "react-bootstrap";
 import { filter, map } from "rxjs";
@@ -12,7 +11,6 @@ import { dockerContainers } from "../services/dockerService";
 import { IDockerContainer } from "../types/dockerContainer";
 
 export const Scrap = () => {
-  const { uid } = useOutletContext<User>();
   const navigate = useNavigate();
 
   const { scrapId } = useParams() as { scrapId: string };
@@ -41,13 +39,13 @@ export const Scrap = () => {
   }, [scrapId]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Main</Breadcrumb.Item>
         <Breadcrumb.Item
           onClick={() => {
             navigate("/scrap");
           }}
+          active
         >
           Scrap
         </Breadcrumb.Item>

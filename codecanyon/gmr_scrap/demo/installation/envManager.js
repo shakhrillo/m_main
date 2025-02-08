@@ -32,6 +32,7 @@ class EnvManager {
     "APP_FIREBASE_EMULATOR_HUB",
     "JWT_SECRET",
     "GOOGLE_MAPS_API_KEY",
+    "GOOGLE_MAPS_ID",
   ];
 
   #loadEnv() {

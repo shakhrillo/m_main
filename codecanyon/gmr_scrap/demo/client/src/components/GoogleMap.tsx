@@ -2,7 +2,7 @@ import { Map, MapCameraChangedEvent, useMap } from "@vis.gl/react-google-maps";
 import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 import { useEffect, useMemo, useState } from "react";
 import { ClusteredMarkers } from "./map/ClusteredMarkers";
-import { useRef } from "react";
+const GOOGLE_MAPS_ID = import.meta.env.VITE_GOOGLE_MAPS_ID || "4cc6e874aae3dd3";
 
 export const GoogleMap = ({
   geojson,
@@ -31,19 +31,24 @@ export const GoogleMap = ({
 
   useMemo(() => {
     if (!map || !bounds) return;
+
+    const boundsJson = bounds.toJSON?.();
+    if (!boundsJson) return;
+
     map.fitBounds(bounds);
   }, [
     map,
-    bounds?.toJSON().west,
-    bounds?.toJSON().south,
-    bounds?.toJSON().east,
-    bounds?.toJSON().north,
+    bounds,
+    bounds?.toJSON?.()?.west,
+    bounds?.toJSON?.()?.south,
+    bounds?.toJSON?.()?.east,
+    bounds?.toJSON?.()?.north,
   ]);
 
   return (
     <Map
       gestureHandling="greedy"
-      mapId="4cc6e874aae3dd3"
+      mapId={GOOGLE_MAPS_ID}
       disableDefaultUI
       defaultCenter={defaultCenter}
       defaultZoom={defaultZoom}

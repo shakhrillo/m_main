@@ -19,6 +19,7 @@ import {
   FormSelect,
   FormText,
   Row,
+  Stack,
 } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
@@ -77,168 +78,188 @@ export const ScrapExtractOptions = ({
     outputAs,
   ]);
   return (
-    <Row className="g-3">
-      <Col md={4}>
-        <Card>
-          <CardBody
-            className="d-flex align-items-start gap-3"
-            onClick={() =>
-              container.rating && setExtractImageUrls(!extractImageUrls)
-            }
-          >
-            {createElement(IconPhoto, {
-              className: "text-body-secondary",
-            })}
-            <span className="me-auto">
-              Image URLs
-              <Badge
-                bg={extractImageUrls ? "success" : "secondary"}
-                className="ms-2"
-              >
-                2 points
-              </Badge>
-            </span>
-            {extractImageUrls ? (
-              <IconCircleCheck className="text-success" />
-            ) : (
-              container.rating && <IconCircleDashedCheck />
-            )}
-          </CardBody>
-        </Card>
-      </Col>
-      <Col md={4}>
-        <Card>
-          <CardBody
-            className="d-flex align-items-start gap-3"
-            onClick={() =>
-              container.rating && setExtractVideoUrls(!extractVideoUrls)
-            }
-          >
-            {createElement(IconVideo, {
-              className: "text-body-secondary",
-            })}
-            <span className="me-auto">
-              Video URLs
-              <Badge
-                bg={extractVideoUrls ? "success" : "secondary"}
-                className="ms-2"
-              >
-                3 points
-              </Badge>
-            </span>
-            {extractVideoUrls ? (
-              <IconCircleCheck className="text-success" />
-            ) : (
-              container.rating && <IconCircleDashedCheck />
-            )}
-          </CardBody>
-        </Card>
-      </Col>
-      <Col md={4}>
-        <Card>
-          <CardBody
-            className="d-flex align-items-start gap-3"
-            onClick={() =>
-              container.rating && setExtractOwnerResponse(!extractOwnerResponse)
-            }
-          >
-            {createElement(IconMessageReply, {
-              className: "text-body-secondary",
-            })}
-            <span className="me-auto">
-              Owner response
-              <Badge
-                bg={extractOwnerResponse ? "success" : "secondary"}
-                className="ms-2"
-              >
-                1 point
-              </Badge>
-            </span>
-            {extractOwnerResponse ? (
-              <IconCircleCheck className="text-success" />
-            ) : (
-              container.rating && <IconCircleDashedCheck />
-            )}
-          </CardBody>
-        </Card>
-      </Col>
-      <Col md={6}>
-        <Card>
-          <CardBody className="d-flex align-items-start gap-3">
-            {createElement(IconFence, {
-              className: "text-body-secondary",
-            })}
-            <div className="w-100">
-              <FormLabel>Review limit</FormLabel>
-              <FormControl
-                placeholder="Review limit"
-                value={limit}
-                onChange={(e) => setLimit(+e.target.value)}
-                disabled={!container.rating}
-              />
-              <FormText>
-                Limit the number of reviews to extract. Leave empty to extract
-                all reviews.
-              </FormText>
-            </div>
-          </CardBody>
-        </Card>
-      </Col>
-      <Col md={6}>
-        <Card>
-          <CardBody className="d-flex align-items-start gap-3">
-            {createElement(IconArrowsSort, {
-              className: "text-body-secondary",
-            })}
-            <div className="w-100">
-              <FormLabel>Sorts by</FormLabel>
-              <FormSelect
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(
-                    e.target.value as
-                      | "Most relevant"
-                      | "Newest"
-                      | "Highest rating"
-                      | "Lowest rating",
-                  )
+    <>
+      <Card>
+        <CardBody>
+          <Row className="g-3">
+            <Col lg={4}>
+              <Stack
+                direction="horizontal"
+                className="bg-light p-3 rounded gap-3"
+                onClick={() =>
+                  container.rating && setExtractImageUrls(!extractImageUrls)
                 }
-                disabled={!container.rating}
               >
-                <option value="Most relevant">Most relevant</option>
-                <option value="Newest">Newest</option>
-                <option value="Highest rating">Highest rating</option>
-                <option value="Lowest rating">Lowest rating</option>
-              </FormSelect>
-              <FormText>
-                Sort reviews by most relevant, newest, highest rating, or lowest
-                rating.
-              </FormText>
-            </div>
-          </CardBody>
-        </Card>
-      </Col>
-      <Col>
-        <Card>
-          <CardBody className="d-flex align-items-start gap-3">
-            {createElement(IconFile, {
-              className: "text-body-secondary",
-            })}
-            <div className="w-100">
-              <FormLabel>Output as</FormLabel>
-              <FormSelect
-                value={outputAs}
-                onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
-                disabled={!container.rating}
+                {createElement(IconPhoto, {
+                  className: "text-body-secondary",
+                  size: 30,
+                })}
+                <Stack className="d-flex me-auto" direction="vertical">
+                  <h6 className="m-0">Image URLs</h6>
+                  <div className="d-inline">
+                    <Badge bg={extractImageUrls ? "success" : "secondary"}>
+                      2 points
+                    </Badge>
+                  </div>
+                </Stack>
+                {createElement(
+                  extractImageUrls ? IconCircleCheck : IconCircleDashedCheck,
+                  {
+                    className: extractImageUrls
+                      ? "text-success"
+                      : "text-body-secondary",
+                    size: 30,
+                  },
+                )}
+              </Stack>
+            </Col>
+            <Col lg={4}>
+              <Stack
+                direction="horizontal"
+                className="bg-light p-3 rounded gap-3"
+                onClick={() =>
+                  container.rating && setExtractVideoUrls(!extractVideoUrls)
+                }
               >
-                <option value="json">JSON</option>
-                <option value="csv">CSV</option>
-              </FormSelect>
-              <FormText>Output as a CSV or JSON file.</FormText>
-            </div>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
+                {createElement(IconVideo, {
+                  className: "text-body-secondary",
+                  size: 30,
+                })}
+                <Stack className="d-flex me-auto" direction="vertical">
+                  <h6 className="m-0">Video URLs</h6>
+                  <div className="d-inline">
+                    <Badge bg={extractVideoUrls ? "success" : "secondary"}>
+                      3 points
+                    </Badge>
+                  </div>
+                </Stack>
+                {createElement(
+                  extractVideoUrls ? IconCircleCheck : IconCircleDashedCheck,
+                  {
+                    className: extractVideoUrls
+                      ? "text-success"
+                      : "text-body-secondary",
+                    size: 30,
+                  },
+                )}
+              </Stack>
+            </Col>
+            <Col lg={4}>
+              <Stack
+                direction="horizontal"
+                className="bg-light p-3 rounded gap-3"
+                onClick={() =>
+                  container.rating &&
+                  setExtractOwnerResponse(!extractOwnerResponse)
+                }
+              >
+                {createElement(IconMessageReply, {
+                  className: "text-body-secondary",
+                  size: 30,
+                })}
+                <Stack className="d-flex me-auto" direction="vertical">
+                  <h6 className="m-0">Owner response</h6>
+                  <div className="d-inline">
+                    <Badge bg={extractOwnerResponse ? "success" : "secondary"}>
+                      3 points
+                    </Badge>
+                  </div>
+                </Stack>
+                {createElement(
+                  extractOwnerResponse
+                    ? IconCircleCheck
+                    : IconCircleDashedCheck,
+                  {
+                    className: extractOwnerResponse
+                      ? "text-success"
+                      : "text-body-secondary",
+                    size: 30,
+                  },
+                )}
+              </Stack>
+            </Col>
+          </Row>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardBody>
+          <Row className="gap-3">
+            <Col sm={12}>
+              <Stack direction="horizontal" className="gap-3 align-items-start">
+                {createElement(IconFence, {
+                  className: "text-body-secondary",
+                })}
+                <div className="w-100">
+                  <FormLabel>Review limit</FormLabel>
+                  <FormControl
+                    placeholder="Review limit"
+                    value={limit}
+                    onChange={(e) => setLimit(+e.target.value)}
+                    disabled={!container.rating}
+                  />
+                  <FormText>
+                    Limit the number of reviews to extract. Leave empty to
+                    extract all reviews.
+                  </FormText>
+                </div>
+              </Stack>
+            </Col>
+            <Col sm={12}>
+              <Stack direction="horizontal" className="gap-3 align-items-start">
+                {createElement(IconArrowsSort, {
+                  className: "text-body-secondary",
+                })}
+                <div className="w-100">
+                  <FormLabel>Sorts by</FormLabel>
+                  <FormSelect
+                    value={sortBy}
+                    onChange={(e) =>
+                      setSortBy(
+                        e.target.value as
+                          | "Most relevant"
+                          | "Newest"
+                          | "Highest rating"
+                          | "Lowest rating",
+                      )
+                    }
+                    disabled={!container.rating}
+                  >
+                    <option value="Most relevant">Most relevant</option>
+                    <option value="Newest">Newest</option>
+                    <option value="Highest rating">Highest rating</option>
+                    <option value="Lowest rating">Lowest rating</option>
+                  </FormSelect>
+                  <FormText>
+                    Sort reviews by most relevant, newest, highest rating, or
+                    lowest rating.
+                  </FormText>
+                </div>
+              </Stack>
+            </Col>
+            <Col>
+              <Stack direction="horizontal" className="gap-3 align-items-start">
+                {createElement(IconFile, {
+                  className: "text-body-secondary",
+                })}
+                <div className="w-100">
+                  <FormLabel>Output as</FormLabel>
+                  <FormSelect
+                    value={outputAs}
+                    onChange={(e) =>
+                      setOutputAs(e.target.value as "json" | "csv")
+                    }
+                    disabled={!container.rating}
+                  >
+                    <option value="json">JSON</option>
+                    <option value="csv">CSV</option>
+                  </FormSelect>
+                  <FormText>Output as a CSV or JSON file.</FormText>
+                </div>
+              </Stack>
+            </Col>
+          </Row>
+        </CardBody>
+      </Card>
+    </>
   );
 };
