@@ -35,12 +35,15 @@ export const ContainersList = ({
   path: "reviews" | "containers" | "scrap";
   type?: "comments" | "info";
 }) => {
-  const { uid } = useOutletContext<User>();
+  const user = useOutletContext<User>();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const subscription = dockerContainers({
       search,
       // uid: uid,
@@ -53,7 +56,7 @@ export const ContainersList = ({
     return () => {
       subscription.unsubscribe();
     };
-  }, [search, uid, type]);
+  }, [search, user, type]);
 
   return (
     <Card>

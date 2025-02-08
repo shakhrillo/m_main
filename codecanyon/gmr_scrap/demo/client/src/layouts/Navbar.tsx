@@ -10,16 +10,22 @@ import { IUser, userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 
 export const AppNavbar = () => {
-  const { uid } = useOutletContext<User>();
-  const [user, setUser] = useState<IUser | null>(null);
+  const user = useOutletContext<User>();
+  const [userInfo, setUserInfo] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const unsubscribe = userData(uid).subscribe((user) => setUser(user));
+    if (!user || !user.uid) {
+      return;
+    }
+
+    const unsubscribe = userData(user.uid).subscribe((user) =>
+      setUserInfo(user),
+    );
 
     return () => {
       unsubscribe.unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   return (
     <Navbar expand="lg" className="navbar">
@@ -32,7 +38,7 @@ export const AppNavbar = () => {
             <NavLink to={"/payments"} className="nav-link">
               <IconCoins size={22} className="text-warning" stroke={2} />
               <span className="fw-bold ms-2">
-                {formatNumber(user?.coinBalance)}
+                {formatNumber(userInfo?.coinBalance)}
               </span>
             </NavLink>
 
@@ -42,7 +48,7 @@ export const AppNavbar = () => {
             </NavLink>
 
             <NavDropdown
-              title={user?.displayName}
+              title={userInfo?.displayName}
               id="user-dropdown"
               align="end"
             >
