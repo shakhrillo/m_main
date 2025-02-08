@@ -12,16 +12,24 @@ export const AuthGuard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const user = await authenticatedUser();
-      setLoading(false);
       setUser(user);
-
-      if (!user) {
-        navigate("/login");
-      }
+      setLoading(false);
     };
 
     fetchUser();
   }, [navigate]);
 
-  return loading ? <div>Loading...</div> : <Outlet context={user} />;
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
+  }, [loading, user]);
+
+  return loading || !user ? <div>Loading...</div> : <Outlet context={user} />;
 };

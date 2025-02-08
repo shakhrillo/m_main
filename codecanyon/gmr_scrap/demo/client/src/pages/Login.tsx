@@ -24,9 +24,9 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
+import { authenticatedUser } from "../services/userService";
 
 export const Login: React.FC = () => {
-  const user = useOutletContext<User>();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -34,8 +34,14 @@ export const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
-    navigate("/scrap");
+    const fetchUser = async () => {
+      const user = await authenticatedUser();
+      if (user) {
+        navigate("/scrap");
+      }
+    };
+
+    fetchUser();
   }, []);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -53,7 +59,7 @@ export const Login: React.FC = () => {
   async function handleGoogleLogin() {
     try {
       await googleLogin();
-      window.location.reload();
+      navigate("/scrap");
     } catch (error) {
       setError("Failed to log in with Google.");
     }
@@ -62,7 +68,7 @@ export const Login: React.FC = () => {
   async function handleFacebookLogin() {
     try {
       await facebookLogin();
-      window.location.reload();
+      navigate("/scrap");
     } catch (error) {
       setError("Failed to log in with Facebook.");
     }
