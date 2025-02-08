@@ -187,11 +187,9 @@ export const Login: React.FC = () => {
                     </Form>
                   </Col>
                   <Col>
-                    <Stack direction="horizontal" gap={1} className="mx-auto">
-                      Don't have an account?{" "}
-                      <NavLink className="text-decoration-none" to="/register">
-                        Create an account
-                      </NavLink>
+                    <Stack direction="horizontal" gap={2}>
+                      Don't have an account?
+                      <NavLink to="/register">Create an account</NavLink>
                     </Stack>
                   </Col>
                 </Row>
