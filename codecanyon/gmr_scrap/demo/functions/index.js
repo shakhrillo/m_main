@@ -29,8 +29,8 @@ const jsonPath = path.join(__dirname, "assets/fake-data.json");
 admin.initializeApp({
   projectId:
     process.env.APP_ENVIRONMENT === "development"
-      ? `demo-${process.env.FIREBASE_PROJECT_ID}`
-      : `${process.env.FIREBASE_PROJECT_ID}`,
+      ? `demo-${process.env.APP_FIREBASE_PROJECT_ID}`
+      : `${process.env.APP_FIREBASE_PROJECT_ID}`,
 });
 
 exports.processUserCreated = functions.auth.user().onCreate(processUserCreated);

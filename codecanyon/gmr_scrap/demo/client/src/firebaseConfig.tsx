@@ -7,7 +7,7 @@ import firebaseConfig from "../firebaseConfig.json";
 const app = initializeApp({
   ...firebaseConfig,
   ...(import.meta.env.VITE_APP_ENVIRONMENT === "development" && {
-    projectId: `demo-${import.meta.env.VITE_FIREBASE_PROJECT_ID}`,
+    projectId: `demo-${import.meta.env.VITE_APP_FIREBASE_PROJECT_ID}`,
   }),
 });
 const auth = getAuth();
@@ -17,13 +17,13 @@ const storage = getStorage(app);
 if (import.meta.env.VITE_APP_ENVIRONMENT === "development") {
   connectAuthEmulator(
     auth,
-    `http://localhost:${import.meta.env.VITE_FIREBASE_EMULATOR_AUTHENTICATION}`,
+    `http://localhost:${import.meta.env.VITE_APP_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
   connectFirestoreEmulator(firestore, "localhost", 8080);
   connectStorageEmulator(
     storage,
     "localhost",
-    import.meta.env.VITE_FIREBASE_EMULATOR_STORAGE,
+    import.meta.env.VITE_APP_FIREBASE_EMULATOR_STORAGE,
   );
 }
 

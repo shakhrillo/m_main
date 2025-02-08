@@ -9,9 +9,9 @@
  *
  * Environment Variables:
  * - `APP_ENVIRONMENT` - Specifies the environment mode.
- * - `FIREBASE_PROJECT_ID` - Specifies the Firebase project ID.
- * - `FIREBASE_IPV4_ADDRESS` - Specifies the Firebase URL.
- * - `FIREBASE_KEYS_PATH` - Specifies the path to the Firebase keys file.
+ * - `APP_FIREBASE_PROJECT_ID` - Specifies the Firebase project ID.
+ * - `APP_FIREBASE_IPV4_ADDRESS` - Specifies the Firebase URL.
+ * - `APP_FIREBASE_KEYS_PATH` - Specifies the path to the Firebase keys file.
  *
  * Version History:
  * - 1.0.0: Initial release with Firestore and Firebase Storage operations.
@@ -34,8 +34,8 @@ const path = require("path");
 
 // Constants
 const environment = process.env.APP_ENVIRONMENT;
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
-const firebaseUrl = process.env.FIREBASE_IPV4_ADDRESS;
+const firebaseProjectId = process.env.APP_FIREBASE_PROJECT_ID;
+const firebaseUrl = process.env.APP_FIREBASE_IPV4_ADDRESS;
 
 const firebasekeysPath = path.resolve(
   __dirname,
@@ -46,8 +46,8 @@ const firebasekeysPath = path.resolve(
 admin.initializeApp({
   projectId:
     process.env.APP_ENVIRONMENT === "development"
-      ? `demo-${process.env.FIREBASE_PROJECT_ID}`
-      : `${process.env.FIREBASE_PROJECT_ID}`,
+      ? `demo-${process.env.APP_FIREBASE_PROJECT_ID}`
+      : `${process.env.APP_FIREBASE_PROJECT_ID}`,
   ...(environment === "production" && {
     credential: admin.credential.cert(firebasekeysPath),
     storageBucket: `gs://${firebaseProjectId}.firebasestorage.app`,
@@ -56,23 +56,6 @@ admin.initializeApp({
 
 // Initialize Firestore
 const db = admin.firestore();
-let serviceAccountJson = {};
-
-// Load Firebase keys for development environment
-if (environment === "development") {
-  const serviceAccountPath = path.resolve(__dirname, "../firebase.json");
-
-  if (fs.existsSync(serviceAccountPath)) {
-    serviceAccountJson = JSON.parse(
-      fs.readFileSync(serviceAccountPath, "utf8")
-    );
-  } else {
-    throw new Error("Firebase keys file not found");
-  }
-
-  const firestoreEmulatorPort = process.env.FIREBASE_EMULATOR_FIRESTORE;
-  db.settings({ host: `${firebaseUrl}:${firestoreEmulatorPort}`, ssl: false });
-}
 
 /**
  * Uploads a file to Firebase Storage.

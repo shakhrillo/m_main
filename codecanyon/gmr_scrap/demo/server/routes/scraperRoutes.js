@@ -13,14 +13,14 @@ const handleContainerOperations = async (req, res) => {
       name: tag,
       Env: [
         `TAG=${tag}`,
-        `NODE_ENV=${process.env.APP_ENVIRONMENT}`,
-        `FIREBASE_PROJECT_ID=${
-          process.env.APP_ENVIRONMENT === "development"
-            ? `demo-${process.env.FIREBASE_PROJECT_ID}`
-            : `${process.env.FIREBASE_PROJECT_ID}`
-        }`,
-        `FIREBASE_URL=${process.env.FIREBASE_IPV4_ADDRESS}`,
-        `CHROME_PATH=/usr/bin/chromium-browser`,
+        // `NODE_ENV=${process.env.APP_ENVIRONMENT}`,
+        // `APP_FIREBASE_PROJECT_ID=${
+        //   process.env.APP_ENVIRONMENT === "development"
+        //     ? `demo-${process.env.APP_FIREBASE_PROJECT_ID}`
+        //     : `${process.env.APP_FIREBASE_PROJECT_ID}`
+        // }`,
+        // `APP_FIREBASE_URL=${process.env.APP_FIREBASE_IPV4_ADDRESS}`,
+        // `CHROME_PATH=/usr/bin/chromium-browser`,
       ],
       Cmd: ["npm", "run", type],
       HostConfig: {

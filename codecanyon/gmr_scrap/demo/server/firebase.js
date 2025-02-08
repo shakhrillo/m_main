@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 
 const environment = process.env.APP_ENVIRONMENT || "development";
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
 
 const firebasekeysPath = path.resolve(
@@ -14,8 +13,8 @@ const firebasekeysPath = path.resolve(
 admin.initializeApp({
   projectId:
     process.env.APP_ENVIRONMENT === "development"
-      ? `demo-${process.env.FIREBASE_PROJECT_ID}`
-      : `${process.env.FIREBASE_PROJECT_ID}`,
+      ? `demo-${process.env.APP_FIREBASE_PROJECT_ID}`
+      : `${process.env.APP_FIREBASE_PROJECT_ID}`,
   ...(environment === "production" && {
     credential: admin.credential.cert(firebasekeysPath),
     storageBucket,
@@ -26,7 +25,7 @@ const db = admin.firestore();
 
 if (environment === "development") {
   db.settings({
-    host: `${process.env.FIREBASE_IPV4_ADDRESS}:${process.env.FIREBASE_EMULATOR_FIRESTORE}`,
+    host: `${process.env.APP_FIREBASE_IPV4_ADDRESS}:${process.env.APP_FIREBASE_EMULATOR_FIRESTORE}`,
     ssl: false,
   });
 }
