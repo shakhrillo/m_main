@@ -29,7 +29,7 @@ async function processContainerCreated(event) {
     /*-------------------*/
     /* Update statistics */
     /*-------------------*/
-    await updateStatistics(db, batch, type, data);
+    // await updateStatistics(db, batch, type, data);
     // const statisticsCollection = db.collection("statistics");
     // const statisticsQuery = await statisticsCollection
     //   .where("type", "==", type)
