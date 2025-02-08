@@ -85,9 +85,11 @@ body {
 // Auth
 .auth-divider {
   position: relative;
+  color: $secondary;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
+  text-transform: uppercase;
 
   &::before {
     left: 0;
@@ -100,7 +102,7 @@ body {
   &::before {
     position: absolute;
     top: 50%;
-    background-color: #dee2e6;
+    background-color: $card-border-color;
     width: calc(50% - 30px);
     height: 1px;
     content: "";
