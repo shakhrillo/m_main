@@ -7,7 +7,7 @@ COPY .env firebaseServiceAccount.json firebase.json firestore.indexes.json fires
 RUN npm install -g firebase-tools
 
 WORKDIR /usr/src/app/functions
-COPY functions ./
+COPY functions .env ./
 RUN npm install --legacy-peer-deps
 RUN rm package-lock.json
 

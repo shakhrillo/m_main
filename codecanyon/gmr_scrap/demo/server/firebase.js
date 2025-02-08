@@ -12,7 +12,10 @@ const firebasekeysPath = path.resolve(
 );
 
 admin.initializeApp({
-  projectId: firebaseProjectId,
+  projectId:
+    process.env.APP_ENVIRONMENT === "development"
+      ? `demo-${process.env.FIREBASE_PROJECT_ID}`
+      : `${process.env.FIREBASE_PROJECT_ID}`,
   ...(environment === "production" && {
     credential: admin.credential.cert(firebasekeysPath),
     storageBucket,

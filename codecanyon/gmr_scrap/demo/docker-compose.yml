@@ -35,7 +35,7 @@ services:
     container_name: ${APP_ID}-firebase
     image: ${APP_ID}-firebase
     volumes:
-      - ./.env:/usr/src/app/functions/.env
+      # - ./.env:/usr/src/app/functions/.env.local
       - ./firebase.sh:/usr/src/app/firebase.sh
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}

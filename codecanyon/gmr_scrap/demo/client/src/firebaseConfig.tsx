@@ -7,7 +7,7 @@ import firebaseConfig from "../firebaseConfig.json";
 const app = initializeApp({
   ...firebaseConfig,
   ...(import.meta.env.VITE_APP_ENVIRONMENT === "development" && {
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    projectId: `demo-${import.meta.env.VITE_FIREBASE_PROJECT_ID}`,
   }),
 });
 const auth = getAuth();

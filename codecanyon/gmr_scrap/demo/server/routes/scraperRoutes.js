@@ -14,7 +14,11 @@ const handleContainerOperations = async (req, res) => {
       Env: [
         `TAG=${tag}`,
         `NODE_ENV=${process.env.APP_ENVIRONMENT}`,
-        `FIREBASE_PROJECT_ID=${process.env.FIREBASE_PROJECT_ID}`,
+        `FIREBASE_PROJECT_ID=${
+          process.env.APP_ENVIRONMENT === "development"
+            ? `demo-${process.env.FIREBASE_PROJECT_ID}`
+            : `${process.env.FIREBASE_PROJECT_ID}`
+        }`,
         `FIREBASE_URL=${process.env.FIREBASE_IPV4_ADDRESS}`,
         `CHROME_PATH=/usr/bin/chromium-browser`,
       ],

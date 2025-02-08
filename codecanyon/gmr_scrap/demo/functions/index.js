@@ -25,12 +25,12 @@ const {
 } = require("./src/services/mainService");
 const processMachineWritten = require("./src/machines/processMachineWritten");
 const jsonPath = path.join(__dirname, "assets/fake-data.json");
-const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
 
 admin.initializeApp({
-  projectId: firebaseProjectId
-    ? `demo-${firebaseProjectId}`
-    : firebaseProjectId,
+  projectId:
+    process.env.APP_ENVIRONMENT === "development"
+      ? `demo-${process.env.FIREBASE_PROJECT_ID}`
+      : `${process.env.FIREBASE_PROJECT_ID}`,
 });
 
 exports.processUserCreated = functions.auth.user().onCreate(processUserCreated);
