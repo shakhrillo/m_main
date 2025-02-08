@@ -4,15 +4,13 @@ function Integration() {
   return (
     <section id="integration" className="integration-section bg-indigo">
       <div className="section__area">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="section__content section-title text-center">
-              <h1 className="home-section__content--title">
-                Integration / API
-              </h1>
-              {/* <!-- <p className="home-section__content--subtitle">We have found 150,000,000+ leades for thousands
+        <div className="container d-flex flex-column justify-content-center align-items-center">
+          <div className="section__content section-title text-center ">
+            <h1 className="home-section__content--title">Integration / API</h1>
+            {/* <!-- <p className="home-section__content--subtitle">We have found 150,000,000+ leades for thousands
                             of businesses around the world this year.</p> --> */}
-            </div>
+          </div>
+          <div className="row justify-content-center">
             <div className="col-lg-6 col-md-12">
               <div className="integration__card">
                 <div className="d-flex gap-3 align-items-center">

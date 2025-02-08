@@ -375,7 +375,6 @@ li {
   z-index: 1;
   position: relative;
   padding: 50px 35px;
-  margin-bottom: 25px;
   border-radius: 15px;
   border: 1px solid #e3e5ff;
   background-color: var(--whiteColor);

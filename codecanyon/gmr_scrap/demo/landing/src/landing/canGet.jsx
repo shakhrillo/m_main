@@ -5,17 +5,17 @@ function CanGet() {
   return (
     <section id="canGet" className="can-get-section">
       <div className="section__area">
-        <div className="container">
+        <div className="container d-flex flex-column justify-content-center align-items-center">
+          <div className="section__content section-title text-center">
+            <h1 className="home-section__content--title">
+              What Type of Data You Can Get
+            </h1>
+            <p className="home-section__content--subtitle">
+              This is just a tip of an iceberg...
+            </p>
+          </div>
           <div className="row justify-content-center">
-            <div className="section__content section-title text-center">
-              <h1 className="home-section__content--title">
-                What Type of Data You Can Get
-              </h1>
-              <p className="home-section__content--subtitle">
-                This is just a tip of an iceberg...
-              </p>
-            </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={setting} alt="setting" />
@@ -32,7 +32,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={addLink} alt="setting" />
@@ -49,7 +49,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={setting} alt="setting" />
@@ -66,7 +66,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6 ">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={setting} alt="setting" />
@@ -83,7 +83,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={setting} alt="setting" />
@@ -100,7 +100,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col-xl-4 col-sm-6 col-md-4">
+            <div className="col-xl-4 col-sm-6">
               <div className="can-get-section__box">
                 <div className="can-get-section__box__single__icon">
                   <img src={setting} alt="setting" />
@@ -117,7 +117,7 @@ function CanGet() {
                 </p>
               </div>
             </div>
-            <div className="col">
+            <div>
               <div className="section__footer">
                 <button className="geo-btn geo-btn__default">
                   Try for free

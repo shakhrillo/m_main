@@ -121,7 +121,7 @@ function Pricing() {
               </div>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <div className="pricing__single">
+              <div className="pricing__single h-100">
                 <h3 className="pricing__single__title">Custome License</h3>
                 <p className="pricing__single__subtitle">
                   If a custom License is necessary for your business model,

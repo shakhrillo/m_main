@@ -4,14 +4,14 @@ import Faq from "./faq";
 import Footer from "./footer";
 import Integration from "./integration";
 import Main from "./main";
-import Navbar from "./navbar";
+import CustomNavbar from "./navbar";
 import Pricing from "./pricing";
 import Testimonal from "./testimonal";
 
 function Landing() {
   return (
     <div className="main">
-      <Navbar />
+      <CustomNavbar />
       <Main />
       <CanGet />
       <Testimonal />

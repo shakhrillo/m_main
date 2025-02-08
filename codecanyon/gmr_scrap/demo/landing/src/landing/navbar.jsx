@@ -1,40 +1,41 @@
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+
 import logo from "../img/logo-with-text.svg";
 
-function Navbar() {
+function CustomNavbar() {
   return (
-    <nav className="geo-navbar">
-      <div className="container">
-        <div className="geo-navbar__content">
-          <a className="geo-navbar__brand" href="#home">
-            <img src={logo} alt="GeoScrapper" />
-          </a>
-          <ul className="geo-navbar__content--menu">
-            <li className="geo-navbar__content--menu__item">
-              <a href="#canGet">Data We Provide</a>
-            </li>
-            <li className="geo-navbar__content--menu__item">
-              <a href="#testimonial">Testimonial</a>
-            </li>
-            <li className="geo-navbar__content--menu__item">
-              <a href="#documentation">Documentation</a>
-            </li>
-            <li className="geo-navbar__content--menu__item">
-              <a href="#integration">Integration</a>
-            </li>
-            <li className="geo-navbar__content--menu__item">
-              <a href="#pricing">Pricing</a>
-            </li>
-            <li className="geo-navbar__content--menu__item">
-              <a href="#faq">FAQ</a>
-            </li>
-          </ul>
-          <button className="geo-btn geo-btn__style-two">
-            Start a free trial
-          </button>
-        </div>
-      </div>
-    </nav>
+    <Navbar collapseOnSelect expand={"lg"} className="w-100 pt-3">
+      <Container>
+        <Navbar.Brand href="#home">
+          <img src={logo} alt="GeoScrapper" />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbarScroll" />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav
+            className="ms-auto me-auto gap-4 my-2 my-lg-0 geo-navbar__content--menu"
+            style={{ maxHeight: "100px" }}
+            navbarScroll
+          >
+            <Nav.Link href="#canGet">Date We Provide</Nav.Link>
+            <Nav.Link href="#testimonial">Testimonial</Nav.Link>
+            <Nav.Link href="#documentation">Documentation</Nav.Link>
+            <Nav.Link href="#integration">Integration</Nav.Link>
+            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link href="#faq">FAQ</Nav.Link>
+          </Nav>
+          <Form className="d-flex">
+            <button className="geo-btn geo-btn__style-two">
+              Start a free trial
+            </button>
+          </Form>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
-export default Navbar;
+export default CustomNavbar;
