@@ -37,10 +37,10 @@ const environment = process.env.APP_ENVIRONMENT;
 const firebaseProjectId = process.env.APP_FIREBASE_PROJECT_ID;
 const firebaseUrl = process.env.APP_FIREBASE_IPV4_ADDRESS;
 
-// const firebasekeysPath = path.resolve(
-//   __dirname,
-//   "/usr/src/app/firebaseServiceAccount.json"
-// );
+const firebasekeysPath = path.resolve(
+  __dirname,
+  "../firebaseServiceAccount.json"
+);
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
@@ -49,9 +49,7 @@ admin.initializeApp({
       ? `demo-${process.env.APP_FIREBASE_PROJECT_ID}`
       : `${process.env.APP_FIREBASE_PROJECT_ID}`,
   ...(environment === "production" && {
-    credential: admin.credential.cert(
-      "/usr/src/app/firebaseServiceAccount.json"
-    ),
+    credential: admin.credential.cert(firebasekeysPath),
     storageBucket: `gs://${firebaseProjectId}.firebasestorage.app`,
   }),
 });

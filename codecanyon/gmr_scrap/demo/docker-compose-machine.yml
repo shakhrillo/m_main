@@ -10,7 +10,7 @@ services:
     volumes:
       - ./certs:/certs
       - ./firebase.json:/usr/src/app/firebase.json
-      - ./firebaseServiceAccount.json:/usr/src/app/firebaseServiceAccount.json
+      - ./firebaseServiceAccount.json:/usr/src/firebaseServiceAccount.json
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       DOCKER_IPV4_ADDRESS: ${DOCKER_IPV4_ADDRESS}
