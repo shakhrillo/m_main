@@ -13,7 +13,7 @@ RUN apk upgrade --no-cache --available && \
 WORKDIR /usr/src/app
 
 # Copy package files and install dependencies
-COPY package.json .
+COPY . .
 RUN npm install
 
 COPY . .

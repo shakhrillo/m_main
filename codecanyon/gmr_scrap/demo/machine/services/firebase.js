@@ -39,7 +39,7 @@ const firebaseUrl = process.env.APP_FIREBASE_IPV4_ADDRESS;
 
 const firebasekeysPath = path.resolve(
   __dirname,
-  "../firebaseServiceAccount.json"
+  "/usr/src/app/firebaseServiceAccount.json"
 );
 
 // Initialize Firebase Admin SDK
