@@ -8,8 +8,7 @@ const createNetwork = require("./network");
 const sourcePath = path.resolve(__dirname, "../");
 
 const executeCompose = async ({ env, config }) => {
-  // for (const action of ["downAll", "buildAll", "upAll"]) {
-  for (const action of ["buildAll", "upAll"]) {
+  for (const action of ["downAll", "buildAll", "upAll"]) {
     if (action === "buildAll" && config === "docker-compose.yml") {
       await createNetwork({ log, env });
     }
@@ -22,7 +21,6 @@ const executeCompose = async ({ env, config }) => {
     });
 
     if (action === "downAll" && config === "docker-compose.yml") {
-      continue;
       for (const img of [
         `${env.APP_ID}-firebase`,
         `${env.APP_ID}-client`,
