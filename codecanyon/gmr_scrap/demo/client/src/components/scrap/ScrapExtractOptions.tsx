@@ -13,6 +13,8 @@ import {
   Badge,
   Card,
   CardBody,
+  CardSubtitle,
+  CardTitle,
   Col,
   FormControl,
   FormLabel,
@@ -81,6 +83,7 @@ export const ScrapExtractOptions = ({
     <>
       <Card>
         <CardBody>
+          <CardTitle className="mb-3">Extract type</CardTitle>
           <Row className="g-3">
             <Col lg={4}>
               <Stack
@@ -183,11 +186,13 @@ export const ScrapExtractOptions = ({
       </Card>
       <Card>
         <CardBody>
+          <CardTitle className="mb-3">Extract options</CardTitle>
           <Row className="gap-3">
             <Col sm={12}>
               <Stack direction="horizontal" className="gap-3 align-items-start">
                 {createElement(IconFence, {
                   className: "text-body-secondary",
+                  size: 30,
                 })}
                 <div className="w-100">
                   <FormLabel>Review limit</FormLabel>
@@ -196,6 +201,7 @@ export const ScrapExtractOptions = ({
                     value={limit}
                     onChange={(e) => setLimit(+e.target.value)}
                     disabled={!container.rating}
+                    size="lg"
                   />
                   <FormText>
                     Limit the number of reviews to extract. Leave empty to
@@ -208,6 +214,7 @@ export const ScrapExtractOptions = ({
               <Stack direction="horizontal" className="gap-3 align-items-start">
                 {createElement(IconArrowsSort, {
                   className: "text-body-secondary",
+                  size: 30,
                 })}
                 <div className="w-100">
                   <FormLabel>Sorts by</FormLabel>
@@ -223,6 +230,7 @@ export const ScrapExtractOptions = ({
                       )
                     }
                     disabled={!container.rating}
+                    size="lg"
                   >
                     <option value="Most relevant">Most relevant</option>
                     <option value="Newest">Newest</option>
@@ -240,6 +248,7 @@ export const ScrapExtractOptions = ({
               <Stack direction="horizontal" className="gap-3 align-items-start">
                 {createElement(IconFile, {
                   className: "text-body-secondary",
+                  size: 30,
                 })}
                 <div className="w-100">
                   <FormLabel>Output as</FormLabel>
@@ -249,6 +258,7 @@ export const ScrapExtractOptions = ({
                       setOutputAs(e.target.value as "json" | "csv")
                     }
                     disabled={!container.rating}
+                    size="lg"
                   >
                     <option value="json">JSON</option>
                     <option value="csv">CSV</option>
