@@ -1,9 +1,9 @@
 const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
-const checkMachine = async ({ env }) => {
+const checkMachine = async () => {
   return new Promise(async (resolve, reject) => {
-    const container = localDocker.getContainer(`${env.APP_ID}-machine`);
+    const container = localDocker.getContainer(`${process.env.APP_ID}-machine`);
 
     container.inspect(async (err, data) => {
       if (err) {

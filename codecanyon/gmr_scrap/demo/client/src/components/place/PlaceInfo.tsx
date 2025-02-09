@@ -47,19 +47,25 @@ export const PlaceInfo = ({
   return (
     <div className="place">
       {geojson && <GoogleMap geojson={geojson} />}
-      <div className="place-info">
-        <StatusInfo container={container} />
-        <NavLink
-          to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
-          className="place-title"
-        >
-          {container.title || "N/A"}
-        </NavLink>
-        {container.rating && <Ratings container={container} />}
-        <a href={container.url} target="_blank" rel="noreferrer">
-          {container.address || "N/A"}
-        </a>
-      </div>
+      {containerId && (
+        <div className="place-info">
+          <StatusInfo container={container} />
+          {container.type && (
+            <NavLink
+              to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
+              className="place-title"
+            >
+              {container.title || "N/A"}
+            </NavLink>
+          )}
+          {container.rating && <Ratings container={container} />}
+          {container.address && (
+            <a href={container.url} target="_blank" rel="noreferrer">
+              {container.address || "N/A"}
+            </a>
+          )}
+        </div>
+      )}
       <Accordion defaultActiveKey="0" flush alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>

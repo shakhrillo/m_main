@@ -96,6 +96,7 @@
 @media (max-width: 1200px) {
   .sidebar {
     width: 60px;
+    min-width: 60px;
 
     .sidebar-group-title,
     .sidebar-logo {

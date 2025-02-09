@@ -80,13 +80,9 @@ export const ScrapExpectedPoints = ({
   return (
     <Card>
       <CardBody>
-        <Stack gap={2}>
-          <CardTitle className="place-info-title">Expected Points:</CardTitle>
-
-          <Stack direction={"horizontal"} className="justify-content-between">
-            Reviews
-          </Stack>
-        </Stack>
+        <CardTitle className="place-info-title">
+          Expected Points: <strong>$125</strong>
+        </CardTitle>
         <Form onSubmit={handleScrap} noValidate id="validateForm">
           <FormCheck
             className="mt-3"
@@ -107,7 +103,8 @@ export const ScrapExpectedPoints = ({
             variant="primary"
             className="w-100 mt-3"
             type="submit"
-            disabled={!isTermsChecked}
+            disabled={!isTermsChecked || !container?.rating}
+            size="lg"
           >
             Scrap
           </Button>

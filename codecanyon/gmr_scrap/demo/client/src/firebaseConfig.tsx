@@ -20,7 +20,7 @@ const app = initializeApp({
     projectId: `demo-${APP_FIREBASE_PROJECT_ID}`,
   }),
 });
-const auth = getAuth();
+const auth = getAuth(app);
 const firestore = getFirestore();
 const storage = getStorage(app);
 

@@ -7,25 +7,25 @@ const createNetwork = require("./network");
 
 const sourcePath = path.resolve(__dirname, "../");
 
-const executeCompose = async ({ env, config }) => {
+const executeCompose = async ({ config }) => {
   for (const action of ["downAll", "buildAll", "upAll"]) {
     if (action === "buildAll" && config === "docker-compose.yml") {
-      await createNetwork({ log, env });
+      await createNetwork({ log });
     }
 
     await compose[action]({
       cwd: sourcePath,
       config,
-      env,
+      env: process.env,
       callback: (chunk) => log(chunk),
     });
 
     if (action === "downAll" && config === "docker-compose.yml") {
       for (const img of [
-        `${env.APP_ID}-firebase`,
-        `${env.APP_ID}-client`,
-        `${env.APP_ID}-server`,
-        `${env.APP_ID}-machine`,
+        `${process.env.APP_ID}-firebase`,
+        `${process.env.APP_ID}-client`,
+        `${process.env.APP_ID}-server`,
+        `${process.env.APP_ID}-machine`,
       ]) {
         try {
           const image = localDocker.getImage(img);

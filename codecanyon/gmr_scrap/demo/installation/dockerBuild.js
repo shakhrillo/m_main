@@ -7,6 +7,8 @@ const checkMachine = require("./machine");
 const checkFirebase = require("./firebase");
 const checkServer = require("./server");
 const { startLog, stopLog } = require("./logger");
+envManager.getEnv();
+require("dotenv").config();
 
 /**
  * Build the Docker containers
@@ -20,10 +22,8 @@ const dockerBuild = async () => {
 
   try {
     await purge();
-    const env = envManager.getEnv();
 
     await executeCompose({
-      env,
       config: "docker-compose.yml",
     });
 
@@ -35,11 +35,10 @@ const dockerBuild = async () => {
     ]);
 
     await executeCompose({
-      env,
       config: "docker-compose-machine.yml",
     });
 
-    await checkMachine({ env });
+    await checkMachine();
   } catch (err) {
     throw err;
   } finally {

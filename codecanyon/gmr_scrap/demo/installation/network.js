@@ -1,9 +1,9 @@
 const { log } = require("./logger");
 const { localDocker } = require("./docker");
 
-const createNetwork = async ({ env }) => {
+const createNetwork = async () => {
   const networkName = "gmrs-network";
-  const networkSubnet = env.NETWORK_SUBNET || "";
+  const networkSubnet = process.env.NETWORK_SUBNET || "";
 
   try {
     const network = localDocker.getNetwork(networkName);

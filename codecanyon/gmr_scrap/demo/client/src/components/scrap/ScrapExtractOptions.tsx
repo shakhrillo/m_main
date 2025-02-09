@@ -85,7 +85,7 @@ export const ScrapExtractOptions = ({
         <CardBody>
           <CardTitle className="mb-3">Extract type</CardTitle>
           <Row className="g-3">
-            <Col lg={4}>
+            <Col xl={4}>
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
@@ -93,10 +93,12 @@ export const ScrapExtractOptions = ({
                   container.rating && setExtractImageUrls(!extractImageUrls)
                 }
               >
-                {createElement(IconPhoto, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
+                <div className="d-block">
+                  {createElement(IconPhoto, {
+                    className: "text-body-secondary",
+                    size: 30,
+                  })}
+                </div>
                 <Stack className="d-flex me-auto" direction="vertical">
                   <h6 className="m-0">Image URLs</h6>
                   <div className="d-inline">
@@ -105,18 +107,21 @@ export const ScrapExtractOptions = ({
                     </Badge>
                   </div>
                 </Stack>
-                {createElement(
-                  extractImageUrls ? IconCircleCheck : IconCircleDashedCheck,
-                  {
-                    className: extractImageUrls
-                      ? "text-success"
-                      : "text-body-secondary",
-                    size: 30,
-                  },
-                )}
+                <span
+                  className={
+                    extractImageUrls ? "text-success" : "text-body-secondary"
+                  }
+                >
+                  {createElement(
+                    extractImageUrls ? IconCircleCheck : IconCircleDashedCheck,
+                    {
+                      size: 30,
+                    },
+                  )}
+                </span>
               </Stack>
             </Col>
-            <Col lg={4}>
+            <Col xl={4}>
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
@@ -124,10 +129,12 @@ export const ScrapExtractOptions = ({
                   container.rating && setExtractVideoUrls(!extractVideoUrls)
                 }
               >
-                {createElement(IconVideo, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
+                <div className="d-block">
+                  {createElement(IconVideo, {
+                    className: "text-body-secondary",
+                    size: 30,
+                  })}
+                </div>
                 <Stack className="d-flex me-auto" direction="vertical">
                   <h6 className="m-0">Video URLs</h6>
                   <div className="d-inline">
@@ -136,18 +143,21 @@ export const ScrapExtractOptions = ({
                     </Badge>
                   </div>
                 </Stack>
-                {createElement(
-                  extractVideoUrls ? IconCircleCheck : IconCircleDashedCheck,
-                  {
-                    className: extractVideoUrls
-                      ? "text-success"
-                      : "text-body-secondary",
-                    size: 30,
-                  },
-                )}
+                <span
+                  className={
+                    extractVideoUrls ? "text-success" : "text-body-secondary"
+                  }
+                >
+                  {createElement(
+                    extractVideoUrls ? IconCircleCheck : IconCircleDashedCheck,
+                    {
+                      size: 30,
+                    },
+                  )}
+                </span>
               </Stack>
             </Col>
-            <Col lg={4}>
+            <Col xl={4}>
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
@@ -156,10 +166,12 @@ export const ScrapExtractOptions = ({
                   setExtractOwnerResponse(!extractOwnerResponse)
                 }
               >
-                {createElement(IconMessageReply, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
+                <div className="d-block">
+                  {createElement(IconMessageReply, {
+                    className: "text-body-secondary",
+                    size: 30,
+                  })}
+                </div>
                 <Stack className="d-flex me-auto" direction="vertical">
                   <h6 className="m-0">Owner response</h6>
                   <div className="d-inline">
@@ -168,17 +180,22 @@ export const ScrapExtractOptions = ({
                     </Badge>
                   </div>
                 </Stack>
-                {createElement(
-                  extractOwnerResponse
-                    ? IconCircleCheck
-                    : IconCircleDashedCheck,
-                  {
-                    className: extractOwnerResponse
+                <span
+                  className={
+                    extractOwnerResponse
                       ? "text-success"
-                      : "text-body-secondary",
-                    size: 30,
-                  },
-                )}
+                      : "text-body-secondary"
+                  }
+                >
+                  {createElement(
+                    extractOwnerResponse
+                      ? IconCircleCheck
+                      : IconCircleDashedCheck,
+                    {
+                      size: 30,
+                    },
+                  )}
+                </span>
               </Stack>
             </Col>
           </Row>
