@@ -13,7 +13,6 @@ const fs = require("fs");
 class EnvManager {
   #sourcePath = path.resolve(__dirname, "../");
   #envPath = path.join(this.#sourcePath, ".env");
-  #firebaseFunctionsPath = path.resolve(this.#sourcePath, "functions/.env");
   #requiredVars = [
     "APP_ENVIRONMENT",
     "APP_ID",
@@ -65,7 +64,6 @@ class EnvManager {
       .map(([k, v]) => `${k}=${v}`)
       .join("\n");
     fs.writeFileSync(this.#envPath, newEnv);
-    fs.writeFileSync(this.#firebaseFunctionsPath, newEnv);
     return { ...env, ...process.env };
   }
 }

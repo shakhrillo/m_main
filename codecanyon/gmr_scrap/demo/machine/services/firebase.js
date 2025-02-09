@@ -42,6 +42,8 @@ const firebasekeysPath = path.resolve(
   "../firebaseServiceAccount.json"
 );
 
+console.log("env", process.env);
+
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   projectId:
@@ -57,6 +59,13 @@ admin.initializeApp({
 // Initialize Firestore
 const db = admin.firestore();
 
+if (environment === "development") {
+  db.settings({
+    host: `${process.env.APP_FIREBASE_IPV4_ADDRESS}:${process.env.APP_FIREBASE_EMULATOR_FIRESTORE}`,
+    ssl: false,
+  });
+}
+
 /**
  * Uploads a file to Firebase Storage.
  *
@@ -67,10 +76,8 @@ const db = admin.firestore();
 async function uploadFile(fileBuffer, destination) {
   try {
     if (environment === "development") {
-      const storageEmulatorPort =
-        serviceAccountJson.emulators?.storage?.port || 9199;
       const storage = new Storage({
-        apiEndpoint: `http://${firebaseUrl}:${storageEmulatorPort}`,
+        apiEndpoint: `http://${firebaseUrl}:${process.env.APP_FIREBASE_EMULATOR_STORAGE}`,
       });
 
       const bucket = storage.bucket(`${firebaseProjectId}.appspot.com`);

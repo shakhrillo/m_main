@@ -34,8 +34,6 @@ services:
       dockerfile: Dockerfile
     container_name: ${APP_ID}-firebase
     image: ${APP_ID}-firebase
-    volumes:
-      - ./firebase.sh:/usr/src/app/firebase.sh
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       APP_FIREBASE_PROJECT_ID: ${APP_FIREBASE_PROJECT_ID}
@@ -49,6 +47,11 @@ services:
       - "${APP_FIREBASE_EMULATOR_FIRESTORE}:8080"
       - "${APP_FIREBASE_EMULATOR_STORAGE}:9199"
       - "${APP_FIREBASE_EMULATOR_HUB}:4400"
+    entrypoint: >
+      sh -c '
+        [ "$APP_ENVIRONMENT" = "production" ] && GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json" firebase deploy --project "$APP_FIREBASE_PROJECT_ID" && exit 0 || firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID"
+      '
+    working_dir: /usr/src/app
     networks:
       gmrs-network:
         ipv4_address: ${APP_FIREBASE_IPV4_ADDRESS}
@@ -73,6 +76,7 @@ services:
       APP_FIREBASE_PROJECT_ID: ${APP_FIREBASE_PROJECT_ID}
       APP_FIREBASE_IPV4_ADDRESS: ${APP_FIREBASE_IPV4_ADDRESS}
       APP_FIREBASE_EMULATOR_FIRESTORE: ${APP_FIREBASE_EMULATOR_FIRESTORE}
+      APP_FIREBASE_EMULATOR_STORAGE: ${APP_FIREBASE_EMULATOR_STORAGE}
 
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_WEBHOOK_SECRET_FILE: /usr/src/app/secrets/stripe_webhook_secret

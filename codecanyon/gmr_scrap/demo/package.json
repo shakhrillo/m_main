@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node index.js",
-    "start": "NODE_ENV=server node index.js"
+    "setup": "npm run purge && npm run dev",
+    "purge": "node installation/purge.js"
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.11.1",

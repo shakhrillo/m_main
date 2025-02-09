@@ -1,6 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { exec } = require("child_process");
+const envManager = require("./envManager");
+envManager.getEnv();
 
 const sourcePath = path.resolve(__dirname, "../");
 const stripeSecretsPath = path.join(sourcePath, "stripe-secrets");

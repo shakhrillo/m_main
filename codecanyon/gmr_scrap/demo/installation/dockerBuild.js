@@ -1,5 +1,3 @@
-const purge = require("./purge");
-const envManager = require("./envManager");
 const executeCompose = require("./composeRunner");
 const { checkDocker } = require("./docker");
 const checkStripe = require("./stripe");
@@ -7,7 +5,6 @@ const checkMachine = require("./machine");
 const checkFirebase = require("./firebase");
 const checkServer = require("./server");
 const { startLog, stopLog } = require("./logger");
-envManager.getEnv();
 require("dotenv").config();
 
 /**
@@ -21,8 +18,6 @@ const dockerBuild = async () => {
   startLog();
 
   try {
-    await purge();
-
     await executeCompose({
       config: "docker-compose.yml",
     });

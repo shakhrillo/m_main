@@ -54,13 +54,17 @@ function startContainer(options) {
         reject(err);
       }
 
-      container.start((err, data) => {
-        if (err) {
-          reject(err);
-        }
+      try {
+        container.start((err, data) => {
+          if (err) {
+            reject(err);
+          }
 
-        resolve(data);
-      });
+          resolve(data);
+        });
+      } catch (error) {
+        reject(err);
+      }
     });
   });
 }
