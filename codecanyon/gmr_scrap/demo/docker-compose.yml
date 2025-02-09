@@ -108,6 +108,10 @@ services:
       VITE_GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
     ports:
       - "${APP_CLIENT_PORT}:3000"
+    entrypoint: >
+      sh -c '
+        [ "$APP_ENVIRONMENT" = "production" ] && npm run build && exit 0 || npm run start
+      '
     networks:
       gmrs-network:
         ipv4_address: ${CLIENT_IPV4_ADDRESS}
