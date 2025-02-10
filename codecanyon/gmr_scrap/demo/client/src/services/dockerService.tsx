@@ -45,9 +45,11 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      // orderBy("createdAt", "desc"),
+      orderBy("createdAt", "desc"),
+      where("url", "!=", null),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
-      ...(q.type ? [where("machine.Type", "==", q.type)] : []),
+      ...(q.type ? [where("type", "==", q.type)] : []),
+      ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(q.status ? [where("status", "==", q.status)] : []),
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),

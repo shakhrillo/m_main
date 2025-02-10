@@ -23,13 +23,10 @@ export const reviewComments = (
   const collectionRef = collection(firestore, `reviews`);
   const reviews$ = new BehaviorSubject([] as IComment[]);
 
-  console.log("placeid", placeId);
-  console.log("uid", uid);
-
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      // orderBy("time", "asc"),
+      // orderBy("createdAt", "asc"),
       where("machineId", "==", placeId),
       where("uid", "==", uid),
       ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
@@ -74,9 +71,6 @@ export const reviewImages = (
 ) => {
   const collectionRef = collection(firestore, `images`);
   const reviews$ = new BehaviorSubject([] as IComment[]);
-
-  console.log("placeid", placeId);
-  console.log("uid", uid);
 
   const unsubscribe = onSnapshot(
     query(

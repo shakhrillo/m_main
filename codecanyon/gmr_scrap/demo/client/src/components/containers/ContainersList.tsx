@@ -47,7 +47,7 @@ export const ContainersList = ({
     const subscription = dockerContainers({
       search,
       // uid: uid,
-      // type,
+      type,
     }).subscribe((data) => {
       console.log(data);
       setContainers(data);

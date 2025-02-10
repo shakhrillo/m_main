@@ -32,7 +32,6 @@ export const PlaceInfo = ({
     const subscription = dockerContainers({ containerId })
       .pipe(map((data) => (Array.isArray(data) ? data[0] : null)))
       .subscribe((data) => {
-        console.log("[place_info]", data);
         if (!data || !data.location) {
           setContainer({} as IDockerContainer);
           return;
@@ -69,16 +68,21 @@ export const PlaceInfo = ({
           </div>
         </div>
       )}
-      <Accordion defaultActiveKey="0" flush alwaysOpen>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>
-            <IconInfoCircle size={30} className="me-3" />
-            <h5 className="m-0">Extracted Data</h5>
-          </Accordion.Header>
-          <Accordion.Body>
-            <PlaceInfoDetails container={container} />
-          </Accordion.Body>
-        </Accordion.Item>
+      <Accordion defaultActiveKey="1" flush alwaysOpen>
+        {(container?.totalReviews ||
+          container?.totalOwnerReviews ||
+          container?.totalImages ||
+          container?.totalVideos) && (
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>
+              <IconInfoCircle size={30} className="me-3" />
+              <h5 className="m-0">Extracted Data</h5>
+            </Accordion.Header>
+            <Accordion.Body>
+              <PlaceInfoDetails container={container} />
+            </Accordion.Body>
+          </Accordion.Item>
+        )}
         <Accordion.Item eventKey="1">
           <Accordion.Header>
             <IconBox size={30} className="me-3" />
