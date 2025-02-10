@@ -261,8 +261,12 @@ let driver;
         Object.keys(data.extractedReviews[0]).join(","),
         ...data.extractedReviews.map((el) => Object.values(el).join(",")),
       ].join("\n");
-      data.csvUrl = await uploadFile(csvContent, `csv/${tag}.csv`);
-      data.jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
+      if (data["outputAs"] === "csv") {
+        data.csvUrl = await uploadFile(csvContent, `csv/${tag}.csv`);
+      }
+      if (data["outputAs"] === "json") {
+        data.jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
+      }
     }
 
     await batchWriteLargeArray(

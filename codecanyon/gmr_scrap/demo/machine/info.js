@@ -190,7 +190,7 @@ let driver;
     );
 
     // Generate search keywords
-    data.keywords = generateSearchKeywords(data.title);
+    data.keywords = [...new Set(data.title.trim().toLowerCase().split(/\s+/))];
   } catch (error) {
     data.status = "error";
     data.error = JSON.stringify(error);

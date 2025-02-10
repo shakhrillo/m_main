@@ -52,6 +52,7 @@ export const GoogleMap = ({
       disableDefaultUI
       defaultCenter={defaultCenter}
       defaultZoom={defaultZoom}
+      maxZoom={20}
       onZoomChanged={(e: MapCameraChangedEvent) => {
         setZoom(e.detail.zoom);
       }}

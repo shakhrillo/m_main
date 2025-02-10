@@ -54,13 +54,13 @@ export const Scrap = () => {
         )}
       </Breadcrumb>
       <Row className="g-3">
-        <Col lg={9}>
+        <Col lg={8} xl={9}>
           <Stack direction={"vertical"} gap={3}>
             <ScrapValidateURL containerId={scrapId} container={container} />
             <ScrapExtractOptions containerId={scrapId} container={container} />
           </Stack>
         </Col>
-        <Col lg={3}>
+        <Col lg={4} xl={3}>
           <PlaceInfo containerId={scrapId} />
           <ScrapExpectedPoints containerId={scrapId} />
         </Col>
