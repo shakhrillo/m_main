@@ -7,7 +7,6 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import "leaflet/dist/leaflet.css";
 import { Doughnut } from "react-chartjs-2";
 import formatNumber from "../utils/formatNumber";
 

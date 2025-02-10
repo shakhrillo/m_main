@@ -1,21 +1,13 @@
 import {
   IconCircleFilled,
-  IconMapPinFilled,
   IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react";
-import { User } from "firebase/auth";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
-import ReactDOMServer from "react-dom/server";
-import { useMap } from "react-leaflet";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { DoughnutChart } from "../components/DoughnutChart";
 import { GoogleMap } from "../components/GoogleMap";
 import { LineChart } from "../components/LineChart";
-import { IReview } from "../services/scrapService";
 import {
   allContainers,
   allUsers,
@@ -28,33 +20,7 @@ import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 
-const iconHtml = ReactDOMServer.renderToString(<IconMapPinFilled size={24} />);
-
-// Fix default marker icons in Leaflet
-L.Marker.prototype.options.icon = L.divIcon({
-  html: iconHtml,
-  iconSize: [24, 24],
-});
-
-// Component to dynamically fit the map bounds to marker locations
-const FitBounds = ({ locations }: { locations: [number, number][] }) => {
-  const map = useMap();
-
-  if (locations.length > 0) {
-    const bounds = L.latLngBounds(locations);
-    map.fitBounds(bounds, { padding: [50, 50] }); // Adjust padding as needed
-  }
-
-  return null;
-};
-
 export const Dashboard: React.FC = () => {
-  const { uid } = useOutletContext<User>();
-  const navigate = useNavigate();
-  const [reviews, setReviews] = useState([] as IReview[]);
-  const [markerLocations, setMarkerLocations] = useState(
-    [] as { latitude: number; longitude: number }[],
-  );
   const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
   const [containers, setContainers] = useState([] as any[]);

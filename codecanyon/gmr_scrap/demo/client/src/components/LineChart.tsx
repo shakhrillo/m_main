@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
-import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { hexToRgba } from "../utils/hexToRGB";

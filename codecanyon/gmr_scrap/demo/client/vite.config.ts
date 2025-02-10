@@ -7,7 +7,6 @@ export default defineConfig({
     port: 3000,
     host: true,
     open: false,
-    allowedHosts: ["dashboard.gmrscrap.store", "localhost"],
   },
   envDir: "../",
   css: {
@@ -23,6 +22,12 @@ export default defineConfig({
         ],
       },
     },
+  },
+  build: {
+    cssCodeSplit: false,
+  },
+  optimizeDeps: {
+    force: true,
   },
   test: {
     globals: true,
