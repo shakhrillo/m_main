@@ -17,6 +17,10 @@ $pagination-border-width: 0;
 @import "styles/videos";
 @import "styles/pagination";
 
+.accordion-button:focus {
+  box-shadow: none;
+}
+
 // a,
 .nav-link {
   color: inherit;

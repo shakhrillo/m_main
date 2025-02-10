@@ -1,4 +1,4 @@
-import { IconBox, IconSettings } from "@tabler/icons-react";
+import { IconBox, IconInfoCircle, IconSettings } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Accordion } from "react-bootstrap";
 import { map } from "rxjs";
@@ -11,6 +11,7 @@ import { PlaceInfoMachine } from "./PlaceInfoMachine";
 import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
+import { PlaceInfoDetails } from "./PlaceInfoDetails";
 
 export const PlaceInfo = ({
   containerId,
@@ -31,7 +32,7 @@ export const PlaceInfo = ({
     const subscription = dockerContainers({ containerId })
       .pipe(map((data) => (Array.isArray(data) ? data[0] : null)))
       .subscribe((data) => {
-        console.log(data);
+        console.log("[place_info]", data);
         if (!data || !data.location) {
           setContainer({} as IDockerContainer);
           return;
@@ -71,6 +72,15 @@ export const PlaceInfo = ({
       <Accordion defaultActiveKey="0" flush alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
+            <IconInfoCircle size={30} className="me-3" />
+            <h5 className="m-0">Extracted Data</h5>
+          </Accordion.Header>
+          <Accordion.Body>
+            <PlaceInfoDetails container={container} />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>
             <IconBox size={30} className="me-3" />
             <h5 className="m-0">Container Info</h5>
           </Accordion.Header>
@@ -78,7 +88,7 @@ export const PlaceInfo = ({
             <PlaceInfoMachine container={container} />
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="1">
+        <Accordion.Item eventKey="2">
           <Accordion.Header>
             <IconSettings size={30} className="me-3" />
             <h5 className="m-0">Options</h5>

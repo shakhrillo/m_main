@@ -45,6 +45,9 @@ export interface IDockerContainer {
 
   Action?: string;
 
+  maxSpentPointsDefault: number;
   maxSpentPoints: number;
+  totalSpentPoints: number;
+
   price: IPrice;
 }

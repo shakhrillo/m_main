@@ -68,7 +68,6 @@ export const ScrapExtractOptions = ({
     updateDockerContainer(container.id, {
       limit,
       maxSpentPoints,
-      maxSpentPointsDefault: maxSpentPoints,
       sortBy,
       extractImageUrls,
       extractVideoUrls,

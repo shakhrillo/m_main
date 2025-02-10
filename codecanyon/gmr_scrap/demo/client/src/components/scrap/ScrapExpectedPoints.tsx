@@ -80,16 +80,8 @@ export const ScrapExpectedPoints = ({
   return (
     <Card>
       <CardBody>
-        <CardTitle className="place-info-title">
-          Expected Points: <strong>$125</strong>
-        </CardTitle>
-        <p className="text-muted">
-          You will earn <strong>$125</strong> for this scrap.
-        </p>
-
         <Form onSubmit={handleScrap} noValidate id="validateForm">
           <FormCheck
-            className="mt-3"
             type="checkbox"
             id="terms"
             checked={isTermsChecked}

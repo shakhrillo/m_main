@@ -43,7 +43,7 @@ require("dotenv").config();
 // Import dependencies
 const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
-const { FieldValue } = require("firebase-admin/firestore");
+const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 const {
   getMachineData,
   getUserData,
@@ -107,6 +107,7 @@ let data = {
   extractedUserReviewCount: 0,
   extractedReviews: [],
   retriesCount: 0,
+  maxSpentPointsDefault: 0,
 };
 
 /**
@@ -126,6 +127,7 @@ let driver;
       ...data,
       ...((await getMachineData(tag)) || {}),
     };
+    data.maxSpentPointsDefault = data.maxSpentPoints || 0;
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
@@ -295,6 +297,7 @@ let driver;
     data.error = JSON.stringify(error);
     console.error(error);
   } finally {
+    const totalSpentPoints = data.maxSpentPointsDefault - data.maxSpentPoints;
     updateMachineData(tag, {
       csvUrl: data.csvUrl || "",
       jsonUrl: data.jsonUrl || "",
@@ -302,18 +305,15 @@ let driver;
       totalImages: data.extractedImageUrls.length || 0,
       totalVideos: data.extractedVideoUrls.length || 0,
       totalOwnerReviews: data.extractedOwnerReviewCount || 0,
-      maxSpentPoints: data.maxSpentPoints || 0,
+      totalSpentPoints,
+      updatedAt: Timestamp.now(),
       status: "completed",
     });
 
     try {
       const user = await getUserData(data.uid);
-      const totalSpentPoints = data.maxSpentPointsDefault - data.maxSpentPoints;
       if (user) {
         await updateUserData(user.id, {
-          _deb: {
-            maxSpentPoints: maxSpentPoints,
-          },
           coinBalance: FieldValue.increment(-totalSpentPoints),
           totalReviews: FieldValue.increment(data.extractedReviews.length),
           totalImages: FieldValue.increment(data.extractedImageUrls.length),

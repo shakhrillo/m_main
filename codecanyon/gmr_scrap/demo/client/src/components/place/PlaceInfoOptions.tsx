@@ -1,16 +1,16 @@
-import { Row, Col } from "react-bootstrap";
-import { IDockerContainer } from "../../types/dockerContainer";
-import { createElement, JSX } from "react";
 import {
   Icon,
   IconArrowsSort,
-  IconCamera,
+  IconCoins,
   IconFence,
   IconFile,
   IconMessageReply,
   IconPhoto,
   IconVideo,
 } from "@tabler/icons-react";
+import { createElement } from "react";
+import { Col, Row } from "react-bootstrap";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 type PlaceInfoRowProps = {
   icon: Icon;
@@ -61,8 +61,15 @@ export const PlaceInfoOptions = ({
       <Col>
         <PlaceInfoRow
           icon={IconFence}
-          label="Limit"
+          label="Max Reviews"
           value={container.limit || "Default"}
+        />
+      </Col>
+      <Col>
+        <PlaceInfoRow
+          icon={IconCoins}
+          label="Max Spent Points"
+          value={container.maxSpentPoints || "Default"}
         />
       </Col>
       <Col>

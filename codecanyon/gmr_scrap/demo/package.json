@@ -9,29 +9,15 @@
     "purge": "node installation/purge.js"
   },
   "dependencies": {
-    "@highlightjs/cdn-assets": "^11.11.1",
     "axios": "^1.7.9",
-    "bootstrap": "^5.3.3",
     "dockerode": "^4.0.4",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
-    "express": "^4.21.2",
-    "highlight.js": "^11.11.1",
-    "highlightjs-structured-text": "^1.4.9",
-    "html-minifier": "^4.0.0",
     "inquirer": "^12.3.2",
-    "json-formatter-js": "^2.5.18",
-    "log4js": "^6.9.1",
-    "nodemon": "^3.1.9",
-    "ora": "^5.0.0",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1",
-    "ws": "^8.18.0"
+    "log4js": "^6.9.1"
   },
   "devDependencies": {
-    "connect-livereload": "^0.6.1",
     "cross-env": "^7.0.3",
-    "docker-compose": "^1.1.0",
-    "livereload": "^0.9.3"
+    "docker-compose": "^1.1.0"
   }
 }
