@@ -33,13 +33,18 @@ class EnvManager {
     "JWT_SECRET",
     "GOOGLE_MAPS_API_KEY",
     "GOOGLE_MAPS_ID",
+    "API_PRODUCTION_URL",
   ];
 
   #loadEnv() {
     const { error, parsed } = dotenv.config({ path: this.#envPath });
     if (error) throw new Error(`Failed to load .env: ${error.message}`);
 
-    const missingVars = this.#requiredVars.filter((key) => !process.env[key]);
+    let missingVars = this.#requiredVars.filter((key) => !process.env[key]);
+    if (process.env["APP_ENVIRONMENT"] === "development") {
+      missingVars = missingVars.filter((key) => key !== "API_PRODUCTION_URL");
+    }
+
     if (missingVars.length)
       throw new Error(`Missing env vars: ${missingVars.join(", ")}`);
 
