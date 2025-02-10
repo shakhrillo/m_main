@@ -52,6 +52,7 @@ require("dotenv").config();
 
 // Import dependencies
 const { WebDriver } = require("selenium-webdriver");
+const { FieldValue } = require("firebase-admin/firestore");
 const {
   uploadFile,
   getMachineData,
@@ -205,7 +206,7 @@ let driver;
     try {
       const user = await getUserData(data.uid);
       if (user) {
-        await updateUserData(data.uid, {
+        await updateUserData(user.id, {
           coinBalance: FieldValue.increment(-data.price.validate),
           totalValidateInfo: FieldValue.increment(1),
         });

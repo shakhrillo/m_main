@@ -309,7 +309,7 @@ let driver;
     try {
       const user = await getUserData(data.uid);
       if (user) {
-        await updateUserData(data.uid, {
+        await updateUserData(user.id, {
           coinBalance: FieldValue.increment(-data.maxSpentPoints),
           totalReviews: FieldValue.increment(data.extractedReviews.length),
           totalImages: FieldValue.increment(data.extractedImageUrls.length),

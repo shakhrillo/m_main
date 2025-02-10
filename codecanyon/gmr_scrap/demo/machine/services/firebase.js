@@ -182,7 +182,10 @@ async function getUserData(uid) {
     return null;
   }
 
-  return doc.docs[0].data();
+  const id = doc.docs[0].id;
+  const data = doc.docs[0].data();
+
+  return { ...data, id };
 }
 
 /**
