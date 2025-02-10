@@ -50,27 +50,28 @@ export const PlaceInfo = ({
       {containerId && (
         <div className="place-info">
           <StatusInfo container={container} />
-          {container.type && (
-            <NavLink
-              to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
-              className="place-title"
-            >
-              {container.title || "N/A"}
-            </NavLink>
-          )}
           {container.rating && <Ratings container={container} />}
-          {container.address && (
-            <a href={container.url} target="_blank" rel="noreferrer">
-              {container.address || "N/A"}
-            </a>
+          {container.type && (
+            <h3>
+              <NavLink
+                to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
+              >
+                {container.title || "N/A"}
+              </NavLink>
+            </h3>
           )}
+          <div className="d-flex mt-3">
+            {container.address && (
+              <i className="d-block">{container.address}</i>
+            )}
+          </div>
         </div>
       )}
       <Accordion defaultActiveKey="0" flush alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
-            <IconBox className="me-3" />
-            Container Info
+            <IconBox size={30} className="me-3" />
+            <h5 className="m-0">Container Info</h5>
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoMachine container={container} />
@@ -78,8 +79,8 @@ export const PlaceInfo = ({
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>
-            <IconSettings className="me-3" />
-            Options
+            <IconSettings size={30} className="me-3" />
+            <h5 className="m-0">Options</h5>
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoOptions container={container} />

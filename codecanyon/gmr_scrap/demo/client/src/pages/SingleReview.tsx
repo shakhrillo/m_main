@@ -11,7 +11,7 @@ export const SingleReview = () => {
   const { reviewId } = useParams() as { reviewId: string };
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reviews</Breadcrumb.Item>
         <Breadcrumb.Item

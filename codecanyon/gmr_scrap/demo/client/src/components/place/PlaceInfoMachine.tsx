@@ -1,26 +1,23 @@
-import {
-  IconBox,
-  IconCheck,
-  IconFrame,
-  IconStopwatch,
-} from "@tabler/icons-react";
-import { JSX } from "react";
+import { Icon, IconCheck, IconFrame, IconStopwatch } from "@tabler/icons-react";
+import { createElement, JSX } from "react";
 import { Badge, Col, Row } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { NavLink, useNavigate } from "react-router-dom";
 
 type MachineInfoRowProps = {
-  icon: JSX.Element;
+  icon: Icon;
   label: string;
   value: JSX.Element | string;
 };
 
 const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
-  <div className="d-flex align-items-center">
-    {icon}
+  <div className="text-secondary d-flex align-items-center">
+    {createElement(icon, {
+      size: 30,
+    })}
     <div className="ms-3">
-      <div className="text-break fw-bold">{label}</div>
-      <div className="text-break">{value}</div>
+      <h6 className="m-0">{label}</h6>
+      <small className="text-break">{value}</small>
     </div>
   </div>
 );
@@ -30,12 +27,11 @@ export const PlaceInfoMachine = ({
 }: {
   container: IDockerContainer;
 }) => {
-  const navigate = useNavigate();
   return (
     <Row className="row-cols-1 g-3">
       <Col>
         <MachineInfoRow
-          icon={<IconFrame />}
+          icon={IconFrame}
           label="Machine ID"
           value={
             <NavLink to={`/containers/${container?.machineId}`}>
@@ -46,7 +42,7 @@ export const PlaceInfoMachine = ({
       </Col>
       <Col>
         <MachineInfoRow
-          icon={<IconCheck />}
+          icon={IconCheck}
           label="Machine Status"
           value={
             <Badge
@@ -61,7 +57,7 @@ export const PlaceInfoMachine = ({
       </Col>
       <Col>
         <MachineInfoRow
-          icon={<IconStopwatch />}
+          icon={IconStopwatch}
           label="Execution Duration"
           value={`${container?.machine?.Actor?.Attributes?.execDuration ?? 0}s`}
         />

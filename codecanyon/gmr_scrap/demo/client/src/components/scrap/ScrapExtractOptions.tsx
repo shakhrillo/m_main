@@ -89,6 +89,7 @@ export const ScrapExtractOptions = ({
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
+                role="button"
                 onClick={() =>
                   container.rating && setExtractImageUrls(!extractImageUrls)
                 }
@@ -125,6 +126,7 @@ export const ScrapExtractOptions = ({
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
+                role="button"
                 onClick={() =>
                   container.rating && setExtractVideoUrls(!extractVideoUrls)
                 }
@@ -161,6 +163,7 @@ export const ScrapExtractOptions = ({
               <Stack
                 direction="horizontal"
                 className="bg-light p-3 rounded gap-3"
+                role="button"
                 onClick={() =>
                   container.rating &&
                   setExtractOwnerResponse(!extractOwnerResponse)

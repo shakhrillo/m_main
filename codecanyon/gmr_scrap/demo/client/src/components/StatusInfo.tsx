@@ -1,4 +1,5 @@
-import { Badge } from "react-bootstrap";
+import { IconCheck } from "@tabler/icons-react";
+import { Spinner, Stack } from "react-bootstrap";
 import { IDockerContainer } from "../types/dockerContainer";
 
 export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
@@ -7,14 +8,19 @@ export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
   const status = container.status.toLowerCase();
   const color =
     status === "completed"
-      ? "success"
+      ? "text-success"
       : status === "in progress"
-        ? "warning"
-        : "danger";
+        ? "text-warning"
+        : "text-danger";
 
   return (
-    <Badge bg={color} pill className="text-capitalize">
-      {status}
-    </Badge>
+    <Stack direction="horizontal" gap={1} className={color}>
+      {status === "completed" ? (
+        <IconCheck />
+      ) : (
+        <Spinner animation="border" size="sm" />
+      )}
+      <span className="text-uppercase">{status}</span>
+    </Stack>
   );
 };

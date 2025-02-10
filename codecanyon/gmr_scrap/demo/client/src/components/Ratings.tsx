@@ -3,7 +3,6 @@ import {
   IconStarFilled,
   IconStarHalfFilled,
 } from "@tabler/icons-react";
-import { Stack } from "react-bootstrap";
 import { IDockerContainer } from "../types/dockerContainer";
 import formatNumber from "../utils/formatNumber";
 

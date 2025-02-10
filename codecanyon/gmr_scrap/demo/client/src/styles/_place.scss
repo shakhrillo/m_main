@@ -6,7 +6,6 @@
   overflow: hidden;
 
   .google-map {
-    border-bottom: $card-border-width solid $card-border-color;
     width: 100%;
     height: 300px;
   }
@@ -14,12 +13,5 @@
   &-info {
     border-bottom: $card-border-width solid $card-border-color;
     padding: $spacer;
-  }
-
-  &-title {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 20px;
   }
 }
