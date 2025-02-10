@@ -427,32 +427,32 @@ window.fetchVisibleElements = async () => {
       }
 
       const validatedElement = await validateNode(node);
-      if (validatedElement) {
-        const review = {
-          ...validatedElement,
-          uid: gmrScrap.uid,
-          machineId: gmrScrap.machineId,
-        };
+      if (!validatedElement) continue;
 
-        gmrScrap.extractedReviews.push(review);
+      const review = {
+        ...validatedElement,
+        uid: gmrScrap.uid,
+        machineId: gmrScrap.machineId,
+      };
 
-        const imageCount = Array.isArray(review.imageUrls)
-          ? review.imageUrls.length
-          : 0;
-        const videoCount = Array.isArray(review.videoUrls)
-          ? review.videoUrls.length
-          : 0;
-        const ownerReviewCount = review.response ? 1 : 0;
-        const reviewCount = review.review && review.review.trim() ? 1 : 0;
+      gmrScrap.extractedReviews.push(review);
 
-        const cost =
-          reviewCount * (gmrScrap.price.review || 0) +
-          imageCount * (gmrScrap.price.image || 0) +
-          videoCount * (gmrScrap.price.video || 0) +
-          ownerReviewCount * (gmrScrap.price.response || 0);
+      const imageCount = Array.isArray(review.imageUrls)
+        ? review.imageUrls.length
+        : 0;
+      const videoCount = Array.isArray(review.videoUrls)
+        ? review.videoUrls.length
+        : 0;
+      const ownerReviewCount = review.response ? 1 : 0;
+      const reviewCount = review.review && review.review.trim() ? 1 : 0;
 
-        gmrScrap["maxSpentPoints"] -= cost;
-      }
+      const cost =
+        reviewCount * (gmrScrap.price.review || 0) +
+        imageCount * (gmrScrap.price.image || 0) +
+        videoCount * (gmrScrap.price.video || 0) +
+        ownerReviewCount * (gmrScrap.price.response || 0);
+
+      gmrScrap["maxSpentPoints"] -= cost;
     } catch (error) {
       console.error("Error processing node:", error);
     }
