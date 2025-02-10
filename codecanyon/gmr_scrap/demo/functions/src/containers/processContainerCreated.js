@@ -111,6 +111,7 @@ async function processContainerCreated(event) {
         image,
         video,
         response,
+        validate,
       },
     });
 

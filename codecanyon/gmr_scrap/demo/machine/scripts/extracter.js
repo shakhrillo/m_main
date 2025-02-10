@@ -436,16 +436,20 @@ window.fetchVisibleElements = async () => {
 
         gmrScrap.extractedReviews.push(review);
 
-        const imageCount = review.imageUrls.length;
-        const videoCount = review.videoUrls.length;
+        const imageCount = Array.isArray(review.imageUrls)
+          ? review.imageUrls.length
+          : 0;
+        const videoCount = Array.isArray(review.videoUrls)
+          ? review.videoUrls.length
+          : 0;
         const ownerReviewCount = review.response ? 1 : 0;
-        const reviewCount = review.review ? 1 : 0;
+        const reviewCount = review.review && review.review.trim() ? 1 : 0;
 
         const cost =
-          reviewCount * gmrScrap.price.review +
-          imageCount * gmrScrap.price.image +
-          videoCount * gmrScrap.price.video +
-          ownerReviewCount * gmrScrap.price.response;
+          reviewCount * (gmrScrap.price.review || 0) +
+          imageCount * (gmrScrap.price.image || 0) +
+          videoCount * (gmrScrap.price.video || 0) +
+          ownerReviewCount * (gmrScrap.price.response || 0);
 
         gmrScrap["maxSpentPoints"] -= cost;
       }
