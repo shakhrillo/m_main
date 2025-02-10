@@ -18,9 +18,10 @@ export const AppNavbar = () => {
       return;
     }
 
-    const unsubscribe = userData(user.uid).subscribe((user) =>
-      setUserInfo(user),
-    );
+    const unsubscribe = userData(user.uid).subscribe((user) => {
+      console.log("user", user);
+      setUserInfo(user);
+    });
 
     return () => {
       unsubscribe.unsubscribe();

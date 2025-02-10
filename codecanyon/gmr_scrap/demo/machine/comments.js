@@ -308,9 +308,13 @@ let driver;
 
     try {
       const user = await getUserData(data.uid);
+      const totalSpentPoints = data.maxSpentPointsDefault - data.maxSpentPoints;
       if (user) {
         await updateUserData(user.id, {
-          coinBalance: FieldValue.increment(-data.maxSpentPoints),
+          _deb: {
+            maxSpentPoints: maxSpentPoints,
+          },
+          coinBalance: FieldValue.increment(-totalSpentPoints),
           totalReviews: FieldValue.increment(data.extractedReviews.length),
           totalImages: FieldValue.increment(data.extractedImageUrls.length),
           totalVideos: FieldValue.increment(data.extractedVideoUrls.length),
