@@ -1,6 +1,13 @@
 import { GeoPoint, Timestamp } from "firebase/firestore";
 import { IDockerMachine } from "./dockerMachine";
 
+interface IPrice {
+  review?: number;
+  image?: number;
+  video?: number;
+  response?: number;
+}
+
 export interface IDockerContainer {
   address?: string;
   createdAt?: Timestamp;
@@ -37,4 +44,7 @@ export interface IDockerContainer {
   jsonUrl?: string;
 
   Action?: string;
+
+  maxSpentPoints: number;
+  price: IPrice;
 }

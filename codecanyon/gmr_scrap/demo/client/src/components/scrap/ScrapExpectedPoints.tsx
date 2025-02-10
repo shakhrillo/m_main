@@ -6,7 +6,6 @@ import {
   CardTitle,
   Form,
   FormCheck,
-  Stack,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { filter, map } from "rxjs";
@@ -70,6 +69,7 @@ export const ScrapExpectedPoints = ({
         extractImageUrls: container?.extractImageUrls || false,
         extractVideoUrls: container?.extractVideoUrls || false,
         extractOwnerResponse: container?.extractOwnerResponse || false,
+        maxSpentPoints: container?.maxSpentPoints || 0,
       });
       navigate(`/scrap/${id}`);
     } catch (error) {
@@ -83,6 +83,10 @@ export const ScrapExpectedPoints = ({
         <CardTitle className="place-info-title">
           Expected Points: <strong>$125</strong>
         </CardTitle>
+        <p className="text-muted">
+          You will earn <strong>$125</strong> for this scrap.
+        </p>
+
         <Form onSubmit={handleScrap} noValidate id="validateForm">
           <FormCheck
             className="mt-3"

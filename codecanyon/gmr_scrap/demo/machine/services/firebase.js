@@ -169,9 +169,37 @@ async function updateMachineData(tag, data) {
   return db.collection("containers").doc(tag).update(data);
 }
 
+/**
+ * Fetches user data from Firestore by UID.
+ * @param {string} uid - The user UID.
+ * @returns {Promise<object | null>}
+ */
+async function getUserData(uid) {
+  const collectionRef = db.collection("users").where("uid", "==", uid);
+  const doc = await collectionRef.get();
+
+  if (doc.empty) {
+    return null;
+  }
+
+  return doc.docs[0].data();
+}
+
+/**
+ * Updates user data in Firestore by UID.
+ * @param {string} uid - The user UID.
+ * @param {object} data - The data to update.
+ * @returns {Promise<void>}
+ */
+async function updateUserData(uid, data) {
+  return db.collection("users").doc(uid).update(data);
+}
+
 module.exports = {
   uploadFile,
   batchWriteLargeArray,
   getMachineData,
   updateMachineData,
+  getUserData,
+  updateUserData,
 };

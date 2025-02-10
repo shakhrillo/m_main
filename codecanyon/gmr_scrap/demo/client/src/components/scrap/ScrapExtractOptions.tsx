@@ -2,6 +2,8 @@ import {
   IconArrowsSort,
   IconCircleCheck,
   IconCircleDashedCheck,
+  IconCoin,
+  IconCoins,
   IconFence,
   IconFile,
   IconMessageReply,
@@ -43,6 +45,9 @@ export const ScrapExtractOptions = ({
     container.extractOwnerResponse || false,
   );
   const [limit, setLimit] = useState<number | undefined>(container.limit || 10);
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number | undefined>(
+    container.limit || 100,
+  );
   const [sortBy, setSortBy] = useState<
     "Most relevant" | "Newest" | "Highest rating" | "Lowest rating"
   >("Most relevant");
@@ -62,6 +67,8 @@ export const ScrapExtractOptions = ({
 
     updateDockerContainer(container.id, {
       limit,
+      maxSpentPoints,
+      maxSpentPointsDefault: maxSpentPoints,
       sortBy,
       extractImageUrls,
       extractVideoUrls,
@@ -73,6 +80,7 @@ export const ScrapExtractOptions = ({
   }, [
     container,
     limit,
+    maxSpentPoints,
     sortBy,
     extractImageUrls,
     extractVideoUrls,
@@ -227,6 +235,25 @@ export const ScrapExtractOptions = ({
                     Limit the number of reviews to extract. Leave empty to
                     extract all reviews.
                   </FormText>
+                </div>
+              </Stack>
+            </Col>
+            <Col sm={12}>
+              <Stack direction="horizontal" className="gap-3 align-items-start">
+                {createElement(IconCoins, {
+                  className: "text-body-secondary",
+                  size: 30,
+                })}
+                <div className="w-100">
+                  <FormLabel>Max spent points</FormLabel>
+                  <FormControl
+                    placeholder="Max spent points"
+                    value={maxSpentPoints}
+                    onChange={(e) => setMaxSpentPoints(+e.target.value)}
+                    disabled={!container.rating}
+                    size="lg"
+                  />
+                  <FormText>Maximum points to spend on this scrap.</FormText>
                 </div>
               </Stack>
             </Col>

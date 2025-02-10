@@ -31,6 +31,7 @@ export const PlaceInfo = ({
     const subscription = dockerContainers({ containerId })
       .pipe(map((data) => (Array.isArray(data) ? data[0] : null)))
       .subscribe((data) => {
+        console.log(data);
         if (!data || !data.location) {
           setContainer({} as IDockerContainer);
           return;

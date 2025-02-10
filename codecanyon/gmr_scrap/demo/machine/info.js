@@ -56,6 +56,8 @@ const {
   uploadFile,
   getMachineData,
   updateMachineData,
+  getUserData,
+  updateUserData,
 } = require("./services/firebase");
 const { GeoPoint } = require("firebase-admin/firestore");
 const { getDriver } = require("./services/selenium");
@@ -199,6 +201,19 @@ let driver;
     data.status = "completed";
     console.log(JSON.stringify(data, null, 2));
     await updateMachineData(tag, data);
+
+    try {
+      const user = await getUserData(data.uid);
+      if (user) {
+        await updateUserData(data.uid, {
+          coinBalance: FieldValue.increment(-data.price.validate),
+          totalValidateInfo: FieldValue.increment(1),
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     log(null);
   }
 })();

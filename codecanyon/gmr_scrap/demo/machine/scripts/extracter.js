@@ -419,13 +419,35 @@ window.fetchVisibleElements = async () => {
   const childNodes = Array.from(scrollContainer.children);
   for (const node of childNodes) {
     try {
+      if (
+        gmrScrap["maxSpentPoints"] <= 0 ||
+        gmrScrap["limit"] <= gmrScrap["extractedReviews"].length
+      ) {
+        continue;
+      }
+
       const validatedElement = await validateNode(node);
       if (validatedElement) {
-        gmrScrap.extractedReviews.push({
+        const review = {
           ...validatedElement,
           uid: gmrScrap.uid,
           machineId: gmrScrap.machineId,
-        });
+        };
+
+        gmrScrap.extractedReviews.push(review);
+
+        const imageCount = review.imageUrls.length;
+        const videoCount = review.videoUrls.length;
+        const ownerReviewCount = review.response ? 1 : 0;
+        const reviewCount = review.review ? 1 : 0;
+
+        const cost =
+          reviewCount * gmrScrap.price.review +
+          imageCount * gmrScrap.price.image +
+          videoCount * gmrScrap.price.video +
+          ownerReviewCount * gmrScrap.price.response;
+
+        gmrScrap["maxSpentPoints"] -= cost;
       }
     } catch (error) {
       console.error("Error processing node:", error);

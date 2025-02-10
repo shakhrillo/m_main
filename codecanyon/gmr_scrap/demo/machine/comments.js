@@ -43,7 +43,12 @@ require("dotenv").config();
 // Import dependencies
 const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
-const { getMachineData } = require("./services/firebase");
+const { FieldValue } = require("firebase-admin/firestore");
+const {
+  getMachineData,
+  getUserData,
+  updateUserData,
+} = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 const {
@@ -210,7 +215,8 @@ let driver;
         if (
           retries > MAX_RETRIES ||
           data.extractedReviews.length >= data.limit ||
-          data.reviews <= data.extractedReviews.length
+          data.reviews <= data.extractedReviews.length ||
+          data.maxSpentPoints <= 0
         ) {
           retries = MAX_RETRIES;
         }
@@ -296,8 +302,27 @@ let driver;
       totalImages: data.extractedImageUrls.length || 0,
       totalVideos: data.extractedVideoUrls.length || 0,
       totalOwnerReviews: data.extractedOwnerReviewCount || 0,
+      maxSpentPoints: data.maxSpentPoints || 0,
       status: "completed",
     });
+
+    try {
+      const user = await getUserData(data.uid);
+      if (user) {
+        await updateUserData(data.uid, {
+          coinBalance: FieldValue.increment(-data.maxSpentPoints),
+          totalReviews: FieldValue.increment(data.extractedReviews.length),
+          totalImages: FieldValue.increment(data.extractedImageUrls.length),
+          totalVideos: FieldValue.increment(data.extractedVideoUrls.length),
+          totalOwnerReviews: FieldValue.increment(
+            data.extractedOwnerReviewCount
+          ),
+          totalValidateComments: FieldValue.increment(1),
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     log(null); // Clear the log
     console.log(
