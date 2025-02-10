@@ -50,8 +50,19 @@ services:
       - "${APP_FIREBASE_EMULATOR_HUB}:4400"
     entrypoint: >
       sh -c '
-        [ "$APP_ENVIRONMENT" = "production" ] && GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json" firebase deploy --project "$APP_FIREBASE_PROJECT_ID" && exit 0 || firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID"
+        if [ "$APP_ENVIRONMENT" = "production" ]; then
+          GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
+
+          # Delete functions
+          firebase functions:delete processContainerCreated processContainerWritten --project "$APP_FIREBASE_PROJECT_ID" --force
+
+          # Redeploy everything
+          firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
+        else
+          firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID"
+        fi
       '
+
     working_dir: /usr/src/app
     networks:
       gmrs-network:
