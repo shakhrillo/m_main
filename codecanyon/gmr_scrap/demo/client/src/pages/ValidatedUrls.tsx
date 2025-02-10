@@ -2,7 +2,7 @@ import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
 import { ContainersList } from "../components/containers/ContainersList";
 export const ValidatedURLs = () => {
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reviews</Breadcrumb.Item>
         <Breadcrumb.Item active>Validates</Breadcrumb.Item>

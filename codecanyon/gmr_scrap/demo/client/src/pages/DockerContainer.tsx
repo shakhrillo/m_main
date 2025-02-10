@@ -112,7 +112,7 @@ export const DockerContainer = () => {
   }, [containerId]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item

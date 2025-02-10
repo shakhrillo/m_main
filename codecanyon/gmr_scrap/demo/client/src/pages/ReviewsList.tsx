@@ -3,7 +3,7 @@ import { ContainersList } from "../components/containers/ContainersList";
 
 export const ReviewsList = () => {
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reviews</Breadcrumb.Item>
         <Breadcrumb.Item active>Reviews list</Breadcrumb.Item>
