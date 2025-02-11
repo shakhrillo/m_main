@@ -112,17 +112,24 @@ export const DockerImages = () => {
                 data={images.map((image) => ({
                   id: image.id,
                   name: image?.id,
-                  Created: formatStringDate(image.Created),
-                  Size: formatSize(image.Size),
-                  Os: image.Os,
-                  Architecture: image.Architecture,
-                  Variant: image.Variant,
-                  updatedAt: formatTimestamp(image.updatedAt),
+                  Size: formatSize(image?.machine?.Size),
+                  Os: image?.machine?.Os,
+                  Architecture: image?.machine?.Architecture,
+                  Variant: image?.machine?.Variant,
+                  Created: image?.machine?.Created,
                 }))}
                 columns={[
                   {
                     dataField: "name",
                     text: "Name",
+                    formatter: (cell: any, row: any) => (
+                      <NavLink
+                        to={`/docker/images/${row.id}`}
+                        className="text-break"
+                      >
+                        {cell}
+                      </NavLink>
+                    ),
                   },
                   {
                     dataField: "Size",
@@ -143,10 +150,6 @@ export const DockerImages = () => {
                   {
                     dataField: "Created",
                     text: "Created",
-                  },
-                  {
-                    dataField: "updatedAt",
-                    text: "Updated",
                   },
                 ]}
                 pagination={paginationFactory({
