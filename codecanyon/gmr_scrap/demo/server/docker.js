@@ -19,9 +19,6 @@ const getDocker = () => {
 
 let docker;
 
-console.log("Docker host:", process.env.DOCKER_IPV4_ADDRESS);
-console.log("Docker port:", process.env.APP_DOCKER_PORT);
-
 /**
  * Check for Docker
  * @returns {Promise<boolean>}
