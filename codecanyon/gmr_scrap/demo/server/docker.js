@@ -23,6 +23,27 @@ const getDocker = () => {
  */
 let docker;
 
+const getImageDetails = async (imageName) => {
+  try {
+    if (!imageName) {
+      console.warn("Image name is required.");
+      return null;
+    }
+
+    const image = docker.getImage(imageName);
+    const imageDetails = await image.inspect();
+    return imageDetails;
+  } catch (error) {
+    if (error.statusCode === 404) {
+      console.warn(`Image '${imageName}' not found.`);
+      return null;
+    }
+
+    console.error("Unexpected error fetching image details:", error);
+    return null;
+  }
+};
+
 /**
  * Check for Docker
  * @returns {Promise<boolean>}
@@ -67,6 +88,42 @@ async function watchDockerEvents() {
   const activeStreams = new Map();
 
   try {
+    const eventsImageStream = await docker.getEvents({
+      filters: {
+        type: ["image"],
+      },
+    });
+    eventsImageStream.setEncoding("utf8");
+
+    const imageStream$ = Kefir.fromEvents(eventsImageStream, "data")
+      .map((data) => {
+        const parsedData = JSON.parse(data);
+        return parsedData;
+      })
+      .debounce(1000);
+
+    imageStream$.onValue(async (data) => {
+      console.log("data", data);
+      const image = data?.Actor?.Attributes?.name;
+
+      if (!image) {
+        console.error("No image found in event data:", data);
+        return;
+      }
+
+      try {
+        const imageDetails = await getImageDetails(image);
+        console.log("imageDetails", imageDetails);
+        if (!imageDetails) return;
+
+        await updateMachine(image, imageDetails);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    //
+
     const eventsStream = await docker.getEvents({
       filters: {
         image: ["gmrs-dev"],
@@ -104,7 +161,7 @@ async function watchDockerEvents() {
         return;
       }
 
-      updateMachine(name, data);
+      await updateMachine(name, data);
 
       if (activeStreams.has(name)) {
         const stream = activeStreams.get(name);
@@ -141,7 +198,7 @@ async function watchDockerEvents() {
           })
           .filter(Boolean);
 
-        stream$.onValue((stats) => addMachineStats(name, stats));
+        stream$.onValue(async (stats) => await addMachineStats(name, stats));
 
         stream.on("end", () => {
           console.log(`Stats stream ended for container ${name}`);

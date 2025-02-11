@@ -8,6 +8,11 @@ const handleContainerOperations = async (req, res) => {
     const { tag, type } = req.data;
     console.log("tag", tag);
     console.log("type", type);
+
+    if (!tag || !type) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
     await startContainer({
       Image: process.env.MACHINE_BUILD_IMAGE_NAME,
       name: tag,
