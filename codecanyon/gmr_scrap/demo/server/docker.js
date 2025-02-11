@@ -24,12 +24,6 @@ let docker;
  * @returns {Promise<boolean>}
  */
 const checkDocker = async () => {
-  console.log(
-    "Docker host:",
-    process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal"
-  );
-  console.log("Docker port:", process.env.APP_DOCKER_PORT || 2376);
-
   while (true) {
     try {
       try {
