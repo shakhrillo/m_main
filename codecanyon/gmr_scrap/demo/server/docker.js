@@ -100,6 +100,10 @@ async function watchDockerEvents() {
     const isNetwork = data?.Type === "network";
     const isImage = data?.Type === "image";
 
+    console.log("-".repeat(50));
+    console.log(data);
+    console.log("-".repeat(50));
+
     if (!name) {
       console.error("No name found in data:", data);
       return;
@@ -107,13 +111,13 @@ async function watchDockerEvents() {
 
     updateMachine(name, data);
 
-    if (isImage && action !== "pull") {
-      docker.getImage(name).inspect().catch(console.error);
-    }
+    // if (isImage && action !== "pull") {
+    //   docker.getImage(name).inspect().catch(console.error);
+    // }
 
-    if (isNetwork) {
-      docker.getNetwork(name).inspect().catch(console.error);
-    }
+    // if (isNetwork) {
+    //   docker.getNetwork(name).inspect().catch(console.error);
+    // }
 
     if (isContainer) {
       if (activeStreams.has(name)) {

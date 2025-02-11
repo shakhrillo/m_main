@@ -22,12 +22,10 @@ const dockerBuild = async () => {
       config: "docker-compose.yml",
     });
 
-    await Promise.all([
-      await checkDocker(),
-      await checkStripe(),
-      await checkFirebase(),
-      await checkServer(),
-    ]);
+    await checkDocker();
+    await checkStripe();
+    await checkFirebase();
+    await checkServer();
 
     await executeCompose({
       config: "docker-compose-machine.yml",
