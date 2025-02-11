@@ -36,7 +36,7 @@ export const DockerImages = () => {
 
   useEffect(() => {
     const subscription = dockerContainers({
-      type: "image",
+      machineType: "image",
     })
       .pipe(
         map((data) => {
@@ -58,7 +58,7 @@ export const DockerImages = () => {
   }, [uid]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item active>Images</Breadcrumb.Item>

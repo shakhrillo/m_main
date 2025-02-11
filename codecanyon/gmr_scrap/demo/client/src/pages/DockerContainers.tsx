@@ -10,7 +10,7 @@ export const DockerContainers = () => {
       </Breadcrumb>
       <Row className="g-3">
         <Col xs={12}>
-          <ContainersList path="containers" />
+          <ContainersList path="containers" machineType="container" />
         </Col>
       </Row>
     </Container>

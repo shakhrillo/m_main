@@ -31,9 +31,11 @@ const FILTER_OPTIONS = [
 export const ContainersList = ({
   path,
   type,
+  machineType,
 }: {
   path: "reviews" | "containers" | "scrap";
   type?: "comments" | "info";
+  machineType?: "container" | "image";
 }) => {
   const user = useOutletContext<User>();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
@@ -48,6 +50,7 @@ export const ContainersList = ({
       search,
       // uid: uid,
       type,
+      machineType,
     }).subscribe((data) => {
       console.log(data);
       setContainers(data);
@@ -136,15 +139,15 @@ export const ContainersList = ({
             machineName: (
               <span className="d-flex flex-column">
                 <NavLink to={`/${path}/${comment.machineId}`}>
-                  {comment.title}
-                  {
+                  {comment.title || comment.tag || comment.machineId}
+                  {comment.type && (
                     <Badge
                       className="text-capitalize ms-2"
                       bg={comment.type === "info" ? "info" : "primary"}
                     >
                       {comment.type === "info" ? "Validate" : "Review"}
                     </Badge>
-                  }
+                  )}
                 </NavLink>
                 #{comment?.machine?.Actor?.Attributes?.name}
               </span>

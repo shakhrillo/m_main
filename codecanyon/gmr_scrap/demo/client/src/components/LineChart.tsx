@@ -88,10 +88,10 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
           hexToRgba(dataset.color, 0.5)
         );
       },
-      tension: 0.5,
-      pointRadius: 0,
+      tension: 0.2,
+      // pointRadius: 0,
       fill: true,
-      borderWidth: 2,
+      // borderWidth: 2,
     })),
   };
 

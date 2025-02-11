@@ -102,7 +102,7 @@ export const DockerInfo = () => {
   }, []);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item active>Docker info</Breadcrumb.Item>
