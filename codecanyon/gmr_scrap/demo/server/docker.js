@@ -59,7 +59,11 @@ const handleImageEvents = async () => {
     .onValue(async ({ Actor: { Attributes: { name } = {} } = {} }) => {
       if (!name) return console.error("No image found in event data");
       const details = await getImageDetails(name);
-      if (details) await updateMachine(name, details);
+      if (details)
+        await updateMachine(name, {
+          ...details,
+          Type: "image",
+        });
     });
 };
 
@@ -77,34 +81,40 @@ const handleContainerEvents = async () => {
     )
     .flatten()
     .debounce(1000)
-    .onValue(
-      async ({ Actor: { Attributes: { name } = {} } = {}, Action, status }) => {
-        if (!name) return console.error("No name found in event data");
-        await updateMachine(name, { Action, status });
-        if (["destroy", "die"].includes(status))
-          return activeStreams.delete(name);
+    .onValue(async (machine) => {
+      const name = machine.Actor.Attributes.name;
+      const { status, action } = machine;
+      if (!name) return console.error("No name found in event data");
+      await updateMachine(name, machine);
 
-        try {
-          const container = docker.getContainer(name);
-          if (!(await container.inspect()).State.Running) return;
-          const statsStream = await container.stats();
-          const stats$ = Kefir.fromEvents(statsStream, "data")
-            .debounce(400)
-            .map(JSON.parse)
-            .filter(Boolean);
-          stats$.onValue((stats) => addMachineStats(name, stats));
-          ["end", "error"].forEach((e) =>
-            statsStream.on(e, () => activeStreams.delete(name))
-          );
-          activeStreams.set(name, statsStream);
-        } catch (error) {
-          console.error(
-            `Error fetching stats for container ${name}:`,
-            error.message
-          );
-        }
+      if (activeStreams.has(name)) {
+        const stream = activeStreams.get(name);
+        stream.destroy();
+        activeStreams.delete(name);
       }
-    );
+
+      if (["destroy", "die"].includes(status) || action === "destroy") return;
+
+      try {
+        const container = docker.getContainer(name);
+        if (!(await container.inspect()).State.Running) return;
+        const statsStream = await container.stats();
+        const stats$ = Kefir.fromEvents(statsStream, "data")
+          .debounce(400)
+          .map(JSON.parse)
+          .filter(Boolean);
+        stats$.onValue((stats) => addMachineStats(name, stats));
+        ["end", "error"].forEach((e) =>
+          statsStream.on(e, () => activeStreams.delete(name))
+        );
+        activeStreams.set(name, statsStream);
+      } catch (error) {
+        console.error(
+          `Error fetching stats for container ${name}:`,
+          error.message
+        );
+      }
+    });
 };
 
 const watchDockerEvents = async () => {

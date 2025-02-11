@@ -111,7 +111,7 @@ export const DockerImages = () => {
                 keyField="key"
                 data={images.map((image) => ({
                   id: image.id,
-                  name: image?.machine?.Actor?.Attributes?.name || "N/A",
+                  name: image?.id,
                   Created: formatStringDate(image.Created),
                   Size: formatSize(image.Size),
                   Os: image.Os,
