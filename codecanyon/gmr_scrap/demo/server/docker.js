@@ -54,72 +54,74 @@ const checkDocker = async () => {
 };
 
 /**
- * Watch Docker events and update Firebase with the machine data
- * @returns {Promise<void>}
+ * Watch Docker events and update Firebase with machine data
  */
 async function watchDockerEvents() {
-  await checkDocker();
+  const isDockerReady = await checkDocker();
+  if (!isDockerReady) return;
+
   const activeStreams = new Map();
 
-  const eventsStream = await docker.getEvents();
-  eventsStream.setEncoding("utf8");
+  try {
+    const eventsStream = await docker.getEvents();
+    eventsStream.setEncoding("utf8");
 
-  const eventStream$ = Kefir.fromEvents(eventsStream, "data")
-    .map((data) => {
-      if (!data || typeof data !== "string") return null;
-      return data
-        .trim()
-        .split("\n")
-        .map((line) => {
-          try {
-            return JSON.parse(line);
-          } catch (err) {
-            console.error("JSON parse error:", err);
-            return null;
-          }
-        });
-    })
-    .flatten()
-    .filter((data) => data !== null)
-    .debounce(400);
+    const eventStream$ = Kefir.fromEvents(eventsStream, "data")
+      .map((data) => {
+        if (!data || typeof data !== "string") return null;
+        return data
+          .trim()
+          .split("\n")
+          .map((line) => {
+            try {
+              return JSON.parse(line);
+            } catch (err) {
+              console.error("JSON parse error:", err);
+              return null;
+            }
+          });
+      })
+      .flatten()
+      .filter(Boolean)
+      .debounce(400);
 
-  eventStream$.onValue((data) => {
-    const name = data?.Actor?.Attributes?.name;
-    const action = data?.Action;
-    const status = data?.status;
-    const isContainer = data?.Type === "container";
+    eventStream$.onValue(async (data) => {
+      const name = data?.Actor?.Attributes?.name;
+      const action = data?.Action;
+      const status = data?.status;
+      const isContainer = data?.Type === "container";
 
-    if (!name) {
-      console.error("No name found in data:", data);
-      return;
-    }
-
-    updateMachine(name, data);
-
-    if (isContainer) {
-      if (activeStreams.has(name)) {
-        const stream = activeStreams.get(name);
-        stream.destroy();
-        activeStreams.delete(name);
-      }
-
-      if (action === "destroy" || status === "destroy" || status === "die") {
-        console.log("Container destroyed, removing from active streams");
+      if (!name) {
+        console.error("No name found in event data:", data);
         return;
       }
 
-      docker
-        .getContainer(name)
-        .inspect()
-        .then((containerData) => {
-          if (!containerData.State.Running) {
-            console.error(`Container ${name} is not running.`);
+      updateMachine(name, data);
+
+      if (isContainer) {
+        if (activeStreams.has(name)) {
+          const stream = activeStreams.get(name);
+          stream.destroy();
+          activeStreams.delete(name);
+        }
+
+        if (action === "destroy" || status === "destroy" || status === "die") {
+          console.log(
+            `Container ${name} destroyed, removing from active streams`
+          );
+          return;
+        }
+
+        try {
+          const container = docker.getContainer(name);
+          const containerData = await container.inspect();
+
+          if (!containerData?.State?.Running) {
+            console.warn(`Container ${name} is not running.`);
             return;
           }
-          return docker.getContainer(name).stats();
-        })
-        .then((stream) => {
-          if (!stream) return;
+
+          const stream = await container.stats();
           const stream$ = Kefir.fromEvents(stream, "data")
             .debounce(400)
             .map((data) => {
@@ -130,23 +132,32 @@ async function watchDockerEvents() {
                 return null;
               }
             })
-            .filter((stats) => stats !== null);
+            .filter(Boolean);
 
           stream$.onValue((stats) => addMachineStats(name, stats));
 
           stream.on("end", () => {
             console.log(`Stats stream ended for container ${name}`);
+            activeStreams.delete(name);
           });
 
           stream.on("error", (err) => {
             console.error(`Stats stream error for container ${name}:`, err);
+            activeStreams.delete(name);
           });
 
           activeStreams.set(name, stream);
-        })
-        .catch(console.error);
-    }
-  });
+        } catch (error) {
+          console.error(
+            `Error fetching stats for container ${name}:`,
+            error.message
+          );
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error watching Docker events:", error.message);
+  }
 }
 
 module.exports = {
