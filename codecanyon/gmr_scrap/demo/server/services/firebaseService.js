@@ -82,6 +82,39 @@ async function updateMachine(docId, data) {
   }
 }
 
+/**
+ * Add image history to machine history collection
+ * @param {string} docId
+ * @param {Docker.ImageInspectInfo} imgHistory
+ */
+async function updateMachineHistory(docId, imgHistory) {
+  if (!imgHistory) return;
+
+  try {
+    const batch = db.batch();
+    const historyCollection = db
+      .collection("machines")
+      .doc(docId)
+      .collection("history");
+
+    imgHistory.forEach((history) => {
+      const historyRef = historyCollection.doc(history.Id);
+      batch.set(
+        historyRef,
+        {
+          ...history,
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true }
+      );
+    });
+
+    await batch.commit();
+  } catch (error) {
+    console.error("Error updating machine history:", error);
+  }
+}
+
 async function addMachineStats(docId, stats) {
   try {
     await db
@@ -94,6 +127,17 @@ async function addMachineStats(docId, stats) {
       });
   } catch (error) {
     console.error("Error updating machine stats:", error);
+  }
+}
+
+async function addMachineLogs(docId, logs) {
+  try {
+    await db.collection("machines").doc(docId).collection("logs").add({
+      logs,
+      updatedAt: Timestamp.now(),
+    });
+  } catch (error) {
+    console.error("Error updating machine logs:", error);
   }
 }
 
@@ -132,4 +176,6 @@ module.exports = {
   addDockerInfo,
   updateDockerImageInfo,
   addMachineStats,
+  updateMachineHistory,
+  addMachineLogs,
 };

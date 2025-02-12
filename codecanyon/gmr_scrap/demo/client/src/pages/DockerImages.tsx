@@ -123,10 +123,7 @@ export const DockerImages = () => {
                     dataField: "name",
                     text: "Name",
                     formatter: (cell: any, row: any) => (
-                      <NavLink
-                        to={`/docker/images/${row.id}`}
-                        className="text-break"
-                      >
+                      <NavLink to={`/images/${row.id}`} className="text-break">
                         {cell}
                       </NavLink>
                     ),

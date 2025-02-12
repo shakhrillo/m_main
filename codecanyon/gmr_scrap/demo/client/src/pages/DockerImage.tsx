@@ -1,3 +1,11 @@
+import {
+  IconBrandUbuntu,
+  IconClock,
+  IconDeviceSdCard,
+  IconHierarchy,
+  IconTag,
+  IconTriangle,
+} from "@tabler/icons-react";
 import { JSX, useEffect, useState } from "react";
 import {
   Breadcrumb,
@@ -10,17 +18,12 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { map } from "rxjs";
 import {
-  IconBrandUbuntu,
-  IconClock,
-  IconDeviceSdCard,
-  IconHierarchy,
-  IconTag,
-  IconTriangle,
-} from "@tabler/icons-react";
-import { a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { docker } from "../services/dockerService";
+  dockerContainerHistory,
+  dockerContainers,
+} from "../services/dockerService";
 import { formatDate } from "../utils/formatDate";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
@@ -53,21 +56,15 @@ export const DockerImage = () => {
   const [imageDetails, setImageDetails] = useState({} as any);
 
   useEffect(() => {
-    const subscription = docker({
-      type: "image",
+    const subscription = dockerContainers({
+      machineType: "image",
+      machineId: imgId,
     })
       .pipe(
         map((data) => {
-          const images = data
-            .filter((image: any) => image.id === imgId)
-            .map((image: any) => ({
-              ...JSON.parse(typeof image.data === "string" ? image.data : "{}"),
-              id: image.id,
-              updatedAt: image.updatedAt,
-            }));
-
-          if (images.length) {
-            return images[0];
+          console.log("data--->", data);
+          if (Array.isArray(data) && data.length > 0) {
+            return data[0];
           }
 
           return {};
@@ -83,30 +80,17 @@ export const DockerImage = () => {
   }, [imgId]);
 
   useEffect(() => {
-    const subscription = docker({
-      type: "layer",
-      imageId: imgId,
-    })
-      .pipe(
-        map((data) => {
-          return data.map((layer: any) => ({
-            ...JSON.parse(typeof layer.data === "string" ? layer.data : "{}"),
-            id: layer.id,
-            updatedAt: layer.updatedAt,
-          }));
-        }),
-      )
-      .subscribe((data) => {
-        setImageLayers(data);
-      });
+    const subscription = dockerContainerHistory(imgId).subscribe((data) => {
+      setImageLayers(data);
+    });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [imgId]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item
@@ -160,8 +144,8 @@ export const DockerImage = () => {
                     icon={<IconTag />}
                     label="Tags"
                     value={
-                      imageDetails.RepoTags
-                        ? imageDetails.RepoTags.join(", ")
+                      imageDetails?.machine?.RepoTags
+                        ? imageDetails?.machine?.RepoTags.join(", ")
                         : "N/A"
                     }
                   />
@@ -170,42 +154,42 @@ export const DockerImage = () => {
                   <DockerImageInfoRow
                     icon={<IconClock />}
                     label="Created"
-                    value={formatStringDate(imageDetails.Created)}
+                    value={formatStringDate(imageDetails?.machine?.Created)}
                   />
                 </Col>
                 <Col>
                   <DockerImageInfoRow
                     icon={<IconClock />}
                     label="Updated"
-                    value={formatTimestamp(imageDetails.updatedAt)}
+                    value={formatTimestamp(imageDetails?.machine?.updatedAt)}
                   />
                 </Col>
                 <Col>
                   <DockerImageInfoRow
                     icon={<IconDeviceSdCard />}
                     label="Size"
-                    value={formatSize(imageDetails.Size || 0)}
+                    value={formatSize(imageDetails?.machine?.Size || 0)}
                   />
                 </Col>
                 <Col>
                   <DockerImageInfoRow
                     icon={<IconBrandUbuntu />}
                     label="OS"
-                    value={imageDetails.Os || "N/A"}
+                    value={imageDetails?.machine?.Os || "N/A"}
                   />
                 </Col>
                 <Col>
                   <DockerImageInfoRow
                     icon={<IconHierarchy />}
                     label="Architecture"
-                    value={imageDetails.Architecture || "N/A"}
+                    value={imageDetails?.machine?.Architecture || "N/A"}
                   />
                 </Col>
                 <Col>
                   <DockerImageInfoRow
                     icon={<IconTriangle />}
                     label="Variant"
-                    value={imageDetails.Variant || "N/A"}
+                    value={imageDetails?.machine?.Variant || "N/A"}
                   />
                 </Col>
               </Row>

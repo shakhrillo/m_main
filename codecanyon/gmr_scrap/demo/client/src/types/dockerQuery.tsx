@@ -5,4 +5,5 @@ export interface IDockerQuery {
   status?: string;
   containerId?: string;
   uid?: string;
+  machineId?: string;
 }

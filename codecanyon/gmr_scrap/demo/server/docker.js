@@ -4,6 +4,8 @@ const fs = require("fs");
 const {
   updateMachine,
   addMachineStats,
+  addMachineLogs,
+  updateMachineHistory,
 } = require("./services/firebaseService");
 
 const DOCKER_CONFIG = {
@@ -15,7 +17,12 @@ const DOCKER_CONFIG = {
   key: fs.readFileSync("/certs/client/key.pem"),
 };
 
+/**
+ * Docker instance
+ * @type {Docker}
+ */
 let docker;
+
 const activeStreams = new Map();
 
 const initializeDocker = () => {
@@ -35,6 +42,21 @@ const getImageDetails = async (imageName) => {
   }
 };
 
+/**
+ * Get image history
+ * @param {string} imageName
+ * @returns {Promise<import("dockerode").ImageInspectInfo>}
+ */
+const getImageHistory = async (imageName) => {
+  if (!imageName) return console.warn("Image name is required."), null;
+  try {
+    return await docker.getImage(imageName).history();
+  } catch (error) {
+    console.error("Error fetching image history:", error);
+    return null;
+  }
+};
+
 const checkDocker = async () => {
   while (true) {
     try {
@@ -42,7 +64,6 @@ const checkDocker = async () => {
         throw new Error("Waiting for /certs/client directory");
       initializeDocker();
       await docker.ping();
-      console.log("Docker is ready");
       return true;
     } catch (error) {
       console.error("Error connecting to Docker:", error.message);
@@ -64,6 +85,9 @@ const handleImageEvents = async () => {
           ...details,
           Type: "image",
         });
+
+      const imgHistory = await getImageHistory(name);
+      await updateMachineHistory(name, imgHistory);
     });
 };
 
@@ -83,6 +107,7 @@ const handleContainerEvents = async () => {
     .debounce(1000)
     .onValue(async (machine) => {
       const name = machine.Actor.Attributes.name;
+      const machineId = machine.Actor.ID;
       const { status, action } = machine;
       if (!name) return console.error("No name found in event data");
       await updateMachine(name, machine);
@@ -93,11 +118,18 @@ const handleContainerEvents = async () => {
         activeStreams.delete(name);
       }
 
+      if (activeStreams.has(machineId)) {
+        const stream = activeStreams.get(machineId);
+        stream.destroy();
+        activeStreams.delete(machineId);
+      }
+
       if (["destroy", "die"].includes(status) || action === "destroy") return;
 
       try {
         const container = docker.getContainer(name);
         if (!(await container.inspect()).State.Running) return;
+        // Fetch stats
         const statsStream = await container.stats();
         const stats$ = Kefir.fromEvents(statsStream, "data")
           .debounce(400)
@@ -108,9 +140,25 @@ const handleContainerEvents = async () => {
           statsStream.on(e, () => activeStreams.delete(name))
         );
         activeStreams.set(name, statsStream);
+
+        // Fetch logs
+        const logsStream = await container.logs({
+          follow: true,
+          stdout: true,
+          stderr: true,
+        });
+        const logs$ = Kefir.fromEvents(logsStream, "data")
+          .debounce(400)
+          .map((data) => data.toString())
+          .filter(Boolean);
+        logs$.onValue((log) => addMachineLogs(name, log));
+        ["end", "error"].forEach((e) =>
+          logsStream.on(e, () => activeStreams.delete(machineId))
+        );
+        activeStreams.set(machineId, logsStream);
       } catch (error) {
         console.error(
-          `Error fetching stats for container ${name}:`,
+          `Error fetching stats for container ${machineId}:`,
           error.message
         );
       }

@@ -50,6 +50,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
+      ...(q.machineId ? [where("machineId", "==", q.machineId)] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(q.status ? [where("status", "==", q.status)] : []),
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
@@ -70,6 +71,69 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
 
   return new Observable<IDockerContainer[]>((subscriber) => {
     const subscription = containers$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerContainerLogs = (containerId: string) => {
+  const logs$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(firestore, "machines", containerId, "logs");
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef, orderBy("updatedAt", "asc")),
+    (snapshot) => {
+      const logsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      logs$.next(logsData);
+    },
+    (error) => {
+      console.error("Error fetching logs data:", error);
+      logs$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = logs$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+};
+
+export const dockerContainerHistory = (containerId: string) => {
+  const history$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(
+    firestore,
+    "machines",
+    containerId,
+    "history",
+  );
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const historyData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      history$.next(historyData);
+    },
+    (error) => {
+      console.error("Error fetching history data:", error);
+      history$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = history$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
