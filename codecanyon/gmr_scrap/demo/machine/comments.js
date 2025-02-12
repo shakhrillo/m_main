@@ -117,7 +117,7 @@ let driver;
 
 // Main function
 (async () => {
-  log("Scraping reviews...");
+  console.log("Scraping reviews...");
 
   try {
     let scrapStartTime = Date.now();
@@ -131,7 +131,7 @@ let driver;
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
     }
-    log(`Scraping reviews from ${data.url}`);
+    console.log(`Scraping reviews from ${data.url}`);
 
     // Initialize Selenium WebDriver
     driver = await getDriver({
@@ -170,14 +170,14 @@ let driver;
     let retries = 0;
 
     while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
-      log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
+      console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
       try {
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
-        log(`Error fetching review IDs: ${error.message}`);
+        console.log(`Error fetching review IDs: ${error.message}`);
       } finally {
         retries++;
       }
@@ -187,7 +187,7 @@ let driver;
       await driver.quit();
       throw new Error("No review IDs found");
     } else {
-      log(`Fetched ${extractedReviewIds.length} review IDs`);
+      console.log(`Fetched ${extractedReviewIds.length} review IDs`);
       retries = 0;
     }
 
@@ -227,11 +227,13 @@ let driver;
         // Get browser logs
         try {
           let logs = await driver.manage().logs().get("browser");
-          logs.forEach(({ level, message }) => log(`[${level}] ${message}`));
+          logs.forEach(({ level, message }) =>
+            console.log(`[${level}] ${message}`)
+          );
           data.browserLogs = JSON.stringify(logs);
           await driver.sleep(1000);
         } catch (error) {
-          log(`Error fetching browser logs: ${error.message}`);
+          console.log(`Error fetching browser logs: ${error.message}`);
         }
 
         retries += 1;
@@ -245,7 +247,7 @@ let driver;
         lastReviewCount = data.extractedReviews.length;
 
         // Log the progress
-        log(
+        console.log(
           `
             Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
               long: true,
@@ -262,7 +264,7 @@ let driver;
     }
 
     // Upload the extracted data to Firestore
-    log("Uploading data to Firestore...");
+    console.log("Uploading data to Firestore...");
     if (data.extractedReviews.length > 0) {
       const jsonContent = JSON.stringify(data.extractedReviews, null, 2);
       const csvContent = [
@@ -328,7 +330,7 @@ let driver;
       console.error(error);
     }
 
-    log(null); // Clear the log
+    console.log(null); // Clear the log
     console.log(
       `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
     );

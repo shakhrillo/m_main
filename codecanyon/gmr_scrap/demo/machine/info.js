@@ -115,14 +115,14 @@ let data = {};
 let driver;
 
 (async () => {
-  log(`Scraping data for tag: ${tag}`);
+  console.log(`Scraping data for tag: ${tag}`);
 
   try {
     // Fetch machine data
     let dataRetries = 3;
     data = await getMachineData(tag);
     while (!data && dataRetries > 0) {
-      log(`Retrying to fetch data for tag: ${tag}`);
+      console.log(`Retrying to fetch data for tag: ${tag}`);
       data = await getMachineData(tag);
       dataRetries--;
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -161,7 +161,7 @@ let driver;
       ...info,
       title: (await driver.getTitle()).replace(" - Google Maps", ""),
     };
-    log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
+    console.log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
 
     // Prepare for screenshot by removing unnecessary elements
     await driver.executeScript(prepareForScreenshot);
@@ -172,7 +172,7 @@ let driver;
     const screenshotBuffer = Buffer.from(screenshot, "base64");
     const imageName = `${tag}.png`;
     data.screenshot = await uploadFile(screenshotBuffer, imageName);
-    log(`Screenshot uploaded: ${data.screenshot}`);
+    console.log(`Screenshot uploaded: ${data.screenshot}`);
 
     data.extendedUrl = await driver.getCurrentUrl();
 
@@ -197,7 +197,7 @@ let driver;
   } catch (error) {
     data.status = "error";
     data.error = JSON.stringify(error);
-    log(`Error: ${error.message}`);
+    console.log(`Error: ${error.message}`);
   } finally {
     data.status = "completed";
     console.log(JSON.stringify(data, null, 2));
@@ -212,9 +212,9 @@ let driver;
         });
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
 
-    log(null);
+    console.log(null);
   }
 })();
