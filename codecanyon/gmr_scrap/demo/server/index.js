@@ -38,7 +38,7 @@ app.use(errorHandler);
 (async () => await watchDockerEvents())();
 
 // Start the server
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("-".repeat(50));
   console.log("");
   console.log(

@@ -37,7 +37,7 @@ export const Payments = () => {
   const [amount, setAmount] = useState("");
   const [coinId, setCoinId] = useState("");
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-  const [cost, setCost] = useState(0);
+  const [cost, setCost] = useState(1);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "cost", type: "coin" })
@@ -46,7 +46,7 @@ export const Payments = () => {
         take(1),
       )
       .subscribe((data) => {
-        setCost(data.value);
+        setCost(data.value || 1);
       });
 
     return () => {

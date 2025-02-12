@@ -60,6 +60,7 @@ class EnvManager {
       APP_FIREBASE_IPV4_ADDRESS: `${subnetBase}.4`,
       SERVER_IPV4_ADDRESS: `${subnetBase}.5`,
       CLIENT_IPV4_ADDRESS: `${subnetBase}.6`,
+      STRIPE_IPV4_ADDRESS: `${subnetBase}.7`,
     };
   }
 

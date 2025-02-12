@@ -40,10 +40,7 @@ exports.processBuyCoins = onDocumentCreated(
   processBuyCoins
 );
 
-exports.userTopUp = onDocumentCreated(
-  "users/{userId}/payments/{paymentId}",
-  userTopUp
-);
+exports.userTopUp = onDocumentCreated("payments/{paymentId}", userTopUp);
 
 exports.processContainerCreated = onDocumentCreated(
   "containers/{containerId}",

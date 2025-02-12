@@ -9,9 +9,12 @@ services:
       STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME}
     volumes:
       - ./stripe-secrets:/usr/src/app/secrets
+    networks:
+      gmrs-network:
+        ipv4_address: ${STRIPE_IPV4_ADDRESS}
     entrypoint: >
       sh -c "
-        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret && 
+        stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret & 
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IPV4_ADDRESS}:${APP_SERVER_PORT}/stripe/webhook
       "
   docker:

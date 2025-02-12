@@ -40,7 +40,7 @@ async function processContainerCreated(event) {
     const settingsPricesQuery = await settingsPricesCollection.get();
     if (!settingsPricesQuery.empty) {
       const settingsPrices = settingsPricesQuery.docs.map((doc) => doc.data());
-      console.log("settingsPrices", settingsPrices);
+      // console.log("settingsPrices", settingsPrices);
       for (const settingsPrice of settingsPrices) {
         const price = settingsPrice["price"];
         const label = settingsPrice["label"];
@@ -115,14 +115,14 @@ async function processContainerCreated(event) {
       },
     });
 
-    console.log("processContainerCreated", {
-      ...data,
-      containerId,
-      status: "pending",
-      tag,
-      createdAt,
-      updatedAt,
-    });
+    // console.log("processContainerCreated", {
+    //   ...data,
+    //   containerId,
+    //   status: "pending",
+    //   tag,
+    //   createdAt,
+    //   updatedAt,
+    // });
 
     await batch.commit();
 

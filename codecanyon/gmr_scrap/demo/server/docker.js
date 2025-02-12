@@ -146,6 +146,7 @@ const handleContainerEvents = async () => {
           follow: true,
           stdout: true,
           stderr: true,
+          timestamps: false,
         });
         const logs$ = Kefir.fromEvents(logsStream, "data")
           .debounce(400)

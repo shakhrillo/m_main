@@ -23,7 +23,7 @@ async function processUserCreated(user) {
   /*-------------------*/
   /* Create user       */
   /*-------------------*/
-  const userRef = db.collection("users").doc();
+  const userRef = db.collection("users").doc(user.uid);
   batch.set(userRef, {
     uid: user.uid,
     displayName: user.displayName,
@@ -33,6 +33,7 @@ async function processUserCreated(user) {
     coinBalance: 100,
     notifications: 0,
     createdAt: Timestamp.now(),
+    totalSpent: 0,
     totalReviews: 0,
     totalImages: 0,
     totalVideos: 0,

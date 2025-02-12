@@ -204,13 +204,10 @@ let driver;
     await updateMachineData(tag, data);
 
     try {
-      const user = await getUserData(data.uid);
-      if (user) {
-        await updateUserData(user.id, {
-          coinBalance: FieldValue.increment(-data.price.validate),
-          totalValidateInfo: FieldValue.increment(1),
-        });
-      }
+      await updateUserData(data.uid, {
+        coinBalance: FieldValue.increment(-data.price.validate),
+        totalValidateInfo: FieldValue.increment(1),
+      });
     } catch (error) {
       console.log(error);
     }
