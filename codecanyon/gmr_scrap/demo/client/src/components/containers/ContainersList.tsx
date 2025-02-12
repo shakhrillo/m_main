@@ -52,7 +52,6 @@ export const ContainersList = ({
       type,
       machineType,
     }).subscribe((data) => {
-      console.log(data);
       setContainers(data);
     });
 
