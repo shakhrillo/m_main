@@ -47,7 +47,7 @@ export const Receipts = () => {
   }, []);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reports</Breadcrumb.Item>
         <Breadcrumb.Item active>Receipts</Breadcrumb.Item>

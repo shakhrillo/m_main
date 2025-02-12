@@ -48,7 +48,7 @@ export const Receipt = () => {
   }, [receiptId]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reports</Breadcrumb.Item>
         <Breadcrumb.Item

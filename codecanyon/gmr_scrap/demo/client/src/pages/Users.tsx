@@ -40,7 +40,7 @@ export const Users = () => {
   }, []);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Settings</Breadcrumb.Item>
         <Breadcrumb.Item active>Users</Breadcrumb.Item>

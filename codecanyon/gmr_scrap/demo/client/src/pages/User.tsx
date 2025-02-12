@@ -75,7 +75,7 @@ export const User = () => {
   }, [buffer, userId]);
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Settings</Breadcrumb.Item>
         <Breadcrumb.Item
@@ -143,7 +143,7 @@ export const User = () => {
           <Card>
             <CardBody>
               <CardTitle>User Profile</CardTitle>
-              <Image src={user.photoURL} rounded fluid />
+              {user.photoURL && <Image src={user.photoURL} rounded fluid />}
               <div className="d-flex flex-column mt-3 gap-3">
                 <div className="d-flex align-items-center">
                   <span>

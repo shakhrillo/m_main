@@ -3,7 +3,7 @@ import { SettingsFormInput } from "../components/SettingsFormInput";
 
 export const Settings = () => {
   return (
-    <Container fluid>
+    <Container>
       <Row className="g-3">
         <Col md={12}>
           <Card>

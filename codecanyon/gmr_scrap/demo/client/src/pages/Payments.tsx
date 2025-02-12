@@ -106,7 +106,7 @@ export const Payments = () => {
   }
 
   return (
-    <Container fluid>
+    <Container>
       <Breadcrumb>
         <Breadcrumb.Item>Reports</Breadcrumb.Item>
         <Breadcrumb.Item active>Buy Coins</Breadcrumb.Item>
