@@ -37,6 +37,8 @@ services:
       dockerfile: Dockerfile
     container_name: ${APP_ID}-firebase
     image: ${APP_ID}-firebase
+    volumes:
+      - ./data:/usr/src/app/data
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       APP_FIREBASE_PROJECT_ID: ${APP_FIREBASE_PROJECT_ID}
@@ -56,10 +58,10 @@ services:
         if [ "$APP_ENVIRONMENT" = "production" ]; then
           GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json" firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
-          firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID"
+          firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
+          # firebase emulators:export --project "demo-$APP_FIREBASE_PROJECT_ID" --output=./data
         fi
       '
-
     working_dir: /usr/src/app
     networks:
       gmrs-network:

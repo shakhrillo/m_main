@@ -24,6 +24,7 @@ const {
   getDockerInfo,
 } = require("./src/services/mainService");
 const processMachineWritten = require("./src/machines/processMachineWritten");
+const processSettingsWritten = require("./src/settings/processSettingsWritten");
 const jsonPath = path.join(__dirname, "assets/fake-data.json");
 
 admin.initializeApp({
@@ -50,6 +51,11 @@ exports.processContainerCreated = onDocumentCreated(
 exports.processContainerWritten = onDocumentWritten(
   "containers/{containerId}",
   processContainerWritten
+);
+
+exports.processSettingsWritten = onDocumentWritten(
+  "settings/{settingsId}",
+  processSettingsWritten
 );
 
 exports.processMachineWritten = onDocumentWritten(

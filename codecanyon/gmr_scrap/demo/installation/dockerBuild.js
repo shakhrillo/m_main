@@ -22,9 +22,9 @@ const dockerBuild = async () => {
       config: "docker-compose.yml",
     });
 
+    await checkFirebase();
     await checkDocker();
     await checkStripe();
-    await checkFirebase();
     await checkServer();
 
     await executeCompose({

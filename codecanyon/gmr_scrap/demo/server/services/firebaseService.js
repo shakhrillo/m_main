@@ -170,6 +170,21 @@ async function updateDockerImageInfo(info) {
   }
 }
 
+async function addDefaultSettings({ tag, label, helpText, value, type }) {
+  try {
+    await db.collection("settings").add({
+      tag,
+      label,
+      helpText,
+      value,
+      type,
+      updatedAt: Timestamp.now(),
+    });
+  } catch (error) {
+    console.error("Error initializing default settings:", error);
+  }
+}
+
 module.exports = {
   createMachine,
   updateMachine,
@@ -178,4 +193,5 @@ module.exports = {
   addMachineStats,
   updateMachineHistory,
   addMachineLogs,
+  addDefaultSettings,
 };
