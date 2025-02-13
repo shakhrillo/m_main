@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { facebookLogin, googleLogin, register } from "../services/authService";
 import {
   Alert,
@@ -10,10 +10,7 @@ import {
   Form,
   FormControl,
   FormGroup,
-  FormLabel,
   Image,
-  Nav,
-  Navbar,
   Row,
   Stack,
 } from "react-bootstrap";
@@ -22,8 +19,6 @@ import {
   IconBrandGoogleFilled,
   IconBrandMeta,
 } from "@tabler/icons-react";
-
-import logo from "../assets/logo.svg";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -81,29 +76,8 @@ export const Register = () => {
 
   return (
     <>
-      <Navbar expand="lg">
-        <Container>
-          <Navbar.Brand href="/">
-            <Image src={logo} alt="Logo" width="150" />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbar" />
-          <Navbar.Collapse id="navbar">
-            <Nav className="ms-auto">
-              <Nav.Link as={NavLink} to="/docs">
-                Documentation
-              </Nav.Link>
-              <Nav.Link as={NavLink} to="/contact">
-                Contact
-              </Nav.Link>
-            </Nav>
-            <Button variant="warning" className="ms-3">
-              Purchase 39$
-            </Button>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
       <Container>
-        <Card className="auth-card mt-3">
+        <Card className="my-3">
           <Row>
             <Col md={6} lg={4}>
               <Card.Body>
@@ -121,7 +95,7 @@ export const Register = () => {
                           size="lg"
                           onClick={handleGoogleLogin}
                         >
-                          <IconBrandGoogleFilled className="me-2" size={20} />
+                          <IconBrandGoogleFilled className="me-2" />
                           Continue with Google
                         </Button>
                       </Col>
@@ -132,7 +106,7 @@ export const Register = () => {
                           size="lg"
                           onClick={handleFacebookLogin}
                         >
-                          <IconBrandMeta className="me-2" size={20} />
+                          <IconBrandMeta className="me-2" />
                           Continue with Facebook
                         </Button>
                       </Col>

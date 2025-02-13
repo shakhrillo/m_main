@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { facebookLogin, googleLogin, login } from "../services/authService";
 import { IconAlertCircle, IconBrandGoogleFilled, IconBrandMeta } from "@tabler/icons-react";
-import logo from "../assets/logo.svg";
-import { Alert, Button, Card, Col, Container, Form, FormControl, FormGroup, Image, Nav, Navbar, Row, Stack } from "react-bootstrap";
-import { authenticatedUser } from "../services/userService";
+import { Alert, Button, Card, Col, Container, Form, FormControl, FormGroup, Image, Row, Stack } from "react-bootstrap";
 
 /**
  * Login page component.
@@ -15,21 +13,6 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await authenticatedUser();
-        if (user) {
-          navigate("/scrap");
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -63,29 +46,8 @@ export const Login = () => {
 
   return (
     <>
-      <Navbar expand="lg">
-        <Container>
-          <Navbar.Brand href="/">
-            <Image src={logo} alt="Logo" width="150" />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbar" />
-          <Navbar.Collapse id="navbar">
-            <Nav className="ms-auto">
-              <Nav.Link as={NavLink} to="/docs">
-                Documentation
-              </Nav.Link>
-              <Nav.Link as={NavLink} to="/contact">
-                Contact
-              </Nav.Link>
-            </Nav>
-            <Button variant="warning" className="ms-3">
-              Purchase 39$
-            </Button>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
       <Container>
-        <Card className="auth-card mt-3">
+        <Card className="my-3">
           <Row>
             <Col md={6} lg={4}>
               <Card.Body>
@@ -103,7 +65,7 @@ export const Login = () => {
                           size="lg"
                           onClick={handleGoogleLogin}
                         >
-                          <IconBrandGoogleFilled className="me-2" size={20} />
+                          <IconBrandGoogleFilled className="me-2" />
                           Continue with Google
                         </Button>
                       </Col>
@@ -114,7 +76,7 @@ export const Login = () => {
                           size="lg"
                           onClick={handleFacebookLogin}
                         >
-                          <IconBrandMeta className="me-2" size={20} />
+                          <IconBrandMeta className="me-2" />
                           Continue with Facebook
                         </Button>
                       </Col>
@@ -182,7 +144,7 @@ export const Login = () => {
                   <Col>
                     <Stack direction="horizontal" gap={2}>
                       Don't have an account?
-                      <NavLink to="/register">Create an account</NavLink>
+                      <NavLink to="/auth/register">Create an account</NavLink>
                     </Stack>
                   </Col>
                 </Row>
