@@ -8,7 +8,6 @@ export default defineConfig({
     host: true,
     open: false,
   },
-  envDir: "../",
   css: {
     preprocessorOptions: {
       scss: {

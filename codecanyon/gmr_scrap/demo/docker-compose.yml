@@ -59,7 +59,7 @@ services:
           GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json" firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
-          # firebase emulators:export --project "demo-$APP_FIREBASE_PROJECT_ID" --output=./data
+          # firebase emulators:start --import=./data --export-on-exit=./data --project "demo-gmrs-6638f"
         fi
       '
     working_dir: /usr/src/app

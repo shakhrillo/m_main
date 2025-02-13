@@ -4,7 +4,8 @@
   "description": "Server for GMR Scrap",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "IS_TEST=true nodemon index.js"
   },
   "author": "shakhrillo",
   "dependencies": {

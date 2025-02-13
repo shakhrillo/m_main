@@ -4,15 +4,15 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import firebaseConfig from "../firebaseConfig.json";
 
-const APP_ENVIRONMENT = import.meta.env.VITE_APP_ENVIRONMENT || "development";
+const APP_ENVIRONMENT = import.meta.env.VITE_APP_ENVIRONMENT;
 const APP_FIREBASE_PROJECT_ID =
-  import.meta.env.VITE_APP_FIREBASE_PROJECT_ID || "gmrs-6638f";
+  import.meta.env.VITE_APP_FIREBASE_PROJECT_ID;
 const APP_FIREBASE_EMULATOR_AUTHENTICATION =
-  import.meta.env.VITE_APP_FIREBASE_EMULATOR_AUTHENTICATION || "9099";
+  import.meta.env.VITE_APP_FIREBASE_EMULATOR_AUTHENTICATION;
 const APP_FIREBASE_EMULATOR_FIRESTORE =
-  import.meta.env.VITE_APP_FIREBASE_EMULATOR_FIRESTORE || "8080";
+  import.meta.env.VITE_APP_FIREBASE_EMULATOR_FIRESTORE;
 const APP_FIREBASE_EMULATOR_STORAGE =
-  import.meta.env.VITE_APP_FIREBASE_EMULATOR_STORAGE || "9199";
+  import.meta.env.VITE_APP_FIREBASE_EMULATOR_STORAGE;
 
 const app = initializeApp({
   ...firebaseConfig,
