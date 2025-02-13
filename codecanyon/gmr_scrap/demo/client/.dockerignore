@@ -1,40 +1,27 @@
-# Operating System Files
-.DS_Store
-Thumbs.db
-
 # Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
 
-# Dependency directories
-node_modules/
-bower_components/
-vendor/
+node_modules
+dist
+dist-ssr
+*.local
 
-# Environment Files
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
 .env
-.env.local
-.env.*.local
-
-# Build output
-# dist/
-build/
-*.out
-*.class
-*.exe
-
-# IDE Files
-.vscode/
-.idea/
-*.sublime-workspace
-*.sublime-project
-
-# Other Temporary Files
-*.tmp
-*.temp
-*.bak
-*.swp
-*.lock
-*.pid
