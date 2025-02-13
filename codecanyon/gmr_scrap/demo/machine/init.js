@@ -44,34 +44,14 @@ require("dotenv").config();
 
 // Import dependencies
 const Docker = require("dockerode");
-const docker = new Docker({
+const docker = new Docker(process.env.IN_DOCKER && {
   protocol: "https",
-  host: process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal",
-  port: process.env.APP_DOCKER_PORT || 2376,
+  host: process.env.DOCKER_IPV4_ADDRESS,
+  port: process.env.APP_DOCKER_PORT,
   ca: fs.readFileSync("/certs/client/ca.pem"),
   cert: fs.readFileSync("/certs/client/cert.pem"),
   key: fs.readFileSync("/certs/client/key.pem"),
 });
-
-console.log("Docker host:", process.env.DOCKER_IPV4_ADDRESS);
-console.log("Docker port:", process.env.APP_DOCKER_PORT);
-
-/**
- * Checks if Docker is available.
- * @returns {Promise} The result of the check.
- */
-async function checkDockerAvailable() {
-  while (true) {
-    try {
-      await docker.ping();
-      console.log("Docker is available.");
-      return;
-    } catch (error) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Waiting for Docker to become available...");
-    }
-  }
-}
 
 /**
  * Initializes the Docker image build process.
@@ -80,8 +60,6 @@ async function checkDockerAvailable() {
  */
 (async () => {
   try {
-    // await checkDockerAvailable();
-
     const buildStream = await docker.buildImage(
       {
         context: process.cwd(),
@@ -99,11 +77,9 @@ async function checkDockerAvailable() {
     });
 
     buildStream.on("error", (err) => {
-      console.error("Build failed:", err.message);
-      console.error("Stack trace:", err.stack);
+      console.error("Image build failed:", err.message);
     });
   } catch (err) {
-    console.error("Docker initialization failed:", err.message);
-    console.error("Stack trace:", err.stack);
+    console.error("An error occurred:", err.message);
   }
 })();

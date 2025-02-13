@@ -19,19 +19,14 @@ let docker;
 const activeStreams = new Map();
 
 const initializeDocker = () => {
-  console.log("process.env.IS_TEST", process.env.IS_TEST);
-  if (process.env.IS_TEST) {
-    docker = new Docker();
-  } else {
-    docker = new Docker({
-      protocol: "https",
-      host: process.env.DOCKER_IPV4_ADDRESS || "host.docker.internal",
-      port: process.env.APP_DOCKER_PORT || 2376,
-      ca: fs.readFileSync("/certs/client/ca.pem"),
-      cert: fs.readFileSync("/certs/client/cert.pem"),
-      key: fs.readFileSync("/certs/client/key.pem"),
-    });
-  }
+  docker = new Docker(process.env.IN_DOCKER && {
+    protocol: "https",
+    host: process.env.DOCKER_IPV4_ADDRESS,
+    port: process.env.APP_DOCKER_PORT,
+    ca: fs.readFileSync("/certs/client/ca.pem"),
+    cert: fs.readFileSync("/certs/client/cert.pem"),
+    key: fs.readFileSync("/certs/client/key.pem"),
+  });
   return docker;
 };
 
@@ -65,7 +60,7 @@ const getImageHistory = async (imageName) => {
 const checkDocker = async () => {
   while (true) {
     try {
-      if (!fs.existsSync("/certs/client") && !process.env.IS_TEST)
+      if (!fs.existsSync("/certs/client") && process.env.IN_DOCKER)
         throw new Error("Waiting for /certs/client directory");
       initializeDocker();
       await docker.ping();

@@ -2,7 +2,7 @@ import { Map, MapCameraChangedEvent, useMap } from "@vis.gl/react-google-maps";
 import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 import { useEffect, useMemo, useState } from "react";
 import { ClusteredMarkers } from "./map/ClusteredMarkers";
-const GOOGLE_MAPS_ID = import.meta.env.VITE_GOOGLE_MAPS_ID || "4cc6e874aae3dd3";
+const GOOGLE_MAPS_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 
 export const GoogleMap = ({
   geojson,

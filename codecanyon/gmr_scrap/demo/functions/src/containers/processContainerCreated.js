@@ -23,11 +23,7 @@ async function processContainerCreated(event) {
     const scrapPricesRef = db.collection("prices").doc("scrap");
     const scrapPricesDoc = await scrapPricesRef.get();
 
-    if (!scrapPricesDoc.exists) {
-      throw new Error("Scrap prices not found");
-    }
-
-    const scrapPrices = scrapPricesDoc.data();
+    const scrapPrices = scrapPricesDoc?.data();
     const { review, image, video, response, validate } = scrapPrices || {
       review: 1,
       image: 2,
