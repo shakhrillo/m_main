@@ -20,6 +20,10 @@ export interface IUser {
   newNotifications?: number;
 }
 
+/**
+ * Get the authenticated user.
+ * @returns Promise<User | null>
+ */
 export const authenticatedUser = (): Promise<User | null> => {
   return new Promise((resolve) => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
