@@ -4,6 +4,7 @@ import { Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages
 import { DockerInfo } from "../pages/DockerInfo";
 import { Receipt } from "../pages/Receipt";
 import { AuthGuard } from "./AuthGuard";
+import { Auth } from "../pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -45,13 +46,20 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: "register", element: <Register /> },
-  { path: "login", element: <Login /> },
-  { path: "logout", element: <Logout /> },
-  { path: "reset-password", element: <ResetPassword /> },
+  {
+    path: "auth",
+    element: <Auth />,
+    children: [
+      { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
+      { path: "logout", element: <Logout /> },
+      { path: "reset-password", element: <ResetPassword /> },
+      { path: "", element: <Navigate to="/auth/login" replace /> }
+    ]
+  },
   {
     path: "*",
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/auth/login" replace />,
   },
 ]);
 

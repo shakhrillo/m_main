@@ -1,43 +1,30 @@
-import { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { facebookLogin, googleLogin, login } from "../services/authService";
-import {
-  IconAlertCircle,
-  IconBrandGoogleFilled,
-  IconBrandMeta,
-} from "@tabler/icons-react";
+import { IconAlertCircle, IconBrandGoogleFilled, IconBrandMeta } from "@tabler/icons-react";
 import logo from "../assets/logo.svg";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  Image,
-  Nav,
-  Navbar,
-  Row,
-  Stack,
-} from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Form, FormControl, FormGroup, Image, Nav, Navbar, Row, Stack } from "react-bootstrap";
 import { authenticatedUser } from "../services/userService";
 
-export const Login: React.FC = () => {
+/**
+ * Login page component.
+ * @returns JSX.Element
+ */
+export const Login = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await authenticatedUser();
-      if (user) {
-        navigate("/scrap");
+      try {
+        const user = await authenticatedUser();
+        if (user) {
+          navigate("/scrap");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
       }
     };
 
@@ -50,7 +37,7 @@ export const Login: React.FC = () => {
 
     try {
       await login(email, password);
-      window.location.reload();
+      navigate("/scrap");
     } catch (error) {
       setError("Email or password is incorrect.");
     }
