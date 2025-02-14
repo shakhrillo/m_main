@@ -42,12 +42,11 @@ export const Users = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Settings</Breadcrumb.Item>
         <Breadcrumb.Item active>Users</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
         <Col xs={12}>
-          <Card>
+          <Card border="light" className="shadow-sm">
             <CardHeader>
               <Stack direction="horizontal">
                 <div className="d-inline-block me-auto">

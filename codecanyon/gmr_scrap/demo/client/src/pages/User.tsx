@@ -1,22 +1,12 @@
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 import { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Card,
-  CardBody,
-  CardTitle,
-  Col,
-  Container,
-  Form,
-  Image,
-  Row,
-} from "react-bootstrap";
+import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile } from "../services/uploadService";
 import { updateUser, userData } from "../services/userService";
-import { UserInfo } from "../types/userInfo";
 import formatNumber from "../utils/formatNumber";
+import { IUserInfo } from "../types/userInfo";
 
 interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
@@ -25,7 +15,7 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
 export const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams() as { userId: string };
-  const [user, setUser] = useState<UserInfo>({} as UserInfo);
+  const [user, setUser] = useState<IUserInfo | null>(null);
   const [buffer, setBuffer] = useState<Buffer | null>(null);
 
   useEffect(() => {
@@ -85,7 +75,7 @@ export const User = () => {
         >
           Users
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>{user.displayName}</Breadcrumb.Item>
+        <Breadcrumb.Item active>{user?.displayName}</Breadcrumb.Item>
       </Breadcrumb>
       <Row>
         <Col md={9}>
@@ -97,7 +87,7 @@ export const User = () => {
                   <Form.Control
                     type="email"
                     placeholder="name@example.com"
-                    value={user.email}
+                    value={user?.email}
                     readOnly
                     disabled
                   />
@@ -107,7 +97,7 @@ export const User = () => {
                   <Form.Control
                     type="text"
                     placeholder="Display Name"
-                    value={user.displayName}
+                    value={user?.displayName}
                     onChange={async (e) => {
                       await updateUser(userId, { displayName: e.target.value });
                     }}
@@ -127,7 +117,7 @@ export const User = () => {
                   <Form.Control
                     type="number"
                     placeholder="Phone"
-                    value={user.phone}
+                    value={user?.phone}
                     onChange={async (e) => {
                       await updateUser(userId, {
                         phone: Number(e.target.value),
@@ -143,14 +133,14 @@ export const User = () => {
           <Card>
             <CardBody>
               <CardTitle>User Profile</CardTitle>
-              {user.photoURL && <Image src={user.photoURL} rounded fluid />}
+              {user?.photoURL && <Image src={user?.photoURL} rounded fluid />}
               <div className="d-flex flex-column mt-3 gap-3">
                 <div className="d-flex align-items-center">
                   <span>
                     <IconMail size={30} />
                   </span>
                   <div className="ms-3">
-                    <div className="text-break fw-bold">{user.email}</div>
+                    <div className="text-break fw-bold">{user?.email}</div>
                     <div className="text-break">Email</div>
                   </div>
                 </div>
@@ -159,7 +149,7 @@ export const User = () => {
                     <IconLabel size={30} />
                   </span>
                   <div className="ms-3">
-                    <div className="text-break fw-bold">{user.displayName}</div>
+                    <div className="text-break fw-bold">{user?.displayName}</div>
                     <div className="text-break">Display Name</div>
                   </div>
                 </div>
@@ -169,7 +159,7 @@ export const User = () => {
                   </span>
                   <div className="ms-3">
                     <div className="text-break fw-bold">
-                      {formatNumber(user.coinBalance)}
+                      {formatNumber(user?.coinBalance)}
                     </div>
                     <div className="text-break">Coin Balance</div>
                   </div>
@@ -180,7 +170,7 @@ export const User = () => {
                   </span>
                   <div className="ms-3">
                     <div className="text-break fw-bold">
-                      {user.totalReviews}
+                      {user?.totalReviews}
                     </div>
                     <div className="text-break">Total Reviews</div>
                   </div>

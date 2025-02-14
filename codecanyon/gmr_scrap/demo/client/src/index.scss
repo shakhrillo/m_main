@@ -3,6 +3,10 @@
 
 // Bootstrap - https://getbootstrap.com/
 $enable-negative-margins: true;
+$card-border-width: 0;
+$card-cap-padding-y: 1rem;
+$card-border-radius: .5rem;
+$card-cap-bg: transparent;
 @import "bootstrap/scss/bootstrap";
 
 // Photoswipe - https://photoswipe.com/
@@ -24,7 +28,7 @@ body {
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
   font-style: normal;
-  background-color: $light;
+  background-color: #fafafa;
   color: $dark;
 }
 
