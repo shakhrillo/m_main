@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { DashboardLayout } from "../layouts";
-import { Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ResetPassword, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
+import { Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
 import { DockerInfo } from "../pages/DockerInfo";
 import { Receipt } from "../pages/Receipt";
 import { AuthGuard } from "./AuthGuard";
@@ -53,7 +53,6 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "logout", element: <Logout /> },
-      { path: "reset-password", element: <ResetPassword /> },
       { path: "", element: <Navigate to="/auth/login" replace /> }
     ]
   },

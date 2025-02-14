@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { Container, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../services/authService";
-import { Spinner } from "react-bootstrap";
 
-export const Logout: React.FC = () => {
+/**
+ * Logout page component.
+ * @returns JSX.Element
+ */
+export const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +17,9 @@ export const Logout: React.FC = () => {
   }, []);
 
   return (
-    <div className="container text-center">
+    <Container className="text-center">
       <h5 className="mt-5">Logging out...</h5>
       <Spinner animation="grow" />
-    </div>
+    </Container>
   );
 };

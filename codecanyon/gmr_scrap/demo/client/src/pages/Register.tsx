@@ -1,34 +1,20 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { facebookLogin, googleLogin, register } from "../services/authService";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  FormControl,
-  FormGroup,
-  Image,
-  Row,
-  Stack,
-} from "react-bootstrap";
-import {
-  IconAlertCircle,
-  IconBrandGoogleFilled,
-  IconBrandMeta,
-} from "@tabler/icons-react";
+import { Alert, Button, Card, Col, Container, Form, FormControl, FormGroup, Image, Row, Stack } from "react-bootstrap";
+import { IconAlertCircle, IconBrandGoogleFilled, IconBrandMeta } from "@tabler/icons-react";
 
+/**
+ * Register page component.
+ * @returns JSX.Element
+ */
 export const Register = () => {
   const navigate = useNavigate();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [error, setError] = useState<string | null>(null);
 
   const handleRegister = async (e: React.FormEvent) => {
