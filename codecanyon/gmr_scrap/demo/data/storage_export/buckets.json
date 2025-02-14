@@ -2,6 +2,9 @@
   "buckets": [
     {
       "id": "demo-gmrs-6638f.appspot.com"
+    },
+    {
+      "id": "gmrs-6638f.firebasestorage.app"
     }
   ]
 }

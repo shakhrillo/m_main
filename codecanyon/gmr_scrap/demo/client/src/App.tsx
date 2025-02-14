@@ -1,6 +1,7 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 import AppRouter from "./routes/AppRoutes";
 import { Favicon } from "./components/Favicon";
+import { SEO } from "./components/SEO";
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 /**
@@ -10,6 +11,7 @@ const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const App = () => (
   <>
     <Favicon />
+    <SEO />
     <APIProvider apiKey={ GOOGLE_MAPS_API_KEY }>
       <AppRouter />
     </APIProvider>
