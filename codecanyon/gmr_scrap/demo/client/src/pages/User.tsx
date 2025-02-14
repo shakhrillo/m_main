@@ -1,6 +1,6 @@
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
-import { useEffect, useState } from "react";
+import { JSX, useCallback, useEffect, useState } from "react";
 import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile } from "../services/uploadService";
@@ -12,50 +12,54 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
 }
 
+const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
+  <div className="d-flex align-items-center">
+    <span>{icon}</span>
+    <div className="ms-3">
+      <div className="text-break fw-bold">{value || "N/A"}</div>
+      <div className="text-break">{label}</div>
+    </div>
+  </div>
+);
+
 export const User = () => {
   const navigate = useNavigate();
-  const { userId } = useParams() as { userId: string };
+  const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<IUserInfo | null>(null);
   const [buffer, setBuffer] = useState<Buffer | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) return;
 
-    const subscription = userData(userId).subscribe((user) => {
-      setUser(user as any);
+    const subscription = userData(userId).subscribe((data) => {
+      setUser(data as IUserInfo);
+      setLoading(false);
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, [userId]);
 
-  const changeUserPhoto = (event: ChangeUserPhotoEvent): void => {
+  const handleFileChange = useCallback((event: ChangeUserPhotoEvent) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
+    if (!file) return;
 
-      reader.onload = () => {
-        const arrayBuffer = reader.result as ArrayBuffer;
-        const buf = Buffer.from(new Uint8Array(arrayBuffer));
-        setBuffer(buf);
-      };
-
-      reader.onerror = (err) => {
-        console.error("Error reading the file:", err);
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-  };
+    const reader = new FileReader();
+    reader.onload = () => {
+      const arrayBuffer = reader.result as ArrayBuffer;
+      setBuffer(Buffer.from(new Uint8Array(arrayBuffer)));
+    };
+    reader.onerror = (err) => console.error("Error reading the file:", err);
+    reader.readAsArrayBuffer(file);
+  }, []);
 
   useEffect(() => {
-    const uploadPhoto = async () => {
-      if (!buffer) return;
+    if (!buffer || !userId) return;
 
+    const uploadPhoto = async () => {
       try {
-        const photoURL = await uploadFile(buffer as any, "users");
-        updateUser(userId, { photoURL });
+        const photoURL = await uploadFile(buffer, "users");
+        await updateUser(userId, { photoURL });
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -64,64 +68,54 @@ export const User = () => {
     uploadPhoto();
   }, [buffer, userId]);
 
+  const handleUpdate = useCallback(
+    (field: string, value: any) => {
+      if (!userId) return;
+      updateUser(userId, { [field]: value });
+    },
+    [userId]
+  );
+
+  if (loading) return <p>Loading user data...</p>;
+
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Settings</Breadcrumb.Item>
-        <Breadcrumb.Item
-          onClick={() => {
-            navigate("/users");
-          }}
-        >
-          Users
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>{user?.displayName}</Breadcrumb.Item>
+        <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>
+        <Breadcrumb.Item active>{user?.displayName || "User"}</Breadcrumb.Item>
       </Breadcrumb>
+
       <Row>
-        <Col md={9}>
+        <Col xl={9}>
           <Card>
             <CardBody>
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="name@example.com"
-                    value={user?.email}
-                    readOnly
-                    disabled
-                  />
+                  <Form.Control size="lg" type="email" value={user?.email || ""} readOnly disabled />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                   <Form.Label>Display Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Display Name"
-                    value={user?.displayName}
-                    onChange={async (e) => {
-                      await updateUser(userId, { displayName: e.target.value });
-                    }}
-                  />
+                  <Form.Control size="lg" type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
-                  <Form.Label>Photo URL</Form.Label>
-                  <Form.Control
-                    type="file"
-                    placeholder="Photo URL"
-                    onChange={changeUserPhoto}
-                    accept="image/*"
-                  />
+                  <Form.Label>Photo</Form.Label>
+                  <Form.Control size="lg" type="file" accept="image/*" onChange={handleFileChange} />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
+                    size="lg"
                     type="number"
-                    placeholder="Phone"
-                    value={user?.phone}
-                    onChange={async (e) => {
-                      await updateUser(userId, {
-                        phone: Number(e.target.value),
-                      });
+                    defaultValue={user?.phone || ""}
+                    onChange={(e) => {
+                      const phone = parseInt(e.target.value, 10);
+                      if (!isNaN(phone)) {
+                        handleUpdate("phone", phone);
+                      }
                     }}
                   />
                 </Form.Group>
@@ -129,52 +123,21 @@ export const User = () => {
             </CardBody>
           </Card>
         </Col>
-        <Col md={3}>
+
+        <Col xl={3}>
           <Card>
             <CardBody>
               <CardTitle>User Profile</CardTitle>
-              {user?.photoURL && <Image src={user?.photoURL} rounded fluid />}
+              <Image
+                src={user?.photoURL || "https://mighty.tools/mockmind-api/content/abstract/4.jpg"}
+                rounded
+                fluid
+              />
               <div className="d-flex flex-column mt-3 gap-3">
-                <div className="d-flex align-items-center">
-                  <span>
-                    <IconMail size={30} />
-                  </span>
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">{user?.email}</div>
-                    <div className="text-break">Email</div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <span>
-                    <IconLabel size={30} />
-                  </span>
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">{user?.displayName}</div>
-                    <div className="text-break">Display Name</div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <span>
-                    <IconCoin size={30} />
-                  </span>
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">
-                      {formatNumber(user?.coinBalance)}
-                    </div>
-                    <div className="text-break">Coin Balance</div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <span>
-                    <IconStars size={30} />
-                  </span>
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">
-                      {user?.totalReviews}
-                    </div>
-                    <div className="text-break">Total Reviews</div>
-                  </div>
-                </div>
+                <UserInfo icon={<IconMail size={30} />} label="Email" value={user?.email} />
+                <UserInfo icon={<IconLabel size={30} />} label="Display Name" value={user?.displayName} />
+                <UserInfo icon={<IconCoin size={30} />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
+                <UserInfo icon={<IconStars size={30} />} label="Total Reviews" value={user?.totalReviews} />
               </div>
             </CardBody>
           </Card>
