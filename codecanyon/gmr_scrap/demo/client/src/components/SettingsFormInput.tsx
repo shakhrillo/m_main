@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { settingValue, updateSettingValue } from "../services/settingService";
 import { filter, take } from "rxjs";
@@ -15,6 +15,7 @@ export const SettingsFormInput = ({
   helpText: string;
 }) => {
   const [info, setInfo] = useState(null as any);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     if (!tag || !type) return;
@@ -25,28 +26,28 @@ export const SettingsFormInput = ({
         take(1),
       )
       .subscribe((data) => {
-        console.log(data);
         setInfo(data);
+        setInputValue(data.value);
       });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [tag, type, setInfo]);
+  }, [tag, type]);
 
   useEffect(() => {
     if (!info || !info.id) return;
 
-    updateSettingValue(info.id, { value: info.value });
-  }, [info]);
+    updateSettingValue(info.id, { value: inputValue });
+  }, [inputValue]);
 
   return info ? (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
       <Form.Control
         type="text"
-        value={info.value}
-        onChange={(e) => setInfo({ ...info, value: e.target.value })}
+        defaultValue={info.value}
+        onChange={(e) => setInputValue(e.target.value)}
       />
       <Form.Text className="text-muted">{helpText}</Form.Text>
     </Form.Group>

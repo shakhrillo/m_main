@@ -35,6 +35,12 @@ export const getSettings = () => {
   });
 };
 
+/**
+ * Get setting value by tag and type.
+ * @param tag string
+ * @param type string
+ * @returns Observable<any>
+ */
 export const settingValue = ({ tag, type }: { tag: string; type: string }) => {
   const collectionRef = collection(firestore, "settings");
   const settings$ = new BehaviorSubject<any>(null);

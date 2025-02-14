@@ -9,7 +9,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
-import logo from "../assets/logo.svg";
+import { Logo } from "../components/Logo";
 
 /**
  * The application navbar.
@@ -31,7 +31,7 @@ export const AppNavbar = () => {
     <Navbar expand="lg" bg="white" variant="light" className="shadow-sm">
       <Container>
         <Navbar.Brand>
-          <img src={logo} alt="Logo" height={30} />
+          <Logo />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />
 

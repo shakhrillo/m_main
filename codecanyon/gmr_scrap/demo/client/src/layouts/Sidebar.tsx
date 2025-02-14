@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Scrollbar } from "react-scrollbars-custom";
 import { Button } from "react-bootstrap";
 import logo from "../assets/logo.svg";
+import { Logo } from "../components/Logo";
 
 // Sidebar menu items
 const menuSections = [
@@ -62,10 +63,10 @@ export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
+    <div className={`shadow-sm sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
       <Scrollbar>
         <div className="sidebar-header">
-          <img src={logo} alt="Logo" height={30} className="sidebar-logo" />
+          <Logo className="sidebar-logo" />
           <Button
             variant="link"
             className="ms-auto p-0"
