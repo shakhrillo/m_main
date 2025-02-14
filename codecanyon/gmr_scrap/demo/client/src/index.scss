@@ -24,7 +24,8 @@ body {
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
   font-style: normal;
-  background-color: #fafafa;
+  background-color: $light;
+  color: $dark;
 }
 
 .google-map {
@@ -98,4 +99,8 @@ body {
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.firebase-emulator-warning {
+  display: none;
 }

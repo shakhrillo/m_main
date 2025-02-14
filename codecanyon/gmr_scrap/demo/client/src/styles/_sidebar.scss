@@ -2,8 +2,8 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  border-right: $card-border-width solid $card-border-color;
-  background-color: #fff;
+  background-color: $dark;
+  color: $light;
   width: 250px;
   min-width: 250px;
   max-width: 250px;
@@ -12,14 +12,7 @@
   .sidebar-header {
     display: flex;
     align-items: center;
-    border-bottom: $card-border-width solid $card-border-color;
-    padding: 0 $spacer;
-    height: 60px;
-  }
-
-  .sidebar-logo {
-    margin: 0;
-    height: 30px;
+    padding: 0.8125rem 1rem;
   }
 
   .sidebar-menu {
@@ -32,17 +25,19 @@
     display: flex;
     position: relative;
     align-items: center;
-    gap: $spacer;
+    gap: .5rem;
     z-index: 2;
-    transition: background-color 0.2s;
+    transition: background-color 0.12s;
     padding: 0.5rem 1rem;
     width: 100%;
-    color: $secondary;
     text-decoration: none;
+    font-size: 16px;
+    color: $light;
+    opacity: 0.82;
 
     &.active {
-      background-color: $primary-bg-subtle;
-      color: $primary;
+      background-color: $primary;
+      color: $light;
     }
   }
 
@@ -55,12 +50,14 @@
   .sidebar-group-title {
     display: block;
     position: relative;
-    margin-top: $spacer;
-    padding: 0 $spacer;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    padding: 0 1rem;
     width: 100%;
-    color: $secondary;
+    font-size: 80%;
+    text-transform: uppercase;
     font-weight: 600;
-    font-size: 12px;
+    opacity: 0.82;
   }
 
   &.sidebar-collapsed {

@@ -9,6 +9,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
+import logo from "../assets/logo.svg";
 
 /**
  * The application navbar.
@@ -29,20 +30,22 @@ export const AppNavbar = () => {
   return (
     <Navbar expand="lg" bg="primary" variant="dark">
       <Container>
-        <Navbar.Brand>GMRScrap</Navbar.Brand>
+        <Navbar.Brand>
+          <img src={logo} alt="Logo" height={30} />
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />
 
         <Navbar.Collapse id="user-navbar">
           <Nav className="ms-auto">
             <NavLink to={"/payments"} className="nav-link">
-              <IconCoins size={22} className="text-warning" stroke={2} />
+              <IconCoins className="text-warning" />
               <span className="fw-bold ms-2">
                 {formatNumber(userInfo?.coinBalance)}
               </span>
             </NavLink>
 
             <NavLink to={"/payments"} className="nav-link">
-              <IconBell size={22} className="text-warning" stroke={2} />
+              <IconBell className="text-warning" />
               <span className="fw-bold ms-2">0</span>
             </NavLink>
 
