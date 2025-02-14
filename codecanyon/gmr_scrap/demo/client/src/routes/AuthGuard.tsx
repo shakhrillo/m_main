@@ -36,5 +36,5 @@ export const AuthGuard = () => {
   return loading || !user ? <>
     <h1>Loading...</h1>
     {error && <p>Error: {error}</p>}
-  </> : <Outlet />;
+  </> : <Outlet context={user} />;
 };

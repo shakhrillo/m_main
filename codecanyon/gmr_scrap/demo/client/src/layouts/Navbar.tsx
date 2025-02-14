@@ -6,30 +6,28 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useOutletContext } from "react-router-dom";
-import { IUser, userData } from "../services/userService";
+import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
+import { IUserInfo } from "../types/userInfo";
 
+/**
+ * The application navbar.
+ * @returns JSX.Element
+ */
 export const AppNavbar = () => {
   const user = useOutletContext<User>();
-  const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
   useEffect(() => {
-    if (!user || !user.uid) {
-      return;
-    }
+    if (!user || !user.uid) return;
 
-    const unsubscribe = userData(user.uid).subscribe((user) => {
-      console.log("user", user);
-      setUserInfo(user);
-    });
+    const unsubscribe = userData(user.uid).subscribe((user) => setUserInfo(user));
 
-    return () => {
-      unsubscribe.unsubscribe();
-    };
+    return () => unsubscribe.unsubscribe()
   }, [user]);
 
   return (
-    <Navbar expand="lg" bg="primary">
+    <Navbar expand="lg" bg="primary" variant="dark">
       <Container>
         <Navbar.Brand>GMRScrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />

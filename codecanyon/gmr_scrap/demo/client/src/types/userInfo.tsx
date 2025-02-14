@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface UserInfo {
+export interface IUserInfo {
   coinBalance: number;
   createdAt: Timestamp;
   displayName: string;

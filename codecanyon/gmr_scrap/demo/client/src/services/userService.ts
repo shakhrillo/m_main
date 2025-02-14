@@ -1,24 +1,8 @@
-import {
-  collection,
-  doc,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { BehaviorSubject, Observable } from "rxjs";
+import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { BehaviorSubject, filter, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
 import { User } from "firebase/auth";
-import { UserInfo } from "../types/userInfo";
-
-export interface IUser {
-  photoURL?: string;
-  displayName?: string;
-  uid?: string;
-  coinBalance?: string;
-  notifications?: { id: string; title: string }[];
-  newNotifications?: number;
-}
+import { IUserInfo } from "../types/userInfo";
 
 /**
  * Get the authenticated user.
@@ -33,15 +17,20 @@ export const authenticatedUser = (): Promise<User | null> => {
   });
 };
 
-export const userData = (uid: string): Observable<IUser> => {
+/**
+ * Get the user data.
+ * @param uid The user ID.
+ * @returns Observable<IUserInfo>
+ */
+export const userData = (uid: string): Observable<IUserInfo | null> => {
   const docCollection = collection(firestore, "users");
-  const user$ = new BehaviorSubject<IUser>({});
+  const user$ = new BehaviorSubject<IUserInfo | null>(null);
 
   const unsubscribe = onSnapshot(
     query(docCollection, where("uid", "==", uid)),
     (snapshot) => {
       snapshot.docs.forEach((doc) => {
-        const data = doc.data() as IUser;
+        const data = doc.data() as IUserInfo;
         user$.next(data);
       });
     },
@@ -51,8 +40,8 @@ export const userData = (uid: string): Observable<IUser> => {
     },
   );
 
-  return new Observable<IUser>((subscriber) => {
-    const subscription = user$.subscribe(subscriber);
+  return new Observable<IUserInfo>((subscriber) => {
+    const subscription = user$.pipe(filter((user) => user !== null)).subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
@@ -63,7 +52,7 @@ export const userData = (uid: string): Observable<IUser> => {
 
 export const updateUser = (
   id: string,
-  data: Partial<UserInfo>,
+  data: Partial<IUserInfo>,
 ): Promise<void> => {
   const docRef = doc(firestore, "users", id);
   return updateDoc(docRef, data);
