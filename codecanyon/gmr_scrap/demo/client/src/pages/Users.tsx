@@ -44,7 +44,7 @@ export const Users = () => {
       <Breadcrumb>
         <Breadcrumb.Item active>Users</Breadcrumb.Item>
       </Breadcrumb>
-      <Row className="g-3">
+      <Row>
         <Col xs={12}>
           <Card border="light" className="shadow-sm">
             <CardHeader>
@@ -88,6 +88,8 @@ export const Users = () => {
             <CardBody>
               <BootstrapTable
                 bordered={false}
+                striped
+                rowStyle={{ cursor: "pointer" }}
                 hover
                 keyField="id"
                 data={users.map((user) => ({
