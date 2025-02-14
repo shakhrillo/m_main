@@ -1,9 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { DashboardLayout } from "../layouts";
-import { Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
-import { DockerInfo } from "../pages/DockerInfo";
-import { Receipt } from "../pages/Receipt";
-import { Auth } from "../pages/Auth";
+import { Auth, Receipt, DockerInfo, Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -16,14 +13,8 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: "", element: <Navigate to={"reviews"} replace /> },
-          {
-            path: "reviews",
-            element: <ReviewsList />,
-          },
-          {
-            path: "reviews/:reviewId",
-            element: <SingleReview />,
-          },
+          { path: "reviews", element: <ReviewsList /> },
+          { path: "reviews/:reviewId", element: <SingleReview /> },
           { path: "validates", element: <ValidatedURLs /> },
           { path: "scrap", element: <Scrap /> },
           { path: "scrap/:scrapId", element: <Scrap /> },
@@ -62,6 +53,10 @@ const router = createBrowserRouter([
   },
 ]);
 
+/**
+ * AppRoutes component
+ * @returns {ReactElement} AppRoutes component
+ */
 const AppRoutes = () => {
   return <RouterProvider router={router} />;
 };

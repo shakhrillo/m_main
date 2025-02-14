@@ -86,41 +86,6 @@ body {
   // padding: 0 1.5rem;
 }
 
-// Auth
-.auth-divider {
-  position: relative;
-  color: $secondary;
-  font-weight: 500;
-  font-size: 14px;
-  text-align: center;
-  text-transform: uppercase;
-
-  &::before {
-    left: 0;
-  }
-  &::after {
-    right: 0;
-  }
-
-  &::after,
-  &::before {
-    position: absolute;
-    top: 50%;
-    background-color: $card-border-color;
-    width: calc(50% - 30px);
-    height: 1px;
-    content: "";
-  }
-}
-
-.auth-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  object-fit: cover;
-}
-
 .firebase-emulator-warning {
   display: none;
 }
