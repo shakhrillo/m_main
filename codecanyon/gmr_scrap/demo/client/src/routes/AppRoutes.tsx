@@ -3,8 +3,8 @@ import { DashboardLayout } from "../layouts";
 import { Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
 import { DockerInfo } from "../pages/DockerInfo";
 import { Receipt } from "../pages/Receipt";
-import { AuthGuard } from "./AuthGuard";
 import { Auth } from "../pages/Auth";
+import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
   {

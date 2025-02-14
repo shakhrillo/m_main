@@ -152,7 +152,7 @@ export const Login = () => {
             </Col>
             <Col md={6} lg={8} className="d-none d-md-block">
               <Image
-                src="https://images.unsplash.com/photo-1488554378835-f7acf46e6c98?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://images.unsplash.com/photo-1584931423298-c576fda54bd2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Login"
                 fluid
                 className="auth-image rounded-end"
