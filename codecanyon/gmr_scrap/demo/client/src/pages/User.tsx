@@ -13,11 +13,11 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
 }
 
 const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
-  <div className="d-flex align-items-center">
+  <div className="d-flex align-items-start">
     <span>{icon}</span>
     <div className="ms-3">
-      <div className="text-break fw-bold">{value || "N/A"}</div>
-      <div className="text-break">{label}</div>
+      <h5 className="text-break">{label}</h5>
+      <p className="text-break">{value || "N/A"}</p>
     </div>
   </div>
 );
@@ -133,7 +133,7 @@ export const User = () => {
                 rounded
                 fluid
               />
-              <div className="d-flex flex-column mt-3 gap-3">
+              <div className="d-flex flex-column mt-3">
                 <UserInfo icon={<IconMail size={30} />} label="Email" value={user?.email} />
                 <UserInfo icon={<IconLabel size={30} />} label="Display Name" value={user?.displayName} />
                 <UserInfo icon={<IconCoin size={30} />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />

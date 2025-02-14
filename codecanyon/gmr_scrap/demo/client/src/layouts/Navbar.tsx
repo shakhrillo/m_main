@@ -28,7 +28,7 @@ export const AppNavbar = () => {
   }, [user]);
 
   return (
-    <Navbar expand="lg" bg="primary" variant="dark">
+    <Navbar expand="lg" bg="white" variant="light" className="shadow-sm">
       <Container>
         <Navbar.Brand>
           <img src={logo} alt="Logo" height={30} />
