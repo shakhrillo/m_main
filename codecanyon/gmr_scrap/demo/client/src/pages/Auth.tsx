@@ -13,24 +13,24 @@ export const Auth = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-          try {
-            const user = await authenticatedUser();
-            if (user) {
-              navigate("/scrap");
+            try {
+                const user = await authenticatedUser();
+                if (user) {
+                    navigate("/scrap");
+                }
+            } catch (error) {
+                console.error("Error fetching user:", error);
             }
-          } catch (error) {
-            console.error("Error fetching user:", error);
-          }
         };
     
         fetchUser();
     }, []);
 
     return <>
-        <Navbar expand="lg">
+        <Navbar expand="lg" bg="primary" variant="dark">
             <Container>
                 <Navbar.Brand href="/">
-                    <Image src={logo} alt="Logo" width="130" />
+                    <Image src={logo} alt="Logo" height="30" />
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar" />
                 <Navbar.Collapse id="navbar">

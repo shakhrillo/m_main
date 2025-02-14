@@ -1,13 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+// Roboto font - https://fonts.google.com/specimen/Roboto
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-$font-size-base: 0.875rem;
+// Bootstrap - https://getbootstrap.com/
 $enable-negative-margins: true;
-$card-border-color: rgb(235, 235, 235);
-$pagination-border-width: 0;
-// $pagination-padding-x: 0;
-// $pagination-padding-y: 0;
 @import "bootstrap/scss/bootstrap";
+
+// Photoswipe - https://photoswipe.com/
 @import "photoswipe/dist/photoswipe.css";
+
+// Custom styles
 @import "styles/navbar";
 @import "styles/sidebar";
 @import "styles/place";
@@ -16,26 +17,13 @@ $pagination-border-width: 0;
 @import "styles/images";
 @import "styles/videos";
 @import "styles/pagination";
-
-.accordion-button:focus {
-  box-shadow: none;
-}
-
-// a,
-// .nav-link {
-//   color: inherit;
-//   text-decoration: none;
-// }
+@import "styles/auth";
 
 html,
 body {
-  color: #475569;
-  font-style: normal;
-  font-family: "Public Sans", serif;
+  font-family: "Roboto", serif;
   font-optical-sizing: auto;
-}
-
-body {
+  font-style: normal;
   background-color: #fafafa;
 }
 
@@ -84,10 +72,6 @@ body {
 .dashboard-navbar,
 .dashboard-content {
   // padding: 0 1.5rem;
-}
-
-.firebase-emulator-warning {
-  display: none;
 }
 
 // Scrap page

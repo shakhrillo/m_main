@@ -29,7 +29,7 @@ export const AppNavbar = () => {
   }, [user]);
 
   return (
-    <Navbar expand="lg" className="navbar">
+    <Navbar expand="lg" bg="primary">
       <Container>
         <Navbar.Brand>GMRScrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="user-navbar" />
