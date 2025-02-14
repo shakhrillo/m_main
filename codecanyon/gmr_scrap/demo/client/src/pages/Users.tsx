@@ -1,21 +1,10 @@
-import { IconSearch } from "@tabler/icons-react";
+import { IconCopy, IconSearch } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Dropdown,
-  FormControl,
-  InputGroup,
-  Row,
-  Stack,
-} from "react-bootstrap";
+import { Breadcrumb, Card, CardBody, CardHeader, Col, Container, Dropdown, FormControl, InputGroup, Row, Stack } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink } from "react-router-dom";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { allUsers } from "../services/settingService";
 import { formatTimestamp } from "../utils/formatTimestamp";
 const FILTER_OPTIONS = [
@@ -46,7 +35,7 @@ export const Users = () => {
       </Breadcrumb>
       <Row>
         <Col xs={12}>
-          <Card border="light" className="shadow-sm">
+          <Card>
             <CardHeader>
               <Stack direction="horizontal">
                 <div className="d-inline-block me-auto">
@@ -89,8 +78,6 @@ export const Users = () => {
               <BootstrapTable
                 bordered={false}
                 striped
-                rowStyle={{ cursor: "pointer" }}
-                hover
                 keyField="id"
                 data={users.map((user) => ({
                   key: user.id,
@@ -111,10 +98,34 @@ export const Users = () => {
                   {
                     dataField: "email",
                     text: "Email",
+                    formatter: (cell: any) => <div className="d-flex align-items-center">
+                      <CopyToClipboard text={cell} onCopy={() => {
+                        alert("Copied");
+                      }}>
+                        <button className="btn btn-sm d-flex">
+                          {cell.replace(/^(.{3})(.*)(@.*)$/, "$1...$3")}
+                          <div className="ms-2">
+                            <IconCopy size={16} />
+                          </div>
+                        </button>
+                      </CopyToClipboard>
+                    </div>
                   },
                   {
                     dataField: "uid",
                     text: "UID",
+                    formatter: (cell: any) => <div className="d-flex align-items-center">
+                      <CopyToClipboard text={cell} onCopy={() => {
+                        alert("Copied");
+                      }}>
+                        <button className="btn btn-sm d-flex">
+                          {cell.replace(/^(.{6})(.*)(.{6})$/, "$1...$3")}
+                          <div className="ms-2">
+                            <IconCopy size={16} />
+                          </div>
+                        </button>
+                      </CopyToClipboard>
+                    </div>
                   },
                   {
                     dataField: "createdAt",

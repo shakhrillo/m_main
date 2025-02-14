@@ -98,7 +98,7 @@ export const User = () => {
 
       <Row>
         <Col xl={9}>
-          <Card className="shadow-sm">
+          <Card>
             <CardBody>
               <Form>
                 <Form.Group className="mb-3">
@@ -136,7 +136,7 @@ export const User = () => {
         </Col>
 
         <Col xl={3}>
-          <Card className="shadow-sm">
+          <Card>
             <CardBody>
               <CardTitle>User Profile</CardTitle>
               {
