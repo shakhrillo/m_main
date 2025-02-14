@@ -1,14 +1,11 @@
 /**
- * Format a number to a string with commas
- * @param number The number to format
- * @returns The formatted number
+ * Formats a number or numeric string with commas.
+ * @param value The number or string to format.
+ * @returns The formatted number as a string.
  */
-function formatNumber(number: number | string | undefined): string {
-  if (!number) {
-    return "0";
-  }
-
-  return number.toLocaleString();
+function formatNumber(value: number | string | undefined): string {
+  const num = Number(value);
+  return isNaN(num) ? "0" : num.toLocaleString();
 }
 
 export default formatNumber;

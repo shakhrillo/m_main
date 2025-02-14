@@ -1,10 +1,9 @@
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 import { JSX, useCallback, useEffect, useState } from "react";
-import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row } from "react-bootstrap";
+import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { uploadFile } from "../services/uploadService";
-import { updateUser, userData } from "../services/userService";
+import { uploadFile, updateUser, userData } from "../services";
 import formatNumber from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
 
@@ -12,16 +11,27 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
 }
 
+/**
+ * User info component
+ * @param icon JSX.Element
+ * @param label string
+ * @param value any
+ * @returns JSX.Element
+ */
 const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
-  <div className="d-flex align-items-start">
+  <Stack direction="horizontal" className="align-items-start">
     <span>{icon}</span>
     <div className="ms-3">
       <h5 className="text-break">{label}</h5>
       <p className="text-break">{value || "N/A"}</p>
     </div>
-  </div>
+  </Stack>
 );
 
+/**
+ * User page component
+ * @returns JSX.Element
+ */
 export const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
@@ -59,6 +69,7 @@ export const User = () => {
     const uploadPhoto = async () => {
       try {
         const photoURL = await uploadFile(buffer, "users");
+        if (!photoURL) return;
         await updateUser(userId, { photoURL });
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -87,7 +98,7 @@ export const User = () => {
 
       <Row>
         <Col xl={9}>
-          <Card>
+          <Card className="shadow-sm">
             <CardBody>
               <Form>
                 <Form.Group className="mb-3">
@@ -125,14 +136,18 @@ export const User = () => {
         </Col>
 
         <Col xl={3}>
-          <Card>
+          <Card className="shadow-sm">
             <CardBody>
               <CardTitle>User Profile</CardTitle>
-              <Image
-                src={user?.photoURL || "https://mighty.tools/mockmind-api/content/abstract/4.jpg"}
-                rounded
-                fluid
-              />
+              {
+                user?.photoURL && (
+                  <Image
+                    src={user?.photoURL}
+                    rounded
+                    fluid
+                  />
+                )
+              }
               <div className="d-flex flex-column mt-3">
                 <UserInfo icon={<IconMail size={30} />} label="Email" value={user?.email} />
                 <UserInfo icon={<IconLabel size={30} />} label="Display Name" value={user?.displayName} />

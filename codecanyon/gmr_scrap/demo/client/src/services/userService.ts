@@ -50,10 +50,25 @@ export const userData = (uid: string): Observable<IUserInfo | null> => {
   });
 };
 
-export const updateUser = (
+/**
+ * Update the user data.
+ * @param id The user ID.
+ * @param data The data to update.
+ * @returns Promise<void>
+ */
+export const updateUser = async (
   id: string,
   data: Partial<IUserInfo>,
 ): Promise<void> => {
-  const docRef = doc(firestore, "users", id);
-  return updateDoc(docRef, data);
+  if (!id) throw new Error("User ID is required.");
+  if (!data || Object.keys(data).length === 0)
+    throw new Error("Update data cannot be empty.");
+
+  try {
+    const docRef = doc(firestore, "users", id);
+    await updateDoc(docRef, data);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw new Error("Failed to update user.");
+  }
 };
