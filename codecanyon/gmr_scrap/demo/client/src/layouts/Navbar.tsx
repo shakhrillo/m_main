@@ -5,11 +5,12 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink, useOutletContext } from "react-router-dom";
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { userData } from "../services/userService";
 import formatNumber from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
 import { Logo } from "../components/Logo";
+import { Image } from "react-bootstrap";
 
 /**
  * The application navbar.
@@ -17,6 +18,7 @@ import { Logo } from "../components/Logo";
  */
 export const AppNavbar = () => {
   const user = useOutletContext<User>();
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
   useEffect(() => {
@@ -38,23 +40,42 @@ export const AppNavbar = () => {
         <Navbar.Collapse id="user-navbar">
           <Nav className="ms-auto">
             <NavLink to={"/payments"} className="nav-link">
-              <IconCoins className="text-warning" />
-              <span className="fw-bold ms-2">
+              <IconCoins size={20} className="text-warning" />
+              <small className="fw-bold ms-2">
                 {formatNumber(userInfo?.coinBalance)}
-              </span>
+              </small>
             </NavLink>
 
             <NavLink to={"/payments"} className="nav-link">
-              <IconBell className="text-warning" />
-              <span className="fw-bold ms-2">0</span>
+              <IconBell size={20} className="text-warning" />
+              <small className="fw-bold ms-2">0</small>
             </NavLink>
 
             <NavDropdown
-              title={userInfo?.displayName}
+              title={
+                <div className="d-inline-block">
+                  {
+                    userInfo?.photoURL &&
+                    <Image
+                      src={userInfo?.photoURL}
+                      alt="User"
+                      width={26}
+                      height={26}
+                      className="rounded-circle me-2"
+                    />
+                  }
+                  <span>{userInfo?.displayName}</span>
+                </div>
+              }
               id="user-dropdown"
               align="end"
             >
-              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+              <NavDropdown.Item href="#" onClick={(e) => {
+                e.preventDefault();
+                navigate(`/users/${user.uid}`);
+              }}>
+                Profile
+              </NavDropdown.Item>
               <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>

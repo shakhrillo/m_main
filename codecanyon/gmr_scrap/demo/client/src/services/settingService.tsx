@@ -1,13 +1,7 @@
-import {
-  collection,
-  doc,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
+import { IUserInfo } from "../types/userInfo";
 
 const startDate: Date = new Date();
 startDate.setMonth(startDate.getMonth() - 12);
@@ -76,22 +70,27 @@ export const updateCoinSettings = (id: string, data: any) => {
   return updateDoc(docRef, data);
 };
 
+/**
+ * Get all users from firestore.
+ * @param fromDate Date
+ * @returns Observable<IUserInfo[]>
+ */
 export const allUsers = (fromDate = startDate) => {
   const collectionRef = collection(firestore, "users");
-  const users$ = new BehaviorSubject([] as any);
+  const users$ = new BehaviorSubject([] as IUserInfo[]);
 
   const unsubscribe = onSnapshot(
     query(collectionRef, where("createdAt", ">", fromDate)),
     (snapshot) => {
       const usersData = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data() as IUserInfo,
       }));
       users$.next(usersData);
     },
   );
 
-  return new Observable<any>((subscriber) => {
+  return new Observable<IUserInfo[]>((subscriber) => {
     const subscription = users$.subscribe(subscriber);
 
     return () => {

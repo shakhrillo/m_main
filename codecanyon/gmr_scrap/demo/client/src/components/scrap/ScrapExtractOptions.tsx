@@ -1,37 +1,10 @@
-import {
-  IconArrowsSort,
-  IconCircleCheck,
-  IconCircleDashedCheck,
-  IconCoin,
-  IconCoins,
-  IconFence,
-  IconFile,
-  IconMessageReply,
-  IconPhoto,
-  IconVideo,
-} from "@tabler/icons-react";
+import { IconArrowsSort, IconCircleCheck, IconCircleDashedCheck, IconCoins, IconFence, IconFile, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
-import {
-  Badge,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardTitle,
-  Col,
-  FormControl,
-  FormLabel,
-  FormSelect,
-  FormText,
-  Row,
-  Stack,
-} from "react-bootstrap";
+import { Badge, Card, CardBody, CardTitle, Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
-export const ScrapExtractOptions = ({
-  containerId,
-  container,
-}: {
+export const ScrapExtractOptions = ({ containerId, container }: {
   containerId: string | undefined;
   container: IDockerContainer;
 }) => {
@@ -228,7 +201,6 @@ export const ScrapExtractOptions = ({
                     value={limit}
                     onChange={(e) => setLimit(+e.target.value)}
                     disabled={!container.rating}
-                    size="lg"
                   />
                   <FormText>
                     Limit the number of reviews to extract. Leave empty to
@@ -250,7 +222,6 @@ export const ScrapExtractOptions = ({
                     value={maxSpentPoints}
                     onChange={(e) => setMaxSpentPoints(+e.target.value)}
                     disabled={!container.rating}
-                    size="lg"
                   />
                   <FormText>Maximum points to spend on this scrap.</FormText>
                 </div>
@@ -276,7 +247,6 @@ export const ScrapExtractOptions = ({
                       )
                     }
                     disabled={!container.rating}
-                    size="lg"
                   >
                     <option value="Most relevant">Most relevant</option>
                     <option value="Newest">Newest</option>
@@ -304,7 +274,6 @@ export const ScrapExtractOptions = ({
                       setOutputAs(e.target.value as "json" | "csv")
                     }
                     disabled={!container.rating}
-                    size="lg"
                   >
                     <option value="json">JSON</option>
                     <option value="csv">CSV</option>

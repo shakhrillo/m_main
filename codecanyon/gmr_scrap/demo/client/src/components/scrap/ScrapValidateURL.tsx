@@ -77,10 +77,10 @@ export const ScrapValidateURL = ({
   }
 
   return (
-    <Card text="light" bg="primary">
+    <Card text="dark">
       <CardBody>
         <Stack direction="horizontal" gap={3} className="align-items-start">
-          <IconBrandGoogleMaps size={48} />
+          <IconBrandGoogleMaps size={48} className="text-primary" />
           <Stack direction="vertical">
             <CardTitle>Google Maps URL</CardTitle>
             <CardSubtitle>
@@ -96,7 +96,6 @@ export const ScrapValidateURL = ({
                   pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
                   required
                   autoFocus
-                  size="lg"
                   disabled={isDisabled}
                 />
                 <FormText className="invalid-feedback bg-danger-subtle">
@@ -113,11 +112,10 @@ export const ScrapValidateURL = ({
               )}
               <Stack direction="horizontal">
                 <Button
-                  variant="light"
+                  variant="primary"
                   type="submit"
                   className="ms-auto"
                   disabled={isDisabled}
-                  size="lg"
                 >
                   <Stack direction="horizontal" gap={2}>
                     {container?.machine?.Action !== "die" && containerId ? (
@@ -129,7 +127,7 @@ export const ScrapValidateURL = ({
                       <>
                         <IconCircleCheck />
                         Validate URL
-                        <Badge bg="warning" className="top-0" pill>
+                        <Badge className="top-0" pill bg="light" text="dark">
                           3 points
                         </Badge>
                       </>

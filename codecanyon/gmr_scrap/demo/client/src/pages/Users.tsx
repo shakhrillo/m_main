@@ -1,12 +1,14 @@
 import { IconCopy, IconSearch } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Breadcrumb, Card, CardBody, CardHeader, Col, Container, Dropdown, FormControl, InputGroup, Row, Stack } from "react-bootstrap";
+import { Breadcrumb, Button, Card, CardBody, CardHeader, Col, Container, Dropdown, FormControl, InputGroup, Row, Stack } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink } from "react-router-dom";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { allUsers } from "../services/settingService";
 import { formatTimestamp } from "../utils/formatTimestamp";
+import { IUserInfo } from "../types/userInfo";
+
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -14,7 +16,7 @@ const FILTER_OPTIONS = [
 ];
 
 export const Users = () => {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<IUserInfo[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
@@ -76,11 +78,9 @@ export const Users = () => {
             </CardHeader>
             <CardBody>
               <BootstrapTable
+                keyField="uid"
                 bordered={false}
-                striped
-                keyField="id"
                 data={users.map((user) => ({
-                  key: user.id,
                   displayName: user.displayName,
                   email: user.email,
                   coinBalance: user.coinBalance,
@@ -92,7 +92,7 @@ export const Users = () => {
                     dataField: "displayName",
                     text: "Display Name",
                     formatter: (cell: any, row: any) => (
-                      <NavLink to={`/users/${row.key}`}>{cell}</NavLink>
+                      <NavLink className={"h6 m-0"} to={`/users/${row.uid}`}>{cell}</NavLink>
                     ),
                   },
                   {
@@ -102,12 +102,12 @@ export const Users = () => {
                       <CopyToClipboard text={cell} onCopy={() => {
                         alert("Copied");
                       }}>
-                        <button className="btn btn-sm d-flex">
-                          {cell.replace(/^(.{3})(.*)(@.*)$/, "$1...$3")}
+                        <Button variant="outline-primary" className="d-flex">
+                          {cell.replace(/^(.{5})(.*)(@.*)$/, "$1...$3")}
                           <div className="ms-2">
                             <IconCopy size={16} />
                           </div>
-                        </button>
+                        </Button>
                       </CopyToClipboard>
                     </div>
                   },
@@ -118,12 +118,12 @@ export const Users = () => {
                       <CopyToClipboard text={cell} onCopy={() => {
                         alert("Copied");
                       }}>
-                        <button className="btn btn-sm d-flex">
+                        <Button variant="outline-primary" className="d-flex">
                           {cell.replace(/^(.{6})(.*)(.{6})$/, "$1...$3")}
                           <div className="ms-2">
                             <IconCopy size={16} />
                           </div>
-                        </button>
+                        </Button>
                       </CopyToClipboard>
                     </div>
                   },
