@@ -215,10 +215,9 @@ async function settingValue(tag, type) {
   }
 
   const doc = results.docs[0];
-  const id = doc.id;
   const data = doc.data();
 
-  return data.value;
+  return Number(data.value || 0);
 };
 
 module.exports = {

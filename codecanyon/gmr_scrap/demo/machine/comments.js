@@ -44,20 +44,11 @@ require("dotenv").config();
 const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
-const {
-  getMachineData,
-  getUserData,
-  updateUserData,
-} = require("./services/firebase");
+const { getMachineData, updateUserData, settingValue } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
-const {
-  uploadFile,
-  batchWriteLargeArray,
-  updateMachineData,
-} = require("./services/firebase");
+const { uploadFile, batchWriteLargeArray, updateMachineData } = require("./services/firebase");
 const generateSearchKeywords = require("./utils/generateSearchKeywords");
-const { log } = require("./services/logger");
 
 // Constants
 const tag = process.env.TAG;
@@ -126,7 +117,14 @@ let driver;
     data = {
       ...data,
       ...((await getMachineData(tag)) || {}),
+      price: {
+        review: await settingValue("review", "coin") || 0,
+        image: await settingValue("image", "coin") || 0,
+        video: await settingValue("video", "coin") || 0,
+        response: await settingValue("response", "coin") || 0,
+      }
     };
+
     data.maxSpentPointsDefault = data.maxSpentPoints || 0;
     if (!data || !data.url) {
       throw new Error("URL not specified or invalid");
