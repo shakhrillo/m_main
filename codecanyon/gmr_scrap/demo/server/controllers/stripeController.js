@@ -1,26 +1,13 @@
 const fs = require("fs");
-
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
-const { db } = require("../firebase");
-const { Timestamp } = require("firebase-admin/firestore");
+const { getUserData, addPayments } = require("../services/firebaseService");
 
 exports.createCheckoutSession = async (req, res) => {
   const { amount, userId } = req.data;
 
   try {
-    // Fetch app settings and set defaults
-    // const settings = await db.doc("app/settings").get();
-    // const { currency = "usd", costs = 1 } = settings.exists
-    //   ? settings.data()
-    //   : {};
-
-    // const unit_amount = amount * Number(costs);
-
-    // Log for debugging
-    // console.log({ currency, costs, unit_amount });
-
-    const user = await db.doc(`users/${userId}`).get();
-    const userEmail = user.exists ? user.data().email : null;
+    const user = await getUserData(userId);
+    const userEmail = user.email;
 
     const customer = await stripe.customers.list({
       email: userEmail,
@@ -81,25 +68,8 @@ exports.webhookHandler = async (req, res) => {
       const signature = req.headers["stripe-signature"];
 
       try {
-        const event = stripe.webhooks.constructEvent(
-          req.body,
-          signature,
-          endpointSecret
-        );
-
-        const {
-          type,
-          data: { object: paymentIntent },
-        } = event;
-
-        const paymentsRef = db.collection("payments");
-        const key = paymentsRef.doc().id;
-        await paymentsRef.doc(key).set({
-          ...paymentIntent,
-          type,
-          key: [key, paymentIntent.id],
-          createdAt: Timestamp.now(),
-        });
+        const event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+        await addPayments(event.data.object);
 
         res.status(200).send("Webhook received and processed");
       } catch (err) {

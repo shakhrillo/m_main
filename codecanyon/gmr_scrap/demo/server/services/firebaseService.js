@@ -77,9 +77,50 @@ async function addMachineLogs(docId, logs) {
   }
 }
 
+/**
+ * Get user data
+ * @param {string} userId
+ * @returns {Promise<Object>}
+ * @throws {Error}
+ */
+async function getUserData(userId) {
+  try {
+    const userRef = db.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      throw new Error("User not found");
+    }
+
+    return userDoc.data();
+  } catch (error) {
+    console.error("Error getting user data:", error);
+  }
+}
+
+/**
+ * Add payments to payments collection
+ * @param {Object} data
+ */
+async function addPayments(data) {
+  try {
+    const paymentsRef = db.collection("payments");
+    const id = paymentsRef.doc().id;
+    await paymentsRef.doc(id).set({
+      ...data,
+      key: [id, data.id],
+      createdAt: Timestamp.now(),
+    });
+  } catch (error) {
+    console.error("Error adding receipt:", error);
+  }
+}
+
 module.exports = {
   updateMachine,
   addMachineStats,
   updateMachineHistory,
   addMachineLogs,
+  getUserData,
+  addPayments,
 };
