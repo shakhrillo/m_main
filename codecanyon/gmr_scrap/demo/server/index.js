@@ -12,7 +12,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const { watchDockerEvents } = require("./docker");
 
 const app = express();
-const PORT = process.env.PORT || 1337;
+const PORT = process.env.APP_SERVER_PORT;
 
 // Middlewares
 app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
