@@ -1,35 +1,48 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { getUserData, addPayments } = require("../services/firebaseService");
 
+/**
+ * Retrieves or creates a Stripe customer based on the user's email.
+ * @param {string} email - User's email address
+ * @returns {Promise<string>} - Stripe Customer ID
+ */
+const getOrCreateCustomer = async (email) => {
+  try {
+    const existingCustomers = await stripe.customers.list({ email, limit: 1 });
+
+    if (existingCustomers.data.length > 0) {
+      return existingCustomers.data[0].id;
+    }
+
+    const newCustomer = await stripe.customers.create({ email });
+    return newCustomer.id;
+  } catch (error) {
+    console.error("Error retrieving/creating customer:", error.message);
+    throw new Error("Failed to retrieve or create Stripe customer.");
+  }
+};
+
+/**
+ * Creates a Stripe Checkout session.
+ */
 exports.createCheckoutSession = async (req, res) => {
-  const { amount, userId } = req.data;
+  const { amount, userId } = req.body; // Ensure request body is parsed properly
+
+  if (!amount || !userId) {
+    return res.status(400).json({ error: "Missing amount or userId" });
+  }
 
   try {
     const user = await getUserData(userId);
-    const userEmail = user.email;
-
-    const customer = await stripe.customers.list({
-      email: userEmail,
-      limit: 1,
-    });
-
-    let customerId;
-
-    // Check if a customer with the given email exists
-    if (customer.data.length === 0) {
-      // Create a new customer and assign the ID
-      const newCustomer = await stripe.customers.create({ email: userEmail });
-      customerId = newCustomer.id;
-    } else {
-      // Use the existing customer's ID
-      customerId = customer.data[0].id;
+    if (!user || !user.email) {
+      return res.status(404).json({ error: "User not found or missing email" });
     }
 
-    console.log(`Customer ID: ${customerId}`);
+    const customerId = await getOrCreateCustomer(user.email);
 
     // Create checkout session
-    const { url } = await stripe.checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
@@ -48,34 +61,39 @@ exports.createCheckoutSession = async (req, res) => {
       customer: customerId,
     });
 
-    res.status(200).json({ url });
+    res.status(200).json({ url: session.url });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: error.message });
+    console.error("Checkout session error:", error.message);
+    res.status(500).json({ error: "Failed to create checkout session." });
   }
 };
 
+/**
+ * Handles Stripe webhook events.
+ */
 exports.webhookHandler = async (req, res) => {
-  fs.readFile(
-    process.env.STRIPE_WEBHOOK_SECRET_FILE,
-    "utf-8",
-    async (err, data) => {
-      if (err) {
-        console.error(`Error reading file: ${err.message}`);
-        return res.status(500).send("Error reading file");
-      }
-      const endpointSecret = data.trim();
-      const signature = req.headers["stripe-signature"];
+  try {
+    const endpointSecret = (await fs.readFile(process.env.STRIPE_WEBHOOK_SECRET_FILE, "utf-8")).trim();
+    const signature = req.headers["stripe-signature"];
 
-      try {
-        const event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-        await addPayments(event.data.object);
-
-        res.status(200).send("Webhook received and processed");
-      } catch (err) {
-        console.error(`Webhook Error: ${err.message}`);
-        res.status(400).send(`Webhook Error: ${err.message}`);
-      }
+    if (!signature) {
+      return res.status(400).json({ error: "Missing Stripe signature" });
     }
-  );
+
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+    } catch (err) {
+      console.error(`Webhook Signature Error: ${err.message}`);
+      return res.status(400).json({ error: `Webhook signature verification failed.` });
+    }
+
+    // Process the payment event
+    await addPayments(event.data.object);
+
+    res.status(200).send("Webhook received and processed");
+  } catch (error) {
+    console.error(`Webhook Handler Error: ${error.message}`);
+    res.status(500).json({ error: "Failed to process webhook." });
+  }
 };
