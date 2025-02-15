@@ -198,6 +198,29 @@ async function updateUserData(uid, data) {
   return db.collection("users").doc(uid).update(data);
 }
 
+/**
+ * Get setting value by tag and type.
+ * @param {string} tag - The setting tag.
+ * @param {string} type - The setting type.
+ * @returns {Promise<object | null>}
+ */
+async function settingValue(tag, type) {
+  const collectionRef = db.collection("settings").where("type", "==", type).where("tag", "==", tag);
+  const results = await collectionRef.get();
+
+  console.log("results", results);
+
+  if (results.empty) {
+    return null;
+  }
+
+  const doc = results.docs[0];
+  const id = doc.id;
+  const data = doc.data();
+
+  return data.value;
+};
+
 module.exports = {
   uploadFile,
   batchWriteLargeArray,
@@ -205,4 +228,5 @@ module.exports = {
   updateMachineData,
   getUserData,
   updateUserData,
+  settingValue,
 };

@@ -64,6 +64,7 @@ const checkDocker = async () => {
         throw new Error("Waiting for /certs/client directory");
       initializeDocker();
       await docker.ping();
+      console.log("Connected to Docker");
       return true;
     } catch (error) {
       console.error("Error connecting to Docker:", error.message);

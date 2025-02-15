@@ -21,7 +21,7 @@ const handleContainerOperations = async (req, res) => {
         `APP_ENVIRONMENT=${process.env.APP_ENVIRONMENT}`,
         `APP_FIREBASE_PROJECT_ID=${process.env.APP_FIREBASE_PROJECT_ID}`,
         `APP_FIREBASE_EMULATOR_FIRESTORE=${process.env.APP_FIREBASE_EMULATOR_FIRESTORE}`,
-        `APP_FIREBASE_IPV4_ADDRESS=${process.env.APP_FIREBASE_IPV4_ADDRESS}`,
+        `APP_FIREBASE_IPV4_ADDRESS=${process.env.IN_DOCKER ? process.env.APP_FIREBASE_IPV4_ADDRESS : 'host.docker.internal'}`,
         `APP_FIREBASE_EMULATOR_STORAGE=${process.env.APP_FIREBASE_EMULATOR_STORAGE}`,
         `CHROME_PATH=/usr/bin/chromium-browser`,
       ],

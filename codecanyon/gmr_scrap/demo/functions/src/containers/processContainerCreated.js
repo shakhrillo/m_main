@@ -20,17 +20,23 @@ async function processContainerCreated(event) {
     const { containerId } = event.params;
     const { type, uid } = data;
 
-    const scrapPricesRef = db.collection("prices").doc("scrap");
-    const scrapPricesDoc = await scrapPricesRef.get();
+    console.log("processContainerCreated", {
+      containerId,
+      type,
+      uid,
+    });
 
-    const scrapPrices = scrapPricesDoc?.data();
-    const { review, image, video, response, validate } = scrapPrices || {
-      review: 1,
-      image: 2,
-      video: 3,
-      response: 1,
-      validate: 3,
-    };
+    // const scrapPricesRef = db.collection("prices").doc("scrap");
+    // const scrapPricesDoc = await scrapPricesRef.get();
+
+    // const scrapPrices = scrapPricesDoc?.data();
+    // const { review, image, video, response, validate } = scrapPrices || {
+    //   review: 1,
+    //   image: 2,
+    //   video: 3,
+    //   response: 1,
+    //   validate: 3,
+    // };
 
     // User balance
     // const usersCollection = admin.firestore().collection("users").where("uid", "==", uid);
@@ -112,13 +118,13 @@ async function processContainerCreated(event) {
       tag,
       createdAt,
       updatedAt,
-      price: {
-        review,
-        image,
-        video,
-        response,
-        validate,
-      },
+      // price: {
+      //   review,
+      //   image,
+      //   video,
+      //   response,
+      //   validate,
+      // },
     });
 
     // console.log("processContainerCreated", {

@@ -59,6 +59,7 @@ const {
   updateMachineData,
   getUserData,
   updateUserData,
+  settingValue,
 } = require("./services/firebase");
 const { GeoPoint } = require("firebase-admin/firestore");
 const { getDriver } = require("./services/selenium");
@@ -204,8 +205,11 @@ let driver;
     await updateMachineData(tag, data);
 
     try {
+      const costValidate = await settingValue("validation", "coin");
+      console.log('costValidate', costValidate);
+      
       await updateUserData(data.uid, {
-        coinBalance: FieldValue.increment(-data.price.validate),
+        coinBalance: FieldValue.increment(-costValidate),
         totalValidateInfo: FieldValue.increment(1),
       });
     } catch (error) {
