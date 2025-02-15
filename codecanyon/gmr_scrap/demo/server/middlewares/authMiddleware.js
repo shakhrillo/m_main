@@ -1,6 +1,5 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const logger = require("../config/logger");
 
 module.exports = function authMiddleware(req, res, next) {
   const authorizationHeader = req.headers["authorization"];
@@ -8,18 +7,15 @@ module.exports = function authMiddleware(req, res, next) {
 
   if (!token) {
     const message = "No token provided";
-    logger.error(message);
     return res.status(403).json({ message });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (error, decodedData) => {
     if (error) {
-      logger.error(error);
       const message = "Failed to authenticate token";
-      logger.error(message);
       return res.status(403).json({ message });
     }
-    req.data = decodedData;
+    req.machine = decodedData;
     next();
   });
 };

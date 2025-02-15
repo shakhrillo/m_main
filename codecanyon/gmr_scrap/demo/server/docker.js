@@ -1,14 +1,7 @@
 const Kefir = require("kefir");
 const Docker = require("dockerode");
 const fs = require("fs");
-const {
-  updateMachine,
-  addMachineStats,
-  addMachineLogs,
-  updateMachineHistory,
-  addDefaultSettings,
-} = require("./services/firebaseService");
-const { db } = require("./firebase");
+const { updateMachine, addMachineStats, addMachineLogs, updateMachineHistory } = require("./services/firebaseService");
 
 /**
  * Docker instance
@@ -16,8 +9,19 @@ const { db } = require("./firebase");
  */
 let docker;
 
+/**
+ * Active streams
+ * @type {Map<string, import("stream").Readable>}
+ * @description Map of active streams
+ */
 const activeStreams = new Map();
 
+/**
+ * Initialize Docker
+ * @returns {Docker}
+ * @throws {Error}
+ * @description Initialize Docker instance
+ */
 const initializeDocker = () => {
   docker = new Docker(process.env.IN_DOCKER && {
     protocol: "https",
@@ -27,17 +31,28 @@ const initializeDocker = () => {
     cert: fs.readFileSync("/certs/client/cert.pem"),
     key: fs.readFileSync("/certs/client/key.pem"),
   });
+
   return docker;
 };
 
+/**
+ * Get image details
+ * @param {string} imageName
+ * @returns {Promise<import("dockerode").ImageInspectInfo>}
+ * @throws {Error}
+ * @description Get image details
+ */
 const getImageDetails = async (imageName) => {
   if (!imageName) return console.warn("Image name is required."), null;
   try {
     return await docker.getImage(imageName).inspect();
   } catch (error) {
-    if (error.statusCode === 404)
+    if (error.statusCode === 404) {
       console.warn(`Image '${imageName}' not found.`);
-    else console.error("Error fetching image details:", error);
+    } else {
+      console.error("Error fetching image details:", error);
+    }
+
     return null;
   }
 };
@@ -57,14 +72,19 @@ const getImageHistory = async (imageName) => {
   }
 };
 
+/**
+ * Check Docker connection
+ * @returns {Promise<boolean>}
+ * @description Check Docker connection
+ */
 const checkDocker = async () => {
   while (true) {
     try {
-      if (!fs.existsSync("/certs/client") && process.env.IN_DOCKER)
+      if (!fs.existsSync("/certs/client") && process.env.IN_DOCKER) {
         throw new Error("Waiting for /certs/client directory");
+      }
       initializeDocker();
       await docker.ping();
-      console.log("Connected to Docker");
       return true;
     } catch (error) {
       console.error("Error connecting to Docker:", error.message);
@@ -73,6 +93,12 @@ const checkDocker = async () => {
   }
 };
 
+/**
+ * Watch Docker events
+ * @returns {Promise<void>}
+ * @description Watch Docker events
+ * @throws {Error}
+ */
 const handleImageEvents = async () => {
   const stream = await docker.getEvents({ filters: { type: ["image"] } });
   Kefir.fromEvents(stream.setEncoding("utf8"), "data")
