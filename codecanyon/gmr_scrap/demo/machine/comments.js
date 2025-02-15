@@ -278,18 +278,15 @@ let driver;
     }
 
     await batchWriteLargeArray(
-      // `users/${data.uid}/reviews/${data.id}/reviews`,
-      `reviews`,
+      `containers/${data.id}/reviews`,
       data.extractedReviews
     );
     await batchWriteLargeArray(
-      // `users/${data.uid}/reviews/${data.id}/images`,
-      `images`,
+      `containers/${data.id}/images`,
       data.extractedImageUrls
     );
     await batchWriteLargeArray(
-      // `users/${data.uid}/reviews/${data.id}/videos`,
-      `videos`,
+      `containers/${data.id}/videos`,
       data.extractedVideoUrls
     );
   } catch (error) {

@@ -20,15 +20,15 @@ export const reviewComments = (
   },
   search: string,
 ) => {
-  const collectionRef = collection(firestore, `reviews`);
+  const collectionRef = collection(firestore, `containers/${placeId}/reviews`);
   const reviews$ = new BehaviorSubject([] as IComment[]);
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
       // orderBy("createdAt", "asc"),
-      where("machineId", "==", placeId),
-      where("uid", "==", uid),
+      // where("machineId", "==", placeId),
+      // where("uid", "==", uid),
       ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
       ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
       ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),
@@ -69,14 +69,14 @@ export const reviewImages = (
   },
   search: string,
 ) => {
-  const collectionRef = collection(firestore, `images`);
+  const collectionRef = collection(firestore, `containers/${placeId}/images`);
   const reviews$ = new BehaviorSubject([] as IComment[]);
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      where("machineId", "==", placeId),
-      where("uid", "==", uid),
+      // where("machineId", "==", placeId),
+      // where("uid", "==", uid),
       ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
       ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
       ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),
@@ -117,7 +117,7 @@ export const reviewVideos = (
   },
   search: string,
 ) => {
-  const collectionRef = collection(firestore, `videos`);
+  const collectionRef = collection(firestore, `containers/${placeId}/videos`);
   const reviews$ = new BehaviorSubject([] as IComment[]);
 
   console.log("placeid", placeId);
