@@ -1,30 +1,25 @@
 const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
 
-async function userTopUp(event) {
+/**
+ * Updates the user's coin balance and total spent amount.
+ * @param {functions.Change} event - Firestore event
+ */
+const userTopUp = async (event) => {
   const snapshot = event.data;
   const { type, metadata } = snapshot.data();
-  /**
-   * @type {import("firebase-admin").firestore.Firestore}
-   * The Firestore instance.
-   **/
   const db = admin.firestore();
 
-  if (type === "charge.succeeded") {
-    try {
-      const userRef = db.doc(`users/${metadata.userId}`);
-      const batch = db.batch();
-    
-      batch.update(userRef, {
-        coinBalance: FieldValue.increment(metadata.amount),
-        totalSpent: FieldValue.increment(metadata.amount),
-      });
-    
-      await batch.commit();
-    } catch (error) {
-      console.error("Error updating user balance: ", error);
-    }
+  if (type !== "charge.succeeded") return;
+
+  try {
+    await db.doc(`users/${metadata.userId}`).update({
+      coinBalance: FieldValue.increment(Number(metadata.amount) || 0),
+      totalSpent: FieldValue.increment(Number(metadata.amount) || 0),
+    });
+  } catch (error) {
+    console.error("Error updating user balance:", error);
   }
-}
+};
 
 module.exports = userTopUp;
