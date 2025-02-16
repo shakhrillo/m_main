@@ -19,7 +19,7 @@ const userTopUp = async (event) => {
       totalSpent: FieldValue.increment(Number(metadata.amount) || 0),
     });
     
-    await updateStatistics("earnings");
+    await updateStatistics("earnings", Number(metadata.amount));
   } catch (error) {
     console.error("Error updating user balance:", error);
   }

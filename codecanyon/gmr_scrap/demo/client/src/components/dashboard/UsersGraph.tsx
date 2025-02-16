@@ -5,15 +5,13 @@ import { allUsers } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
 
 /**
- * Customers component for the current month
- * @returns The customers component
+ * Users component
  */
-export const Customers = () => {
+export const UsersGraph = () => {
     const [users, setUsers] = useState<any[]>([]);
 
     useEffect(() => {
         const subscribtion = allUsers().subscribe((users) => {
-            console.log('f users', formatTotalUsers(users));
             setUsers(formatTotalUsers(users));
         });
 

@@ -1,97 +1,24 @@
-import {
-  IconCircleFilled,
-  IconTrendingDown,
-  IconTrendingUp,
-} from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
-import { DoughnutChart } from "../components/DoughnutChart";
 import { GoogleMap } from "../components/GoogleMap";
-import { LineChart } from "../components/LineChart";
-import {
-  allContainers,
-  allUsers,
-  appStatistics,
-  totalEarnings,
-} from "../services/settingService";
-import { checkEarningsTrend } from "../utils/checkEarningsTrend";
-import formatNumber from "../utils/formatNumber";
-// import { formatTotalEarnings } from "../utils/formatTotalEarnings";
-import { formatTotalUsers } from "../utils/formatTotalUsers";
+import { RevenueGraph } from "../components/dashboard/RevenueGraph";
+import { StatisticsDoughnut } from "../components/dashboard/StatisticsDoughnut";
+import { EraningsTotal } from "../components/dashboard/EraningsTotal";
+import { UsersGraph } from "../components/dashboard/UsersGraph";
+import { UsersTotal } from "../components/dashboard/UsersTotal";
+import { allContainers } from "../services/settingService";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
-import { paymentsData } from "../services/paymentService";
-import { formatAmount } from "../utils/formatAmount";
-import { formatDate } from "../utils/formatDate";
-import { Revenue } from "../components/dashboard/Revenue";
-import { Customers } from "../components/dashboard/Customers";
-import { Statistics } from "../components/dashboard/Statistics";
 
 export const Dashboard: React.FC = () => {
-  // const [earnings, setEarnings] = useState([] as any[]);
-  const [users, setUsers] = useState([] as any[]);
-  const [containers, setContainers] = useState([] as any[]);
-  const [statistics, setStatistics] = useState({} as any);
   const [geojson, setGeojson] = useState<any>(null);
 
   useEffect(() => {
-    const appStatisticsSubscription = appStatistics().subscribe((data) => {
-      setStatistics(data);
+    const subscription = allContainers().subscribe((data) => {
+      setGeojson(locationsToGeoJSON(data.map((container: any) => container.location)));
     });
-
-    const containersSubscription = allContainers().subscribe((data) => {
-      const totalImages = data.reduce(
-        (acc: number, e: any) => acc + (e.totalImages || 0),
-        0,
-      );
-      const totalOwnerReviews = data.reduce(
-        (acc: number, e: any) => acc + (e.totalOwnerReviews || 0),
-        0,
-      );
-      const totalReviews = data.reduce(
-        (acc: number, e: any) => acc + (e.totalReviews || 0),
-        0,
-      );
-      const totalVideos = data.reduce(
-        (acc: number, e: any) => acc + (e.totalVideos || 0),
-        0,
-      );
-
-      setContainers([
-        totalImages,
-        totalVideos,
-        totalReviews,
-        totalOwnerReviews,
-      ]);
-
-      setGeojson(
-        locationsToGeoJSON(data.map((container: any) => container.location)),
-      );
-    });
-
-    // const earningsSubscription = totalEarnings().subscribe((data) => {
-    //   setEarnings(formatTotalEarnings(data));
-    // });
-
-    const usersSubscription = allUsers().subscribe((data) => {
-      console.log("users", formatTotalUsers(data));
-      setUsers(formatTotalUsers(data));
-    });
-
-    return () => {
-      appStatisticsSubscription.unsubscribe();
-      // earningsSubscription.unsubscribe();
-      usersSubscription.unsubscribe();
-      containersSubscription.unsubscribe();
-    };
+    
+    return () => subscription.unsubscribe();
   }, []);
-
-  // useEffect(() => {
-  //   const subscription = paymentsData({type: ["charge.succeeded"]}).subscribe((data) => setEarnings(formatTotalEarnings(data)));
-
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, []);
 
   return (
     <Container>
@@ -99,93 +26,11 @@ export const Dashboard: React.FC = () => {
         <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
-        <Col md={6}>
-          <Revenue />
-        </Col>
-        <Col md={6}>
-          <Customers />
-        </Col>
-        <Col md={6}>
-          <Statistics />
-        </Col>
-        <Col className="d-none">
-          <Card>
-            <Row>
-              <Col sm={7} className="d-flex">
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title>Statistics</Card.Title>
-                  <Row className="mt-auto row-cols-2 g-2">
-                    {[
-                      {
-                        title: "Images",
-                        total: containers[0],
-                        backgroundColor: "bg-primary-subtle",
-                        color: "text-primary",
-                      },
-                      {
-                        title: "Videos",
-                        total: containers[1],
-                        backgroundColor: "bg-success-subtle",
-                        color: "text-success",
-                      },
-                      {
-                        title: "Reviews",
-                        total: containers[2],
-                        backgroundColor: "bg-info-subtle",
-                        color: "text-info",
-                      },
-                      {
-                        title: "Responses",
-                        total: containers[3],
-                        backgroundColor: "bg-warning-subtle",
-                        color: "text-warning",
-                      },
-                    ].map((item, index) => (
-                      <Col key={index}>
-                        <IconCircleFilled
-                          size={20}
-                          strokeWidth={1}
-                          className={item.color}
-                        />
-                        <span className="text-capitalize ms-2">
-                          {item.title} ({formatNumber(item.total)})
-                        </span>
-                      </Col>
-                    ))}
-                  </Row>
-                </Card.Body>
-              </Col>
-              <Col sm={5}>
-                <DoughnutChart
-                  data={containers}
-                  total={containers.reduce((acc, e) => acc + e, 0)}
-                />
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        <Col>
-          <Card className="h-100">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title>Earnings</Card.Title>
-              {/* <div className="fs-1">
-                ${formatNumber((statistics?.earnings || 0) / 100)}
-              </div>
-              <small className="mt-auto">
-                {checkEarningsTrend(earnings)}%{" "}
-                {checkEarningsTrend(earnings) > 0 ? "increase" : "decrease"}{" "}
-                in revenue since last month
-              </small>
-              <div className="position-absolute p-1 top-0 end-0 mt-2 me-2 rounded bg-light">
-                {checkEarningsTrend(earnings) > 0 ? (
-                  <IconTrendingUp size={24} className="text-success" />
-                ) : (
-                  <IconTrendingDown size={24} className="text-danger" />
-                )}
-              </div> */}
-            </Card.Body>
-          </Card>
-        </Col>
+        <Col md={6}><RevenueGraph /></Col>
+        <Col md={6}><UsersGraph /></Col>
+        <Col md={4}><StatisticsDoughnut /></Col>
+        <Col md={4}><EraningsTotal /></Col>
+        <Col md={4}><UsersTotal /></Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>
             {geojson && <GoogleMap geojson={geojson} />}
