@@ -11,6 +11,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardSubtitle,
   CardText,
   CardTitle,
   Col,
@@ -22,6 +23,7 @@ import {
   FormLabel,
   FormText,
   Row,
+  Stack,
 } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
@@ -30,7 +32,6 @@ import { settingValue } from "../services/settingService";
 
 export const Payments = () => {
   const { uid } = useOutletContext<User>();
-
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -42,200 +43,149 @@ export const Payments = () => {
   useEffect(() => {
     const subscription = settingValue({ tag: "cost", type: "coin" })
       .pipe(
-        filter((data) => !!data),
-        take(1),
+        filter(Boolean),
+        take(1)
       )
-      .subscribe((data) => {
-        setCost(data.value || 1);
-      });
+      .subscribe((data) => setCost(data.value || 1));
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!coinId) return;
 
     const unsubscribe = buyCoinsData(coinId, uid).subscribe((data) => {
-      const url = data?.url;
-      const error = data?.error;
-
-      console.log(data);
-
-      if (url) {
-        window.location.href = url;
-      }
-
-      if (error) {
-        setError(error);
-        setLoading(false);
-        setCoinId("");
-        setAmount("");
-        setIsFormValid(false);
+      if (data?.url) {
+        window.location.href = data.url;
+      } else if (data?.error) {
+        setError(data.error);
+        resetForm();
       }
     });
 
-    return () => {
-      unsubscribe.unsubscribe();
-    };
+    return () => unsubscribe.unsubscribe();
   }, [coinId]);
 
   useEffect(() => {
     if (!amount) return;
 
-    const validateForm = document.getElementById(
-      "validateForm",
-    ) as HTMLFormElement;
-    if (validateForm) {
-      validateForm.classList.add("was-validated");
+    const form = document.getElementById("validateForm") as HTMLFormElement;
+    if (form) {
+      form.classList.add("was-validated");
+      setIsFormValid(form.checkValidity());
     }
-
-    const isValid = validateForm?.checkValidity();
-    setIsFormValid(isValid);
   }, [amount]);
 
-  async function handlePurchase() {
+  const handlePurchase = async () => {
     setLoading(true);
     try {
       const id = await buyCoins(uid, Number(amount), Number(amount) * cost);
       setCoinId(id);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setError("Purchase failed. Try again.");
     }
-  }
+    setLoading(false);
+  };
+
+  const resetForm = () => {
+    setCoinId("");
+    setAmount("");
+    setIsFormValid(false);
+    setLoading(false);
+  };
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Reports</Breadcrumb.Item>
         <Breadcrumb.Item active>Buy Coins</Breadcrumb.Item>
       </Breadcrumb>
       <Row>
         <Col md={9}>
-          <Card className="mb-3">
+          <Card>
             <CardBody>
-              <CardTitle>Purchaseasd Coins</CardTitle>
-              <Form noValidate id="validateForm" className="needs-validation">
-                <FormGroup className="mb-3" controlId="amount">
-                  <FormLabel>Amount</FormLabel>
-                  <FormControl
-                    type="text"
-                    value={amount}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setAmount(Number(value) ? value : "");
-                    }}
-                    pattern="^[1-9]\d*$"
-                    placeholder="Enter amount"
-                    className="mb-2"
-                    required
-                  />
-                  <FormControl.Feedback type={"invalid"}>
-                    <IconAlertCircle className="me-2" />
-                    {error || "Please enter a valid amount."}
-                  </FormControl.Feedback>
-                  <FormText className={error ? "d-none" : ""}>
-                    <IconInfoCircle className="me-2" />
-                    There might be restrictions on the minimum and maximum from
-                    the Stripe API.
-                  </FormText>
-                </FormGroup>
-              </Form>
-              <hr />
-              <Row>
-                <Col xs="auto">
-                  <IconCoins size={40} />
-                </Col>
-                <Col>
-                  <CardTitle>Coins explained</CardTitle>
-                  <CardText>
-                    Coins are the currency used to purchase data from the
-                    website. You can purchase coins in the following ways:
-                  </CardText>
-                  <ul>
-                    <li>
-                      <strong>Free Coins:</strong> You can earn coins by
-                      participating in the website's activities.
-                    </li>
-                    <li>
-                      <strong>Purchase Coins:</strong> You can purchase coins
-                      using the payment methods provided.
-                    </li>
-                  </ul>
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <Col xs={"auto"}>
-                  <IconInfoCircle size={40} />
-                </Col>
-                <Col>
-                  <CardTitle>Cancellation and Refund Policy</CardTitle>
-                  <CardText>
-                    Once you have purchased coins, you cannot cancel the
-                    purchase or request a refund. Please be sure to purchase
-                    coins after confirming the amount.
-                  </CardText>
-                  <CardText>
-                    If you have purchased coins by mistake, please contact us
-                    immediately. We will refund the coins you purchased.
-                  </CardText>
-                </Col>
-              </Row>
+              <Stack direction="horizontal" gap={3} className="align-items-start bg-primary-subtle p-3 rounded-top m-n3">
+                <IconCoins size={48} className="text-primary" />
+                <Stack direction="vertical">
+                  <CardTitle>Purchase Coins</CardTitle>
+                  <CardSubtitle>
+                    Amount of coins to purchase.
+                  </CardSubtitle>
+                  <Form noValidate id="validateForm" className="needs-validation mt-3">
+                    <FormGroup className="mb-3" controlId="amount">
+                      <FormControl
+                        type="text"
+                        value={amount}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setAmount(/^[1-9]\d*$/.test(value) ? value : "");
+                        }}
+                        pattern="^[1-9]\d*$"
+                        placeholder="Enter amount"
+                        className="mb-2"
+                        required
+                        size="lg"
+                      />
+                      {error && (
+                        <FormControl.Feedback type="invalid">
+                          <IconAlertCircle className="me-2" /> {error}
+                        </FormControl.Feedback>
+                      )}
+                      <FormText className={error ? "d-none" : ""}>
+                        <IconInfoCircle className="me-2" />
+                        There might be restrictions on the minimum and maximum from the payment API.
+                      </FormText>
+                    </FormGroup>
+                  </Form>
+                </Stack>
+              </Stack>
+              <h6 className="mt-5">Coins Explained</h6>
+              <p>
+                Coins are used to purchase data from the website. You can acquire coins by:
+              </p>
+              <ul>
+                <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
+                <li><strong>Purchase Coins:</strong> Available for purchase.</li>
+              </ul>
+              <h6>Refund Policy</h6>
+              <p>
+                Purchases are non-refundable. If an error occurs, contact support immediately.
+              </p>
             </CardBody>
           </Card>
         </Col>
         <Col md={3}>
-          <Card className="mb-3">
-            <CardBody>
-              <CardTitle>Summary</CardTitle>
-
-              <div className="d-flex flex-column gap-3">
-                <div className="d-flex align-items-center">
-                  <IconCoins size={30} />
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">{amount || 0}</div>
-                    <div className="text-break">Coins</div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <IconCoin size={30} />
-                  <div className="ms-3">
-                    <div className="text-break fw-bold">
-                      {(Number(amount || 0) * cost).toFixed(2)}
-                    </div>
-                    <div className="text-break">Price</div>
-                  </div>
-                </div>
-              </div>
-            </CardBody>
-          </Card>
           <Card>
             <CardBody>
-              <FormGroup className="mt-3" controlId="terms">
-                <FormCheck
-                  type="checkbox"
-                  label={
-                    <>
-                      I agree to the{" "}
-                      <a href="#" target="_blank">
-                        terms and conditions
-                      </a>
-                    </>
-                  }
-                  required
-                  checked={isTermsAccepted}
-                  onChange={(e) => setIsTermsAccepted(e.target.checked)}
-                />
-              </FormGroup>
+              <CardTitle>Summary</CardTitle>
+              <Stack direction="horizontal" gap={3} className="align-items-start">
+                <IconCoins size={30} />
+                <Stack direction="vertical">
+                  <h5 className="mb-0">{amount || 0}</h5>
+                  <p>Coins</p>
+                </Stack>
+              </Stack>
+              <Stack direction="horizontal" gap={3} className="align-items-start">
+                <IconCoin size={30} />
+                <Stack direction="vertical">
+                  <h5 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h5>
+                  <p>Price</p>
+                </Stack>
+              </Stack>
+              <FormCheck
+                type="checkbox"
+                label={<span>I agree to the <a href="#">terms and conditions</a></span>}
+                required
+                checked={isTermsAccepted}
+                onChange={(e) => setIsTermsAccepted(e.target.checked)}
+              />
               <Button
                 variant="primary"
                 className="w-100 mt-3"
                 onClick={handlePurchase}
                 disabled={!isTermsAccepted || loading || !isFormValid}
               >
-                Purchase
+                {loading ? "Processing..." : "Purchase"}
               </Button>
             </CardBody>
           </Card>
