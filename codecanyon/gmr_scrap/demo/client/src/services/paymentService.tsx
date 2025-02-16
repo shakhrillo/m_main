@@ -16,10 +16,11 @@ interface IBuyCoins {
   error?: string;
 }
 
-export const buyCoins = async (uid: string, amount: number) => {
+export const buyCoins = async (uid: string, amount: number, cost: number) => {
   const collectionRef = collection(firestore, `users/${uid}/buyCoins`);
   const docRef = await addDoc(collectionRef, {
     amount,
+    cost
   });
 
   return docRef.id;

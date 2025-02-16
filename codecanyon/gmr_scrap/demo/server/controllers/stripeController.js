@@ -27,7 +27,7 @@ const getOrCreateCustomer = async (email) => {
  * Creates a Stripe Checkout session.
  */
 exports.createCheckoutSession = async (req, res) => {
-  const { amount, userId } = req.body; // Ensure request body is parsed properly
+  const { amount, cost, userId } = req.machine;
 
   if (!amount || !userId) {
     return res.status(400).json({ error: "Missing amount or userId" });
@@ -49,7 +49,7 @@ exports.createCheckoutSession = async (req, res) => {
           price_data: {
             currency: "usd",
             product_data: { name: "Custom Amount" },
-            unit_amount: Math.round(amount * 100),
+            unit_amount: Math.round(cost * 100),
           },
           quantity: 1,
         },
@@ -57,7 +57,7 @@ exports.createCheckoutSession = async (req, res) => {
       mode: "payment",
       success_url: `${process.env.STRIPE_SUCCESS_URL}/{CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.STRIPE_CANCEL_URL}/{CHECKOUT_SESSION_ID}`,
-      payment_intent_data: { metadata: { userId } },
+      payment_intent_data: { metadata: { userId, amount } },
       customer: customerId,
     });
 
@@ -89,7 +89,10 @@ exports.webhookHandler = async (req, res) => {
     }
 
     // Process the payment event
-    await addPayments(event.data.object);
+    await addPayments({
+      type: event.type,
+      ...event.data.object,
+    });
 
     res.status(200).send("Webhook received and processed");
   } catch (error) {

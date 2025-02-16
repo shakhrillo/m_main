@@ -98,7 +98,7 @@ export const Payments = () => {
   async function handlePurchase() {
     setLoading(true);
     try {
-      const id = await buyCoins(uid, Number(amount) * cost);
+      const id = await buyCoins(uid, Number(amount), Number(amount) * cost);
       setCoinId(id);
     } catch (error) {
       console.log(error);

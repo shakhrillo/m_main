@@ -7,12 +7,14 @@ const { generateStripePaymentUrl } = require("../services/mainService");
  */
 const processBuyCoins = async (event) => {
   const ref = event.data.ref;
-  const { amount } = event.data.data();
+  const { amount, cost } = event.data.data();
   const { userId } = event.params;
+
+  console.log(`Processing buy coins for user ${userId} with amount ${amount} and cost ${cost}`);
 
   try {
     await ref.update({
-      url: await generateStripePaymentUrl({ userId, amount }),
+      url: await generateStripePaymentUrl({ userId, amount, cost }),
     });
   } catch (error) {
     const data = error.response.data;
