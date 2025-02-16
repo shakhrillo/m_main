@@ -16,15 +16,18 @@ import {
 } from "../services/settingService";
 import { checkEarningsTrend } from "../utils/checkEarningsTrend";
 import formatNumber from "../utils/formatNumber";
-import { formatTotalEarnings } from "../utils/formatTotalEarnings";
+// import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 import { paymentsData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
+import { Revenue } from "../components/dashboard/Revenue";
+import { Customers } from "../components/dashboard/Customers";
+import { Statistics } from "../components/dashboard/Statistics";
 
 export const Dashboard: React.FC = () => {
-  const [earnings, setEarnings] = useState([] as any[]);
+  // const [earnings, setEarnings] = useState([] as any[]);
   const [users, setUsers] = useState([] as any[]);
   const [containers, setContainers] = useState([] as any[]);
   const [statistics, setStatistics] = useState({} as any);
@@ -82,13 +85,13 @@ export const Dashboard: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const subscription = paymentsData({type: ["charge.succeeded"]}).subscribe((data) => setEarnings(formatTotalEarnings(data)));
+  // useEffect(() => {
+  //   const subscription = paymentsData({type: ["charge.succeeded"]}).subscribe((data) => setEarnings(formatTotalEarnings(data)));
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, []);
 
   return (
     <Container>
@@ -97,40 +100,15 @@ export const Dashboard: React.FC = () => {
       </Breadcrumb>
       <Row className="g-3">
         <Col md={6}>
-          <Card id="dashboard">
-            <Card.Body>
-              <Card.Title>Total revenue</Card.Title>
-              <LineChart
-                labels={earnings.map((e) => e.date)}
-                datasets={[
-                  {
-                    label: "Total revenue",
-                    data: earnings.map((e) => e.total),
-                    color: "#3e2c41",
-                  },
-                ]}
-              />
-            </Card.Body>
-          </Card>
+          <Revenue />
         </Col>
         <Col md={6}>
-          <Card id="users">
-            <Card.Body>
-              <Card.Title>Total users</Card.Title>
-              <LineChart
-                labels={users.map((e) => e.date)}
-                datasets={[
-                  {
-                    label: "Total users",
-                    data: users.map((e) => e.total),
-                    color: "#3e2c41",
-                  },
-                ]}
-              />
-            </Card.Body>
-          </Card>
+          <Customers />
         </Col>
-        <Col>
+        <Col md={6}>
+          <Statistics />
+        </Col>
+        <Col className="d-none">
           <Card>
             <Row>
               <Col sm={7} className="d-flex">
@@ -190,7 +168,7 @@ export const Dashboard: React.FC = () => {
           <Card className="h-100">
             <Card.Body className="d-flex flex-column">
               <Card.Title>Earnings</Card.Title>
-              <div className="fs-1">
+              {/* <div className="fs-1">
                 ${formatNumber((statistics?.earnings || 0) / 100)}
               </div>
               <small className="mt-auto">
@@ -204,7 +182,7 @@ export const Dashboard: React.FC = () => {
                 ) : (
                   <IconTrendingDown size={24} className="text-danger" />
                 )}
-              </div>
+              </div> */}
             </Card.Body>
           </Card>
         </Col>

@@ -1,39 +1,24 @@
-export const formatTotalUsers = (data: any[], startDate?: Date) => {
-  const dateArray: Record<string, { date: string; total: number }> = {};
+import { format } from "date-fns";
+
+export const formatTotalUsers = (data: any[]) => {
   const currentDate = new Date();
+  const monthKey = format(currentDate, "MMM y");
+  const currentDay = currentDate.getDate();
+  
+  const dateArray = Array.from({ length: currentDay }, (_, i) => ({
+    date: `${i + 1} ${format(currentDate, "MMM")}`,
+    total: 0,
+  }));
 
-  if (!startDate) {
-    startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 2);
-  }
-
-  const tempDate = new Date(startDate);
-  while (tempDate <= currentDate) {
-    const monthKey = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, "0")}`;
-    dateArray[monthKey] = {
-      date: monthKey,
-      total: 0,
-    };
-    tempDate.setMonth(tempDate.getMonth() + 1);
-  }
-
-  const grouped = data.reduce((acc: Record<string, number>, item) => {
-    const date = new Date(item.createdAt.seconds * 1000);
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-
-    if (!acc[monthKey]) {
-      acc[monthKey] = 0;
-    }
-    acc[monthKey] += 1;
-
-    return acc;
-  }, {});
-
-  Object.keys(dateArray).forEach((monthKey) => {
-    if (grouped[monthKey]) {
-      dateArray[monthKey].total = grouped[monthKey];
+  // Calculate total users for each day up to the current day
+  data.forEach((item) => {
+    const itemDate = new Date(item.createdAt.seconds * 1000);
+    const day = itemDate.getDate();
+    
+    if (format(itemDate, "MMM y") === monthKey && day <= currentDay) {
+      dateArray[day - 1].total += 1;
     }
   });
 
-  return Object.values(dateArray);
+  return dateArray;
 };

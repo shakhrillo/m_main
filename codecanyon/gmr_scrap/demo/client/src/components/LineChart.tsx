@@ -106,7 +106,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
         grid: { display: false },
         border: { display: false },
         ticks: {
-          color: "#999",
+          color: "#000",
           font: { size: 12 },
         },
       },
@@ -114,7 +114,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
         grid: { color: "#fff", lineWidth: 0.5 },
         border: { display: false },
         ticks: {
-          color: "#999",
+          color: "#000",
           font: { size: 12 },
         },
       },

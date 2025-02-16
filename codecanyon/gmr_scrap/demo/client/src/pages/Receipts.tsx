@@ -18,7 +18,7 @@ import {
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink, useOutletContext } from "react-router-dom";
-import { receiptData } from "../services/paymentService";
+import { paymentsData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
 const FILTER_OPTIONS = [
@@ -34,7 +34,7 @@ export const Receipts = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const unsubscribe = receiptData({
+    const unsubscribe = paymentsData({
       uid,
       type: ["charge.succeeded", "charge.failed"],
     }).subscribe((data) => {
