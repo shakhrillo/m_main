@@ -33,7 +33,12 @@ export const Dashboard: React.FC = () => {
         <Col md={4}><UsersTotal /></Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>
-            {geojson && <GoogleMap geojson={geojson} />}
+            <Card.Body>
+              <Card.Title>
+                This month's container locations
+              </Card.Title>
+              {geojson && <GoogleMap geojson={geojson} />}
+            </Card.Body>
           </Card>
         </Col>
       </Row>
