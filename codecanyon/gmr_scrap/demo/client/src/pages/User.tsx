@@ -22,7 +22,7 @@ const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; va
   <Stack direction="horizontal" className="align-items-start">
     <span>{icon}</span>
     <div className="ms-3">
-      <h5 className="text-break">{label}</h5>
+      <h6 className="mb-0">{label}</h6>
       <p className="text-break">{value || "N/A"}</p>
     </div>
   </Stack>
@@ -148,10 +148,10 @@ export const User = () => {
                 )
               }
               <div className="d-flex flex-column mt-3">
-                <UserInfo icon={<IconMail size={30} />} label="Email" value={user?.email} />
-                <UserInfo icon={<IconLabel size={30} />} label="Display Name" value={user?.displayName} />
-                <UserInfo icon={<IconCoin size={30} />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
-                <UserInfo icon={<IconStars size={30} />} label="Total Reviews" value={user?.totalReviews} />
+                <UserInfo icon={<IconMail />} label="Email" value={user?.email} />
+                <UserInfo icon={<IconLabel />} label="Display Name" value={user?.displayName} />
+                <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
+                <UserInfo icon={<IconStars />} label="Total Reviews" value={user?.totalReviews} />
               </div>
             </CardBody>
           </Card>

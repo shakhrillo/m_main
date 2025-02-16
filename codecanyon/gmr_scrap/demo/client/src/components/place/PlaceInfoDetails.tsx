@@ -24,12 +24,10 @@ const PlaceInfoDetailsRow = ({
   value,
 }: PlaceInfoDetailsRowProps) => (
   <div className="text-secondary d-flex align-items-center">
-    {createElement(icon, {
-      size: 30,
-    })}
+    {createElement(icon)}
     <div className="ms-3">
       <h6 className="m-0">{label}</h6>
-      <small className="text-break">{value}</small>
+      <p className="text-break">{value}</p>
     </div>
   </div>
 );

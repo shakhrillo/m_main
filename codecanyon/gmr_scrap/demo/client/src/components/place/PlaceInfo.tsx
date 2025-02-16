@@ -75,7 +75,7 @@ export const PlaceInfo = ({
           container?.totalVideos) && (
           <Accordion.Item eventKey="0">
             <Accordion.Header>
-              <IconInfoCircle size={30} className="me-3" />
+              <IconInfoCircle className="me-3" />
               <h5 className="m-0">Extracted Data</h5>
             </Accordion.Header>
             <Accordion.Body>
@@ -85,7 +85,7 @@ export const PlaceInfo = ({
         )}
         <Accordion.Item eventKey="1">
           <Accordion.Header>
-            <IconBox size={30} className="me-3" />
+            <IconBox className="me-3" />
             <h5 className="m-0">Container Info</h5>
           </Accordion.Header>
           <Accordion.Body>
@@ -94,7 +94,7 @@ export const PlaceInfo = ({
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>
-            <IconSettings size={30} className="me-3" />
+            <IconSettings className="me-3" />
             <h5 className="m-0">Options</h5>
           </Accordion.Header>
           <Accordion.Body>

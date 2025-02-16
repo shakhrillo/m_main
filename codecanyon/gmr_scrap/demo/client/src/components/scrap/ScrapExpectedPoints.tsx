@@ -1,25 +1,16 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardTitle,
-  Form,
-  FormCheck,
-} from "react-bootstrap";
+import { Button, Card, CardBody, Form, FormCheck } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { filter, map } from "rxjs";
-import {
-  createDockerContainer,
-  dockerContainers,
-} from "../../services/dockerService";
+import { createDockerContainer, dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
-export const ScrapExpectedPoints = ({
-  containerId,
-}: {
-  containerId: string;
-}) => {
+/**
+ * Scrap expected points component
+ * @param containerId string
+ * @returns JSX.Element
+ */
+export const ScrapExpectedPoints = ({ containerId }: { containerId: string }) => {
   const navigate = useNavigate();
   const [container, setContainer] = useState<IDockerContainer>();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
@@ -95,13 +86,7 @@ export const ScrapExpectedPoints = ({
               </>
             }
           ></FormCheck>
-          <Button
-            variant="primary"
-            className="w-100 mt-3"
-            type="submit"
-            disabled={!isTermsChecked || !container?.rating}
-            size="lg"
-          >
+          <Button variant="primary" className="w-100 mt-3" type="submit" disabled={!isTermsChecked || !container?.rating}>
             Scrap
           </Button>
         </Form>

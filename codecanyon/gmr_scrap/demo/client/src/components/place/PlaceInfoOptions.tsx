@@ -19,13 +19,11 @@ type PlaceInfoRowProps = {
 };
 
 const PlaceInfoRow = ({ icon, label, value }: PlaceInfoRowProps) => (
-  <div className="text-secondary d-flex align-items-center">
-    {createElement(icon, {
-      size: 30,
-    })}
+  <div className="text-secondary d-flex align-items-start">
+    {createElement(icon)}
     <div className="ms-3">
-      <h6 className="m-0">{label}</h6>
-      <small className="text-break">{value}</small>
+      <h6 className="mb-0">{label}</h6>
+      <p className="text-break">{value || "N/A"}</p>
     </div>
   </div>
 );
