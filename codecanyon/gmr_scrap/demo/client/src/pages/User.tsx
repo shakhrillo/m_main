@@ -103,23 +103,22 @@ export const User = () => {
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
-                  <Form.Control size="lg" type="email" value={user?.email || ""} readOnly disabled />
+                  <Form.Control type="email" value={user?.email || ""} readOnly disabled />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>Display Name</Form.Label>
-                  <Form.Control size="lg" type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
+                  <Form.Control type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>Photo</Form.Label>
-                  <Form.Control size="lg" type="file" accept="image/*" onChange={handleFileChange} />
+                  <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
-                    size="lg"
                     type="number"
                     defaultValue={user?.phone || ""}
                     onChange={(e) => {

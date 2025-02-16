@@ -92,7 +92,7 @@ export const Users = () => {
                     dataField: "displayName",
                     text: "Display Name",
                     formatter: (cell: any, row: any) => (
-                      <NavLink className={"h6 m-0"} to={`/users/${row.uid}`}>{cell}</NavLink>
+                      <NavLink to={`/users/${row.uid}`}>{cell}</NavLink>
                     ),
                   },
                   {
