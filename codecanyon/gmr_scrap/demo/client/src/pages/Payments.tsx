@@ -1,35 +1,16 @@
-import {
-  IconAlertCircle,
-  IconCoin,
-  IconCoins,
-  IconInfoCircle,
-} from "@tabler/icons-react";
+import { IconAlertCircle, IconCoin, IconCoins, IconInfoCircle } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardText,
-  CardTitle,
-  Col,
-  Container,
-  Form,
-  FormCheck,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  FormText,
-  Row,
-  Stack,
-} from "react-bootstrap";
+import { Breadcrumb, Button, Card, CardBody, CardSubtitle, CardTitle, Col, Container, Form, FormCheck, FormControl, FormGroup, FormText, Row, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
 
+/**
+ * View for purchasing coins.
+ * @returns Component.
+ */
 export const Payments = () => {
   const { uid } = useOutletContext<User>();
   const [isFormValid, setIsFormValid] = useState(false);
@@ -41,13 +22,8 @@ export const Payments = () => {
   const [cost, setCost] = useState(1);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "cost", type: "coin" })
-      .pipe(
-        filter(Boolean),
-        take(1)
-      )
+    const subscription = settingValue({ tag: "cost", type: "coin" }).pipe(filter(Boolean), take(1))
       .subscribe((data) => setCost(data.value || 1));
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -102,7 +78,7 @@ export const Payments = () => {
       </Breadcrumb>
       <Row>
         <Col md={9}>
-          <Card>
+          <Card className="mb-3">
             <CardBody>
               <Stack direction="horizontal" gap={3} className="align-items-start bg-primary-subtle p-3 rounded-top m-n3">
                 <IconCoins size={48} className="text-primary" />
@@ -158,15 +134,19 @@ export const Payments = () => {
           <Card>
             <CardBody>
               <CardTitle>Summary</CardTitle>
-              <Stack direction="horizontal" gap={3} className="align-items-start">
-                <IconCoins size={30} />
+              <Stack direction="horizontal" className="align-items-start">
+                <div className="me-3">
+                  <IconCoins size={30} />
+                </div>
                 <Stack direction="vertical">
                   <h5 className="mb-0">{amount || 0}</h5>
                   <p>Coins</p>
                 </Stack>
               </Stack>
-              <Stack direction="horizontal" gap={3} className="align-items-start">
-                <IconCoin size={30} />
+              <Stack direction="horizontal" className="align-items-start">
+                <div className="me-3">
+                  <IconCoin size={30} />
+                </div>
                 <Stack direction="vertical">
                   <h5 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h5>
                   <p>Price</p>

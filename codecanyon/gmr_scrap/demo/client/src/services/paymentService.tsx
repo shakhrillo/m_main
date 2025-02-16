@@ -26,6 +26,12 @@ export const buyCoins = async (uid: string, amount: number, cost: number) => {
   return docRef.id;
 };
 
+/**
+ * Get the buy coins data.
+ * @param documentId - The document ID.
+ * @param uid - The user ID.
+ * @returns The buy coins data.
+ */
 export const buyCoinsData = (documentId: string, uid: string) => {
   const docRef = doc(firestore, `users/${uid}/buyCoins/${documentId}`);
   const buyCoins$ = new BehaviorSubject({
