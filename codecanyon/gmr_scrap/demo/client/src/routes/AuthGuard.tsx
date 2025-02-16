@@ -4,37 +4,49 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { authenticatedUser } from "../services/userService";
 
 /**
- * AuthGuard component.
+ * Protects routes by ensuring only authenticated users can access them.
  */
 export const AuthGuard = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true; // Prevents state updates after unmount
+
     const fetchUser = async () => {
       try {
-        const user = await authenticatedUser();
-        setUser(user);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setError(String(error));
+        const userData = await authenticatedUser();
+        if (isMounted) setUser(userData);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        if (isMounted) setError("Failed to authenticate user.");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchUser();
-  }, [navigate]);
+
+    return () => {
+      isMounted = false; // Cleanup function
+    };
+  }, []);
 
   useEffect(() => {
-    if (loading) return;
-    navigate(user ? "/" : "/login");
-  }, [loading, user]);
-  
-  return loading || !user ? <>
-    <h1>Loading...</h1>
-    {error && <p>Error: {error}</p>}
-  </> : <Outlet context={user} />;
+    if (!loading && !user) {
+      navigate("/auth/login");
+    }
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  return <Outlet context={user} />;
 };
