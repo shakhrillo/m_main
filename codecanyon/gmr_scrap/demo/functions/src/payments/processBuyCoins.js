@@ -10,8 +10,6 @@ const processBuyCoins = async (event) => {
   const { amount, cost } = event.data.data();
   const { userId } = event.params;
 
-  console.log(`Processing buy coins for user ${userId} with amount ${amount} and cost ${cost}`);
-
   try {
     await ref.update({
       url: await generateStripePaymentUrl({ userId, amount, cost }),

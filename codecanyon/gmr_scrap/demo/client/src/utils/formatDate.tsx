@@ -5,11 +5,16 @@ import { format } from "date-fns";
  * @param timestamp The Unix timestamp to format.
  * @returns The formatted timestamp.
  */
-export const formatDate = (timestamp: number | undefined): string => {
+export const formatDate = (timestamp: number | undefined, isFull?: boolean): string => {
   if (!timestamp) {
     return "";
   }
 
   const date = new Date(timestamp * 1000);
-  return `${format(date, "MMM dd, yyyy")} ${format(date, "HH:mm:ss a")}`;
+
+  if (isFull) {
+    return format(date, "MMM dd, yyyy HH:mm:ss a");
+  }
+
+  return format(date, "MMM dd, yyyy");
 };

@@ -10,6 +10,7 @@ function createAndStartContainer(containerOptions) {
   return new Promise((resolve, reject) => {
     const docker = getDocker();
 
+    console.log('-'.repeat(100));
     docker.createContainer(containerOptions, (createError, container) => {
       if (createError) {
         console.error("Error creating container:", createError);

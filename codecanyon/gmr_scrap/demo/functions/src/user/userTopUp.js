@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
+const updateStatistics = require("../services/statisticsService");
 
 /**
  * Updates the user's coin balance and total spent amount.
@@ -17,6 +18,8 @@ const userTopUp = async (event) => {
       coinBalance: FieldValue.increment(Number(metadata.amount) || 0),
       totalSpent: FieldValue.increment(Number(metadata.amount) || 0),
     });
+    
+    await updateStatistics("earnings");
   } catch (error) {
     console.error("Error updating user balance:", error);
   }

@@ -1,24 +1,21 @@
+const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
 
-const updateStatistics = async (db, batch, type, data) => {
-  const statisticsCollection = db.collection("statistics");
-  const statisticsQuery = await statisticsCollection
-    .where("type", "==", type)
-    .get();
-  let statisticsDoc;
-  if (statisticsQuery.empty) {
-    statisticsDoc = statisticsCollection.doc(type);
-    batch.set(statisticsDoc, {
-      type,
-      total: 0,
+/**
+ * Update statistics
+ * @param {string} type
+ * @returns {Promise<void>}
+ */
+const updateStatistics = async (type) => {
+  try {
+    const db = admin.firestore();
+    const statisticsRef = db.doc(`statistics/${type}`);
+    await statisticsRef.update({
+      total: FieldValue.increment(1),
     });
-  } else {
-    statisticsDoc = statisticsQuery.docs[0].ref;
+  } catch (error) {
+    console.error("Error updating statistics:", error);
   }
-
-  batch.update(statisticsDoc, {
-    total: FieldValue.increment(data[type] || 0),
-  });
 };
 
 module.exports = updateStatistics;

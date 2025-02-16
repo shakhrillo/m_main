@@ -19,6 +19,9 @@ import formatNumber from "../utils/formatNumber";
 import { formatTotalEarnings } from "../utils/formatTotalEarnings";
 import { formatTotalUsers } from "../utils/formatTotalUsers";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
+import { paymentsData } from "../services/paymentService";
+import { formatAmount } from "../utils/formatAmount";
+import { formatDate } from "../utils/formatDate";
 
 export const Dashboard: React.FC = () => {
   const [earnings, setEarnings] = useState([] as any[]);
@@ -62,9 +65,9 @@ export const Dashboard: React.FC = () => {
       );
     });
 
-    const earningsSubscription = totalEarnings().subscribe((data) => {
-      setEarnings(formatTotalEarnings(data));
-    });
+    // const earningsSubscription = totalEarnings().subscribe((data) => {
+    //   setEarnings(formatTotalEarnings(data));
+    // });
 
     const usersSubscription = allUsers().subscribe((data) => {
       console.log("users", formatTotalUsers(data));
@@ -73,20 +76,27 @@ export const Dashboard: React.FC = () => {
 
     return () => {
       appStatisticsSubscription.unsubscribe();
-      earningsSubscription.unsubscribe();
+      // earningsSubscription.unsubscribe();
       usersSubscription.unsubscribe();
       containersSubscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = paymentsData({type: ["charge.succeeded"]}).subscribe((data) => setEarnings(formatTotalEarnings(data)));
+
+    return () => {
+      subscription.unsubscribe();
     };
   }, []);
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Main</Breadcrumb.Item>
         <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
-        <Col md={8}>
+        <Col md={6}>
           <Card id="dashboard">
             <Card.Body>
               <Card.Title>Total revenue</Card.Title>
@@ -103,87 +113,100 @@ export const Dashboard: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4}>
-          <Row className="row-cols-1 g-3">
-            <Col>
-              <Card>
-                <Row>
-                  <Col sm={7} className="d-flex">
-                    <Card.Body className="d-flex flex-column">
-                      <Card.Title>Statistics</Card.Title>
-                      <Row className="mt-auto row-cols-2 g-2">
-                        {[
-                          {
-                            title: "Images",
-                            total: containers[0],
-                            backgroundColor: "bg-primary-subtle",
-                            color: "text-primary",
-                          },
-                          {
-                            title: "Videos",
-                            total: containers[1],
-                            backgroundColor: "bg-success-subtle",
-                            color: "text-success",
-                          },
-                          {
-                            title: "Reviews",
-                            total: containers[2],
-                            backgroundColor: "bg-info-subtle",
-                            color: "text-info",
-                          },
-                          {
-                            title: "Responses",
-                            total: containers[3],
-                            backgroundColor: "bg-warning-subtle",
-                            color: "text-warning",
-                          },
-                        ].map((item, index) => (
-                          <Col key={index}>
-                            <IconCircleFilled
-                              size={20}
-                              strokeWidth={1}
-                              className={item.color}
-                            />
-                            <span className="text-capitalize ms-2">
-                              {item.title}
-                            </span>
-                          </Col>
-                        ))}
-                      </Row>
-                    </Card.Body>
-                  </Col>
-                  <Col sm={5}>
-                    <DoughnutChart
-                      data={containers}
-                      total={containers.reduce((acc, e) => acc + e, 0)}
-                    />
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-            <Col>
-              <Card className="h-100">
+        <Col md={6}>
+          <Card id="users">
+            <Card.Body>
+              <Card.Title>Total users</Card.Title>
+              <LineChart
+                labels={users.map((e) => e.date)}
+                datasets={[
+                  {
+                    label: "Total users",
+                    data: users.map((e) => e.total),
+                    color: "#3e2c41",
+                  },
+                ]}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col>
+          <Card>
+            <Row>
+              <Col sm={7} className="d-flex">
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title>Earnings</Card.Title>
-                  <div className="fs-1">
-                    ${formatNumber((statistics?.earnings || 0) / 100)}
-                  </div>
-                  <small className="mt-auto">
-                    {checkEarningsTrend(earnings)}%{" "}
-                    {checkEarningsTrend(earnings) > 0 ? "increase" : "decrease"}{" "}
-                    in revenue since last month
-                  </small>
-                  <div className="position-absolute p-1 top-0 end-0 mt-2 me-2 rounded bg-light">
-                    {checkEarningsTrend(earnings) > 0 ? (
-                      <IconTrendingUp size={24} className="text-success" />
-                    ) : (
-                      <IconTrendingDown size={24} className="text-danger" />
-                    )}
-                  </div>
+                  <Card.Title>Statistics</Card.Title>
+                  <Row className="mt-auto row-cols-2 g-2">
+                    {[
+                      {
+                        title: "Images",
+                        total: containers[0],
+                        backgroundColor: "bg-primary-subtle",
+                        color: "text-primary",
+                      },
+                      {
+                        title: "Videos",
+                        total: containers[1],
+                        backgroundColor: "bg-success-subtle",
+                        color: "text-success",
+                      },
+                      {
+                        title: "Reviews",
+                        total: containers[2],
+                        backgroundColor: "bg-info-subtle",
+                        color: "text-info",
+                      },
+                      {
+                        title: "Responses",
+                        total: containers[3],
+                        backgroundColor: "bg-warning-subtle",
+                        color: "text-warning",
+                      },
+                    ].map((item, index) => (
+                      <Col key={index}>
+                        <IconCircleFilled
+                          size={20}
+                          strokeWidth={1}
+                          className={item.color}
+                        />
+                        <span className="text-capitalize ms-2">
+                          {item.title} ({formatNumber(item.total)})
+                        </span>
+                      </Col>
+                    ))}
+                  </Row>
                 </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+              </Col>
+              <Col sm={5}>
+                <DoughnutChart
+                  data={containers}
+                  total={containers.reduce((acc, e) => acc + e, 0)}
+                />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+        <Col>
+          <Card className="h-100">
+            <Card.Body className="d-flex flex-column">
+              <Card.Title>Earnings</Card.Title>
+              <div className="fs-1">
+                ${formatNumber((statistics?.earnings || 0) / 100)}
+              </div>
+              <small className="mt-auto">
+                {checkEarningsTrend(earnings)}%{" "}
+                {checkEarningsTrend(earnings) > 0 ? "increase" : "decrease"}{" "}
+                in revenue since last month
+              </small>
+              <div className="position-absolute p-1 top-0 end-0 mt-2 me-2 rounded bg-light">
+                {checkEarningsTrend(earnings) > 0 ? (
+                  <IconTrendingUp size={24} className="text-success" />
+                ) : (
+                  <IconTrendingDown size={24} className="text-danger" />
+                )}
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
         <Col md={12}>
           <Card style={{ height: "400px" }}>

@@ -20,6 +20,7 @@ const SETTINGS_TABS = [
     type: "coin",
     fields: [
       { tag: "cost", label: "Cost", helpText: "The cost of each coin." },
+      { tag: "bonus", label: "Bonus", helpText: "The bonus of each coin." },
       { tag: "image", label: "Image", helpText: "The cost of each image in coins." },
       { tag: "video", label: "Video", helpText: "The cost of each video in coins." },
       { tag: "response", label: "Response", helpText: "The cost of each response in coins." },

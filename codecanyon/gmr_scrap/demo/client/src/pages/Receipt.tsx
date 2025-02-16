@@ -21,7 +21,7 @@ import {
 } from "react-bootstrap";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { filter, map } from "rxjs";
-import { receiptData } from "../services/paymentService";
+import { paymentsData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
 
@@ -33,7 +33,7 @@ export const Receipt = () => {
   useEffect(() => {
     if (!receiptId) return;
 
-    const subscription = receiptData({ receiptId })
+    const subscription = paymentsData({ receiptId })
       .pipe(
         filter((data) => data && data.length > 0),
         map((data) => data[0]),

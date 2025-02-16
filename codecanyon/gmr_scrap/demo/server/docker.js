@@ -38,17 +38,22 @@ const initializeDocker = () => {
 /**
  * Get image details
  * @param {string} imageName
+ * @param {import("dockerode").DockerEvent} event
  * @returns {Promise<import("dockerode").ImageInspectInfo>}
  * @throws {Error}
  * @description Get image details
  */
-const getImageDetails = async (imageName) => {
-  if (!imageName) return console.warn("Image name is required."), null;
+const getImageDetails = async (imageName, event) => {
+  if (!imageName) {
+    console.warn("Image name is required.");
+    return null;
+  }
   try {
     return await docker.getImage(imageName).inspect();
   } catch (error) {
     if (error.statusCode === 404) {
       console.warn(`Image '${imageName}' not found.`);
+      console.log("Event data:", event);
     } else {
       console.error("Error fetching image details:", error);
     }
@@ -63,7 +68,10 @@ const getImageDetails = async (imageName) => {
  * @returns {Promise<import("dockerode").ImageInspectInfo>}
  */
 const getImageHistory = async (imageName) => {
-  if (!imageName) return console.warn("Image name is required."), null;
+  if (!imageName) {
+    console.warn("Image name is required.");
+    return null;
+  }
   try {
     return await docker.getImage(imageName).history();
   } catch (error) {
@@ -104,9 +112,12 @@ const handleImageEvents = async () => {
   Kefir.fromEvents(stream.setEncoding("utf8"), "data")
     .map(JSON.parse)
     .debounce(1000)
-    .onValue(async ({ Actor: { Attributes: { name } = {} } = {} }) => {
-      if (!name) return console.error("No image found in event data");
-      const details = await getImageDetails(name);
+    .onValue(async (event) => {
+      const name = event.Actor.Attributes.name;
+      if (!name || event.Action === "delete") {
+        return console.error("No name found in event data or image deleted");
+      }
+      const details = await getImageDetails(name, event);
       if (details)
         await updateMachine(name, {
           ...details,
