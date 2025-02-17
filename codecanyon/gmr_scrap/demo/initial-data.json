@@ -1,19 +1,37 @@
 [
   {
-    "collection": "users",
-    "documentId": "user1",
-    "data": {
-      "name": "John Doe",
-      "age": 30
-    }
+    "eventKey": "generalSettings",
+    "title": "General",
+    "type": "general",
+    "fields": [
+      { "value": "1", "tag": "logo", "label": "Logo", "helpText": "The URL for the logo." },
+      { "value": "1", "tag": "favicon", "label": "Favicon", "helpText": "The URL for the favicon." },
+      { "value": "1", "tag": "title", "label": "Title", "helpText": "The title of the website." },
+      { "value": "1", "tag": "description", "label": "Description", "helpText": "The description of the website." },
+      { "value": "1", "tag": "keywords", "label": "Keywords", "helpText": "The keywords of the website." }
+    ]
   },
   {
-    "collection": "users",
-    "documentId": "user2",
-    "data": {
-      "name": "Jane Doe",
-      "age": 25
-    }
+    "eventKey": "coinSettings",
+    "title": "Coin",
+    "type": "coin",
+    "fields": [
+      { "value": "1", "tag": "cost", "label": "Cost", "helpText": "The cost of each coin." },
+      { "value": "1", "tag": "bonus", "label": "Bonus", "helpText": "The bonus of each coin." },
+      { "value": "1", "tag": "image", "label": "Image", "helpText": "The cost of each image in coins." },
+      { "value": "1", "tag": "video", "label": "Video", "helpText": "The cost of each video in coins." },
+      { "value": "1", "tag": "response", "label": "Response", "helpText": "The cost of each response in coins." },
+      { "value": "1", "tag": "review", "label": "Review", "helpText": "The cost of each review in coins." },
+      { "value": "1", "tag": "validation", "label": "Validation", "helpText": "The cost of each validation in coins." }
+    ]
+  }, {
+    "eventKey": "scrapSettings",
+    "title": "Scrap",
+    "type": "scrap",
+    "fields": [
+      { "value": "1", "tag": "minimum", "label": "Minimum", "helpText": "The minimum of scrapes." },
+      { "value": "1", "tag": "maximum", "label": "Maximum", "helpText": "The maximum of scrapes." },
+      { "value": "1", "tag": "retries", "label": "Retries", "helpText": "The retries of scrapes." }
+    ]
   }
 ]
-  
