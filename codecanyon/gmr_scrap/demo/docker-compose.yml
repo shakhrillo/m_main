@@ -61,20 +61,26 @@ services:
       sh -c '
         if [ "$APP_ENVIRONMENT" = "production" ]; then
           # Remove package-lock.json only if it exists
-          if [ -f /usr/src/app/functions/package-lock.json ]; then
-            rm -rf /usr/src/app/functions/package-lock.json
+          if [ -f "/usr/src/app/functions/package-lock.json" ]; then
+            rm -f "/usr/src/app/functions/package-lock.json"
           fi
 
-          # Set the Google Application Credentials and deploy to Firebase
+          # Set Google Application Credentials and deploy to Firebase
           export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
-          firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
-          firebase firestore:documents:add function --json '{"type": "general", "tag": "logo", "value": "logo.png"}' --project "$APP_FIREBASE_PROJECT_ID"
-          firebase firestore:documents:add function --json '{"type": "general", "tag": "description", "value": "some content"}' --project "$APP_FIREBASE_PROJECT_ID"
+
+          # Delete all Firestore collections
+          firebase firestore:delete --all-collections --recursive --force --project "$APP_FIREBASE_PROJECT_ID"
+
+          # Add Firestore documents
+          firebase firestore:documents:create general/logo --json \'{"type": "general", "tag": "logo", "value": "logo.png"}\' --project "$APP_FIREBASE_PROJECT_ID"
+          firebase firestore:documents:create general/description --json \'{"type": "general", "tag": "description", "value": "some content"}\' --project "$APP_FIREBASE_PROJECT_ID"
+
+          # Deploy to Firebase with import/export
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
         else
           # Start Firebase emulators with demo project ID and handle data import/export
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
-          # Optionally: Uncomment the following line to use a fixed demo project ID instead
+          # Uncomment the following line to use a fixed demo project ID instead
           # firebase emulators:start --import=./data --export-on-exit=./data --project "demo-gmrs-6638f"
         fi
       '
