@@ -83,6 +83,7 @@ services:
       - ./firebaseServiceAccount.json:/usr/src/firebaseServiceAccount.json
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
+      IN_DOCKER: true
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}
 
       DOCKER_IPV4_ADDRESS: ${DOCKER_IPV4_ADDRESS}

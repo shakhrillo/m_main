@@ -13,6 +13,7 @@ services:
       - ./firebaseServiceAccount.json:/usr/src/app/firebaseServiceAccount.json
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
+      IN_DOCKER: true
       DOCKER_IPV4_ADDRESS: ${DOCKER_IPV4_ADDRESS}
       APP_DOCKER_PORT: ${APP_DOCKER_PORT}
       MACHINE_BUILD_IMAGE_NAME: ${APP_ID}

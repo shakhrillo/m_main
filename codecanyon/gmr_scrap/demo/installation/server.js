@@ -28,7 +28,7 @@ const checkServer = async () => {
           const handleData = (chunk) => {
             log(chunk);
 
-            if (chunk.toString().includes("Server is running on port")) {
+            if (chunk.toString().includes("Server running on port")) {
               stream.removeListener("data", handleData);
               stream.destroy();
               resolve("Server is ready.");
