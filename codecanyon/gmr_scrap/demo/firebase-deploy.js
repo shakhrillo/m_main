@@ -81,7 +81,7 @@ async function deploy() {
 
       // Clear Firestore indexes
       console.log('Clearing Firestore indexes...');
-      await runCommand(`firebase firestore:indexes:clear --project "${APP_FIREBASE_PROJECT_ID}"`);
+    //   await runCommand(`firebase firestore:indexes:clear --project "${APP_FIREBASE_PROJECT_ID}"`);
 
       // Import initial data
       console.log('Importing initial data...');
