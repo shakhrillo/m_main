@@ -1,19 +1,17 @@
-const admin = require("firebase-admin");
 const { Timestamp } = require("firebase-admin/firestore");
 const updateStatistics = require("../services/statisticsService");
 const settingsService = require("../services/settingsService");
+const updateUser = require("../services/userService");
 
 /**
  * Once a user is created, this function will be triggered.
  * - Update statistics
  * - Create user
- * @param {admin.auth.UserRecord} user
+ * @param {Object} user
  * @returns {Promise<void>}
  */
 async function processUserCreated(user) {
-  const db = admin.firestore();
   const bonusCoins = await settingsService("bonus", "coin");
-  console.log(`User created: ${user.uid}`, bonusCoins);
 
   /*-------------------*/
   /* Update statistics */
@@ -23,8 +21,7 @@ async function processUserCreated(user) {
   /*-------------------*/
   /* Create user       */
   /*-------------------*/
-  const userRef = db.collection("users").doc(user.uid);
-  await userRef.set({
+  await updateUser(user.uid, {
     uid: user.uid,
     displayName: user.displayName,
     email: user.email,

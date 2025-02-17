@@ -44,7 +44,7 @@ require("dotenv").config();
 const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
-const { getMachineData, updateUserData, settingValue } = require("./services/firebase");
+const { getMachineData, updateUserData, settingsService } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 const { uploadFile, batchWriteLargeArray, updateMachineData } = require("./services/firebase");
@@ -118,10 +118,10 @@ let driver;
       ...data,
       ...((await getMachineData(tag)) || {}),
       price: {
-        review: await settingValue("review", "coin") || 0,
-        image: await settingValue("image", "coin") || 0,
-        video: await settingValue("video", "coin") || 0,
-        response: await settingValue("response", "coin") || 0,
+        review: await settingsService("review", "coin") || 0,
+        image: await settingsService("image", "coin") || 0,
+        video: await settingsService("video", "coin") || 0,
+        response: await settingsService("response", "coin") || 0,
       }
     };
 

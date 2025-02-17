@@ -53,7 +53,7 @@ require("dotenv").config();
 // Import dependencies
 const { WebDriver } = require("selenium-webdriver");
 const { FieldValue } = require("firebase-admin/firestore");
-const { uploadFile, getMachineData, updateMachineData, updateUserData, settingValue } = require("./services/firebase");
+const { uploadFile, getMachineData, updateMachineData, updateUserData, settingsService } = require("./services/firebase");
 const { GeoPoint } = require("firebase-admin/firestore");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
@@ -196,7 +196,7 @@ let driver;
     await updateMachineData(tag, data);
 
     try {
-      const costValidate = await settingValue("validation", "coin");
+      const costValidate = await settingsService("validation", "coin");
       await updateUserData(data.uid, {
         coinBalance: FieldValue.increment(-costValidate),
         totalValidateInfo: FieldValue.increment(1),

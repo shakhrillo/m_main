@@ -1,4 +1,4 @@
-const { Timestamp, GeoPoint } = require("firebase-admin/firestore");
+const { Timestamp } = require("firebase-admin/firestore");
 const { executeScraping } = require("../services/mainService");
 const updateStatistics = require("../services/statisticsService");
 const geoFire = require("geofire-common");
@@ -8,8 +8,8 @@ const geoFire = require("geofire-common");
  * - Update statistics
  * - Create container
  * - Execute scraping
- *
- * @param {functions.EventContext} event
+ * 
+ * @param {Object} event
  * @returns {Promise<void>}
  */
 async function processContainerCreated(event) {
@@ -19,9 +19,6 @@ async function processContainerCreated(event) {
     const { containerId } = event.params;
     const { type, uid } = data;
     let geohash = null;
-    /**
-     * @type {GeoPoint}
-     */
     const location = data.location;
     if(data.location) {
       const { latitude, longitude } = data.location;
@@ -58,7 +55,7 @@ async function processContainerCreated(event) {
     /* Update statistics */
     /*-------------------*/
     await updateStatistics(type);
-    
+
   } catch (error) {
     console.error("processContainerCreated", error);
   }
