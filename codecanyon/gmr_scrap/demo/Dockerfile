@@ -22,4 +22,4 @@ RUN npm install --legacy-peer-deps
 
 WORKDIR /usr/src/app
 
-CMD [ "node firebase-deploy.js" ]
+CMD [ "node", "firebase-deploy.js" ]
