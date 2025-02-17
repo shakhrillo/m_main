@@ -42,8 +42,6 @@ services:
     container_name: ${APP_ID}-firebase
     image: ${APP_ID}-firebase
     volumes:
-      # - ./firebase-deploy.js:/usr/src/app/firebase-deploy.js
-      # - ./initial-data.json:/usr/src/app/initial-data.json
       - ./data:/usr/src/app/data
     environment:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
@@ -62,29 +60,28 @@ services:
     entrypoint: >
       sh -c '
         if [ "$APP_ENVIRONMENT" = "production" ]; then
-          # Remove package-lock.json only if it exists
           if [ -f /usr/src/app/functions/package-lock.json ]; then
             rm -rf /usr/src/app/functions/package-lock.json
           fi
 
-          # Install the dependencies
+          # Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to the path of the JSON file that contains your service account key.
+          export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
+          
+          # Delete all collections in the firestore database
+          firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
+          
+          # Import the initial data into the firestore database
           node firebase-deploy.js
 
-          # Set the Google Application Credentials and deploy to Firebase
-          export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
-          firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
-          # Remove all firestore indexes
-          # firebase firestore:indexes:clear --project "$APP_FIREBASE_PROJECT_ID"
-          # Import the initial data
-          # firebase firestore:import /usr/src/app/initial-data.json --project "$APP_FIREBASE_PROJECT_ID"
+          # Deploy the firestore indexes
           firebase deploy --only firestore:indexes --force --project "$APP_FIREBASE_PROJECT_ID"
+
           # Deploy the functions
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID" --only functions
         else
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
         fi
       '
-
     working_dir: /usr/src/app
     networks:
       gmrs-network:
