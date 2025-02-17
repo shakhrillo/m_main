@@ -12,7 +12,8 @@ const settingsService = require("../services/settingsService");
  */
 async function processUserCreated(user) {
   const db = admin.firestore();
-  const batch = db.batch();
+  const bonusCoins = await settingsService("bonus", "coin");
+  console.log(`User created: ${user.uid}`, bonusCoins);
 
   /*-------------------*/
   /* Update statistics */
@@ -23,13 +24,13 @@ async function processUserCreated(user) {
   /* Create user       */
   /*-------------------*/
   const userRef = db.collection("users").doc(user.uid);
-  batch.set(userRef, {
+  await userRef.set({
     uid: user.uid,
     displayName: user.displayName,
     email: user.email,
     photoURL: user.photoURL,
     phone: user.phoneNumber,
-    coinBalance: await settingsService("coins", "bonus") || 0,
+    coinBalance: bonusCoins,
     notifications: 0,
     createdAt: Timestamp.now(),
     totalSpent: 0,
@@ -40,8 +41,6 @@ async function processUserCreated(user) {
     totalValidateComments: 0,
     totalValidateInfo: 0,
   });
-
-  await batch.commit();
 }
 
 module.exports = processUserCreated;
