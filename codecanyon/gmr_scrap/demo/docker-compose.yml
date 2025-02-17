@@ -68,14 +68,9 @@ services:
           # Set the Google Application Credentials and deploy to Firebase
           export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
           firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
-          # firebase firestore:documents:add function --json \'{\"type\": \"general\", \"tag\": \"logo\", \"value\": \"logo.png\"}\' --project \"$APP_FIREBASE_PROJECT_ID\"
-          # firebase firestore:documents:add function --json \'{\"type\": \"general\", \"tag\": \"description\", \"value\": \"some content\"}\' --project \"$APP_FIREBASE_PROJECT_ID\"
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
-          # Start Firebase emulators with demo project ID and handle data import/export
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
-          # Optionally: Uncomment the following line to use a fixed demo project ID instead
-          # firebase emulators:start --import=./data --export-on-exit=./data --project "demo-gmrs-6638f"
         fi
       '
 
