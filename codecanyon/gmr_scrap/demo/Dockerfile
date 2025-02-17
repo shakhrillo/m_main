@@ -16,7 +16,7 @@ COPY ./firestore.indexes.json .
 COPY ./firestore.rules .
 COPY ./storage.rules .
 COPY ./functions ./functions
-COPY .env ./functions/.env
+COPY ./.env ./functions/.env
 
 WORKDIR /usr/src/app/functions
 RUN npm install --legacy-peer-deps
