@@ -12,7 +12,7 @@ COPY ./firestore.rules .
 COPY ./storage.rules .
 COPY ./functions ./functions
 
-# WORKDIR /usr/src/app/functions
-# RUN npm install --legacy-peer-deps
+WORKDIR /usr/src/app/functions
+RUN npm install --legacy-peer-deps
 
 WORKDIR /usr/src/app

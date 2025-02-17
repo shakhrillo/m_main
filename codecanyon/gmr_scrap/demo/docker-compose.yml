@@ -61,9 +61,9 @@ services:
       sh -c '
         if [ "$APP_ENVIRONMENT" = "production" ]; then
           # Remove package-lock.json only if it exists
-          # if [ -f /usr/src/app/functions/package-lock.json ]; then
-          #   rm -rf /usr/src/app/functions/package-lock.json
-          # fi
+          if [ -f /usr/src/app/functions/package-lock.json ]; then
+            rm -rf /usr/src/app/functions/package-lock.json
+          fi
 
           # Set the Google Application Credentials and deploy to Firebase
           export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
