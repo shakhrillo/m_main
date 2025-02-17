@@ -18,10 +18,10 @@
     "firebase-functions": "^6.0.1",
     "geofire-common": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
-    "stripe": "^17.3.1"
+    "stripe": "^17.3.1",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7",
     "firebase-functions-test": "^3.1.0"
   },
   "private": true
