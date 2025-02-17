@@ -198,8 +198,6 @@ async function updateUserData(uid, data) {
   return db.collection("users").doc(uid).update(data);
 }
 
-const admin = require("firebase-admin");
-
 /**
  * Get setting value by tag and type.
  * @param {string} tag - The setting tag.

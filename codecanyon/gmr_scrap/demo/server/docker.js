@@ -114,8 +114,8 @@ const handleImageEvents = async () => {
     .debounce(1000)
     .onValue(async (event) => {
       const name = event.Actor.Attributes.name;
-      if (!name || event.Action === "delete") {
-        return console.error("No name found in event data or image deleted");
+      if (!name || event.Action === "delete" || event.Action === "pull") {
+        return console.error("No name found in event data");
       }
       const details = await getImageDetails(name, event);
       if (details)
