@@ -87,7 +87,12 @@ async function deploy() {
 
       // Deploy functions
       console.log('Deploying Firebase functions...');
-      await runCommand(`firebase deploy --project "${APP_FIREBASE_PROJECT_ID}"`);
+      try {
+        await runCommand(`export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json`);
+        await runCommand(`firebase deploy --project "${APP_FIREBASE_PROJECT_ID}"`);
+      } catch (error) {
+        console.error(error);
+      }
 
     } else {
       // Start Firebase emulators
