@@ -10,8 +10,7 @@ COPY ./firebase.json .
 COPY ./firestore.indexes.json .
 COPY ./firestore.rules .
 COPY ./storage.rules .
-COPY ./functions/src ./functions/src
-COPY ./functions/package.json ./functions/package.json
+COPY ./functions ./functions
 
 # WORKDIR /usr/src/app/functions
 # RUN npm install --legacy-peer-deps
