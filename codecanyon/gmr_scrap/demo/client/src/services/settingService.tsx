@@ -1,4 +1,5 @@
-import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs } from "firebase/firestore";
+import * as geofire from "geofire-common";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 import { IUserInfo } from "../types/userInfo";
@@ -100,34 +101,36 @@ export const allUsers = (fromDate = startDate) => {
   });
 };
 
-export const allContainers = (fromDate = startDate) => {
-  const collectionRef = collection(firestore, "containers");
-  const containers$ = new BehaviorSubject([] as any);
+export const allContainersByGeoBounds = async (bounds: google.maps.LatLngBounds) => {
+  const sw = bounds.getSouthWest();
+  const ne = bounds.getNorthEast();
+  const center: [number, number] = [(sw.lat() + ne.lat()) / 2, (sw.lng() + ne.lng()) / 2];
+  const radiusInM = geofire.distanceBetween([sw.lat(), sw.lng()], [ne.lat(), ne.lng()]) * 1000;
 
-  const unsubscribe = onSnapshot(
-    query(
-      collectionRef,
-      // where("createdAt", ">", fromDate),
-      where("type", "==", "comments"),
-      // where("status", "==", "completed"),
-    ),
-    (snapshot) => {
-      const containersData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      containers$.next(containersData);
-    },
+  const boundsQueries = geofire.geohashQueryBounds(center, radiusInM);
+  const promises = boundsQueries.map(([start, end]) =>
+    getDocs(
+      query(collection(firestore, "containers"), orderBy("geohash"), startAt(start), endAt(end))
+    )
   );
 
-  return new Observable<any>((subscriber) => {
-    const subscription = containers$.subscribe(subscriber);
+  const snapshots = await Promise.all(promises);
+  const matchingDocs: any[] = [];
 
-    return () => {
-      subscription.unsubscribe();
-      unsubscribe();
-    };
-  });
+  for (const snap of snapshots) {
+    for (const doc of snap.docs) {
+      const data = doc.data();
+      const { latitude, longitude } = data.location;
+
+      // Extra filtering for false positives
+      const distance = geofire.distanceBetween([latitude, longitude], center) * 1000;
+      if (distance <= radiusInM) {
+        matchingDocs.push({ id: doc.id, ...data });
+      }
+    }
+  }
+
+  return matchingDocs;
 };
 
 export const totalEarnings = (fromDate = startDate) => {

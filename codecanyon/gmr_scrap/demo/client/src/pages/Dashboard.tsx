@@ -2,21 +2,32 @@ import { useEffect, useState } from "react";
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
 import { RevenueGraph, StatisticsDoughnut, EraningsTotal, UsersGraph, UsersTotal } from "../components/dashboard";
-import { allContainers } from "../services/settingService";
+import { allContainersByGeoBounds } from "../services/settingService";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
+import { BehaviorSubject, debounceTime, distinctUntilChanged, skip, skipWhile } from "rxjs";
+const boundChanges$ = new BehaviorSubject<google.maps.LatLngBounds | null>(null);
 
 /**
  * Dashboard page component.
  * @returns JSX.Element
  */
 export const Dashboard = () => {
-  const [geojson, setGeojson] = useState<any>(null);
+  const [geojson, setGeojson] = useState<any>({ type: "FeatureCollection", features: [] });
 
   useEffect(() => {
-    const subscription = allContainers().subscribe((data) => {
-      setGeojson(locationsToGeoJSON(data.map((container: any) => container.location)));
+    const subscription = boundChanges$.pipe(
+      skip(1),
+      skipWhile((bounds) => bounds === null),
+      distinctUntilChanged((prev, curr) => prev?.toJSON() === curr?.toJSON()),
+      debounceTime(600)
+    ).subscribe((bounds) => {
+      if (!bounds) return;
+
+      allContainersByGeoBounds(bounds).then((data: any) => {
+        setGeojson(locationsToGeoJSON(data.map((container: any) => container.location)));
+      });
     });
-    
+
     return () => subscription.unsubscribe();
   }, []);
 
@@ -37,7 +48,7 @@ export const Dashboard = () => {
               <Card.Title>
                 This month's container locations
               </Card.Title>
-              {geojson && <GoogleMap geojson={geojson} />}
+              <GoogleMap geojson={geojson} boundChanges={boundChanges$} />
             </Card.Body>
           </Card>
         </Col>
