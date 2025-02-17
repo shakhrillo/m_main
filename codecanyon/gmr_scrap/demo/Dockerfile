@@ -8,6 +8,8 @@ RUN npm install -g firebase-tools
 COPY ./package.json .
 RUN npm install --legacy-peer-deps
 
+COPY ./firebase-deploy.js .
+COPY ./initial-data.json .
 COPY ./firebaseServiceAccount.json . 
 COPY ./firebase.json .
 COPY ./firestore.indexes.json .
