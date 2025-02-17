@@ -13,7 +13,7 @@ COPY ./storage.rules .
 COPY ./functions/src ./functions/src
 COPY ./functions/package.json ./functions/package.json
 
-WORKDIR /usr/src/app/functions
-RUN npm install --legacy-peer-deps
+# WORKDIR /usr/src/app/functions
+# RUN npm install --legacy-peer-deps
 
 WORKDIR /usr/src/app
