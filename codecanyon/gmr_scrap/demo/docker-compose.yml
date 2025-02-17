@@ -136,7 +136,11 @@ services:
       - "${APP_CLIENT_PORT}:3000"
     entrypoint: >
       sh -c '
-        [ "$APP_ENVIRONMENT" = "production" ] && npm run build && exit 0 || npm run start
+        if [ "$APP_ENVIRONMENT" = "production" ]; then
+          npm run build && exit 0
+        elif [ "$APP_ENVIRONMENT" = "development" ]; then
+          npm run start
+        fi
       '
     networks:
       gmrs-network:
