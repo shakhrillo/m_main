@@ -1,13 +1,19 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Supercluster, { ClusterProperties } from "supercluster";
 import { FeatureMarker } from "./FeatureMarker";
-import { FeaturesClusterMarker } from "./FeaturesClusterMarker";
+import { ClusterMarker } from "./ClusterMarker";
 import { FeatureCollection, Point } from "geojson";
 import { useMap } from "@vis.gl/react-google-maps";
 
+/**
+ * ClusteredMarkers component
+ * @param geojson GeoJSON data
+ * @param zoom Current zoom level
+ * @returns Clustered markers
+ */
 export const ClusteredMarkers = ({ geojson, zoom }: { geojson: FeatureCollection<Point, any>; zoom: any;}) => {
   const map = useMap();
-  const [clusters, setClusters] = useState<any[]>([]);
+  const [clusterData, setClusterData] = useState<any[]>([]);
 
   const clusterer = useMemo(() => {
     return new Supercluster({
@@ -19,19 +25,19 @@ export const ClusteredMarkers = ({ geojson, zoom }: { geojson: FeatureCollection
 
   useEffect(() => {
     clusterer.load(geojson.features);
-    const clustersData = clusterer.getClusters([-180, -85, 180, 85], zoom);
-    setClusters(clustersData);
+    const clusters = clusterer.getClusters([-180, -85, 180, 85], zoom);
+    setClusterData(clusters);
   }, [geojson, clusterer, zoom]);
 
-  const getLeaves = useCallback(
+  const getClusterLeaves = useCallback(
     (clusterId: number) => clusterer.getLeaves(clusterId, Infinity),
     [clusterer],
   );
 
-  const handleClusterClick = useCallback(
+  const handleClusterMarkerClick = useCallback(
     (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
       // Zoom in to the cluster
-      const leaves = getLeaves(clusterId);
+      const leaves = getClusterLeaves(clusterId);
       const bounds = new google.maps.LatLngBounds();
       leaves.forEach((leaf) => {
         const [lng, lat] = leaf.geometry.coordinates;
@@ -39,33 +45,33 @@ export const ClusteredMarkers = ({ geojson, zoom }: { geojson: FeatureCollection
       });
       map?.fitBounds(bounds);
     },
-    [getLeaves],
+    [getClusterLeaves],
   );
 
-  const handleMarkerClick = () => {};
+  const handleFeatureMarkerClick = () => {};
 
   return (
     <>
-      {clusters.map((feature) => {
+      {clusterData.map((feature, index) => {
         const [lng, lat] = feature.geometry.coordinates;
-        const clusterProperties = feature.properties as ClusterProperties;
-        const isCluster: boolean = clusterProperties.cluster;
+        const clusterProps = feature.properties as ClusterProperties;
+        const isCluster: boolean = clusterProps.cluster;
 
         return isCluster ? (
-          <FeaturesClusterMarker
-            key={feature.id}
-            clusterId={clusterProperties.cluster_id}
+          <ClusterMarker
+            key={`cluster-${index}`}
+            clusterId={clusterProps.cluster_id}
             position={{ lat, lng }}
-            size={clusterProperties.point_count}
-            sizeAsText={String(clusterProperties.point_count_abbreviated)}
-            onMarkerClick={handleClusterClick}
+            size={clusterProps.point_count}
+            sizeAsText={String(clusterProps.point_count_abbreviated)}
+            onMarkerClick={handleClusterMarkerClick}
           />
         ) : (
           <FeatureMarker
-            key={feature.id}
-            featureId={feature.id as string}
+            key={`feature-${index}`}
+            featureId={String(feature.id)}
             position={{ lat, lng }}
-            onMarkerClick={handleMarkerClick}
+            onMarkerClick={handleFeatureMarkerClick}
           />
         );
       })}

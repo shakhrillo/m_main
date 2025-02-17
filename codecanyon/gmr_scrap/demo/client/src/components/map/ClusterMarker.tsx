@@ -16,7 +16,7 @@ type TreeClusterMarkerProps = {
   sizeAsText: string;
 };
 
-export const FeaturesClusterMarker = ({
+export const ClusterMarker = ({
   position,
   size,
   sizeAsText,
