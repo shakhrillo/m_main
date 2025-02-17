@@ -59,27 +59,30 @@ services:
       - "${APP_FIREBASE_EMULATOR_FIRESTORE}:8080"
       - "${APP_FIREBASE_EMULATOR_STORAGE}:9199"
       - "${APP_FIREBASE_EMULATOR_HUB}:4400"
-    # entrypoint: >
-    #   sh -c '
-    #     if [ "$APP_ENVIRONMENT" = "production" ]; then
-    #       # Remove package-lock.json only if it exists
-    #       if [ -f /usr/src/app/functions/package-lock.json ]; then
-    #         rm -rf /usr/src/app/functions/package-lock.json
-    #       fi
+    entrypoint: >
+      sh -c '
+        if [ "$APP_ENVIRONMENT" = "production" ]; then
+          # Remove package-lock.json only if it exists
+          if [ -f /usr/src/app/functions/package-lock.json ]; then
+            rm -rf /usr/src/app/functions/package-lock.json
+          fi
 
-    #       # Set the Google Application Credentials and deploy to Firebase
-    #       export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
-    #       firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
-    #       # Remove all firestore indexes
-    #       firebase firestore:indexes:clear --project "$APP_FIREBASE_PROJECT_ID"
-    #       # Import the initial data
-    #       firebase firestore:import /usr/src/app/initial-data.json --project "$APP_FIREBASE_PROJECT_ID"
-    #       # Deploy the functions
-    #       firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
-    #     else
-    #       firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
-    #     fi
-    #   '
+          # Install the dependencies
+          node firebase-deploy.js
+
+          # Set the Google Application Credentials and deploy to Firebase
+          export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
+          firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
+          # Remove all firestore indexes
+          firebase firestore:indexes:clear --project "$APP_FIREBASE_PROJECT_ID"
+          # Import the initial data
+          firebase firestore:import /usr/src/app/initial-data.json --project "$APP_FIREBASE_PROJECT_ID"
+          # Deploy the functions
+          firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
+        else
+          firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
+        fi
+      '
 
     working_dir: /usr/src/app
     networks:

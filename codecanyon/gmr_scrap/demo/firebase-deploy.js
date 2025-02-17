@@ -17,17 +17,17 @@ admin.initializeApp({
 const firestore = admin.firestore();
 
 // Function to run Firebase CLI commands
-function runCommand(command) {
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error: ${stderr}`);
-      } else {
-        resolve(stdout);
-      }
-    });
-  });
-}
+// function runCommand(command) {
+//   return new Promise((resolve, reject) => {
+//     exec(command, (error, stdout, stderr) => {
+//       if (error) {
+//         reject(`Error: ${stderr}`);
+//       } else {
+//         resolve(stdout);
+//       }
+//     });
+//   });
+// }
 
 // Function to delete all Firestore collections
 async function deleteFirestoreCollections() {
@@ -67,15 +67,15 @@ async function deploy() {
   try {
     if (APP_ENVIRONMENT === 'production') {
       // Remove package-lock.json if it exists
-      const packageLockPath = '/usr/src/app/functions/package-lock.json';
-      if (fs.existsSync(packageLockPath)) {
-        fs.unlinkSync(packageLockPath);
-        console.log('Removed package-lock.json');
-      }
+      // const packageLockPath = '/usr/src/app/functions/package-lock.json';
+      // if (fs.existsSync(packageLockPath)) {
+      //   fs.unlinkSync(packageLockPath);
+      //   console.log('Removed package-lock.json');
+      // }
 
       // Delete Firestore collections
       console.log('Deleting Firestore collections...');
-      await deleteFirestoreCollections();
+      // await deleteFirestoreCollections();
 
       // Clear Firestore indexes
       console.log('Clearing Firestore indexes...');
@@ -87,17 +87,17 @@ async function deploy() {
 
       // Deploy functions
       console.log('Deploying Firebase functions...');
-      try {
-        await runCommand(`export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json`);
-        await runCommand(`firebase deploy --project "${APP_FIREBASE_PROJECT_ID}"`);
-      } catch (error) {
-        console.error(error);
-      }
+      // try {
+      //   await runCommand(`export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json`);
+      //   await runCommand(`firebase deploy --project "${APP_FIREBASE_PROJECT_ID}"`);
+      // } catch (error) {
+      //   console.error(error);
+      // }
 
     } else {
       // Start Firebase emulators
-      console.log('Starting Firebase emulators...');
-      await runCommand(`firebase emulators:start --project "demo-${APP_FIREBASE_PROJECT_ID}" --import=./data --export-on-exit=./data`);
+      // console.log('Starting Firebase emulators...');
+      // await runCommand(`firebase emulators:start --project "demo-${APP_FIREBASE_PROJECT_ID}" --import=./data --export-on-exit=./data`);
     }
 
   } catch (error) {
