@@ -60,12 +60,22 @@ services:
     entrypoint: >
       sh -c '
         if [ "$APP_ENVIRONMENT" = "production" ]; then
-          GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json" firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
+          # Remove package-lock.json only if it exists
+          if [ -f /usr/src/app/functions/package-lock.json ]; then
+            rm -rf /usr/src/app/functions/package-lock.json
+          fi
+
+          # Set the Google Application Credentials and deploy to Firebase
+          export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
+          firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
+          # Start Firebase emulators with demo project ID and handle data import/export
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
+          # Optionally: Uncomment the following line to use a fixed demo project ID instead
           # firebase emulators:start --import=./data --export-on-exit=./data --project "demo-gmrs-6638f"
         fi
       '
+
     working_dir: /usr/src/app
     networks:
       gmrs-network:
