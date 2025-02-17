@@ -1,0 +1,3308 @@
+[
+  {
+    "date": "4 hours ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNneHFYejNBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Fab",
+      "time"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "1 hr+",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Fab time",
+    "time": 1739740411269,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVCg0b5uIjUbAFWoi01UAkfIBcIoDPVhOjy26mbgmx-jQIdVuPG",
+      "name": "Thick Obob (Thickobob)",
+      "url": "https://www.google.com/maps/contrib/113966594364342118437/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 hours ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNneHRyUWd3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 2,
+    "response": "",
+    "review": "",
+    "time": 1739740411270,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJruOvBT_E7QU0mJl59lstT-4PiiPimm_2k5NdAtsFGQNgy3g",
+      "name": "Farhan Qamar",
+      "url": "https://www.google.com/maps/contrib/111215302481455210791/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "8 hours ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnLXByUEZ3EAE",
+    "imageUrls": [],
+    "keywords": [
+      "Amazing",
+      "!",
+      "Incontournable",
+      "lorsqu'on",
+      "vient",
+      "à",
+      "NYC",
+      "!",
+      "À",
+      "voir",
+      "absolument"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Amazing ! Incontournable lorsqu'on vient à NYC ! À voir absolument",
+    "time": 1739740413507,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXjaUudnyw9doIxBKOSfjcqgWow6vwhDFydqRoNOAkIdigNhbXF",
+      "name": "Rom Pokrywka",
+      "url": "https://www.google.com/maps/contrib/104165315641438409732/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "13 hours ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnMm9MVDh3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Île",
+      "extraordinaire.",
+      "",
+      "Musée",
+      "gratuit,",
+      "un",
+      "temps",
+      "parfait",
+      "lors",
+      "de",
+      "notre",
+      "venue",
+      "avec",
+      "une",
+      "vue",
+      "imprenable",
+      "sur",
+      "Manhattan.\nUn",
+      "combo",
+      "à",
+      "faire",
+      "avec",
+      "Ellis",
+      "Island.",
+      "Un",
+      "moment",
+      "tout",
+      "en",
+      "émotions"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Île extraordinaire.  Musée gratuit, un temps parfait lors de notre venue avec une vue imprenable sur Manhattan.\nUn combo à faire avec Ellis Island. Un moment tout en émotions",
+    "time": 1739740414621,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWEeAXBJAHR0_h272tN9_K1IXnz_W6naqG7CbwzRa1Hn9GTcnd2RQ",
+      "name": "nadege galea",
+      "url": "https://www.google.com/maps/contrib/106849897512375208296/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "19 hours ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNncXRUQmJREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Not sure",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740415734,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWpvXp_7HW1YtIEJNhiL83J9QgocydjCjMelteBEnNrUyg5rXY",
+      "name": "David Meneses",
+      "url": "https://www.google.com/maps/contrib/100800934698781013709/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnaXZyT2JBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "30–60 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740416843,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUKEoxl-T42G4EG2Tk_nJ1duTWh31RaKS5w8VL76XaxdijYGSbSmg",
+      "name": "Mariela Bravo",
+      "url": "https://www.google.com/maps/contrib/114001661591497414681/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnMHBUc3lnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740417952,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWea9p1Sscd8SYwTMV8z1hkMPYTABW_rKZXvH_HGLh0pM0XGbXVPA",
+      "name": "sesh sunkad",
+      "url": "https://www.google.com/maps/contrib/110032504249074111961/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnSUNJdGZtSjJRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Statue",
+      "of",
+      "liberty.",
+      "Lugar",
+      "donde",
+      "Todo",
+      "el",
+      "Mundo",
+      "debe",
+      "ir."
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Statue of liberty. Lugar donde Todo el Mundo debe ir.",
+    "time": 1739740419072,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVWJJMFgqf_A1jdQj8Q0vQgDGg3frPnPfKRAV3DuD7feHh_5-W6Zg",
+      "name": "Angel Rojas",
+      "url": "https://www.google.com/maps/contrib/108080759705211323001/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnb3Vid2h3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740420176,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKjFFhHVlSzpunLJLxuzXT7-W5XIjU74Msp-d1nzYbZjqCX2A",
+      "name": "Makara Murare",
+      "url": "https://www.google.com/maps/contrib/111440267422288054667/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnd3FMVkJ3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Public holiday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Not sure",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740421283,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXtIum8Guh_hjU-pA4EoGMFXrBvFu2GfyFmO6CoxpUd0vognOWy",
+      "name": "Sayou Ameur",
+      "url": "https://www.google.com/maps/contrib/106282005990323442116/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnM01EY25nRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740421469,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXLMD_WfvcWQGmTU7YzocGcteGrnuyl9nHjCYjZ3kJdqpgCf7g",
+      "name": "Santiago's Bakery",
+      "url": "https://www.google.com/maps/contrib/115313370127948108401/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " day ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnN1BhOVNnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740422582,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVGqRaNsworUyJWBSb86bPyAv5RAMyAaBcJKoMmYfd125qzRW5J",
+      "name": "Felipe Andres Benvenuto Abello",
+      "url": "https://www.google.com/maps/contrib/109454550917141162356/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnOUlMMVFBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740422582,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocK3UBs2JQg3Rk40J_dOakXSDBRB-TnWKWQRW4o38gaKm5-mUw",
+      "name": "jie chen",
+      "url": "https://www.google.com/maps/contrib/107400784477901683799/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnOUlTeFZnEAE",
+    "imageUrls": [],
+    "keywords": [
+      "Mágico",
+      "lugar"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Mágico lugar",
+    "time": 1739740423693,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocISBy16BekQO3ISAZbVjA6FGqiTYhGmT9NrEV8jgKJ6twJkJfET",
+      "name": "Fabiola Alejandra Sandoval Salcedo",
+      "url": "https://www.google.com/maps/contrib/110947554672038181621/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnNVA2WDJRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740423694,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWKYJ1fbZjpa7jRnne5lC_rfuP5H6xsJj9BaWNaXLRypa_wjCpj",
+      "name": "Jessica Costa",
+      "url": "https://www.google.com/maps/contrib/101842003299981809273/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNncEx2TTZnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Ótimo",
+      "passeio",
+      "com",
+      "um",
+      "excelente",
+      "custo-benefício.",
+      "",
+      "Encantador",
+      "ver",
+      "a",
+      "estátua",
+      "de",
+      "perto",
+      "e",
+      "com",
+      "uma",
+      "vista",
+      "excelente",
+      "para",
+      "o",
+      "skyline",
+      "de",
+      "Manhattan."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Ótimo passeio com um excelente custo-benefício.  Encantador ver a estátua de perto e com uma vista excelente para o skyline de Manhattan.",
+    "time": 1739740424815,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocL9g05GZ5MskjQRQ_lsP-cVTBC2jBGsASa-jSfG0UIY1XXrsA",
+      "name": "Eduardo Ferreira",
+      "url": "https://www.google.com/maps/contrib/109755171127230640137/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNneE9lY3VRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740424815,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKkO-9UmvveDv1lF6BLVuGrSNbGaQQrZoSQ-9-Pq9UM7MAZ0Q",
+      "name": "Deleuze Thierry",
+      "url": "https://www.google.com/maps/contrib/102492644929749675306/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnLVBPMHdnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740424816,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJ2sYkNdBIB6Gai0mu2rFLj-PHA3PMioofGXjybkJlck5lVaQ",
+      "name": "Odai Affan",
+      "url": "https://www.google.com/maps/contrib/111241060434856967546/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNndUozSE1nEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740424816,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVacuGKNh7tPAlALZK9sE6oDwrxMua1ON1Bz86HbFzE1C-8PdY",
+      "name": "Marriott",
+      "url": "https://www.google.com/maps/contrib/101951478460928557300/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnMk5fcHRBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740425923,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIVcrfcfdND2fM3nsx4Q9o7YgSPylIMfwoFsdGC9DOYaI1-9Q",
+      "name": "nojek kwidzyn",
+      "url": "https://www.google.com/maps/contrib/114363871254655276170/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "2 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnbU1yeHlBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Iconica,",
+      "la",
+      "vista",
+      "fino",
+      "alla",
+      "corona",
+      "vale",
+      "la",
+      "pena."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Iconica, la vista fino alla corona vale la pena.",
+    "time": 1739740428342,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJ9OQJGPwL39CpFMZvysNeTVEWwZoYpjZTEftJJh1dcc7k3eg",
+      "name": "GoTravel",
+      "url": "https://www.google.com/maps/contrib/116279295749318355373/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnNk1QMzRBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740428343,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJKZgSd2rcJROske-h9k2ItpVKUmyU3b_2xZqbr_jw_oAqKGQ",
+      "name": "Jimena Montes",
+      "url": "https://www.google.com/maps/contrib/108721491578121220931/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnNk5Ia1p3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740429457,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUmUg4ITocK1xjJyutItQeaIJt09tiXprK-3paMAnENOI8njVDC",
+      "name": "Fiorella Adinolfi",
+      "url": "https://www.google.com/maps/contrib/112545517145839226338/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNncU5LcHlRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740429457,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUUSYdcV4wPJBuYez9FAS9FCfagW3ciVIN0tjaUdUUu2iZjBjh-",
+      "name": "Walerian Książyk",
+      "url": "https://www.google.com/maps/contrib/117815561689654466329/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChRDSUhNMG9nS0VJQ0FnTUNneUpVchAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740429457,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUOXYwi7UPw1KSXHdL2XR-mvz9l3VAX6H7nYX7u1w5-p68d0AIWVA",
+      "name": "Joey Iversen",
+      "url": "https://www.google.com/maps/contrib/104869158009666292890/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnSURnekxUeFJnEAE",
+    "imageUrls": [],
+    "keywords": [
+      "Never",
+      "disappointed.",
+      "Fourth",
+      "time",
+      "over,",
+      "but",
+      "first",
+      "crossing",
+      "in",
+      "a",
+      "fog.",
+      "Quite",
+      "dramatic",
+      "when",
+      "it",
+      "appeared",
+      "in",
+      "the",
+      "fog",
+      "on",
+      "the",
+      "approach",
+      "to",
+      "the",
+      "island."
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Never disappointed. Fourth time over, but first crossing in a fog. Quite dramatic when it appeared in the fog on the approach to the island.",
+    "time": 1739740429458,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVavRBfuYdf3FyDAheTOQ2YN6cWY0CC379ka1w44JsIIPz5N2Yv",
+      "name": "RobCarb",
+      "url": "https://www.google.com/maps/contrib/114639500280968422346/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNnb09YS1F3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740430566,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocL8sssvCvAFCrR2Ix4sygCfbHyVlLL9hGYDjgWpbIvcXWKNl84",
+      "name": "Letizia R.",
+      "url": "https://www.google.com/maps/contrib/112175561675192923476/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNnd091NjBBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740430566,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWHkUmQJklBwlKZ3zvJcPiMdkWnGkxntKMbKldQR-LwnkgSQ0w",
+      "name": "Alan Elsley",
+      "url": "https://www.google.com/maps/contrib/114393809986697980432/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBXzVQcmtBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "انه",
+      "راع"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "انه راع",
+    "time": 1739740431680,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUzUUO7XFgT4Kpw48qoEUJan3kokZSPHpB9lgLCrhVHxE5ZD-Gk",
+      "name": "rashed Ahmed",
+      "url": "https://www.google.com/maps/contrib/112163722168106203527/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBMzVqZVNnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740431680,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIv55JM0-7zOtr06Mo5GcOsFLaPcAFoYimR4ucn1ftGOZrN6v0I",
+      "name": "林宏勳",
+      "url": "https://www.google.com/maps/contrib/100612211687076440454/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "3 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBbi1qMmV3EAE",
+    "imageUrls": [],
+    "keywords": [
+      "Great"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Great",
+    "time": 1739740431812,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKOKbXMpuXz90MiuRBI0CXeR8_zziCFw4_LpGnX8uGVi5SjCg",
+      "name": "Yechezkel Binstok",
+      "url": "https://www.google.com/maps/contrib/106791733493964014633/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "4 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBN19iWHB3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Worth",
+      "visiting"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Worth visiting",
+    "time": 1739740432922,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVk34An6eZGmJ6Bu3_qrwxBhxsjunBFmHjPGI68nHpSpTd7Wjg",
+      "name": "Irfan",
+      "url": "https://www.google.com/maps/contrib/107755974234735900803/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "4 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBejlMWVJREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740434035,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocLDJeyBty4IwMFXE0kVOX7VjbMTJX3n3eis6bFI2z9ANEiHdA",
+      "name": "Vicente Chazarra",
+      "url": "https://www.google.com/maps/contrib/115455086267285634417/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "4 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBdS1MV1lREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740435141,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJc9JetCOpJdTvyhjaZTFy2Ll0Y_64f92g3_RCFLBiDwQfs1w",
+      "name": "Anita Ramirez",
+      "url": "https://www.google.com/maps/contrib/116404664265818248438/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBaTdfYnlRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740435141,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUIW6koGYG7DDfgUpzQNtHBkwvMjFIjHVaz0c-BrKyaJ4TpT4U",
+      "name": "budDy nita",
+      "url": "https://www.google.com/maps/contrib/101100591979048715864/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBczRyY29RRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Loved",
+      "it.",
+      "I",
+      "was",
+      "able",
+      "to",
+      "see",
+      "the",
+      "Statue",
+      "of",
+      "Liberty",
+      "without",
+      "having",
+      "to",
+      "ride",
+      "the",
+      "ferry."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Not sure",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Loved it. I was able to see the Statue of Liberty without having to ride the ferry.",
+    "time": 1739740436261,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJYwWVDPi-SHLjMIhCKwJ_9GJ-8e4w1yZIKD7-9Xrx5HrP3TA",
+      "name": "Yezi",
+      "url": "https://www.google.com/maps/contrib/100991087164086891429/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBazZIRHJBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740437373,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXmG9lJln8tKOFpslv2qo3xUXr2lzoqdsG1cdqH4vkBdDq03_MH",
+      "name": "Nischal Rayamajhi",
+      "url": "https://www.google.com/maps/contrib/109693799386125560811/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBZzhuTkRnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740437373,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIhH6oIg-L5FAQx6Sm_jNncd08cweU5yB4RlKdfF7LcnEYGZg",
+      "name": "James Watts",
+      "url": "https://www.google.com/maps/contrib/101402311269007087804/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBM2ViVEpnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740438484,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWiNv65ANXqBdnisoGzitl2964vYTJ0tv7iBKhElxwOPqq2Q1s",
+      "name": "Gabriela Alina Mitrut",
+      "url": "https://www.google.com/maps/contrib/103559268543863276462/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBX1pIVHRBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Um",
+      "dos",
+      "cartões",
+      "postais",
+      "do",
+      "mundo"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Um dos cartões postais do mundo",
+    "time": 1739740439590,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWuow0S_UYpdwNf1uhucz9p-8msOA9gl7t6-EH1xWEeG3WIURMqrg",
+      "name": "C K",
+      "url": "https://www.google.com/maps/contrib/103591344136087496946/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBX2ZqYi1nRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Très",
+      "facile",
+      "d'accès,",
+      "des",
+      "agents",
+      "vous",
+      "dirige",
+      "là",
+      "où",
+      "vous",
+      "pouvez",
+      "embarquer.",
+      "Attention",
+      "à",
+      "ceux",
+      "qui",
+      "ont",
+      "des",
+      "réservations",
+      "pour",
+      "monter",
+      "dans",
+      "la",
+      "couronne,",
+      "il",
+      "faut",
+      "IMPÉRATIVEMENT",
+      "passez",
+      "par",
+      "le",
+      "kiosque",
+      "sur",
+      "Battery",
+      "Park",
+      "pour",
+      "récupérer",
+      "les",
+      "bracelets",
+      "AVANT",
+      "de",
+      "monter",
+      "sur",
+      "le",
+      "bateau."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 4,
+    "response": "",
+    "review": "Très facile d'accès, des agents vous dirige là où vous pouvez embarquer. Attention à ceux qui ont des réservations pour monter dans la couronne, il faut IMPÉRATIVEMENT passez par le kiosque sur Battery Park pour récupérer les bracelets AVANT de monter sur le bateau.",
+    "time": 1739740441983,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKBV23lgtzkCreM58hEo7mBw10MgAxFMR43QD3cXM_952iCBQ",
+      "name": "Ludovic Vincent",
+      "url": "https://www.google.com/maps/contrib/109251907135572314427/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBN2NLY2hRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740441983,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjX4zK-nsJAqBEmxBUPrT5t0BgkFIXncRIXwRtlVOXqtv3lO4GeTWQ",
+      "name": "BOYAPATI THANUSH",
+      "url": "https://www.google.com/maps/contrib/103780684699236941508/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "5 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBamNPMWxnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740441983,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJBDQ6PxINYuuwLpa36HG-0qxbFL0G8l_uYwlch3sZOyhi--T4",
+      "name": "Joedson",
+      "url": "https://www.google.com/maps/contrib/107672770414852479408/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBMWN2elZ3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740441983,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXMxF8xJNvbb6oIp7I-1GFPRrBhVRuoFECCY-tE3HJSyqc2hA4y",
+      "name": "Gautam Bandodkar",
+      "url": "https://www.google.com/maps/contrib/105026731427054881207/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBMWJYVGF3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740441984,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVJy1O_yd6okhX5cd_SfOTsp-7LFmzYd5oK4k5IFCHhjkfIT4MB",
+      "name": "Diego Sanchez",
+      "url": "https://www.google.com/maps/contrib/108726792005323749696/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBMWFTXzRBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740441984,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIYWi5k7b5PTVkYSNpg_PWWCC-tbZNb8LbYoi3FKf49DK5Igw",
+      "name": "Selena Santana",
+      "url": "https://www.google.com/maps/contrib/105490382793686213911/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBbFlpQTh3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740441984,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVURTvgVYWr5zcvLMFzRQ8f5efo9YWB6Lhopv0X4AEvlq5USbO5",
+      "name": "Jakir ahmed",
+      "url": "https://www.google.com/maps/contrib/111961948506445367336/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBNWZhR0RREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740443088,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVtOJJfzh_niZe4mOr5K6NJdvQIxpRkODHmi9HzT7EPcTfd3zKC",
+      "name": "Kirandeep Singh",
+      "url": "https://www.google.com/maps/contrib/104129721130579687380/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBeGItUElREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740444192,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXgazNqeyjcN4jPwKn9x2Cea0J4IPVbJICZFjUoZqYgn88yzJ0a",
+      "name": "Kranthi Kumar CH (Kranthi1305)",
+      "url": "https://www.google.com/maps/contrib/113546776928016730225/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBeGFIblVREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740444192,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjW_72JRSzBBs6NcODzlMVNdbNsnko1D1n85P0YT9HdRu_w9PUSaKA",
+      "name": "Felix Almonte Almonte Calderon",
+      "url": "https://www.google.com/maps/contrib/113747636018961361983/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBMllQZTJBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Reconstruction",
+      "any",
+      "where"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 4,
+    "response": "",
+    "review": "Reconstruction any where",
+    "time": 1739740445389,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXkBfROU0CbZR3plVDHFW-2-DHL73CDdtpO57FtGiIzzOFlvSg",
+      "name": "Piter Sipayung",
+      "url": "https://www.google.com/maps/contrib/102632025394321729216/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBcWZ5eGV3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740445389,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocLyC2pu2w6UtSXmI7mq5eUSEo1jmBMmA8R4Zw8YcZfb4OZuyw",
+      "name": "jhjfghj dsdfgsvsdfv",
+      "url": "https://www.google.com/maps/contrib/111461960187076409849/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBaWNmcFJ3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740445389,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjW6LJ-J3Fm9NN0XXF6xkawk6G5nwyamVdaL4atgz_z0FvVXyI0",
+      "name": "diego duarte",
+      "url": "https://www.google.com/maps/contrib/106921220869785801917/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": "6 days ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBaWNxRERREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740446498,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXjR7AftoOM-vVmWEX1tBbxbxu1PUA0kDsNLx_Y766ysjUJ418L",
+      "name": "Giovani Bernardes",
+      "url": "https://www.google.com/maps/contrib/116040276046326415385/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBMFpyVFJ3EAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740447605,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjU5QlZ_wkolFkTfAdXkctRe9ZlkOsJ_qdyHNE1ib4szQZI-Q-LV",
+      "name": "Guillermo Chedid",
+      "url": "https://www.google.com/maps/contrib/104678791226986460137/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBNGItU0ZREAE",
+    "imageUrls": [],
+    "keywords": [
+      "🗽",
+      "우리",
+      "부자의",
+      "자유의",
+      "여신상",
+      "크라운",
+      "투어",
+      "–",
+      "자유와",
+      "독립을",
+      "향한",
+      "특별한",
+      "여정",
+      "🇺🇸\n\n🔹",
+      "🚲",
+      "새벽",
+      "라이딩,",
+      "배터리",
+      "파크로",
+      "출발!\n아침",
+      "일찍,",
+      "허드슨강을",
+      "따라",
+      "자전거",
+      "🚴‍♂️를",
+      "타고",
+      "배터리",
+      "파크로",
+      "향했습니다.\n🌅",
+      "일출과",
+      "함께하는",
+      "라이딩은",
+      "자유를",
+      "향한",
+      "여정의",
+      "시작을",
+      "알리는",
+      "듯했습니다.\n🚢",
+      "페리를",
+      "타고",
+      "리버티",
+      "아일랜드로",
+      "가며,",
+      "점점",
+      "가까워지는",
+      "자유의",
+      "여신상을",
+      "보니\n가슴이",
+      "두근거리는",
+      "순간!",
+      "💙\n\n🔹",
+      "🗽",
+      "크라운까지의",
+      "도전",
+      "–",
+      "354개의",
+      "계단!\n자유의",
+      "여신상",
+      "내부에",
+      "들어서자,\n📜",
+      "미국",
+      "독립과",
+      "이민의",
+      "역사를",
+      "담은",
+      "전시물들이",
+      "눈길을",
+      "사로잡았습니다.\n그리고",
+      "마침내,",
+      "우리의",
+      "목표!",
+      "🔝",
+      "크라운(Crown)까지",
+      "오르기!\n⏳",
+      "총",
+      "354개의",
+      "계단을",
+      "걸어야",
+      "하는",
+      "도전!\n🚶‍♂️",
+      "숨이",
+      "차오르지만,",
+      "아들과",
+      "함께",
+      "한",
+      "걸음씩",
+      "오르며\n자유를",
+      "위해",
+      "싸운",
+      "수많은",
+      "사람들을",
+      "떠올렸습니다.\n\n🔹",
+      "👑",
+      "크라운에서",
+      "바라본",
+      "뉴욕",
+      "–",
+      "자유의",
+      "상징을",
+      "품다!\n드디어!",
+      "자유의",
+      "여신상",
+      "크라운에",
+      "도착!",
+      "🏆\n👀",
+      "작은",
+      "창을",
+      "통해",
+      "내려다본",
+      "뉴욕은\n독립과",
+      "자유를",
+      "위해",
+      "달려온",
+      "미국의",
+      "역사를",
+      "보여주는",
+      "듯했습니다.\n🌎",
+      "“이곳에서",
+      "수많은",
+      "이민자들이",
+      "새로운",
+      "희망을",
+      "꿈꿨겠구나.”\n아들과",
+      "함께",
+      "자유와",
+      "독립의",
+      "의미를",
+      "다시",
+      "한번",
+      "마음에",
+      "새기는",
+      "순간이었습니다.\n\n🔹",
+      "🗽",
+      "‘자유는",
+      "공짜가",
+      "아니다’",
+      "–",
+      "역사를",
+      "가슴에",
+      "새기며\n🕊️",
+      "자유는",
+      "쉽게",
+      "얻어지는",
+      "것이",
+      "아니라,",
+      "끊임없는",
+      "노력과",
+      "희생의",
+      "결과물.\n⚖️",
+      "독립을",
+      "향한",
+      "미국의",
+      "여정과,\n우리나라의",
+      "역사를",
+      "떠올리며",
+      "아들과",
+      "깊은",
+      "대화를",
+      "나누었습니다.\n💬",
+      "“자유란",
+      "무엇일까?”\n🌟",
+      "“우리는",
+      "어떤",
+      "자유를",
+      "만들어",
+      "가야",
+      "할까?”\n단순한",
+      "관광이",
+      "아닌,",
+      "역사와",
+      "가치를",
+      "되새기는",
+      "시간이었습니다.\n\n🔹",
+      "🚲",
+      "다시",
+      "뉴욕으로",
+      "–",
+      "우리의",
+      "자유",
+      "여행은",
+      "계속된다!\n페리를",
+      "타고",
+      "돌아와,",
+      "다시",
+      "자전거를",
+      "타고",
+      "뉴욕을",
+      "달렸습니다.\n🏙️",
+      "센트럴파크를",
+      "지나며,",
+      "우리는",
+      "또",
+      "다른",
+      "자유를",
+      "향한",
+      "여정을",
+      "준비합니다.\n🚀",
+      "자유와",
+      "독립은",
+      "멈추지",
+      "않고,",
+      "끊임없이",
+      "이어지는",
+      "것.\n✨",
+      "오늘,",
+      "우리는",
+      "또",
+      "하나의",
+      "소중한",
+      "기억을",
+      "만들었습니다.\n\n🗽",
+      "\"FREEDOM",
+      "IS",
+      "NOT",
+      "FREE.\"\n🇺🇸",
+      "자유의",
+      "의미를",
+      "가슴에",
+      "새기며,",
+      "우리의",
+      "여행은",
+      "계속된다!",
+      "🚲🚢💙\n\n#자유의여신상",
+      "#크라운투어",
+      "#부자여행",
+      "#자유와독립",
+      "#뉴욕여행",
+      "#역사를가슴에",
+      "🚲🗽🇺🇸✨"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "🗽 우리 부자의 자유의 여신상 크라운 투어 – 자유와 독립을 향한 특별한 여정 🇺🇸\n\n🔹 🚲 새벽 라이딩, 배터리 파크로 출발!\n아침 일찍, 허드슨강을 따라 자전거 🚴‍♂️를 타고 배터리 파크로 향했습니다.\n🌅 일출과 함께하는 라이딩은 자유를 향한 여정의 시작을 알리는 듯했습니다.\n🚢 페리를 타고 리버티 아일랜드로 가며, 점점 가까워지는 자유의 여신상을 보니\n가슴이 두근거리는 순간! 💙\n\n🔹 🗽 크라운까지의 도전 – 354개의 계단!\n자유의 여신상 내부에 들어서자,\n📜 미국 독립과 이민의 역사를 담은 전시물들이 눈길을 사로잡았습니다.\n그리고 마침내, 우리의 목표! 🔝 크라운(Crown)까지 오르기!\n⏳ 총 354개의 계단을 걸어야 하는 도전!\n🚶‍♂️ 숨이 차오르지만, 아들과 함께 한 걸음씩 오르며\n자유를 위해 싸운 수많은 사람들을 떠올렸습니다.\n\n🔹 👑 크라운에서 바라본 뉴욕 – 자유의 상징을 품다!\n드디어! 자유의 여신상 크라운에 도착! 🏆\n👀 작은 창을 통해 내려다본 뉴욕은\n독립과 자유를 위해 달려온 미국의 역사를 보여주는 듯했습니다.\n🌎 “이곳에서 수많은 이민자들이 새로운 희망을 꿈꿨겠구나.”\n아들과 함께 자유와 독립의 의미를 다시 한번 마음에 새기는 순간이었습니다.\n\n🔹 🗽 ‘자유는 공짜가 아니다’ – 역사를 가슴에 새기며\n🕊️ 자유는 쉽게 얻어지는 것이 아니라, 끊임없는 노력과 희생의 결과물.\n⚖️ 독립을 향한 미국의 여정과,\n우리나라의 역사를 떠올리며 아들과 깊은 대화를 나누었습니다.\n💬 “자유란 무엇일까?”\n🌟 “우리는 어떤 자유를 만들어 가야 할까?”\n단순한 관광이 아닌, 역사와 가치를 되새기는 시간이었습니다.\n\n🔹 🚲 다시 뉴욕으로 – 우리의 자유 여행은 계속된다!\n페리를 타고 돌아와, 다시 자전거를 타고 뉴욕을 달렸습니다.\n🏙️ 센트럴파크를 지나며, 우리는 또 다른 자유를 향한 여정을 준비합니다.\n🚀 자유와 독립은 멈추지 않고, 끊임없이 이어지는 것.\n✨ 오늘, 우리는 또 하나의 소중한 기억을 만들었습니다.\n\n🗽 \"FREEDOM IS NOT FREE.\"\n🇺🇸 자유의 의미를 가슴에 새기며, 우리의 여행은 계속된다! 🚲🚢💙\n\n#자유의여신상 #크라운투어 #부자여행 #자유와독립 #뉴욕여행 #역사를가슴에 🚲🗽🇺🇸✨",
+    "time": 1739740449290,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjW-TOIKbCSAtAJelv5BLKu5vMqYFQatL4L5QyIn4LG-Fk3TzDIX",
+      "name": "Eliot. Oh!",
+      "url": "https://www.google.com/maps/contrib/116625581012374207170/reviews?hl=en"
+    },
+    "videoUrls": [
+      {
+        "id": "ChZDSUhNMG9nS0VJQ0FnTURBNGItU0ZREAE",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJJy03FoJDARs4d6cz0J5wz7aa_1YFCZATOFMuZZfyCM4n-SiHvEN_JzNzrjQo1NzAi4OYMtat7qniB1JGvdi8-MC-ohcixClWetuJKjyS0msZoavkFhkMHx0HWmg1dYeRdDEOQ=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJJy03FoJDARs4d6cz0J5wz7aa_1YFCZATOFMuZZfyCM4n-SiHvEN_JzNzrjQo1NzAi4OYMtat7qniB1JGvdi8-MC-ohcixClWetuJKjyS0msZoavkFhkMHx0HWmg1dYeRdDEOQ=w300-h225-p",
+        "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+        "videoUrl": "https://lh3.googleusercontent.com/gpms-cs/AFkMzASv09MrxCZwgCubsMa2UMjNJSy9wf7NXNF_oQpQoq_jtX9KP8At7kjXaYKEnTmKcjYAvOr11UOc7IqEL-ihAgXO4ouvWXp3Isfkvt2QKjXmItMAkGMwsTqZG2L-5lkEN72JFg0=m18?cpn=djs-X4KcZiSMSOsb"
+      }
+    ]
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBNGI2VHN3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740450402,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIpmwvEpUSnnUmT0Y1iKR2LmhIHSHHVFye3_3bOlkihlGs5Jw",
+      "name": "RAM IT",
+      "url": "https://www.google.com/maps/contrib/114118715102171104617/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBd1ozNjB3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740451508,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWE21RcgrxqD38OeuoHmU4HFd5Yqlt89vSvDZwyFJiceXlqAxYM",
+      "name": "Julien Dupuy",
+      "url": "https://www.google.com/maps/contrib/102092563415705701021/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBd2JXSl93RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 3,
+    "response": "",
+    "review": "",
+    "time": 1739740452616,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJyFaF6NEJkqWvIEF_1W_f9p-6Pl2j_mjXu2oZ1K4o-SpP6TQ",
+      "name": "Alessia Morreale",
+      "url": "https://www.google.com/maps/contrib/103077955674142683311/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnSURnczdpazRnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740452620,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJ9Jgh-ljHvzr1AJOmGO8KQjubmLCRMBVIRyT2eu5despl5IA",
+      "name": "Sanka 7",
+      "url": "https://www.google.com/maps/contrib/102460784570981725267/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBX29UMUZnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740455068,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJSBpR0uVqn9DLhG_8suKYeTQc5AkT6p6sxRftyvm4TPyjrFw",
+      "name": "Charlene Chedal-bornu",
+      "url": "https://www.google.com/maps/contrib/100784199967948009387/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBN29idDd3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740455068,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWRP5rkqHNzuvTxfmDALDk9Ols7AqJn6KqwX5yUbGkLxW5JINprrw",
+      "name": "Bogdan Morosan",
+      "url": "https://www.google.com/maps/contrib/101098357835917889587/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBcnFLekRREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "30–60 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 3,
+    "response": "",
+    "review": "",
+    "time": 1739740456180,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUdl_LQ68xkGqck_gXYlnzR1EVF3PYd_hzUafnHDK2JNIA6O4hi",
+      "name": "Simen Almestad",
+      "url": "https://www.google.com/maps/contrib/102082688804244221867/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBcnFLZzJnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Such",
+      "a",
+      "beautiful",
+      "view..."
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Such a beautiful view...",
+    "time": 1739740457289,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUI-KTDIkWKC6AbbHKLUc5xV9adEyqkHdRtnQAIZWyGW3qgNrFg",
+      "name": "Liz Kisyang'a",
+      "url": "https://www.google.com/maps/contrib/102107220886097497856/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBanNta0VBEAE",
+    "imageUrls": [],
+    "keywords": [
+      "What",
+      "can",
+      "I",
+      "say"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "What can I say",
+    "time": 1739740458402,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJCWBiAyjEBZ4SAJB7EUKS7r9C046zw4nTY7wNv4Ev8Z1aueQ",
+      "name": "howard brandon",
+      "url": "https://www.google.com/maps/contrib/103235892213729377955/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBOXNUTDN3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      "A",
+      "must",
+      "visit",
+      "when",
+      "you're",
+      "in",
+      "the",
+      "US."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "A must visit when you're in the US.",
+    "time": 1739740459507,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIfuF2cMaM79LuSsyw0sJaBCihEZcz1oCMRu5y73uvqHHMm6Q",
+      "name": "Huawei Mate",
+      "url": "https://www.google.com/maps/contrib/112735094724233490684/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBdHBiMFZBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740463770,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjX0cQpe9Iw3hVKN83xCMN3aN5K_ETtojG7HwMkU9KIkTF-8vcRq",
+      "name": "Nadeesha Gayan",
+      "url": "https://www.google.com/maps/contrib/105609404447008660067/reviews?hl=en"
+    },
+    "videoUrls": [
+      {
+        "id": "ChZDSUhNMG9nS0VJQ0FnTURBdHBiMFZBEAE",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJIKxndRhIXbG_EhVKeiI9PfAv1rz6-1OWxisu8afbDxPOrA2ILwaGgW_i8kvnU7jIHon56s2OafSdno8oYhL8XeMthwGsG7irlv2g4p1o01WvRjQ9Lf0EOqSZynlV6zUNrYqoj0=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJIKxndRhIXbG_EhVKeiI9PfAv1rz6-1OWxisu8afbDxPOrA2ILwaGgW_i8kvnU7jIHon56s2OafSdno8oYhL8XeMthwGsG7irlv2g4p1o01WvRjQ9Lf0EOqSZynlV6zUNrYqoj0=w300-h225-p",
+        "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+        "videoUrl": "https://lh3.googleusercontent.com/gpms-cs/AFkMzAQHEWjWCS68DHUthzT9fazrYoaupLzYrbZBoSAndF7YB3Zpn9F4Oi7g2-WX6O9zOVMemPnLQNILiNK741nPI1CJuGZ4kH-MDJsWKcTmuOCdqvw1hB_W_k9PXnOGnMPEQMmMwdhv=m18?cpn=OV85yLMEWnSBdLEv"
+      },
+      {
+        "id": "ChZDSUhNMG9nS0VJQ0FnTURBdHBiMFZBEAE",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJJZcVOb9jGakBmmGcPYypvtMKLHPg8IkT2oRGaa8D5szJ15ewN6sjwq-k7YB2u2avrEuHAcbFT4ciZQrj-SvuhlbK5rZv5EdJti2GX-a4LM1XcBAOiw9fqYM-_QRx4Hd7lw0Vnp=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJJZcVOb9jGakBmmGcPYypvtMKLHPg8IkT2oRGaa8D5szJ15ewN6sjwq-k7YB2u2avrEuHAcbFT4ciZQrj-SvuhlbK5rZv5EdJti2GX-a4LM1XcBAOiw9fqYM-_QRx4Hd7lw0Vnp=w300-h225-p",
+        "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+        "videoUrl": "https://lh3.googleusercontent.com/gpms-cs/AFkMzARNxkfLEOYJgWE3YY81pn_og0jkDzJf2k5PvmRI1fVknsTg6sFTkv4EYgYJkzpKjuvN_vwe9WG0j1HwSk9nQrAoxeYd8-ItUoQ5ihulyfWIpJc_GyWXNWLYMkJkao18LrwifcOO=m18?cpn=5f1L_jW-eDIAU1D7"
+      },
+      {
+        "id": "ChZDSUhNMG9nS0VJQ0FnTURBdHBiMFZBEAE",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJKkpM1Hui-YIVB5BOFGlBjfGOHQfMe8fyhtQ5RvIRydAWQhQ5knZP671S3LeHxJWbo9owK7aeGtVligsKR2W440_WbYpFK8JWHzrX0Z-aFSzeJnySblCkOZtebTJKi5XV2O1n9L5Q=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJKkpM1Hui-YIVB5BOFGlBjfGOHQfMe8fyhtQ5RvIRydAWQhQ5knZP671S3LeHxJWbo9owK7aeGtVligsKR2W440_WbYpFK8JWHzrX0Z-aFSzeJnySblCkOZtebTJKi5XV2O1n9L5Q=w300-h225-p",
+        "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+        "videoUrl": "https://lh3.googleusercontent.com/gpms-cs/AFkMzATzl__BDLKBA2DKg4daYB2oY_nExsf5vg6EFKI7hmmISocNlwBIMUreNM8nt6417I_5oY3LAxqEDoaMv3_jAyHU6dql3QFkJuarqRCTCxtUlrSUdolqRYkcedv0-uUPooWFSXO4Kw=m18?cpn=F672wKx3C1VyaiTE"
+      },
+      {
+        "id": "ChZDSUhNMG9nS0VJQ0FnTURBdHBiMFZBEAE",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJK2cNCuofm0ldOUJXWVf0iuJXHowZKWnyUNFpzWadxwPAJxnaW7KKlu2anhLHx16pQc1xjqGKWiL9Z0IbtFEn-cVOq3Ot1tOUFxQpY2H5zAmya2UZFYbMJpRdDH2663za3MjkWL=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJK2cNCuofm0ldOUJXWVf0iuJXHowZKWnyUNFpzWadxwPAJxnaW7KKlu2anhLHx16pQc1xjqGKWiL9Z0IbtFEn-cVOq3Ot1tOUFxQpY2H5zAmya2UZFYbMJpRdDH2663za3MjkWL=w300-h225-p",
+        "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+        "videoUrl": "https://lh3.googleusercontent.com/gpms-cs/AFkMzAQQ_0Bs1xwAZVPbh-mHYAEfKdSK37Fd6oomnSQdSC5-os9kXNoLGEWx1OTRWw2t8y8DPd9liAdLAI3m2ikEQ4hwEQx9k7uKz27-Qa-QJZ55QvOLta1eq6yFdkORmcb_8HlMQnoq=m18?cpn=13iSIqL8t4vh7j-Q"
+      }
+    ]
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnSURfMXZMbUtREAE",
+    "imageUrls": [],
+    "keywords": [
+      "It",
+      "is",
+      "good",
+      "to",
+      "visit.",
+      "You",
+      "should",
+      "try.\nTake",
+      "pictures.\nBy",
+      "boat.\nThere",
+      "is",
+      "a",
+      "good",
+      "restaurant",
+      "on",
+      "the",
+      "island.\n25",
+      "dollars",
+      "for",
+      "one",
+      "ticket.",
+      "It",
+      "deserves"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "1 hr+",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "It is good to visit. You should try.\nTake pictures.\nBy boat.\nThere is a good restaurant on the island.\n25 dollars for one ticket. It deserves",
+    "time": 1739740464876,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJd_hd11N0TK3S_yujGiFg8ecV498klOIzq_7mlZLtVZW0CSH8",
+      "name": "mohamed donia",
+      "url": "https://www.google.com/maps/contrib/102611066389468585721/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBMXJDaFhBEAE",
+    "imageUrls": [],
+    "keywords": [
+      "Worthy",
+      "of",
+      "the",
+      "fee."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Worthy of the fee.",
+    "time": 1739740467094,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocLU_2JrEa0ZDGH4OVZovwqmdZb41FIrwaqzm0QH6_eCj_hCFQ",
+      "name": "Gary Peake",
+      "url": "https://www.google.com/maps/contrib/103265230553820500752/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBNXF5VkJBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Not sure",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740468208,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXjVZTpDwE3y50jnSJABuexijHvOZSkPnlt0yszkst1BJQM06re",
+      "name": "amir mirou",
+      "url": "https://www.google.com/maps/contrib/110476409086609703213/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBcXFURUlREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740469416,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVnekFLvC383IGoRSbugeme8c1-kUQKRBRWkd-1M253EV0aJEI",
+      "name": "أبو ليث",
+      "url": "https://www.google.com/maps/contrib/103782402246197071899/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBeXNyX2xnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Bello",
+      "lindo",
+      "y",
+      "hermoso",
+      "lugar"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Bello lindo y hermoso lugar",
+    "time": 1739740470531,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXqvcjQGIq4GxZW4uH96gXILC8bJrNxss3M175hm_EXJyo9vBg",
+      "name": "Lic. Francisco Javier Cerón Flores",
+      "url": "https://www.google.com/maps/contrib/116921820335545407637/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBaXFEaDJRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Public holiday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "10–30 min",
+        "question": "Wait time"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740471646,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXKhF6Gncsk9kW2_JlQ1XTwyS5r8rsLuntaOAydMbdv8gxB0olB",
+      "name": "Ayodeji Oluwatomide",
+      "url": "https://www.google.com/maps/contrib/106014706042568453329/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBOHFLcmZBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Not sure",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740472762,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocIiAX_euxIxa4QMlCjo2Bv4E1rXu2wNefTmgQmd3-DQZay_2w",
+      "name": "Steve D",
+      "url": "https://www.google.com/maps/contrib/105143280476612495646/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBc3ViMk9nEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740472762,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWzLia_P2uYqOpE-i7xKtfEeO3qyJhOt_V9IutFR3cGzNH_v1a3",
+      "name": "scows arrow",
+      "url": "https://www.google.com/maps/contrib/117665933237857332433/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBa3NmRV93RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740472762,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUvW1_GvZsmp7BM-vbhTmhLe0VvC4cPKzGS6aJ28YN2tIOEyqWH",
+      "name": "Isabel Campos",
+      "url": "https://www.google.com/maps/contrib/115617012989343447137/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBa3FQWVpnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740472762,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJ6V2mXUAHQeY6UhDjPcyvW1ldSiVuww1gbBbTDVdgjHiUxMg",
+      "name": "Rina alvarado",
+      "url": "https://www.google.com/maps/contrib/100812419702350156211/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBa3NiZzJRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Forse",
+      "un",
+      "poco",
+      "banale,",
+      "ma",
+      "la",
+      "statua",
+      "della",
+      "Libertà",
+      "è",
+      "un",
+      "simbolo",
+      "di",
+      "ottimismo",
+      "e",
+      "amicizia",
+      "per",
+      "tutti.",
+      "Il",
+      "museo",
+      "è",
+      "ben",
+      "fatto.",
+      "La",
+      "vista",
+      "di",
+      "Manhattan",
+      "da",
+      "qui",
+      "è",
+      "fantastica."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 4,
+    "response": "",
+    "review": "Forse un poco banale, ma la statua della Libertà è un simbolo di ottimismo e amicizia per tutti. Il museo è ben fatto. La vista di Manhattan da qui è fantastica.",
+    "time": 1739740473875,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUA0osa7ddm76Hg6WrTTaNIzCEEhro1dDn7CSVi3NUkWPhTw0wi1Q",
+      "name": "Giacomo Gh",
+      "url": "https://www.google.com/maps/contrib/100885133313681761756/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBd3JEX0hnEAE",
+    "imageUrls": [],
+    "keywords": [
+      "Sweet",
+      "Liberty!"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Sweet Liberty!",
+    "time": 1739740473875,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUYDhbOEiDTMpUkX7WSPTcflkZ6FOE2INxmj1BIB1jAAXTIH_Y",
+      "name": "Meryl DeGeer",
+      "url": "https://www.google.com/maps/contrib/107990066169577196312/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBaEx6aFV3EAE",
+    "imageUrls": [],
+    "keywords": [
+      "Maps"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Maps",
+    "time": 1739740473876,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocLxjVVIi-cLDVZ_gTY1nHRx6JlJ_eRhmlg7JOtzUmkkR5WmBg",
+      "name": "Tatyana Burnett",
+      "url": "https://www.google.com/maps/contrib/105517808469005049497/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBLUp2Mm93RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740475057,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWunRl5SdHXhHlciBzV5UdVKciPxDCfRgs2xHLKrocW03jZjB71",
+      "name": "Luis Child",
+      "url": "https://www.google.com/maps/contrib/103120153987763648252/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBLUpLSjhnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Es",
+      "un",
+      "icónico",
+      "monumento",
+      "de",
+      "la",
+      "ciudad",
+      "de",
+      "New",
+      "York,",
+      "símbolo",
+      "de",
+      "libertad",
+      "y",
+      "democracia."
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Es un icónico monumento de la ciudad de New York, símbolo de libertad y democracia.",
+    "time": 1739740476168,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXjpwtvMx8fpIEuCH42NhgZZViq0EMIX1qY91Hl9Jr4zaHyMDtUtA",
+      "name": "Ramon Matista",
+      "url": "https://www.google.com/maps/contrib/115841847471706181302/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTURBbUxuOHFnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740477277,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjW0kJj6pPh-hGDyb3Mxvn3qt80vtl_V8crX_bALXgFPNcBQcIs",
+      "name": "Grace Viteri Pólit",
+      "url": "https://www.google.com/maps/contrib/116630088025281194077/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBbU5ybVRnEAE",
+    "imageUrls": [],
+    "keywords": [
+      "Lugar",
+      "emblemático",
+      "de",
+      "New",
+      "York\nEs",
+      "más",
+      "pequeña",
+      "de",
+      "lo",
+      "que",
+      "aparenta\nSu",
+      "interior",
+      "es",
+      "estrecho",
+      "y",
+      "con",
+      "excelente",
+      "seguridad",
+      "para",
+      "subir",
+      "hasta",
+      "la",
+      "corona"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "Lugar emblemático de New York\nEs más pequeña de lo que aparenta\nSu interior es estrecho y con excelente seguridad para subir hasta la corona",
+    "time": 1739740479499,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJ6M6rtQaDXlCwiW5bZUaXz3BhClDLJZBNiy-r8fa_4fR_86Q",
+      "name": "Alejandro Cervantes Rodriguez",
+      "url": "https://www.google.com/maps/contrib/110479715239517856914/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBb01fa1VnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740479499,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXN95N7wwI1YODo7UOGbVwfcKcUcEaqpY8WFeqm0FC2NaM3Idg",
+      "name": "Faraz Aslam",
+      "url": "https://www.google.com/maps/contrib/115072528379749049959/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTURBZ0tXbEdBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740480604,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUWJJ4ItdBC2jFjlDKlpC-GJhSHLcGhze6sUyUSajJM91kWSilG",
+      "name": "Heather Ebner",
+      "url": "https://www.google.com/maps/contrib/108422824822534380355/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBX18ydURnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740481710,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWg7gkzeryeWtDer2I-i1TaV7UrcQ7II8o2W0i67OVkXJ8tq5t7",
+      "name": "C. Ba.",
+      "url": "https://www.google.com/maps/contrib/112026018241723295506/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBdjdEZUdREAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740481710,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjX8iUtdi6iO3ZaUgcWm0-3HI2Vvzhs7vQ7I5rV6COsJkwnbY1U",
+      "name": "Master Hope",
+      "url": "https://www.google.com/maps/contrib/102934261909492354605/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBcjktd3d3RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 4,
+    "response": "",
+    "review": "",
+    "time": 1739740481710,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjUEyzO6IUYppnEGPbI6GWoyPiYHczouJgwHG6j-GgeV6HqIR5_bfQ",
+      "name": "Ivan Morales",
+      "url": "https://www.google.com/maps/contrib/108962674369617904723/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnSURfaE5QbkdnEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740481710,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjV8cuD9H9NILPgMPDZLCGJHlw6l0SQyHJjKbUQcIlpA9IOJv-4",
+      "name": "West Valley Painting",
+      "url": "https://www.google.com/maps/contrib/109159616987172881875/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBai1hbkhBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740484029,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjWdsEnPiEAhMd_1QASY44UnZJj01JSLW5Nmh4IVKjZ1q3QI9b8j",
+      "name": "HYUNBAE KIM",
+      "url": "https://www.google.com/maps/contrib/109594350108438216041/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBajZTVjhnRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Take",
+      "the",
+      "cruise",
+      "to",
+      "it....so",
+      "fun"
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "Take the cruise to it....so fun",
+    "time": 1739740484029,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVW8uxDSspIsXS0dKFdbjqzTcraZnWekyubcv0e6S2uWUyBAydj",
+      "name": "Sarah Joiner",
+      "url": "https://www.google.com/maps/contrib/113947937954272892769/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBbDRhS3FRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Muss",
+      "man",
+      "gesehen",
+      "haben"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekend",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Muss man gesehen haben",
+    "time": 1739740485139,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKLySHjmhszSvg4Khvd_muHLceGyYLbTEL1OyElp0YUmF-d_g",
+      "name": "Julia Röhrl-Orlandini",
+      "url": "https://www.google.com/maps/contrib/102268604537238713072/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBbC1pbG9RRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740485139,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjXo-D76OlcxIEEiFcZW61VTiiZ7-YGa9RW7TLpag0dqGuHj-XyMWg",
+      "name": "erika sanchez",
+      "url": "https://www.google.com/maps/contrib/108159942944283171844/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBcDg3bVhBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740485139,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjV4otEzSSwj5rYdl-86FTe3k-GfW-JIJp1tWPZxAu6ujaQRO5VFAg",
+      "name": "Marcio Ribeiro",
+      "url": "https://www.google.com/maps/contrib/105110357576547974782/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBeDhhWFZBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740486252,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVFe3wNqiMIKFZEYNAPVj_u5HUGruGDM2OLL3jTY8g5yjKn7J1Q",
+      "name": "Camilo Andres Poblete Molina",
+      "url": "https://www.google.com/maps/contrib/116629947803127923466/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChZDSUhNMG9nS0VJQ0FnTUNBeDVLM1hBEAE",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "Up to 10 min",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740487371,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjU2iEDmyLi02b4ENgP1T35553x6vP46mwU98gdMkJHZDHrpo8zX4g",
+      "name": "이응",
+      "url": "https://www.google.com/maps/contrib/107312361799112435979/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBaDltYmdBRRAB",
+    "imageUrls": [],
+    "keywords": [
+      "Symbol",
+      "USA",
+      "co",
+      "víc",
+      "dodat."
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "Symbol USA co víc dodat.",
+    "time": 1739740488479,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjVdeFVDO452XfVqRpqwRcgPGPlPt1q62NBougH8iMAJNDCh8MkL",
+      "name": "Petr Vaněk",
+      "url": "https://www.google.com/maps/contrib/115207787284182316919/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBLV91Ti13RRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "Yes",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740489596,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjX15bxRQKdjZt5_z0KDK0tOzJ9NYCjmVah5zV3oKNOk3NBMCYcwNA",
+      "name": "5th ave nails & spa",
+      "url": "https://www.google.com/maps/contrib/113246561608590451108/reviews?hl=en"
+    },
+    "videoUrls": []
+  },
+  {
+    "date": " week ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnTUNBLV9DTThRRRAB",
+    "imageUrls": [],
+    "keywords": [
+      ""
+    ],
+    "machineId": null,
+    "qa": [],
+    "rating": 5,
+    "response": "",
+    "review": "",
+    "time": 1739740489596,
+    "uid": "CQyQ8lTutB7J9LoJgncOYZnopV7u",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJBvCsSzJZBXAAxvfdSlGthuiqJ7tqYehv1yk8r_wkv1iDJIg",
+      "name": "조원종",
+      "url": "https://www.google.com/maps/contrib/105182401776689835065/reviews?hl=en"
+    },
+    "videoUrls": []
+  }
+]

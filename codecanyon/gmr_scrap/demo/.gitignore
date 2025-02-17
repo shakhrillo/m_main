@@ -71,7 +71,7 @@ node_modules/
 
 # dataconnect generated files
 stripe-secrets/
-data/
+# data/
 
 certs
 certs/*

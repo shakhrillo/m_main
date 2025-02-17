@@ -1,0 +1,19 @@
+{
+  "name": "users/1739532677254",
+  "bucket": "gmrs-6638f.firebasestorage.app",
+  "metageneration": 1,
+  "generation": 1739532677262,
+  "contentType": "application/octet-stream",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "0ffd9745-92d7-41d0-b796-cb151dd9b090"
+  ],
+  "etag": "GyiyjxtOc6dTtbJM5USx3JOkOw4",
+  "customMetadata": {},
+  "timeCreated": "2025-02-14T11:31:17.262Z",
+  "updated": "2025-02-14T11:31:17.262Z",
+  "size": 136989,
+  "md5Hash": "2TN7xryvWFsB9I/KEBJlDw==",
+  "crc32c": "4048982372"
+}
