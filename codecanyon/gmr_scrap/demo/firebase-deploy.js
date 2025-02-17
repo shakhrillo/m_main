@@ -53,6 +53,7 @@ async function importInitialData() {
 
 
     initialData.forEach((data) => {
+        console.log(data);
       const collectionRef = firestore.collection(data.collection);
       batch.set(collectionRef, data.data);
     });
