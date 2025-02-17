@@ -56,12 +56,15 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => {
-      const containersData = snapshot.docs.map((doc, index) => ({
-        key: index,
-        id: doc.id,
-        ...doc.data(),
-      }));
-      containers$.next(containersData as IDockerContainer[]);
+      const containersData = snapshot.docs.map((doc, index) => {
+        const data = doc.data() as IDockerContainer;
+        return {
+          key: index,
+          id: doc.id,
+          ...data,
+        };
+      });
+      containers$.next(containersData);
     },
     (error) => {
       console.error("Error fetching containers data:", error);

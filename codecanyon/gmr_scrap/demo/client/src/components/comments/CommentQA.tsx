@@ -14,11 +14,12 @@ export const CommentQA = ({ comment }: { comment?: IComment }) => {
               <tr key={"qa-" + index}>
                 <td>{qa.question}</td>
                 <td>
-                  {isRate(qa.answer) ? (
+                  {/* TODO: Add ratings */}
+                  {/* {isRate(qa.answer) ? (
                     <Ratings container={{ rating: Number(qa.answer) }} />
                   ) : (
                     qa.answer
-                  )}
+                  )} */}
                 </td>
               </tr>
             ))}
