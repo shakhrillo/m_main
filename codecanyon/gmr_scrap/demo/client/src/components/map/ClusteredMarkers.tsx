@@ -1,18 +1,11 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { filter } from "rxjs";
 import Supercluster, { ClusterProperties } from "supercluster";
 import { FeatureMarker } from "./FeatureMarker";
 import { FeaturesClusterMarker } from "./FeaturesClusterMarker";
-import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
+import { FeatureCollection, Point } from "geojson";
 import { useMap } from "@vis.gl/react-google-maps";
 
-export const ClusteredMarkers = ({
-  geojson,
-  zoom,
-}: {
-  geojson: FeatureCollection<Point, any>;
-  zoom: any;
-}) => {
+export const ClusteredMarkers = ({ geojson, zoom }: { geojson: FeatureCollection<Point, any>; zoom: any;}) => {
   const map = useMap();
   const [clusters, setClusters] = useState<any[]>([]);
 

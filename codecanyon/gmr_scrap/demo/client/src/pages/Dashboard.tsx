@@ -48,7 +48,7 @@ export const Dashboard = () => {
               <Card.Title>
                 This month's container locations
               </Card.Title>
-              <GoogleMap geojson={geojson} boundChanges={boundChanges$} />
+              <GoogleMap geojson={geojson} boundChanges={boundChanges$} isFitBounds={false} />
             </Card.Body>
           </Card>
         </Col>

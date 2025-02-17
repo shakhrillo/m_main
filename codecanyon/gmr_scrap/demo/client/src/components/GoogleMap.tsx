@@ -6,17 +6,24 @@ import { BehaviorSubject } from "rxjs";
 
 const GOOGLE_MAPS_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 
+/**
+ * GoogleMap component.
+ * @param geojson GeoJSON data.
+ * @param boundChanges Subject to emit bounds changes.
+ * @param isFitBounds Whether to fit bounds.
+ */
 export const GoogleMap = ({
   geojson,
   boundChanges,
+  isFitBounds = true,
 }: {
   geojson: FeatureCollection<Point, GeoJsonProperties>;
   boundChanges?: BehaviorSubject<google.maps.LatLngBounds | null>;
+  isFitBounds?: boolean;
 }) => {
   const map = useMap();
   const [zoom, setZoom] = useState(3);
   const defaultCenter = { lat: 20, lng: 20 };
-  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
 
   useEffect(() => {
     if (!map || !geojson.features.length) return;
@@ -27,14 +34,10 @@ export const GoogleMap = ({
       bounds.extend(new google.maps.LatLng(lat, lng));
     });
 
-    setBounds(bounds);
-    map.fitBounds(bounds);
+    if (isFitBounds) {
+      map.fitBounds(bounds);
+    }
   }, [geojson, map]);
-
-  useEffect(() => {
-    if (!map || !bounds) return;
-    map.fitBounds(bounds);
-  }, [map, bounds]);
 
   return (
     <Map
