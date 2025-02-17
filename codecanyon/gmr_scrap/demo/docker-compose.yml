@@ -67,6 +67,7 @@ services:
 
           # Set the Google Application Credentials and deploy to Firebase
           export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
+          firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
         else
           # Start Firebase emulators with demo project ID and handle data import/export
