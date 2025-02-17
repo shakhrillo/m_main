@@ -70,7 +70,7 @@ services:
           export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
           firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
           # Remove all firestore indexes
-          firebase firestore:indexes:delete --all --project "$APP_FIREBASE_PROJECT_ID"
+          firebase firestore:indexes:delete --project "$APP_FIREBASE_PROJECT_ID"
           firebase firestore:documents:add --json /usr/src/app/initial-data.json --project "$APP_FIREBASE_PROJECT_ID"
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
