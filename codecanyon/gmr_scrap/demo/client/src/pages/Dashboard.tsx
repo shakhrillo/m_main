@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
-import { RevenueGraph } from "../components/dashboard/RevenueGraph";
-import { StatisticsDoughnut } from "../components/dashboard/StatisticsDoughnut";
-import { EraningsTotal } from "../components/dashboard/EraningsTotal";
-import { UsersGraph } from "../components/dashboard/UsersGraph";
-import { UsersTotal } from "../components/dashboard/UsersTotal";
+import { RevenueGraph, StatisticsDoughnut, EraningsTotal, UsersGraph, UsersTotal } from "../components/dashboard";
 import { allContainers } from "../services/settingService";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 
-export const Dashboard: React.FC = () => {
+/**
+ * Dashboard page component.
+ * @returns JSX.Element
+ */
+export const Dashboard = () => {
   const [geojson, setGeojson] = useState<any>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const Dashboard: React.FC = () => {
         <Col md={4}><EraningsTotal /></Col>
         <Col md={4}><UsersTotal /></Col>
         <Col md={12}>
-          <Card style={{ height: "400px" }}>
+          <Card>
             <Card.Body>
               <Card.Title>
                 This month's container locations
