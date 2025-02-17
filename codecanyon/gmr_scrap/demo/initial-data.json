@@ -1,19 +1,19 @@
 [
-    {
-      "collection": "users",
-      "documentId": "user1",
-      "data": {
-        "name": "John Doe",
-        "age": 30
-      }
-    },
-    {
-      "collection": "users",
-      "documentId": "user2",
-      "data": {
-        "name": "Jane Doe",
-        "age": 25
-      }
+  {
+    "collection": "users",
+    "documentId": "user1",
+    "data": {
+      "name": "John Doe",
+      "age": 30
     }
-  ]
+  },
+  {
+    "collection": "users",
+    "documentId": "user2",
+    "data": {
+      "name": "Jane Doe",
+      "age": 25
+    }
+  }
+]
   

@@ -49,12 +49,9 @@ async function importInitialData() {
     const initialData = require(INITIAL_DATA_PATH);
     const batch = firestore.batch();
 
-    Object.keys(initialData).forEach((collectionName) => {
-      const collectionRef = firestore.collection(collectionName);
-      initialData[collectionName].forEach((document) => {
-        const docRef = collectionRef.doc(document.id);
-        batch.set(docRef, document);
-      });
+    initialData.forEach((data) => {
+      const collectionRef = firestore.collection(data.collection);
+      batch.set(collectionRef, data.data);
     });
 
     await batch.commit();
