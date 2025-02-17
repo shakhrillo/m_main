@@ -17,7 +17,7 @@ app.use("/stripe", stripeRoutes);
 app.use(express.json());
 
 app.use("/scrap", scraperRoutes);
-app.get("/", (req, res) => res.send("Server is running"));
+app.get("/", (req, res) => res.send("Server is running [check]"));
 app.use((req, res, next) => {
   next({ status: 404, message: "Invalid route" });
 });
