@@ -11,26 +11,27 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
   # Authenticate gcloud with the service account
   gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
 
-  # Delete all Firestore indexes
-  gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | xargs -I {} gcloud firestore indexes composite delete {} --project="$APP_FIREBASE_PROJECT_ID" --quiet
-
-  # Delete all Cloud Functions
-  FUNCTIONS=("processBuyCoins" "userTopUp" "processMachineWritten" "processContainerCreated" "processUserCreated")
-
-  for function in "${FUNCTIONS[@]}"; do
-    gcloud functions delete "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
-  done
-
-  # Delete all Firestore collections
-  firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
-
-  # Import the initial data into Firestore
-  node firebase-deploy.js
-
   # Deploy the functions with a retry mechanism
   MAX_RETRIES=3
   for ((i=1; i<=MAX_RETRIES; i++)); do
-    echo "Attempt $i: Deploying Firebase functions..."
+    echo "Deployment attempt $i..."
+
+    # Delete all Firestore indexes
+    gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | xargs -I {} gcloud firestore indexes composite delete {} --project="$APP_FIREBASE_PROJECT_ID" --quiet
+
+    # Delete all Cloud Functions
+    FUNCTIONS=("processBuyCoins" "userTopUp" "processMachineWritten" "processContainerCreated" "processUserCreated")
+
+    for function in "${FUNCTIONS[@]}"; do
+      gcloud functions delete "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
+    done
+
+    # Delete all Firestore collections
+    firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
+
+    # Import the initial data into Firestore
+    node firebase-deploy.js
+
     if firebase deploy --project "$APP_FIREBASE_PROJECT_ID"; then
       echo "Deployment succeeded!"
       break
