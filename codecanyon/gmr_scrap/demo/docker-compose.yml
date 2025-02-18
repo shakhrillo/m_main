@@ -63,6 +63,16 @@ services:
             rm -rf /usr/src/app/functions/package-lock.json
           fi
 
+          # gcloud authenticate
+          gcloud auth activate-service-account --key-file=/usr/src/app/firebaseServiceAccount.json
+
+          # Delete all functions
+          gcloud functions delete processBuyCoins --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+          gcloud functions delete userTopUp --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+          gcloud functions delete processMachineWritten --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+          gcloud functions delete processContainerCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+          gcloud functions delete processUserCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+
           # Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to the path of the JSON file that contains your service account key.
           export GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/firebaseServiceAccount.json
           
