@@ -16,12 +16,14 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
   for ((i=1; i<=MAX_RETRIES; i++)); do
     echo "Deployment attempt $i..."
 
-    # Delete all Firestore indexes
-    gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | xargs -I {} gcloud firestore indexes composite delete {} --project="$APP_FIREBASE_PROJECT_ID" --quiet
+    # List existing indexes and delete them
+    EXISTING_INDEXES=$(gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)")
+    for index in $EXISTING_INDEXES; do
+      gcloud firestore indexes composite delete "$index" --project="$APP_FIREBASE_PROJECT_ID" --quiet || echo "Ignoring index deletion conflict"
+    done
 
     # Delete all Cloud Functions
     FUNCTIONS=("processBuyCoins" "userTopUp" "processMachineWritten" "processContainerCreated" "processUserCreated")
-
     for function in "${FUNCTIONS[@]}"; do
       gcloud functions delete "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
     done
@@ -32,9 +34,16 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     # Import the initial data into Firestore
     node firebase-deploy.js
 
-    if firebase deploy --project "$APP_FIREBASE_PROJECT_ID"; then
+    # Deploy the Firebase project
+    firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
+    DEPLOY_STATUS=$?
+
+    if [ $DEPLOY_STATUS -eq 0 ]; then
       echo "Deployment succeeded!"
       break
+    elif [ $DEPLOY_STATUS -eq 409 ]; then
+      echo "Error: Index already exists (HTTP 409). Retrying deployment..."
+      sleep 10
     elif [ "$i" -eq "$MAX_RETRIES" ]; then
       echo "Deployment failed after $MAX_RETRIES attempts."
       exit 1
