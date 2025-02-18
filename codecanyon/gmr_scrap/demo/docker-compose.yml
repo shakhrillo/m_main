@@ -83,7 +83,7 @@ services:
           node firebase-deploy.js
 
           # Delete all firestore indexes
-          gcloud firestore indexes composite delete $(gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | head -n 1) --project="$APP_FIREBASE_PROJECT_ID" --quiet
+          gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | xargs -I {} gcloud firestore indexes composite delete {} --project="$APP_FIREBASE_PROJECT_ID" --quiet
 
           # Deploy the functions
           firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
