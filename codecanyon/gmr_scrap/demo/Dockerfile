@@ -15,6 +15,7 @@ COPY ./package.json .
 RUN npm install --legacy-peer-deps
 
 # Copy necessary project files
+COPY ./firebase-deploy.sh .
 COPY ./firebase-deploy.js .
 COPY ./initial-data.json .
 COPY ./firebaseServiceAccount.json . 
@@ -31,3 +32,9 @@ RUN npm install --legacy-peer-deps
 
 # Go back to the root project directory
 WORKDIR /usr/src/app
+
+# Give execute permission to the script
+RUN chmod +x /usr/src/app/firebase-deploy.sh
+
+# Default command to run the script
+CMD ["/bin/bash", "/usr/src/app/firebase-deploy.sh"]
