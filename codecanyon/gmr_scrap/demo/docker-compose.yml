@@ -70,11 +70,11 @@ services:
           gcloud auth activate-service-account --key-file=/usr/src/app/firebaseServiceAccount.json
           
           # Delete all functions
-          gcloud functions delete processBuyCoins --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
-          gcloud functions delete userTopUp --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
-          gcloud functions delete processMachineWritten --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
-          gcloud functions delete processContainerCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
-          gcloud functions delete processUserCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
+          gcloud functions delete processBuyCoins --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
+          gcloud functions delete userTopUp --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
+          gcloud functions delete processMachineWritten --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
+          gcloud functions delete processContainerCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
+          gcloud functions delete processUserCreated --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
 
           # Delete all collections in the firestore database
           firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
