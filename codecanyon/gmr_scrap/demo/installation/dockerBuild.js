@@ -24,7 +24,9 @@ const dockerBuild = async () => {
 
     await checkFirebase();
     await checkDocker();
-    await checkStripe();
+    if(process.env.APP_ENVIRONMENT === "development") {
+      await checkStripe();
+    }
     await checkServer();
 
     await executeCompose({
