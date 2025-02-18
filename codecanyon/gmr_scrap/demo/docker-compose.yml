@@ -81,6 +81,12 @@ services:
 
           # Delete all collections in the firestore database
           firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
+
+          # Delete all firestore indexes
+          gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | xargs -I {} gcloud firestore indexes composite delete {} --project="$APP_FIREBASE_PROJECT_ID" --quiet
+
+          # List all the firestore indexes
+          gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID"
           
           # Import the initial data into the firestore database
           node firebase-deploy.js
