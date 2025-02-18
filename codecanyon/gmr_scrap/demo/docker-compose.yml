@@ -63,9 +63,6 @@ services:
             rm -rf /usr/src/app/functions/package-lock.json
           fi
 
-          # gcloud authenticate
-          gcloud auth activate-service-account --key-file=/usr/src/app/firebaseServiceAccount.json
-
           # Delete all functions
           gcloud functions delete processBuyCoins --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
           gcloud functions delete userTopUp --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
