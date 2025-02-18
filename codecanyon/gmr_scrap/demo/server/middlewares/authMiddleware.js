@@ -1,4 +1,3 @@
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 /**
@@ -11,6 +10,8 @@ module.exports = function authMiddleware(req, res, next) {
   const authorizationHeader = req.headers["authorization"];
   const token = authorizationHeader && authorizationHeader.split(" ")[1];
 
+  consoel.log("token", token);
+
   if (!token) {
     const message = "No token provided";
     return res.status(403).json({ message });
@@ -21,6 +22,7 @@ module.exports = function authMiddleware(req, res, next) {
       const message = "Failed to authenticate token";
       return res.status(403).json({ message });
     }
+    console.log("decodedData", decodedData);
     req.machine = decodedData;
     next();
   });
