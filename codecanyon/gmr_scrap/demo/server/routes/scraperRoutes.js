@@ -56,7 +56,8 @@ router.post("/", authMiddleware, async (req, res) => {
       Env: envVariables,
       Cmd: ["npm", "run", type],
       HostConfig: {
-        AutoRemove: APP_ENVIRONMENT === "production",
+        AutoRemove: false,
+        // AutoRemove: APP_ENVIRONMENT === "production",
       },
     });
 
