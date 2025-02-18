@@ -16,7 +16,7 @@ services:
       sh -c "
         stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --print-secret > /usr/src/app/secrets/stripe_webhook_secret & 
         if [ \"${APP_ENVIRONMENT}\" = \"production\" ]; then
-          stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://${API_PRODUCTION_URL}stripe/webhook
+          stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to https://${API_PRODUCTION_URL}/stripe/webhook
         else
           stripe listen --api-key ${STRIPE_API_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://${SERVER_IPV4_ADDRESS}:${APP_SERVER_PORT}/stripe/webhook
         fi

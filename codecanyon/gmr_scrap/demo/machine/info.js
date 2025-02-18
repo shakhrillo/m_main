@@ -195,11 +195,14 @@ let driver;
     await updateMachineData(tag, data);
 
     try {
+      console.log("Updating user data");
       const costValidate = await settingsService("validation", "coin");
+      console.log("Cost validate: ", costValidate);
       await updateUserData(data.uid, {
         coinBalance: FieldValue.increment(-costValidate),
         totalValidateInfo: FieldValue.increment(1),
       });
+      console.log("User data updated");
     } catch (error) {
       console.log(error);
     }
