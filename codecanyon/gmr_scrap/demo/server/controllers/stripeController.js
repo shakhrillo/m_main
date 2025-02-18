@@ -73,7 +73,10 @@ exports.createCheckoutSession = async (req, res) => {
  */
 exports.webhookHandler = async (req, res) => {
   try {
-    const endpointSecret = (await fs.readFile(process.env.STRIPE_WEBHOOK_SECRET_FILE, "utf-8")).trim() || process.env.STRIPE_WEBHOOK_SECRET_SERVER;
+    let endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (process.env.APP_ENVIRONMENT === "development") {
+      endpointSecret = (await fs.readFile(process.env.STRIPE_WEBHOOK_SECRET_FILE, "utf-8")).trim();
+    }
     const signature = req.headers["stripe-signature"];
 
     if (!signature) {

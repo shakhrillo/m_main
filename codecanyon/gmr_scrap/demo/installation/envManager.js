@@ -20,6 +20,7 @@ class EnvManager {
     "APP_CLIENT_PORT",
     "APP_SERVER_PORT",
     "STRIPE_API_KEY",
+    "STRIPE_WEBHOOK_SECRET",
     "STRIPE_DEVICE_NAME",
     "STRIPE_SUCCESS_URL",
     "STRIPE_CANCEL_URL",
@@ -42,7 +43,18 @@ class EnvManager {
 
     let missingVars = this.#requiredVars.filter((key) => !process.env[key]);
     if (process.env["APP_ENVIRONMENT"] === "development") {
-      missingVars = missingVars.filter((key) => key !== "API_PRODUCTION_URL");
+      missingVars = missingVars.filter((key) => key !== "API_PRODUCTION_URL"); 
+      missingVars = missingVars.filter((key) => key !== "STRIPE_WEBHOOK_SECRET");
+    }
+
+    if (process.env["APP_ENVIRONMENT"] === "production") {
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_AUTHENTICATION");
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_UI");
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_FUNCTIONS");
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_FIRESTORE");
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_STORAGE");
+      missingVars = missingVars.filter((key) => key !== "APP_FIREBASE_EMULATOR_HUB");
+      missingVars = missingVars.filter((key) => key !== "STRIPE_DEVICE_NAME");
     }
 
     if (missingVars.length)

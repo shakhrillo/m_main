@@ -11,6 +11,7 @@ admin.initializeApp({
 });
 
 const firestore = admin.firestore();
+const auth = admin.auth();
 
 const importInitialData = async () => {
   if (!fs.existsSync(INITIAL_DATA_FILE_PATH)) {
@@ -41,7 +42,12 @@ const importInitialData = async () => {
   });
 
   await batch.commit();
-  console.log('✅ Initial data import successful.');
+
+  // Get all users and remove them
+  const { users } = await auth.listUsers();
+  await auth.deleteUsers(users.map((user) => user.uid));
+
+  console.log('✅ Completed importing initial data.');
 };
 
 importInitialData();
