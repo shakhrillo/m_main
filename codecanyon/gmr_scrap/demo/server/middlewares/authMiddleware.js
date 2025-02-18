@@ -10,7 +10,7 @@ module.exports = function authMiddleware(req, res, next) {
   const authorizationHeader = req.headers["authorization"];
   const token = authorizationHeader && authorizationHeader.split(" ")[1];
 
-  consoel.log("token", token);
+  console.log("token", token);
 
   if (!token) {
     const message = "No token provided";
