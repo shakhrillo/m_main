@@ -131,7 +131,7 @@ const handleImageEvents = async () => {
 
 const handleContainerEvents = async () => {
   const stream = await docker.getEvents({
-    filters: { image: ["gmrs-dev"], type: ["container"] },
+    filters: { image: [process.env.MACHINE_BUILD_IMAGE_NAME], type: ["container"] },
   });
   Kefir.fromEvents(stream.setEncoding("utf8"), "data")
     .map((data) =>
