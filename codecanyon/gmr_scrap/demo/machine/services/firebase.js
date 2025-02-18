@@ -166,7 +166,7 @@ async function getMachineData(tag) {
  * @returns {Promise<void>}
  */
 async function updateMachineData(tag, data) {
-  return db.collection("machines").doc(tag).update(data);
+  return db.collection("machines").doc(tag).set(data, { merge: true });
 }
 
 /**
