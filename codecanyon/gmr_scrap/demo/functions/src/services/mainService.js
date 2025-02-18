@@ -15,6 +15,7 @@ const executeScraping = async (data) => {
 
   const config = {
     headers,
+    method: "POST",
   };
 
   await axiosInstance.post(`/scrap`, {}, config);

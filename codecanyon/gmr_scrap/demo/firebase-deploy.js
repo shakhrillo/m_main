@@ -32,6 +32,13 @@ const importInitialData = async () => {
       });
     });
   });
+  
+  ["users", "earnings", "info", "comments"].forEach((type) => {
+    const documentRef = firestore.collection('statistics').doc(type);
+    batch.set(documentRef, {
+      total: 0,
+    });
+  });
 
   await batch.commit();
   console.log('✅ Initial data import successful.');
