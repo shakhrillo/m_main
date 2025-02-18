@@ -31,6 +31,3 @@ RUN npm install --legacy-peer-deps
 
 # Go back to the root project directory
 WORKDIR /usr/src/app
-
-# Set the command to run the deploy script (uncomment to enable it)
-# CMD ["node", "firebase-deploy.js"]
