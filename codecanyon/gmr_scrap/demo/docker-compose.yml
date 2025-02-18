@@ -63,6 +63,9 @@ services:
             rm -rf /usr/src/app/functions/package-lock.json
           fi
 
+          # Set the firebase service account credentials
+          export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
+
           # Set gcloud account
           gcloud auth activate-service-account --key-file=/usr/src/app/firebaseServiceAccount.json
 
