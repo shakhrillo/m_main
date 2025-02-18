@@ -64,6 +64,8 @@ services:
           fi
 
           # Delete all functions
+          export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/firebaseServiceAccount.json"
+
           gcloud functions delete processBuyCoins --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
           gcloud functions delete userTopUp --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
           gcloud functions delete processMachineWritten --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID"
