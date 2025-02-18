@@ -198,6 +198,7 @@ let driver;
       console.log("Updating user data");
       const costValidate = await settingsService("validation", "coin");
       console.log("Cost validate: ", costValidate);
+      console.log('uid:', data.uid);
       await updateUserData(data.uid, {
         coinBalance: FieldValue.increment(-costValidate),
         totalValidateInfo: FieldValue.increment(1),
