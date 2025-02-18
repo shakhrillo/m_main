@@ -82,11 +82,11 @@ services:
           # Import the initial data into the firestore database
           node firebase-deploy.js
 
-          # Deploy the firestore indexes
-          firebase deploy --only firestore:indexes --force --project "$APP_FIREBASE_PROJECT_ID"
+          # Delete all firestore indexes
+          gcloud firestore indexes composite delete $(gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format="value(name)" | head -n 1) --project="$APP_FIREBASE_PROJECT_ID" --quiet
 
           # Deploy the functions
-          firebase deploy --project "$APP_FIREBASE_PROJECT_ID" --only functions
+          firebase deploy --project "$APP_FIREBASE_PROJECT_ID"
         else
           firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
         fi
