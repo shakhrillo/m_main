@@ -34,6 +34,7 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
 
     if firebase deploy --project "$APP_FIREBASE_PROJECT_ID"; then
       echo "Deployment succeeded!"
+      exit 0
       break
     elif [ "$i" -eq "$MAX_RETRIES" ]; then
       echo "Deployment failed after $MAX_RETRIES attempts."
