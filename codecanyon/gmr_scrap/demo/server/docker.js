@@ -53,7 +53,6 @@ const getImageDetails = async (imageName, event) => {
   } catch (error) {
     if (error.statusCode === 404) {
       console.warn(`Image '${imageName}' not found.`);
-      console.log("Event data:", event);
     } else {
       console.error("Error fetching image details:", error);
     }

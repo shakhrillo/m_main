@@ -20,8 +20,6 @@ router.post("/", authMiddleware, async (req, res) => {
   try {
     const { tag, type } = req.machine;
 
-    console.log("Starting container:", tag, type);
-
     if (!tag || !type) {
       return res.status(400).json({ message: "Missing required fields: 'tag' and 'type'." });
     }

@@ -4,11 +4,11 @@
     "title": "General",
     "type": "general",
     "fields": [
-      { "value": "1", "tag": "logo", "label": "Logo", "helpText": "The URL for the logo." },
+      { "value": "https://cdn.prod.website-files.com/6365d860c7b7a7191055eb8a/66eeb030dcea757c29ff2b9e_45%2520Degrees.svg", "tag": "logo", "label": "Logo", "helpText": "The URL for the logo." },
       { "value": "1", "tag": "favicon", "label": "Favicon", "helpText": "The URL for the favicon." },
-      { "value": "1", "tag": "title", "label": "Title", "helpText": "The title of the website." },
-      { "value": "1", "tag": "description", "label": "Description", "helpText": "The description of the website." },
-      { "value": "1", "tag": "keywords", "label": "Keywords", "helpText": "The keywords of the website." }
+      { "value": "Gmr Scrap", "tag": "title", "label": "Title", "helpText": "The title of the website." },
+      { "value": "Google Map Review Scrapper", "tag": "description", "label": "Description", "helpText": "The description of the website." },
+      { "value": "Scrapping tool", "tag": "keywords", "label": "Keywords", "helpText": "The keywords of the website." }
     ]
   },
   {
@@ -16,22 +16,22 @@
     "title": "Coin",
     "type": "coin",
     "fields": [
-      { "value": "1", "tag": "cost", "label": "Cost", "helpText": "The cost of each coin." },
-      { "value": "1", "tag": "bonus", "label": "Bonus", "helpText": "The bonus of each coin." },
-      { "value": "1", "tag": "image", "label": "Image", "helpText": "The cost of each image in coins." },
-      { "value": "1", "tag": "video", "label": "Video", "helpText": "The cost of each video in coins." },
-      { "value": "1", "tag": "response", "label": "Response", "helpText": "The cost of each response in coins." },
-      { "value": "1", "tag": "review", "label": "Review", "helpText": "The cost of each review in coins." },
-      { "value": "1", "tag": "validation", "label": "Validation", "helpText": "The cost of each validation in coins." }
+      { "value": "0.05", "tag": "cost", "label": "Cost", "helpText": "The cost of each coin." },
+      { "value": "150", "tag": "bonus", "label": "Bonus", "helpText": "The bonus of each coin." },
+      { "value": "5", "tag": "image", "label": "Image", "helpText": "The cost of each image in coins." },
+      { "value": "10", "tag": "video", "label": "Video", "helpText": "The cost of each video in coins." },
+      { "value": "5", "tag": "response", "label": "Response", "helpText": "The cost of each response in coins." },
+      { "value": "2", "tag": "review", "label": "Review", "helpText": "The cost of each review in coins." },
+      { "value": "10", "tag": "validation", "label": "Validation", "helpText": "The cost of each validation in coins." }
     ]
   }, {
     "eventKey": "scrapSettings",
     "title": "Scrap",
     "type": "scrap",
     "fields": [
-      { "value": "1", "tag": "minimum", "label": "Minimum", "helpText": "The minimum of scrapes." },
-      { "value": "1", "tag": "maximum", "label": "Maximum", "helpText": "The maximum of scrapes." },
-      { "value": "1", "tag": "retries", "label": "Retries", "helpText": "The retries of scrapes." }
+      { "value": "10", "tag": "minimum", "label": "Minimum", "helpText": "The minimum of scrapes." },
+      { "value": "10", "tag": "maximum", "label": "Maximum", "helpText": "The maximum of scrapes." },
+      { "value": "10", "tag": "retries", "label": "Retries", "helpText": "The retries of scrapes." }
     ]
   }
 ]
