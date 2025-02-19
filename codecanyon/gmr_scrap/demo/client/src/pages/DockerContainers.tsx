@@ -1,18 +1,18 @@
-import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
+import { Breadcrumb, Container } from "react-bootstrap";
 import { ContainersList } from "../components/containers/ContainersList";
 
+/**
+ * Docker containers page
+ * @returns JSX.Element
+ */
 export const DockerContainers = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item active>Containers</Breadcrumb.Item>
       </Breadcrumb>
-      <Row className="g-3">
-        <Col xs={12}>
-          <ContainersList path="containers" machineType="container" />
-        </Col>
-      </Row>
+
+      <ContainersList path="containers" machineType="container" />
     </Container>
   );
 };

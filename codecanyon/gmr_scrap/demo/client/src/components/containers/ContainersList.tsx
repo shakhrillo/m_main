@@ -1,19 +1,10 @@
 import { IconSearch } from "@tabler/icons-react";
-import { User } from "firebase/auth";
-import { useEffect, useState } from "react"; // React imports for state and effect handling
-import {
-  Badge,
-  Card,
-  CardBody,
-  CardHeader,
-  Dropdown,
-  Form,
-  InputGroup,
-  Stack,
-} from "react-bootstrap";
+import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { Badge, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { NavLink, useOutletContext } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
@@ -24,6 +15,7 @@ import { Ratings } from "../Ratings";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
+  { value: "completed", label: "Completed" },
   { value: "pending", label: "Pending" },
   { value: "error", label: "Failed" },
 ];
@@ -37,28 +29,33 @@ export const ContainersList = ({
   type?: "comments" | "info";
   machineType?: "container" | "image";
 }) => {
-  const user = useOutletContext<User>();
+  const auth = getAuth();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    if (!user) {
+    if (!auth.currentUser || !auth.currentUser?.uid) {
       return;
     }
+    
+    setContainers([]);
+
     const subscription = dockerContainers({
       search,
-      // uid: uid,
+      uid: auth.currentUser?.uid,
       type,
       machineType,
+      status: filter,
     }).subscribe((data) => {
+      console.log("data", data);
       setContainers(data);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [search, user, type]);
+  }, [search, auth, type, filter]);
 
   return (
     <Card>
@@ -66,15 +63,15 @@ export const ContainersList = ({
         <Stack direction="horizontal">
           <div className="d-inline-block me-auto">
             <InputGroup>
-              <InputGroup.Text id="search-icon">
+              <InputGroup.Text id="searchContainers" className="bg-transparent">
                 <IconSearch />
               </InputGroup.Text>
               <Form.Control
                 type="search"
                 id="search"
-                placeholder="Search..."
+                placeholder="Search containers"
                 aria-label="Search"
-                aria-describedby="search-icon"
+                aria-describedby="searchContainers"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -82,29 +79,44 @@ export const ContainersList = ({
           </div>
           <Dropdown>
             <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-              Filter
+              Filter {filter ? `(${filter})` : ""}
             </Dropdown.Toggle>
 
             <Dropdown.Menu aria-labelledby="dropdown-filter">
               {FILTER_OPTIONS.map((option) => (
                 <Dropdown.Item
-                  key={option.value}
+                  key={option.label}
                   onClick={() => setFilter(option.value)}
                   className={filter === option.value ? "active" : ""}
-                >
-                  {option.label}
-                </Dropdown.Item>
+                >{ option.label }</Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
         </Stack>
       </CardHeader>
       <CardBody>
+        <div className="mb-3">
+          {
+            filter && containers.length === 0 && (
+              <div>
+                No containers found with status: {filter}
+              </div>
+            )
+          }
+          {
+            filter && containers.length > 0 && (
+              <div>
+                Showing containers with status: {filter}
+              </div>
+            )
+          }
+        </div>
         <BootstrapTable
           bordered={false}
           hover
-          keyField="key"
+          keyField="containerId"
           data={containers.map((comment) => ({
+            containerId: comment.containerId,
             title: (
               <NavLink to={`/${path}/${comment.machineId}`}>
                 {comment.title}

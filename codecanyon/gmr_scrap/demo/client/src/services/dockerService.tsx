@@ -46,7 +46,6 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
-      // where("url", "!=", null),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
@@ -56,10 +55,9 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => {
-      const containersData = snapshot.docs.map((doc, index) => {
+      const containersData = snapshot.docs.map((doc) => {
         const data = doc.data() as IDockerContainer;
         return {
-          key: index,
           id: doc.id,
           ...data,
         };

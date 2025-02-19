@@ -17,6 +17,7 @@ export interface IDockerContainer {
   location?: GeoPoint;
   machine?: IDockerMachine;
   machineId?: string;
+  containerId?: string;
   tag?: string;
   rating?: number;
   reviewId?: string;

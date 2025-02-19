@@ -1,17 +1,18 @@
-import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
+import { Breadcrumb, Container } from "react-bootstrap";
 import { ContainersList } from "../components/containers/ContainersList";
+
+/**
+ * Validated URLs page
+ * @returns JSX.Element
+ */
 export const ValidatedURLs = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Reviews</Breadcrumb.Item>
         <Breadcrumb.Item active>Validates</Breadcrumb.Item>
       </Breadcrumb>
-      <Row className="g-3">
-        <Col xs={12}>
-          <ContainersList path="scrap" type="info" />
-        </Col>
-      </Row>
+
+      <ContainersList path="scrap" type="info" />
     </Container>
   );
 };
