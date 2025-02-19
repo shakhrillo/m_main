@@ -2,15 +2,13 @@ import { IconSearch } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Badge, Button, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { formatDate, formatNumber, formatTimestamp } from "../../utils";
 import { Ratings } from "../Ratings";
-import { map, take } from "rxjs";
+import { filter, map, take } from "rxjs";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -30,17 +28,18 @@ export const ContainersList = ({
 }) => {
   const auth = getAuth();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
-  const [newContainers, setNewContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("");
-  const [limit, setLimit] = useState(1);
+  const [status, setStatus] = useState("");
   const [lastDoc, setLastDoc] = useState<any>(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
     if (!auth.currentUser || !auth.currentUser?.uid) {
       return;
     }
     
+    setLastDoc(null);
+    setIsLastPage(false);
     setContainers([]);
 
     const subscription = dockerContainers({
@@ -48,9 +47,16 @@ export const ContainersList = ({
       uid: auth.currentUser?.uid,
       type,
       machineType,
-      status: filter,
+      status,
     }).pipe(
-      map((docs) => {
+      filter((snapshot) => snapshot !== null),
+      map((snapshot) => {
+        const docs = snapshot.docs;
+
+        if (snapshot.empty) {
+          setIsLastPage(true);
+        }
+
         setLastDoc(docs[docs.length - 1]);
         return docs.map((doc) => {
           const data = doc.data() as IDockerContainer;
@@ -60,18 +66,12 @@ export const ContainersList = ({
           };
         });
       })
-    ).subscribe((data) => setNewContainers(data));
+    ).subscribe((data) => setContainers(data));
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [search, auth, type, filter]);
-
-  useEffect(() => {
-    if (newContainers.length > 0) {
-      setContainers([...newContainers, ...containers]);
-    }
-  }, [newContainers]);
+  }, [search, auth, type, status, machineType]);
 
   function loadMore() {
     if (!auth.currentUser || !auth.currentUser?.uid) {
@@ -83,9 +83,16 @@ export const ContainersList = ({
       uid: auth.currentUser?.uid,
       type,
       machineType,
-      status: filter,
+      status,
     }, lastDoc).pipe(
-      map((docs) => {
+      filter((snapshot) => snapshot !== null),
+      map((snapshot) => {
+        const docs = snapshot.docs;
+
+        if (snapshot.empty) {
+          setIsLastPage(true);
+        }
+
         setLastDoc(docs[docs.length - 1]);
         return docs.map((doc) => {
           const data = doc.data() as IDockerContainer;
@@ -95,8 +102,9 @@ export const ContainersList = ({
           };
         });
       }),
+      filter((data) => data.length > 0),
       take(1),
-    ).subscribe((data) => setNewContainers(data));
+    ).subscribe((data) => setContainers([...containers, ...data]));
 
     return () => {
       subscription.unsubscribe();
@@ -124,16 +132,16 @@ export const ContainersList = ({
             </InputGroup>
           </div>
           <Dropdown>
-            <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-              Filter {filter ? `(${filter})` : ""}
+            <Dropdown.Toggle id="dropdown-status" variant="secondary">
+              Filter {status ? `(${status})` : ""}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu aria-labelledby="dropdown-filter">
+            <Dropdown.Menu aria-labelledby="dropdown-status">
               {FILTER_OPTIONS.map((option) => (
                 <Dropdown.Item
                   key={option.label}
-                  onClick={() => setFilter(option.value)}
-                  className={filter === option.value ? "active" : ""}
+                  onClick={() => setStatus(option.value)}
+                  className={status === option.value ? "active" : ""}
                 >{ option.label }</Dropdown.Item>
               ))}
             </Dropdown.Menu>
@@ -143,16 +151,16 @@ export const ContainersList = ({
       <CardBody>
         <div className="mb-3">
           {
-            filter && containers.length === 0 && (
+            status && containers.length === 0 && (
               <div>
-                No containers found with status: {filter}
+                No containers found with status: {status}
               </div>
             )
           }
           {
-            filter && containers.length > 0 && (
+            status && containers.length > 0 && (
               <div>
-                Showing containers with status: {filter}
+                Showing containers with status: {status}
               </div>
             )
           }
@@ -228,9 +236,13 @@ export const ContainersList = ({
             ))
           }
 
-          <Button onClick={loadMore} variant="outline-primary" className="mt-3">
-            Load more
-          </Button>
+          {
+            !isLastPage && (
+              <Button onClick={loadMore} variant="outline-primary" className="mt-3">
+                Load more
+              </Button>
+            )
+          }
         </div>
       </CardBody>
     </Card>

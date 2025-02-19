@@ -8,6 +8,7 @@ import {
   orderBy,
   query,
   QueryDocumentSnapshot,
+  QuerySnapshot,
   setDoc,
   startAfter,
   updateDoc,
@@ -43,7 +44,7 @@ export const createDockerContainer = (data: any) => {
  * @returns Observable<IDockerContainer[]>
  */
 export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
-  const containers$ = new BehaviorSubject<QueryDocumentSnapshot<DocumentData, DocumentData>[]>([]);
+  const containers$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
@@ -60,23 +61,14 @@ export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
       ...(q.status ? [where("status", "==", q.status)] : []),
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
-    (snapshot) => {
-      // const containersData = snapshot.docs.map((doc) => {
-      //   const data = doc.data() as IDockerContainer;
-      //   return {
-      //     id: doc.id,
-      //     ...data,
-      //   };
-      // });
-      containers$.next(snapshot.docs);
-    },
+    (snapshot) => containers$.next(snapshot),
     (error) => {
       console.error("Error fetching containers data:", error);
       containers$.error(error);
     },
   );
 
-  return new Observable<QueryDocumentSnapshot<DocumentData, DocumentData>[]>((subscriber) => {
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
     const subscription = containers$.subscribe(subscriber);
 
     return () => {
