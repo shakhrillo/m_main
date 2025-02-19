@@ -1,4 +1,4 @@
-import { IconSearch } from "@tabler/icons-react";
+import { IconReload, IconSearch } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Badge, Button, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
@@ -6,9 +6,9 @@ import { NavLink } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { formatDate, formatNumber, formatTimestamp } from "../../utils";
+import { formatNumber, formatTimestamp } from "../../utils";
 import { Ratings } from "../Ratings";
-import { filter, map, take } from "rxjs";
+import { debounceTime, filter, map, Subject, take } from "rxjs";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -17,15 +17,15 @@ const FILTER_OPTIONS = [
   { value: "error", label: "Failed" },
 ];
 
-export const ContainersList = ({
-  path,
-  type,
-  machineType,
-}: {
+interface IContainersList {
   path: "reviews" | "containers" | "scrap";
   type?: "comments" | "info";
   machineType?: "container" | "image";
-}) => {
+}
+
+const searchSubject = new Subject<string>();
+
+export const ContainersList = ({ path, type, machineType }: IContainersList) => {
   const auth = getAuth();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
@@ -34,82 +34,53 @@ export const ContainersList = ({
   const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
-    if (!auth.currentUser || !auth.currentUser?.uid) {
-      return;
-    }
-    
+    const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
+      setSearch(value);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchSubject.next(e.target.value);
+  };
+
+  const fetchContainers = (append = false, lastDocument = null) => {
+    if (!auth.currentUser?.uid) return;
+
+    return dockerContainers({
+      search: search.trim().toLowerCase(),
+      uid: auth.currentUser.uid,
+      type,
+      machineType,
+      status,
+    }, lastDocument).pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => {
+        if (snapshot.empty) {
+          setIsLastPage(true);
+          return [];
+        }
+        setLastDoc(snapshot.docs.at(-1));
+        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+      }),
+      take(1),
+    ).subscribe((data) => {
+      setContainers((prev) => (append ? [...prev, ...data] : data));
+    });
+  };
+
+  useEffect(() => {
     setLastDoc(null);
     setIsLastPage(false);
     setContainers([]);
+    const subscription = fetchContainers();
+    return () => subscription?.unsubscribe();
+  }, [search, type, status, machineType]);
 
-    const subscription = dockerContainers({
-      search,
-      uid: auth.currentUser?.uid,
-      type,
-      machineType,
-      status,
-    }).pipe(
-      filter((snapshot) => snapshot !== null),
-      map((snapshot) => {
-        const docs = snapshot.docs;
-
-        if (snapshot.empty) {
-          setIsLastPage(true);
-        }
-
-        setLastDoc(docs[docs.length - 1]);
-        return docs.map((doc) => {
-          const data = doc.data() as IDockerContainer;
-          return {
-            id: doc.id,
-            ...data,
-          };
-        });
-      })
-    ).subscribe((data) => setContainers(data));
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [search, auth, type, status, machineType]);
-
-  function loadMore() {
-    if (!auth.currentUser || !auth.currentUser?.uid) {
-      return;
-    }
-
-    const subscription = dockerContainers({
-      search,
-      uid: auth.currentUser?.uid,
-      type,
-      machineType,
-      status,
-    }, lastDoc).pipe(
-      filter((snapshot) => snapshot !== null),
-      map((snapshot) => {
-        const docs = snapshot.docs;
-
-        if (snapshot.empty) {
-          setIsLastPage(true);
-        }
-
-        setLastDoc(docs[docs.length - 1]);
-        return docs.map((doc) => {
-          const data = doc.data() as IDockerContainer;
-          return {
-            id: doc.id,
-            ...data,
-          };
-        });
-      }),
-      filter((data) => data.length > 0),
-      take(1),
-    ).subscribe((data) => setContainers([...containers, ...data]));
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }
+  const loadMore = () => {
+    if (!isLastPage) fetchContainers(true, lastDoc);
+  };
 
   return (
     <Card>
@@ -126,8 +97,7 @@ export const ContainersList = ({
                 placeholder="Search containers"
                 aria-label="Search"
                 aria-describedby="searchContainers"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearch}
               />
             </InputGroup>
           </div>
@@ -150,100 +120,94 @@ export const ContainersList = ({
       </CardHeader>
       <CardBody>
         <div className="mb-3">
-          {
-            status && containers.length === 0 && (
-              <div>
-                No containers found with status: {status}
-              </div>
-            )
-          }
-          {
-            status && containers.length > 0 && (
-              <div>
-                Showing containers with status: {status}
-              </div>
-            )
-          }
+          {status && (
+            <div className="text-muted">
+              {containers.length === 0 
+                ? `No containers found with status: ${status}` 
+                : `Showing containers with status: ${status}`}
+            </div>
+          )}
         </div>
-        <div>
-          {
-            containers.map((comment) => ({
-              containerId: comment.containerId,
-              title: (
-                <NavLink to={`/${path}/${comment.machineId}`}>
-                  {comment.title}
-                </NavLink>
-              ),
-              status: <StatusInfo container={comment} />,
-              date: formatTimestamp(comment.createdAt),
-              rating: <Ratings container={comment} />,
-              totalReviews: formatNumber(comment.totalReviews),
-              totalOwnerReviews: formatNumber(comment.totalOwnerReviews),
-              totalImages: formatNumber(comment.totalImages),
-              totalVideos: formatNumber(comment.totalVideos),
-              machineAction: (
-                <Badge
-                  bg={
-                    comment.machine?.Action === "die"
-                      ? "danger"
-                      : comment.machine?.Action === "start"
-                        ? "success"
-                        : "secondary"
-                  }
-                  className="text-capitalize"
-                >
-                  {comment.machine?.Action}
-                </Badge>
-              ),
-              machineTime: formatDate(comment?.machine?.time || 0),
-              machineExecDuration:
-                (comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s",
-              machineImage: comment?.machine?.Actor?.Attributes?.image,
-              machineName: (
-                <span className="d-flex flex-column">
-                  <NavLink to={`/${path}/${comment.machineId}`}>
-                    {comment.title || comment.tag || comment.machineId}
-                    {comment.type && (
-                      <Badge
-                        className="text-capitalize ms-2"
-                        bg={comment.type === "info" ? "info" : "primary"}
-                      >
-                        {comment.type === "info" ? "Validate" : "Review"}
-                      </Badge>
-                    )}
-                  </NavLink>
-                  #{comment?.machine?.Actor?.Attributes?.name}
-                </span>
-              ),
-            })).map((comment) => (
-              <div key={comment.containerId}>
-                {/* <NavLink to={`/${path}/${comment.machineId}`}>
-                  {comment.title}
-                </NavLink> */}
-                {comment.status}
-                {comment.date}
-                {comment.rating}
-                {comment.totalReviews}
-                {comment.totalOwnerReviews}
-                {comment.totalImages}
-                {comment.totalVideos}
-                {comment.machineAction}
-                {comment.machineTime}
-                {comment.machineExecDuration}
-                {comment.machineImage}
-                {comment.machineName}
-              </div>
-            ))
-          }
 
-          {
-            !isLastPage && (
-              <Button onClick={loadMore} variant="outline-primary" className="mt-3">
-                Load more
+        {
+          containers.map((comment) => (
+            <div className="border-bottom py-3" key={comment.machineId}>
+              <Stack direction="horizontal" gap={2} className="justify-content-between">
+                {
+                  path === "containers" ? (
+                    <Stack direction="horizontal" gap={2}>
+                      <Badge className="text-capitalize" bg={comment.type === "comments" ? "info" : "warning"}>
+                        {comment.type}
+                      </Badge>
+                      <Badge
+                        bg={
+                          comment.machine?.Action === "die" ? "danger" : comment.machine?.Action === "start" ? "success" : "secondary"
+                        }
+                        className="text-capitalize"
+                      >
+                        {comment.machine?.Action}
+                      </Badge>
+                    </Stack>
+                  ) : (
+                    <StatusInfo container={comment} />
+                  )
+                }
+                <small>
+                  {formatTimestamp(comment.createdAt)}
+                </small>
+              </Stack>
+              <NavLink className={"h6"} to={`/${path}/${comment.machineId}`}>
+                {
+                  path === "containers" ? (
+                    <>
+                      {comment.title}
+                    </>
+                  ) : (
+                    comment.title
+                  )
+                }
+              </NavLink>
+              {
+                path === "containers" ? (
+                  <>
+                    <Stack direction="horizontal" gap={2} className="text-muted">
+                      {comment?.machine?.Actor?.Attributes?.name && (
+                        <i className="text-capitalize">
+                          #{comment?.machine?.Actor?.Attributes?.name}
+                        </i>
+                      )}
+                      {(comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s exec duration"}
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Ratings container={comment} />
+                    {
+                      comment.type === "comments" && (
+                        <Stack direction="horizontal" gap={2} className="text-muted">
+                          <div>{formatNumber(comment.totalReviews)} Reviews</div>
+                          <div>{formatNumber(comment.totalOwnerReviews)} Owner Reviews</div>
+                          <div>{formatNumber(comment.totalImages)} Images</div>
+                          <div>{formatNumber(comment.totalVideos)} Videos</div>
+                        </Stack>
+                      )
+                    }
+                  </>
+                )
+              }
+            </div>
+          ))
+        }
+
+        {
+          !isLastPage && (
+            <Stack direction="horizontal" className="justify-content-center mt-3">
+              <Button onClick={loadMore} variant="outline-primary">
+                <IconReload className="me-2" /> Load more
               </Button>
-            )
-          }
-        </div>
+            </Stack>
+          )
+        }
       </CardBody>
     </Card>
   );

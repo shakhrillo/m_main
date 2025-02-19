@@ -3,7 +3,7 @@ import {
   IconChevronRight,
   IconSearch,
 } from "@tabler/icons-react";
-import { User } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -28,8 +28,8 @@ interface ICommentsListProps {
 }
 
 export const CommentsList = ({ reviewId }: ICommentsListProps) => {
+  const auth = getAuth();
   const commentsRef = useRef<HTMLDivElement>(null);
-  const { uid } = useOutletContext<User>();
   const [comments, setComments] = useState([] as IComment[]);
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
@@ -77,7 +77,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
     setPage(1);
     const subscription = reviewComments(
       reviewId,
-      uid,
+      auth.currentUser?.uid || "",
       filterOptions,
       search,
     ).subscribe((data) => {
@@ -88,7 +88,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [reviewId, filterOptions, search, uid]);
+  }, [reviewId, filterOptions, search, auth.currentUser?.uid]);
 
   return (
     <div className="comments" ref={commentsRef}>

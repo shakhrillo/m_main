@@ -51,7 +51,7 @@ export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
-      limit(1),
+      limit(10),
       ...(lastRef ? [startAfter(lastRef)] : []),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
