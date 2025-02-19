@@ -1,7 +1,7 @@
 import { IconReload, IconSearch } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Badge, Button, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { Badge, Button, Card, CardBody, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
@@ -83,55 +83,54 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <Stack direction="horizontal">
-          <div className="d-inline-block me-auto">
-            <InputGroup>
-              <InputGroup.Text id="searchContainers" className="bg-transparent">
-                <IconSearch />
-              </InputGroup.Text>
-              <Form.Control
-                type="search"
-                id="search"
-                placeholder="Search containers"
-                aria-label="Search"
-                aria-describedby="searchContainers"
-                onChange={handleSearch}
-              />
-            </InputGroup>
-          </div>
-          <Dropdown>
-            <Dropdown.Toggle id="dropdown-status" variant="secondary">
-              Filter {status ? `(${status})` : ""}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu aria-labelledby="dropdown-status">
-              {FILTER_OPTIONS.map((option) => (
-                <Dropdown.Item
-                  key={option.label}
-                  onClick={() => setStatus(option.value)}
-                  className={status === option.value ? "active" : ""}
-                >{ option.label }</Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Stack>
-      </CardHeader>
-      <CardBody>
-        <div className="mb-3">
-          {status && (
-            <div className="text-muted">
-              {containers.length === 0 
-                ? `No containers found with status: ${status}` 
-                : `Showing containers with status: ${status}`}
-            </div>
-          )}
+    <>
+      <Stack className="mb-3" direction="horizontal">
+        <div className="d-inline-block me-auto">
+          <InputGroup>
+            <InputGroup.Text id="searchContainers" className="bg-transparent">
+              <IconSearch />
+            </InputGroup.Text>
+            <Form.Control
+              type="search"
+              id="search"
+              placeholder="Search containers"
+              aria-label="Search"
+              aria-describedby="searchContainers"
+              onChange={handleSearch}
+            />
+          </InputGroup>
         </div>
+        <Dropdown>
+          <Dropdown.Toggle id="dropdown-status" variant="secondary">
+            Filter {status ? `(${status})` : ""}
+          </Dropdown.Toggle>
 
-        {
-          containers.map((comment) => (
-            <div className="border-bottom py-3" key={comment.machineId}>
+          <Dropdown.Menu aria-labelledby="dropdown-status">
+            {FILTER_OPTIONS.map((option) => (
+              <Dropdown.Item
+                key={option.label}
+                onClick={() => setStatus(option.value)}
+                className={status === option.value ? "active" : ""}
+              >{ option.label }</Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </Stack>
+
+      {
+        status && (
+          <div className="text-muted">
+            {containers.length === 0 
+              ? `No containers found with status: ${status}` 
+              : `Showing containers with status: ${status}`}
+          </div>
+        )
+      }
+
+      {
+        containers.map((comment) => (
+          <Card key={comment.machineId} className="mb-3">
+            <CardBody>
               <Stack direction="horizontal" gap={2} className="justify-content-between">
                 {
                   path === "containers" ? (
@@ -195,20 +194,20 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
                   </>
                 )
               }
-            </div>
-          ))
-        }
+            </CardBody>
+          </Card>
+        ))
+      }
 
-        {
-          !isLastPage && (
-            <Stack direction="horizontal" className="justify-content-center mt-3">
-              <Button onClick={loadMore} variant="outline-primary">
-                <IconReload className="me-2" /> Load more
-              </Button>
-            </Stack>
-          )
-        }
-      </CardBody>
-    </Card>
+      {
+        !isLastPage && (
+          <Stack direction="horizontal" className="justify-content-center mt-3">
+            <Button onClick={loadMore} variant="outline-primary">
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )
+      }
+    </>
   );
 };

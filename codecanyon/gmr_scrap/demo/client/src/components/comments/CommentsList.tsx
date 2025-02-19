@@ -74,6 +74,9 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   }, []);
 
   useEffect(() => {
+    if (!auth.currentUser?.uid) return;
+    
+    console.log('auth.currentUser?.uid', auth.currentUser?.uid);
     setPage(1);
     const subscription = reviewComments(
       reviewId,
@@ -81,6 +84,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
       filterOptions,
       search,
     ).subscribe((data) => {
+      console.log('->', data);
       setComments(data);
       setTotal(Math.ceil(data.length / limit));
     });

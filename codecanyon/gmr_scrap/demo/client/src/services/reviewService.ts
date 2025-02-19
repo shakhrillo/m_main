@@ -28,7 +28,7 @@ export const reviewComments = (
       collectionRef,
       // orderBy("createdAt", "asc"),
       // where("machineId", "==", placeId),
-      // where("uid", "==", uid),
+      where("uid", "==", uid),
       ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
       ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
       ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),

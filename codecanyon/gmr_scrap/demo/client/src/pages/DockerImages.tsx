@@ -40,11 +40,12 @@ export const DockerImages = () => {
     })
       .pipe(
         map((data) => {
-          return data.map((image: any) => ({
-            ...image,
-            id: image.id,
-            updatedAt: image.updatedAt,
-          }));
+          // return data.map((image: any) => ({
+          //   ...image,
+          //   id: image.id,
+          //   updatedAt: image.updatedAt,
+          // }));
+          return []
         }),
       )
       .subscribe((data) => {
