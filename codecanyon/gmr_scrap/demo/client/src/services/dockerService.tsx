@@ -2,10 +2,14 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentData,
+  limit,
   onSnapshot,
   orderBy,
   query,
+  QueryDocumentSnapshot,
   setDoc,
+  startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -38,14 +42,16 @@ export const createDockerContainer = (data: any) => {
  * Fetches all docker containers
  * @returns Observable<IDockerContainer[]>
  */
-export const dockerContainers = (q: IDockerQuery = {}) => {
-  const containers$ = new BehaviorSubject<IDockerContainer[]>([]);
+export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
+  const containers$ = new BehaviorSubject<QueryDocumentSnapshot<DocumentData, DocumentData>[]>([]);
   const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
+      limit(1),
+      ...(lastRef ? [startAfter(lastRef)] : []),
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.type ? [where("type", "==", q.type)] : []),
       ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
@@ -55,14 +61,14 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
       ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => {
-      const containersData = snapshot.docs.map((doc) => {
-        const data = doc.data() as IDockerContainer;
-        return {
-          id: doc.id,
-          ...data,
-        };
-      });
-      containers$.next(containersData);
+      // const containersData = snapshot.docs.map((doc) => {
+      //   const data = doc.data() as IDockerContainer;
+      //   return {
+      //     id: doc.id,
+      //     ...data,
+      //   };
+      // });
+      containers$.next(snapshot.docs);
     },
     (error) => {
       console.error("Error fetching containers data:", error);
@@ -70,7 +76,7 @@ export const dockerContainers = (q: IDockerQuery = {}) => {
     },
   );
 
-  return new Observable<IDockerContainer[]>((subscriber) => {
+  return new Observable<QueryDocumentSnapshot<DocumentData, DocumentData>[]>((subscriber) => {
     const subscription = containers$.subscribe(subscriber);
 
     return () => {

@@ -1,6 +1,6 @@
 import React, { ElementType } from "react";
 import { Card, CardBody, CardText, CardTitle, Stack } from "react-bootstrap";
-import formatNumber from "../utils/formatNumber";
+import { formatNumber } from "../utils/formatNumber";
 
 export const Statistics = ({
   icon,

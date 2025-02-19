@@ -4,7 +4,7 @@ import {
   IconStarHalfFilled,
 } from "@tabler/icons-react";
 import { IDockerContainer } from "../types/dockerContainer";
-import formatNumber from "../utils/formatNumber";
+import { formatNumber } from "../utils/formatNumber";
 
 /**
  * Display the ratings of a review

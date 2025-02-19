@@ -1,4 +1,4 @@
-import formatNumber from "./formatNumber";
+import { formatNumber } from "./formatNumber";
 
 /**
  * Format amount to display

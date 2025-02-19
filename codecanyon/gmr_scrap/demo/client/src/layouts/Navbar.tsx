@@ -7,7 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { userData } from "../services/userService";
-import formatNumber from "../utils/formatNumber";
+import { formatNumber } from "../utils";
 import { IUserInfo } from "../types/userInfo";
 import { Logo } from "../components/Logo";
 import { Image } from "react-bootstrap";

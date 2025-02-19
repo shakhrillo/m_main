@@ -1,17 +1,16 @@
 import { IconSearch } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Badge, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { Badge, Button, Card, CardBody, CardHeader, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { NavLink } from "react-router-dom";
 import { StatusInfo } from "../../components/StatusInfo";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { formatDate } from "../../utils/formatDate";
-import formatNumber from "../../utils/formatNumber";
-import { formatTimestamp } from "../../utils/formatTimestamp";
+import { formatDate, formatNumber, formatTimestamp } from "../../utils";
 import { Ratings } from "../Ratings";
+import { map, take } from "rxjs";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -31,8 +30,11 @@ export const ContainersList = ({
 }) => {
   const auth = getAuth();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
+  const [newContainers, setNewContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
+  const [limit, setLimit] = useState(1);
+  const [lastDoc, setLastDoc] = useState<any>(null);
 
   useEffect(() => {
     if (!auth.currentUser || !auth.currentUser?.uid) {
@@ -47,15 +49,59 @@ export const ContainersList = ({
       type,
       machineType,
       status: filter,
-    }).subscribe((data) => {
-      console.log("data", data);
-      setContainers(data);
-    });
+    }).pipe(
+      map((docs) => {
+        setLastDoc(docs[docs.length - 1]);
+        return docs.map((doc) => {
+          const data = doc.data() as IDockerContainer;
+          return {
+            id: doc.id,
+            ...data,
+          };
+        });
+      })
+    ).subscribe((data) => setNewContainers(data));
 
     return () => {
       subscription.unsubscribe();
     };
   }, [search, auth, type, filter]);
+
+  useEffect(() => {
+    if (newContainers.length > 0) {
+      setContainers([...newContainers, ...containers]);
+    }
+  }, [newContainers]);
+
+  function loadMore() {
+    if (!auth.currentUser || !auth.currentUser?.uid) {
+      return;
+    }
+
+    const subscription = dockerContainers({
+      search,
+      uid: auth.currentUser?.uid,
+      type,
+      machineType,
+      status: filter,
+    }, lastDoc).pipe(
+      map((docs) => {
+        setLastDoc(docs[docs.length - 1]);
+        return docs.map((doc) => {
+          const data = doc.data() as IDockerContainer;
+          return {
+            id: doc.id,
+            ...data,
+          };
+        });
+      }),
+      take(1),
+    ).subscribe((data) => setNewContainers(data));
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }
 
   return (
     <Card>
@@ -111,100 +157,81 @@ export const ContainersList = ({
             )
           }
         </div>
-        <BootstrapTable
-          bordered={false}
-          hover
-          keyField="containerId"
-          data={containers.map((comment) => ({
-            containerId: comment.containerId,
-            title: (
-              <NavLink to={`/${path}/${comment.machineId}`}>
-                {comment.title}
-              </NavLink>
-            ),
-            status: <StatusInfo container={comment} />,
-            date: formatTimestamp(comment.createdAt),
-            rating: <Ratings container={comment} />,
-            totalReviews: formatNumber(comment.totalReviews),
-            totalOwnerReviews: formatNumber(comment.totalOwnerReviews),
-            totalImages: formatNumber(comment.totalImages),
-            totalVideos: formatNumber(comment.totalVideos),
-            machineAction: (
-              <Badge
-                bg={
-                  comment.machine?.Action === "die"
-                    ? "danger"
-                    : comment.machine?.Action === "start"
-                      ? "success"
-                      : "secondary"
-                }
-                className="text-capitalize"
-              >
-                {comment.machine?.Action}
-              </Badge>
-            ),
-            machineTime: formatDate(comment?.machine?.time || 0),
-            machineExecDuration:
-              (comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s",
-            machineImage: comment?.machine?.Actor?.Attributes?.image,
-            machineName: (
-              <span className="d-flex flex-column">
+        <div>
+          {
+            containers.map((comment) => ({
+              containerId: comment.containerId,
+              title: (
                 <NavLink to={`/${path}/${comment.machineId}`}>
-                  {comment.title || comment.tag || comment.machineId}
-                  {comment.type && (
-                    <Badge
-                      className="text-capitalize ms-2"
-                      bg={comment.type === "info" ? "info" : "primary"}
-                    >
-                      {comment.type === "info" ? "Validate" : "Review"}
-                    </Badge>
-                  )}
+                  {comment.title}
                 </NavLink>
-                #{comment?.machine?.Actor?.Attributes?.name}
-              </span>
-            ),
-          }))}
-          columns={[
-            ...(type ? [{ dataField: "title", text: "Title" }] : []),
-            ...(type ? [{ dataField: "status", text: "Comment" }] : []),
-            ...(type ? [{ dataField: "date", text: "Date" }] : []),
-            ...(type === "info" ? [{ dataField: "rating", text: "Rate" }] : []),
-            ...(type === "comments"
-              ? [{ dataField: "totalReviews", text: "Reviews" }]
-              : []),
-            ...(type === "comments"
-              ? [{ dataField: "totalImages", text: "Images" }]
-              : []),
-            ...(type === "comments"
-              ? [{ dataField: "totalVideos", text: "Videos" }]
-              : []),
-            ...(type === "comments"
-              ? [{ dataField: "totalOwnerReviews", text: "Owner response" }]
-              : []),
-            ...(!type ? [{ dataField: "machineName", text: "Machine" }] : []),
-            ...(!type
-              ? [{ dataField: "machineAction", text: "Machine Action" }]
-              : []),
-            ...(!type
-              ? [{ dataField: "machineTime", text: "Machine Time" }]
-              : []),
-            ...(!type
-              ? [
-                  {
-                    dataField: "machineExecDuration",
-                    text: "Machine Exec Duration",
-                  },
-                ]
-              : []),
-            ...(!type
-              ? [{ dataField: "machineImage", text: "Machine Image" }]
-              : []),
-          ]}
-          pagination={paginationFactory({
-            sizePerPage: 10,
-            hideSizePerPage: true,
-          })}
-        />
+              ),
+              status: <StatusInfo container={comment} />,
+              date: formatTimestamp(comment.createdAt),
+              rating: <Ratings container={comment} />,
+              totalReviews: formatNumber(comment.totalReviews),
+              totalOwnerReviews: formatNumber(comment.totalOwnerReviews),
+              totalImages: formatNumber(comment.totalImages),
+              totalVideos: formatNumber(comment.totalVideos),
+              machineAction: (
+                <Badge
+                  bg={
+                    comment.machine?.Action === "die"
+                      ? "danger"
+                      : comment.machine?.Action === "start"
+                        ? "success"
+                        : "secondary"
+                  }
+                  className="text-capitalize"
+                >
+                  {comment.machine?.Action}
+                </Badge>
+              ),
+              machineTime: formatDate(comment?.machine?.time || 0),
+              machineExecDuration:
+                (comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s",
+              machineImage: comment?.machine?.Actor?.Attributes?.image,
+              machineName: (
+                <span className="d-flex flex-column">
+                  <NavLink to={`/${path}/${comment.machineId}`}>
+                    {comment.title || comment.tag || comment.machineId}
+                    {comment.type && (
+                      <Badge
+                        className="text-capitalize ms-2"
+                        bg={comment.type === "info" ? "info" : "primary"}
+                      >
+                        {comment.type === "info" ? "Validate" : "Review"}
+                      </Badge>
+                    )}
+                  </NavLink>
+                  #{comment?.machine?.Actor?.Attributes?.name}
+                </span>
+              ),
+            })).map((comment) => (
+              <div key={comment.containerId}>
+                {/* <NavLink to={`/${path}/${comment.machineId}`}>
+                  {comment.title}
+                </NavLink> */}
+                {comment.status}
+                {comment.date}
+                {comment.rating}
+                {comment.totalReviews}
+                {comment.totalOwnerReviews}
+                {comment.totalImages}
+                {comment.totalVideos}
+                {comment.machineAction}
+                {comment.machineTime}
+                {comment.machineExecDuration}
+                {comment.machineImage}
+                {comment.machineName}
+              </div>
+            ))
+          }
+
+          <Button onClick={loadMore} variant="outline-primary" className="mt-3">
+            Load more
+          </Button>
+        </div>
       </CardBody>
     </Card>
   );

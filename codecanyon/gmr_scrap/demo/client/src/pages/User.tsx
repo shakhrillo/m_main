@@ -4,7 +4,7 @@ import { JSX, useCallback, useEffect, useState } from "react";
 import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
-import formatNumber from "../utils/formatNumber";
+import { formatNumber } from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
 
 interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {

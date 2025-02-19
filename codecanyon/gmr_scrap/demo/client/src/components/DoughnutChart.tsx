@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import formatNumber from "../utils/formatNumber";
+import { formatNumber } from "../utils/formatNumber";
 
 ChartJS.register(
   ArcElement,

@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap"
-import formatNumber from "../../utils/formatNumber"
+import { formatNumber } from "../../utils/formatNumber"
 import { useEffect, useState } from "react"
 import { getStatistics } from "../../services/statistics";
 
