@@ -175,10 +175,10 @@ function getReviewResponse(node) {
   );
 
   if (spanEl) {
-    return spanEl.parentElement?.nextElementSibling?.innerText || "";
+    return [spanEl.parentElement?.nextElementSibling?.innerText || ""];
   }
 
-  return "";
+  return []
 }
 
 /**
@@ -323,10 +323,10 @@ async function validateNode(node) {
 
     const review = getReviewComment(node);
 
-    let response = "";
+    let response = [];
     if (gmrScrap["extractOwnerResponse"]) {
-      response = getReviewResponse(node);
-      if (!!response) {
+      response = getReviewResponse(node) || [];
+      if (response.length) {
         gmrScrap["extractedOwnerReviewCount"] = !gmrScrap[
           "extractedOwnerReviewCount"
         ]

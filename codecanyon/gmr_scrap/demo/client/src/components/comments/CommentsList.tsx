@@ -1,21 +1,18 @@
+import { useEffect, useRef, useState } from "react";
 import {
   IconReload,
   IconSearch,
 } from "@tabler/icons-react";
-import { getAuth, User } from "firebase/auth";
-import { useEffect, useRef, useState } from "react";
+import { getAuth } from "firebase/auth";
 import {
   Alert,
   Button,
-  Card,
-  CardBody,
   Dropdown,
   Form,
   InputGroup,
-  Pagination,
   Stack,
 } from "react-bootstrap";
-import { debounceTime, filter, map, Subject, take } from "rxjs";
+import { debounceTime, filter, Subject } from "rxjs";
 import { reviewComments } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
@@ -24,32 +21,35 @@ interface ICommentsListProps {
   reviewId: string;
 }
 
+const FILTER_OPTIONS = [{
+  key: "",
+  label: "All",
+}, {
+  key: "imageUrls",
+  label: "Images",
+}, {
+  key: "videoUrls",
+  label: "Videos",
+}, {
+  key: "qa",
+  label: "Q&A",
+}, {
+  key: "response",
+  label: "Response",
+}];
+
 export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const auth = getAuth();
   const commentsRef = useRef<HTMLDivElement>(null);
-  const [comments, setComments] = useState([] as IComment[]);
-  const [limit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [filterOptions, setFilterOptions] = useState({
-    onlyImages: false,
-    onlyVideos: false,
-    onlyQA: false,
-    onlyResponse: false,
-  });
+  const [comments, setComments] = useState<IComment[]>([]);
   const [search, setSearch] = useState("");
   const [searchSubject] = useState(new Subject<string>());
-  const [paginationLength, setPaginationLength] = useState(5);
-  const paginationRef = useRef<HTMLDivElement | null>(null);
-
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
+  const [filterOptions, setFilterOptions] = useState<string>("");
 
   useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
-      setSearch(value);
-    });
-
+    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
     return () => subscription.unsubscribe();
   }, []);
 
@@ -60,160 +60,69 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const fetchComments = (append = false, lastDocument = null) => {
     if (!auth.currentUser?.uid) return;
 
-    return reviewComments({
-      reviewId,
-      uid: auth.currentUser?.uid || "",
-      filterOptions,
-      search,
-    }, lastDocument).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
+    reviewComments({ reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument)
+      .pipe(filter((snapshot) => snapshot !== null))
+      .subscribe((snapshot) => {
         if (snapshot.empty) {
           setIsLastPage(true);
-          return [];
+          return;
         }
         setLastDoc(snapshot.docs.at(-1));
-        return snapshot.docs.map((doc) => {
-          const data = doc.data() as IComment;
-          return { ...data, id: doc.id };
-        });
-      }),
-      take(1),
-    ).subscribe((data) => {
-      setComments((prev) => (append ? [...prev, ...data] : data));
-    });
-  }
+        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
+        setComments((prev) => (append ? [...prev, ...data] : data));
+      });
+  };
 
   useEffect(() => {
     setLastDoc(null);
     setIsLastPage(false);
     setComments([]);
-    const subscription = fetchComments();
-    return () => subscription?.unsubscribe();
+    fetchComments();
   }, [search, filterOptions, reviewId]);
-
-  const loadMore = () => {
-    if (!isLastPage) fetchComments(true, lastDoc);
-  };
 
   return (
     <div className="comments" ref={commentsRef}>
       <Stack direction="horizontal">
-        <div className="d-inline-block me-auto">
-          <InputGroup>
-            <InputGroup.Text id="search-icon">
-              <IconSearch />
-            </InputGroup.Text>
-            <Form.Control
-              type="search"
-              id="search"
-              placeholder="Search..."
-              aria-label="Search"
-              aria-describedby="search-icon"
-              onChange={handleSearch}
-            />
-          </InputGroup>
-        </div>
+        <InputGroup className="me-auto">
+          <InputGroup.Text>
+            <IconSearch />
+          </InputGroup.Text>
+          <Form.Control
+            type="search"
+            placeholder="Search..."
+            onChange={handleSearch}
+          />
+        </InputGroup>
         <Dropdown autoClose="outside">
-          <Dropdown.Toggle id="dropdown-filter" variant="secondary">
-            Filter
-          </Dropdown.Toggle>
-
+          <Dropdown.Toggle variant="secondary">Filter</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={(e) => {
-                e.preventDefault();
-                setFilterOptions({
-                  ...filterOptions,
-                  onlyImages: !filterOptions.onlyImages,
-                });
-              }}
-            >
-              <Form>
-                <Form.Check
-                  type="checkbox"
-                  id="filter-image-checkbox"
-                  label="Image comments"
-                  checked={filterOptions.onlyImages}
-                />
-              </Form>
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={(e) => {
-                e.preventDefault();
-                setFilterOptions({
-                  ...filterOptions,
-                  onlyVideos: !filterOptions.onlyVideos,
-                });
-              }}
-            >
-              <Form>
-                <Form.Check
-                  type="checkbox"
-                  id="filter-video-checkbox"
-                  label="Video comments"
-                  checked={filterOptions.onlyVideos}
-                />
-              </Form>
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={(e) => {
-                e.preventDefault();
-                setFilterOptions({
-                  ...filterOptions,
-                  onlyQA: !filterOptions.onlyQA,
-                });
-              }}
-            >
-              <Form>
-                <Form.Check
-                  type="checkbox"
-                  id="filter-qa-checkbox"
-                  label="QA comments"
-                  checked={filterOptions.onlyQA}
-                />
-              </Form>
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={(e) => {
-                e.preventDefault();
-                setFilterOptions({
-                  ...filterOptions,
-                  onlyResponse: !filterOptions.onlyResponse,
-                });
-              }}
-            >
-              <Form>
-                <Form.Check
-                  type="checkbox"
-                  id="filter-response-checkbox"
-                  label="Response comments"
-                  checked={filterOptions.onlyResponse}
-                />
-              </Form>
-            </Dropdown.Item>
+            {
+              FILTER_OPTIONS.map(({key, label}) => (
+                <Dropdown.Item key={key} onClick={() => setFilterOptions(key)}>
+                  <Form.Check
+                    type="radio"
+                    name="filter"
+                    label={label}
+                    checked={filterOptions === key}
+                  />
+                </Dropdown.Item>
+              ))
+            }
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
-      {comments.map((review, index) => (
-        <Comment review={review} key={index} />
-      ))}
 
-      {!comments.length && (
-        <Alert className="w-100" variant="info">
-          No comments found
-        </Alert>
+      {comments.length ? comments.map((review) => <Comment review={review} key={review.id} />) : (
+        <Alert className="w-100" variant="info">No comments found</Alert>
       )}
 
-      {
-        !isLastPage && (
-          <Stack direction="horizontal" className="justify-content-center mt-3">
-            <Button onClick={loadMore} variant="outline-primary">
-              <IconReload className="me-2" /> Load more
-            </Button>
-          </Stack>
-        )
-      }
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3">
+          <Button onClick={() => fetchComments(true, lastDoc)} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
+      )}
     </div>
   );
 };
