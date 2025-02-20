@@ -1,6 +1,6 @@
 import { IconCircleCheck, IconCircleDashedCheck, IconFence, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
-import { Badge, Card, CardBody, Col, Row } from "react-bootstrap";
+import { Badge, Card, CardBody, Col, FormLabel, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
@@ -53,24 +53,30 @@ export const ScrapExtractType = ({ containerId, container }: {
       <h5 className="mt-3 mb-0">
         Extract type
       </h5>
-      <Row>
+      <Row className="g-3">
         {options.map(({ key, label, icon, points }) => {
           const isActive = extractOptions[key as keyof typeof extractOptions];
           return (
-            <Col key={key}>
-              <Card role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)}>
-                <CardBody className="d-flex align-items-center">
-                  {createElement(icon, { className: "text-body-secondary me-3", size: 30 })}
-                  <div className="d-block me-auto">
-                    <h6 className="m-0">{label}</h6>
-                    <Badge className="d-inline" bg={isActive ? "success" : "secondary"}>{points} points</Badge>
-                  </div>
+            <Col key={key} sm={4}>
+              <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} className="d-flex align-items-center">
+                <div className="me-3">
+                  {/* {createElement(icon, { className: "text-body-secondary", size: 30 })} */}
                   {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {
                     className: isActive ? "text-success" : "text-body-secondary",
                     size: 30,
                   })}
-                </CardBody>
-              </Card>
+                </div>
+                <Stack direction="vertical">
+                  <FormLabel>{label}</FormLabel>
+                  <div className="mt-n2">
+                    <Badge bg={isActive ? "success" : "secondary"}>{points} points</Badge>
+                  </div>
+                </Stack>
+                {/* {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {
+                  className: isActive ? "text-success" : "text-body-secondary",
+                  size: 30,
+                })} */}
+              </div>
             </Col>
           );
         })}

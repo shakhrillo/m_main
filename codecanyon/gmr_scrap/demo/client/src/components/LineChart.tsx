@@ -69,7 +69,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
     const { top, bottom } = chartArea;
     const gradient = ctx.createLinearGradient(0, top, 0, bottom);
     gradient.addColorStop(0, hexToRgba(color, 1));
-    gradient.addColorStop(1, hexToRgba(color, 0));
+    gradient.addColorStop(1, hexToRgba(color, 1));
     return gradient;
   };
 
@@ -88,26 +88,24 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
           hexToRgba(dataset.color, 0.5)
         );
       },
-      tension: 0.2,
-      // pointRadius: 0,
+      tension: 0,
+      pointRadius: 0,
       fill: true,
-      // borderWidth: 2,
+      borderWidth: 0,
     })),
   };
 
   const chartOptions = {
     animation: {
-      duration: 1000,
+      duration: 0,
       delay: 0,
-      easing: "easeInOutQuart" as const,
     },
     scales: {
       x: {
         grid: { display: false },
         border: { display: false },
         ticks: {
-          color: "#000",
-          font: { size: 12 },
+          display: false,
         },
       },
       y: {

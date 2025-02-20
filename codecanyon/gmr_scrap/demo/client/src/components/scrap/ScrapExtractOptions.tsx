@@ -23,18 +23,14 @@ interface IOptionCardProps {
  * @returns Option card component.
  */
 const OptionCard = ({ icon, label, children }: IOptionCardProps) => (
-  <Col sm={12}>
-    <Card>
-      <CardBody>
-        <Stack direction="horizontal" className="gap-3 align-items-start">
-          {createElement(icon, { className: "text-body-secondary", size: 30 })}
-          <div className="w-100">
-            <FormLabel>{label}</FormLabel>
-            {children}
-          </div>
-        </Stack>
-      </CardBody>
-    </Card>
+  <Col sm={6}>
+    <Stack direction="horizontal" className="gap-3 align-items-start">
+      {/* {createElement(icon, { className: "text-body-secondary", size: 30 })} */}
+      <div className="w-100">
+        <FormLabel>{label}</FormLabel>
+        {children}
+      </div>
+    </Stack>
   </Col>
 );
 

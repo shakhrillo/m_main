@@ -180,7 +180,6 @@ export const DockerContainer = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item
           onClick={() => {
             navigate("/containers");
@@ -188,35 +187,41 @@ export const DockerContainer = () => {
         >
           Containers
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>{containerId || "N/A"}</Breadcrumb.Item>
+        <Breadcrumb.Item active>{container.title || "N/A"}</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
         <Col md={9}>
-          <Tabs defaultActiveKey="stats" className="mb-3">
+          <Tabs variant="pills" defaultActiveKey="stats">
             <Tab eventKey="stats" title="Stats">
-              <Row className="g-3 row-cols-1">
+              <Row>
                 {chartData.map((chart) => (
-                  <Col key={chart.label}>
-                    <Card>
-                      <CardBody>
-                        <Stack direction="horizontal" gap={3} className="mb-3">
-                          <span className="fw-bold fs-5 me-auto">
-                            {chart.label}
-                          </span>
-                          <Button
-                            variant="link"
-                            className="p-0"
-                            onClick={() =>
-                              setStats(stats.map((stat) => ({ ...stat })))
-                            }
-                          >
-                            <IconReload />
-                          </Button>
-                        </Stack>
-                        <LineChart labels={labels} datasets={chart.datasets} />
-                      </CardBody>
-                    </Card>
+                  <Col key={chart.label} md={6} className="mt-3">
+                    <h5>
+                      {chart.label}
+                    </h5>
+                    <LineChart labels={labels} datasets={chart.datasets} />
                   </Col>
+                  // <Col key={chart.label}>
+                  //   <Card>
+                  //     <CardBody>
+                  //       <Stack direction="horizontal" gap={3} className="mb-3">
+                  //         <span className="fw-bold fs-5 me-auto">
+                  //           {chart.label}
+                  //         </span>
+                  //         <Button
+                  //           variant="link"
+                  //           className="p-0"
+                  //           onClick={() =>
+                  //             setStats(stats.map((stat) => ({ ...stat })))
+                  //           }
+                  //         >
+                  //           <IconReload />
+                  //         </Button>
+                  //       </Stack>
+                  //       <LineChart labels={labels} datasets={chart.datasets} />
+                  //     </CardBody>
+                  //   </Card>
+                  // </Col>
                 ))}
               </Row>
             </Tab>

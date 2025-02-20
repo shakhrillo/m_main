@@ -77,68 +77,64 @@ export const ScrapValidateURL = ({
   }
 
   return (
-    <Card text="dark">
-      <CardBody>
-        <Stack direction="horizontal" gap={3} className="align-items-start">
-          <IconBrandGoogleMaps size={48} className="text-primary" />
-          <Stack direction="vertical">
-            <CardTitle>Google Maps URL</CardTitle>
-            <CardSubtitle>
-              Validate a Google Maps URL to get information about the location.
-            </CardSubtitle>
-            <Form className="mt-3" onSubmit={handleSubmit} noValidate>
-              <FormGroup className="mb-3" controlId="url">
-                <FormControl
-                  type="url"
-                  value={url}
-                  placeholder="https://maps.app.goo.gl/..."
-                  onChange={(e) => setUrl(e.target.value)}
-                  pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
-                  required
-                  autoFocus
-                  disabled={isDisabled}
-                />
-                <FormText className="invalid-feedback bg-danger-subtle">
-                  <IconAlertCircle className="me-2" size={20} />
-                  Please provide a valid Google Maps URL. Example:
-                  https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
-                </FormText>
-              </FormGroup>
-              {error && (
-                <div className="alert alert-danger mt-3">
-                  <IconAlertCircle className="me-2" size={20} />
-                  {error}
-                </div>
-              )}
-              <Stack direction="horizontal">
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="ms-auto"
-                  disabled={isDisabled}
-                >
-                  <Stack direction="horizontal" gap={2}>
-                    {container?.machine?.Action !== "die" && containerId ? (
-                      <>
-                        <Spinner animation="border" size="sm" />
-                        Validating URL...
-                      </>
-                    ) : (
-                      <>
-                        <IconCircleCheck />
-                        Validate URL
-                        <Badge className="top-0" pill bg="light" text="dark">
-                          3 points
-                        </Badge>
-                      </>
-                    )}
-                  </Stack>
-                </Button>
+    <Stack direction="horizontal" gap={3} className="bg-light p-3 rounded align-items-start">
+      <IconBrandGoogleMaps size={48} className="text-primary" />
+      <Stack direction="vertical">
+        <CardTitle>Google Maps URL</CardTitle>
+        <CardSubtitle>
+          Validate a Google Maps URL to get information about the location.
+        </CardSubtitle>
+        <Form className="mt-3" onSubmit={handleSubmit} noValidate>
+          <FormGroup className="mb-3" controlId="url">
+            <FormControl
+              type="url"
+              value={url}
+              placeholder="https://maps.app.goo.gl/..."
+              onChange={(e) => setUrl(e.target.value)}
+              pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
+              required
+              autoFocus
+              disabled={isDisabled}
+            />
+            <FormText className="invalid-feedback bg-danger-subtle">
+              <IconAlertCircle className="me-2" size={20} />
+              Please provide a valid Google Maps URL. Example:
+              https://maps.app.goo.gl/9Jcrd1eE4eZnPXx38
+            </FormText>
+          </FormGroup>
+          {error && (
+            <div className="alert alert-danger mt-3">
+              <IconAlertCircle className="me-2" size={20} />
+              {error}
+            </div>
+          )}
+          <Stack direction="horizontal">
+            <Button
+              variant="primary"
+              type="submit"
+              className="ms-auto"
+              disabled={isDisabled}
+            >
+              <Stack direction="horizontal" gap={2}>
+                {container?.machine?.Action !== "die" && containerId ? (
+                  <>
+                    <Spinner animation="border" size="sm" />
+                    Validating URL...
+                  </>
+                ) : (
+                  <>
+                    <IconCircleCheck />
+                    Validate URL
+                    <Badge className="top-0" pill bg="light" text="dark">
+                      3 points
+                    </Badge>
+                  </>
+                )}
               </Stack>
-            </Form>
+            </Button>
           </Stack>
-        </Stack>
-      </CardBody>
-    </Card>
+        </Form>
+      </Stack>
+    </Stack>
   );
 };
