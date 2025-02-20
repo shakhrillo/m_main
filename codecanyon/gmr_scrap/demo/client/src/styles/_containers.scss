@@ -1,0 +1,13 @@
+.containers-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-data {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  padding: $spacer;
+  overflow: hidden;
+  font-size: 14px;
+}

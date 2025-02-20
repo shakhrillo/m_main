@@ -69,7 +69,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
           </InputGroup>
         </div>
         <Dropdown autoClose="outside">
-          <Dropdown.Toggle variant="outline-secondary" id="dropdown-filter">
+          <Dropdown.Toggle variant="outline-secondary">
             <IconFilter className="me-2" />
             Filter
           </Dropdown.Toggle>

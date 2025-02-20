@@ -94,10 +94,13 @@ export const SingleReview = () => {
             <Tab
               eventKey="videos"
               title={
-                <>
-                  <IconVideo size={24} />
-                  <span className="ms-3">Videos</span>
-                </>
+                <Stack direction="horizontal" gap={2}>
+                  <IconVideo />
+                  <h6 className="m-0">Videos</h6>
+                  <Badge>
+                    { container.totalVideos }
+                  </Badge>
+                </Stack>
               }
             >
               <VideosList reviewId={reviewId} />

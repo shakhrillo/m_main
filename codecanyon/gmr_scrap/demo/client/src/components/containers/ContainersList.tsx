@@ -1,4 +1,4 @@
-import { IconReload, IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconReload, IconSearch } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Badge, Button, Card, CardBody, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
@@ -9,6 +9,7 @@ import { IDockerContainer } from "../../types/dockerContainer";
 import { formatNumber, formatTimestamp } from "../../utils";
 import { Ratings } from "../Ratings";
 import { debounceTime, filter, map, Subject, take } from "rxjs";
+import { ContainerData } from "./ContainerData";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -40,10 +41,6 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    searchSubject.next(e.target.value);
-  };
 
   const fetchContainers = (append = false, lastDocument = null) => {
     if (!auth.currentUser?.uid) return;
@@ -83,29 +80,19 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
   };
 
   return (
-    <>
-      <Stack className="mb-3" direction="horizontal">
-        <div className="d-inline-block me-auto">
+    <div className="containers-list">
+      <Stack direction="horizontal" className="bg-light p-3 rounded">
+        <div className="me-auto">
           <InputGroup>
-            <InputGroup.Text id="searchContainers" className="bg-transparent">
-              <IconSearch />
-            </InputGroup.Text>
-            <Form.Control
-              type="search"
-              id="search"
-              placeholder="Search containers"
-              aria-label="Search"
-              aria-describedby="searchContainers"
-              onChange={handleSearch}
-            />
+            <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
           </InputGroup>
         </div>
-        <Dropdown>
-          <Dropdown.Toggle id="dropdown-status" variant="secondary">
+        <Dropdown autoClose="outside">
+          <Dropdown.Toggle variant="outline-secondary">
+            <IconFilter className="me-2" />
             Filter {status ? `(${status})` : ""}
           </Dropdown.Toggle>
-
-          <Dropdown.Menu aria-labelledby="dropdown-status">
+          <Dropdown.Menu>
             {FILTER_OPTIONS.map((option) => (
               <Dropdown.Item
                 key={option.label}
@@ -128,88 +115,7 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
       }
 
       {
-        containers.map((comment) => (
-          <Card key={comment.machineId} className="mb-3">
-            <CardBody>
-              <Stack direction="horizontal" gap={2} className="justify-content-between">
-                {
-                  path === "containers" ? (
-                    <Stack direction="horizontal" gap={2}>
-                      <Badge className="text-capitalize" bg={comment.type === "comments" ? "info" : "warning"}>
-                        {comment.type}
-                      </Badge>
-                      <Badge
-                        bg={
-                          comment.machine?.Action === "die" ? "danger" : comment.machine?.Action === "start" ? "success" : "secondary"
-                        }
-                        className="text-capitalize"
-                      >
-                        {comment.machine?.Action}
-                      </Badge>
-                    </Stack>
-                  ) : (
-                    <StatusInfo container={comment} />
-                  )
-                }
-                <small>
-                  {formatTimestamp(comment.createdAt)}
-                </small>
-              </Stack>
-              <NavLink className={"h6"} to={`/${path}/${comment.machineId}`}>
-                {
-                  path === "containers" ? (
-                    <>
-                      {comment.title}
-                    </>
-                  ) : (
-                    comment.title
-                  )
-                }
-              </NavLink>
-              {
-                path === "containers" && (
-                  <>
-                    <Stack direction="horizontal" gap={2} className="text-muted">
-                      {comment?.machine?.Actor?.Attributes?.name && (
-                        <i className="text-capitalize">
-                          #{comment?.machine?.Actor?.Attributes?.name}
-                        </i>
-                      )}
-                      {(comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s exec duration"}
-                    </Stack>
-                  </>
-                )
-              }
-              {
-                (path === "reviews" || path === "scrap") && (
-                  <>
-                    <Ratings container={comment} />
-                    {
-                      comment.type === "comments" && (
-                        <Stack direction="horizontal" gap={2} className="text-muted">
-                          <div>{formatNumber(comment.totalReviews)} Reviews</div>
-                          <div>{formatNumber(comment.totalOwnerReviews)} Owner Reviews</div>
-                          <div>{formatNumber(comment.totalImages)} Images</div>
-                          <div>{formatNumber(comment.totalVideos)} Videos</div>
-                        </Stack>
-                      )
-                    }
-                  </>
-                )
-              }
-              {
-                path === "images" && (
-                  <Stack direction="horizontal" gap={2} className="text-muted">
-                    <div>{comment?.machine?.Os}</div>
-                    <div>{comment?.machine?.Architecture}</div>
-                    <div>{comment?.machine?.Variant}</div>
-                    <div>{formatTimestamp(comment?.machine?.Created)}</div>
-                  </Stack>
-                )
-              }
-            </CardBody>
-          </Card>
-        ))
+        containers.map((comment) => <ContainerData key={comment.id} container={comment} path={path} />)
       }
 
       {
@@ -221,6 +127,6 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
           </Stack>
         )
       }
-    </>
+    </div>
   );
 };

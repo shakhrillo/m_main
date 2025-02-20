@@ -30,7 +30,7 @@ export const AppNavbar = () => {
   }, [user]);
 
   return (
-    <Navbar expand="lg" bg="white" variant="light" className="shadow-sm">
+    <Navbar expand="lg" bg="white" variant="light" className="border-bottom">
       <Container>
         <Navbar.Brand>
           <Logo />

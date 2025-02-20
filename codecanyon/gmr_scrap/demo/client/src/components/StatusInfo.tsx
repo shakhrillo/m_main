@@ -14,13 +14,13 @@ export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
         : "text-danger";
 
   return (
-    <Stack direction="horizontal" gap={1} className={color}>
+    <Stack direction="horizontal" gap={2} className={color}>
       {status === "completed" ? (
-        <IconCheck />
+        <IconCheck size={18} />
       ) : (
         <Spinner animation="border" size="sm" />
       )}
-      <span className="text-uppercase">{status}</span>
+      <span className="text-capitalize">{status}</span>
     </Stack>
   );
 };
