@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { IconFilter, IconReload, IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconReload } from "@tabler/icons-react";
 import { getAuth } from "firebase/auth";
 import { Alert, Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { debounceTime, filter, Subject, take } from "rxjs";
-import { reviewComments } from "../../services/reviewService";
+import { reviewsData } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
 
@@ -49,7 +49,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const fetchComments = (append = false, lastDocument = null) => {
     if (!auth.currentUser?.uid) return;
 
-    reviewComments({ reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument).pipe(filter((snapshot) => snapshot !== null), take(1)).subscribe((snapshot) => {
+    reviewsData("reviews", { reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument).pipe(filter((snapshot) => snapshot !== null), take(1)).subscribe((snapshot) => {
       if (snapshot.empty) {
         setIsLastPage(true);
         return;

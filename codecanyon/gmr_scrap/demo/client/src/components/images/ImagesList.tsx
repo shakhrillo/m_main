@@ -1,54 +1,43 @@
-import { IconPhoto } from "@tabler/icons-react";
-import { User } from "firebase/auth";
+import { IconPhoto, IconReload } from "@tabler/icons-react";
+import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Alert, Image } from "react-bootstrap";
+import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import { useOutletContext } from "react-router-dom";
-import { debounceTime, Subject } from "rxjs";
-import { reviewImages } from "../../services/reviewService";
+import { filter, take } from "rxjs";
+import { reviewsData } from "../../services/reviewService";
+import { ICommentImage } from "../../types/comment";
 
 interface IImagesListProps {
   reviewId: string;
 }
 
 export const ImagesList = ({ reviewId }: IImagesListProps) => {
-  const { uid } = useOutletContext<User>();
-  const [images, setImages] = useState([] as any[]);
-  const [filterOptions, setFilterOptions] = useState({
-    onlyImages: false,
-    onlyVideos: false,
-    onlyQA: false,
-    onlyResponse: false,
-  });
-  const [search, setSearch] = useState("");
-  const [searchSubject] = useState(new Subject<string>());
+  const auth = getAuth();
+  const [images, setImages] = useState([] as ICommentImage[]);
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
-  useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        setSearch(value);
-      });
+  const fetchImages = (append = false, lastDocument = null) => {
+    if (!auth.currentUser?.uid) return;
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscription = reviewImages(
-      reviewId,
-      uid,
-      filterOptions,
-      search,
-    ).subscribe((data) => {
-      setImages(data);
+    reviewsData("images", { reviewId, uid: auth.currentUser.uid }, lastDocument).pipe(filter((snapshot) => snapshot !== null), take(1)).subscribe((snapshot) => {
+      if (snapshot.empty) {
+        setIsLastPage(true);
+        return;
+      }
+      
+      setLastDoc(snapshot.docs.at(-1));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as any));
+      setImages((prev) => (append ? [...prev, ...data] : data));
     });
+  };
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [reviewId, filterOptions, search, uid]);
+  useEffect(() => {
+    setImages([]);
+    setLastDoc(null);
+    setIsLastPage(false);
+    fetchImages();
+  }, [reviewId]);
 
   return (
     <div className="images">
@@ -78,10 +67,19 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
           </Item>
         ))}
       </Gallery>
+      
       {!images.length && (
         <Alert className="w-100" variant="info">
           No images found
         </Alert>
+      )}
+
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+          <Button onClick={() => fetchImages(true, lastDoc)} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
       )}
     </div>
   );

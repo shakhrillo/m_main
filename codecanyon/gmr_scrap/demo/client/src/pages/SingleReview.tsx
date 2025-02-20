@@ -80,10 +80,13 @@ export const SingleReview = () => {
             <Tab
               eventKey="images"
               title={
-                <>
-                  <IconLibraryPhoto size={24} />
-                  <span className="ms-3">Images</span>
-                </>
+                <Stack direction="horizontal" gap={2}>
+                  <IconLibraryPhoto />
+                  <h6 className="m-0">Images</h6>
+                  <Badge>
+                    { container.totalImages }
+                  </Badge>
+                </Stack>
               }
             >
               <ImagesList reviewId={reviewId} />
@@ -97,7 +100,7 @@ export const SingleReview = () => {
                 </>
               }
             >
-              <VideosList reviewId={reviewId} />
+              {/* <VideosList reviewId={reviewId} /> */}
             </Tab>
           </Tabs>
         </Col>
