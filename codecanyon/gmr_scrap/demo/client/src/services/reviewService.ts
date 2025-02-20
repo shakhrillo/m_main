@@ -15,12 +15,6 @@ import { IComment } from "./scrapService";
 interface IReviewQuery {
   uid?: string;
   reviewId?: string;
-  // filterOptions?: {
-  //   onlyImages?: boolean;
-  //   onlyVideos?: boolean;
-  //   onlyQA?: boolean;
-  //   onlyResponse?: boolean;
-  // };
   filterOptions?: "onlyImages" | "onlyVideos" | "onlyQA" | "onlyResponse" | string;
   search?: string;
 }
@@ -28,16 +22,14 @@ export const reviewComments = (q: IReviewQuery = {}, lastRef?: any) => {
   const reviews$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, `containers/${q.reviewId}/reviews`);
 
-  console.log("q", q);
-
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
       where("uid", "==", q.uid),
-      limit(1),
-      ...(lastRef ? [startAfter(lastRef)] : []),
       ...(q.filterOptions ? [where(q.filterOptions, ">", [])] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
+      ...(lastRef ? [startAfter(lastRef)] : []),
+      limit(10),
     ),
     (snapshot) => reviews$.next(snapshot),
     (error) => {
@@ -74,8 +66,8 @@ export const reviewImages = (
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      // where("machineId", "==", placeId),
-      // where("uid", "==", uid),
+      where("uid", "==", uid),
+      limit(1),
       ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
       ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
       ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),

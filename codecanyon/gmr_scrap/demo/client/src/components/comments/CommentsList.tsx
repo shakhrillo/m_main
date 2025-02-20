@@ -12,7 +12,7 @@ import {
   InputGroup,
   Stack,
 } from "react-bootstrap";
-import { debounceTime, filter, Subject } from "rxjs";
+import { debounceTime, filter, Subject, take } from "rxjs";
 import { reviewComments } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
@@ -61,7 +61,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
     if (!auth.currentUser?.uid) return;
 
     reviewComments({ reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument)
-      .pipe(filter((snapshot) => snapshot !== null))
+      .pipe(filter((snapshot) => snapshot !== null), take(1))
       .subscribe((snapshot) => {
         if (snapshot.empty) {
           setIsLastPage(true);
@@ -77,6 +77,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
     setLastDoc(null);
     setIsLastPage(false);
     setComments([]);
+
     fetchComments();
   }, [search, filterOptions, reviewId]);
 
@@ -104,6 +105,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
                     name="filter"
                     label={label}
                     checked={filterOptions === key}
+                    onChange={() => {}}
                   />
                 </Dropdown.Item>
               ))
