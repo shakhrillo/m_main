@@ -1,290 +1,118 @@
-import { IconArrowsSort, IconCircleCheck, IconCircleDashedCheck, IconCoins, IconFence, IconFile, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
+import { IconArrowsSort, IconCoins, IconFence, IconFile } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
-import { Badge, Card, CardBody, CardTitle, Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
+import { Card, CardBody, Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
-export const ScrapExtractOptions = ({ containerId, container }: {
+interface IScrapExtractOptionsProps {
   containerId: string | undefined;
   container: IDockerContainer;
-}) => {
-  const [extractImageUrls, setExtractImageUrls] = useState<boolean>(
-    container.extractImageUrls || false,
-  );
-  const [extractVideoUrls, setExtractVideoUrls] = useState<boolean>(
-    container.extractVideoUrls || false,
-  );
-  const [extractOwnerResponse, setExtractOwnerResponse] = useState<boolean>(
-    container.extractOwnerResponse || false,
-  );
-  const [limit, setLimit] = useState<number | undefined>(container.limit || 10);
-  const [maxSpentPoints, setMaxSpentPoints] = useState<number | undefined>(
-    container.limit || 100,
-  );
-  const [sortBy, setSortBy] = useState<
-    "Most relevant" | "Newest" | "Highest rating" | "Lowest rating"
-  >("Most relevant");
-  const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
+}
 
-  useEffect(() => {
-    setExtractImageUrls(container.extractImageUrls || false);
-    setExtractVideoUrls(container.extractVideoUrls || false);
-    setExtractOwnerResponse(container.extractOwnerResponse || false);
-    setLimit(container.limit || 10);
-    setSortBy(container.sortBy || "Most relevant");
-    setOutputAs(container.outputAs || "json");
-  }, [container]);
+interface IOptionCardProps {
+  icon: any;
+  label: string;
+  children: React.ReactNode;
+}
+
+/**
+ * Option card component.
+ * @param icon Icon.
+ * @param label Label.
+ * @param children Children.
+ * @returns Option card component.
+ */
+const OptionCard = ({ icon, label, children }: IOptionCardProps) => (
+  <Col sm={12}>
+    <Card>
+      <CardBody>
+        <Stack direction="horizontal" className="gap-3 align-items-start">
+          {createElement(icon, { className: "text-body-secondary", size: 30 })}
+          <div className="w-100">
+            <FormLabel>{label}</FormLabel>
+            {children}
+          </div>
+        </Stack>
+      </CardBody>
+    </Card>
+  </Col>
+);
+
+/**
+ * Scrap extract options component.
+ * @param containerId Container ID.
+ * @param container Container.
+ * @returns Scrap extract options component.
+ */
+export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOptionsProps) => {
+  const [limit, setLimit] = useState(container.limit || 10);
+  const [maxSpentPoints, setMaxSpentPoints] = useState(container.maxSpentPoints || 100);
+  const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">(
+    container.sortBy || "Most relevant"
+  );
+  const [outputAs, setOutputAs] = useState<"json" | "csv">(container.outputAs || "json");
 
   useEffect(() => {
     if (!container.rating || !container.id || !containerId) return;
 
-    updateDockerContainer(container.id, {
-      limit,
-      maxSpentPoints,
-      sortBy,
-      extractImageUrls,
-      extractVideoUrls,
-      extractOwnerResponse,
-      outputAs,
-    }).catch((error) => {
-      console.error("Error updating container limit:", error);
-    });
-  }, [
-    container,
-    limit,
-    maxSpentPoints,
-    sortBy,
-    extractImageUrls,
-    extractVideoUrls,
-    extractOwnerResponse,
-    outputAs,
-  ]);
+    updateDockerContainer(container.id, { limit, maxSpentPoints, sortBy, outputAs }).catch((error) =>
+      console.error("Error updating container:", error)
+    );
+  }, [container.id, container.rating, containerId, limit, maxSpentPoints, sortBy, outputAs]);
+
   return (
     <>
-      <Card>
-        <CardBody>
-          <CardTitle className="mb-3">Extract type</CardTitle>
-          <Row className="g-3">
-            <Col xl={4}>
-              <Stack
-                direction="horizontal"
-                className="bg-light p-3 rounded gap-3"
-                role="button"
-                onClick={() =>
-                  container.rating && setExtractImageUrls(!extractImageUrls)
-                }
-              >
-                <div className="d-block">
-                  {createElement(IconPhoto, {
-                    className: "text-body-secondary",
-                    size: 30,
-                  })}
-                </div>
-                <Stack className="d-flex me-auto" direction="vertical">
-                  <h6 className="m-0">Image URLs</h6>
-                  <div className="d-inline">
-                    <Badge bg={extractImageUrls ? "success" : "secondary"}>
-                      2 points
-                    </Badge>
-                  </div>
-                </Stack>
-                <span
-                  className={
-                    extractImageUrls ? "text-success" : "text-body-secondary"
-                  }
-                >
-                  {createElement(
-                    extractImageUrls ? IconCircleCheck : IconCircleDashedCheck,
-                    {
-                      size: 30,
-                    },
-                  )}
-                </span>
-              </Stack>
-            </Col>
-            <Col xl={4}>
-              <Stack
-                direction="horizontal"
-                className="bg-light p-3 rounded gap-3"
-                role="button"
-                onClick={() =>
-                  container.rating && setExtractVideoUrls(!extractVideoUrls)
-                }
-              >
-                <div className="d-block">
-                  {createElement(IconVideo, {
-                    className: "text-body-secondary",
-                    size: 30,
-                  })}
-                </div>
-                <Stack className="d-flex me-auto" direction="vertical">
-                  <h6 className="m-0">Video URLs</h6>
-                  <div className="d-inline">
-                    <Badge bg={extractVideoUrls ? "success" : "secondary"}>
-                      3 points
-                    </Badge>
-                  </div>
-                </Stack>
-                <span
-                  className={
-                    extractVideoUrls ? "text-success" : "text-body-secondary"
-                  }
-                >
-                  {createElement(
-                    extractVideoUrls ? IconCircleCheck : IconCircleDashedCheck,
-                    {
-                      size: 30,
-                    },
-                  )}
-                </span>
-              </Stack>
-            </Col>
-            <Col xl={4}>
-              <Stack
-                direction="horizontal"
-                className="bg-light p-3 rounded gap-3"
-                role="button"
-                onClick={() =>
-                  container.rating &&
-                  setExtractOwnerResponse(!extractOwnerResponse)
-                }
-              >
-                <div className="d-block">
-                  {createElement(IconMessageReply, {
-                    className: "text-body-secondary",
-                    size: 30,
-                  })}
-                </div>
-                <Stack className="d-flex me-auto" direction="vertical">
-                  <h6 className="m-0">Owner response</h6>
-                  <div className="d-inline">
-                    <Badge bg={extractOwnerResponse ? "success" : "secondary"}>
-                      3 points
-                    </Badge>
-                  </div>
-                </Stack>
-                <span
-                  className={
-                    extractOwnerResponse
-                      ? "text-success"
-                      : "text-body-secondary"
-                  }
-                >
-                  {createElement(
-                    extractOwnerResponse
-                      ? IconCircleCheck
-                      : IconCircleDashedCheck,
-                    {
-                      size: 30,
-                    },
-                  )}
-                </span>
-              </Stack>
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardBody>
-          <CardTitle className="mb-3">Extract options</CardTitle>
-          <Row className="gap-3">
-            <Col sm={12}>
-              <Stack direction="horizontal" className="gap-3 align-items-start">
-                {createElement(IconFence, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
-                <div className="w-100">
-                  <FormLabel>Review limit</FormLabel>
-                  <FormControl
-                    placeholder="Review limit"
-                    value={limit}
-                    onChange={(e) => setLimit(+e.target.value)}
-                    disabled={!container.rating}
-                  />
-                  <FormText>
-                    Limit the number of reviews to extract. Leave empty to
-                    extract all reviews.
-                  </FormText>
-                </div>
-              </Stack>
-            </Col>
-            <Col sm={12}>
-              <Stack direction="horizontal" className="gap-3 align-items-start">
-                {createElement(IconCoins, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
-                <div className="w-100">
-                  <FormLabel>Max spent points</FormLabel>
-                  <FormControl
-                    placeholder="Max spent points"
-                    value={maxSpentPoints}
-                    onChange={(e) => setMaxSpentPoints(+e.target.value)}
-                    disabled={!container.rating}
-                  />
-                  <FormText>Maximum points to spend on this scrap.</FormText>
-                </div>
-              </Stack>
-            </Col>
-            <Col sm={12}>
-              <Stack direction="horizontal" className="gap-3 align-items-start">
-                {createElement(IconArrowsSort, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
-                <div className="w-100">
-                  <FormLabel>Sorts by</FormLabel>
-                  <FormSelect
-                    value={sortBy}
-                    onChange={(e) =>
-                      setSortBy(
-                        e.target.value as
-                          | "Most relevant"
-                          | "Newest"
-                          | "Highest rating"
-                          | "Lowest rating",
-                      )
-                    }
-                    disabled={!container.rating}
-                  >
-                    <option value="Most relevant">Most relevant</option>
-                    <option value="Newest">Newest</option>
-                    <option value="Highest rating">Highest rating</option>
-                    <option value="Lowest rating">Lowest rating</option>
-                  </FormSelect>
-                  <FormText>
-                    Sort reviews by most relevant, newest, highest rating, or
-                    lowest rating.
-                  </FormText>
-                </div>
-              </Stack>
-            </Col>
-            <Col>
-              <Stack direction="horizontal" className="gap-3 align-items-start">
-                {createElement(IconFile, {
-                  className: "text-body-secondary",
-                  size: 30,
-                })}
-                <div className="w-100">
-                  <FormLabel>Output as</FormLabel>
-                  <FormSelect
-                    value={outputAs}
-                    onChange={(e) =>
-                      setOutputAs(e.target.value as "json" | "csv")
-                    }
-                    disabled={!container.rating}
-                  >
-                    <option value="json">JSON</option>
-                    <option value="csv">CSV</option>
-                  </FormSelect>
-                  <FormText>Output as a CSV or JSON file.</FormText>
-                </div>
-              </Stack>
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
+      <h5 className="mt-3 mb-0">Extract options</h5>
+      <Row className="g-3">
+        <OptionCard icon={IconFence} label="Review limit">
+          <FormControl
+            placeholder="Review limit"
+            value={limit}
+            onChange={(e) => setLimit(Number(e.target.value))}
+            disabled={!container.rating}
+          />
+          <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
+        </OptionCard>
+
+        <OptionCard icon={IconCoins} label="Max spent points">
+          <FormControl
+            placeholder="Max spent points"
+            value={maxSpentPoints}
+            onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
+            disabled={!container.rating}
+          />
+          <FormText>Maximum points to spend on this scrap.</FormText>
+        </OptionCard>
+
+        <OptionCard icon={IconArrowsSort} label="Sort by">
+          <FormSelect
+            value={sortBy}
+            onChange={(e) =>
+              setSortBy(e.target.value as "Most relevant" | "Newest" | "Highest rating" | "Lowest rating")
+            }
+            disabled={!container.rating}
+          >
+            {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </FormSelect>
+          <FormText>Sort reviews by most relevant, newest, highest rating, or lowest rating.</FormText>
+        </OptionCard>
+
+        <OptionCard icon={IconFile} label="Output as">
+          <FormSelect
+            value={outputAs}
+            onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
+            disabled={!container.rating}
+          >
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+          </FormSelect>
+          <FormText>Output as a CSV or JSON file.</FormText>
+        </OptionCard>
+      </Row>
     </>
   );
 };

@@ -50,8 +50,8 @@ export const ScrapExtractType = ({ containerId, container }: {
 
   return (
     <>
-      <h5 className="mb-0">
-        <IconFence size={24} className="me-2" /> Extract type
+      <h5 className="mt-3 mb-0">
+        Extract type
       </h5>
       <Row>
         {options.map(({ key, label, icon, points }) => {
