@@ -1,11 +1,10 @@
-import { IconPhoto, IconPlayerPlay } from "@tabler/icons-react";
-import { User } from "firebase/auth";
+import { IconPlayerPlay, IconReload } from "@tabler/icons-react";
+import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Alert, Image } from "react-bootstrap";
+import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import { useOutletContext } from "react-router-dom";
-import { debounceTime, Subject } from "rxjs";
-import { reviewVideos } from "../../services/reviewService";
+import { filter, take } from "rxjs";
+import { reviewsData } from "../../services/reviewService";
 import ReactPlayer from "react-player";
 
 interface IVideosListProps {
@@ -13,73 +12,56 @@ interface IVideosListProps {
 }
 
 export const VideosList = ({ reviewId }: IVideosListProps) => {
-  const { uid } = useOutletContext<User>();
-  const [videos, setVideos] = useState([] as any[]);
-  const [filterOptions, setFilterOptions] = useState({
-    onlyImages: false,
-    onlyVideos: false,
-    onlyQA: false,
-    onlyResponse: false,
-  });
-  const [search, setSearch] = useState("");
-  const [searchSubject] = useState(new Subject<string>());
+  const auth = getAuth();
+  const [videos, setVideos] = useState<any[]>([]);
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
-  useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        setSearch(value);
+  const fetchVideos = (append = false) => {
+    if (!auth.currentUser?.uid || isLastPage) return;
+
+    reviewsData("videos", { reviewId, uid: auth.currentUser.uid }, lastDoc)
+      .pipe(filter(snapshot => snapshot !== null), take(1))
+      .subscribe(snapshot => {
+        if (snapshot.empty) return setIsLastPage(true);
+
+        const newVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log('newVideos', newVideos);
+        setVideos(prev => (append ? [...prev, ...newVideos] : newVideos));
+        setLastDoc(snapshot.docs.at(-1));
       });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  };
 
   useEffect(() => {
-    const subscription = reviewVideos(
-      reviewId,
-      uid,
-      filterOptions,
-      search,
-    ).subscribe((data) => {
-      setVideos(data);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [reviewId, filterOptions, search, uid]);
+    setVideos([]);
+    setLastDoc(null);
+    setIsLastPage(false);
+    fetchVideos();
+  }, [reviewId]);
 
   return (
     <div className="videos">
       <Gallery>
-        {videos.map((video, index) => (
-          <Item
-            key={`video-${index}`}
-            original={video.videoUrl}
-            thumbnail={video.thumb}
-            content={
-              <ReactPlayer url={video.videoUrl} controls className="video" />
-            }
-          >
+        {videos.map(({ videoUrl, thumb }, index) => (
+          <Item key={`video-${index}`} original={videoUrl} content={<ReactPlayer url={videoUrl} controls className="video" />}>
             {({ ref, open }) => (
               <div className="video-thumb-container" ref={ref} onClick={open}>
-                <Image
-                  src={video.thumb}
-                  alt={`video-thumb-${index}`}
-                  className="video-thumb"
-                />
-                <IconPlayerPlay size={24} className="comment-thumb-icon" />
+                <Image src={thumb} alt={`video-thumb-${index}`} className="video-thumb" />
+                <IconPlayerPlay size={24} className="video-thumb-icon" />
               </div>
             )}
           </Item>
         ))}
       </Gallery>
-      {!videos.length && (
-        <Alert className="w-100" variant="info">
-          No videos found
-        </Alert>
+
+      {!videos.length && <Alert className="w-100" variant="info">No videos found</Alert>}
+
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+          <Button onClick={() => fetchVideos(true)} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
       )}
     </div>
   );

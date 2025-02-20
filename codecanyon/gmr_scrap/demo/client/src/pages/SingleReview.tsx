@@ -100,7 +100,7 @@ export const SingleReview = () => {
                 </>
               }
             >
-              {/* <VideosList reviewId={reviewId} /> */}
+              <VideosList reviewId={reviewId} />
             </Tab>
           </Tabs>
         </Col>
