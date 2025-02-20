@@ -8,6 +8,7 @@
   max-width: 250px;
   height: 100%;
   z-index: 1;
+  border-right: 1px solid #eee;
 
   .sidebar-header {
     display: flex;
@@ -31,11 +32,12 @@
     padding: 0.5rem 1rem;
     width: 100%;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     opacity: 0.82;
     color: $dark;
 
     &.active {
+      background-color: #f8f9fa;
       color: $primary;
     }
   }

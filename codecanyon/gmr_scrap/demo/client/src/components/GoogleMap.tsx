@@ -17,7 +17,7 @@ export const GoogleMap = ({
   boundChanges,
   isFitBounds = true,
 }: {
-  geojson: FeatureCollection<Point, GeoJsonProperties>;
+  geojson?: FeatureCollection<Point, GeoJsonProperties> | null;
   boundChanges?: BehaviorSubject<google.maps.LatLngBounds | null>;
   isFitBounds?: boolean;
 }) => {
@@ -26,7 +26,7 @@ export const GoogleMap = ({
   const defaultCenter = { lat: 20, lng: 20 };
 
   useEffect(() => {
-    if (!map || !geojson.features.length) return;
+    if (!map || !geojson || !geojson.features.length) return;
 
     const bounds = new google.maps.LatLngBounds();
     geojson.features.forEach((feature) => {
@@ -55,7 +55,7 @@ export const GoogleMap = ({
         }
       }}
     >
-      <ClusteredMarkers geojson={geojson} zoom={zoom} />
+      { geojson && <ClusteredMarkers geojson={geojson} zoom={zoom} /> }
     </Map>
   );
 };

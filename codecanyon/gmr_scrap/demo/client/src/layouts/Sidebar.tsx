@@ -63,7 +63,7 @@ export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className={`shadow-sm sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
+    <div className={`sidebar ${collapsed ? "shadow-sm sidebar-collapsed" : ""}`}>
       <Scrollbar>
         <div className="sidebar-header">
           <Logo className="sidebar-logo" />
@@ -84,7 +84,7 @@ export const Sidebar = () => {
               <span className="sidebar-group-title">{section.title}</span>
               {section.items.map(({ path, icon, label, badge }) => (
                 <NavLink key={path} to={path} className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}`}>
-                  {createElement(icon)}
+                  {createElement(icon, { size: 20 })}
                   <span className="me-auto">{label}</span>
                   {badge && <span className="badge text-bg-primary ms-auto">{badge}</span>}
                 </NavLink>

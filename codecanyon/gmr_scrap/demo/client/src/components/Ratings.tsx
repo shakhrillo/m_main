@@ -5,13 +5,14 @@ import {
 } from "@tabler/icons-react";
 import { IDockerContainer } from "../types/dockerContainer";
 import { formatNumber } from "../utils/formatNumber";
+import { IComment } from "../services/scrapService";
 
 /**
  * Display the ratings of a review
  * @param info The review information
  * @returns The ratings component
  */
-export const Ratings = ({ container }: { container?: IDockerContainer }) => {
+export const Ratings = ({ container }: { container?: IDockerContainer | IComment }) => {
   if (!container || typeof container.rating !== "number") return null;
 
   const validRating = Math.max(0, Math.min(container.rating, 5));

@@ -1,22 +1,20 @@
 import { GeoPoint } from "firebase/firestore";
+import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 
 /**
- * Convert an array of locations to a GeoJSON FeatureCollection
- * @param locations Array of locations
+ * Convert an array of Firestore GeoPoint locations to a GeoJSON FeatureCollection
+ * @param locations Array of GeoPoint locations
  * @returns GeoJSON FeatureCollection
  */
-export const locationsToGeoJSON = (locations: GeoPoint[]) => {
-  const features = locations.map((location) => {
-    const { latitude, longitude, ...properties } = location;
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [longitude, latitude],
-      },
-      properties,
-    };
-  });
+export const locationsToGeoJSON = (locations: GeoPoint[]): FeatureCollection<Point, GeoJsonProperties> => {
+  const features = locations.map((location) => ({
+    type: "Feature" as const,
+    geometry: {
+      type: "Point" as const,
+      coordinates: [location.longitude, location.latitude], // Correct access to properties
+    },
+    properties: {}
+  }));
 
   return {
     type: "FeatureCollection",

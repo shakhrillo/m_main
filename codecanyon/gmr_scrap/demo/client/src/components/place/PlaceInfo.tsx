@@ -1,8 +1,5 @@
 import { IconBox, IconInfoCircle, IconSettings } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
 import { Accordion } from "react-bootstrap";
-import { filter, map } from "rxjs";
-import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { locationsToGeoJSON } from "../../utils/locationsToGeoJSON";
 import { GoogleMap } from "../GoogleMap";
@@ -12,65 +9,27 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 import { PlaceInfoDetails } from "./PlaceInfoDetails";
-import { getAuth } from "firebase/auth";
 
-export const PlaceInfo = ({
-  containerId,
-}: {
-  containerId: string | undefined;
-}) => {
-  const auth = getAuth();
-  const [container, setContainer] = useState<IDockerContainer>(
-    {} as IDockerContainer,
-  );
-  const [geojson, setGeojson] = useState<any>(null);
+interface IPlaceInfoProps {
+  container: IDockerContainer;
+}
 
-  useEffect(() => {
-    if (!containerId || !auth.currentUser?.uid) {
-      setContainer({} as IDockerContainer);
-      return;
-    }
-
-    const subscription = dockerContainers({
-      containerId,
-      uid: auth.currentUser?.uid,
-    })
-    .pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-        return containers[0];
-      })
-    )
-    .subscribe((data) => {
-      if (!data || !data.location) {
-        setContainer({} as IDockerContainer);
-        return;
-      }
-      setContainer(data);
-      setGeojson(locationsToGeoJSON([data.location]));
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [containerId, auth.currentUser?.uid]);
-
+export const PlaceInfo = ({ container }: IPlaceInfoProps) => {
   return (
     <div className="place">
-      {geojson && <GoogleMap geojson={geojson} />}
-      {containerId && (
+      {container.location && <GoogleMap geojson={locationsToGeoJSON([container.location])} />}
+      {container.location && (
         <div className="place-info">
           <StatusInfo container={container} />
           {container.rating && <Ratings container={container} />}
           {container.type && (
-            <h3>
+            <h5>
               <NavLink
                 to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
               >
                 {container.title || "N/A"}
               </NavLink>
-            </h3>
+            </h5>
           )}
           <div className="d-flex mt-3">
             {container.address && (
@@ -87,7 +46,7 @@ export const PlaceInfo = ({
           <Accordion.Item eventKey="0">
             <Accordion.Header>
               <IconInfoCircle className="me-3" />
-              <h5 className="m-0">Extracted Data</h5>
+              <h6 className="m-0">Extracted Data</h6>
             </Accordion.Header>
             <Accordion.Body>
               <PlaceInfoDetails container={container} />
@@ -97,7 +56,7 @@ export const PlaceInfo = ({
         <Accordion.Item eventKey="1">
           <Accordion.Header>
             <IconBox className="me-3" />
-            <h5 className="m-0">Container Info</h5>
+            <h6 className="m-0">Container Info</h6>
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoMachine container={container} />
@@ -106,7 +65,7 @@ export const PlaceInfo = ({
         <Accordion.Item eventKey="2">
           <Accordion.Header>
             <IconSettings className="me-3" />
-            <h5 className="m-0">Options</h5>
+            <h6 className="m-0">Options</h6>
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoOptions container={container} />

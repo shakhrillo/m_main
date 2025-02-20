@@ -34,8 +34,7 @@ export const Comment = ({ review }: { review: IComment }) => {
           <a href={review.user.url} target="_blank" rel="noreferrer">
             {review.user.name}
           </a>
-          {/* TODO: Add ratings */}
-          {/* <Ratings container={review} /> */}
+          <Ratings container={review} />
         </div>
         <small>{review.date}</small>
       </div>
