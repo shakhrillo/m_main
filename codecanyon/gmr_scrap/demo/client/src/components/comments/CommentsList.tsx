@@ -1,12 +1,12 @@
 import {
-  IconChevronLeft,
-  IconChevronRight,
+  IconReload,
   IconSearch,
 } from "@tabler/icons-react";
 import { getAuth, User } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Button,
   Card,
   CardBody,
   Dropdown,
@@ -15,13 +15,10 @@ import {
   Pagination,
   Stack,
 } from "react-bootstrap";
-import { useOutletContext } from "react-router-dom";
-import { debounceTime, Subject } from "rxjs";
+import { debounceTime, filter, map, Subject, take } from "rxjs";
 import { reviewComments } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -45,54 +42,59 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const [paginationLength, setPaginationLength] = useState(5);
   const paginationRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const updatePagination = () => {
-      if (paginationRef.current) {
-        const width = paginationRef.current.clientWidth;
-        setPaginationLength(Math.floor(width / 100) - 2);
-      }
-    };
-
-    updatePagination();
-    window.addEventListener("resize", updatePagination);
-
-    return () => {
-      window.removeEventListener("resize", updatePagination);
-    };
-  }, []);
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        setSearch(value);
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!auth.currentUser?.uid) return;
-    
-    console.log('auth.currentUser?.uid', auth.currentUser?.uid);
-    setPage(1);
-    const subscription = reviewComments(
-      reviewId,
-      auth.currentUser?.uid || "",
-      filterOptions,
-      search,
-    ).subscribe((data) => {
-      console.log('->', data);
-      setComments(data);
-      setTotal(Math.ceil(data.length / limit));
+    const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
+      setSearch(value);
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [reviewId, filterOptions, search, auth.currentUser?.uid]);
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchSubject.next(e.target.value);
+  };
+
+  const fetchComments = (append = false, lastDocument = null) => {
+    if (!auth.currentUser?.uid) return;
+
+    return reviewComments({
+      reviewId,
+      uid: auth.currentUser?.uid || "",
+      filterOptions,
+      search,
+    }, lastDocument).pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => {
+        if (snapshot.empty) {
+          setIsLastPage(true);
+          return [];
+        }
+        setLastDoc(snapshot.docs.at(-1));
+        return snapshot.docs.map((doc) => {
+          const data = doc.data() as IComment;
+          return { ...data, id: doc.id };
+        });
+      }),
+      take(1),
+    ).subscribe((data) => {
+      setComments((prev) => (append ? [...prev, ...data] : data));
+    });
+  }
+
+  useEffect(() => {
+    setLastDoc(null);
+    setIsLastPage(false);
+    setComments([]);
+    const subscription = fetchComments();
+    return () => subscription?.unsubscribe();
+  }, [search, filterOptions, reviewId]);
+
+  const loadMore = () => {
+    if (!isLastPage) fetchComments(true, lastDoc);
+  };
 
   return (
     <div className="comments" ref={commentsRef}>
@@ -108,9 +110,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
               placeholder="Search..."
               aria-label="Search"
               aria-describedby="search-icon"
-              onChange={(e) => {
-                searchSubject.next(e.target.value);
-              }}
+              onChange={handleSearch}
             />
           </InputGroup>
         </div>
@@ -195,76 +195,25 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
-      {comments.slice((page - 1) * limit, page * limit).map((review, index) => (
+      {comments.map((review, index) => (
         <Comment review={review} key={index} />
       ))}
-
-      {comments.length > limit && (
-        <Card>
-          <CardBody
-            ref={paginationRef}
-            className="d-flex justify-content-center w-100"
-          >
-            <Pagination className="m-0">
-              <Pagination.Prev
-                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                disabled={page === 1}
-              />
-
-              {page > Math.floor(paginationLength / 2) + 1 && (
-                <Pagination.Item onClick={() => setPage(1)}>1</Pagination.Item>
-              )}
-
-              {page > Math.floor(paginationLength / 2) + 1 && (
-                <Pagination.Ellipsis />
-              )}
-
-              {Array.from({ length: paginationLength })
-                .map((_, index) => {
-                  const start = Math.max(
-                    1,
-                    Math.min(
-                      page - Math.floor(paginationLength / 2),
-                      total - paginationLength + 1,
-                    ),
-                  );
-                  return start + index;
-                })
-                .filter((p) => p >= 1 && p <= total)
-                .map((p) => (
-                  <Pagination.Item
-                    key={p}
-                    active={p === page}
-                    onClick={() => setPage(p)}
-                  >
-                    {p}
-                  </Pagination.Item>
-                ))}
-
-              {page < total - Math.floor(paginationLength / 2) && (
-                <Pagination.Ellipsis />
-              )}
-
-              {page < total - Math.floor(paginationLength / 2) && (
-                <Pagination.Item onClick={() => setPage(total)}>
-                  {total}
-                </Pagination.Item>
-              )}
-
-              <Pagination.Next
-                onClick={() => setPage((prev) => Math.min(prev + 1, total))}
-                disabled={page === total}
-              />
-            </Pagination>
-          </CardBody>
-        </Card>
-      )}
 
       {!comments.length && (
         <Alert className="w-100" variant="info">
           No comments found
         </Alert>
       )}
+
+      {
+        !isLastPage && (
+          <Stack direction="horizontal" className="justify-content-center mt-3">
+            <Button onClick={loadMore} variant="outline-primary">
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )
+      }
     </div>
   );
 };

@@ -4,51 +4,50 @@ import {
   query,
   orderBy,
   where,
+  limit,
+  startAfter,
+  QuerySnapshot,
+  DocumentData,
 } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 import { IComment } from "./scrapService";
-
-export const reviewComments = (
-  placeId: string,
-  uid: string,
-  filterOptions: {
-    onlyImages: boolean;
-    onlyVideos: boolean;
-    onlyQA: boolean;
-    onlyResponse: boolean;
-  },
-  search: string,
-) => {
-  const collectionRef = collection(firestore, `containers/${placeId}/reviews`);
-  const reviews$ = new BehaviorSubject([] as IComment[]);
+interface IReviewQuery {
+  uid?: string;
+  reviewId?: string;
+  filterOptions?: {
+    onlyImages?: boolean;
+    onlyVideos?: boolean;
+    onlyQA?: boolean;
+    onlyResponse?: boolean;
+  };
+  search?: string;
+}
+export const reviewComments = (q: IReviewQuery = {}, lastRef?: any) => {
+  const reviews$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
+  const collectionRef = collection(firestore, `containers/${q.reviewId}/reviews`);
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      // orderBy("createdAt", "asc"),
-      // where("machineId", "==", placeId),
-      where("uid", "==", uid),
-      ...(filterOptions.onlyQA ? [where("qa", ">", [])] : []),
-      ...(filterOptions.onlyResponse ? [where("response", ">", "")] : []),
-      ...(filterOptions.onlyImages ? [where("imageUrls", ">", [])] : []),
-      ...(filterOptions.onlyVideos ? [where("videoUrls", ">", [])] : []),
-      ...(search ? [where("keywords", "array-contains", search)] : []),
+      where("uid", "==", q.uid),
+      limit(1),
+      ...(lastRef ? [startAfter(lastRef)] : []),
+      ...(q.filterOptions?.onlyQA ? [where("qa", ">", [])] : []),
+      ...(q.filterOptions?.onlyResponse ? [where("response", ">", "")] : []),
+      ...(q.filterOptions?.onlyImages ? [where("imageUrls", ">", [])] : []),
+      ...(q.filterOptions?.onlyVideos ? [where("videoUrls", ">", [])] : []),
+      ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
     ),
-    (snapshot) => {
-      const reviewsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as IComment[];
-      reviews$.next(reviewsData);
-    },
+    (snapshot) => reviews$.next(snapshot),
     (error) => {
+      console.log(q)
       console.error("Error fetching reviews data:", error);
       reviews$.error(error);
     },
   );
 
-  return new Observable<any>((subscriber) => {
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
     const subscription = reviews$.subscribe(subscriber);
 
     return () => {
