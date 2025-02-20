@@ -78,77 +78,73 @@ export const Payments = () => {
       </Breadcrumb>
       <Row>
         <Col md={9}>
-          <Card className="mb-3">
-            <CardBody>
-              <Stack direction="horizontal" gap={3} className="align-items-start bg-primary-subtle p-3 rounded-top m-n3">
-                <IconCoins size={48} className="text-primary" />
-                <Stack direction="vertical">
-                  <CardTitle>Purchase Coins</CardTitle>
-                  <CardSubtitle>
-                    Amount of coins to purchase.
-                  </CardSubtitle>
-                  <Form noValidate id="validateForm" className="needs-validation mt-3">
-                    <FormGroup className="mb-3" controlId="amount">
-                      <FormControl
-                        type="text"
-                        value={amount}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setAmount(/^[1-9]\d*$/.test(value) ? value : "");
-                        }}
-                        pattern="^[1-9]\d*$"
-                        placeholder="Enter amount"
-                        className="mb-2"
-                        required
-                        size="lg"
-                      />
-                      {error && (
-                        <FormControl.Feedback type="invalid">
-                          <IconAlertCircle className="me-2" /> {error}
-                        </FormControl.Feedback>
-                      )}
-                      <FormText className={error ? "d-none" : ""}>
-                        <IconInfoCircle className="me-2" />
-                        There might be restrictions on the minimum and maximum from the payment API.
-                      </FormText>
-                    </FormGroup>
-                  </Form>
-                </Stack>
-              </Stack>
-              <h6 className="mt-5">Coins Explained</h6>
-              <p>
-                Coins are used to purchase data from the website. You can acquire coins by:
-              </p>
-              <ul>
-                <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
-                <li><strong>Purchase Coins:</strong> Available for purchase.</li>
-              </ul>
-              <h6>Refund Policy</h6>
-              <p>
-                Purchases are non-refundable. If an error occurs, contact support immediately.
-              </p>
-            </CardBody>
-          </Card>
+          <Stack direction="horizontal" gap={3} className="align-items-start bg-light p-3 rounded-top">
+            <IconCoins size={48} className="text-primary" />
+            <Stack direction="vertical">
+              <CardTitle>Purchase Coins</CardTitle>
+              <CardSubtitle>
+                Amount of coins to purchase.
+              </CardSubtitle>
+              <Form noValidate id="validateForm" className="needs-validation mt-3">
+                <FormGroup className="mb-3" controlId="amount">
+                  <FormControl
+                    type="text"
+                    value={amount}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setAmount(/^[1-9]\d*$/.test(value) ? value : "");
+                    }}
+                    pattern="^[1-9]\d*$"
+                    placeholder="Enter amount"
+                    className="mb-2"
+                    required
+                  />
+                  {error && (
+                    <FormControl.Feedback type="invalid">
+                      <IconAlertCircle className="me-2" /> {error}
+                    </FormControl.Feedback>
+                  )}
+                  <FormText className={error ? "d-none" : ""}>
+                    <IconInfoCircle className="me-2" />
+                    There might be restrictions on the minimum and maximum from the payment API.
+                  </FormText>
+                </FormGroup>
+              </Form>
+            </Stack>
+          </Stack>
+
+          <h6 className="mt-3">Coins Explained</h6>
+          <p>
+            Coins are used to purchase data from the website. You can acquire coins by:
+          </p>
+          <ul>
+            <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
+            <li><strong>Purchase Coins:</strong> Available for purchase.</li>
+          </ul>
+          <h6>Refund Policy</h6>
+          <p>
+            Purchases are non-refundable. If an error occurs, contact support immediately.
+          </p>
         </Col>
         <Col md={3}>
           <Card>
             <CardBody>
-              <CardTitle>Summary</CardTitle>
+              <h6>Summary</h6>
               <Stack direction="horizontal" className="align-items-start">
                 <div className="me-3">
-                  <IconCoins size={30} />
+                  <IconCoins size={24} />
                 </div>
                 <Stack direction="vertical">
-                  <h5 className="mb-0">{amount || 0}</h5>
+                  <h6 className="mb-0">{amount || 0}</h6>
                   <p>Coins</p>
                 </Stack>
               </Stack>
               <Stack direction="horizontal" className="align-items-start">
                 <div className="me-3">
-                  <IconCoin size={30} />
+                  <IconCoin size={24} />
                 </div>
                 <Stack direction="vertical">
-                  <h5 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h5>
+                  <h6 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h6>
                   <p>Price</p>
                 </Stack>
               </Stack>

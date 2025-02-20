@@ -162,7 +162,7 @@ export const DockerContainer = () => {
 
     const subscription = dockerContainerLogs(containerId).subscribe({
       next: (data) => {
-        console.log(data);
+        console.log('+', data);
         if (!data || data.length === 0) {
           return;
         }
@@ -201,36 +201,11 @@ export const DockerContainer = () => {
                     </h5>
                     <LineChart labels={labels} datasets={chart.datasets} />
                   </Col>
-                  // <Col key={chart.label}>
-                  //   <Card>
-                  //     <CardBody>
-                  //       <Stack direction="horizontal" gap={3} className="mb-3">
-                  //         <span className="fw-bold fs-5 me-auto">
-                  //           {chart.label}
-                  //         </span>
-                  //         <Button
-                  //           variant="link"
-                  //           className="p-0"
-                  //           onClick={() =>
-                  //             setStats(stats.map((stat) => ({ ...stat })))
-                  //           }
-                  //         >
-                  //           <IconReload />
-                  //         </Button>
-                  //       </Stack>
-                  //       <LineChart labels={labels} datasets={chart.datasets} />
-                  //     </CardBody>
-                  //   </Card>
-                  // </Col>
                 ))}
               </Row>
             </Tab>
             <Tab eventKey="logs" title="Logs">
-              <Card>
-                <CardBody>
-                  <pre>{logs.join("\n")}</pre>
-                </CardBody>
-              </Card>
+              <pre className="mt-3">{logs.join("\n")}</pre>
             </Tab>
           </Tabs>
         </Col>
