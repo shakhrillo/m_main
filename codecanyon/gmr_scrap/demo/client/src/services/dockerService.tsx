@@ -63,6 +63,7 @@ export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
     ),
     (snapshot) => containers$.next(snapshot),
     (error) => {
+      console.log(q)
       console.error("Error fetching containers data:", error);
       containers$.error(error);
     },

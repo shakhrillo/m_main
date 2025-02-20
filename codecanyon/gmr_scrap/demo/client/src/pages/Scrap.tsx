@@ -2,15 +2,18 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { Breadcrumb, Col, Container, Row, Stack } from "react-bootstrap";
-import { filter, map } from "rxjs";
+import { filter, map, take } from "rxjs";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
 import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 import { dockerContainers } from "../services/dockerService";
 import { IDockerContainer } from "../types/dockerContainer";
+import { getAuth } from "firebase/auth";
+import { ScrapExtractType } from "../components/scrap/ScrapExtractType";
 
 export const Scrap = () => {
+  const auth = getAuth();
   const navigate = useNavigate();
 
   const { scrapId } = useParams() as { scrapId: string };
@@ -19,24 +22,35 @@ export const Scrap = () => {
   );
 
   useEffect(() => {
-    if (!scrapId) {
+    if (!scrapId || !auth.currentUser?.uid) {
       setContainer({} as IDockerContainer);
       return;
     }
 
-    const subscription = dockerContainers({ containerId: scrapId })
+    const subscription = dockerContainers({
+      containerId: scrapId,
+      uid: auth.currentUser?.uid,
+    })
       .pipe(
-        map((data) => (Array.isArray(data) ? data[0] : null)),
-        filter((data) => !!data),
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+          return containers[0];
+        }),
+        take(1),
       )
       .subscribe((data) => {
+        if (!data || !data.location) {
+          setContainer({} as IDockerContainer);
+          return;
+        }
         setContainer(data);
       });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [scrapId]);
+  }, [scrapId, auth.currentUser?.uid]);
 
   return (
     <Container>
@@ -57,6 +71,7 @@ export const Scrap = () => {
         <Col lg={8} xl={9}>
           <Stack direction={"vertical"} gap={3}>
             <ScrapValidateURL containerId={scrapId} container={container} />
+            <ScrapExtractType  containerId={scrapId} container={container} />
             <ScrapExtractOptions containerId={scrapId} container={container} />
           </Stack>
         </Col>

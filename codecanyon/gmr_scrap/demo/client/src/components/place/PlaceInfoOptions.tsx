@@ -45,7 +45,7 @@ export const PlaceInfoOptions = ({
       <Col>
         <PlaceInfoRow
           icon={IconVideo}
-          label="Extract Images"
+          label="Extract Videos"
           value={container.extractVideoUrls ? "Yes" : "No"}
         />
       </Col>

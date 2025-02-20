@@ -19,5 +19,10 @@ export interface IDockerMachine {
   time: number;
   timeNano: number;
   type: string;
+  Size: number;
+  Os: string;
+  Architecture: string;
+  Variant: string;
+  Created: Timestamp;
   updatedAt: Timestamp;
 }

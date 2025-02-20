@@ -18,7 +18,7 @@ const FILTER_OPTIONS = [
 ];
 
 interface IContainersList {
-  path: "reviews" | "containers" | "scrap";
+  path: "reviews" | "containers" | "scrap" | "images";
   type?: "comments" | "info";
   machineType?: "container" | "image";
 }
@@ -167,7 +167,7 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
                 }
               </NavLink>
               {
-                path === "containers" ? (
+                path === "containers" && (
                   <>
                     <Stack direction="horizontal" gap={2} className="text-muted">
                       {comment?.machine?.Actor?.Attributes?.name && (
@@ -178,7 +178,10 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
                       {(comment?.machine?.Actor?.Attributes?.execDuration || 0) + "s exec duration"}
                     </Stack>
                   </>
-                ) : (
+                )
+              }
+              {
+                (path === "reviews" || path === "scrap") && (
                   <>
                     <Ratings container={comment} />
                     {
@@ -192,6 +195,16 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
                       )
                     }
                   </>
+                )
+              }
+              {
+                path === "images" && (
+                  <Stack direction="horizontal" gap={2} className="text-muted">
+                    <div>{comment?.machine?.Os}</div>
+                    <div>{comment?.machine?.Architecture}</div>
+                    <div>{comment?.machine?.Variant}</div>
+                    <div>{formatTimestamp(comment?.machine?.Created)}</div>
+                  </Stack>
                 )
               }
             </CardBody>

@@ -1,7 +1,7 @@
 import { IconBox, IconInfoCircle, IconSettings } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Accordion } from "react-bootstrap";
-import { map } from "rxjs";
+import { filter, map } from "rxjs";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { locationsToGeoJSON } from "../../utils/locationsToGeoJSON";
@@ -12,38 +12,49 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 import { PlaceInfoDetails } from "./PlaceInfoDetails";
+import { getAuth } from "firebase/auth";
 
 export const PlaceInfo = ({
   containerId,
 }: {
   containerId: string | undefined;
 }) => {
+  const auth = getAuth();
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
   );
   const [geojson, setGeojson] = useState<any>(null);
 
   useEffect(() => {
-    if (!containerId) {
+    if (!containerId || !auth.currentUser?.uid) {
       setContainer({} as IDockerContainer);
       return;
     }
 
-    const subscription = dockerContainers({ containerId })
-      .pipe(map((data) => (Array.isArray(data) ? data[0] : null)))
-      .subscribe((data) => {
-        if (!data || !data.location) {
-          setContainer({} as IDockerContainer);
-          return;
-        }
-        setContainer(data);
-        setGeojson(locationsToGeoJSON([data.location]));
-      });
+    const subscription = dockerContainers({
+      containerId,
+      uid: auth.currentUser?.uid,
+    })
+    .pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => {
+        const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+        return containers[0];
+      })
+    )
+    .subscribe((data) => {
+      if (!data || !data.location) {
+        setContainer({} as IDockerContainer);
+        return;
+      }
+      setContainer(data);
+      setGeojson(locationsToGeoJSON([data.location]));
+    });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [containerId]);
+  }, [containerId, auth.currentUser?.uid]);
 
   return (
     <div className="place">

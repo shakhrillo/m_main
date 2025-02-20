@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { filter, map } from "rxjs";
 import { createDockerContainer, dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { getAuth } from "firebase/auth";
 
 /**
  * Scrap expected points component
@@ -11,26 +12,40 @@ import { IDockerContainer } from "../../types/dockerContainer";
  * @returns JSX.Element
  */
 export const ScrapExpectedPoints = ({ containerId }: { containerId: string }) => {
+  const auth = getAuth();
   const navigate = useNavigate();
   const [container, setContainer] = useState<IDockerContainer>();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
 
   useEffect(() => {
-    if (!containerId) return;
+    if (!containerId || !auth.currentUser?.uid) {
+      setContainer({} as IDockerContainer);
+      return;
+    }
 
-    const subscription = dockerContainers({ containerId })
+    const subscription = dockerContainers({
+      containerId,
+      uid: auth.currentUser?.uid,
+    })
       .pipe(
-        map((data) => (Array.isArray(data) ? data[0] : null)),
-        filter((data) => !!data),
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+          return containers[0];
+        })
       )
       .subscribe((data) => {
+        if (!data || !data.location) {
+          setContainer({} as IDockerContainer);
+          return;
+        }
         setContainer(data);
       });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [containerId]);
+  }, [containerId, auth.currentUser?.uid]);
 
   useEffect(() => {
     if (container?.machineId && container?.type === "comments") {

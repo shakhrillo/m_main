@@ -22,6 +22,7 @@ import { docker, dockerContainers } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { formatTimestamp } from "../utils/formatTimestamp";
+import { ContainersList } from "../components/containers/ContainersList";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -29,42 +30,42 @@ const FILTER_OPTIONS = [
 ];
 
 export const DockerImages = () => {
-  const { uid } = useOutletContext<User>();
+  // const { uid } = useOutletContext<User>();
   const [images, setImages] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
-  useEffect(() => {
-    const subscription = dockerContainers({
-      machineType: "image",
-    })
-      .pipe(
-        map((data) => {
-          // return data.map((image: any) => ({
-          //   ...image,
-          //   id: image.id,
-          //   updatedAt: image.updatedAt,
-          // }));
-          return []
-        }),
-      )
-      .subscribe((data) => {
-        console.log("images--->", data);
-        setImages(data);
-      });
+  // useEffect(() => {
+  //   const subscription = dockerContainers({
+  //     machineType: "image",
+  //   })
+  //     .pipe(
+  //       map((data) => {
+  //         // return data.map((image: any) => ({
+  //         //   ...image,
+  //         //   id: image.id,
+  //         //   updatedAt: image.updatedAt,
+  //         // }));
+  //         return []
+  //       }),
+  //     )
+  //     .subscribe((data) => {
+  //       console.log("images--->", data);
+  //       setImages(data);
+  //     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [uid]);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, [uid]);
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Docker</Breadcrumb.Item>
         <Breadcrumb.Item active>Images</Breadcrumb.Item>
       </Breadcrumb>
-      <Row className="g-3">
+      <ContainersList path="images" machineType="container" />
+      <Row className="g-3 d-none">
         <Col md={12}>
           <Card>
             <CardHeader>
