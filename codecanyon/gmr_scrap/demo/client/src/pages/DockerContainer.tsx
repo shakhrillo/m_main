@@ -17,11 +17,15 @@ import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import {
   dockerContainerLogs,
+  dockerContainers,
   dockerContainerStats,
 } from "../services/dockerService";
 import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
+import { filter, map } from "rxjs";
+import { auth } from "../firebaseConfig";
+import { IDockerContainer } from "../types/dockerContainer";
 
 export const DockerContainer = () => {
   const navigate = useNavigate();
@@ -29,6 +33,40 @@ export const DockerContainer = () => {
 
   const [stats, setStats] = useState<IDockerStats[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
+
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
+
+  useEffect(() => {
+    if (!containerId || !auth.currentUser?.uid) {
+      setContainer({} as IDockerContainer);
+      return;
+    }
+
+    const subscription = dockerContainers({
+      containerId: containerId,
+      uid: auth.currentUser?.uid,
+    })
+    .pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => {
+        const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+        return containers[0];
+      })
+    )
+    .subscribe((data) => {
+      if (!data || !data.location) {
+        setContainer({} as IDockerContainer);
+        return;
+      }
+      setContainer(data);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [containerId, auth.currentUser?.uid]);
 
   const labels = useMemo(
     () => stats.map((stat) => formatStringDate(stat?.read ?? "", "HH:mm:ss")),
@@ -192,7 +230,7 @@ export const DockerContainer = () => {
           </Tabs>
         </Col>
         <Col md={3}>
-          <PlaceInfo containerId={containerId} />
+          <PlaceInfo container={container} />
         </Col>
       </Row>
     </Container>

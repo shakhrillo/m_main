@@ -57,7 +57,7 @@ export const Scrap = () => {
           </Stack>
         </Col>
         <Col lg={4} xl={3}>
-          <PlaceInfo containerId={scrapId} />
+          <PlaceInfo container={container} />
           <ScrapExpectedPoints containerId={scrapId || ''} />
         </Col>
       </Row>
