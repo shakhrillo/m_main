@@ -62,7 +62,7 @@ export const DockerImages = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item active>Images</Breadcrumb.Item>
+        <Breadcrumb.Item active>Images__</Breadcrumb.Item>
       </Breadcrumb>
       <ContainersList path="images" machineType="container" />
       <Row className="g-3 d-none">

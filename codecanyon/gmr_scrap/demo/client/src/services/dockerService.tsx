@@ -162,7 +162,7 @@ export const dockerContainer = (containerId: string) => {
   const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, where("machine.id", "==", containerId)),
+    query(collectionRef, where("machineId", "==", containerId)),
     (doc) => {
       const results = doc.docs.map((doc) => ({
         id: doc.id,

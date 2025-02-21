@@ -4,92 +4,123 @@
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "containerId", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "uid", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "machine.Type", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "type", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "machine.Type", "order": "ASCENDING" },
-        { "fieldPath": "machineId", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "machine.Type", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
+      ]
+    },
+    {
+      "collectionGroup": "containers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "machineId", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
+      ]
+    },
+    {
+      "collectionGroup": "containers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "keywords", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "containers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
+      ]
+    },
+    {
+      "collectionGroup": "containers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "containerId", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
+      ]
+    },
+    {
+      "collectionGroup": "containers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "filterOptions", "order": "ascending" }
       ]
     },
     {
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "key", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "metadata.userId", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "type", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "metadata.userId", "order": "ASCENDING" },
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "key", "arrayConfig": "CONTAINS" }
       ]
     },
     {
-      "collectionGroup": "payments",
+      "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "key", "arrayConfig": "CONTAINS" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "type", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
       ]
     },
     {
-      "collectionGroup": "docker",
+      "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "updatedAt", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "status", "order": "ascending" },
+        { "fieldPath": "createdAt", "order": "descending" }
+      ]
+    },
+    {
+      "collectionGroup": "reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "keywords", "arrayConfig": "CONTAINS" }
       ]
     },
     {
       "collectionGroup": "settings",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "tag", "order": "ASCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
+        { "fieldPath": "type", "order": "ascending" },
+        { "fieldPath": "tag", "order": "ascending" }
       ]
     }
   ],
