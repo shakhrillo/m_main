@@ -55,6 +55,7 @@ service cloud.firestore {
 
       match /buyCoins/{buyCoinsId} {
         allow create: if request.auth != null && request.auth.uid == userId;
+        allow read: if request.auth != null && request.auth.uid == userId;
       }
     }
 

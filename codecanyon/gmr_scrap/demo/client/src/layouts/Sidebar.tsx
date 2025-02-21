@@ -32,7 +32,7 @@ const menuSections = [
     items: [
       { path: "/containers", icon: IconBox, label: "Containers" },
       { path: "/images", icon: IconBoxMargin, label: "Images" },
-      { path: "/docker", icon: IconBrandDocker, label: "Docker" },
+      // { path: "/docker", icon: IconBrandDocker, label: "Docker" },
     ],
   },
   {

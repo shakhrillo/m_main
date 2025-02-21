@@ -1,0 +1,13 @@
+.receipts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-data {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  padding: $spacer;
+  overflow: hidden;
+  font-size: 14px;
+}

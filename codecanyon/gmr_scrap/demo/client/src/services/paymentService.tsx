@@ -2,13 +2,18 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentData,
+  limit,
   onSnapshot,
   orderBy,
   query,
+  QuerySnapshot,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
+import { IPaymentsQuery } from "../types/paymentsQuery";
 
 interface IBuyCoins {
   amount: number;
@@ -78,44 +83,29 @@ export const paymentData = (receiptId: string) => {
   });
 };
 
-export const paymentsData = ({
-  uid,
-  receiptId,
-  type,
-}: {
-  uid?: string;
-  receiptId?: string;
-  type?: string[];
-}): Observable<any[]> => {
-  const collectionRef = collection(firestore, `payments`);
-  const paymentsData$ = new BehaviorSubject([] as any[]);
+export const paymentsData = (q: IPaymentsQuery, lastRef?: any) => {
+  const paymentsData$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any)
+  const collectionRef = collection(firestore, "payments");
 
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      ...(uid ? [where("metadata.userId", "==", uid)] : []),
-      ...(type ? [where("type", "in", type)] : []),
-      ...(receiptId ? [where("key", "array-contains", receiptId)] : []),
       orderBy("createdAt", "desc"),
+      limit(10),
+      ...(lastRef ? [startAfter(lastRef)] : []),
+      ...(q.uid ? [where("metadata.userId", "==", q.uid)] : []),
+      ...(q.type ? [where("type", "in", q.type)] : []),
+      ...(q.receiptId ? [where("key", "array-contains", q.receiptId)] : []),
     ),
-    (snapshot) => {
-      const historyData = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          ...data,
-          number: data.id,
-          id: doc.id,
-        };
-      });
-      paymentsData$.next(historyData);
-    },
+    (snapshot) => paymentsData$.next(snapshot),
   );
 
-  return new Observable<any[]>((subscriber) => {
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
     const subscription = paymentsData$.subscribe(subscriber);
+
     return () => {
-      unsubscribe();
       subscription.unsubscribe();
+      unsubscribe();
     };
   });
 };

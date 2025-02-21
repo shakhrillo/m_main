@@ -21,6 +21,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { paymentsData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
+import { ReceiptList } from "../components/receipt/ReceiptList";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
@@ -29,30 +30,31 @@ const FILTER_OPTIONS = [
 
 export const Receipts = () => {
   const { uid } = useOutletContext<User>();
-  const [history, setHistory] = useState([] as any[]);
+  // const [history, setHistory] = useState([] as any[]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
 
-  useEffect(() => {
-    const unsubscribe = paymentsData({
-      uid,
-      type: ["charge.succeeded", "charge.failed"],
-    }).subscribe((data) => {
-      setHistory(data);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = paymentsData({
+  //     uid,
+  //     type: ["charge.succeeded", "charge.failed"],
+  //   }).subscribe((data) => {
+  //     setHistory(data);
+  //   });
 
-    return () => {
-      unsubscribe.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     unsubscribe.unsubscribe();
+  //   };
+  // }, []);
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item>Reports</Breadcrumb.Item>
         <Breadcrumb.Item active>Receipts</Breadcrumb.Item>
       </Breadcrumb>
-      <Row className="g-3">
+
+      <ReceiptList uid={uid} />
+      {/* <Row className="g-3">
         <Col xs={12}>
           <Card>
             <CardHeader>
@@ -146,7 +148,7 @@ export const Receipts = () => {
             </CardBody>
           </Card>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };
