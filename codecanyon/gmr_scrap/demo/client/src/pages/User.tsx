@@ -98,40 +98,36 @@ export const User = () => {
 
       <Row>
         <Col xl={9}>
-          <Card>
-            <CardBody>
-              <Form>
-                <Form.Group className="mb-3">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" value={user?.email || ""} readOnly disabled />
-                </Form.Group>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" value={user?.email || ""} readOnly disabled />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Display Name</Form.Label>
-                  <Form.Control type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
-                </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Display Name</Form.Label>
+              <Form.Control type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Photo</Form.Label>
-                  <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
-                </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Photo</Form.Label>
+              <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Phone</Form.Label>
-                  <Form.Control
-                    type="number"
-                    defaultValue={user?.phone || ""}
-                    onChange={(e) => {
-                      const phone = parseInt(e.target.value, 10);
-                      if (!isNaN(phone)) {
-                        handleUpdate("phone", phone);
-                      }
-                    }}
-                  />
-                </Form.Group>
-              </Form>
-            </CardBody>
-          </Card>
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="number"
+                defaultValue={user?.phone || ""}
+                onChange={(e) => {
+                  const phone = parseInt(e.target.value, 10);
+                  if (!isNaN(phone)) {
+                    handleUpdate("phone", phone);
+                  }
+                }}
+              />
+            </Form.Group>
+          </Form>
         </Col>
 
         <Col xl={3}>

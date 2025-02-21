@@ -1,0 +1,13 @@
+.users-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-data {
+  width: 100%;
+  display: flex;
+  position: relative;
+  padding: $spacer;
+  overflow: hidden;
+  font-size: 14px;
+}

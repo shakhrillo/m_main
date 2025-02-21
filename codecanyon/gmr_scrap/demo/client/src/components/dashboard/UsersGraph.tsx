@@ -1,7 +1,7 @@
 import { Card } from "react-bootstrap";
 import { LineChart } from "../LineChart";
 import { useState, useEffect } from "react";
-import { allUsers } from "../../services/settingService";
+import { usersList } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
 
 /**
@@ -11,8 +11,8 @@ export const UsersGraph = () => {
     const [users, setUsers] = useState<any[]>([]);
 
     useEffect(() => {
-        const subscribtion = allUsers().subscribe((users) => {
-            setUsers(formatTotalUsers(users));
+        const subscribtion = usersList().subscribe((users) => {
+            // setUsers(formatTotalUsers(users));
         });
 
         return () => {

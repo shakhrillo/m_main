@@ -8,6 +8,7 @@ export interface IUserInfo {
   notifications: number;
   phone: number;
   photoURL: string;
+  totalSpent: number;
   totalImages: number;
   totalOwnerReviews: number;
   totalReviews: number;

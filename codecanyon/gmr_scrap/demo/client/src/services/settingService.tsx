@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs, DocumentData, QuerySnapshot } from "firebase/firestore";
 import * as geofire from "geofire-common";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -76,22 +76,23 @@ export const updateCoinSettings = (id: string, data: any) => {
  * @param fromDate Date
  * @returns Observable<IUserInfo[]>
  */
-export const allUsers = (fromDate = startDate) => {
+export const usersList = (lastRef?: any) => {
+  const users$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "users");
-  const users$ = new BehaviorSubject([] as IUserInfo[]);
 
   const unsubscribe = onSnapshot(
-    query(collectionRef, where("createdAt", ">", fromDate)),
-    (snapshot) => {
-      const usersData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data() as IUserInfo,
-      }));
-      users$.next(usersData);
+    query(
+      collectionRef,
+      orderBy("createdAt", "desc")
+    ),
+    (snapshot) => users$.next(snapshot),
+    (error) => {
+      console.error("Error fetching containers data:", error);
+      users$.error(error);
     },
   );
 
-  return new Observable<IUserInfo[]>((subscriber) => {
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
     const subscription = users$.subscribe(subscriber);
 
     return () => {

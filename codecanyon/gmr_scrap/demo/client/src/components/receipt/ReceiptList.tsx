@@ -5,7 +5,7 @@ import { debounceTime, filter, map, Subject, take } from "rxjs";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Stack, Button, Dropdown, Form, InputGroup } from "react-bootstrap";
-import { ReceiptData } from "./receiptData";
+import { ReceiptData } from "./ReceiptData";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -56,7 +56,6 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
       }),
       take(1),
     ).subscribe((data) => {
-      console.log(data);
       setHistory((prev) => (append ? [...prev, ...data] : data));
     });
   };
