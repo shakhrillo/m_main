@@ -1,0 +1,8 @@
+.docker-image-data {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  padding: $spacer;
+  overflow: hidden;
+  font-size: 14px;
+}

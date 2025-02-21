@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { DashboardLayout } from "../layouts";
-import { Auth, Receipt, DockerInfo, Dashboard, DockerContainer, DockerContainers, DockerImage, DockerImages, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
+import { Auth, Receipt, DockerInfo, Dashboard, DockerContainer, DockerContainers, DockerImage, ImagesList, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
           { path: "docker", element: <DockerInfo /> },
           { path: "containers", element: <DockerContainers /> },
           { path: "containers/:containerId", element: <DockerContainer /> },
-          { path: "images", element: <DockerImages /> },
+          { path: "images", element: <ImagesList /> },
           { path: "images/:imgId", element: <DockerImage /> },
         ],
       },

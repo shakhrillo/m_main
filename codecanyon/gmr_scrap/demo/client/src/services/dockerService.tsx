@@ -79,6 +79,40 @@ export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
   });
 };
 
+export const dockerImages = (lastRef?: any) => {
+  const images$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
+  const collectionRef = collection(firestore, "machines");
+
+  const unsubscribe = onSnapshot(
+    query(
+      collectionRef,
+      limit(10),
+      ...(lastRef ? [startAfter(lastRef)] : []),
+      // ...(q.uid ? [where("uid", "==", q.uid)] : []),
+      // ...(q.type ? [where("type", "==", q.type)] : []),
+      // ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
+      // ...(q.machineId ? [where("machineId", "==", q.machineId)] : []),
+      // ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
+      // ...(q.status ? [where("status", "==", q.status)] : []),
+      // ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
+    ),
+    (snapshot) => images$.next(snapshot),
+    (error) => {
+      console.error("Error fetching images data:", error);
+      images$.error(error);
+    },
+  );
+
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
+    const subscription = images$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+}
+
 export const dockerContainerLogs = (containerId: string) => {
   const logs$ = new BehaviorSubject([] as any);
   const collectionRef = collection(firestore, "machines", containerId, "logs");

@@ -1,8 +1,9 @@
-import { IconSearch } from "@tabler/icons-react";
+import { IconReload, IconSearch } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
   Breadcrumb,
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -17,54 +18,34 @@ import {
 import { NavLink, useOutletContext } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { map } from "rxjs";
-import { docker, dockerContainers } from "../services/dockerService";
+import { filter, map, take } from "rxjs";
+import { docker, dockerContainers, dockerImages } from "../services/dockerService";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { ContainersList } from "../components/containers/ContainersList";
+import { DockerImagesList } from "../components/docker/DockerImagesList";
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
   { value: "pending", label: "Pending" },
   { value: "error", label: "Failed" },
 ];
 
-export const DockerImages = () => {
+export const ImagesList = () => {
   // const { uid } = useOutletContext<User>();
   const [images, setImages] = useState<any[]>([]);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("");
+  // const [lastDoc, setLastDoc] = useState<any>(null);
+  // const [isLastPage, setIsLastPage] = useState(false);
 
-  // useEffect(() => {
-  //   const subscription = dockerContainers({
-  //     machineType: "image",
-  //   })
-  //     .pipe(
-  //       map((data) => {
-  //         // return data.map((image: any) => ({
-  //         //   ...image,
-  //         //   id: image.id,
-  //         //   updatedAt: image.updatedAt,
-  //         // }));
-  //         return []
-  //       }),
-  //     )
-  //     .subscribe((data) => {
-  //       console.log("images--->", data);
-  //       setImages(data);
-  //     });
-
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, [uid]);
+  
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item active>Images__</Breadcrumb.Item>
+        <Breadcrumb.Item active>Images</Breadcrumb.Item>
       </Breadcrumb>
-      <ContainersList path="images" machineType="container" />
+      <DockerImagesList />
       <Row className="g-3 d-none">
         <Col md={12}>
           <Card>
@@ -92,7 +73,7 @@ export const DockerImages = () => {
                     Filter
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu aria-labelledby="dropdown-filter">
+                  {/* <Dropdown.Menu aria-labelledby="dropdown-filter">
                     {FILTER_OPTIONS.map((option) => (
                       <Dropdown.Item
                         key={option.value}
@@ -102,7 +83,7 @@ export const DockerImages = () => {
                         {option.label}
                       </Dropdown.Item>
                     ))}
-                  </Dropdown.Menu>
+                  </Dropdown.Menu> */}
                 </Dropdown>
               </Stack>
             </CardHeader>
@@ -160,6 +141,15 @@ export const DockerImages = () => {
           </Card>
         </Col>
       </Row>
+      {/* {
+        !isLastPage && (
+          <Stack direction="horizontal" className="justify-content-center mt-3">
+            <Button onClick={loadMore} variant="outline-primary">
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )
+      } */}
     </Container>
   );
 };
