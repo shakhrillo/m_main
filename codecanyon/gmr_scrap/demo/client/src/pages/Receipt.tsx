@@ -1,156 +1,64 @@
-import {
-  IconCheck,
-  IconClock,
-  IconCoin,
-  IconCreditCard,
-  IconReceipt,
-  IconUser,
-  IconX,
-} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import {
-  Badge,
-  Breadcrumb,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardTitle,
-  Col,
-  Container,
-  Row,
-} from "react-bootstrap";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { filter, map } from "rxjs";
+import { useNavigate, useParams, NavLink } from "react-router-dom";
+import { getAuth } from "firebase/auth";
 import { paymentsData } from "../services/paymentService";
 import { formatAmount } from "../utils/formatAmount";
 import { formatDate } from "../utils/formatDate";
-import { getAuth } from "firebase/auth";
+import { IconCheck, IconClock, IconCoin, IconCreditCard, IconReceipt, IconUser, IconX } from "@tabler/icons-react";
+import { Badge, Breadcrumb, Container, Row, Col } from "react-bootstrap";
+import { filter, map } from "rxjs";
 
 export const Receipt = () => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const { receiptId } = useParams() as { receiptId: string };
-  const [receipt, setReceipt] = useState({} as any);
+  const { receiptId } = useParams();
+  const [receipt, setReceipt] = useState<{ id: string; [key: string]: any } | null>(null);
 
   useEffect(() => {
     if (!receiptId || !auth.currentUser) return;
 
     const subscription = paymentsData({ receiptId, uid: auth.currentUser.uid })
       .pipe(
-        filter((snapshot) => !!snapshot),
-        filter((snapshot) => !snapshot.empty),
-        map((snapshot) => {
-          const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          return data[0];
-        }),
+        filter((snapshot) => snapshot && !snapshot.empty),
+        map((snapshot) => ({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() }))
       )
-      .subscribe((data) => setReceipt(data));
+      .subscribe((data) => {
+        console.log(data);
+        setReceipt(data)
+      });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, [receiptId, auth.currentUser]);
+
+  if (!receipt) return null;
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item
-          onClick={() => {
-            navigate("/receipts");
-          }}
-        >
-          Receipts
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>
-          {receipt?.payment_intent || "N/A"}
-        </Breadcrumb.Item>
+        <Breadcrumb.Item onClick={() => navigate("/receipts")}>Receipts</Breadcrumb.Item>
+        <Breadcrumb.Item active>{receipt.payment_intent || "N/A"}</Breadcrumb.Item>
       </Breadcrumb>
       <Row>
         <Col>
           <h5>Payment Receipt</h5>
-          <p>#{receipt?.payment_intent}</p>
+          <p>#{receipt.payment_intent}</p>
           <div className="d-flex flex-column gap-3">
-            <div className="d-flex align-items-center">
-              <IconReceipt size={30} />
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  <a
-                    href={receipt?.receipt_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-end text-break d-flex"
-                  >
-                    {receipt.number || "N/A"}
-                  </a>
+            {[
+              { icon: <IconReceipt size={30} />, label: "Payment Number", value: <a href={receipt.receipt_url} target="_blank" rel="noreferrer">{receipt.id || "N/A"}</a> },
+              { icon: <IconClock size={30} />, label: "Payment Date", value: formatDate(receipt.created) || "N/A" },
+              { icon: <IconCoin size={30} />, label: "Payment Amount", value: formatAmount(receipt.amount || receipt.amount_total, receipt.currency) },
+              { icon: <IconCreditCard size={30} />, label: "Payment Method", value: receipt.payment_method_details?.type || receipt.payment_method_types || "N/A" },
+              { icon: receipt.status === "succeeded" || receipt.status === "complete" ? <IconCheck size={30} /> : <IconX size={30} />, label: "Payment Status", value: <Badge bg={receipt.status === "succeeded" || receipt.status === "complete" ? "success" : "danger"}>{receipt.status || "Failed"}</Badge> },
+              { icon: <IconUser />, label: "Customer", value: <NavLink to={`/users/${receipt.metadata?.userId}`}>{receipt.customer || "N/A"}</NavLink> }
+            ].map(({ icon, label, value }, idx) => (
+              <div key={idx} className="d-flex align-items-center">
+                {icon}
+                <div className="ms-3">
+                  <div className="fw-bold text-break">{value}</div>
+                  <div className="text-break">{label}</div>
                 </div>
-                <div className="text-break">Payment Number</div>
               </div>
-            </div>
-            <div className="d-flex align-items-center">
-              <IconClock size={30} />
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  {formatDate(receipt.created) || "N/A"}
-                </div>
-                <div className="text-break">Payment Date</div>
-              </div>
-            </div>
-            <div className="d-flex align-items-center">
-              <IconCoin size={30} />
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  {formatAmount(
-                    receipt.amount || receipt.amount_total,
-                    receipt.currency,
-                  )}
-                </div>
-                <div className="text-break">Payment Amount</div>
-              </div>
-            </div>
-            <div className="d-flex align-items-center">
-              <IconCreditCard size={30} />
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  {receipt?.payment_method_details?.type ||
-                    receipt?.payment_method_types ||
-                    "N/A"}
-                </div>
-                <div className="text-break">Payment Method</div>
-              </div>
-            </div>
-            <div className="d-flex align-items-center">
-              {receipt.status === "succeeded" ||
-              receipt.status === "complete" ? (
-                <IconCheck size={30} />
-              ) : (
-                <IconX size={30} />
-              )}
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  {receipt.status === "succeeded" ||
-                  receipt.status === "complete" ? (
-                    <Badge bg="success">{receipt.status}</Badge>
-                  ) : (
-                    <Badge bg="danger">{receipt.status || "Failed"}</Badge>
-                  )}
-                </div>
-                <div className="text-break">Payment Status</div>
-              </div>
-            </div>
-            <div className="d-flex align-items-center">
-              <IconUser />
-              <div className="ms-3">
-                <div className="text-break fw-bold">
-                  <NavLink to={`/users/${receipt?.metadata?.userId}`}>
-                    {receipt?.customer || "N/A"}
-                  </NavLink>
-                </div>
-                <div className="text-break">Customer</div>
-              </div>
-            </div>
+            ))}
           </div>
         </Col>
       </Row>
