@@ -77,7 +77,7 @@ export const ScrapExpectedPoints = ({ containerId }: { containerId: string }) =>
         extractOwnerResponse: container?.extractOwnerResponse || false,
         maxSpentPoints: container?.maxSpentPoints || 0,
       });
-      navigate(`/scrap/${id}`);
+      navigate(`/reviews/${id}`);
     } catch (error) {
       console.log(error);
     }

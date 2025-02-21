@@ -31,9 +31,11 @@ export const Scrap = () => {
       .pipe(
         filter(snapshot => !!snapshot),
         map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IDockerContainer }))[0]),
+        filter(data => data !== undefined && data?.status === "completed" && data?.machine?.Action === "die"),
         take(1)
       )
       .subscribe(data => {
+        console.log(data);
         setContainer(data?.location ? data : ({} as IDockerContainer));
       });
 

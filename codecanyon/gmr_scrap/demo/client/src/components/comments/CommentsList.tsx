@@ -49,11 +49,15 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   const fetchComments = (append = false, lastDocument = null) => {
     if (!auth.currentUser?.uid) return;
 
-    reviewsData("reviews", { reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument).pipe(filter((snapshot) => snapshot !== null), take(1)).subscribe((snapshot) => {
+    reviewsData("reviews", { reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument).pipe(
+      filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
+      take(1)
+    ).subscribe((snapshot) => {
       if (snapshot.empty) {
         setIsLastPage(true);
         return;
       }
+      if (snapshot.docs.length < 10) setIsLastPage(true);
       setLastDoc(snapshot.docs.at(-1));
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
       setComments((prev) => (append ? [...prev, ...data] : data));
@@ -83,11 +87,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
         </Dropdown>
       </Stack>
 
-      {comments.length > 0 ? (
-        comments.map((review) => <Comment review={review} key={review.id} />)
-      ) : (
-        <Alert className="w-100" variant="info">No comments found</Alert>
-      )}
+      {comments.map((review) => <Comment review={review} key={review.id} />)}
 
       {!isLastPage && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
