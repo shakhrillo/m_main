@@ -4,13 +4,6 @@
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "containers",
-      "queryScope": "COLLECTION",
-      "fields": [
         { "fieldPath": "uid", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
@@ -43,13 +36,6 @@
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "keywords", "arrayConfig": "CONTAINS" }
-      ]
-    },
-    {
-      "collectionGroup": "containers",
-      "queryScope": "COLLECTION",
-      "fields": [
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
@@ -60,13 +46,6 @@
       "fields": [
         { "fieldPath": "containerId", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "containers",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "filterOptions", "arrayConfig": "CONTAINS" }
       ]
     },
     {
@@ -86,13 +65,6 @@
       ]
     },
     {
-      "collectionGroup": "payments",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "key", "arrayConfig": "CONTAINS" }
-      ]
-    },
-    {
       "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
@@ -106,13 +78,6 @@
       "fields": [
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "reviews",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "keywords", "arrayConfig": "CONTAINS" }
       ]
     },
     {
