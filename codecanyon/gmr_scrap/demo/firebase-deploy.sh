@@ -21,6 +21,11 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
       gcloud functions delete "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet
     done
 
+    # Remove all indexes
+    gcloud firestore indexes composite list --project "$APP_FIREBASE_PROJECT_ID" --format json | jq -r '.indexes[] | .name' | while read -r index; do
+      gcloud firestore indexes composite delete "$index" --project "$APP_FIREBASE_PROJECT_ID" --quiet
+    done
+
     # Delete all Firestore collections
     firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID"
 
@@ -32,7 +37,13 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     firebase deploy --only firestore:rules --project "$APP_FIREBASE_PROJECT_ID"
     firebase deploy --only firestore:indexes --project "$APP_FIREBASE_PROJECT_ID" --force
 
+    # Echo success message
+    echo "Firebase initialization successful!"
   done
 else
+  # Set the Firebase service account credentials
   firebase emulators:start --project "demo-$APP_FIREBASE_PROJECT_ID" --import=./data --export-on-exit=./data
+
+  # Echo success message
+  echo "Firebase initialization successful!"
 fi

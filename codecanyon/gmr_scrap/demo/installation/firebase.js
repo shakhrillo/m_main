@@ -32,7 +32,7 @@ const checkFirebase = async () => {
 
             if (
               chunk.toString().includes("All emulators ready!") ||
-              chunk.toString().includes("Deploy complete!")
+              chunk.toString().includes("Firebase initialization successful!")
             ) {
               stream.removeListener("data", handleData);
               stream.destroy();
