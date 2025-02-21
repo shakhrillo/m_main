@@ -4,39 +4,39 @@
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "uid", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "machine.Type", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "machine.Type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "machineId", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "machineId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -50,39 +50,39 @@
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "status", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "containerId", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "containerId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "containers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "filterOptions", "order": "ascending" }
+        { "fieldPath": "filterOptions", "arrayConfig": "CONTAINS" }
       ]
     },
     {
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "metadata.userId", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "metadata.userId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -96,16 +96,16 @@
       "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "status", "order": "ascending" },
-        { "fieldPath": "createdAt", "order": "descending" }
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -119,8 +119,8 @@
       "collectionGroup": "settings",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "type", "order": "ascending" },
-        { "fieldPath": "tag", "order": "ascending" }
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "tag", "order": "ASCENDING" }
       ]
     }
   ],
