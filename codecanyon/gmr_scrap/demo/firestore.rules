@@ -26,6 +26,10 @@ service cloud.firestore {
       match /stats/{statsId} {
         allow read: if request.auth != null;
       }
+
+      match /history/{historyId} {
+        allow read: if request.auth != null;
+      }
     }
 
     match /containers/{containerId} {

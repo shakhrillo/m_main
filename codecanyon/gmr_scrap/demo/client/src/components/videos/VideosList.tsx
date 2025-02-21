@@ -24,9 +24,9 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
       .pipe(filter(snapshot => snapshot !== null), take(1))
       .subscribe(snapshot => {
         if (snapshot.empty) return setIsLastPage(true);
+        if (snapshot.docs.length < 10) setIsLastPage(true);
 
         const newVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('newVideos', newVideos);
         setVideos(prev => (append ? [...prev, ...newVideos] : newVideos));
         setLastDoc(snapshot.docs.at(-1));
       });

@@ -58,6 +58,9 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
           setIsLastPage(true);
           return [];
         }
+        
+        if (snapshot.docs.length < 10) setIsLastPage(true);
+
         setLastDoc(snapshot.docs.at(-1));
         return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
       }),

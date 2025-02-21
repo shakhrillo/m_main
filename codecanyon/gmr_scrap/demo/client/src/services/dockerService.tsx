@@ -87,14 +87,8 @@ export const dockerImages = (lastRef?: any) => {
     query(
       collectionRef,
       limit(10),
+      where("Type", "==", "image"),
       ...(lastRef ? [startAfter(lastRef)] : []),
-      // ...(q.uid ? [where("uid", "==", q.uid)] : []),
-      // ...(q.type ? [where("type", "==", q.type)] : []),
-      // ...(q.machineType ? [where("machine.Type", "==", q.machineType)] : []),
-      // ...(q.machineId ? [where("machineId", "==", q.machineId)] : []),
-      // ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
-      // ...(q.status ? [where("status", "==", q.status)] : []),
-      // ...(q.containerId ? [where("containerId", "==", q.containerId)] : []),
     ),
     (snapshot) => images$.next(snapshot),
     (error) => {
@@ -105,6 +99,35 @@ export const dockerImages = (lastRef?: any) => {
 
   return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
     const subscription = images$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+}
+
+export const dockerImage = (imageId: string) => {
+  const image$ = new BehaviorSubject({} as any);
+  const docRef = doc(firestore, "machines", imageId);
+
+  const unsubscribe = onSnapshot(
+    docRef,
+    (doc) => {
+      const imageData = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      image$.next(imageData);
+    },
+    (error) => {
+      console.error("Error fetching image data:", error);
+      image$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = image$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();
