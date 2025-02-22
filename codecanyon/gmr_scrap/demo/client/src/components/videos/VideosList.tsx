@@ -21,7 +21,10 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
     if (!auth.currentUser?.uid || isLastPage) return;
 
     reviewsData("videos", { reviewId, uid: auth.currentUser.uid }, lastDoc)
-      .pipe(filter(snapshot => snapshot !== null), take(1))
+      .pipe(
+        filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDoc)),
+        take(1)
+      )
       .subscribe(snapshot => {
         if (snapshot.empty) return setIsLastPage(true);
         if (snapshot.docs.length < 10) setIsLastPage(true);
