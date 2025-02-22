@@ -8,7 +8,10 @@
       { "value": "1", "tag": "favicon", "label": "Favicon", "helpText": "The URL for the favicon." },
       { "value": "Gmr Scrap", "tag": "title", "label": "Title", "helpText": "The title of the website." },
       { "value": "Google Map Review Scrapper", "tag": "description", "label": "Description", "helpText": "The description of the website." },
-      { "value": "Scrapping tool", "tag": "keywords", "label": "Keywords", "helpText": "The keywords of the website." }
+      { "value": "Scrapping tool", "tag": "keywords", "label": "Keywords", "helpText": "The keywords of the website." },
+      { "value": "Info...", "tag": "info", "label": "Info", "helpText": "The info of the website." },
+      { "value": "Help...", "tag": "help", "label": "Help", "helpText": "The help of the website." },
+      { "value": "Security...", "tag": "security", "label": "Security", "helpText": "The security of the website." }
     ]
   },
   {

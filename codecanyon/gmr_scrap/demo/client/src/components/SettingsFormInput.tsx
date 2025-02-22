@@ -3,17 +3,15 @@ import { Form } from "react-bootstrap";
 import { settingValue, updateSettingValue } from "../services/settingService";
 import { filter, take } from "rxjs";
 
-export const SettingsFormInput = ({
-  tag,
-  type,
-  label,
-  helpText,
-}: {
+interface ISettingsFormInput {
   tag: string;
   type: string;
   label: string;
   helpText: string;
-}) => {
+  inputType: string;
+}
+
+export const SettingsFormInput = ({ tag, type, label, helpText, inputType = 'text' }: ISettingsFormInput) => {
   const [info, setInfo] = useState(null as any);
   const [inputValue, setInputValue] = useState("");
 
@@ -21,10 +19,7 @@ export const SettingsFormInput = ({
     if (!tag || !type) return;
 
     const subscription = settingValue({ tag, type })
-      .pipe(
-        filter((data) => !!data),
-        take(1),
-      )
+      .pipe(filter((data) => !!data), take(1))
       .subscribe((data) => {
         setInfo(data);
         setInputValue(data.value);
@@ -44,11 +39,22 @@ export const SettingsFormInput = ({
   return info ? (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
-      <Form.Control
-        type="text"
-        defaultValue={info.value}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
+      {
+        inputType === 'textarea' ? (
+          <Form.Control
+            as="textarea"
+            rows={3}
+            defaultValue={info.value}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        ) : (
+          <Form.Control
+            type="text"
+            defaultValue={info.value}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        )
+      }
       <Form.Text className="text-muted">{helpText}</Form.Text>
     </Form.Group>
   ) : (

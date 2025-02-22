@@ -1,24 +1,27 @@
-import { Container, Row, Col, Card, CardBody } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { filter, take } from "rxjs";
+import { settingValue } from "../services/settingService";
 
-export const Info: React.FC = () => {
+export const Info = () => {
+  const [info, setInfo] = useState(null as any);
+
+  useEffect(() => {
+    const subscription = settingValue({ tag: "help", type: "general" })
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => setInfo(data["value"]));
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col>
-          <Card>
-            <CardBody>
-              <h4>Info</h4>
-              <p>
-                This is a demo application for scraping reviews from Google
-                Maps.
-              </p>
-              <h4>How to scrape reviews?</h4>
-              <p>
-                To scrape reviews, go to the Scrap page and enter the URL of the
-                place you want to scrape reviews from.
-              </p>
-            </CardBody>
-          </Card>
+          <h5>Info</h5>
+          {info}
         </Col>
       </Row>
     </Container>

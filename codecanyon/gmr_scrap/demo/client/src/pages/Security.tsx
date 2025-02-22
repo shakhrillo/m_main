@@ -1,24 +1,27 @@
-import { Card, CardBody, Col, Container, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { filter, take } from "rxjs";
+import { settingValue } from "../services/settingService";
 
 export const Security = () => {
+  const [info, setInfo] = useState(null as any);
+  
+  useEffect(() => {
+    const subscription = settingValue({ tag: "security", type: "general" })
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => setInfo(data["value"]));
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col>
-          <Card>
-            <CardBody>
-              <h4>How to change password?</h4>
-              <p>
-                To change password, go to the Account page and click the change
-                password button.
-              </p>
-              <h4>How to delete account?</h4>
-              <p>
-                To delete account, go to the Account page and click the delete
-                account button.
-              </p>
-            </CardBody>
-          </Card>
+          <h5>Security</h5>
+          {info}
         </Col>
       </Row>
     </Container>

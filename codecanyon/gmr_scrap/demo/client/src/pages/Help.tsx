@@ -1,25 +1,27 @@
-import React from "react";
-import { Container, Row, Col, Card, CardBody } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { filter, take } from "rxjs";
+import { settingValue } from "../services/settingService";
 
-export const Help: React.FC = () => {
+export const Help = () => {
+  const [help, setHelp] = useState(null as any);
+  
+  useEffect(() => {
+    const subscription = settingValue({ tag: "help", type: "general" })
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => setHelp(data["value"]));
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col>
-          <Card>
-            <CardBody>
-              <h4>How to scrape reviews?</h4>
-              <p>
-                To scrape reviews, go to the Scrap page and enter the URL of the
-                place you want to scrape reviews from.
-              </p>
-              <h4>How to download reviews?</h4>
-              <p>
-                To download reviews, go to the Scrap page and click the download
-                button.
-              </p>
-            </CardBody>
-          </Card>
+          <h5>Help</h5>
+          {help}
         </Col>
       </Row>
     </Container>
