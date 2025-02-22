@@ -26,8 +26,7 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
         take(1)
       )
       .subscribe(snapshot => {
-        if (snapshot.empty) return setIsLastPage(true);
-        if (snapshot.docs.length < 10) setIsLastPage(true);
+        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
 
         const newImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ICommentImage));
         setImages(prev => (append ? [...prev, ...newImages] : newImages));
@@ -59,13 +58,13 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
 
       {!images.length && <Alert className="w-100" variant="info">No images found</Alert>}
 
-      {!isLastPage && (
+      {!isLastPage && images.length ? (
         <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
           <Button onClick={() => fetchImages(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
-      )}
+      ) : ""}
     </div>
   );
 };

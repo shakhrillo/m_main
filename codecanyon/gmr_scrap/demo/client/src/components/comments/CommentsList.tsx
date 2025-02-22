@@ -53,14 +53,11 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
       filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
       take(1)
     ).subscribe((snapshot) => {
-      if (snapshot.empty) {
-        setIsLastPage(true);
-        return;
-      }
-      if (snapshot.docs.length < 10) setIsLastPage(true);
-      setLastDoc(snapshot.docs.at(-1));
+      setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
       setComments((prev) => (append ? [...prev, ...data] : data));
+      setLastDoc(snapshot.docs.at(-1));
     });
   };
 
@@ -89,13 +86,13 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
 
       {comments.map((review) => <Comment review={review} key={review.id} />)}
 
-      {!isLastPage && (
+      {!isLastPage && comments.length > 0 ? (
         <Stack direction="horizontal" className="justify-content-center mt-3">
           <Button onClick={() => fetchComments(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
-      )}
+      ): ""}
     </div>
   );
 };
