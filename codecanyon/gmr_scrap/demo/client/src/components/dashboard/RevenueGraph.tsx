@@ -3,6 +3,8 @@ import { LineChart } from "../LineChart"
 import { useEffect, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
 import { formatTotalEarnings } from "../../utils/formatTotalEarnings";
+import { filter, map, take } from "rxjs";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 /**
  * Revenue component for the current month
@@ -12,7 +14,13 @@ export const RevenueGraph = () => {
   const [earnings, setEarnings] = useState([] as any[]);
 
   useEffect(() => {
-    const subscription = paymentsData({type: ["charge.succeeded"]}).subscribe((data) => setEarnings(formatTotalEarnings(data)));
+    const subscription = paymentsData({type: ["charge.succeeded"]})
+    .pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }))),
+      take(1),
+    )
+    .subscribe((data) => setEarnings(formatTotalEarnings(data)));
 
     return () => {
       subscription.unsubscribe();
