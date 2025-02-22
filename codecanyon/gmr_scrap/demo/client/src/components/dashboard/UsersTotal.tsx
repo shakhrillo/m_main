@@ -17,13 +17,11 @@ export const UsersTotal = () => {
   }, []);
 
   return (
-    <Card className="h-100">
-      <Card.Body className="d-flex flex-column">
-        <Card.Title>Lifetime Users</Card.Title>
-        <div className="display-5 mt-auto">
-          {formatNumber((users))}
-        </div>
-      </Card.Body>
-    </Card>
+    <div className="d-flex flex-column h-100">
+      <h5>Lifetime Users</h5>
+      <div className="display-6 mt-auto">
+        {formatNumber((users))}
+      </div>
+    </div>
   )
 }

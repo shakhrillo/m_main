@@ -1,4 +1,3 @@
-import { Card } from "react-bootstrap"
 import { LineChart } from "../LineChart"
 import { useEffect, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
@@ -28,17 +27,15 @@ export const RevenueGraph = () => {
   }, []);
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>This month's revenue</Card.Title>
-        <LineChart labels={earnings.map((e) => e.date)}
-          datasets={[{
-            label: "Revenue",
-            data: earnings.map((e) => e.total),
-            color: "#3e2c41",
-          }]}
-        />
-      </Card.Body>
-    </Card>
+    <>
+      <h5>This month's revenue</h5>
+      <LineChart labels={earnings.map((e) => e.date)}
+        datasets={[{
+          label: "Revenue",
+          data: earnings.map((e) => e.total),
+          color: "#3e2c41",
+        }]}
+      />
+    </>
   )
 }
