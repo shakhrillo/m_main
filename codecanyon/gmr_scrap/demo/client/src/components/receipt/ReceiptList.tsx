@@ -39,7 +39,7 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
     if (!auth.currentUser?.uid) return;
 
     return paymentsData({
-      uid,
+      // uid,
       type: status ? [status] : ["charge.succeeded", "charge.failed"],
     }, lastDocument).pipe(
       filter((snapshot) => !!snapshot),

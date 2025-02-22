@@ -76,16 +76,7 @@
       "collectionGroup": "payments",
       "queryScope": "COLLECTION",
       "fields": [
-        {"fieldPath": "metadata.userId", "order": "ASCENDING"},
-        {"fieldPath": "createdAt", "order": "DESCENDING"}
-      ]
-    },
-    {
-      "collectionGroup": "payments",
-      "queryScope": "COLLECTION",
-      "fields": [
         {"fieldPath": "key", "arrayConfig": "CONTAINS"},
-        {"fieldPath": "metadata.userId", "order": "ASCENDING"},
         {"fieldPath": "createdAt", "order": "DESCENDING"}
       ]
     },

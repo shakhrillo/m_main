@@ -19,7 +19,7 @@ export const Receipt = () => {
 
     console.log(receiptId, auth.currentUser.uid);
 
-    const subscription = paymentsData({ receiptId, uid: auth.currentUser.uid })
+    const subscription = paymentsData({ receiptId })
       .pipe(
         filter((snapshot) => snapshot && !snapshot.empty),
         map((snapshot) => ({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() }))

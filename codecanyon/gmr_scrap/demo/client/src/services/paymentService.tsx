@@ -93,7 +93,7 @@ export const paymentsData = (q: IPaymentsQuery, lastRef?: any) => {
       orderBy("createdAt", "desc"),
       limit(10),
       ...(lastRef ? [startAfter(lastRef)] : []),
-      ...(q.uid ? [where("metadata.userId", "==", q.uid)] : []),
+      // ...(q.uid ? [where("metadata.userId", "==", q.uid)] : []),
       ...(q.type ? [where("type", "in", q.type)] : []),
       ...(q.receiptId ? [where("key", "array-contains", q.receiptId)] : []),
     ),

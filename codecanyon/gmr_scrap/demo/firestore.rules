@@ -13,7 +13,7 @@ service cloud.firestore {
     }
 
     match /payments/{paymentsId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.metadata.userId;
+      allow read: if request.auth != null;
     }
 
     match /machines/{machineId} {
