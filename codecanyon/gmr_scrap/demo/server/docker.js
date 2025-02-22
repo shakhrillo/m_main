@@ -168,7 +168,7 @@ const handleContainerEvents = async () => {
         if (!(await container.inspect()).State.Running) return;
         // Fetch stats
         const statsStream = await container.stats();
-        const stats$ = Kefir.fromEvents(statsStream, "data")
+        const stats$ = Kefir.fromEvents(statsStream.setEncoding("utf8"), "data")
           .debounce(400)
           .map(JSON.parse)
           .filter(Boolean);
@@ -185,7 +185,7 @@ const handleContainerEvents = async () => {
           stderr: true,
           timestamps: false,
         });
-        const logs$ = Kefir.fromEvents(logsStream, "data")
+        const logs$ = Kefir.fromEvents(logsStream.setEncoding("utf8"), "data")
           .debounce(400)
           .map((data) => data.toString())
           .filter(Boolean);

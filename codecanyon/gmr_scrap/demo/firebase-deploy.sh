@@ -12,6 +12,9 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
   # Authenticate gcloud with the service account
   gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
 
+  # Save the Firebase project ID
+  gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format=json > saved_indexes.json
+
   # Deploy the functions with a retry mechanism
   MAX_RETRIES=3
   for ((i=1; i<=MAX_RETRIES; i++)); do
@@ -37,7 +40,7 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     # Deploy sequentially
     firebase deploy --only functions --project "$APP_FIREBASE_PROJECT_ID" || exit 1
     firebase deploy --only firestore:rules --project "$APP_FIREBASE_PROJECT_ID" || exit 1
-    firebase deploy --only firestore:indexes --project "$APP_FIREBASE_PROJECT_ID" --force || exit 1
+    # firebase deploy --only firestore:indexes --project "$APP_FIREBASE_PROJECT_ID" --force || exit 1
 
     echo "Firebase initialization successful!"
     break  # Exit loop on success

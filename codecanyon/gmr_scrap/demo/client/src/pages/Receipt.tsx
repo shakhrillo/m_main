@@ -17,6 +17,8 @@ export const Receipt = () => {
   useEffect(() => {
     if (!receiptId || !auth.currentUser) return;
 
+    console.log(receiptId, auth.currentUser.uid);
+
     const subscription = paymentsData({ receiptId, uid: auth.currentUser.uid })
       .pipe(
         filter((snapshot) => snapshot && !snapshot.empty),
