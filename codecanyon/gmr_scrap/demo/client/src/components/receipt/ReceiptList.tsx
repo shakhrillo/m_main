@@ -73,13 +73,8 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
   };
   
   return (
-    <div>
-      <Stack direction="horizontal" className="bg-light p-3 rounded">
-        <div className="me-auto">
-          <InputGroup>
-            <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
-          </InputGroup>
-        </div>
+    <div className="receipts-list">
+      <Stack direction="horizontal" className="receipts-sort">
         <Dropdown autoClose="outside">
           <Dropdown.Toggle variant="outline-secondary">
             <IconFilter className="me-2" />

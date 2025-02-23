@@ -63,7 +63,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
 
   return (
     <div className="comments" ref={commentsRef}>
-      <Stack direction="horizontal" className="bg-light p-3 rounded">
+      <Stack direction="horizontal" className="comments-sort">
         <div className="me-auto">
           <InputGroup>
             <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />

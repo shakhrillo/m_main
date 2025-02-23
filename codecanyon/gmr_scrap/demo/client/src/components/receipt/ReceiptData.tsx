@@ -12,13 +12,15 @@ export const ReceiptData = ({ receipt }: IReceiptData) => {
       <Stack direction="horizontal" gap={2} className="justify-content-between">
         <Stack direction="horizontal" gap={2}>
           {`${formatAmount(receipt.amount)} ${receipt?.currency?.toUpperCase()}`}
-          <Badge bg={receipt.status === "succeeded" ? "success" : "danger"} className="text-capitalize">
+          <Badge bg={receipt.status === "succeeded" ? "success" : "danger"} className="text-capitalize" pill>
             {receipt.status}
           </Badge>
         </Stack>
-        {formatTimestamp(receipt.createdAt)}
+        <div className="receipt-time">
+          {formatTimestamp(receipt.createdAt)}
+        </div>
       </Stack>
-      <NavLink className={"h6"} to={`/receipts/${receipt.id}`}>
+      <NavLink to={`/receipts/${receipt.id}`} className="receipt-label">
         {formatNumber(receipt.metadata.amount)} Coins
       </NavLink>
       <Stack direction="horizontal" gap={2} className="text-muted">
