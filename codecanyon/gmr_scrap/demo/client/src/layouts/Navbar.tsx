@@ -50,11 +50,6 @@ export const AppNavbar = () => {
               </small>
             </NavLink>
 
-            <NavLink to={"/payments"} className="nav-link">
-              <IconBell size={20} className="text-warning" />
-              <small className="fw-bold ms-2">0</small>
-            </NavLink>
-
             <NavDropdown
               title={
                 <div className="d-inline-block">
@@ -80,7 +75,10 @@ export const AppNavbar = () => {
               }}>
                 Profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+              {
+                user.isAdmin &&
+                <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+              }
               <NavDropdown.Divider />
               <NavDropdown.Item href="/auth/logout">Logout</NavDropdown.Item>
             </NavDropdown>

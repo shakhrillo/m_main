@@ -22,9 +22,9 @@ export const ContainerData = ({ container, path }: IContainerData) => {
             <StatusInfo container={container} />
           )
         }
-        <small>
+        <div className="container-time">
           {formatTimestamp(container.createdAt)}
-        </small>
+        </div>
       </Stack>
       <NavLink className={"h6"} to={`/${path}/${container.machineId}`}>
         {

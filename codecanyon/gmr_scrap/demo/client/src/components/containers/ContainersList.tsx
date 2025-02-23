@@ -84,12 +84,10 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
 
   return (
     <div className="containers-list">
-      <Stack direction="horizontal" className="bg-light p-3 rounded">
-        <div className="me-auto">
-          <InputGroup>
-            <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
-          </InputGroup>
-        </div>
+      <Stack direction="horizontal" className="containers-sort">
+        <InputGroup>
+          <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
+        </InputGroup>
         <Dropdown autoClose="outside">
           <Dropdown.Toggle variant="outline-secondary">
             <IconFilter className="me-2" />

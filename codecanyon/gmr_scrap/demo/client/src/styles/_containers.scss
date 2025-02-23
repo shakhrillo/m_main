@@ -16,3 +16,29 @@
   background-color: #fff;
   color: #666;
 }
+
+.containers-sort {
+  padding: $spacer;
+  font-size: 14px;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  background-color: #fff;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+
+  .input-group {
+    width: auto;
+  }
+}
+
+.container-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 12px;
+  border-radius: 0 0 0 $card-border-radius;
+}

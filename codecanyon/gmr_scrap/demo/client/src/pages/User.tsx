@@ -97,13 +97,15 @@ export const User = () => {
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>
+        {
+          user?.isAdmin && <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>
+        }
         <Breadcrumb.Item active>{user?.displayName || "User"}</Breadcrumb.Item>
       </Breadcrumb>
 
       <Row>
         <Col xl={9}>
-          <Form>
+          <Form className="user-form">
             <Form.Group className="mb-3">
               <Form.Label>Email address</Form.Label>
               <Form.Control type="email" value={user?.email || ""} readOnly disabled />
@@ -136,26 +138,23 @@ export const User = () => {
         </Col>
 
         <Col xl={3}>
-          <Card>
-            <CardBody>
-              <CardTitle>User Profile</CardTitle>
-              {
-                user?.photoURL && (
-                  <Image
-                    src={user?.photoURL}
-                    rounded
-                    fluid
-                  />
-                )
-              }
-              <div className="d-flex flex-column mt-3">
-                <UserInfo icon={<IconMail />} label="Email" value={user?.email} />
-                <UserInfo icon={<IconLabel />} label="Display Name" value={user?.displayName} />
-                <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
-                <UserInfo icon={<IconStars />} label="Total Reviews" value={user?.totalReviews} />
-              </div>
-            </CardBody>
-          </Card>
+          <div className="user-info">
+            {
+              user?.photoURL && (
+                <Image
+                  src={user?.photoURL}
+                  rounded
+                  fluid
+                />
+              )
+            }
+            <div className="d-flex flex-column mt-3">
+              <UserInfo icon={<IconMail />} label="Email" value={user?.email} />
+              <UserInfo icon={<IconLabel />} label="Display Name" value={user?.displayName} />
+              <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
+              <UserInfo icon={<IconStars />} label="Total Reviews" value={user?.totalReviews} />
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>
