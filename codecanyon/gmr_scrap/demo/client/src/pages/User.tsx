@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
+import { filter, map, take } from "rxjs";
 
 interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
@@ -42,8 +43,12 @@ export const User = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const subscription = userData(userId).subscribe((data) => {
-      setUser(data as IUserInfo);
+    const subscription = userData(userId).pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
+      take(1)
+    ).subscribe((data) => {
+      setUser(data[0]);
       setLoading(false);
     });
 

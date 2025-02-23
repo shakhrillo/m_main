@@ -4,12 +4,12 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /statistics/{statisticsId} {
-      allow read: if isAdmin();
+      allow read: if isAdminRead();
     }
 
     match /settings/{settingsId} {
       allow read: if request.auth != null;
-      allow write: if isAdmin();
+      allow write: if isAdminEditor();
     }
 
     match /payments/{paymentsId} {
@@ -17,50 +17,54 @@ service cloud.firestore {
     }
 
     match /machines/{machineId} {
-      allow read: if request.auth != null;
+      allow read: if isAdminRead();
 
       match /logs/{logsId} {
-        allow read: if request.auth != null;
+        allow read: if isAdminRead();
       }
 
       match /stats/{statsId} {
-        allow read: if request.auth != null;
+        allow read: if isAdminRead();
       }
 
       match /history/{historyId} {
-        allow read: if request.auth != null;
+        allow read: if isAdminRead();
       }
     }
 
     match /containers/{containerId} {
-      allow read: if request.auth.uid == resource.data.uid || isAdmin();
-      allow create, update: if request.auth != null && request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid || isAdminRead();
+      allow create, update: if request.auth.uid == request.resource.data.uid;
 
       match /images/{imageId} {
-        allow read: if request.auth.uid == resource.data.uid;
+        allow read: if request.auth.uid == resource.data.uid || isAdminRead();
       }
 
       match /videos/{videoId} {
-        allow read: if request.auth.uid == resource.data.uid;
+        allow read: if request.auth.uid == resource.data.uid || isAdminRead();
       }
 
       match /reviews/{reviewId} {
-        allow read: if request.auth.uid == resource.data.uid;
+        allow read: if request.auth.uid == resource.data.uid || isAdminRead();
       }
     }
 
     match /users/{userId} {
-      allow get, list: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == userId;
+      allow get, list: if request.auth != null || isAdminRead();
+      allow update, delete: if request.auth.uid == userId || isAdminEditor();
 
       match /buyCoins/{buyCoinsId} {
-        allow create: if request.auth != null && request.auth.uid == userId;
-        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth.uid == userId;
+        allow read: if request.auth.uid == userId;
       }
     }
 
-    function isAdmin() {
-      return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    function isAdminRead() {
+      return request.auth != null && get(/databases/$(database)/documents/admin/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    function isAdminEditor() {
+      return request.auth != null && get(/databases/$(database)/documents/admin/$(request.auth.uid)).data.isEditor == true;
     }
   }
 }

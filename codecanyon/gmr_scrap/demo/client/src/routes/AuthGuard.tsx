@@ -1,36 +1,56 @@
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { authenticatedUser } from "../services/userService";
+import { authenticatedUser, userData } from "../services/userService";
+import { filter, map, take } from "rxjs";
+import { IUserInfo } from "../types/userInfo";
 
 /**
  * Protects routes by ensuring only authenticated users can access them.
  */
 export const AuthGuard = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true; // Prevents state updates after unmount
-
+    let isSubscribed = true;
+    
     const fetchUser = async () => {
       try {
-        const userData = await authenticatedUser();
-        if (isMounted) setUser(userData);
+        const user = await authenticatedUser();
+        if (!user || !isSubscribed) return;
+
+        const subscription = userData(user.uid)
+          .pipe(
+            filter((snapshot) => !!snapshot),
+            map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
+            take(1)
+          )
+          .subscribe({
+            next: (users) => {
+              if (users.length > 0 && isSubscribed) {
+                setUser(users[0]);
+              }
+            },
+            error: (err) => {
+              if (isSubscribed) setError("Failed to fetch user data.");
+              console.error("Error fetching user data:", err);
+            },
+            complete: () => setLoading(false),
+          });
+
+        return () => subscription.unsubscribe();
       } catch (err) {
-        console.error("Error fetching user:", err);
-        if (isMounted) setError("Failed to authenticate user.");
-      } finally {
-        if (isMounted) setLoading(false);
+        console.info("Error authenticating user:", err);
+        if (isSubscribed) setError("Failed to authenticate user.");
       }
     };
 
     fetchUser();
 
     return () => {
-      isMounted = false; // Cleanup function
+      isSubscribed = false;
     };
   }, []);
 

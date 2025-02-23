@@ -11,20 +11,24 @@ import { formatNumber } from "../utils";
 import { IUserInfo } from "../types/userInfo";
 import { Logo } from "../components/Logo";
 import { Image } from "react-bootstrap";
+import { filter, map } from "rxjs";
 
 /**
  * The application navbar.
  * @returns JSX.Element
  */
 export const AppNavbar = () => {
-  const user = useOutletContext<User>();
+  const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
   useEffect(() => {
     if (!user || !user.uid) return;
 
-    const unsubscribe = userData(user.uid).subscribe((user) => setUserInfo(user));
+    const unsubscribe = userData(user.uid).pipe(
+      filter((snapshot) => !!snapshot),
+      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
+    ).subscribe((user) => setUserInfo(user[0]));
 
     return () => unsubscribe.unsubscribe()
   }, [user]);

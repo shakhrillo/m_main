@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, DocumentData, onSnapshot, query, QuerySnapshot, updateDoc, where } from "firebase/firestore";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
 import { User } from "firebase/auth";
@@ -22,26 +22,18 @@ export const authenticatedUser = (): Promise<User | null> => {
  * @param uid The user ID.
  * @returns Observable<IUserInfo>
  */
-export const userData = (uid: string): Observable<IUserInfo | null> => {
-  const docCollection = collection(firestore, "users");
-  const user$ = new BehaviorSubject<IUserInfo | null>(null);
+export const userData = (uid: string) =>{
+  const user$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any)
+  const collectionRef = collection(firestore, "users");
 
   const unsubscribe = onSnapshot(
-    query(docCollection, where("uid", "==", uid)),
-    (snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        const data = doc.data() as IUserInfo;
-        user$.next(data);
-      });
-    },
-    (error) => {
-      console.error("Error fetching user data:", error);
-      user$.error(error);
-    },
+    query(collectionRef, where("uid", "==", uid)),
+    (snapshot) => user$.next(snapshot),
+    (error) => user$.error(error)
   );
 
-  return new Observable<IUserInfo>((subscriber) => {
-    const subscription = user$.pipe(filter((user) => user !== null)).subscribe(subscriber);
+  return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {
+    const subscription = user$.subscribe(subscriber);
 
     return () => {
       subscription.unsubscribe();

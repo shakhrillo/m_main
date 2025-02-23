@@ -16,4 +16,5 @@ export interface IUserInfo {
   totalValidateInfo: number;
   totalVideos: number;
   uid: string;
+  isAdmin: boolean;
 }
