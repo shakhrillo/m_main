@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { Timestamp } = require("firebase-admin/firestore");
 const fs = require('fs');
 
 const FIREBASE_PROJECT_ID = process.env.APP_FIREBASE_PROJECT_ID;
@@ -53,11 +54,30 @@ async function createAdminUser() {
       email,
       password,
       displayName: 'Admin',
+      phoneNumber: '+1234567890',
+      photoURL: ''
     });
 
     await firestore.collection('admin').doc(user.uid).set({
       isAdmin: true,
       isEditor: false,
+    });
+    await firestore.collection('users').doc(user.uid).set({
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      phone: user.phoneNumber,
+      coinBalance: 150,
+      notifications: 0,
+      createdAt: Timestamp.now(),
+      totalSpent: 0,
+      totalReviews: 0,
+      totalImages: 0,
+      totalVideos: 0,
+      totalOwnerReviews: 0,
+      totalValidateComments: 0,
+      totalValidateInfo: 0,
     });
     console.log('✅ Admin user created.');
   } catch (error) {
@@ -76,10 +96,27 @@ async function createDemoUser() {
   }
 
   try {
-    await auth.createUser({
+    const user = await auth.createUser({
       email,
       password,
       displayName: 'Demo',
+    });
+    await firestore.collection('users').doc(user.uid).set({
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      phone: user.phoneNumber,
+      coinBalance: 150,
+      notifications: 0,
+      createdAt: Timestamp.now(),
+      totalSpent: 0,
+      totalReviews: 0,
+      totalImages: 0,
+      totalVideos: 0,
+      totalOwnerReviews: 0,
+      totalValidateComments: 0,
+      totalValidateInfo: 0,
     });
     console.log('✅ Demo user created.');
   } catch (error) {
