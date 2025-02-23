@@ -34,7 +34,7 @@ export const AppNavbar = () => {
   }, [user]);
 
   return (
-    <Navbar expand="lg" bg="white" variant="light" className="border-bottom">
+    <Navbar expand="lg" bg="white" variant="light">
       <Container>
         <Navbar.Brand>
           <Logo />

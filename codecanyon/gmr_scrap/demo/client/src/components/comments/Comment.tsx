@@ -31,9 +31,9 @@ export const Comment = ({ review }: { review: IComment }) => {
       <div className="comment-user">
         <img src={review.user.image} alt={review.user.name} />
         <div className="comment-user-info">
-          <a href={review.user.url} target="_blank" rel="noreferrer">
-            {review.user.name}
-          </a>
+          <span>
+            {review.user.name.slice(0, 3) + "***" + review.user.name.slice(-3)}
+          </span>
           <Ratings container={review} />
         </div>
         <small>{review.date}</small>

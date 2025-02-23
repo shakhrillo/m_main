@@ -11,8 +11,8 @@ const menuSections = [
     title: "Main",
     id: "main",
     items: [
-      { path: "/dashboard", icon: IconDashboard, label: "Dashboard" },
-      { path: "/scrap", icon: IconSearch, label: "Scrap" },
+      { path: "/dashboard", id: "dashboard", icon: IconDashboard, label: "Dashboard" },
+      { path: "/scrap", id: "scrap", icon: IconSearch, label: "Scrap" },
     ],
   },
   {
@@ -20,45 +20,42 @@ const menuSections = [
     id: "reviews",
     items: [
       {
-        path: "/reviews",
-        icon: IconServerBolt,
-        label: "Reviews",
-        badge: "4",
+        path: "/reviews", id: "reviews", icon: IconServerBolt, label: "Reviews", badge: "4",
       },
-      { path: "/validates", icon: IconWorldCheck, label: "Validates" },
+      { path: "/validates", id: "validates", icon: IconWorldCheck, label: "Validates" },
     ],
   },
   {
     title: "Docker",
     id: "docker",
     items: [
-      { path: "/containers", icon: IconBox, label: "Containers" },
-      { path: "/images", icon: IconBoxMargin, label: "Images" },
+      { path: "/containers", id: "containers", icon: IconBox, label: "Containers" },
+      { path: "/images", id: "images", icon: IconBoxMargin, label: "Images" },
     ],
   },
   {
     title: "Reports",
     id: "reports",
     items: [
-      { path: "/payments", icon: IconCreditCard, label: "Buy Coins" },
-      { path: "/receipts", icon: IconReceipt, label: "Receipts" },
+      { path: "/payments", id: "payments", icon: IconCreditCard, label: "Buy Coins" },
+      { path: "/receipts", id: "receipts", icon: IconReceipt, label: "Receipts" },
     ],
   },
   {
     title: "Settings",
     id: "settings",
     items: [
-      { path: "/users", icon: IconUser, label: "Users" },
-      { path: "/settings", icon: IconSettings, label: "Settings" },
+      { path: "/users", id: "users", icon: IconUser, label: "Users" },
+      { path: "/settings", id: "settings", icon: IconSettings, label: "Settings" },
     ],
   },
   {
     title: "Help",
     id: "help",
     items: [
-      { path: "/security", icon: IconShield, label: "Security" },
-      { path: "/help", icon: IconHelp, label: "Help" },
-      { path: "/info", icon: IconInfoCircle, label: "Info" },
+      { path: "/security", id: "security", icon: IconShield, label: "Security" },
+      { path: "/help", id: "help", icon: IconHelp, label: "Help" },
+      { path: "/info", id: "info", icon: IconInfoCircle, label: "Info" },
     ],
   },
 ];
@@ -66,10 +63,6 @@ const menuSections = [
 export const Sidebar = () => {
   const user = useOutletContext<IUserInfo>();
   const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <div className={`sidebar ${collapsed ? "shadow-sm sidebar-collapsed" : ""}`}>
@@ -89,10 +82,17 @@ export const Sidebar = () => {
 
         <div className="sidebar-menu">
           {menuSections.filter(section => {
-            if (section.id === "main" && !user?.isAdmin) return false;
             if (section.id === "docker" && !user?.isAdmin) return false;
             if (section.id === "settings" && !user?.isAdmin) return false;
             return true;
+          }).map(section => {
+            if (section.id === "main" && !user?.isAdmin) {
+              return {
+                ...section,
+                items: section.items.filter(item => item.id !== "dashboard"),
+              }
+            }
+            return section;
           }).map((section) => (
             <div className="sidebar-group" key={section.title}>
               <span className="sidebar-group-title">{section.title}</span>

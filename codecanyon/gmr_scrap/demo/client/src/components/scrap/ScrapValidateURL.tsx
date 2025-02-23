@@ -77,8 +77,10 @@ export const ScrapValidateURL = ({
   }
 
   return (
-    <Stack direction="horizontal" gap={3} className="bg-light p-3 rounded align-items-start">
-      <IconBrandGoogleMaps size={48} className="text-primary" />
+    <Stack direction="horizontal" gap={3} className="scrap-validate-url">
+      <div className="text-primary">
+        <IconBrandGoogleMaps size={48} />
+      </div>
       <Stack direction="vertical">
         <CardTitle>Google Maps URL</CardTitle>
         <CardSubtitle>

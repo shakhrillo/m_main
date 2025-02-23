@@ -59,56 +59,58 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
   return (
     <>
       <h5 className="mt-3 mb-0">Extract options</h5>
-      <Row className="g-3">
-        <OptionCard icon={IconFence} label="Review limit">
-          <FormControl
-            placeholder="Review limit"
-            value={limit}
-            onChange={(e) => setLimit(Number(e.target.value))}
-            disabled={!container.rating}
-          />
-          <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
-        </OptionCard>
+      <div className="scrap-extract-options">
+        <Row className="g-3">
+          <OptionCard icon={IconFence} label="Review limit">
+            <FormControl
+              placeholder="Review limit"
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+              disabled={!container.rating}
+            />
+            <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
+          </OptionCard>
 
-        <OptionCard icon={IconCoins} label="Max spent points">
-          <FormControl
-            placeholder="Max spent points"
-            value={maxSpentPoints}
-            onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
-            disabled={!container.rating}
-          />
-          <FormText>Maximum points to spend on this scrap.</FormText>
-        </OptionCard>
+          <OptionCard icon={IconCoins} label="Max spent points">
+            <FormControl
+              placeholder="Max spent points"
+              value={maxSpentPoints}
+              onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
+              disabled={!container.rating}
+            />
+            <FormText>Maximum points to spend on this scrap.</FormText>
+          </OptionCard>
 
-        <OptionCard icon={IconArrowsSort} label="Sort by">
-          <FormSelect
-            value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as "Most relevant" | "Newest" | "Highest rating" | "Lowest rating")
-            }
-            disabled={!container.rating}
-          >
-            {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </FormSelect>
-          <FormText>Sort reviews by most relevant, newest, highest rating, or lowest rating.</FormText>
-        </OptionCard>
+          <OptionCard icon={IconArrowsSort} label="Sort by">
+            <FormSelect
+              value={sortBy}
+              onChange={(e) =>
+                setSortBy(e.target.value as "Most relevant" | "Newest" | "Highest rating" | "Lowest rating")
+              }
+              disabled={!container.rating}
+            >
+              {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </FormSelect>
+            <FormText>Sort reviews by most relevant, newest, highest rating, or lowest rating.</FormText>
+          </OptionCard>
 
-        <OptionCard icon={IconFile} label="Output as">
-          <FormSelect
-            value={outputAs}
-            onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
-            disabled={!container.rating}
-          >
-            <option value="json">JSON</option>
-            <option value="csv">CSV</option>
-          </FormSelect>
-          <FormText>Output as a CSV or JSON file.</FormText>
-        </OptionCard>
-      </Row>
+          <OptionCard icon={IconFile} label="Output as">
+            <FormSelect
+              value={outputAs}
+              onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
+              disabled={!container.rating}
+            >
+              <option value="json">JSON</option>
+              <option value="csv">CSV</option>
+            </FormSelect>
+            <FormText>Output as a CSV or JSON file.</FormText>
+          </OptionCard>
+        </Row>
+      </div>
     </>
   );
 };

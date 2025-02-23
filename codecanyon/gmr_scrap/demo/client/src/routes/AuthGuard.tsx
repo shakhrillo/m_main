@@ -19,7 +19,11 @@ export const AuthGuard = () => {
     const fetchUser = async () => {
       try {
         const user = await authenticatedUser();
-        if (!user || !isSubscribed) return;
+        if (!user || !isSubscribed) {
+          setLoading(false);
+          setError("User not authenticated.");
+          return
+        }
 
         const subscription = userData(user.uid)
           .pipe(

@@ -1,7 +1,7 @@
 .comments {
   display: flex;
   flex-direction: column;
-  // gap: 0.5rem;
+  gap: 1rem;
   padding: 1rem 0;
 }
 
@@ -10,13 +10,14 @@
   position: relative;
   flex-direction: column;
   gap: 0.5rem;
-  // border-bottom: $card-border-width solid $border-color;
-  // border-radius: $card-border-radius;
-  // background-color: #fafafa;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  background-color: #fff;
   padding: $spacer;
   max-height: 150px;
   overflow: hidden;
   font-size: 14px;
+  color: #666;
 
   &-expand {
     display: flex;
@@ -42,6 +43,8 @@
     display: flex;
     align-items: start;
     gap: $spacer;
+    pointer-events: none;
+    user-select: none;
 
     &-info {
       display: flex;
@@ -63,6 +66,10 @@
       max-width: 35px;
       height: 35px;
       object-fit: cover;
+      filter: brightness(0.6) blur(1px);
+      pointer-events: none;
+      user-select: none;
+
     }
   }
 

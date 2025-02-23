@@ -23,13 +23,14 @@ $card-cap-bg: transparent;
 @import "styles/auth";
 @import "styles/receipts";
 @import "styles/users";
+@import "styles/scrap";
 
 html,
 body {
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
   font-style: normal;
-  background-color: #fff;
+  background-color: #f8f8f8;
   color: $dark;
 }
 

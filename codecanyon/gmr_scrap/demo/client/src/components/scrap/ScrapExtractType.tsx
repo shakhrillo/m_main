@@ -58,7 +58,7 @@ export const ScrapExtractType = ({ containerId, container }: {
           const isActive = extractOptions[key as keyof typeof extractOptions];
           return (
             <Col key={key} sm={4}>
-              <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} className="d-flex align-items-center">
+              <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} className="scrap-extract-type">
                 <div className="me-3">
                   {/* {createElement(icon, { className: "text-body-secondary", size: 30 })} */}
                   {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {

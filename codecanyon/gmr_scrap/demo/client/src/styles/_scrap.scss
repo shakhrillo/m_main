@@ -1,0 +1,26 @@
+.scrap {
+  &-validate-url {
+    display: flex;
+    padding: 1rem;
+    align-items: start;
+    background-color: #fff;
+    border-radius: $card-border-radius;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
+  
+  &-extract-type {
+    display: flex;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: $card-border-radius;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
+
+  &-extract-options {
+    display: flex;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: $card-border-radius;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
+}

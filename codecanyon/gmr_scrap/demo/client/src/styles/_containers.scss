@@ -1,6 +1,7 @@
 .containers-list {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .container-data {
@@ -10,4 +11,8 @@
   padding: $spacer;
   overflow: hidden;
   font-size: 14px;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  background-color: #fff;
+  color: #666;
 }

@@ -43,7 +43,7 @@ export const Scrap = () => {
   }, [scrapId, auth.currentUser?.uid]);
 
   return (
-    <Container>
+    <Container className="scrap">
       <Breadcrumb>
         <Breadcrumb.Item onClick={() => navigate("/scrap")} active>
           Scrap
