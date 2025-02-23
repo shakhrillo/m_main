@@ -8,15 +8,15 @@ import FIcon from "react-favicon";
  * @returns JSX.Element
  */
 export const Favicon = () => {
-    const [favicon, setFavicon] = useState<string | null>(null);
+  const [favicon, setFavicon] = useState<string | null>(null);
 
-    useEffect(() => {
-        const subscription = settingValue({ tag: "favicon", type: "general" })
-            .pipe(filter((data) => !!data?.value))
-            .subscribe(({ value }) => setFavicon(value));
+  useEffect(() => {
+    const subscription = settingValue({ tag: "favicon", type: "general" })
+      .pipe(filter((data) => !!data?.value))
+      .subscribe(({ value }) => setFavicon(value));
 
-        return () => subscription.unsubscribe();
-    }, []);
+    return () => subscription.unsubscribe();
+  }, []);
 
-    return favicon && <FIcon url={favicon} />
+  return favicon && <FIcon url={favicon} />
 };

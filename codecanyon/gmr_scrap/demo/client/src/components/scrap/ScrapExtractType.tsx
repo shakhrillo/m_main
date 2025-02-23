@@ -70,7 +70,7 @@ export const ScrapExtractType = ({ containerId, container }: {
                 <Stack direction="vertical">
                   <FormLabel>{label}</FormLabel>
                   <div className="mt-n2">
-                    <Badge pill>{points} points</Badge>
+                    <Badge pill bg={isActive ? "success" : "secondary"}>{points} points</Badge>
                   </div>
                 </Stack>
               </div>

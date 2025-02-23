@@ -22,6 +22,7 @@ import {
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { ScrapValidateButton } from "./ScrapValidateButton";
 
 /**
  * Component for validating Google Maps URL.
@@ -111,7 +112,8 @@ export const ScrapValidateURL = ({
             </div>
           )}
           <Stack direction="horizontal">
-            <Button
+            <ScrapValidateButton container={container} containerId={containerId} isDisabled={isDisabled} />
+            {/* <Button
               variant="primary"
               type="submit"
               className="ms-auto"
@@ -127,13 +129,13 @@ export const ScrapValidateURL = ({
                   <>
                     <IconCircleCheck />
                     Validate URL
-                    <Badge className="top-0" pill bg="light" text="dark">
+                    <Badge pill bg="light" text="dark">
                       3 points
                     </Badge>
                   </>
                 )}
               </Stack>
-            </Button>
+            </Button> */}
           </Stack>
         </Form>
       </Stack>
