@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.25rem 0;
 
   &-stars {
     display: flex;
@@ -10,8 +11,6 @@
   }
 
   &-star {
-    width: 1rem;
-    height: 1rem;
     color: $warning;
   }
 }

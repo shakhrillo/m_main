@@ -26,13 +26,13 @@ export const Ratings = ({ container }: { container?: IDockerContainer | IComment
 
       <div className="ratings-stars">
         {Array.from({ length: fullStars }).map((_, i) => (
-          <IconStarFilled key={`full-${i}`} className="ratings-star" />
+          <IconStarFilled key={`full-${i}`} size={16} className="ratings-star" />
         ))}
 
-        {halfStar && <IconStarHalfFilled className="ratings-star" />}
+        {halfStar && <IconStarHalfFilled size={16} className="ratings-star" />}
 
         {Array.from({ length: emptyStars }).map((_, i) => (
-          <IconStar key={`empty-${i}`} className="ratings-star" />
+          <IconStar key={`empty-${i}`} size={16} className="ratings-star" />
         ))}
       </div>
 

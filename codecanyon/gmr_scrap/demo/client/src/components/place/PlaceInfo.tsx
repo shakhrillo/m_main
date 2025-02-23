@@ -23,30 +23,27 @@ export const PlaceInfo = ({ container }: IPlaceInfoProps) => {
           <StatusInfo container={container} />
           {container.rating && <Ratings container={container} />}
           {container.type && (
-            <h5>
-              <NavLink
-                to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
-              >
-                {container.title || "N/A"}
-              </NavLink>
-            </h5>
+            <NavLink
+              className="place-title"
+              to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
+            >
+              {container.title || "N/A"}
+            </NavLink>
           )}
-          <div className="d-flex mt-3">
-            {container.address && (
-              <i className="d-block">{container.address}</i>
-            )}
-          </div>
+          {container.address && (
+            <i className="d-block">{container.address}</i>
+          )}
         </div>
       )}
-      <Accordion defaultActiveKey="1" flush alwaysOpen>
+      <Accordion defaultActiveKey="1" flush alwaysOpen className="place-accordion">
         {(container?.totalReviews ||
           container?.totalOwnerReviews ||
           container?.totalImages ||
           container?.totalVideos) && (
           <Accordion.Item eventKey="0">
-            <Accordion.Header>
-              <IconInfoCircle className="me-3" />
-              <h6 className="m-0">Extracted Data</h6>
+            <Accordion.Header className="place-accordion-header">
+              <IconInfoCircle />
+              Extracted Data
             </Accordion.Header>
             <Accordion.Body>
               <PlaceInfoDetails container={container} />
@@ -54,18 +51,18 @@ export const PlaceInfo = ({ container }: IPlaceInfoProps) => {
           </Accordion.Item>
         )}
         <Accordion.Item eventKey="1">
-          <Accordion.Header>
-            <IconBox className="me-3" />
-            <h6 className="m-0">Container Info</h6>
+          <Accordion.Header className="place-accordion-header">
+            <IconBox />
+            Container Info
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoMachine container={container} />
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="2">
-          <Accordion.Header>
-            <IconSettings className="me-3" />
-            <h6 className="m-0">Options</h6>
+          <Accordion.Header className="place-accordion-header">
+            <IconSettings />
+            Options
           </Accordion.Header>
           <Accordion.Body>
             <PlaceInfoOptions container={container} />

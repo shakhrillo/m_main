@@ -19,11 +19,11 @@ type PlaceInfoRowProps = {
 };
 
 const PlaceInfoRow = ({ icon, label, value }: PlaceInfoRowProps) => (
-  <div className="text-secondary d-flex align-items-start">
+  <div className="place-info-details">
     {createElement(icon)}
-    <div className="ms-3">
-      <h6 className="mb-0">{label}</h6>
-      <p className="text-break">{value || "N/A"}</p>
+    <div className="place-info-content">
+      <div className="place-info-label">{label}</div>
+      <div className="place-info-value">{value || "N/A"}</div>
     </div>
   </div>
 );
@@ -34,7 +34,7 @@ export const PlaceInfoOptions = ({
   container: IDockerContainer;
 }) => {
   return (
-    <Row className="row-cols-1 g-3">
+    <Row className="row-cols-1">
       <Col>
         <PlaceInfoRow
           icon={IconPhoto}

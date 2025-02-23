@@ -16,7 +16,7 @@ export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
   return (
     <Stack direction="horizontal" gap={2} className={color}>
       {status === "completed" ? (
-        <IconCheck size={18} />
+        <IconCheck size={16} />
       ) : (
         <Spinner animation="border" size="sm" />
       )}
