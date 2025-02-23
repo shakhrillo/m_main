@@ -1,8 +1,9 @@
 import { Icon, IconCheck, IconFrame, IconStopwatch } from "@tabler/icons-react";
 import { createElement, JSX } from "react";
 import { Badge, Col, Row } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useOutletContext } from "react-router-dom";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { IUserInfo } from "../../types/userInfo";
 
 type MachineInfoRowProps = {
   icon: Icon;
@@ -25,6 +26,8 @@ export const PlaceInfoMachine = ({
 }: {
   container: IDockerContainer;
 }) => {
+  const user = useOutletContext<IUserInfo>();
+
   return (
     <Row className="row-cols-1 g-3">
       <Col>
@@ -32,9 +35,10 @@ export const PlaceInfoMachine = ({
           icon={IconFrame}
           label="Machine ID"
           value={
+            user?.isAdmin ? (
             <NavLink to={`/containers/${container?.machineId}`}>
-              {container?.machine?.Actor?.Attributes?.name}
-            </NavLink>
+              {container?.machine?.Actor?.Attributes?.name ?? "N/A"}
+            </NavLink>) : container?.machine?.Actor?.Attributes?.name ?? "N/A"
           }
         />
       </Col>

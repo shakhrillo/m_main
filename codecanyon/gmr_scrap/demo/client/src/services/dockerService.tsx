@@ -203,9 +203,9 @@ export const dockerContainerHistory = (containerId: string) => {
  * @param containerId
  * @param data
  */
-export const updateDockerContainer = (containerId: string, data: any) => {
+export const updateDockerContainer = async (containerId: string, data: any) => {
   const containerRef = doc(firestore, "containers", containerId);
-  return updateDoc(containerRef, data);
+  return await updateDoc(containerRef, data)
 };
 
 /**

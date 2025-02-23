@@ -19,10 +19,8 @@ const menuSections = [
     title: "Reviews",
     id: "reviews",
     items: [
-      {
-        path: "/reviews", id: "reviews", icon: IconServerBolt, label: "Reviews", badge: "4",
-      },
       { path: "/validates", id: "validates", icon: IconWorldCheck, label: "Validates" },
+      { path: "/reviews", id: "reviews", icon: IconServerBolt, label: "Reviews" }
     ],
   },
   {
@@ -96,11 +94,10 @@ export const Sidebar = () => {
           }).map((section) => (
             <div className="sidebar-group" key={section.title}>
               <span className="sidebar-group-title">{section.title}</span>
-              {section.items.map(({ path, icon, label, badge }) => (
+              {section.items.map(({ path, icon, label }) => (
                 <NavLink key={path} to={path} className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}`}>
                   {createElement(icon, { size: 20 })}
                   <span className="me-auto">{label}</span>
-                  {badge && <span className="badge text-bg-primary ms-auto">{badge}</span>}
                 </NavLink>
               ))}
             </div>

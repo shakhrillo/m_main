@@ -1,6 +1,6 @@
-import { IconCircleCheck, IconCircleDashedCheck, IconFence, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleDashedCheck, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
-import { Badge, Card, CardBody, Col, FormLabel, Row, Stack } from "react-bootstrap";
+import { Badge, Col, FormLabel, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 
@@ -31,6 +31,7 @@ export const ScrapExtractType = ({ containerId, container }: {
   useEffect(() => {
     if (!container.rating || !container.id || !containerId) return;
 
+    console.log("Updating container:", container.id, extractOptions);
     updateDockerContainer(container.id, extractOptions).catch((error) => {
       console.error("Error updating container:", error);
     });
@@ -58,24 +59,20 @@ export const ScrapExtractType = ({ containerId, container }: {
           const isActive = extractOptions[key as keyof typeof extractOptions];
           return (
             <Col key={key} sm={4}>
-              <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} className="scrap-extract-type">
+              <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} 
+                className={`scrap-extract-type ${isActive ? "active" : ""}`}
+                aria-disabled={!container.rating}>
                 <div className="me-3">
-                  {/* {createElement(icon, { className: "text-body-secondary", size: 30 })} */}
                   {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {
-                    className: isActive ? "text-success" : "text-body-secondary",
                     size: 30,
                   })}
                 </div>
                 <Stack direction="vertical">
                   <FormLabel>{label}</FormLabel>
                   <div className="mt-n2">
-                    <Badge bg={isActive ? "success" : "secondary"}>{points} points</Badge>
+                    <Badge pill>{points} points</Badge>
                   </div>
                 </Stack>
-                {/* {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {
-                  className: isActive ? "text-success" : "text-body-secondary",
-                  size: 30,
-                })} */}
               </div>
             </Col>
           );
