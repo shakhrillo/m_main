@@ -42,25 +42,27 @@ export const Receipt = () => {
       </Breadcrumb>
       <Row>
         <Col>
-          <h5>Payment Receipt</h5>
-          <p>#{receipt.payment_intent}</p>
-          <div className="d-flex flex-column gap-3">
-            {[
-              { icon: <IconReceipt size={30} />, label: "Payment Number", value: <a href={receipt.receipt_url} target="_blank" rel="noreferrer">{receipt.id || "N/A"}</a> },
-              { icon: <IconClock size={30} />, label: "Payment Date", value: formatDate(receipt.created) || "N/A" },
-              { icon: <IconCoin size={30} />, label: "Payment Amount", value: formatAmount(receipt.amount || receipt.amount_total, receipt.currency) },
-              { icon: <IconCreditCard size={30} />, label: "Payment Method", value: receipt.payment_method_details?.type || receipt.payment_method_types || "N/A" },
-              { icon: receipt.status === "succeeded" || receipt.status === "complete" ? <IconCheck size={30} /> : <IconX size={30} />, label: "Payment Status", value: <Badge bg={receipt.status === "succeeded" || receipt.status === "complete" ? "success" : "danger"}>{receipt.status || "Failed"}</Badge> },
-              { icon: <IconUser />, label: "Customer", value: <NavLink to={`/users/${receipt.metadata?.userId}`}>{receipt.customer || "N/A"}</NavLink> }
-            ].map(({ icon, label, value }, idx) => (
-              <div key={idx} className="d-flex align-items-center">
-                {icon}
-                <div className="ms-3">
-                  <div className="fw-bold text-break">{value}</div>
-                  <div className="text-break">{label}</div>
+          <div className="receipt-info">
+            <h5>Payment Receipt</h5>
+            <p>#{receipt.payment_intent}</p>
+            <div className="d-flex flex-column gap-3">
+              {[
+                { icon: <IconReceipt size={24} />, label: "Payment Number", value: <a href={receipt.receipt_url} target="_blank" rel="noreferrer">{receipt.id || "N/A"}</a> },
+                { icon: <IconClock size={24} />, label: "Payment Date", value: formatDate(receipt.created) || "N/A" },
+                { icon: <IconCoin size={24} />, label: "Payment Amount", value: formatAmount(receipt.amount || receipt.amount_total, receipt.currency) },
+                { icon: <IconCreditCard size={24} />, label: "Payment Method", value: receipt.payment_method_details?.type || receipt.payment_method_types || "N/A" },
+                { icon: receipt.status === "succeeded" || receipt.status === "complete" ? <IconCheck size={24} /> : <IconX size={24} />, label: "Payment Status", value: <Badge bg={receipt.status === "succeeded" || receipt.status === "complete" ? "success" : "danger"}>{receipt.status || "Failed"}</Badge> },
+                { icon: <IconUser />, label: "Customer", value: <NavLink to={`/users/${receipt.metadata?.userId}`}>{receipt.customer || "N/A"}</NavLink> }
+              ].map(({ icon, label, value }, idx) => (
+                <div key={idx} className="d-flex align-items-center">
+                  {icon}
+                  <div className="ms-3">
+                    <div className="fw-bold text-break">{value}</div>
+                    <div className="text-break">{label}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </Col>
       </Row>

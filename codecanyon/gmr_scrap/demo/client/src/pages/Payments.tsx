@@ -78,14 +78,16 @@ export const Payments = () => {
       </Breadcrumb>
       <Row>
         <Col md={9}>
-          <Stack direction="horizontal" gap={3} className="align-items-start bg-light p-3 rounded-top">
+          <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
-              <CardTitle>Purchase Coins</CardTitle>
-              <CardSubtitle>
+              <h5 className="payments-title">
+                Purchase Coins
+              </h5>
+              <span className="text-muted">
                 Amount of coins to purchase.
-              </CardSubtitle>
-              <Form noValidate id="validateForm" className="needs-validation mt-3">
+              </span>
+              <Form noValidate id="validateForm" className="needs-validation mt-2">
                 <FormGroup className="mb-3" controlId="amount">
                   <FormControl
                     type="text"
@@ -127,44 +129,42 @@ export const Payments = () => {
           </p>
         </Col>
         <Col md={3}>
-          <Card>
-            <CardBody>
-              <h6>Summary</h6>
-              <Stack direction="horizontal" className="align-items-start">
-                <div className="me-3">
-                  <IconCoins size={24} />
-                </div>
-                <Stack direction="vertical">
-                  <h6 className="mb-0">{amount || 0}</h6>
-                  <p>Coins</p>
-                </Stack>
+          <div className="payment-summary">
+            <h6>Summary</h6>
+            <Stack direction="horizontal" className="align-items-start">
+              <div className="me-3">
+                <IconCoins />
+              </div>
+              <Stack direction="vertical">
+                <h6 className="mb-0">{amount || 0}</h6>
+                <p>Coins</p>
               </Stack>
-              <Stack direction="horizontal" className="align-items-start">
-                <div className="me-3">
-                  <IconCoin size={24} />
-                </div>
-                <Stack direction="vertical">
-                  <h6 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h6>
-                  <p>Price</p>
-                </Stack>
+            </Stack>
+            <Stack direction="horizontal" className="align-items-start">
+              <div className="me-3">
+                <IconCoin />
+              </div>
+              <Stack direction="vertical">
+                <h6 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h6>
+                <p>Price</p>
               </Stack>
-              <FormCheck
-                type="checkbox"
-                label={<span>I agree to the <a href="#">terms and conditions</a></span>}
-                required
-                checked={isTermsAccepted}
-                onChange={(e) => setIsTermsAccepted(e.target.checked)}
-              />
-              <Button
-                variant="primary"
-                className="w-100 mt-3"
-                onClick={handlePurchase}
-                disabled={!isTermsAccepted || loading || !isFormValid}
-              >
-                {loading ? "Processing..." : "Purchase"}
-              </Button>
-            </CardBody>
-          </Card>
+            </Stack>
+            <FormCheck
+              type="checkbox"
+              label={<span>I agree to the <a href="#">terms and conditions</a></span>}
+              required
+              checked={isTermsAccepted}
+              onChange={(e) => setIsTermsAccepted(e.target.checked)}
+            />
+            <Button
+              variant="primary"
+              className="w-100 mt-3"
+              onClick={handlePurchase}
+              disabled={!isTermsAccepted || loading || !isFormValid}
+            >
+              {loading ? "Processing..." : "Purchase"}
+            </Button>
+          </div>
         </Col>
       </Row>
     </Container>
