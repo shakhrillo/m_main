@@ -53,9 +53,7 @@ async function createAdminUser() {
     const user = await auth.createUser({
       email,
       password,
-      displayName: 'Admin',
-      phoneNumber: '+1234567890',
-      photoURL: ''
+      displayName: 'Admin'
     });
 
     await firestore.collection('admin').doc(user.uid).set({
@@ -66,8 +64,8 @@ async function createAdminUser() {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
-      photoURL: user.photoURL,
-      phone: user.phoneNumber,
+      photoURL: user.photoURL || '',
+      phone: user.phoneNumber || '',
       coinBalance: 150,
       notifications: 0,
       createdAt: Timestamp.now(),
@@ -105,8 +103,8 @@ async function createDemoUser() {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
-      photoURL: user.photoURL,
-      phone: user.phoneNumber,
+      photoURL: user.photoURL || '',
+      phone: user.phoneNumber || '',
       coinBalance: 150,
       notifications: 0,
       createdAt: Timestamp.now(),
