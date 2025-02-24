@@ -37,6 +37,8 @@ async function processUserCreated(user) {
     totalOwnerReviews: 0,
     totalValidateComments: 0,
     totalValidateInfo: 0,
+    isAdmin: false,
+    isEditor: false
   });
 }
 

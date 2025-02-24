@@ -58,7 +58,7 @@ async function createAdminUser() {
 
     await firestore.collection('admin').doc(user.uid).set({
       isAdmin: true,
-      isEditor: false,
+      isEditor: true,
     });
     await firestore.collection('users').doc(user.uid).set({
       uid: user.uid,
@@ -76,6 +76,8 @@ async function createAdminUser() {
       totalOwnerReviews: 0,
       totalValidateComments: 0,
       totalValidateInfo: 0,
+      isAdmin: true,
+      isEditor: true,
     });
     console.log('✅ Admin user created.');
   } catch (error) {
