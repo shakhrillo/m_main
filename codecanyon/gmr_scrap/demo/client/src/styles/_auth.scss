@@ -1,3 +1,35 @@
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+}
+
+.auth-form {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  background-color: #fff;
+  color: #666;
+  width: 100%;
+  padding: 1rem;
+}
+
+.auth-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: $primary;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: $secondary;
+}
+
 .auth-divider {
     position: relative;
     color: $secondary;

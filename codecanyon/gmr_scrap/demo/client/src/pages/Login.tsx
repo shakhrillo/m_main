@@ -1,166 +1,140 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { facebookLogin, googleLogin, login } from "../services/authService";
-import { IconAlertCircle, IconBrandGoogleFilled, IconBrandMeta } from "@tabler/icons-react";
-import { Alert, Button, Card, Col, Container, Form, FormControl, FormGroup, Image, Row, Stack } from "react-bootstrap";
+import { 
+  IconAlertCircle, 
+  IconBrandGoogleFilled, 
+  IconBrandMeta 
+} from "@tabler/icons-react";
+import { 
+  Alert, 
+  Button, 
+  Card, 
+  Col, 
+  Container, 
+  Form, 
+  FormControl, 
+  FormGroup, 
+  Image, 
+  Row, 
+  Stack 
+} from "react-bootstrap";
+import { UserCredential } from "firebase/auth";
 
-/**
- * Login page component.
- * @returns JSX.Element
- */
 export const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "user@user.com", password: "123456" });
   const [error, setError] = useState<string | null>(null);
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email: string) =>
+    /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
     try {
-      await login(email, password);
+      await login(formData.email, formData.password);
       navigate("/scrap");
-    } catch (error) {
+    } catch {
       setError("Email or password is incorrect.");
     }
-  }
+  };
 
-  async function handleGoogleLogin() {
-    try {
-      await googleLogin();
-      navigate("/scrap");
-    } catch (error) {
-      setError("Failed to log in with Google.");
-    }
-  }
-
-  async function handleFacebookLogin() {
-    try {
-      await facebookLogin();
-      navigate("/scrap");
-    } catch (error) {
-      setError("Failed to log in with Facebook.");
-    }
-  }
+  const handleOAuthLogin = async (provider: () => Promise<UserCredential>) => {
+      try {
+        await provider();
+        navigate("/scrap");
+      } catch {
+        setError("Failed to log in.");
+      }
+    };
 
   return (
-    <>
-      <Container>
-        <Card className="my-3">
-          <Row>
-            <Col md={6} lg={4}>
-              <Card.Body>
-                <Row className="g-3 row-cols-1">
-                  <Col>
-                    <h2>Get Started Now</h2>
-                    <p>Enter your credentials to access your account.</p>
-                  </Col>
-                  <Col>
-                    <Row className="row-cols-1 g-3">
-                      <Col>
-                        <Button
-                          variant="outline-primary"
-                          className="w-100"
-                          size="lg"
-                          onClick={handleGoogleLogin}
-                        >
-                          <IconBrandGoogleFilled className="me-2" />
-                          Continue with Google
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          variant="outline-primary"
-                          className="w-100"
-                          size="lg"
-                          onClick={handleFacebookLogin}
-                        >
-                          <IconBrandMeta className="me-2" />
-                          Continue with Facebook
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col>
-                    <div className="auth-divider my-3">or</div>
-                  </Col>
-                  <Col>
-                    <Form onSubmit={handleLogin}>
-                      <FormGroup className="mb-3" controlId="email">
-                        <FormControl
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Email address"
-                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                          required
-                          isInvalid={
-                            !!email &&
-                            !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(
-                              email,
-                            )
-                          }
-                          size="lg"
-                        />
+    <div className="auth">
+      <div className="auth-form">
+        <div className="auth-title">
+          Login to your account
+        </div>
+        <p className="auth-subtitle">
+          Welcome back! We're happy to see you again.
+        </p>
+        <Button 
+          variant="outline-secondary"
+          className="w-100" 
+          onClick={() => handleOAuthLogin(googleLogin)}
+        >
+          <IconBrandGoogleFilled className="me-2" />
+          Continue with Google
+        </Button>
+        <Button 
+          variant="outline-secondary"
+          className="w-100 mt-3"
+          onClick={() => handleOAuthLogin(facebookLogin)}
+        >
+          <IconBrandMeta className="me-2" />
+          Continue with Facebook
+        </Button>
 
-                        <FormControl.Feedback type={"invalid"}>
-                          <IconAlertCircle className="me-2" size={20} />
-                          Please enter a valid email address.
-                        </FormControl.Feedback>
-                      </FormGroup>
+        <div className="auth-divider my-3">or</div>
 
-                      <FormGroup className="mb-3" controlId="password">
-                        <FormControl
-                          type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Password"
-                          pattern=".{6,}"
-                          size="lg"
-                          required
-                        />
-                        <FormControl.Feedback type={"invalid"}>
-                          <IconAlertCircle className="me-2" size={20} />
-                          Password must be at least 6 characters long.
-                        </FormControl.Feedback>
-                      </FormGroup>
+        <Form onSubmit={handleSubmit} className="mb-3">
+          <FormGroup className="mb-3" controlId="email">
+            <FormControl
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email address"
+              required
+              isInvalid={!!formData.email && !validateEmail(formData.email)}
+            />
+            <Form.Text>
+              Admin: admin@admin.com <br />
+              User: user@user.com
+            </Form.Text>
 
-                      <Button
-                        variant="primary"
-                        className="w-100"
-                        type="submit"
-                        size="lg"
-                      >
-                        Login
-                      </Button>
-                      {error && (
-                        <Alert variant="danger mt-4" role="alert">
-                          {error}
-                        </Alert>
-                      )}
-                    </Form>
-                  </Col>
-                  <Col>
-                    <Stack direction="horizontal" gap={2}>
-                      Don't have an account?
-                      <NavLink to="/auth/register">Create an account</NavLink>
-                    </Stack>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Col>
-            <Col md={6} lg={8} className="d-none d-md-block">
-              <Image
-                src="https://images.unsplash.com/photo-1584931423298-c576fda54bd2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Login"
-                fluid
-                className="auth-image rounded-end"
-              />
-            </Col>
-          </Row>
-        </Card>
-      </Container>
-    </>
+            <FormControl.Feedback type="invalid">
+              <IconAlertCircle className="me-2" size={20} />
+              Please enter a valid email address.
+            </FormControl.Feedback>
+          </FormGroup>
+
+          <FormGroup className="mb-3" controlId="password">
+            <FormControl
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+              pattern=".{6,}"
+            />
+            <Form.Text>
+              Admin: 123456 <br />
+              User: 123456
+            </Form.Text>
+            <FormControl.Feedback type="invalid">
+              <IconAlertCircle className="me-2" size={20} />
+              Password must be at least 6 characters long.
+            </FormControl.Feedback>
+          </FormGroup>
+
+          <Button variant="primary" className="w-100" type="submit">
+            Login
+          </Button>
+
+          {error && <Alert variant="danger mt-4">{error}</Alert>}
+        </Form>
+        <Stack direction="horizontal" gap={2}>
+          Don't have an account?
+          <NavLink to="/auth/register">Create an account</NavLink>
+        </Stack>
+      </div>
+    </div>
   );
 };
