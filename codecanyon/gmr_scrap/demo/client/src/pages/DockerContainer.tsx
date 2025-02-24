@@ -1,31 +1,21 @@
-import { IconReload } from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  Stack,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
+import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
-import {
-  dockerContainerLogs,
-  dockerContainers,
-  dockerContainerStats,
-} from "../services/dockerService";
+import { dockerContainerLogs, dockerContainers, dockerContainerStats } from "../services/dockerService";
 import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { filter, map } from "rxjs";
 import { auth } from "../firebaseConfig";
 import { IDockerContainer } from "../types/dockerContainer";
+
+const cpuChartColor = "#c8dceb";
+const memoryChartColor = "#fffc7f";
+const networkChartDownloadedColor = "#c9f29b";
+const networkChartUploadedColor = "#ecd9dd";
+const pidsChartColor = "#ff9470";
 
 export const DockerContainer = () => {
   const navigate = useNavigate();
@@ -88,7 +78,7 @@ export const DockerContainer = () => {
                 ),
               ),
             ),
-            color: "#3e2c41",
+            color: cpuChartColor
           },
         ],
       },
@@ -100,7 +90,7 @@ export const DockerContainer = () => {
             data: stats.map((stat) =>
               Number(formatSize(stat?.memory_stats?.usage ?? 0, "num")),
             ),
-            color: "#ff4c30",
+            color: memoryChartColor
           },
         ],
       },
@@ -112,14 +102,14 @@ export const DockerContainer = () => {
             data: stats.map((stat) =>
               Number(formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num")),
             ),
-            color: "#e33d94",
+            color: networkChartDownloadedColor
           },
           {
             label: "Uploaded Data",
             data: stats.map((stat) =>
               Number(formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num")),
             ),
-            color: "#825e5c",
+            color: networkChartUploadedColor
           },
         ],
       },
@@ -129,7 +119,7 @@ export const DockerContainer = () => {
           {
             label: "PIDs Count",
             data: stats.map((stat) => stat?.pids_stats?.current ?? 0),
-            color: "#5a228b",
+            color: pidsChartColor
           },
         ],
       },
@@ -162,7 +152,6 @@ export const DockerContainer = () => {
 
     const subscription = dockerContainerLogs(containerId).subscribe({
       next: (data) => {
-        console.log('+', data);
         if (!data || data.length === 0) {
           return;
         }
@@ -195,11 +184,11 @@ export const DockerContainer = () => {
             <Tab eventKey="stats" title="Stats">
               <Row>
                 {chartData.map((chart) => (
-                  <Col key={chart.label} md={6} className="mt-3">
-                    <h5>
-                      {chart.label}
-                    </h5>
-                    <LineChart labels={labels} datasets={chart.datasets} />
+                  <Col key={chart.label} sm={12} className="mt-3">
+                    <div className="docker-title">{chart.label}</div>
+                    <div className="docker-graph">
+                      <LineChart labels={labels} datasets={chart.datasets} />
+                    </div>
                   </Col>
                 ))}
               </Row>

@@ -1,20 +1,5 @@
-.docker-image-data {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  padding: $spacer;
-  overflow: hidden;
-  font-size: 14px;
-}
-
-.docker-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #666;
-}
-
-.docker-graph {
+.dashboard-map,
+.dashboard-graph {
   padding: $spacer;
   font-size: 14px;
   border-radius: $card-border-radius;
@@ -25,4 +10,15 @@
   min-height: 220px;
   overflow: hidden;
   position: relative;
+}
+
+.dashboard-map {
+  padding: 0;
+}
+
+.dashboard-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #666;
 }

@@ -17,11 +17,15 @@ export const UsersTotal = () => {
   }, []);
 
   return (
-    <div className="d-flex flex-column h-100">
-      <h5>Lifetime Users</h5>
-      <div className="display-6 mt-auto">
-        {formatNumber((users))}
+    <>
+      <div className="dashboard-title">
+        Users
       </div>
-    </div>
+      <div className="dashboard-graph">
+        <div className="display-6 mt-auto">
+          {formatNumber((users))}
+        </div>
+      </div>
+    </>
   )
 }

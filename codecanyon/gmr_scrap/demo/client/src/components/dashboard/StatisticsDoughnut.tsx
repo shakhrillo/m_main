@@ -29,23 +29,27 @@ export const StatisticsDoughnut = () => {
 
   return (
     <>
-      <h5>Statistics</h5>
-      <Row className="g-3">
-        <Col md={6} className="d-flex flex-column justify-content-end">
-          {containers.map(({ id, title, total, colorClass }, index) => (
-            <Stack key={id} direction="horizontal" gap={2} className="mt-2">
-              <IconCircleFilled size={20} strokeWidth={1} className={colorClass} />
-              <span className="text-capitalize">{title} ({formatNumber(total)})</span>
-            </Stack>
-          ))}
-        </Col>
-        <Col md={6}>
-          <DoughnutChart
-            data={containers.map(({ total }) => total)}
-            total={containers.reduce((acc, { total }) => acc + total, 0)}
-          />
-        </Col>
-      </Row>
+      <div className="dashboard-title">
+        Statistics
+      </div>
+      <div className="dashboard-graph">
+        <Row className="g-3">
+          <Col md={6} className="d-flex flex-column justify-content-end">
+            {containers.map(({ id, title, total, colorClass }, index) => (
+              <Stack key={id} direction="horizontal" gap={2} className="mt-2">
+                <IconCircleFilled size={20} strokeWidth={1} className={colorClass} />
+                <span className="text-capitalize">{title} ({formatNumber(total)})</span>
+              </Stack>
+            ))}
+          </Col>
+          <Col md={6}>
+            <DoughnutChart
+              data={containers.map(({ total }) => total)}
+              total={containers.reduce((acc, { total }) => acc + total, 0)}
+            />
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

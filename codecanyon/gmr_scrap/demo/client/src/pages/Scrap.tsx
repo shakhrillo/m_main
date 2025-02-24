@@ -44,12 +44,16 @@ export const Scrap = () => {
 
   return (
     <Container className="scrap">
-      <Breadcrumb>
-        <Breadcrumb.Item onClick={() => navigate("/scrap")} active>
-          Scrap
-        </Breadcrumb.Item>
-        {scrapId && <Breadcrumb.Item active>{container.title || scrapId}</Breadcrumb.Item>}
-      </Breadcrumb>
+      {
+        scrapId && (
+          <Breadcrumb>
+            <Breadcrumb.Item onClick={() => navigate("/scrap")}>
+              Scrap
+            </Breadcrumb.Item>
+            <Breadcrumb.Item active>{container.title || scrapId}</Breadcrumb.Item>
+          </Breadcrumb>
+        )
+      }
       <Row className="g-3">
         <Col lg={8} xl={9}>
           <Stack direction="vertical" gap={3}>

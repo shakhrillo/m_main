@@ -102,18 +102,19 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
     },
     scales: {
       x: {
-        grid: { display: false },
+        grid: { color: "#eee", lineWidth: 1 },
         border: { display: false },
         ticks: {
           display: false,
         },
       },
       y: {
-        grid: { color: "#fff", lineWidth: 0.5 },
+        display: true,
+        grid: { color: "#eee", lineWidth: 1 },
         border: { display: false },
         ticks: {
-          color: "#000",
-          font: { size: 12 },
+          color: "#666",
+          font: { size: 10 },
         },
       },
     },

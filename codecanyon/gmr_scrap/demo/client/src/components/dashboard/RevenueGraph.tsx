@@ -28,14 +28,18 @@ export const RevenueGraph = () => {
 
   return (
     <>
-      <h5>This month's revenue</h5>
-      <LineChart labels={earnings.map((e) => e.date)}
-        datasets={[{
-          label: "Revenue",
-          data: earnings.map((e) => e.total),
-          color: "#3e2c41",
-        }]}
-      />
+      <div className="dashboard-title">
+        This month's revenue
+      </div>
+      <div className="dashboard-graph">
+        <LineChart labels={earnings.map((e) => e.date)}
+          datasets={[{
+            label: "Revenue",
+            data: earnings.map((e) => e.total),
+            color: "#3e2c41",
+          }]}
+        />
+      </div>
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
 import { RevenueGraph, StatisticsDoughnut, EraningsTotal, UsersGraph, UsersTotal } from "../components/dashboard";
 import { allContainersByGeoBounds } from "../services/settingService";
@@ -33,16 +33,20 @@ export const Dashboard = () => {
 
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
-      </Breadcrumb>
       <Row className="g-3">
         <Col md={6}><RevenueGraph /></Col>
         <Col md={6}><UsersGraph /></Col>
         <Col md={4}><StatisticsDoughnut /></Col>
         <Col md={4}><EraningsTotal /></Col>
         <Col md={4}><UsersTotal /></Col>
-        <Col md={12}><GoogleMap geojson={geojson} boundChanges={boundChanges$} isFitBounds={false} /></Col>
+        <Col md={12}>
+          <div className="dashboard-title">
+            Map of all containers
+          </div>
+          <div className="dashboard-map">
+            <GoogleMap geojson={geojson} boundChanges={boundChanges$} isFitBounds={false} />
+          </div>
+        </Col>
       </Row>
     </Container>
   );

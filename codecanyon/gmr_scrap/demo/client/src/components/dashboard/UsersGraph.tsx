@@ -29,15 +29,19 @@ export const UsersGraph = () => {
 
   return (
     <>
-      <h5>This month's users</h5>
-      <LineChart
-        labels={users.map((e) => e.date)}
-        datasets={[{
-          label: "This month's users",
-          data: users.map((e) => e.total),
-          color: "#3e2c41",
-        }]}
-      />
+      <div className="dashboard-title">
+        This month's users
+      </div>
+      <div className="dashboard-graph">
+        <LineChart
+          labels={users.map((e) => e.date)}
+          datasets={[{
+            label: "This month's users",
+            data: users.map((e) => e.total),
+            color: "#3e2c41",
+          }]}
+        />
+      </div>
     </>
   )
 };
