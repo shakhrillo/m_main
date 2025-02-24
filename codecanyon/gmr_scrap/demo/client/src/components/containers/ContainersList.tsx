@@ -1,15 +1,12 @@
-import { IconFilter, IconReload, IconSearch } from "@tabler/icons-react";
-import { getAuth } from "firebase/auth";
+import { IconFilter, IconReload } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Badge, Button, Card, CardBody, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import { StatusInfo } from "../../components/StatusInfo";
+import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { useOutletContext } from "react-router-dom";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { formatNumber, formatTimestamp } from "../../utils";
-import { Ratings } from "../Ratings";
 import { debounceTime, filter, map, Subject, take } from "rxjs";
 import { ContainerData } from "./ContainerData";
+import { IUserInfo } from "../../types/userInfo";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -27,7 +24,7 @@ interface IContainersList {
 const searchSubject = new Subject<string>();
 
 export const ContainersList = ({ path, type, machineType }: IContainersList) => {
-  const auth = getAuth();
+  const user = useOutletContext<IUserInfo>();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -43,11 +40,13 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
   }, []);
 
   const fetchContainers = (append = false, lastDocument = null) => {
-    if (!auth.currentUser?.uid) return;
+    if (!user?.uid) return;
+
+    console.log("fetchContainers", search, type, status, machineType, lastDocument);
 
     return dockerContainers({
       search: search.trim().toLowerCase(),
-      uid: auth.currentUser.uid,
+      uid: !user.isAdmin ? user?.uid : undefined,
       type,
       machineType,
       status,

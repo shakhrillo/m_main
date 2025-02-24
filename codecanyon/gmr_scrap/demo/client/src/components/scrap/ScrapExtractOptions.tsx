@@ -3,6 +3,8 @@ import { createElement, useEffect, useState } from "react";
 import { Card, CardBody, Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { useOutletContext } from "react-router-dom";
+import { IUserInfo } from "../../types/userInfo";
 
 interface IScrapExtractOptionsProps {
   containerId: string | undefined;
@@ -41,6 +43,8 @@ const OptionCard = ({ icon, label, children }: IOptionCardProps) => (
  * @returns Scrap extract options component.
  */
 export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOptionsProps) => {
+  const user = useOutletContext<IUserInfo>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [limit, setLimit] = useState(container.limit || 10);
   const [maxSpentPoints, setMaxSpentPoints] = useState(container.maxSpentPoints || 100);
   const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">(
@@ -49,12 +53,16 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
   const [outputAs, setOutputAs] = useState<"json" | "csv">(container.outputAs || "json");
 
   useEffect(() => {
-    if (!container.rating || !container.id || !containerId) return;
+    setIsDisabled(!container.rating || user?.uid !== container?.uid || !containerId);
+  }, [container]);
+
+  useEffect(() => {
+    if (isDisabled || !container.id) return;
 
     updateDockerContainer(container.id, { limit, maxSpentPoints, sortBy, outputAs }).catch((error) =>
       console.error("Error updating container:", error)
     );
-  }, [container.id, container.rating, containerId, limit, maxSpentPoints, sortBy, outputAs]);
+  }, [isDisabled, container, containerId, limit, maxSpentPoints, sortBy, outputAs]);
 
   return (
     <>
@@ -66,7 +74,7 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
               placeholder="Review limit"
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
-              disabled={!container.rating}
+              disabled={isDisabled}
             />
             <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
           </OptionCard>
@@ -76,7 +84,7 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
               placeholder="Max spent points"
               value={maxSpentPoints}
               onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
-              disabled={!container.rating}
+              disabled={isDisabled}
             />
             <FormText>Maximum points to spend on this scrap.</FormText>
           </OptionCard>
@@ -87,7 +95,7 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
               onChange={(e) =>
                 setSortBy(e.target.value as "Most relevant" | "Newest" | "Highest rating" | "Lowest rating")
               }
-              disabled={!container.rating}
+              disabled={isDisabled}
             >
               {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
                 <option key={option} value={option}>
@@ -102,7 +110,7 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
             <FormSelect
               value={outputAs}
               onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
-              disabled={!container.rating}
+              disabled={isDisabled}
             >
               <option value="json">JSON</option>
               <option value="csv">CSV</option>

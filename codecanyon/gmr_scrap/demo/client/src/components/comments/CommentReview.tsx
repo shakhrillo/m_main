@@ -28,5 +28,5 @@ function maskComment(comment: string): string {
  */
 export const CommentReview = ({ comment }: { comment?: IComment }) => {
   // make it *** random characters
-  return <div className="comment-review">{maskComment(comment?.review || "")}</div>;
+  return <div className="comment-review">{comment?.review || ""}</div>;
 };

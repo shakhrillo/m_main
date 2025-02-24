@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Breadcrumb, Col, Container, Row, Stack } from "react-bootstrap";
 import { filter, map, take } from "rxjs";
@@ -9,25 +9,25 @@ import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 import { ScrapExtractType } from "../components/scrap/ScrapExtractType";
 import { dockerContainers } from "../services/dockerService";
 import { IDockerContainer } from "../types/dockerContainer";
-import { getAuth } from "firebase/auth";
+import { IUserInfo } from "../types/userInfo";
 
 /**
  * Scrap page.
  * @returns JSX.Element
  */
 export const Scrap = () => {
-  const auth = getAuth();
+  const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
   const { scrapId } = useParams<{ scrapId: string }>();
   const [container, setContainer] = useState<IDockerContainer>({} as IDockerContainer);
 
   useEffect(() => {
-    if (!scrapId || !auth.currentUser?.uid) {
+    if (!scrapId || !user?.uid) {
       setContainer({} as IDockerContainer);
       return;
     }
 
-    const subscription = dockerContainers({ containerId: scrapId, uid: auth.currentUser?.uid })
+    const subscription = dockerContainers({ containerId: scrapId, uid: !user.isAdmin ? user.uid : undefined, })
       .pipe(
         filter(snapshot => !!snapshot),
         map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IDockerContainer }))[0]),
@@ -40,7 +40,7 @@ export const Scrap = () => {
       });
 
     return () => subscription.unsubscribe();
-  }, [scrapId, auth.currentUser?.uid]);
+  }, [scrapId, user?.uid]);
 
   return (
     <Container className="scrap">

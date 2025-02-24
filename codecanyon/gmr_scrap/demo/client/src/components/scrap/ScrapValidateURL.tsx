@@ -1,28 +1,12 @@
-import {
-  IconAlertCircle,
-  IconBrandGoogleMaps,
-  IconCircleCheck,
-} from "@tabler/icons-react";
+import { IconAlertCircle, IconBrandGoogleMaps } from "@tabler/icons-react";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardTitle,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  FormText,
-  Spinner,
-  Stack,
-} from "react-bootstrap";
+import { CardSubtitle, CardTitle, FormControl, FormGroup, FormText, Stack } from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { ScrapValidateButton } from "./ScrapValidateButton";
+import { IUserInfo } from "../../types/userInfo";
 
 /**
  * Component for validating Google Maps URL.
@@ -34,7 +18,7 @@ export const ScrapValidateURL = ({
   containerId: string | undefined;
   container: IDockerContainer;
 }) => {
-  const { uid } = useOutletContext<User>();
+  const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [url, setUrl] = useState<string>(container.url || "");
@@ -42,7 +26,7 @@ export const ScrapValidateURL = ({
 
   useEffect(() => {
     setIsDisabled(
-      container?.machine?.Action !== "die" && containerId !== undefined,
+      (container?.machine?.Action !== "die" && containerId !== undefined) || (!!containerId && user?.uid !== container?.uid)
     );
   }, [container, containerId]);
 
@@ -67,7 +51,7 @@ export const ScrapValidateURL = ({
 
     try {
       setError(null);
-      const { id } = await createDockerContainer({ url, uid, type: "info" });
+      const { id } = await createDockerContainer({ url, uid: user?.uid, type: "info" });
       navigate(`/scrap/${id}`);
     } catch (err) {
       console.error(err);
@@ -113,29 +97,6 @@ export const ScrapValidateURL = ({
           )}
           <Stack direction="horizontal">
             <ScrapValidateButton container={container} containerId={containerId} isDisabled={isDisabled} />
-            {/* <Button
-              variant="primary"
-              type="submit"
-              className="ms-auto"
-              disabled={isDisabled}
-            >
-              <Stack direction="horizontal" gap={2}>
-                {container?.machine?.Action !== "die" && containerId ? (
-                  <>
-                    <Spinner animation="border" size="sm" />
-                    Validating URL...
-                  </>
-                ) : (
-                  <>
-                    <IconCircleCheck />
-                    Validate URL
-                    <Badge pill bg="light" text="dark">
-                      3 points
-                    </Badge>
-                  </>
-                )}
-              </Stack>
-            </Button> */}
           </Stack>
         </Form>
       </Stack>

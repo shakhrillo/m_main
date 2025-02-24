@@ -3,6 +3,8 @@ import { createElement, useEffect, useState } from "react";
 import { Badge, Col, FormLabel, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { useOutletContext } from "react-router-dom";
+import { IUserInfo } from "../../types/userInfo";
 
 /**
  * Scrap extract type component.
@@ -14,6 +16,8 @@ export const ScrapExtractType = ({ containerId, container }: {
   containerId: string | undefined;
   container: IDockerContainer;
 }) => {
+  const user = useOutletContext<IUserInfo>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [extractOptions, setExtractOptions] = useState({
     extractImageUrls: container.extractImageUrls || false,
     extractVideoUrls: container.extractVideoUrls || false,
@@ -26,12 +30,12 @@ export const ScrapExtractType = ({ containerId, container }: {
       extractVideoUrls: container.extractVideoUrls || false,
       extractOwnerResponse: container.extractOwnerResponse || false,
     });
+
+    setIsDisabled(!container.rating || user?.uid !== container?.uid);
   }, [container]);
 
   useEffect(() => {
-    if (!container.rating || !container.id || !containerId) return;
-
-    console.log("Updating container:", container.id, extractOptions);
+    if (isDisabled || !container.id || !containerId) return;
     updateDockerContainer(container.id, extractOptions).catch((error) => {
       console.error("Error updating container:", error);
     });
@@ -61,7 +65,7 @@ export const ScrapExtractType = ({ containerId, container }: {
             <Col key={key} sm={4}>
               <div role="button" onClick={() => toggleOption(key as keyof typeof extractOptions)} 
                 className={`scrap-extract-type ${isActive ? "active" : ""}`}
-                aria-disabled={!container.rating}>
+                aria-disabled={isDisabled}>
                 <div className="me-3">
                   {createElement(isActive ? IconCircleCheck : IconCircleDashedCheck, {
                     size: 30,

@@ -6,21 +6,23 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import ReactPlayer from "react-player";
+import { useOutletContext } from "react-router-dom";
+import { IUserInfo } from "../../types/userInfo";
 
 interface IVideosListProps {
   reviewId: string;
 }
 
 export const VideosList = ({ reviewId }: IVideosListProps) => {
-  const auth = getAuth();
+  const user = useOutletContext<IUserInfo>();
   const [videos, setVideos] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
   const fetchVideos = (append = false) => {
-    if (!auth.currentUser?.uid || isLastPage) return;
+    if (!user?.uid || isLastPage) return;
 
-    reviewsData("videos", { reviewId, uid: auth.currentUser.uid }, lastDoc)
+    reviewsData("videos", { reviewId, uid: !user.isAdmin ? user.uid : undefined, }, lastDoc)
       .pipe(
         filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDoc)),
         take(1)

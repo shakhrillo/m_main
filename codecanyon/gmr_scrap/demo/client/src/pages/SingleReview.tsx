@@ -1,6 +1,6 @@
 import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
 import { Badge, Breadcrumb, Col, Container, Row, Stack, Tab, Tabs } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { CommentsList } from "../components/comments/CommentsList";
 import { ImagesList } from "../components/images/ImagesList";
 import { PlaceInfo } from "../components/place/PlaceInfo";
@@ -8,10 +8,11 @@ import { VideosList } from "../components/videos/VideosList";
 import { IDockerContainer } from "../types/dockerContainer";
 import { useEffect, useState } from "react";
 import { filter, map } from "rxjs";
-import { auth } from "../firebaseConfig";
 import { dockerContainers } from "../services/dockerService";
+import { IUserInfo } from "../types/userInfo";
 
 export const SingleReview = () => {
+  const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
   const { reviewId } = useParams() as { reviewId: string };
   const [container, setContainer] = useState<IDockerContainer>(
@@ -19,14 +20,14 @@ export const SingleReview = () => {
   );
 
   useEffect(() => {
-    if (!reviewId || !auth.currentUser?.uid) {
+    if (!reviewId || !user?.uid) {
       setContainer({} as IDockerContainer);
       return;
     }
 
     const subscription = dockerContainers({
       containerId: reviewId,
-      uid: auth.currentUser?.uid,
+      uid: !user.isAdmin ? user.uid : undefined,
     })
     .pipe(
       filter((snapshot) => !!snapshot),
@@ -46,7 +47,7 @@ export const SingleReview = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [reviewId, auth.currentUser?.uid]);
+  }, [reviewId, user?.uid]);
 
   return (
     <Container>

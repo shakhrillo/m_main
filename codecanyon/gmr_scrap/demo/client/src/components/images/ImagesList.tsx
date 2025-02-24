@@ -1,26 +1,27 @@
 import { IconPhoto, IconReload } from "@tabler/icons-react";
-import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { ICommentImage } from "../../types/comment";
+import { useOutletContext } from "react-router-dom";
+import { IUserInfo } from "../../types/userInfo";
 
 interface IImagesListProps {
   reviewId: string;
 }
 
 export const ImagesList = ({ reviewId }: IImagesListProps) => {
-  const auth = getAuth();
+  const user = useOutletContext<IUserInfo>();
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
   const fetchImages = (append = false) => {
-    if (!auth.currentUser?.uid || isLastPage) return;
+    if (!user?.uid || isLastPage) return;
 
-    reviewsData("images", { reviewId, uid: auth.currentUser.uid }, lastDoc)
+    reviewsData("images", { reviewId, uid: !user.isAdmin ? user.uid : undefined, }, lastDoc)
       .pipe(
         filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDoc)),
         take(1)

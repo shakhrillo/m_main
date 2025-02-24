@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
-import { getAuth } from "firebase/auth";
-import { Alert, Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
+import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { debounceTime, filter, Subject, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
+import { IUserInfo } from "../../types/userInfo";
+import { useOutletContext } from "react-router-dom";
 
 interface ICommentsListProps {
   reviewId: string;
@@ -25,7 +26,7 @@ const FILTER_OPTIONS = [
  * @returns JSX.Element
  */
 export const CommentsList = ({ reviewId }: ICommentsListProps) => {
-  const auth = getAuth();
+  const user = useOutletContext<IUserInfo>();
   const commentsRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<IComment[]>([]);
   const [search, setSearch] = useState("");
@@ -47,9 +48,14 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
   }, [search, filterOptions, reviewId]);
 
   const fetchComments = (append = false, lastDocument = null) => {
-    if (!auth.currentUser?.uid) return;
+    if (!user?.uid) return;
 
-    reviewsData("reviews", { reviewId, uid: auth.currentUser.uid, filterOptions, search }, lastDocument).pipe(
+    reviewsData("reviews", { 
+      reviewId,
+      uid: !user.isAdmin ? user.uid : undefined,
+      filterOptions,
+      search
+    }, lastDocument).pipe(
       filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
       take(1)
     ).subscribe((snapshot) => {

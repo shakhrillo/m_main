@@ -25,7 +25,7 @@ export const reviewsData = (type: 'reviews' | 'images' | 'videos', q: IReviewQue
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      where("uid", "==", q.uid),
+      ...(q.uid ? [where("uid", "==", q.uid)] : []),
       ...(q.filterOptions ? [where(q.filterOptions, ">", [])] : []),
       ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
       ...(lastRef ? [startAfter(lastRef)] : []),
