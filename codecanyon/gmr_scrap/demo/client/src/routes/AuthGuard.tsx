@@ -3,74 +3,46 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { authenticatedUser, userData } from "../services/userService";
 import { filter, map, take } from "rxjs";
 import { IUserInfo } from "../types/userInfo";
+import { Container, Spinner } from "react-bootstrap";
 
-/**
- * Protects routes by ensuring only authenticated users can access them.
- */
 export const AuthGuard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUserInfo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isSubscribed = true;
-    
-    const fetchUser = async () => {
-      try {
-        const user = await authenticatedUser();
-        if (!user || !isSubscribed) {
-          setLoading(false);
-          setError("User not authenticated.");
-          return
-        }
+    let isActive = true;
 
-        const subscription = userData(user.uid)
+    (async () => {
+      try {
+        const authUser = await authenticatedUser();
+        if (!authUser || !isActive) throw new Error("User not authenticated.");
+
+        const subscription = userData(authUser.uid)
           .pipe(
-            filter((snapshot) => !!snapshot),
-            map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
+            filter(Boolean),
+            map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo }))?.[0]),
             take(1)
           )
           .subscribe({
-            next: (users) => {
-              if (users.length > 0 && isSubscribed) {
-                setUser(users[0]);
-              }
-            },
-            error: (err) => {
-              if (isSubscribed) setError("Failed to fetch user data.");
-              console.error("Error fetching user data:", err);
-            },
-            complete: () => setLoading(false),
+            next: user => isActive && setUser(user),
+            error: () => isActive && navigate("/auth/login"),
+            complete: () => setLoading(false)
           });
 
         return () => subscription.unsubscribe();
-      } catch (err) {
-        console.info("Error authenticating user:", err);
-        if (isSubscribed) setError("Failed to authenticate user.");
+      } catch {
+        isActive && navigate("/auth/login");
       }
-    };
+    })();
 
-    fetchUser();
+    return () => { isActive = false; };
+  }, [navigate]);
 
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth/login");
-    }
-  }, [loading, user, navigate]);
-
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  return <Outlet context={user} />;
+  return loading ? (
+    <Container className="text-center">
+      <h5 className="mt-5">Loading...</h5>
+      <Spinner animation="grow" />
+    </Container>
+  ) : <Outlet context={user} />;
 };
