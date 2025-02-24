@@ -7,15 +7,17 @@
 
 .auth-form {
   max-width: 400px;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
   font-size: 14px;
   border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   background-color: #fff;
   color: #666;
-  width: 100%;
-  padding: 1rem;
+  box-shadow: 
+    0px 1px 3px rgba(0, 0, 0, 0.1),
+    0px 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .auth-title {
@@ -31,35 +33,31 @@
 }
 
 .auth-divider {
-    position: relative;
-    color: $secondary;
-    font-weight: 500;
-    font-size: 14px;
-    text-align: center;
-    text-transform: uppercase;
-  
-    &::before {
-      left: 0;
-    }
-    &::after {
-      right: 0;
-    }
-  
-    &::after,
-    &::before {
-      position: absolute;
-      top: 50%;
-      background-color: $card-border-color;
-      width: calc(50% - 30px);
-      height: 1px;
-      content: "";
-    }
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+  color: $secondary;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 30px);
+    height: 1px;
+    background-color: $card-border-color;
+  }
+
+  &::before { left: 0; }
+  &::after { right: 0; }
 }
-  
+
 .auth-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  object-fit: cover;
 }
