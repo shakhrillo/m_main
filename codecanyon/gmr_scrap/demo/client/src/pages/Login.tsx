@@ -48,6 +48,7 @@ export const Login = () => {
 
         <Form onSubmit={handleSubmit} className="mb-3">
           <FormGroup className="mb-3" controlId="email">
+            <Form.Label>Email address</Form.Label>
             <FormControl
               type="email"
               name="email"
@@ -63,6 +64,7 @@ export const Login = () => {
           </FormGroup>
 
           <FormGroup className="mb-3" controlId="password">
+            <Form.Label>Password</Form.Label>
             <FormControl
               type="password"
               name="password"
