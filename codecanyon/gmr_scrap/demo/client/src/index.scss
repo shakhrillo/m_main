@@ -36,9 +36,26 @@ body {
   color: $dark;
 }
 
+.nav {
+  margin-bottom: 1rem;
+  font-size: 14px;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  background-color: #fff;
+  color: #666;
+  padding: 0.5rem;
+}
+
+.nav-pills .nav-link {
+  color: #666;
+  border-radius: 36px;
+}
+
 .form-label {
   font-size: 14px;
 }
+
+
 
 .google-map {
   width: 100%;

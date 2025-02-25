@@ -10,6 +10,7 @@ import { formatStringDate } from "../utils/formatStringDate";
 import { filter, map } from "rxjs";
 import { auth } from "../firebaseConfig";
 import { IDockerContainer } from "../types/dockerContainer";
+import { ContainerLogs } from "../components/containers/ContainerLogs";
 
 const cpuChartColor = "#c8dceb";
 const memoryChartColor = "#fffc7f";
@@ -22,7 +23,7 @@ export const DockerContainer = () => {
   const { containerId } = useParams<{ containerId: string }>();
 
   const [stats, setStats] = useState<IDockerStats[]>([]);
-  const [logs, setLogs] = useState<string[]>([]);
+  // const [logs, setLogs] = useState<string[]>([]);
 
   const [container, setContainer] = useState<IDockerContainer>(
     {} as IDockerContainer,
@@ -145,26 +146,26 @@ export const DockerContainer = () => {
     };
   }, [containerId]);
 
-  useEffect(() => {
-    if (!containerId) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!containerId) {
+  //     return;
+  //   }
 
-    const subscription = dockerContainerLogs(containerId).subscribe({
-      next: (data) => {
-        if (!data || data.length === 0) {
-          return;
-        }
+  //   const subscription = dockerContainerLogs(containerId).subscribe({
+  //     next: (data) => {
+  //       if (!data || data.length === 0) {
+  //         return;
+  //       }
 
-        setLogs(data.map(({ logs }: { logs: string }) => logs));
-      },
-      error: (error) => console.error("Error fetching logs data:", error),
-    });
+  //       setLogs(data.map(({ logs }: { logs: string }) => logs));
+  //     },
+  //     error: (error) => console.error("Error fetching logs data:", error),
+  //   });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [containerId]);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, [containerId]);
 
   return (
     <Container>
@@ -182,9 +183,9 @@ export const DockerContainer = () => {
         <Col md={9}>
           <Tabs variant="pills" defaultActiveKey="stats">
             <Tab eventKey="stats" title="Stats">
-              <Row>
+              <Row className="g-3">
                 {chartData.map((chart) => (
-                  <Col key={chart.label} sm={12} className="mt-3">
+                  <Col key={chart.label} sm={12}>
                     <div className="docker-title">{chart.label}</div>
                     <div className="docker-graph">
                       <LineChart labels={labels} datasets={chart.datasets} />
@@ -194,7 +195,7 @@ export const DockerContainer = () => {
               </Row>
             </Tab>
             <Tab eventKey="logs" title="Logs">
-              <pre className="mt-3">{logs.join("\n")}</pre>
+              <ContainerLogs containerId={containerId} />
             </Tab>
           </Tabs>
         </Col>
