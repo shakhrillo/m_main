@@ -44,9 +44,24 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div
-          class="collapse navbar-collapse justify-content-center"
+          class="collapse navbar-collapse justify-content-end"
           id="navbarNavDropdown"
-        ></div>
+        >
+          <ul class="navbar-nav spacing-40 spacing-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#pricing">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#testimonial">Testimonial</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
     <section>
@@ -78,9 +93,13 @@
                 >
                   Get Started
                 </a>
-                <button class="geo-btn geo-btn-outline" type="button">
+                <a
+                  class="geo-btn geo-btn-outline"
+                  type="button"
+                  href="#features"
+                >
                   Learn More
-                </button>
+                </a>
               </div>
               <!-- <small class="small-bold-subtitle geo-text-secondary">
                 Used and helping over <strong>more 200+ Companies</strong>
@@ -92,7 +111,7 @@
         </div>
       </div>
     </section>
-    <section>
+    <section id="features">
       <div class="container d-flex flex-column spacing-76 mt-76">
         <!-- Effortless Customer Relationship Management -->
         <div class="row flex-column flex-md-row">
@@ -107,16 +126,20 @@
               Streamline Your Workflow: Collect and Manage Google Reviews with
               Ease
             </p>
-            <div>
-              <button class="geo-btn geo-btn-outline" type="button">
+            <div class="d-flex">
+              <a
+                class="geo-btn geo-btn-outline"
+                type="button"
+                href="#features-section-two"
+              >
                 Learn More
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
         <!-- Dynamic Email Integration Excellence -->
-        <div class="row flex-column flex-md-row">
+        <div class="row flex-column flex-md-row" id="features-section-two">
           <div
             class="col d-flex justify-content-center flex-column flex-start spacing-16"
           >
@@ -128,10 +151,10 @@
               continuous, high-volume scraping while maintaining reliability and
               data accuracy.
             </p>
-            <div>
-              <button class="geo-btn geo-btn-outline" type="button">
+            <div class="d-flex">
+              <a class="geo-btn geo-btn-outline" type="button" href="#pricing">
                 Learn More
-              </button>
+              </a>
             </div>
           </div>
           <div class="col features-content dynamic-email"></div>
