@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs, DocumentData, QuerySnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs, DocumentData, QuerySnapshot, limit, startAfter } from "firebase/firestore";
 import * as geofire from "geofire-common";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -83,7 +83,9 @@ export const usersList = (lastRef?: any) => {
   const unsubscribe = onSnapshot(
     query(
       collectionRef,
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
+      limit(10),
+      ...(lastRef ? [startAfter(lastRef)] : []),
     ),
     (snapshot) => users$.next(snapshot),
     (error) => {

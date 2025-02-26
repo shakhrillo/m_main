@@ -76,7 +76,7 @@ export const AppNavbar = () => {
                 Profile
               </NavDropdown.Item>
               {
-                user.isAdmin &&
+                user!.isAdmin &&
                 <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
               }
               <NavDropdown.Divider />

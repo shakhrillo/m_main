@@ -21,6 +21,7 @@ export const UsersList = () => {
     return usersList(lastDocument).pipe(
       filter((snapshot) => !!snapshot),
       map((snapshot) => {
+        console.log('length', snapshot.docs.length);
         if (snapshot.empty) {
           setIsLastPage(true);
           return [];
@@ -39,6 +40,7 @@ export const UsersList = () => {
   };
 
   useEffect(() => {
+    console.log('+++')
     setLastDoc(null);
     setIsLastPage(false);
     setUsers([]);

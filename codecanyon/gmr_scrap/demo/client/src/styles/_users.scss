@@ -3,29 +3,64 @@
   flex-direction: column;
 }
 
-.user-data {
+.user-data,
+.user-form,
+.user-info {
   width: 100%;
+  padding: 1rem;
+  background: #fff;
+  border-radius: $card-border-radius;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
+  font-size: 14px;
   display: flex;
   position: relative;
-  padding: $spacer;
   overflow: hidden;
-  font-size: 14px;
+  gap: 1rem;
+}
+
+.user-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .user-form {
-  display: flex;
   flex-direction: column;
-  padding: 1rem;
-  background: #fff;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
-  font-size: 14px;
 }
 
-.user-info {
-  padding: 1rem;
-  background: #fff;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
-  font-size: 14px;
+.user-image,
+.user-image img {
+  width: 50px;
+  height: 50px;
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
+}
+
+.user-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 12px;
+  border-radius: 0 0 0 $card-border-radius;
+}
+
+@media (max-width: 768px) {
+  .user-time {
+    position: relative;
+    background-color: transparent;
+  }
+
+  .user-stats {
+    justify-content: center;
+  }
+
+  .user-data {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 }
