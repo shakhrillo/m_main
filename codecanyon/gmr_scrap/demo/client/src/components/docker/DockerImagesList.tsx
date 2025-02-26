@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { filter, map, take } from "rxjs";
 import { dockerImages } from "../../services/dockerService";
 import { IconReload } from "@tabler/icons-react";
-import { Stack, Button } from "react-bootstrap";
+import { Stack, Button, Row, Col } from "react-bootstrap";
 import { formatSize, formatStringDate } from "../../utils";
 import { NavLink } from "react-router-dom";
 import { QueryDocumentSnapshot } from "firebase/firestore";
@@ -18,7 +18,7 @@ interface IDockerImage {
 
 const DockerImageItem = ({ image }: { image: IDockerImage }) => (
   <div className="docker-image-data">
-    <NavLink className="h6" to={`/images/${image.id}`}>
+    <NavLink to={`/images/${image.id}`}>
       {image.id}
     </NavLink>
     <Stack direction="horizontal" gap={2} className="text-muted">
@@ -35,9 +35,13 @@ export const DockerImagesList = () => {
   const [images, setImages] = useState<IDockerImage[]>([]);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null);
   const [isLastPage, setIsLastPage] = useState(false);
+  const subscriptionRef = useRef<any>(null);
 
   const fetchImages = (append = false, lastDocument: QueryDocumentSnapshot | null = null) => {
-    return dockerImages(lastDocument)
+    // Unsubscribe previous subscription before making a new request
+    subscriptionRef.current?.unsubscribe();
+
+    subscriptionRef.current = dockerImages(lastDocument)
       .pipe(
         filter(snapshot => !!snapshot),
         map(snapshot => {
@@ -47,13 +51,13 @@ export const DockerImagesList = () => {
           }
           if (snapshot.docs.length < 10) setIsLastPage(true);
 
-          const lastDoc = snapshot.docs.at(-1);
-          if (lastDoc) {
-            setLastDoc(lastDoc);
+          const newLastDoc = snapshot.docs.at(-1);
+          if (newLastDoc) {
+            setLastDoc(newLastDoc);
           }
+
           return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        }),
-        take(1)
+        })
       )
       .subscribe(data => {
         setImages(prev => (append ? [...prev, ...data] : data));
@@ -61,23 +65,26 @@ export const DockerImagesList = () => {
   };
 
   useEffect(() => {
-    const subscription = fetchImages();
-    return () => subscription.unsubscribe();
+    fetchImages();
+
+    return () => subscriptionRef.current?.unsubscribe(); // Cleanup on unmount
   }, []);
 
   return (
-    <>
+    <Row className="g-3 row-cols-1">
       {images.map(image => (
-        <DockerImageItem key={image.id} image={image} />
+        <Col key={image.id}>
+          <DockerImageItem image={image} />
+        </Col>
       ))}
 
-      {!isLastPage && (
+      {!isLastPage && images.length > 0 && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
           <Button onClick={() => fetchImages(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
       )}
-    </>
+    </Row>
   );
 };

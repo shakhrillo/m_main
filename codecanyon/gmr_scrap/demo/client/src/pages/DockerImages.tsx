@@ -1,4 +1,4 @@
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { DockerImagesList } from "../components/docker/DockerImagesList";
 
 /**
@@ -7,10 +7,6 @@ import { DockerImagesList } from "../components/docker/DockerImagesList";
 export const ImagesList = () => {
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Images</Breadcrumb.Item>
-      </Breadcrumb>
-
       <DockerImagesList />
     </Container>
   );
