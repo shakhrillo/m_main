@@ -1,10 +1,10 @@
 import { IconFilter, IconReload } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { dockerContainers } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
-import { debounceTime, filter, map, Subject, take } from "rxjs";
+import { debounceTime, filter, map, Subject, Subscription } from "rxjs";
 import { ContainerData } from "./ContainerData";
 import { IUserInfo } from "../../types/userInfo";
 
@@ -31,51 +31,55 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
-  useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
-      setSearch(value);
-    });
+  const subscriptionRef = useRef<Subscription | null>(null);
 
-    return () => subscription.unsubscribe();
+  useEffect(() => {
+    const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    return () => searchSubscription.unsubscribe();
   }, []);
 
-  const fetchContainers = (append = false, lastDocument = null) => {
-    if (!user?.uid) return;
+  const fetchContainers = useCallback(
+    (append = false, lastDocument = null) => {
+      if (!user?.uid) return;
 
-    console.log("fetchContainers", search, type, status, machineType, lastDocument);
+      subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
 
-    return dockerContainers({
-      search: search.trim().toLowerCase(),
-      uid: !user.isAdmin ? user?.uid : undefined,
-      type,
-      machineType,
-      status,
-    }, lastDocument).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        if (snapshot.empty) {
-          setIsLastPage(true);
-          return [];
-        }
-        
-        if (snapshot.docs.length < 10) setIsLastPage(true);
+      subscriptionRef.current = dockerContainers(
+        {
+          search: search.trim().toLowerCase(),
+          uid: !user.isAdmin ? user?.uid : undefined,
+          type,
+          machineType,
+          status,
+        },
+        lastDocument
+      )
+        .pipe(
+          filter((snapshot) => !!snapshot),
+          map((snapshot) => {
+            const docs = snapshot.docs;
+            setIsLastPage(docs.length < 10);
+            if (!docs.length) return [];
 
-        setLastDoc(snapshot.docs.at(-1));
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-      }),
-      take(1),
-    ).subscribe((data) => {
-      setContainers((prev) => (append ? [...prev, ...data] : data));
-    });
-  };
+            setLastDoc(docs.at(-1));
+            return docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
+          })
+        )
+        .subscribe((data) => {
+          setContainers((prev) => (append ? [...prev, ...data] : data));
+        });
+    },
+    [search, type, status, machineType, user?.uid, user?.isAdmin]
+  );
 
   useEffect(() => {
     setLastDoc(null);
     setIsLastPage(false);
     setContainers([]);
-    const subscription = fetchContainers();
-    return () => subscription?.unsubscribe();
-  }, [search, type, status, machineType]);
+    fetchContainers();
+
+    return () => subscriptionRef.current?.unsubscribe(); // Cleanup subscription on unmount
+  }, [fetchContainers]);
 
   const loadMore = () => {
     if (!isLastPage) fetchContainers(true, lastDoc);
@@ -98,35 +102,33 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
                 key={option.label}
                 onClick={() => setStatus(option.value)}
                 className={status === option.value ? "active" : ""}
-              >{ option.label }</Dropdown.Item>
+              >
+                {option.label}
+              </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
 
-      {
-        status && (
-          <div className="text-muted">
-            {containers.length === 0 
-              ? `No containers found with status: ${status}` 
-              : `Showing containers with status: ${status}`}
-          </div>
-        )
-      }
+      {status && (
+        <div className="text-muted">
+          {containers.length === 0
+            ? `No containers found with status: ${status}`
+            : `Showing containers with status: ${status}`}
+        </div>
+      )}
 
-      {
-        containers.map((comment) => <ContainerData key={comment.id} container={comment} path={path} />)
-      }
+      {containers.map((comment) => (
+        <ContainerData key={comment.id} container={comment} path={path} />
+      ))}
 
-      {
-        !isLastPage && (
-          <Stack direction="horizontal" className="justify-content-center mt-3">
-            <Button onClick={loadMore} variant="outline-primary">
-              <IconReload className="me-2" /> Load more
-            </Button>
-          </Stack>
-        )
-      }
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3">
+          <Button onClick={loadMore} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
+      )}
     </div>
   );
 };
