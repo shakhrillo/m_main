@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
-import { useState, useEffect } from "react";
-import { filter, map, take } from "rxjs";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { filter, map, take, Subscription } from "rxjs";
 import { usersList } from "../../services/settingService";
 import { IUserInfo } from "../../types/userInfo";
 import { UserData } from "./UserData";
@@ -15,38 +15,48 @@ export const UsersList = () => {
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
-  const fetchUsers = (append = false, lastDocument = null) => {
+  // Store the subscription reference
+  const subscriptionRef = useRef<Subscription | null>(null);
+
+  const fetchUsers = useCallback((append = false, lastDocument = null) => {
     if (!auth.currentUser?.uid) return;
 
-    return usersList(lastDocument).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        console.log('length', snapshot.docs.length);
-        if (snapshot.empty) {
-          setIsLastPage(true);
-          return [];
-        }
-        
-        if (snapshot.docs.length < 10) setIsLastPage(true);
-  
-        setLastDoc(snapshot.docs.at(-1));
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }));
-      }),
-      take(1),
-    ).subscribe((users) => {
-      console.log(users);
-      setUsers((prev) => (append ? [...prev, ...users] : users));
-    });
-  };
+    // Unsubscribe from the previous subscription before creating a new one
+    subscriptionRef.current?.unsubscribe();
+
+    const subscription = usersList(lastDocument)
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          if (snapshot.empty) {
+            setIsLastPage(true);
+            return [];
+          }
+
+          if (snapshot.docs.length < 10) setIsLastPage(true);
+
+          setLastDoc(snapshot.docs.at(-1));
+          return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }));
+        })
+      )
+      .subscribe((fetchedUsers) => {
+        setUsers((prev) => (append ? [...prev, ...fetchedUsers] : fetchedUsers));
+      });
+
+    subscriptionRef.current = subscription;
+  }, [auth.currentUser?.uid]);
 
   useEffect(() => {
-    console.log('+++')
     setLastDoc(null);
     setIsLastPage(false);
     setUsers([]);
-    const subscription = fetchUsers();
-    return () => subscription?.unsubscribe();
-  }, [search, status]);
+
+    fetchUsers();
+
+    return () => {
+      subscriptionRef.current?.unsubscribe();
+    };
+  }, [fetchUsers, search, status]);
 
   const loadMore = () => {
     if (!isLastPage) fetchUsers(true, lastDoc);
@@ -54,17 +64,17 @@ export const UsersList = () => {
 
   return (
     <div className="users-list">
-      {users.map((user) => <UserData key={user.uid} user={user} />)}
+      {users.map((user) => (
+        <UserData key={user.uid} user={user} />
+      ))}
 
-      {
-        !isLastPage && (
-          <Stack direction="horizontal" className="justify-content-center mt-3">
-            <Button onClick={loadMore} variant="outline-primary">
-              <IconReload className="me-2" /> Load more
-            </Button>
-          </Stack>
-        )
-      }
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3">
+          <Button onClick={loadMore} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
+      )}
     </div>
-  )
-} 
+  );
+};

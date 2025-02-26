@@ -1,8 +1,8 @@
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 import { JSX, useCallback, useEffect, useState } from "react";
-import { Breadcrumb, Card, CardBody, CardTitle, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Breadcrumb, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
@@ -23,7 +23,7 @@ const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; va
   <Stack direction="horizontal" className="align-items-start">
     <span>{icon}</span>
     <div className="ms-3">
-      <h6 className="mb-0">{label}</h6>
+      <strong>{label}</strong>
       <p className="text-break">{value || "N/A"}</p>
     </div>
   </Stack>
@@ -36,7 +36,8 @@ const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; va
 export const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<IUserInfo | null>(null);
+  const user = useOutletContext<IUserInfo>();
+  const [selectedUser, setSelectedUser] = useState<IUserInfo | null>(null);
   const [buffer, setBuffer] = useState<Buffer | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +49,7 @@ export const User = () => {
       map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
       take(1)
     ).subscribe((data) => {
-      setUser(data[0]);
+      setSelectedUser(data[0]);
       setLoading(false);
     });
 
@@ -100,7 +101,7 @@ export const User = () => {
         {
           user?.isAdmin && <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>
         }
-        <Breadcrumb.Item active>{user?.displayName || "User"}</Breadcrumb.Item>
+        <Breadcrumb.Item active>{selectedUser?.displayName || "User"}</Breadcrumb.Item>
       </Breadcrumb>
 
       <Row>
@@ -108,12 +109,12 @@ export const User = () => {
           <Form className="user-form">
             <Form.Group className="mb-3">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" value={user?.email || ""} readOnly disabled />
+              <Form.Control type="email" value={selectedUser?.email || ""} readOnly disabled />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Display Name</Form.Label>
-              <Form.Control type="text" defaultValue={user?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
+              <Form.Control type="text" defaultValue={selectedUser?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -125,7 +126,7 @@ export const User = () => {
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 type="number"
-                defaultValue={user?.phone || ""}
+                defaultValue={selectedUser?.phone || ""}
                 onChange={(e) => {
                   const phone = parseInt(e.target.value, 10);
                   if (!isNaN(phone)) {
@@ -140,19 +141,15 @@ export const User = () => {
         <Col xl={3}>
           <div className="user-info">
             {
-              user?.photoURL && (
-                <Image
-                  src={user?.photoURL}
-                  rounded
-                  fluid
-                />
+              selectedUser?.photoURL && (
+                <Image src={selectedUser?.photoURL} rounded fluid />
               )
             }
             <div className="d-flex flex-column mt-3">
-              <UserInfo icon={<IconMail />} label="Email" value={user?.email} />
-              <UserInfo icon={<IconLabel />} label="Display Name" value={user?.displayName} />
-              <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(user?.coinBalance)} />
-              <UserInfo icon={<IconStars />} label="Total Reviews" value={user?.totalReviews} />
+              <UserInfo icon={<IconMail />} label="Email" value={selectedUser?.email} />
+              <UserInfo icon={<IconLabel />} label="Display Name" value={selectedUser?.displayName} />
+              <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(selectedUser?.coinBalance)} />
+              <UserInfo icon={<IconStars />} label="Total Reviews" value={selectedUser?.totalReviews} />
             </div>
           </div>
         </Col>

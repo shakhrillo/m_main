@@ -76,7 +76,7 @@ export const updateCoinSettings = (id: string, data: any) => {
  * @param fromDate Date
  * @returns Observable<IUserInfo[]>
  */
-export const usersList = (lastRef?: any) => {
+export const usersList = (lastRef?: DocumentData | null) => {
   const users$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "users");
 
