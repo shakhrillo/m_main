@@ -1,24 +1,17 @@
-import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
-import { Buffer } from "buffer";
-import { JSX, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef, JSX } from "react";
+import { filter, map } from "rxjs";
 import { Breadcrumb, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
 import { IUserInfo } from "../types/userInfo";
-import { filter, map, take } from "rxjs";
+import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
+import { Buffer } from "buffer";
 
 interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
 }
 
-/**
- * User info component
- * @param icon JSX.Element
- * @param label string
- * @param value any
- * @returns JSX.Element
- */
 const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
   <Stack direction="horizontal" className="align-items-start">
     <span>{icon}</span>
@@ -29,10 +22,6 @@ const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; va
   </Stack>
 );
 
-/**
- * User page component
- * @returns JSX.Element
- */
 export const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
@@ -41,19 +30,23 @@ export const User = () => {
   const [buffer, setBuffer] = useState<Buffer | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const subscriptionRef = useRef<any>(null);
+
   useEffect(() => {
     if (!userId) return;
 
-    const subscription = userData(userId).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
-      take(1)
-    ).subscribe((data) => {
+    // Unsubscribe before creating a new subscription
+    subscriptionRef.current?.unsubscribe();
+
+    subscriptionRef.current = userData(userId).pipe(
+      filter(snapshot => !!snapshot),
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo }))),
+    ).subscribe(data => {
       setSelectedUser(data[0]);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => subscriptionRef.current?.unsubscribe();
   }, [userId]);
 
   const handleFileChange = useCallback((event: ChangeUserPhotoEvent) => {
@@ -65,7 +58,7 @@ export const User = () => {
       const arrayBuffer = reader.result as ArrayBuffer;
       setBuffer(Buffer.from(new Uint8Array(arrayBuffer)));
     };
-    reader.onerror = (err) => console.error("Error reading the file:", err);
+    reader.onerror = err => console.error("Error reading the file:", err);
     reader.readAsArrayBuffer(file);
   }, []);
 
@@ -98,31 +91,29 @@ export const User = () => {
   return (
     <Container>
       <Breadcrumb>
-        {
-          user?.isAdmin && <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>
-        }
+        {user?.isAdmin && <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>}
         <Breadcrumb.Item active>{selectedUser?.displayName || "User"}</Breadcrumb.Item>
       </Breadcrumb>
 
       <Row>
         <Col xl={9}>
           <Form className="user-form">
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Email address</Form.Label>
               <Form.Control type="email" value={selectedUser?.email || ""} readOnly disabled />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Display Name</Form.Label>
               <Form.Control type="text" defaultValue={selectedUser?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Photo</Form.Label>
               <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 type="number"
@@ -140,11 +131,7 @@ export const User = () => {
 
         <Col xl={3}>
           <div className="user-info">
-            {
-              selectedUser?.photoURL && (
-                <Image src={selectedUser?.photoURL} rounded fluid />
-              )
-            }
+            {selectedUser?.photoURL && <Image src={selectedUser.photoURL} rounded fluid />}
             <div className="d-flex flex-column mt-3">
               <UserInfo icon={<IconMail />} label="Email" value={selectedUser?.email} />
               <UserInfo icon={<IconLabel />} label="Display Name" value={selectedUser?.displayName} />
