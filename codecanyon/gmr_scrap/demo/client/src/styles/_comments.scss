@@ -69,21 +69,18 @@
 
     img {
       align-self: center;
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background-color: $secondary;
       object-fit: cover;
-      filter: brightness(0.6) blur(1px);
       pointer-events: none;
       user-select: none;
     }
   }
 
-  &-review,
   &-qa {
     display: flex;
-    flex-direction: column;
     gap: 0.5rem;
   }
 
@@ -160,5 +157,16 @@
       z-index: 1;
       cursor: pointer;
     }
+  }
+
+  &-time {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    color: #666;
+    font-size: 12px;
+    border-radius: 0 0 0 $card-border-radius;
   }
 }

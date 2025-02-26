@@ -3,12 +3,12 @@ import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { debounceTime, filter, Subject, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
-import { IComment } from "../../services/scrapService";
 import { Comment } from "./Comment";
 import { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";
+import { IComment } from "../../types/comment";
 
-interface ICommentsListProps {
+interface ICommentsList {
   reviewId: string;
 }
 
@@ -25,7 +25,7 @@ const FILTER_OPTIONS = [
  * @param reviewId Review ID
  * @returns JSX.Element
  */
-export const CommentsList = ({ reviewId }: ICommentsListProps) => {
+export const CommentsList = ({ reviewId }: ICommentsList) => {
   const user = useOutletContext<IUserInfo>();
   const commentsRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<IComment[]>([]);
@@ -90,7 +90,7 @@ export const CommentsList = ({ reviewId }: ICommentsListProps) => {
         </Dropdown>
       </Stack>
 
-      {comments.map((review) => <Comment review={review} key={review.id} />)}
+      {comments.map((review) => <Comment comment={review} key={review.id} />)}
 
       {!isLastPage && comments.length > 0 ? (
         <Stack direction="horizontal" className="justify-content-center mt-3">

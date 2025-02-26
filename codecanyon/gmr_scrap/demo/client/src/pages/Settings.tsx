@@ -1,4 +1,4 @@
-import { Breadcrumb, Card, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { Breadcrumb, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
 import { SettingsFormInput } from "../components/SettingsFormInput";
 
 const SETTINGS_TABS = [
@@ -48,34 +48,27 @@ export const Settings = () => {
       <Breadcrumb>
         <Breadcrumb.Item active>Setttings</Breadcrumb.Item>
       </Breadcrumb>
-      <Tabs
-        defaultActiveKey="generalSettings"
-        id="mainSettings"
-      >
+      <Tabs variant="pills" defaultActiveKey="generalSettings">
         {
           SETTINGS_TABS.map(({ eventKey, title, type, fields }) => (
             <Tab eventKey={eventKey} title={title} key={eventKey}>
-              <Card className="border-top-0 rounded-top-0">
-                <Card.Body>
-                  <Form>
-                    <Row>
-                      {
-                        fields.map(({ tag, label, helpText, inputType }) => (
-                          <Col key={tag} md={6}>
-                            <SettingsFormInput
-                              type={type}
-                              tag={tag}
-                              label={label}
-                              helpText={helpText}
-                              inputType={inputType}
-                            />
-                          </Col>
-                        ))
-                      }
-                    </Row>
-                  </Form>
-                </Card.Body>
-              </Card>
+              <Form className="settings">
+                <Row>
+                  {
+                    fields.map(({ tag, label, helpText, inputType }) => (
+                      <Col key={tag} md={6}>
+                        <SettingsFormInput
+                          type={type}
+                          tag={tag}
+                          label={label}
+                          helpText={helpText}
+                          inputType={inputType}
+                        />
+                      </Col>
+                    ))
+                  }
+                </Row>
+              </Form>
             </Tab>
           ))
         }

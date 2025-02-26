@@ -2,14 +2,14 @@ import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import Scrollbar from "react-scrollbars-custom";
-import { IComment } from "../../services/scrapService";
-import { IconPlayerPlay, IconVideo } from "@tabler/icons-react";
+import { IconPlayerPlay } from "@tabler/icons-react";
+import { IComment } from "../../types/comment";
 
-interface ICommentVideosProps {
+interface ICommentVideos {
   comment?: IComment;
 }
 
-export const CommentVideos = ({ comment }: ICommentVideosProps) => {
+export const CommentVideos = ({ comment }: ICommentVideos) => {
   return (
     !!comment?.videoUrls?.length && (
       <Gallery

@@ -1,13 +1,13 @@
 import { IconPhoto } from "@tabler/icons-react";
 import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import { IComment } from "../../services/scrapService";
+import { IComment } from "../../types/comment";
 
-interface ICommentImagesProps {
+interface ICommentImages {
   comment?: IComment;
 }
 
-export const CommentImages = ({ comment }: ICommentImagesProps) => {
+export const CommentImages = ({ comment }: ICommentImages) => {
   return (
     !!comment?.imageUrls?.length && (
       <Gallery>

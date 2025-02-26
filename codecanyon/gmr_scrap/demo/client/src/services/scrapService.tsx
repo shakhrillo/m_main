@@ -11,30 +11,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
-
-export interface ICommentUser {
-  url: string;
-  name: string;
-  image: string;
-}
-
-export interface ICommentQA {
-  question: string;
-  answer: string;
-}
-
-export interface IComment {
-  date: string;
-  id: string;
-  imageUrls: { thumb: string; original: string; id: string }[];
-  qa: ICommentQA[];
-  rating: number;
-  response: string;
-  review: string;
-  time: number; // Need to convert to Timestamp
-  user: ICommentUser;
-  videoUrls: { videoUrl: string; thumb: string; id: string }[];
-}
+import { IComment } from "../types/comment";
 
 export interface IReview {
   id?: string;

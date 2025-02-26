@@ -7,15 +7,16 @@ import {
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import { IComment } from "../../services/scrapService";
 import { Ratings } from "../Ratings";
 import { CommentImages } from "./CommentImages";
 import { CommentQA } from "./CommentQA";
 import { CommentResponse } from "./CommentResponse";
 import { CommentReview } from "./CommentReview";
 import { CommentVideos } from "./CommentVideos";
+import { IComment } from "../../types/comment";
+import { maskName } from "../../utils/maskName";
 
-export const Comment = ({ review }: { review: IComment }) => {
+export const Comment = ({ comment }: {comment: IComment}) => {
   const commentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(true);
 
@@ -29,20 +30,22 @@ export const Comment = ({ review }: { review: IComment }) => {
   return (
     <div className={`comment ${expanded ? "expanded" : ""}`} ref={commentRef}>
       <div className="comment-user">
-        <img src={review.user.image} alt={review.user.name} />
+        <img src={comment?.user?.image} alt={comment?.user?.name} />
         <div className="comment-user-info">
-          <span>
-            {review.user.name.slice(0, 3) + "***" + review.user.name.slice(-3)}
-          </span>
-          <Ratings container={review} />
+          <strong>
+            {maskName(comment?.user?.name)}
+          </strong>
+          <Ratings container={comment} />
         </div>
-        <small>{review.date}</small>
+        <div className="comment-time">
+          {comment?.date}
+        </div>
       </div>
-      <CommentReview comment={review} />
-      <CommentQA comment={review} />
-      <CommentImages comment={review} />
-      <CommentVideos comment={review} />
-      <CommentResponse comment={review} />
+      <CommentReview comment={comment} />
+      <CommentQA comment={comment} />
+      <CommentImages comment={comment} />
+      <CommentVideos comment={comment} />
+      <CommentResponse comment={comment} />
       {!expanded && (
         <div className="comment-expand">
           <Button variant="link" onClick={() => setExpanded(!expanded)}>

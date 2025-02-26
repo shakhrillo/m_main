@@ -63,7 +63,7 @@ export const SingleReview = () => {
       </Breadcrumb>
       <Row>
         <Col md={9}>
-          <Tabs defaultActiveKey="comments" variant="pills">
+          <Tabs variant="pills" defaultActiveKey="comments">
             <Tab
               eventKey="comments"
               title={

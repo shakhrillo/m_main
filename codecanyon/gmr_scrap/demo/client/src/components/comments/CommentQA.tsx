@@ -1,31 +1,25 @@
-import { Table } from "react-bootstrap";
-import { IComment } from "../../services/scrapService";
+import { IComment } from "../../types/comment";
 import { Ratings } from "../Ratings";
 
-export const CommentQA = ({ comment }: { comment?: IComment }) => {
-  const isRate = (question: string) => /^[1-9]$|^5$/.test(question);
+interface ICommentQA {
+  comment?: IComment;
+}
+
+export const CommentQA = ({ comment }: ICommentQA) => {
+  if (!comment?.qa?.length) return null;
+
+  const isRate = (answer: string) => /^[1-9]$|^5$/.test(answer);
 
   return (
-    !!comment?.qa?.length && (
-      <div className="comment-qa">
-        <Table>
-          <tbody>
-            {comment?.qa.map((qa, index) => (
-              <tr key={"qa-" + index}>
-                <td>{qa.question}</td>
-                <td>
-                  {/* TODO: Add ratings */}
-                  {/* {isRate(qa.answer) ? (
-                    <Ratings container={{ rating: Number(qa.answer) }} />
-                  ) : (
-                    qa.answer
-                  )} */}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </div>
-    )
+    <>
+      {
+        comment.qa.map(({ question, answer }, index) => (
+          <div className="comment-qa" key={`qa-${index}`}>
+            <strong>{question}</strong>
+            {isRate(answer) ? <Ratings container={comment} /> : answer}
+          </div>
+        ))
+      }
+    </>
   );
 };
