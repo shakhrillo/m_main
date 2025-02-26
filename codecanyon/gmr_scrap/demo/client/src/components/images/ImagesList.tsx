@@ -1,8 +1,8 @@
 import { IconPhoto, IconReload } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import { filter, take } from "rxjs";
+import { filter } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { ICommentImage } from "../../types/comment";
 import { useOutletContext } from "react-router-dom";
@@ -17,21 +17,24 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
+  const subscriptionRef = useRef<any>(null);
 
   const fetchImages = (append = false) => {
     if (!user?.uid || isLastPage) return;
 
-    reviewsData("images", { reviewId, uid: !user.isAdmin ? user.uid : undefined, }, lastDoc)
-      .pipe(
-        filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDoc)),
-        take(1)
-      )
-      .subscribe(snapshot => {
-        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+    subscriptionRef.current?.unsubscribe(); // Ensure previous subscription is cleared
 
-        const newImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ICommentImage));
-        setImages(prev => (append ? [...prev, ...newImages] : newImages));
+    subscriptionRef.current = reviewsData(
+      "images",
+      { reviewId, uid: !user.isAdmin ? user.uid : undefined },
+      lastDoc
+    )
+      .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
+      .subscribe((snapshot) => {
+        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
         setLastDoc(snapshot.docs.at(-1));
+
+        setImages((prev) => (append ? [...prev, ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage)] : snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage)));
       });
   };
 
@@ -40,6 +43,8 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     setLastDoc(null);
     setIsLastPage(false);
     fetchImages();
+
+    return () => subscriptionRef.current?.unsubscribe();
   }, [reviewId]);
 
   return (
@@ -59,13 +64,13 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
 
       {!images.length && <Alert className="w-100" variant="info">No images found</Alert>}
 
-      {!isLastPage && images.length ? (
+      {!isLastPage && images.length > 0 && (
         <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
           <Button onClick={() => fetchImages(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
-      ) : ""}
+      )}
     </div>
   );
 };
