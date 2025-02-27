@@ -5,7 +5,7 @@ import {
 } from "@tabler/icons-react";
 import { IDockerContainer } from "../types/dockerContainer";
 import { formatNumber } from "../utils/formatNumber";
-import { IComment } from "../services/scrapService";
+import { IComment } from "../types/comment";
 
 /**
  * Display the ratings of a review
