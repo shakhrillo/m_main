@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { filter } from "rxjs";
 import { settingValue } from "../services/settingService";
+import LogoImg from "../assets/logo_scrappio.png";
 
 /**
  * Logo component.
@@ -8,17 +9,17 @@ import { settingValue } from "../services/settingService";
  * @returns JSX.Element
  */
 export const Logo = (
-    props: React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+  props: React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
 ) => {
-    const [logo, setLogo] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string>(LogoImg);
 
-    useEffect(() => {
-        const subscription = settingValue({ tag: "logo", type: "general" })
-            .pipe(filter((data) => !!data?.value))
-            .subscribe(({ value }) => setLogo(value));
+  useEffect(() => {
+    const subscription = settingValue({ tag: "logo", type: "general" })
+      .pipe(filter((data) => Boolean(data?.value)))
+      .subscribe(({ value }) => setLogo(value));
 
-        return () => subscription.unsubscribe();
-    }, []);
+    return () => subscription.unsubscribe();
+  }, []);
 
-    return logo ? <img src={logo} alt="Logo" height={30} {...props} /> : 'Scrappio';
+  return <img src={logo} alt="Logo" height={30} {...props} />;
 };

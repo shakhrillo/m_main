@@ -4,6 +4,8 @@ import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { IUserInfo } from "../../types/userInfo";
+import { settingValue } from "../../services/settingService";
+import { filter, take } from "rxjs";
 
 interface IScrapExpectedPoints {
   container: IDockerContainer;
@@ -18,12 +20,42 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
   const navigate = useNavigate();
   const user = useOutletContext<IUserInfo>();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [limit, setLimit] = useState<number>(0);
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(user?.coinBalance || 0);
 
   useEffect(() => {
     if (container?.machineId && container?.type === "comments") {
       navigate(`/reviews/${container?.machineId}`);
     }
   }, [container]);
+
+  useEffect(() => {
+    const subscription = settingValue({ tag: "minimum", type: "scrap"})
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => {
+        if(data?.value) {
+          setLimit(Number(data.value));
+        }
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
+
+  useEffect(() => {
+    const subscription = settingValue({ tag: "maximum", type: "scrap"})
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => {
+        if(data?.value) {
+          setMaxSpentPoints(Number(data.value));
+        }
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
 
   /**
    * Validation URL
@@ -42,12 +74,12 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
         address: container?.address,
         uid: container?.uid,
         type: "comments",
-        limit: container?.limit,
+        limit: container?.limit || limit,
         sortBy: container?.sortBy || "Most relevant",
         extractImageUrls: container?.extractImageUrls || false,
         extractVideoUrls: container?.extractVideoUrls || false,
         extractOwnerResponse: container?.extractOwnerResponse || false,
-        maxSpentPoints: container?.maxSpentPoints || 0,
+        maxSpentPoints: container?.maxSpentPoints || maxSpentPoints,
       });
       navigate(`/reviews/${id}`);
     } catch (error) {

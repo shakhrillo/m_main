@@ -4,7 +4,7 @@
     "title": "General",
     "type": "general",
     "fields": [
-      { "value": "https://cdn.prod.website-files.com/6365d860c7b7a7191055eb8a/66eeb030dcea757c29ff2b9e_45%2520Degrees.svg", "tag": "logo", "label": "Logo", "helpText": "The URL for the logo." },
+      { "value": "", "tag": "logo", "label": "Logo", "helpText": "The URL for the logo." },
       { "value": "1", "tag": "favicon", "label": "Favicon", "helpText": "The URL for the favicon." },
       { "value": "Gmr Scrap", "tag": "title", "label": "Title", "helpText": "The title of the website." },
       { "value": "Google Map Review Scrapper", "tag": "description", "label": "Description", "helpText": "The description of the website." },
