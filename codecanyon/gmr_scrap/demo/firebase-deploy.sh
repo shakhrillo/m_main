@@ -21,7 +21,7 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     echo "Attempt $i of $MAX_RETRIES"
 
     # Delete all Cloud Functions sequentially if they exist
-    FUNCTIONS=("processBuyCoins" "userTopUp" "processMachineWritten" "processContainerCreated" "processUserCreated")
+    FUNCTIONS=("processBuyCoins" "userTopUp" "processMachineWritten" "processContainerCreated" "processUserCreated" "processUserUpdated")
     for function in "${FUNCTIONS[@]}"; do
       if gcloud functions describe "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" &>/dev/null; then
         gcloud functions delete "$function" --region=us-central1 --project="$APP_FIREBASE_PROJECT_ID" --quiet || exit 1
