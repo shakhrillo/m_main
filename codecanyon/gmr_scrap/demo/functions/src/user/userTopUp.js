@@ -8,15 +8,15 @@ const { updateUser } = require("../services/userService");
  */
 const userTopUp = async (event) => {
   const snapshot = event.data;
-  const { type, metadata } = snapshot.data();
+  const { type, metadata, amount } = snapshot.data();
 
   if (type !== "charge.succeeded") return;
 
   try {
-    const amount = Number(metadata.amount || 0);
+    const coinBalance = Number(metadata.amount || 0);
     await updateUser(metadata.userId, {
-      coinBalance: FieldValue.increment(amount),
-      totalSpent: FieldValue.increment(amount),
+      coinBalance: FieldValue.increment(coinBalance),
+      totalSpent: FieldValue.increment(coinBalance),
     });
     await updateStatistics("earnings", amount);
   } catch (error) {

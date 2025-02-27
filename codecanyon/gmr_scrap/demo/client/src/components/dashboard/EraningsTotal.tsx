@@ -22,7 +22,7 @@ export const EraningsTotal = () => {
       </div>
       <div className="dashboard-graph">
         <div className="display-6 mt-auto">
-          ${formatNumber((earnings) / 100)}
+          ${formatNumber(earnings)}
         </div>
       </div>
     </>

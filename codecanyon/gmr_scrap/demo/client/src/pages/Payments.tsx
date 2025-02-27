@@ -1,18 +1,18 @@
 import { IconAlertCircle, IconCoin, IconCoins, IconInfoCircle } from "@tabler/icons-react";
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Card, CardBody, CardSubtitle, CardTitle, Col, Container, Form, FormCheck, FormControl, FormGroup, FormText, Row, Stack } from "react-bootstrap";
+import { Breadcrumb, Button, Col, Container, Form, FormCheck, FormControl, FormGroup, FormText, Row, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
+import { IUserInfo } from "../types/userInfo";
 
 /**
  * View for purchasing coins.
  * @returns Component.
  */
 export const Payments = () => {
-  const { uid } = useOutletContext<User>();
+  const user = useOutletContext<IUserInfo>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,9 +28,9 @@ export const Payments = () => {
   }, []);
 
   useEffect(() => {
-    if (!coinId) return;
+    if (!coinId || !user) return;
 
-    const unsubscribe = buyCoinsData(coinId, uid).subscribe((data) => {
+    const unsubscribe = buyCoinsData(coinId, user?.uid).subscribe((data) => {
       if (data?.url) {
         window.location.href = data.url;
       } else if (data?.error) {
@@ -40,7 +40,7 @@ export const Payments = () => {
     });
 
     return () => unsubscribe.unsubscribe();
-  }, [coinId]);
+  }, [coinId, user]);
 
   useEffect(() => {
     if (!amount) return;
@@ -55,7 +55,7 @@ export const Payments = () => {
   const handlePurchase = async () => {
     setLoading(true);
     try {
-      const id = await buyCoins(uid, Number(amount), Number(amount) * cost);
+      const id = await buyCoins(user?.uid, Number(amount), Number(amount) * cost);
       setCoinId(id);
     } catch (error) {
       console.error(error);
@@ -73,17 +73,14 @@ export const Payments = () => {
 
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Buy Coins</Breadcrumb.Item>
-      </Breadcrumb>
       <Row>
         <Col md={9}>
           <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
-              <h5 className="payments-title">
+              <div className="payments-title">
                 Purchase Coins
-              </h5>
+              </div>
               <span className="text-muted">
                 Amount of coins to purchase.
               </span>
@@ -130,7 +127,6 @@ export const Payments = () => {
         </Col>
         <Col md={3}>
           <div className="payment-summary">
-            <h6>Summary</h6>
             <Stack direction="horizontal" className="align-items-start">
               <div className="me-3">
                 <IconCoins />
