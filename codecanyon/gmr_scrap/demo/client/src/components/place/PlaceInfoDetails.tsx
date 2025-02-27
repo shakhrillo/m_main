@@ -26,8 +26,8 @@ const PlaceInfoDetailsRow = ({
   <div className="place-info-details">
     {createElement(icon)}
     <div className="place-info-content">
-    <div className="place-info-label">{label}</div>
-    <div className="place-info-value">{value || "N/A"}</div>
+      <div className="place-info-label">{label}</div>
+      <div className="place-info-value">{value || "N/A"}</div>
     </div>
   </div>
 );

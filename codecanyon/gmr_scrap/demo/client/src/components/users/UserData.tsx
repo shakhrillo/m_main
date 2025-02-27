@@ -12,6 +12,11 @@ export const UserData = ({ user }: { user: IUserInfo }) => {
 
       <Stack>
         <NavLink to={`/users/${user.uid}`}>{user.email}</NavLink>
+        {
+          user.isDeleted && (
+            <div className="text-danger">Deleted</div>
+          )
+        }
         <Stack direction="horizontal" gap={2} className="user-stats">
           <div>Coins: {formatNumber(user.coinBalance)}</div>
           <div>Images: {formatNumber(user.totalImages)}</div>

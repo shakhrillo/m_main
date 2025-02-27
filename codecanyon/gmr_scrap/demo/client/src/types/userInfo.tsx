@@ -5,7 +5,7 @@ export interface IUserInfo {
   createdAt: Timestamp;
   displayName: string;
   email: string;
-  notifications: number;
+  notifications?: number;
   phone: number;
   photoURL: string;
   totalSpent: number;
@@ -18,4 +18,5 @@ export interface IUserInfo {
   uid: string;
   isAdmin: boolean;
   isEditor: boolean;
+  isDeleted: boolean;
 }

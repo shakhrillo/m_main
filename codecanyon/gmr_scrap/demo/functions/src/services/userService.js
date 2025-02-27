@@ -17,4 +17,21 @@ const updateUser = (uid, data) => {
   }
 }
 
-module.exports = updateUser;
+/**
+ * Delete user
+ * @param {string} uid
+ * @returns {Promise<void>}
+ */
+const deleteUser = (uid) => {
+  try {
+    const auth = admin.auth();
+    return auth.deleteUser(uid);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+  }
+}
+
+module.exports = {
+  updateUser,
+  deleteUser
+}

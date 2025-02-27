@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useRef, JSX } from "react";
 import { filter, map } from "rxjs";
-import { Breadcrumb, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
+import { Alert, Breadcrumb, Button, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
@@ -13,11 +13,11 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
 }
 
 const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
-  <Stack direction="horizontal" className="align-items-start">
+  <Stack direction="horizontal" className="align-items-start" gap={3}>
     <span>{icon}</span>
-    <div className="ms-3">
+    <div>
       <strong>{label}</strong>
-      <p className="text-break">{value || "N/A"}</p>
+      <div className="text-break">{value || "N/A"}</div>
     </div>
   </Stack>
 );
@@ -29,25 +29,32 @@ export const User = () => {
   const [selectedUser, setSelectedUser] = useState<IUserInfo | null>(null);
   const [buffer, setBuffer] = useState<Buffer | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const subscriptionRef = useRef<any>(null);
 
   useEffect(() => {
     if (!userId) return;
 
-    // Unsubscribe before creating a new subscription
     subscriptionRef.current?.unsubscribe();
 
-    subscriptionRef.current = userData(userId).pipe(
-      filter(snapshot => !!snapshot),
-      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo }))),
-    ).subscribe(data => {
-      setSelectedUser(data[0]);
-      setLoading(false);
-    });
+    subscriptionRef.current = userData(userId)
+      .pipe(
+        filter(snapshot => !!snapshot),
+        map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo })))
+      )
+      .subscribe(data => {
+        setSelectedUser(data[0]);
+        setLoading(false);
+      });
 
     return () => subscriptionRef.current?.unsubscribe();
   }, [userId]);
+
+  useEffect(() => {
+    if (!user || !userId || !selectedUser) return;
+    setIsDisabled(user?.uid !== userId || selectedUser?.isDeleted);
+  }, [user, selectedUser]);
 
   const handleFileChange = useCallback((event: ChangeUserPhotoEvent) => {
     const file = event.target.files?.[0];
@@ -79,11 +86,20 @@ export const User = () => {
   }, [buffer, userId]);
 
   const handleUpdate = useCallback(
-    (field: string, value: any) => {
+    async (field: string, value: any) => {
       if (!userId) return;
-      updateUser(userId, { [field]: value });
+      await updateUser(userId, { [field]: value });
     },
     [userId]
+  );
+
+  const deleteUser = useCallback(
+    async (uid: string | undefined) => {
+      if (!uid) return;
+      await updateUser(uid, { isDeleted: true });
+      navigate("/users");
+    },
+    [navigate]
   );
 
   if (loading) return <p>Loading user data...</p>;
@@ -105,12 +121,17 @@ export const User = () => {
 
             <Form.Group>
               <Form.Label>Display Name</Form.Label>
-              <Form.Control type="text" defaultValue={selectedUser?.displayName || ""} onChange={(e) => handleUpdate("displayName", e.target.value)} />
+              <Form.Control
+                type="text"
+                defaultValue={selectedUser?.displayName || ""}
+                onBlur={(e) => handleUpdate("displayName", e.target.value)}
+                disabled={isDisabled}
+              />
             </Form.Group>
 
             <Form.Group>
               <Form.Label>Photo</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+              <Form.Control type="file" accept="image/*" onChange={handleFileChange} disabled={isDisabled} />
             </Form.Group>
 
             <Form.Group>
@@ -118,12 +139,13 @@ export const User = () => {
               <Form.Control
                 type="number"
                 defaultValue={selectedUser?.phone || ""}
-                onChange={(e) => {
+                onBlur={(e) => {
                   const phone = parseInt(e.target.value, 10);
                   if (!isNaN(phone)) {
                     handleUpdate("phone", phone);
                   }
                 }}
+                disabled={isDisabled}
               />
             </Form.Group>
           </Form>
@@ -132,12 +154,26 @@ export const User = () => {
         <Col xl={3}>
           <div className="user-info">
             {selectedUser?.photoURL && <Image src={selectedUser.photoURL} rounded fluid />}
-            <div className="d-flex flex-column mt-3">
+            <div className="d-flex flex-column mt-3 gap-3">
+              {
+                selectedUser?.isDeleted && (
+                  <Alert variant="danger">
+                    This user has been deleted.
+                  </Alert>
+                )
+              }
               <UserInfo icon={<IconMail />} label="Email" value={selectedUser?.email} />
               <UserInfo icon={<IconLabel />} label="Display Name" value={selectedUser?.displayName} />
               <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(selectedUser?.coinBalance)} />
               <UserInfo icon={<IconStars />} label="Total Reviews" value={selectedUser?.totalReviews} />
             </div>
+            {
+              !selectedUser?.isDeleted && (
+                <Button variant="danger" onClick={() => deleteUser(selectedUser?.uid)}>
+                  Delete User
+                </Button>
+              )
+            }
           </div>
         </Col>
       </Row>

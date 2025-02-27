@@ -1,6 +1,6 @@
 const { FieldValue } = require("firebase-admin/firestore");
 const updateStatistics = require("../services/statisticsService");
-const updateUser = require("../services/userService");
+const { updateUser } = require("../services/userService");
 
 /**
  * Updates the user's coin balance and total spent amount.

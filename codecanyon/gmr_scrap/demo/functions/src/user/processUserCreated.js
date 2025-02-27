@@ -1,7 +1,7 @@
 const { Timestamp } = require("firebase-admin/firestore");
 const updateStatistics = require("../services/statisticsService");
 const settingsService = require("../services/settingsService");
-const updateUser = require("../services/userService");
+const { updateUser } = require("../services/userService");
 
 /**
  * Once a user is created, this function will be triggered.
@@ -38,7 +38,8 @@ async function processUserCreated(user) {
     totalValidateComments: 0,
     totalValidateInfo: 0,
     isAdmin: false,
-    isEditor: false
+    isEditor: false,
+    isDeleted: false,
   });
 }
 
