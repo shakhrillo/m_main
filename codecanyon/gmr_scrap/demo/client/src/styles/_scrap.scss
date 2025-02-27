@@ -1,7 +1,8 @@
 .scrap {
   &-validate-url,
   &-extract-type,
-  &-extract-options {
+  &-extract-options,
+  &-expected-points {
     display: flex;
     align-items: flex-start;
     padding: 1rem;

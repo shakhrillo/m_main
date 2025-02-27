@@ -10,11 +10,16 @@ import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 import { PlaceInfoDetails } from "./PlaceInfoDetails";
 
-interface IPlaceInfoProps {
+interface IPlaceInfo {
   container: IDockerContainer;
 }
 
-export const PlaceInfo = ({ container }: IPlaceInfoProps) => {
+/**
+ * Place info component.
+ * @param {IDockerContainer} container - Container.
+ * @returns {JSX.Element} Place info component.
+ */
+export const PlaceInfo = ({ container }: IPlaceInfo) => {
   return (
     <div className="place">
       {container.location && <GoogleMap geojson={locationsToGeoJSON([container.location])} />}
