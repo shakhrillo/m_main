@@ -144,9 +144,20 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               value={maxSpentPoints}
               type="number"
               onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
-              onBlur={(e) => handleFormChange("maxSpentPoints", Number(e.target.value))}
+              onBlur={(e) => {
+                let value = Number(e.target.value);
+                if(value < 0) {
+                  value = 0;
+                } else if(value > user?.coinBalance) {
+                  value = user?.coinBalance;
+                }
+                setMaxSpentPoints(value);
+                handleFormChange("maxSpentPoints", value);
+              }}
             />
-            <FormText>Maximum points to spend on this scrap.</FormText>
+            <FormText>
+              Maximum points to spend on this scrap. By default, it will spend all {user?.coinBalance} points.
+            </FormText>
           </OptionCard>
 
           <OptionCard label="Sort by">

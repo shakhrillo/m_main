@@ -33,7 +33,7 @@
     "type": "scrap",
     "fields": [
       { "value": "10", "tag": "minimum", "label": "Minimum", "helpText": "The minimum of scrapes." },
-      { "value": "10", "tag": "maximum", "label": "Maximum", "helpText": "The maximum of scrapes." },
+      { "value": "500", "tag": "maximum", "label": "Maximum", "helpText": "The maximum of scrapes." },
       { "value": "10", "tag": "retries", "label": "Retries", "helpText": "The retries of scrapes." }
     ]
   }
