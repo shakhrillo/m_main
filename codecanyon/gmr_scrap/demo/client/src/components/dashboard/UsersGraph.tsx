@@ -17,7 +17,6 @@ export const UsersGraph = () => {
       map((snapshot) => {
         return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }));
       }),
-      take(1),
     ).subscribe((users) => {
       setUsers(formatTotalUsers(users));
     });

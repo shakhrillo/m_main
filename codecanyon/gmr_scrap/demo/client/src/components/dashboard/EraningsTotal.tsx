@@ -1,6 +1,6 @@
-import { formatNumber } from "../../utils/formatNumber"
 import { useEffect, useState } from "react"
 import { getStatistics } from "../../services/statistics";
+import { formatAmount } from "../../utils";
 
 export const EraningsTotal = () => {
   const [earnings, setEarnings] = useState(0);
@@ -22,7 +22,7 @@ export const EraningsTotal = () => {
       </div>
       <div className="dashboard-graph">
         <div className="display-6 mt-auto">
-          ${formatNumber(earnings)}
+          ${formatAmount(earnings)}
         </div>
       </div>
     </>

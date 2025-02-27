@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Row, Col, Stack } from "react-bootstrap";
+import { Row, Col, Stack } from "react-bootstrap";
 import { IconCircleFilled } from "@tabler/icons-react";
 import { formatNumber } from "../../utils/formatNumber";
 import { DoughnutChart } from "../DoughnutChart";
