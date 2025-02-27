@@ -1,4 +1,4 @@
-import { IconCircleCheck, IconCircleDashedCheck, IconMessageReply, IconPhoto, IconVideo } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleDashedCheck } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
 import { Badge, Col, FormLabel, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
@@ -34,6 +34,12 @@ export const ScrapExtractType = ({ container }: {
         extractVideoUrls: container.extractVideoUrls,
         extractOwnerResponse: container.extractOwnerResponse,
       });
+    } else {
+      setExtractOptions({
+        extractImageUrls: false,
+        extractVideoUrls: false,
+        extractOwnerResponse: false,
+      });
     }
   }, [container.extractImageUrls, container.extractVideoUrls, container.extractOwnerResponse]);
 
@@ -49,9 +55,9 @@ export const ScrapExtractType = ({ container }: {
   };
 
   const options = [
-    { key: "extractImageUrls", label: "Image URLs", icon: IconPhoto, points: 2 },
-    { key: "extractVideoUrls", label: "Video URLs", icon: IconVideo, points: 3 },
-    { key: "extractOwnerResponse", label: "Owner response", icon: IconMessageReply, points: 3 },
+    { key: "extractImageUrls", label: "Image URLs", points: 2 },
+    { key: "extractVideoUrls", label: "Video URLs", points: 3 },
+    { key: "extractOwnerResponse", label: "Owner response", points: 3 },
   ];
 
   return (
@@ -60,7 +66,7 @@ export const ScrapExtractType = ({ container }: {
         Extract type
       </h5>
       <Row className="g-3">
-        {options.map(({ key, label, icon, points }) => {
+        {options.map(({ key, label, points }) => {
           const isActive = extractOptions[key as keyof typeof extractOptions];
           return (
             <Col key={key} sm={4}>

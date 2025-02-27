@@ -1,5 +1,4 @@
-import { IconBell, IconCoins } from "@tabler/icons-react";
-import { User } from "firebase/auth";
+import { IconCoins } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";

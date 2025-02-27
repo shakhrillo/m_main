@@ -4,6 +4,8 @@ import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { useOutletContext } from "react-router-dom";
 import { IUserInfo } from "../../types/userInfo";
+import { settingValue } from "../../services/settingService";
+import { filter, take } from "rxjs";
 
 interface IScrapExtractOptions {
   container: IDockerContainer;
@@ -41,9 +43,12 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   const user = useOutletContext<IUserInfo>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [limit, setLimit] = useState<number>(0);
-  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(0);
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(user?.coinBalance || 0);
   const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">("Most relevant");
   const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
+
+  const [validateMin, setValidateMin] = useState<number>(0);
+  const [validateMax, setValidateMax] = useState<number>(0);
 
   useEffect(() => {
     if (typeof container.limit === "number" && typeof container.maxSpentPoints === "number") {
@@ -68,6 +73,34 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     setIsDisabled(!container.rating || user?.uid !== container?.uid);
   }, [container, user?.uid]);
 
+  useEffect(() => {
+    const subscription = settingValue({ tag: "minimum", type: "scrap"})
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => {
+        if(data?.value) {
+          setValidateMin(Number(data.value));
+        }
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
+
+  useEffect(() => {
+    const subscription = settingValue({ tag: "maximum", type: "scrap"})
+      .pipe(filter((data) => !!data), take(1))
+      .subscribe((data) => {
+        if(data?.value) {
+          setValidateMax(Number(data.value));
+        }
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
+
   const handleFormChange = (key: string, value: any) => {
     if (isDisabled || !container.id) return;
     updateDockerContainer(container.id, { [key]: value }).catch((error) => {
@@ -86,9 +119,22 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               disabled={isDisabled}
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
-              onBlur={(e) => handleFormChange("limit", Number(e.target.value))}
+              onBlur={(e) => {
+                let value = Number(e.target.value);
+                if(value < validateMin) {
+                  value = validateMin;
+                } else if(value > validateMax) {
+                  value = validateMax;
+                }
+                handleFormChange("limit", value);
+              }}
+              type="number"
+              min={validateMin}
+              max={validateMax}
             />
-            <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
+            <FormText>
+              Maximum number of reviews to extract. Minimum: {validateMin}, Maximum: {validateMax}.
+            </FormText>
           </OptionCard>
 
           <OptionCard label="Max spent points">
@@ -96,6 +142,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               placeholder="Max spent points"
               disabled={isDisabled}
               value={maxSpentPoints}
+              type="number"
               onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
               onBlur={(e) => handleFormChange("maxSpentPoints", Number(e.target.value))}
             />

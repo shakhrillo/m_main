@@ -97,7 +97,11 @@ export const User = () => {
     async (uid: string | undefined) => {
       if (!uid) return;
       await updateUser(uid, { isDeleted: true });
-      navigate("/users");
+      if (user?.isAdmin) {
+        navigate("/users");
+      } else {
+        navigate("/auth/logout");
+      }
     },
     [navigate]
   );
