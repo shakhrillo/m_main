@@ -1,7 +1,7 @@
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Breadcrumb, Col, Container, Row, Stack } from "react-bootstrap";
-import { filter, map, take } from "rxjs";
+import { filter, map } from "rxjs";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { ScrapExpectedPoints } from "../components/scrap/ScrapExpectedPoints";
 import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";

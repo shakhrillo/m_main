@@ -1,5 +1,4 @@
 import { IconAlertCircle, IconBrandGoogleMaps } from "@tabler/icons-react";
-import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { CardSubtitle, CardTitle, FormControl, FormGroup, FormText, Stack } from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
@@ -28,7 +27,7 @@ export const ScrapValidateURL = ({
     setIsDisabled(
       (container?.machine?.Action !== "die" && containerId !== undefined) || (!!containerId && user?.uid !== container?.uid)
     );
-  }, [container, containerId]);
+  }, [container, containerId, user?.uid]);
 
   useEffect(() => {
     setUrl(container.url || "");
