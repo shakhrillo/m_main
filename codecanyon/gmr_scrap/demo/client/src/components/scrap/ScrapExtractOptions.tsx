@@ -1,33 +1,28 @@
-import { IconArrowsSort, IconCoins, IconFence, IconFile } from "@tabler/icons-react";
-import { createElement, useEffect, useState } from "react";
-import { Card, CardBody, Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { useOutletContext } from "react-router-dom";
 import { IUserInfo } from "../../types/userInfo";
 
-interface IScrapExtractOptionsProps {
-  containerId: string | undefined;
+interface IScrapExtractOptions {
   container: IDockerContainer;
 }
 
 interface IOptionCardProps {
-  icon: any;
   label: string;
   children: React.ReactNode;
 }
 
 /**
  * Option card component.
- * @param icon Icon.
  * @param label Label.
  * @param children Children.
  * @returns Option card component.
  */
-const OptionCard = ({ icon, label, children }: IOptionCardProps) => (
+const OptionCard = ({ label, children }: IOptionCardProps) => (
   <Col sm={6}>
     <Stack direction="horizontal" className="gap-3 align-items-start">
-      {/* {createElement(icon, { className: "text-body-secondary", size: 30 })} */}
       <div className="w-100">
         <FormLabel>{label}</FormLabel>
         {children}
@@ -42,60 +37,77 @@ const OptionCard = ({ icon, label, children }: IOptionCardProps) => (
  * @param container Container.
  * @returns Scrap extract options component.
  */
-export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOptionsProps) => {
+export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   const user = useOutletContext<IUserInfo>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [limit, setLimit] = useState(container.limit || 10);
-  const [maxSpentPoints, setMaxSpentPoints] = useState(container.maxSpentPoints || 100);
-  const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">(
-    container.sortBy || "Most relevant"
-  );
-  const [outputAs, setOutputAs] = useState<"json" | "csv">(container.outputAs || "json");
+  const [limit, setLimit] = useState<number>(0);
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">("Most relevant");
+  const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
 
   useEffect(() => {
-    setIsDisabled(!container.rating || user?.uid !== container?.uid || !containerId);
-  }, [container]);
+    if (typeof container.limit === "number" && typeof container.maxSpentPoints === "number") {
+      setLimit(container.limit);
+      setMaxSpentPoints(container.maxSpentPoints);
+    }
+  }, [container?.limit, container?.maxSpentPoints]);
 
   useEffect(() => {
+    if (container.sortBy) {
+      setSortBy(container.sortBy);
+    }
+  }, [container?.sortBy]);
+
+  useEffect(() => {
+    if (container.outputAs) {
+      setOutputAs(container.outputAs);
+    }
+  }, [container?.outputAs]);
+
+  useEffect(() => {
+    setIsDisabled(!container.rating || user?.uid !== container?.uid);
+  }, [container, user?.uid]);
+
+  const handleFormChange = (key: string, value: any) => {
     if (isDisabled || !container.id) return;
-
-    updateDockerContainer(container.id, { limit, maxSpentPoints, sortBy, outputAs }).catch((error) =>
-      console.error("Error updating container:", error)
-    );
-  }, [isDisabled, container, containerId, limit, maxSpentPoints, sortBy, outputAs]);
+    updateDockerContainer(container.id, { [key]: value }).catch((error) => {
+      console.error("Error updating container:", error);
+    });
+  }
 
   return (
     <>
       <h5 className="mt-3 mb-0">Extract options</h5>
       <div className="scrap-extract-options">
         <Row className="g-3">
-          <OptionCard icon={IconFence} label="Review limit">
+          <OptionCard label="Review limit">
             <FormControl
               placeholder="Review limit"
+              disabled={isDisabled}
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
-              disabled={isDisabled}
+              onBlur={(e) => handleFormChange("limit", Number(e.target.value))}
             />
             <FormText>Limit the number of reviews to extract. Leave empty to extract all.</FormText>
           </OptionCard>
 
-          <OptionCard icon={IconCoins} label="Max spent points">
+          <OptionCard label="Max spent points">
             <FormControl
               placeholder="Max spent points"
+              disabled={isDisabled}
               value={maxSpentPoints}
               onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
-              disabled={isDisabled}
+              onBlur={(e) => handleFormChange("maxSpentPoints", Number(e.target.value))}
             />
             <FormText>Maximum points to spend on this scrap.</FormText>
           </OptionCard>
 
-          <OptionCard icon={IconArrowsSort} label="Sort by">
+          <OptionCard label="Sort by">
             <FormSelect
               value={sortBy}
-              onChange={(e) =>
-                setSortBy(e.target.value as "Most relevant" | "Newest" | "Highest rating" | "Lowest rating")
-              }
               disabled={isDisabled}
+              onChange={(e) => handleFormChange("sortBy", e.target.value)}
+              onBlur={(e) => handleFormChange("sortBy", e.target.value)}
             >
               {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
                 <option key={option} value={option}>
@@ -106,11 +118,12 @@ export const ScrapExtractOptions = ({ containerId, container }: IScrapExtractOpt
             <FormText>Sort reviews by most relevant, newest, highest rating, or lowest rating.</FormText>
           </OptionCard>
 
-          <OptionCard icon={IconFile} label="Output as">
+          <OptionCard label="Output as">
             <FormSelect
-              value={outputAs}
-              onChange={(e) => setOutputAs(e.target.value as "json" | "csv")}
               disabled={isDisabled}
+              value={outputAs}
+              onChange={(e) => handleFormChange("outputAs", e.target.value)}
+              onBlur={(e) => handleFormChange("outputAs", e.target.value)}
             >
               <option value="json">JSON</option>
               <option value="csv">CSV</option>

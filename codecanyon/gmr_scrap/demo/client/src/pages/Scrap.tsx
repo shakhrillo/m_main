@@ -30,12 +30,9 @@ export const Scrap = () => {
     const subscription = dockerContainers({ containerId: scrapId, uid: !user.isAdmin ? user.uid : undefined, })
       .pipe(
         filter(snapshot => !!snapshot),
-        map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IDockerContainer }))[0]),
-        filter(data => data !== undefined && data?.status === "completed" && data?.machine?.Action === "die"),
-        take(1)
+        map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IDockerContainer }))[0])
       )
       .subscribe(data => {
-        console.log(data);
         setContainer(data?.location ? data : ({} as IDockerContainer));
       });
 
@@ -58,8 +55,8 @@ export const Scrap = () => {
         <Col lg={8} xl={9}>
           <Stack direction="vertical" gap={3}>
             <ScrapValidateURL containerId={scrapId} container={container} />
-            <ScrapExtractType containerId={scrapId} container={container} />
-            <ScrapExtractOptions containerId={scrapId} container={container} />
+            <ScrapExtractType container={container} />
+            <ScrapExtractOptions container={container} />
           </Stack>
         </Col>
         <Col lg={4} xl={3}>

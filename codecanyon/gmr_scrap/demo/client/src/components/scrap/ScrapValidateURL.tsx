@@ -32,7 +32,7 @@ export const ScrapValidateURL = ({
 
   useEffect(() => {
     setUrl(container.url || "");
-  }, [container]);
+  }, [container?.url]);
 
   /**
    * Handles form submission for URL validation.

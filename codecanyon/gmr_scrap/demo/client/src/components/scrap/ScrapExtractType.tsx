@@ -12,39 +12,40 @@ import { IUserInfo } from "../../types/userInfo";
  * @param container Container.
  * @returns Scrap extract type component.
  */
-export const ScrapExtractType = ({ containerId, container }: {
-  containerId: string | undefined;
+export const ScrapExtractType = ({ container }: {
   container: IDockerContainer;
 }) => {
   const user = useOutletContext<IUserInfo>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [extractOptions, setExtractOptions] = useState({
-    extractImageUrls: container.extractImageUrls || false,
-    extractVideoUrls: container.extractVideoUrls || false,
-    extractOwnerResponse: container.extractOwnerResponse || false,
+    extractImageUrls: false,
+    extractVideoUrls: false,
+    extractOwnerResponse: false
   });
 
   useEffect(() => {
-    setExtractOptions({
-      extractImageUrls: container.extractImageUrls || false,
-      extractVideoUrls: container.extractVideoUrls || false,
-      extractOwnerResponse: container.extractOwnerResponse || false,
-    });
-
-    setIsDisabled(!container.rating || user?.uid !== container?.uid);
-  }, [container]);
+    if (
+      typeof container.extractImageUrls === "boolean" && 
+      typeof container.extractVideoUrls === "boolean" && 
+      typeof container.extractOwnerResponse === "boolean"
+    ) {
+      setExtractOptions({
+        extractImageUrls: container.extractImageUrls,
+        extractVideoUrls: container.extractVideoUrls,
+        extractOwnerResponse: container.extractOwnerResponse,
+      });
+    }
+  }, [container.extractImageUrls, container.extractVideoUrls, container.extractOwnerResponse]);
 
   useEffect(() => {
-    if (isDisabled || !container.id || !containerId) return;
-    updateDockerContainer(container.id, extractOptions).catch((error) => {
-      console.error("Error updating container:", error);
-    });
-  }, [container, extractOptions]);
+    setIsDisabled(!container.rating || user?.uid !== container?.uid);
+  }, [container, user?.uid]);
 
   const toggleOption = (key: keyof typeof extractOptions) => {
-    if (container.rating) {
-      setExtractOptions((prev) => ({ ...prev, [key]: !prev[key] }));
-    }
+    if (isDisabled || !container.id ) return
+    updateDockerContainer(container.id, { [key]: !extractOptions[key] }).catch((error) => {
+      console.error("Error updating container:", error);
+    });
   };
 
   const options = [
