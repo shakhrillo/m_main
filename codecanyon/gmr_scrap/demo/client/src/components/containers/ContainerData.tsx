@@ -1,4 +1,4 @@
-import { Stack, Badge } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { formatTimestamp, formatNumber } from "../../utils";
@@ -26,7 +26,7 @@ export const ContainerData = ({ container, path }: IContainerData) => {
           {formatTimestamp(container.createdAt)}
         </div>
       </Stack>
-      <NavLink className={"h6"} to={`/${path}/${container.machineId}`}>
+      <NavLink to={`/${path}/${container.machineId}`}>
         {
           path === "containers" ? (
             <>

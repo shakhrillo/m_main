@@ -1,32 +1,11 @@
-import {
-  IconBrandUbuntu,
-  IconClock,
-  IconDeviceSdCard,
-  IconHierarchy,
-  IconTag,
-  IconTriangle,
-} from "@tabler/icons-react";
-import { JSX, useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Card,
-  CardBody,
-  CardTitle,
-  Col,
-  Container,
-  Row,
-} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { map } from "rxjs";
-import {
-  dockerContainerHistory,
-  dockerContainers,
-} from "../services/dockerService";
+import { dockerContainerHistory } from "../services/dockerService";
 import { formatDate } from "../utils/formatDate";
 import { formatSize } from "../utils/formatSize";
-import { formatStringDate } from "../utils/formatStringDate";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { DockerImageInfo } from "../components/docker/DockerImageInfo";
 
@@ -34,7 +13,6 @@ export const DockerImage = () => {
   const { imgId } = useParams() as { imgId: string };
   const navigate = useNavigate();
   const [imageLayers, setImageLayers] = useState([] as any);
-  const [imageDetails, setImageDetails] = useState({} as any);
 
   useEffect(() => {
     if (!imgId) return;
@@ -62,27 +40,29 @@ export const DockerImage = () => {
           {imgId}
         </Breadcrumb.Item>
       </Breadcrumb>
+      
       <Row className="g-3">
         <Col md={9}>
-          <h5>Image Layers ({imageLayers.length})</h5>
-          <SyntaxHighlighter language="docker" style={a11yLight}>
-            {imageLayers
-              .map((layer: any) => {
-                return `${
-                  typeof layer?.CreatedBy === "string"
-                    ? layer.CreatedBy.replace(/\s+/g, " ")
-                        .split("&&")
-                        .join(" &&\n ")
-                    : ""
-                }
+          <div className="docker-image-history">
+            <SyntaxHighlighter language="docker" style={a11yLight}>
+              {imageLayers
+                .map((layer: any) => {
+                  return `${
+                    typeof layer?.CreatedBy === "string"
+                      ? layer.CreatedBy.replace(/\s+/g, " ")
+                          .split("&&")
+                          .join(" &&\n ")
+                      : ""
+                  }
 # Created At: ${formatDate(layer.Created)}
 # Size: ${formatSize(layer.Size)}
 # Comment: ${layer.Comment || "N/A"}
 # Tags: ${layer.Tags ? layer.Tags.join(", ") : "N/A"}
 # Updated At: ${formatTimestamp(layer.updatedAt)}`;
-              })
-              .join("\n\n")}{" "}
-          </SyntaxHighlighter>
+                })
+                .join("\n\n")}{" "}
+            </SyntaxHighlighter>
+          </div>
         </Col>
         <Col md={3}>
           <DockerImageInfo imageId={imgId} />

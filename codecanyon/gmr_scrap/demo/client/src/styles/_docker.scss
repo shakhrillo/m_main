@@ -1,3 +1,6 @@
+.docker-graph,
+.docker-image-history,
+.docker-image-info,
 .docker-image-data {
   display: flex;
   position: relative;
@@ -19,14 +22,16 @@
 }
 
 .docker-graph {
-  padding: $spacer;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
   min-height: 220px;
-  overflow: hidden;
-  position: relative;
+}
+
+.docker-image-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 12px;
+  border-radius: 0 0 0 $card-border-radius;
 }

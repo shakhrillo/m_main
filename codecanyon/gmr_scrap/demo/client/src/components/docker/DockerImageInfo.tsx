@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import { dockerImage } from "../../services/dockerService";
 import { IconTag, IconClock, IconDeviceSdCard, IconBrandUbuntu, IconHierarchy, IconTriangle } from "@tabler/icons-react";
-import { Row, Col, Card, CardBody } from "react-bootstrap";
+import { Row, Col, Stack } from "react-bootstrap";
 import { formatStringDate, formatTimestamp, formatSize } from "../../utils";
 
 interface IDockerImageInfo {
@@ -19,13 +19,13 @@ const DockerImageInfoRow = ({
   label,
   value,
 }: DockerImageInfoRowProps) => (
-  <div className="d-flex align-items-center">
+  <Stack direction="horizontal" gap={3} className="align-items-start">
     {icon}
-    <div className="ms-3">
-      <div className="text-break fw-bold">{label}</div>
+    <div>
+      <strong>{label}</strong>
       <div className="text-break">{value}</div>
     </div>
-  </div>
+  </Stack>
 );
 
 export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
@@ -42,68 +42,62 @@ export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
   }, []);
 
   return (
-    <>
-      <h5>Image Info</h5>
-
-      <Card>
-        <CardBody>
-          <Row className="g-3 row-cols-1">
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconTag />}
-                label="Tags"
-                value={
-                  imageDetails?.RepoTags
-                    ? imageDetails?.RepoTags.join(", ")
-                    : "N/A"
-                }
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconClock />}
-                label="Created"
-                value={formatStringDate(imageDetails?.Created)}
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconClock />}
-                label="Updated"
-                value={formatTimestamp(imageDetails?.updatedAt)}
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconDeviceSdCard />}
-                label="Size"
-                value={formatSize(imageDetails?.Size || 0)}
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconBrandUbuntu />}
-                label="OS"
-                value={imageDetails?.Os || "N/A"}
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconHierarchy />}
-                label="Architecture"
-                value={imageDetails?.Architecture || "N/A"}
-              />
-            </Col>
-            <Col>
-              <DockerImageInfoRow
-                icon={<IconTriangle />}
-                label="Variant"
-                value={imageDetails?.Variant || "N/A"}
-              />
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-    </>
+    <div className="docker-image-info">
+      <Row className="g-3 row-cols-1">
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconTag />}
+            label="Tags"
+            value={
+              imageDetails?.RepoTags
+                ? imageDetails?.RepoTags.join(", ")
+                : "N/A"
+            }
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconClock />}
+            label="Created"
+            value={formatStringDate(imageDetails?.Created)}
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconClock />}
+            label="Updated"
+            value={formatTimestamp(imageDetails?.updatedAt)}
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconDeviceSdCard />}
+            label="Size"
+            value={formatSize(imageDetails?.Size || 0)}
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconBrandUbuntu />}
+            label="OS"
+            value={imageDetails?.Os || "N/A"}
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconHierarchy />}
+            label="Architecture"
+            value={imageDetails?.Architecture || "N/A"}
+          />
+        </Col>
+        <Col>
+          <DockerImageInfoRow
+            icon={<IconTriangle />}
+            label="Variant"
+            value={imageDetails?.Variant || "N/A"}
+          />
+        </Col>
+      </Row>
+    </div>
   )
 };

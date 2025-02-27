@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { dockerContainerLogs } from "../../services/dockerService";
-import { IconArrowRight, IconChevronRight } from "@tabler/icons-react";
+import { IconChevronRight } from "@tabler/icons-react";
 
 interface IContainerLogs {
   containerId: string | undefined;

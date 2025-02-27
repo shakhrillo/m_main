@@ -26,8 +26,10 @@ const DockerImageItem = ({ image }: { image: IDockerImage }) => (
       <div>{formatSize(image?.Size ?? 0)}</div>
       <div>{image?.Architecture}</div>
       <div>{image?.Type}</div>
-      <div>{formatStringDate(image?.Created ?? "")}</div>
     </Stack>
+    <div className="docker-image-time">
+      {formatStringDate(image?.Created ?? "")}
+    </div>
   </div>
 );
 
@@ -67,7 +69,7 @@ export const DockerImagesList = () => {
   useEffect(() => {
     fetchImages();
 
-    return () => subscriptionRef.current?.unsubscribe(); // Cleanup on unmount
+    return () => subscriptionRef.current?.unsubscribe();
   }, []);
 
   return (
