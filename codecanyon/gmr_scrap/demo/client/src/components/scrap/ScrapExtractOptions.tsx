@@ -79,6 +79,10 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
       .subscribe((data) => {
         if(data?.value) {
           setValidateMin(Number(data.value));
+
+          if (limit < Number(data.value)) {
+            setLimit(Number(data.value));
+          }
         }
       });
 
@@ -93,6 +97,10 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
       .subscribe((data) => {
         if(data?.value) {
           setValidateMax(Number(data.value));
+
+          if (maxSpentPoints > Number(data.value)) {
+            setMaxSpentPoints(Number(data.value));
+          }
         }
       });
 
@@ -121,11 +129,13 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               onChange={(e) => setLimit(Number(e.target.value))}
               onBlur={(e) => {
                 let value = Number(e.target.value);
+                console.log(value, validateMin, validateMax);
                 if(value < validateMin) {
                   value = validateMin;
                 } else if(value > validateMax) {
                   value = validateMax;
                 }
+                setLimit(value);
                 handleFormChange("limit", value);
               }}
               type="number"
@@ -156,7 +166,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               }}
             />
             <FormText>
-              Maximum points to spend on this scrap. By default, it will spend all {user?.coinBalance} points.
+              Maximum points to spend on this scrap. Max points you can spend: {maxSpentPoints < user?.coinBalance ? maxSpentPoints : user?.coinBalance}.
             </FormText>
           </OptionCard>
 

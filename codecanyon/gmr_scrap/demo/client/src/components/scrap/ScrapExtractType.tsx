@@ -24,23 +24,11 @@ export const ScrapExtractType = ({ container }: {
   });
 
   useEffect(() => {
-    if (
-      typeof container.extractImageUrls === "boolean" && 
-      typeof container.extractVideoUrls === "boolean" && 
-      typeof container.extractOwnerResponse === "boolean"
-    ) {
-      setExtractOptions({
-        extractImageUrls: container.extractImageUrls,
-        extractVideoUrls: container.extractVideoUrls,
-        extractOwnerResponse: container.extractOwnerResponse,
-      });
-    } else {
-      setExtractOptions({
-        extractImageUrls: false,
-        extractVideoUrls: false,
-        extractOwnerResponse: false,
-      });
-    }
+    setExtractOptions({
+      extractImageUrls: container.extractImageUrls || false,
+      extractVideoUrls: container.extractVideoUrls || false,
+      extractOwnerResponse: container.extractOwnerResponse || false
+    });
   }, [container.extractImageUrls, container.extractVideoUrls, container.extractOwnerResponse]);
 
   useEffect(() => {

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Form, FormCheck } from "react-bootstrap";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
+import { IUserInfo } from "../../types/userInfo";
 
 interface IScrapExpectedPoints {
   container: IDockerContainer;
@@ -15,6 +16,7 @@ interface IScrapExpectedPoints {
  */
 export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
   const navigate = useNavigate();
+  const user = useOutletContext<IUserInfo>();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
             </>
           }
         ></FormCheck>
-        <Button variant="primary" className="w-100 mt-3" type="submit" disabled={!isTermsChecked || !container?.rating}>
+        <Button variant="primary" className="w-100 mt-3" type="submit" disabled={!isTermsChecked || !container?.rating || user?.coinBalance <= 0}>
           Scrap
         </Button>
       </Form>

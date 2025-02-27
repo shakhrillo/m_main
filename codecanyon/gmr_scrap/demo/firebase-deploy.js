@@ -66,7 +66,7 @@ async function createAdminUser() {
       email: user.email,
       photoURL: user.photoURL || '',
       phone: user.phoneNumber || '',
-      coinBalance: 150,
+      coinBalance: 9007199254740991, // Max value of a 64-bit signed integer
       notifications: 0,
       createdAt: Timestamp.now(),
       totalSpent: 0,
