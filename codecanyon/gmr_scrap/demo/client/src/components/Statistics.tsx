@@ -1,4 +1,5 @@
-import React, { ElementType } from "react";
+import type { ElementType } from "react";
+import React from "react";
 import { Card, CardBody, CardText, CardTitle, Stack } from "react-bootstrap";
 import { formatNumber } from "../utils/formatNumber";
 

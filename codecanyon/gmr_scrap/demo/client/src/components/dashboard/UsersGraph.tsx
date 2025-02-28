@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { usersList } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
 import { filter, map, take } from "rxjs";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 /**
  * Users component

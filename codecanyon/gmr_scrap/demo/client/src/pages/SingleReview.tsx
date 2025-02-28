@@ -14,11 +14,11 @@ import { CommentsList } from "../components/comments/CommentsList";
 import { ImagesList } from "../components/images/ImagesList";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { VideosList } from "../components/videos/VideosList";
-import { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerContainer } from "../types/dockerContainer";
 import { useEffect, useState } from "react";
 import { filter, map } from "rxjs";
 import { dockerContainers } from "../services/dockerService";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 
 export const SingleReview = () => {
   const user = useOutletContext<IUserInfo>();

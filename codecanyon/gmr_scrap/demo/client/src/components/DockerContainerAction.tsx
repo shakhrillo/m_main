@@ -1,4 +1,4 @@
-import { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerContainer } from "../types/dockerContainer";
 
 /**
  * DockerContainerAction component

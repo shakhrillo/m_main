@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
 import { getAuth } from "firebase/auth";
-import { debounceTime, filter, map, Subject, Subscription, take } from "rxjs";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { Subscription} from "rxjs";
+import { debounceTime, filter, map, Subject, take } from "rxjs";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Stack, Button, Dropdown, Form, InputGroup } from "react-bootstrap";
 import { ReceiptData } from "./ReceiptData";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";
 
 const FILTER_OPTIONS = [

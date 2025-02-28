@@ -16,8 +16,8 @@ import { ScrapExtractOptions } from "../components/scrap/ScrapExtractOptions";
 import { ScrapValidateURL } from "../components/scrap/ScrapValidateURL";
 import { ScrapExtractType } from "../components/scrap/ScrapExtractType";
 import { dockerContainers } from "../services/dockerService";
-import { IDockerContainer } from "../types/dockerContainer";
-import { IUserInfo } from "../types/userInfo";
+import type { IDockerContainer } from "../types/dockerContainer";
+import type { IUserInfo } from "../types/userInfo";
 
 /**
  * Scrap page.

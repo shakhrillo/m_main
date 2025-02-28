@@ -1,6 +1,6 @@
 import { Stack } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { formatTimestamp, formatNumber } from "../../utils";
 import { Ratings } from "../Ratings";
 import { StatusInfo } from "../StatusInfo";

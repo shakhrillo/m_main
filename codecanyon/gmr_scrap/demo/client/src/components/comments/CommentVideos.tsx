@@ -3,7 +3,7 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
 import Scrollbar from "react-scrollbars-custom";
 import { IconPlayerPlay } from "@tabler/icons-react";
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 
 interface ICommentVideos {
   comment?: IComment;

@@ -1,8 +1,9 @@
 import { getAuth } from "firebase/auth";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { filter, map, take, Subscription } from "rxjs";
+import type { Subscription } from "rxjs";
+import { filter, map, take } from "rxjs";
 import { usersList } from "../../services/settingService";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 import { UserData } from "./UserData";
 import { IconReload } from "@tabler/icons-react";
 import { Stack, Button } from "react-bootstrap";

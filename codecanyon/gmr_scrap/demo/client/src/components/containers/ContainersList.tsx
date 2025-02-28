@@ -3,10 +3,11 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { dockerContainers } from "../../services/dockerService";
-import { IDockerContainer } from "../../types/dockerContainer";
-import { debounceTime, filter, map, Subject, Subscription } from "rxjs";
+import type { IDockerContainer } from "../../types/dockerContainer";
+import type { Subscription } from "rxjs";
+import { debounceTime, filter, map, Subject } from "rxjs";
 import { ContainerData } from "./ContainerData";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },

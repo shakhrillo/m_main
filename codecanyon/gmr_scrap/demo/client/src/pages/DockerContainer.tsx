@@ -8,13 +8,13 @@ import {
   dockerContainers,
   dockerContainerStats,
 } from "../services/dockerService";
-import { IDockerStats } from "../types/dockerStats";
+import type { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { filter, map } from "rxjs";
-import { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerContainer } from "../types/dockerContainer";
 import { ContainerLogs } from "../components/containers/ContainerLogs";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 
 const cpuChartColor = "#c8dceb";
 const memoryChartColor = "#fffc7f";

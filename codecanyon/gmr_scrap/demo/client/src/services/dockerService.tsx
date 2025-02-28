@@ -1,14 +1,15 @@
+import type {
+  DocumentData,
+  QuerySnapshot} from "firebase/firestore";
 import {
   addDoc,
   collection,
   doc,
-  DocumentData,
   limit,
   onSnapshot,
   orderBy,
   query,
   QueryDocumentSnapshot,
-  QuerySnapshot,
   setDoc,
   startAfter,
   updateDoc,
@@ -17,9 +18,9 @@ import {
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 import { IDockerConfig } from "../types/dockerConfig";
-import { IDockerContainer } from "../types/dockerContainer";
-import { IDockerQuery } from "../types/dockerQuery";
-import { IDockerStats } from "../types/dockerStats";
+import type { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerQuery } from "../types/dockerQuery";
+import type { IDockerStats } from "../types/dockerStats";
 
 /**
  * Create a new docker container

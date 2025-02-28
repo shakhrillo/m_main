@@ -1,7 +1,7 @@
-import { JSX } from "react";
+import type { JSX } from "react";
 import { Stack, Badge } from "react-bootstrap";
 import { IconPrompt } from "@tabler/icons-react";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 interface IContainerInfo {
   container: IDockerContainer;

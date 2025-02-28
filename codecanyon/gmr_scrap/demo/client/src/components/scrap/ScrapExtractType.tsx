@@ -2,9 +2,9 @@ import { IconCircleCheck, IconCircleDashedCheck } from "@tabler/icons-react";
 import { createElement, useEffect, useState } from "react";
 import { Badge, Col, FormLabel, Row, Stack } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { useOutletContext } from "react-router-dom";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 /**
  * Scrap extract type component.

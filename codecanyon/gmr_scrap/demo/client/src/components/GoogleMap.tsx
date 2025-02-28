@@ -1,8 +1,9 @@
-import { Map, MapCameraChangedEvent, useMap } from "@vis.gl/react-google-maps";
-import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
+import type { MapCameraChangedEvent} from "@vis.gl/react-google-maps";
+import { Map, useMap } from "@vis.gl/react-google-maps";
+import type { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 import { useEffect, useState } from "react";
 import { ClusteredMarkers } from "./map/ClusteredMarkers";
-import { BehaviorSubject } from "rxjs";
+import type { BehaviorSubject } from "rxjs";
 
 const GOOGLE_MAPS_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 

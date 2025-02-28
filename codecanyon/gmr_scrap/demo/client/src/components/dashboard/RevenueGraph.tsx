@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
 import { formatTotalEarnings } from "../../utils/formatTotalEarnings";
 import { filter, map } from "rxjs";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 /**
  * Revenue component for the current month

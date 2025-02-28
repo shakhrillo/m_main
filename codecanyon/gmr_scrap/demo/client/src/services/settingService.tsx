@@ -1,3 +1,6 @@
+import type {
+  DocumentData,
+  QuerySnapshot} from "firebase/firestore";
 import {
   collection,
   doc,
@@ -9,8 +12,6 @@ import {
   startAt,
   endAt,
   getDocs,
-  DocumentData,
-  QuerySnapshot,
   limit,
   startAfter,
 } from "firebase/firestore";

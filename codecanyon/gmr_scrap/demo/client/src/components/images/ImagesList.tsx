@@ -4,9 +4,9 @@ import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
-import { ICommentImage } from "../../types/comment";
+import type { ICommentImage } from "../../types/comment";
 import { useOutletContext } from "react-router-dom";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 interface IImagesListProps {
   reviewId: string;

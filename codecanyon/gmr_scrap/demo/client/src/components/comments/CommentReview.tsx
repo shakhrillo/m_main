@@ -1,4 +1,4 @@
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 
 interface ICommentReview {
   comment?: IComment;

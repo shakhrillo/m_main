@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Form, FormCheck } from "react-bootstrap";
 import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
-import { IDockerContainer } from "../../types/dockerContainer";
-import { IUserInfo } from "../../types/userInfo";
+import type { IDockerContainer } from "../../types/dockerContainer";
+import type { IUserInfo } from "../../types/userInfo";
 import { settingValue } from "../../services/settingService";
 import { filter, take } from "rxjs";
 

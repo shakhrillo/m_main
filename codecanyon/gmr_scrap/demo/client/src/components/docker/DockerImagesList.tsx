@@ -5,7 +5,7 @@ import { IconReload } from "@tabler/icons-react";
 import { Stack, Button, Row, Col } from "react-bootstrap";
 import { formatSize, formatStringDate } from "../../utils";
 import { NavLink } from "react-router-dom";
-import { QueryDocumentSnapshot } from "firebase/firestore";
+import type { QueryDocumentSnapshot } from "firebase/firestore";
 
 interface IDockerImage {
   id: string;

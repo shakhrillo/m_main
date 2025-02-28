@@ -1,5 +1,6 @@
+import type {
+  Icon} from "@tabler/icons-react";
 import {
-  Icon,
   IconCamera,
   IconCoins,
   IconMessage,
@@ -7,9 +8,10 @@ import {
   IconStopwatch,
   IconVideo,
 } from "@tabler/icons-react";
-import { createElement, JSX } from "react";
+import type { JSX } from "react";
+import { createElement } from "react";
 import { Badge, Col, Row } from "react-bootstrap";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { spentTime } from "../../utils/spentTime";
 
 type PlaceInfoDetailsRowProps = {

@@ -22,7 +22,7 @@ import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 
 /**
  * View for purchasing coins.

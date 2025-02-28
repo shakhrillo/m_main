@@ -1,8 +1,9 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
-import Supercluster, { ClusterProperties } from "supercluster";
+import type { ClusterProperties } from "supercluster";
+import Supercluster from "supercluster";
 import { FeatureMarker } from "./FeatureMarker";
 import { ClusterMarker } from "./ClusterMarker";
-import { FeatureCollection, Point } from "geojson";
+import type { FeatureCollection, Point } from "geojson";
 import { useMap } from "@vis.gl/react-google-maps";
 
 /**

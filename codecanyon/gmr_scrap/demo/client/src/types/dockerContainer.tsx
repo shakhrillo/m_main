@@ -1,5 +1,5 @@
-import { GeoPoint, Timestamp } from "firebase/firestore";
-import { IDockerMachine } from "./dockerMachine";
+import type { GeoPoint, Timestamp } from "firebase/firestore";
+import type { IDockerMachine } from "./dockerMachine";
 
 interface IPrice {
   review?: number;

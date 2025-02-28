@@ -10,9 +10,9 @@ import {
 } from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { ScrapValidateButton } from "./ScrapValidateButton";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 /**
  * Component for validating Google Maps URL.

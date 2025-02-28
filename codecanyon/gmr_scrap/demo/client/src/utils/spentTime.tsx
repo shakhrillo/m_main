@@ -1,5 +1,5 @@
 import { differenceInSeconds } from "date-fns";
-import { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerContainer } from "../types/dockerContainer";
 
 export const spentTime = (container: IDockerContainer) => {
   if (!container.createdAt || !container.updatedAt) return "00:00:00";

@@ -1,7 +1,7 @@
 import { IconCircleCheck } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button, Stack, Spinner, Badge } from "react-bootstrap";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { settingValue } from "../../services/settingService";
 import { filter, take } from "rxjs";
 

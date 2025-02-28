@@ -1,19 +1,20 @@
+import type {
+  DocumentData,
+  QuerySnapshot} from "firebase/firestore";
 import {
   addDoc,
   collection,
   doc,
-  DocumentData,
   limit,
   onSnapshot,
   orderBy,
   query,
-  QuerySnapshot,
   startAfter,
   where,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
-import { IPaymentsQuery } from "../types/paymentsQuery";
+import type { IPaymentsQuery } from "../types/paymentsQuery";
 
 interface IBuyCoins {
   amount: number;

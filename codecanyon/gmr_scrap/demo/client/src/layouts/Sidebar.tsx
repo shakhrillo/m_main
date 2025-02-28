@@ -20,7 +20,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { Scrollbar } from "react-scrollbars-custom";
 import { Button } from "react-bootstrap";
 import { Logo } from "../components/Logo";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 
 const menuSections = [
   {

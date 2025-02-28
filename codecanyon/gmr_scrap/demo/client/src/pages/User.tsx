@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, useRef, JSX } from "react";
+import type { JSX } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { filter, map } from "rxjs";
 import {
   Alert,
@@ -14,7 +15,7 @@ import {
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 

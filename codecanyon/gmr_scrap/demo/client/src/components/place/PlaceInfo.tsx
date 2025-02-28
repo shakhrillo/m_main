@@ -1,6 +1,6 @@
 import { IconBox, IconInfoCircle, IconSettings } from "@tabler/icons-react";
 import { Accordion } from "react-bootstrap";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { locationsToGeoJSON } from "../../utils/locationsToGeoJSON";
 import { GoogleMap } from "../GoogleMap";
 import { Ratings } from "../Ratings";

@@ -1,17 +1,18 @@
+import type {
+  DocumentData,
+  QuerySnapshot} from "firebase/firestore";
 import {
   collection,
   doc,
-  DocumentData,
   onSnapshot,
   query,
-  QuerySnapshot,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
-import { User } from "firebase/auth";
-import { IUserInfo } from "../types/userInfo";
+import type { User } from "firebase/auth";
+import type { IUserInfo } from "../types/userInfo";
 
 /**
  * Get the authenticated user.

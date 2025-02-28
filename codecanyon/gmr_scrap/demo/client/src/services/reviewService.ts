@@ -1,3 +1,6 @@
+import type {
+  QuerySnapshot,
+  DocumentData} from "firebase/firestore";
 import {
   collection,
   onSnapshot,
@@ -5,9 +8,7 @@ import {
   orderBy,
   where,
   limit,
-  startAfter,
-  QuerySnapshot,
-  DocumentData,
+  startAfter
 } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";

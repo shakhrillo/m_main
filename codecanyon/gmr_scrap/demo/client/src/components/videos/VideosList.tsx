@@ -6,7 +6,7 @@ import { filter } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import ReactPlayer from "react-player";
 import { useOutletContext } from "react-router-dom";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 
 interface IVideosListProps {
   reviewId: string;

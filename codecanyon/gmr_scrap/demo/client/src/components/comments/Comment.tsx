@@ -13,7 +13,7 @@ import { CommentQA } from "./CommentQA";
 import { CommentResponse } from "./CommentResponse";
 import { CommentReview } from "./CommentReview";
 import { CommentVideos } from "./CommentVideos";
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 import { maskName } from "../../utils/maskName";
 
 export const Comment = ({ comment }: { comment: IComment }) => {

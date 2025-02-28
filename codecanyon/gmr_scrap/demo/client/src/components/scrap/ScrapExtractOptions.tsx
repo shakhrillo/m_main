@@ -9,9 +9,9 @@ import {
   Stack,
 } from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { useOutletContext } from "react-router-dom";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 import { settingValue } from "../../services/settingService";
 import { filter, take } from "rxjs";
 

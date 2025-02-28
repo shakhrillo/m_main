@@ -18,7 +18,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import { formatSize } from "../utils/formatSize";
-import { IDockerConfig } from "../types/dockerConfig";
+import type { IDockerConfig } from "../types/dockerConfig";
 
 export const DockerDetails = ({ info }: { info: IDockerConfig }) => {
   return (

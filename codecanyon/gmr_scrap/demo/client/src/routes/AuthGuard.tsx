@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { authenticatedUser, userData } from "../services/userService";
 import { from, filter, map, switchMap, catchError, of } from "rxjs";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 import { Container, Spinner } from "react-bootstrap";
 
 export const AuthGuard = () => {

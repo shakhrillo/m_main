@@ -1,4 +1,4 @@
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 import { Ratings } from "../Ratings";
 
 interface ICommentQA {

@@ -73,7 +73,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-css-order": "^2.1.2",
     "sass": "^1.83.0",
-    "typescript": "^5.7.2",
+    "typescript": "^5.1.6",
     "vite": "^6.1.0",
     "vitest": "^3.0.5"
   },

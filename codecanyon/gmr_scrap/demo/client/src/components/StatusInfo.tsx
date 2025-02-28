@@ -1,6 +1,6 @@
 import { IconCheck } from "@tabler/icons-react";
 import { Spinner, Stack } from "react-bootstrap";
-import { IDockerContainer } from "../types/dockerContainer";
+import type { IDockerContainer } from "../types/dockerContainer";
 
 export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
   if (!container || !container.status) return null;

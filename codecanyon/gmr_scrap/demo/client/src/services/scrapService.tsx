@@ -1,17 +1,18 @@
+import type {
+  GeoPoint,
+  Timestamp} from "firebase/firestore";
 import {
   addDoc,
   collection,
   doc,
-  GeoPoint,
   onSnapshot,
   orderBy,
   query,
-  Timestamp,
   where,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
-import { IComment } from "../types/comment";
+import type { IComment } from "../types/comment";
 
 export interface IReview {
   id?: string;

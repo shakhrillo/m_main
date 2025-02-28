@@ -1,6 +1,6 @@
 import { Outlet, useOutletContext } from "react-router-dom";
 import { AppNavbar, Sidebar } from "./";
-import { IUserInfo } from "../types/userInfo";
+import type { IUserInfo } from "../types/userInfo";
 
 export const DashboardLayout = () => {
   const user = useOutletContext<IUserInfo>();

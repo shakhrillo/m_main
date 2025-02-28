@@ -1,5 +1,5 @@
-import { GeoPoint } from "firebase/firestore";
-import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
+import type { GeoPoint } from "firebase/firestore";
+import type { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 
 /**
  * Convert an array of Firestore GeoPoint locations to a GeoJSON FeatureCollection

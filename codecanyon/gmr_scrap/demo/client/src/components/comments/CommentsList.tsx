@@ -4,9 +4,9 @@ import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { debounceTime, filter, Subject, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { Comment } from "./Comment";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 
 interface ICommentsList {
   reviewId: string;

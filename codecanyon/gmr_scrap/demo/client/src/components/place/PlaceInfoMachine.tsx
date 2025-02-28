@@ -1,9 +1,11 @@
-import { Icon, IconCheck, IconFrame, IconStopwatch } from "@tabler/icons-react";
-import { createElement, JSX } from "react";
+import type { Icon} from "@tabler/icons-react";
+import { IconCheck, IconFrame, IconStopwatch } from "@tabler/icons-react";
+import type { JSX } from "react";
+import { createElement } from "react";
 import { Badge, Col, Row } from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
-import { IDockerContainer } from "../../types/dockerContainer";
-import { IUserInfo } from "../../types/userInfo";
+import type { IDockerContainer } from "../../types/dockerContainer";
+import type { IUserInfo } from "../../types/userInfo";
 
 type MachineInfoRowProps = {
   icon: Icon;

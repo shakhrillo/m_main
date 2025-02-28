@@ -1,7 +1,7 @@
 import { IconPhoto } from "@tabler/icons-react";
 import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import { IComment } from "../../types/comment";
+import type { IComment } from "../../types/comment";
 
 interface ICommentImages {
   comment?: IComment;

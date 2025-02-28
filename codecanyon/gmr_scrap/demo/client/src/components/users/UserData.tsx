@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { IUserInfo } from "../../types/userInfo";
+import type { IUserInfo } from "../../types/userInfo";
 import { Stack, Image } from "react-bootstrap";
 import { formatNumber, formatTimestamp } from "../../utils";
 

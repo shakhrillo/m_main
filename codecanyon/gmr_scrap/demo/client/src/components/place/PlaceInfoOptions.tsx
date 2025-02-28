@@ -1,5 +1,6 @@
+import type {
+  Icon} from "@tabler/icons-react";
 import {
-  Icon,
   IconArrowsSort,
   IconCoins,
   IconFence,
@@ -10,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { createElement } from "react";
 import { Col, Row } from "react-bootstrap";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 type PlaceInfoRowProps = {
   icon: Icon;

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { googleLogin, login } from "../services/authService";
 import { IconBrandGoogleFilled } from "@tabler/icons-react";
@@ -10,7 +11,7 @@ import {
   FormGroup,
   Stack,
 } from "react-bootstrap";
-import { UserCredential } from "firebase/auth";
+import type { UserCredential } from "firebase/auth";
 
 export const Login = () => {
   const navigate = useNavigate();
