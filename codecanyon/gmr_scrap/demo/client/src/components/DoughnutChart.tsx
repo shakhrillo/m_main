@@ -60,7 +60,7 @@ export const DoughnutChart = ({
             {
               data,
               borderWidth: 0,
-              backgroundColor: ["#3e2c41", "#a4c694", "#a1d6e2", "#f6e27f"],
+              backgroundColor: ["#ecd9dd", "#c9f29b"],
               borderRadius: 20,
               borderAlign: "center",
               spacing: 10,
@@ -69,7 +69,7 @@ export const DoughnutChart = ({
           ],
         }}
         options={{
-          cutout: "70%", // Customize the cutout for the doughnut
+          cutout: "80%",
           layout: {
             padding: 10,
           },

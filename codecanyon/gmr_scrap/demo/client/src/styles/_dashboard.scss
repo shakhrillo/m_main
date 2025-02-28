@@ -9,9 +9,9 @@
   border-radius: $card-border-radius;
   background-color: #fff;
   padding: $spacer;
-  min-height: 220px;
   overflow: hidden;
   font-size: 14px;
+  justify-content: flex-end;
 }
 
 .dashboard-map {
@@ -19,7 +19,7 @@
 }
 
 .dashboard-title {
-  margin-bottom: 0.5rem;
+  // margin-bottom: 0.5rem;
   color: #666;
   font-weight: 600;
   font-size: 16px;

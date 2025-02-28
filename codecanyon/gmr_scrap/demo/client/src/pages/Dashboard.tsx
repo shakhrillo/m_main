@@ -57,30 +57,41 @@ export const Dashboard = () => {
   return (
     <Container>
       <Row className="g-3">
-        <Col md={6}>
-          <RevenueGraph />
+        <Col lg={8} xl={9}>
+          <Row className="g-3">
+            <Col md={12}>
+              <RevenueGraph />
+            </Col>
+            <Col md={12}>
+              <div className="dashboard-title">Map of all containers</div>
+              <div className="dashboard-map">
+                <GoogleMap
+                  geojson={geojson}
+                  boundChanges={boundChanges$}
+                  isFitBounds={false}
+                />
+              </div>
+            </Col>
+          </Row>
         </Col>
-        <Col md={6}>
-          <UsersGraph />
-        </Col>
-        <Col md={4}>
-          <StatisticsDoughnut />
-        </Col>
-        <Col md={4}>
-          <EraningsTotal />
-        </Col>
-        <Col md={4}>
-          <UsersTotal />
-        </Col>
-        <Col md={12}>
-          <div className="dashboard-title">Map of all containers</div>
-          <div className="dashboard-map">
-            <GoogleMap
-              geojson={geojson}
-              boundChanges={boundChanges$}
-              isFitBounds={false}
-            />
-          </div>
+        <Col lg={4} xl={3}>
+          <Row className="g-3">
+            <Col md={12}>
+              <StatisticsDoughnut />
+            </Col>
+            <Col md={12}>
+              <EraningsTotal />
+            </Col>
+            <Col md={12}>
+              <UsersTotal />
+            </Col>
+            <Col md={12}>
+              Images
+            </Col>
+            <Col md={12}>
+              Containers
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>

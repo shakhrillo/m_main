@@ -11,6 +11,7 @@ export const formatTotalEarnings = (data: any[]) => {
   const currentDay = currentDate.getDate();
 
   const dateArray = Array.from({ length: currentDay }, (_, i) => ({
+    id: i.toString(), 
     date: `${i + 1} ${format(currentDate, "MMM")}`,
     total: 0,
   }));

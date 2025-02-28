@@ -1,18 +1,24 @@
 import { LineChart } from "../LineChart";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { paymentsData } from "../../services/paymentService";
 import { formatTotalEarnings } from "../../utils/formatTotalEarnings";
 import { filter, map } from "rxjs";
 import type { IDockerContainer } from "../../types/dockerContainer";
+
+interface IEarnings {
+  id: string;
+  date: string;
+  total: number;
+}
 
 /**
  * Revenue component for the current month
  * @returns The revenue component
  */
 export const RevenueGraph = () => {
-  const [earnings, setEarnings] = useState([] as any[]);
+  const [earnings, setEarnings] = useState<IEarnings[]>([]);
 
-  useEffect(() => {
+  const fetchPayments = useCallback(() => {
     const subscription = paymentsData({ type: ["charge.succeeded"] })
       .pipe(
         filter((snapshot) => !!snapshot),
@@ -25,25 +31,30 @@ export const RevenueGraph = () => {
       )
       .subscribe((data) => setEarnings(formatTotalEarnings(data)));
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(fetchPayments, []);
+
+  const chartData = useMemo(
+    () => ({
+      labels: earnings.map((e) => e.date),
+      datasets: [
+        {
+          label: "Revenue",
+          data: earnings.map((e) => e.total),
+          color: "#c8dceb",
+        },
+      ],
+    }),
+    [earnings],
+  );
 
   return (
     <>
-      <div className="dashboard-title">This month's revenue</div>
+      <h4 className="dashboard-title">This Month's Revenue</h4>
       <div className="dashboard-graph">
-        <LineChart
-          labels={earnings.map((e) => e.date)}
-          datasets={[
-            {
-              label: "Revenue",
-              data: earnings.map((e) => e.total),
-              color: "#3e2c41",
-            },
-          ]}
-        />
+        <LineChart {...chartData} />
       </div>
     </>
   );

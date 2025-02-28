@@ -19,7 +19,7 @@ export const UsersTotal = () => {
     <>
       <div className="dashboard-title">Users</div>
       <div className="dashboard-graph">
-        <div className="display-6 mt-auto">{formatNumber(users)}</div>
+        <h1 className="m-0">{formatNumber(users)}</h1>
       </div>
     </>
   );

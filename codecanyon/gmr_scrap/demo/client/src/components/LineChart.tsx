@@ -42,7 +42,7 @@ interface LineChartProps {
 export const LineChart = ({ labels, datasets }: LineChartProps) => {
   const [chartWidth, setChartWidth] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const chartHeight = 300;
+  const chartHeight = 350;
 
   useEffect(() => {
     const updateChartWidth = () => {

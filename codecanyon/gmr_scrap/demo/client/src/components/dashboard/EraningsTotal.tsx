@@ -19,7 +19,7 @@ export const EraningsTotal = () => {
     <>
       <div className="dashboard-title">Earnings</div>
       <div className="dashboard-graph">
-        <div className="display-6 mt-auto">${formatAmount(earnings)}</div>
+        <h1 className="m-0">${formatAmount(earnings)}</h1>
       </div>
     </>
   );

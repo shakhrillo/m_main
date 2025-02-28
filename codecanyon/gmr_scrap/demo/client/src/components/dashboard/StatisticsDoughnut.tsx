@@ -6,8 +6,8 @@ import { DoughnutChart } from "../DoughnutChart";
 import { getStatistics } from "../../services/statistics";
 
 const INITIAL_CONTAINERS = [
-  { id: "info", title: "Validated", colorClass: "text-primary", bgClass: "bg-primary-subtle" },
-  { id: "comments", title: "Scraped", colorClass: "text-success", bgClass: "bg-success-subtle" },
+  { id: "info", title: "Validated", colorClass: "#ecd9dd", bgClass: "bg-primary-subtle" },
+  { id: "comments", title: "Scraped", colorClass: "#c9f29b", bgClass: "bg-success-subtle" },
 ];
 
 export const StatisticsDoughnut = () => {
@@ -38,21 +38,15 @@ export const StatisticsDoughnut = () => {
     <div>
       <h4 className="dashboard-title">Statistics</h4>
       <div className="dashboard-graph">
-        <Row className="g-3">
-          <Col md={6} className="d-flex flex-column justify-content-end">
-            {containers.map(({ id, title, total, colorClass }) => (
-              <Stack key={id} direction="horizontal" gap={2} className="mt-2">
-                <IconCircleFilled size={20} strokeWidth={1} className={colorClass} />
-                <span className="text-capitalize">
-                  {title} ({formatNumber(total)})
-                </span>
-              </Stack>
-            ))}
-          </Col>
-          <Col md={6}>
-            <DoughnutChart data={containers.map(({ total }) => total)} total={totalValue} />
-          </Col>
-        </Row>
+        {containers.map(({ id, title, total, colorClass }) => (
+          <Stack key={id} direction="horizontal" gap={2} className="mt-2">
+            <IconCircleFilled fill={colorClass} />
+            <span className="text-capitalize">
+              {title} ({formatNumber(total)})
+            </span>
+          </Stack>
+        ))}
+        <DoughnutChart data={containers.map(({ total }) => total)} total={totalValue} />
       </div>
     </div>
   );
