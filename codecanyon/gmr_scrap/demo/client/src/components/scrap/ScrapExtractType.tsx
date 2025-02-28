@@ -32,7 +32,7 @@ export const ScrapExtractType = ({ container }: {
   }, [container.extractImageUrls, container.extractVideoUrls, container.extractOwnerResponse]);
 
   useEffect(() => {
-    setIsDisabled(!container.rating || user?.uid !== container?.uid);
+    setIsDisabled(!container.rating || user?.uid !== container?.uid || user?.coinBalance <= 0);
   }, [container, user?.uid]);
 
   const toggleOption = (key: keyof typeof extractOptions) => {

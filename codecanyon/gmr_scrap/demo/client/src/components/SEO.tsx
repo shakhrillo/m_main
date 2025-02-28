@@ -8,38 +8,24 @@ import { settingValue } from "../services/settingService";
  * @returns JSX.Element
  */
 export const SEO = () => {
-    const [title, setTitle] = useState<string | null>(null);
-    const [keywords, setKeywords] = useState<string | null>(null);
-    const [description, setDescription] = useState<string | null>(null);
+  const [meta, setMeta] = useState({ title: "", keywords: "", description: "" });
 
-    useEffect(() => {
-        const subscription = settingValue({ tag: "title", type: "general" })
-            .pipe(filter((data) => !!data?.value))
-            .subscribe(({ value }) => setTitle(value));
+  useEffect(() => {
+    const tags = ["title", "keywords", "description"];
+    const subscriptions = tags.map(tag =>
+      settingValue({ tag, type: "general" })
+        .pipe(filter((data) => !!data?.value))
+        .subscribe(({ value }) => setMeta(prev => ({ ...prev, [tag]: value })))
+    );
+    return () => subscriptions.forEach(sub => sub.unsubscribe());
+  }, []);
 
-        return () => subscription.unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        const subscription = settingValue({ tag: "keywords", type: "general" })
-            .pipe(filter((data) => !!data?.value))
-            .subscribe(({ value }) => setKeywords(value));
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        const subscription = settingValue({ tag: "description", type: "general" })
-            .pipe(filter((data) => !!data?.value))
-            .subscribe(({ value }) => setDescription(value));
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    return <Helmet>
-        <title>{ title }</title>
-        <meta charSet="utf-8" />
-        <meta name="keywords" content={ keywords || "" } />
-        <meta name="description" content={ description || "" } />
+  return (
+    <Helmet>
+      <title>{meta.title}</title>
+      <meta charSet="utf-8" />
+      <meta name="keywords" content={meta.keywords} />
+      <meta name="description" content={meta.description} />
     </Helmet>
+  );
 };

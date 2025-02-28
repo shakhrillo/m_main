@@ -51,9 +51,16 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   const [validateMax, setValidateMax] = useState<number>(0);
 
   useEffect(() => {
-    if (typeof container.limit === "number" && typeof container.maxSpentPoints === "number") {
+    if (typeof container.limit === "number") {
       setLimit(container.limit);
-      setMaxSpentPoints(container.maxSpentPoints);
+    }
+
+    if (typeof container.maxSpentPoints === "number") {
+      if(container.maxSpentPoints > user?.coinBalance) {
+        setMaxSpentPoints(user?.coinBalance);
+      } else {
+        setMaxSpentPoints(container.maxSpentPoints);
+      }
     }
   }, [container?.limit, container?.maxSpentPoints]);
 
@@ -70,7 +77,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   }, [container?.outputAs]);
 
   useEffect(() => {
-    setIsDisabled(!container.rating || user?.uid !== container?.uid);
+    setIsDisabled(!container.rating || user?.uid !== container?.uid || user?.coinBalance <= 0);
   }, [container, user?.uid]);
 
   useEffect(() => {
@@ -166,7 +173,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               }}
             />
             <FormText>
-              Maximum points to spend on this scrap. Max points you can spend: {maxSpentPoints < user?.coinBalance ? maxSpentPoints : user?.coinBalance}.
+              Maximum points to spend on this scrap. Max points you can spend: {validateMax < user?.coinBalance ? validateMax : user?.coinBalance}.
             </FormText>
           </OptionCard>
 
