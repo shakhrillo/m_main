@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { dockerContainerLogs, dockerContainers, dockerContainerStats } from "../services/dockerService";
@@ -8,9 +8,9 @@ import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
 import { filter, map } from "rxjs";
-import { auth } from "../firebaseConfig";
 import { IDockerContainer } from "../types/dockerContainer";
 import { ContainerLogs } from "../components/containers/ContainerLogs";
+import { IUserInfo } from "../types/userInfo";
 
 const cpuChartColor = "#c8dceb";
 const memoryChartColor = "#fffc7f";
@@ -20,6 +20,7 @@ const pidsChartColor = "#ff9470";
 
 export const DockerContainer = () => {
   const navigate = useNavigate();
+  const user = useOutletContext<IUserInfo>(); 
   const { containerId } = useParams<{ containerId: string }>();
 
   const [stats, setStats] = useState<IDockerStats[]>([]);
@@ -30,14 +31,18 @@ export const DockerContainer = () => {
   );
 
   useEffect(() => {
-    if (!containerId || !auth.currentUser?.uid) {
+    if (!containerId || !user?.uid) {
       setContainer({} as IDockerContainer);
       return;
     }
 
+    console.log('containerId', containerId);
+    console.log('user?.uid', user?.uid);
+
     const subscription = dockerContainers({
       containerId: containerId,
-      uid: auth.currentUser?.uid,
+      ...user?.isAdmin ? {} : { uid: user?.uid },
+      // uid: auth.currentUser?.uid,
     })
     .pipe(
       filter((snapshot) => !!snapshot),
@@ -47,6 +52,7 @@ export const DockerContainer = () => {
       })
     )
     .subscribe((data) => {
+      console.log('data', data);
       if (!data || !data.location) {
         setContainer({} as IDockerContainer);
         return;
@@ -57,7 +63,7 @@ export const DockerContainer = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [containerId, auth.currentUser?.uid]);
+  }, [containerId, user?.uid]);
 
   const labels = useMemo(
     () => stats.map((stat) => formatStringDate(stat?.read ?? "", "HH:mm:ss")),
