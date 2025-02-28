@@ -1,5 +1,5 @@
 import { IconPhoto, IconReload } from "@tabler/icons-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter } from "rxjs";
@@ -20,13 +20,12 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   const [isLastPage, setIsLastPage] = useState(false);
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchImages = (append = false) => {
+  const fetchImages = useCallback((append = false) => {
     if (!user?.uid || isLastPage) return;
 
-    // Unsubscribe from previous subscription
+    // Unsubscribe from any existing subscription
     subscriptionRef.current?.unsubscribe();
 
-    // Subscribe to new data stream
     const subscription = reviewsData(
       "images",
       { reviewId, uid: user.isAdmin ? undefined : user.uid },
@@ -38,14 +37,13 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
           (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
         );
 
-        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+        setImages((prev) => (append ? [...prev, ...newImages] : newImages));
         setLastDoc(snapshot.docs.at(-1));
-
-        setImages((prev) => [...new Set([...prev, ...newImages])]);
+        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
       });
 
     subscriptionRef.current = subscription;
-  };
+  }, [user, reviewId, isLastPage, lastDoc]);
 
   useEffect(() => {
     setImages([]);
@@ -61,15 +59,15 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   return (
     <div className="images">
       <Gallery>
-        {images.map(({ original, thumb }, index) => (
+        {images.map(({ id, original, thumb }) => (
           <Item
-            key={index}
+            key={id}
             original={original}
-            content={<Image src={original} alt={`image-${index}`} className="image" />}
+            content={<Image src={original} alt={`image-${id}`} className="image" />}
           >
             {({ ref, open }) => (
               <div className="image-thumb-container" ref={ref} onClick={open}>
-                <Image src={thumb} alt={`image-thumb-${index}`} className="image-thumb" />
+                <Image src={thumb} alt={`image-thumb-${id}`} className="image-thumb" />
                 <IconPhoto size={24} className="image-thumb-icon" />
               </div>
             )}
