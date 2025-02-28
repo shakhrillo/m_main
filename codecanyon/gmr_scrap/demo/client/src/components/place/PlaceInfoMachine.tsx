@@ -1,4 +1,4 @@
-import type { Icon} from "@tabler/icons-react";
+import type { Icon } from "@tabler/icons-react";
 import { IconCheck, IconFrame, IconStopwatch } from "@tabler/icons-react";
 import type { JSX } from "react";
 import { createElement } from "react";

@@ -29,7 +29,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
       subscriptionRef.current = reviewsData(
         "videos",
         { reviewId, uid: !user.isAdmin ? user.uid : undefined },
-        lastDoc
+        lastDoc,
       )
         .pipe(filter((snapshot) => snapshot?.docs?.length > 0))
         .subscribe({
@@ -47,7 +47,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
           error: (error) => console.error("Error fetching videos:", error),
         });
     },
-    [user, reviewId, lastDoc, isLastPage]
+    [user, reviewId, lastDoc, isLastPage],
   );
 
   useEffect(() => {
@@ -70,7 +70,11 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
           >
             {({ ref, open }) => (
               <div className="video-thumb-container" ref={ref} onClick={open}>
-                <Image src={thumb} alt={`video-thumb-${index}`} className="video-thumb" />
+                <Image
+                  src={thumb}
+                  alt={`video-thumb-${index}`}
+                  className="video-thumb"
+                />
                 <IconPlayerPlay size={24} className="video-thumb-icon" />
               </div>
             )}
@@ -85,7 +89,10 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
       )}
 
       {!isLastPage && videos.length > 0 && (
-        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+        <Stack
+          direction="horizontal"
+          className="justify-content-center mt-3 w-100"
+        >
           <Button onClick={() => fetchVideos(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>

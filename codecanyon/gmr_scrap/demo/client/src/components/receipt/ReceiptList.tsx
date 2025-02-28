@@ -29,7 +29,9 @@ export const ReceiptList = () => {
   const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe(setSearch);
     return () => subscription.unsubscribe();
   }, []);
 
@@ -45,7 +47,7 @@ export const ReceiptList = () => {
           ...(user?.isAdmin ? {} : { uid: user?.uid }),
           type: status ? [status] : ["charge.succeeded", "charge.failed"],
         },
-        lastDocument
+        lastDocument,
       )
         .pipe(
           filter((snapshot) => !!snapshot),
@@ -62,13 +64,13 @@ export const ReceiptList = () => {
               id: doc.id,
               ...(doc.data() as IDockerContainer),
             }));
-          })
+          }),
         )
         .subscribe((data) => {
           setHistory((prev) => (append ? [...prev, ...data] : data));
         });
     },
-    [user?.uid, user?.isAdmin, status]
+    [user?.uid, user?.isAdmin, status],
   );
 
   // Handle Filters Change
@@ -113,7 +115,10 @@ export const ReceiptList = () => {
 
       {!isLastPage && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button onClick={() => fetchReceipts(true, lastDoc)} variant="outline-primary">
+          <Button
+            onClick={() => fetchReceipts(true, lastDoc)}
+            variant="outline-primary"
+          >
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>

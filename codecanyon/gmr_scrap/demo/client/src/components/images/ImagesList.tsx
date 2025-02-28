@@ -20,30 +20,33 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   const [isLastPage, setIsLastPage] = useState(false);
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchImages = useCallback((append = false) => {
-    if (!user?.uid || isLastPage) return;
+  const fetchImages = useCallback(
+    (append = false) => {
+      if (!user?.uid || isLastPage) return;
 
-    // Unsubscribe from any existing subscription
-    subscriptionRef.current?.unsubscribe();
+      // Unsubscribe from any existing subscription
+      subscriptionRef.current?.unsubscribe();
 
-    const subscription = reviewsData(
-      "images",
-      { reviewId, uid: user.isAdmin ? undefined : user.uid },
-      lastDoc
-    )
-      .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
-      .subscribe((snapshot) => {
-        const newImages = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
-        );
+      const subscription = reviewsData(
+        "images",
+        { reviewId, uid: user.isAdmin ? undefined : user.uid },
+        lastDoc,
+      )
+        .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
+        .subscribe((snapshot) => {
+          const newImages = snapshot.docs.map(
+            (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
+          );
 
-        setImages((prev) => (append ? [...prev, ...newImages] : newImages));
-        setLastDoc(snapshot.docs.at(-1));
-        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
-      });
+          setImages((prev) => (append ? [...prev, ...newImages] : newImages));
+          setLastDoc(snapshot.docs.at(-1));
+          setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+        });
 
-    subscriptionRef.current = subscription;
-  }, [user, reviewId, isLastPage, lastDoc]);
+      subscriptionRef.current = subscription;
+    },
+    [user, reviewId, isLastPage, lastDoc],
+  );
 
   useEffect(() => {
     setImages([]);
@@ -54,7 +57,7 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, [reviewId]);
+  }, [reviewId, fetchImages]);
 
   return (
     <div className="images">
@@ -63,11 +66,17 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
           <Item
             key={id}
             original={original}
-            content={<Image src={original} alt={`image-${id}`} className="image" />}
+            content={
+              <Image src={original} alt={`image-${id}`} className="image" />
+            }
           >
             {({ ref, open }) => (
               <div className="image-thumb-container" ref={ref} onClick={open}>
-                <Image src={thumb} alt={`image-thumb-${id}`} className="image-thumb" />
+                <Image
+                  src={thumb}
+                  alt={`image-thumb-${id}`}
+                  className="image-thumb"
+                />
                 <IconPhoto size={24} className="image-thumb-icon" />
               </div>
             )}
@@ -82,7 +91,10 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
       )}
 
       {!isLastPage && images.length > 0 && (
-        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+        <Stack
+          direction="horizontal"
+          className="justify-content-center mt-3 w-100"
+        >
           <Button onClick={() => fetchImages(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>

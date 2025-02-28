@@ -1,7 +1,12 @@
-import type {
-  QuerySnapshot,
-  DocumentData} from "firebase/firestore";
-import { collection, onSnapshot, query, where, limit, startAfter } from "firebase/firestore";
+import type { QuerySnapshot, DocumentData } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  limit,
+  startAfter,
+} from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 interface IReviewQuery {

@@ -43,27 +43,36 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
           filterOptions,
           search,
         },
-        lastDocument
+        lastDocument,
       )
         .pipe(
-          filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
-          take(1)
+          filter(
+            (snapshot) =>
+              snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
+          ),
+          take(1),
         )
         .subscribe((snapshot) => {
           setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
 
-          const newComments = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
+          const newComments = snapshot.docs.map(
+            (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+          );
 
-          setComments((prev) => (append ? [...prev, ...newComments] : newComments));
+          setComments((prev) =>
+            append ? [...prev, ...newComments] : newComments,
+          );
           setLastDoc(snapshot.docs.at(-1));
         });
     },
-    [reviewId, user, filterOptions, search]
+    [reviewId, user, filterOptions, search],
   );
 
   // Debounce search input
   useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe(setSearch);
     return () => subscription.unsubscribe();
   }, [searchSubject]);
 
@@ -96,7 +105,13 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
           <Dropdown.Menu>
             {FILTER_OPTIONS.map(({ key, label }) => (
               <Dropdown.Item key={key} onClick={() => setFilterOptions(key)}>
-                <Form.Check type="radio" name="filter" label={label} checked={filterOptions === key} readOnly />
+                <Form.Check
+                  type="radio"
+                  name="filter"
+                  label={label}
+                  checked={filterOptions === key}
+                  readOnly
+                />
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
@@ -109,7 +124,10 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
 
       {!isLastPage && comments.length > 0 && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button onClick={() => fetchComments(true, lastDoc)} variant="outline-primary">
+          <Button
+            onClick={() => fetchComments(true, lastDoc)}
+            variant="outline-primary"
+          >
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>

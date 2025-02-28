@@ -170,9 +170,7 @@ export const Payments = () => {
                 <IconCoin />
               </div>
               <Stack direction="vertical">
-                <strong>
-                  {(Number(amount || 0) * cost).toFixed(2)}
-                </strong>
+                <strong>{(Number(amount || 0) * cost).toFixed(2)}</strong>
                 <p>Price</p>
               </Stack>
             </Stack>
@@ -180,7 +178,8 @@ export const Payments = () => {
               type="checkbox"
               label={
                 <>
-                  I agree to the <NavLink to="/terms">terms and conditions</NavLink>
+                  I agree to the{" "}
+                  <NavLink to="/terms">terms and conditions</NavLink>
                 </>
               }
               required

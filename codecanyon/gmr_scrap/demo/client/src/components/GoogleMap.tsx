@@ -1,4 +1,4 @@
-import type { MapCameraChangedEvent} from "@vis.gl/react-google-maps";
+import type { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import type { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 import { useEffect, useState } from "react";
