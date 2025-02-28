@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
 import { SettingsFormInput } from "../components/SettingsFormInput";
 
 const SETTINGS_TABS = [
@@ -45,9 +45,6 @@ const SETTINGS_TABS = [
 export const Settings = () => {
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Setttings</Breadcrumb.Item>
-      </Breadcrumb>
       <Tabs variant="pills" defaultActiveKey="generalSettings">
         {
           SETTINGS_TABS.map(({ eventKey, title, type, fields }) => (
