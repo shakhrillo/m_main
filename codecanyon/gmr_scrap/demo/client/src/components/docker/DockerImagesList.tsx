@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { filter, map, take } from "rxjs";
+import { filter, map } from "rxjs";
 import { dockerImages } from "../../services/dockerService";
 import { IconReload } from "@tabler/icons-react";
 import { Stack, Button, Row, Col } from "react-bootstrap";

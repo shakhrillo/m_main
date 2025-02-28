@@ -47,7 +47,7 @@ export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [imageId]);
 
   return (
     <div className="docker-image-info">

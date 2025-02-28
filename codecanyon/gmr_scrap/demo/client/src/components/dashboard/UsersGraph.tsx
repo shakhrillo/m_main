@@ -2,7 +2,7 @@ import { LineChart } from "../LineChart";
 import { useState, useEffect } from "react";
 import { usersList } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
-import { filter, map, take } from "rxjs";
+import { filter, map } from "rxjs";
 import type { IUserInfo } from "../../types/userInfo";
 
 /**

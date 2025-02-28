@@ -7,6 +7,7 @@ import { reviewsData } from "../../services/reviewService";
 import type { ICommentImage } from "../../types/comment";
 import { useOutletContext } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
+import type { Subscription } from "rxjs";
 
 interface IImagesListProps {
   reviewId: string;
@@ -17,36 +18,33 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
-  const subscriptionRef = useRef<any>(null);
+  const subscriptionRef = useRef<Subscription | null>(null);
 
   const fetchImages = (append = false) => {
     if (!user?.uid || isLastPage) return;
 
-    subscriptionRef.current?.unsubscribe(); // Ensure previous subscription is cleared
+    // Unsubscribe from previous subscription
+    subscriptionRef.current?.unsubscribe();
 
-    subscriptionRef.current = reviewsData(
+    // Subscribe to new data stream
+    const subscription = reviewsData(
       "images",
-      { reviewId, uid: !user.isAdmin ? user.uid : undefined },
-      lastDoc,
+      { reviewId, uid: user.isAdmin ? undefined : user.uid },
+      lastDoc
     )
       .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
       .subscribe((snapshot) => {
+        const newImages = snapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
+        );
+
         setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
         setLastDoc(snapshot.docs.at(-1));
 
-        setImages((prev) =>
-          append
-            ? [
-                ...prev,
-                ...snapshot.docs.map(
-                  (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
-                ),
-              ]
-            : snapshot.docs.map(
-                (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
-              ),
-        );
+        setImages((prev) => [...new Set([...prev, ...newImages])]);
       });
+
+    subscriptionRef.current = subscription;
   };
 
   useEffect(() => {
@@ -55,7 +53,9 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     setIsLastPage(false);
     fetchImages();
 
-    return () => subscriptionRef.current?.unsubscribe();
+    return () => {
+      subscriptionRef.current?.unsubscribe();
+    };
   }, [reviewId]);
 
   return (
@@ -63,19 +63,13 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
       <Gallery>
         {images.map(({ original, thumb }, index) => (
           <Item
-            key={`image-${index}`}
+            key={index}
             original={original}
-            content={
-              <Image src={original} alt={`image-${index}`} className="image" />
-            }
+            content={<Image src={original} alt={`image-${index}`} className="image" />}
           >
             {({ ref, open }) => (
               <div className="image-thumb-container" ref={ref} onClick={open}>
-                <Image
-                  src={thumb}
-                  alt={`image-thumb-${index}`}
-                  className="image-thumb"
-                />
+                <Image src={thumb} alt={`image-thumb-${index}`} className="image-thumb" />
                 <IconPhoto size={24} className="image-thumb-icon" />
               </div>
             )}
@@ -83,17 +77,14 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
         ))}
       </Gallery>
 
-      {!images.length && (
+      {images.length === 0 && (
         <Alert className="w-100" variant="info">
           No images found
         </Alert>
       )}
 
       {!isLastPage && images.length > 0 && (
-        <Stack
-          direction="horizontal"
-          className="justify-content-center mt-3 w-100"
-        >
+        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
           <Button onClick={() => fetchImages(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>

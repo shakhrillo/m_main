@@ -37,7 +37,7 @@ export const StatisticsDoughnut = () => {
     );
 
     return () => subscriptions.forEach((sub) => sub.unsubscribe());
-  }, []);
+  }, [containers]);
 
   return (
     <>

@@ -52,7 +52,7 @@ export const ClusteredMarkers = ({
       });
       map?.fitBounds(bounds);
     },
-    [getClusterLeaves],
+    [getClusterLeaves, map],
   );
 
   const handleFeatureMarkerClick = () => {};
