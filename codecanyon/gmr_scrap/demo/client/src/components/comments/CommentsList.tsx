@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { debounceTime, filter, Subject, take } from "rxjs";
@@ -20,11 +20,6 @@ const FILTER_OPTIONS = [
   { key: "response", label: "Response" },
 ];
 
-/**
- * CommentsList component
- * @param reviewId Review ID
- * @returns JSX.Element
- */
 export const CommentsList = ({ reviewId }: ICommentsList) => {
   const user = useOutletContext<IUserInfo>();
   const commentsRef = useRef<HTMLDivElement>(null);
@@ -35,50 +30,50 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
   const [isLastPage, setIsLastPage] = useState(false);
   const [filterOptions, setFilterOptions] = useState("");
 
-  useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe(setSearch);
-    return () => subscription.unsubscribe();
-  }, []);
+  // Fetch comments function with useCallback to avoid unnecessary re-renders
+  const fetchComments = useCallback(
+    (append = false, lastDocument = null) => {
+      if (!user?.uid) return;
 
+      reviewsData(
+        "reviews",
+        {
+          reviewId,
+          uid: !user.isAdmin ? user.uid : undefined,
+          filterOptions,
+          search,
+        },
+        lastDocument
+      )
+        .pipe(
+          filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
+          take(1)
+        )
+        .subscribe((snapshot) => {
+          setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+
+          const newComments = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
+
+          setComments((prev) => (append ? [...prev, ...newComments] : newComments));
+          setLastDoc(snapshot.docs.at(-1));
+        });
+    },
+    [reviewId, user, filterOptions, search]
+  );
+
+  // Debounce search input
+  useEffect(() => {
+    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    return () => subscription.unsubscribe();
+  }, [searchSubject]);
+
+  // Fetch comments when dependencies change
   useEffect(() => {
     setComments([]);
     setLastDoc(null);
     setIsLastPage(false);
     fetchComments();
-  }, [search, filterOptions, reviewId]);
-
-  const fetchComments = (append = false, lastDocument = null) => {
-    if (!user?.uid) return;
-
-    reviewsData(
-      "reviews",
-      {
-        reviewId,
-        uid: !user.isAdmin ? user.uid : undefined,
-        filterOptions,
-        search,
-      },
-      lastDocument,
-    )
-      .pipe(
-        filter(
-          (snapshot) =>
-            snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
-        ),
-        take(1),
-      )
-      .subscribe((snapshot) => {
-        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
-
-        const data = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as IComment),
-        );
-        setComments((prev) => (append ? [...prev, ...data] : data));
-        setLastDoc(snapshot.docs.at(-1));
-      });
-  };
+  }, [fetchComments]);
 
   return (
     <div className="comments" ref={commentsRef}>
@@ -92,6 +87,7 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
             />
           </InputGroup>
         </div>
+
         <Dropdown autoClose="outside">
           <Dropdown.Toggle variant="outline-secondary">
             <IconFilter className="me-2" />
@@ -100,34 +96,23 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
           <Dropdown.Menu>
             {FILTER_OPTIONS.map(({ key, label }) => (
               <Dropdown.Item key={key} onClick={() => setFilterOptions(key)}>
-                <Form.Check
-                  type="radio"
-                  name="filter"
-                  label={label}
-                  checked={filterOptions === key}
-                  readOnly
-                />
+                <Form.Check type="radio" name="filter" label={label} checked={filterOptions === key} readOnly />
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
 
-      {comments.map((review) => (
-        <Comment comment={review} key={review.id} />
+      {comments.map((comment) => (
+        <Comment comment={comment} key={comment.id} />
       ))}
 
-      {!isLastPage && comments.length > 0 ? (
+      {!isLastPage && comments.length > 0 && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button
-            onClick={() => fetchComments(true, lastDoc)}
-            variant="outline-primary"
-          >
+          <Button onClick={() => fetchComments(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
-      ) : (
-        ""
       )}
     </div>
   );
