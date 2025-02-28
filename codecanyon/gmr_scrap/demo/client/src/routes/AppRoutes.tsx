@@ -1,6 +1,34 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { DashboardLayout } from "../layouts";
-import { Auth, Receipt, DockerInfo, Dashboard, DockerContainer, DockerContainers, DockerImage, ImagesList, Help, Info, Login, Logout, Payments, Receipts, Register, ReviewsList, Scrap, Security, Settings, SingleReview, User, Users, ValidatedURLs } from "../pages";
+import {
+  Auth,
+  Receipt,
+  DockerInfo,
+  Dashboard,
+  DockerContainer,
+  DockerContainers,
+  DockerImage,
+  ImagesList,
+  Help,
+  Info,
+  Login,
+  Logout,
+  Payments,
+  Receipts,
+  Register,
+  ReviewsList,
+  Scrap,
+  Security,
+  Settings,
+  SingleReview,
+  User,
+  Users,
+  ValidatedURLs,
+} from "../pages";
 import { AuthGuard } from "./AuthGuard";
 
 const router = createBrowserRouter([
@@ -44,8 +72,8 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "logout", element: <Logout /> },
-      { path: "", element: <Navigate to="/auth/login" replace /> }
-    ]
+      { path: "", element: <Navigate to="/auth/login" replace /> },
+    ],
   },
   {
     path: "*",

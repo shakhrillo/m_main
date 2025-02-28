@@ -6,14 +6,16 @@ import { FeatureCollection, GeoJsonProperties, Point } from "geojson";
  * @param locations Array of GeoPoint locations
  * @returns GeoJSON FeatureCollection
  */
-export const locationsToGeoJSON = (locations: GeoPoint[]): FeatureCollection<Point, GeoJsonProperties> => {
+export const locationsToGeoJSON = (
+  locations: GeoPoint[],
+): FeatureCollection<Point, GeoJsonProperties> => {
   const features = locations.map((location) => ({
     type: "Feature" as const,
     geometry: {
       type: "Point" as const,
       coordinates: [location.longitude, location.latitude], // Correct access to properties
     },
-    properties: {}
+    properties: {},
   }));
 
   return {

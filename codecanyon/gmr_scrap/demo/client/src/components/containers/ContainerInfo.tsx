@@ -16,17 +16,19 @@ export const ContainerInfo = ({ container }: IContainerInfo): JSX.Element => {
   return (
     <Stack direction="horizontal" gap={2}>
       <IconPrompt />
-      <div className="text-capitalize">
-        {container.type}
-      </div>
+      <div className="text-capitalize">{container.type}</div>
       <Badge
         bg={
-          container.machine?.Action === "die" ? "danger" : container.machine?.Action === "start" ? "success" : "secondary"
+          container.machine?.Action === "die"
+            ? "danger"
+            : container.machine?.Action === "start"
+              ? "success"
+              : "secondary"
         }
         className="text-capitalize"
       >
         {container.machine?.Action}
       </Badge>
     </Stack>
-  )
+  );
 };

@@ -21,7 +21,9 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
   const user = useOutletContext<IUserInfo>();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [limit, setLimit] = useState<number>(0);
-  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(user?.coinBalance || 0);
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(
+    user?.coinBalance || 0,
+  );
 
   useEffect(() => {
     if (container?.machineId && container?.type === "comments") {
@@ -30,31 +32,37 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
   }, [container]);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "minimum", type: "scrap"})
-      .pipe(filter((data) => !!data), take(1))
+    const subscription = settingValue({ tag: "minimum", type: "scrap" })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => {
-        if(data?.value) {
+        if (data?.value) {
           setLimit(Number(data.value));
         }
       });
 
     return () => {
       subscription.unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "maximum", type: "scrap"})
-      .pipe(filter((data) => !!data), take(1))
+    const subscription = settingValue({ tag: "maximum", type: "scrap" })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => {
-        if(data?.value) {
+        if (data?.value) {
           setMaxSpentPoints(Number(data.value));
         }
       });
 
     return () => {
       subscription.unsubscribe();
-    }
+    };
   }, []);
 
   /**
@@ -101,7 +109,14 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
             </>
           }
         ></FormCheck>
-        <Button variant="primary" className="w-100 mt-3" type="submit" disabled={!isTermsChecked || !container?.rating || user?.coinBalance <= 0}>
+        <Button
+          variant="primary"
+          className="w-100 mt-3"
+          type="submit"
+          disabled={
+            !isTermsChecked || !container?.rating || user?.coinBalance <= 0
+          }
+        >
           Scrap
         </Button>
       </Form>

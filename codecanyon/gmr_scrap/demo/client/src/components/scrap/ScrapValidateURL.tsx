@@ -1,6 +1,13 @@
 import { IconAlertCircle, IconBrandGoogleMaps } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { CardSubtitle, CardTitle, FormControl, FormGroup, FormText, Stack } from "react-bootstrap";
+import {
+  CardSubtitle,
+  CardTitle,
+  FormControl,
+  FormGroup,
+  FormText,
+  Stack,
+} from "react-bootstrap";
 import { Form, useNavigate, useOutletContext } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
@@ -25,7 +32,8 @@ export const ScrapValidateURL = ({
 
   useEffect(() => {
     setIsDisabled(
-      (container?.machine?.Action !== "die" && containerId !== undefined) || (!!containerId && user?.uid !== container?.uid)
+      (container?.machine?.Action !== "die" && containerId !== undefined) ||
+        (!!containerId && user?.uid !== container?.uid),
     );
   }, [container, containerId, user?.uid]);
 
@@ -50,7 +58,11 @@ export const ScrapValidateURL = ({
 
     try {
       setError(null);
-      const { id } = await createDockerContainer({ url, uid: user?.uid, type: "info" });
+      const { id } = await createDockerContainer({
+        url,
+        uid: user?.uid,
+        type: "info",
+      });
       navigate(`/scrap/${id}`);
     } catch (err) {
       console.error(err);
@@ -95,7 +107,11 @@ export const ScrapValidateURL = ({
             </div>
           )}
           <Stack direction="horizontal">
-            <ScrapValidateButton container={container} containerId={containerId} isDisabled={isDisabled || user?.coinBalance <= 0} />
+            <ScrapValidateButton
+              container={container}
+              containerId={containerId}
+              isDisabled={isDisabled || user?.coinBalance <= 0}
+            />
           </Stack>
         </Form>
       </Stack>

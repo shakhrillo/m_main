@@ -36,7 +36,9 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
   const [filterOptions, setFilterOptions] = useState("");
 
   useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe(setSearch);
     return () => subscription.unsubscribe();
   }, []);
 
@@ -50,21 +52,32 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
   const fetchComments = (append = false, lastDocument = null) => {
     if (!user?.uid) return;
 
-    reviewsData("reviews", { 
-      reviewId,
-      uid: !user.isAdmin ? user.uid : undefined,
-      filterOptions,
-      search
-    }, lastDocument).pipe(
-      filter((snapshot) => snapshot !== null && (snapshot.size !== 0 || !!lastDocument)),
-      take(1)
-    ).subscribe((snapshot) => {
-      setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+    reviewsData(
+      "reviews",
+      {
+        reviewId,
+        uid: !user.isAdmin ? user.uid : undefined,
+        filterOptions,
+        search,
+      },
+      lastDocument,
+    )
+      .pipe(
+        filter(
+          (snapshot) =>
+            snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
+        ),
+        take(1),
+      )
+      .subscribe((snapshot) => {
+        setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
 
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IComment));
-      setComments((prev) => (append ? [...prev, ...data] : data));
-      setLastDoc(snapshot.docs.at(-1));
-    });
+        const data = snapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+        );
+        setComments((prev) => (append ? [...prev, ...data] : data));
+        setLastDoc(snapshot.docs.at(-1));
+      });
   };
 
   return (
@@ -72,7 +85,11 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
       <Stack direction="horizontal" className="comments-sort">
         <div className="me-auto">
           <InputGroup>
-            <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
+            <Form.Control
+              type="search"
+              placeholder="Search..."
+              onChange={(e) => searchSubject.next(e.target.value)}
+            />
           </InputGroup>
         </div>
         <Dropdown autoClose="outside">
@@ -83,22 +100,35 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
           <Dropdown.Menu>
             {FILTER_OPTIONS.map(({ key, label }) => (
               <Dropdown.Item key={key} onClick={() => setFilterOptions(key)}>
-                <Form.Check type="radio" name="filter" label={label} checked={filterOptions === key} readOnly />
+                <Form.Check
+                  type="radio"
+                  name="filter"
+                  label={label}
+                  checked={filterOptions === key}
+                  readOnly
+                />
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
 
-      {comments.map((review) => <Comment comment={review} key={review.id} />)}
+      {comments.map((review) => (
+        <Comment comment={review} key={review.id} />
+      ))}
 
       {!isLastPage && comments.length > 0 ? (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button onClick={() => fetchComments(true, lastDoc)} variant="outline-primary">
+          <Button
+            onClick={() => fetchComments(true, lastDoc)}
+            variant="outline-primary"
+          >
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
-      ): ""}
+      ) : (
+        ""
+      )}
     </div>
   );
 };

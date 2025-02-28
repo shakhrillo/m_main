@@ -3,7 +3,11 @@ import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
-import { dockerContainerLogs, dockerContainers, dockerContainerStats } from "../services/dockerService";
+import {
+  dockerContainerLogs,
+  dockerContainers,
+  dockerContainerStats,
+} from "../services/dockerService";
 import { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
@@ -20,7 +24,7 @@ const pidsChartColor = "#ff9470";
 
 export const DockerContainer = () => {
   const navigate = useNavigate();
-  const user = useOutletContext<IUserInfo>(); 
+  const user = useOutletContext<IUserInfo>();
   const { containerId } = useParams<{ containerId: string }>();
 
   const [stats, setStats] = useState<IDockerStats[]>([]);
@@ -36,29 +40,32 @@ export const DockerContainer = () => {
       return;
     }
 
-    console.log('containerId', containerId);
-    console.log('user?.uid', user?.uid);
+    console.log("containerId", containerId);
+    console.log("user?.uid", user?.uid);
 
     const subscription = dockerContainers({
       containerId: containerId,
-      ...user?.isAdmin ? {} : { uid: user?.uid },
+      ...(user?.isAdmin ? {} : { uid: user?.uid }),
       // uid: auth.currentUser?.uid,
     })
-    .pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-        return containers[0];
-      })
-    )
-    .subscribe((data) => {
-      console.log('data', data);
-      if (!data || !data.location) {
-        setContainer({} as IDockerContainer);
-        return;
-      }
-      setContainer(data);
-    });
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          const containers = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IDockerContainer),
+          }));
+          return containers[0];
+        }),
+      )
+      .subscribe((data) => {
+        console.log("data", data);
+        if (!data || !data.location) {
+          setContainer({} as IDockerContainer);
+          return;
+        }
+        setContainer(data);
+      });
 
     return () => {
       subscription.unsubscribe();
@@ -85,7 +92,7 @@ export const DockerContainer = () => {
                 ),
               ),
             ),
-            color: cpuChartColor
+            color: cpuChartColor,
           },
         ],
       },
@@ -97,7 +104,7 @@ export const DockerContainer = () => {
             data: stats.map((stat) =>
               Number(formatSize(stat?.memory_stats?.usage ?? 0, "num")),
             ),
-            color: memoryChartColor
+            color: memoryChartColor,
           },
         ],
       },
@@ -109,14 +116,14 @@ export const DockerContainer = () => {
             data: stats.map((stat) =>
               Number(formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num")),
             ),
-            color: networkChartDownloadedColor
+            color: networkChartDownloadedColor,
           },
           {
             label: "Uploaded Data",
             data: stats.map((stat) =>
               Number(formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num")),
             ),
-            color: networkChartUploadedColor
+            color: networkChartUploadedColor,
           },
         ],
       },
@@ -126,7 +133,7 @@ export const DockerContainer = () => {
           {
             label: "PIDs Count",
             data: stats.map((stat) => stat?.pids_stats?.current ?? 0),
-            color: pidsChartColor
+            color: pidsChartColor,
           },
         ],
       },

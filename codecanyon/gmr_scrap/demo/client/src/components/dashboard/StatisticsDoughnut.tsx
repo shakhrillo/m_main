@@ -6,8 +6,20 @@ import { DoughnutChart } from "../DoughnutChart";
 import { getStatistics } from "../../services/statistics";
 
 const INITIAL_CONTAINERS = [
-  { id: "info", title: "Validated", total: 3, colorClass: "text-primary", bgClass: "bg-primary-subtle" },
-  { id: "comments", title: "Scraped", total: 1, colorClass: "text-success", bgClass: "bg-success-subtle" },
+  {
+    id: "info",
+    title: "Validated",
+    total: 3,
+    colorClass: "text-primary",
+    bgClass: "bg-primary-subtle",
+  },
+  {
+    id: "comments",
+    title: "Scraped",
+    total: 1,
+    colorClass: "text-success",
+    bgClass: "bg-success-subtle",
+  },
 ];
 
 export const StatisticsDoughnut = () => {
@@ -21,7 +33,7 @@ export const StatisticsDoughnut = () => {
           updatedContainers[index] = { ...prev[index], total: data.total };
           return updatedContainers;
         });
-      })
+      }),
     );
 
     return () => subscriptions.forEach((sub) => sub.unsubscribe());
@@ -29,16 +41,20 @@ export const StatisticsDoughnut = () => {
 
   return (
     <>
-      <div className="dashboard-title">
-        Statistics
-      </div>
+      <div className="dashboard-title">Statistics</div>
       <div className="dashboard-graph">
         <Row className="g-3">
           <Col md={6} className="d-flex flex-column justify-content-end">
             {containers.map(({ id, title, total, colorClass }, index) => (
               <Stack key={id} direction="horizontal" gap={2} className="mt-2">
-                <IconCircleFilled size={20} strokeWidth={1} className={colorClass} />
-                <span className="text-capitalize">{title} ({formatNumber(total)})</span>
+                <IconCircleFilled
+                  size={20}
+                  strokeWidth={1}
+                  className={colorClass}
+                />
+                <span className="text-capitalize">
+                  {title} ({formatNumber(total)})
+                </span>
               </Stack>
             ))}
           </Col>

@@ -9,7 +9,10 @@ import LogoImg from "../assets/logo_scrappio.png";
  * @returns JSX.Element
  */
 export const Logo = (
-  props: React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+  props: React.DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  >,
 ) => {
   const [logo, setLogo] = useState<string>(LogoImg);
 

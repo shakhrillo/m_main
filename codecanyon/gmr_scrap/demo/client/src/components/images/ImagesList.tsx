@@ -27,14 +27,25 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     subscriptionRef.current = reviewsData(
       "images",
       { reviewId, uid: !user.isAdmin ? user.uid : undefined },
-      lastDoc
+      lastDoc,
     )
       .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
       .subscribe((snapshot) => {
         setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
         setLastDoc(snapshot.docs.at(-1));
 
-        setImages((prev) => (append ? [...prev, ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage)] : snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage)));
+        setImages((prev) =>
+          append
+            ? [
+                ...prev,
+                ...snapshot.docs.map(
+                  (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
+                ),
+              ]
+            : snapshot.docs.map(
+                (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
+              ),
+        );
       });
   };
 
@@ -51,10 +62,20 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     <div className="images">
       <Gallery>
         {images.map(({ original, thumb }, index) => (
-          <Item key={`image-${index}`} original={original} content={<Image src={original} alt={`image-${index}`} className="image" />}>
+          <Item
+            key={`image-${index}`}
+            original={original}
+            content={
+              <Image src={original} alt={`image-${index}`} className="image" />
+            }
+          >
             {({ ref, open }) => (
               <div className="image-thumb-container" ref={ref} onClick={open}>
-                <Image src={thumb} alt={`image-thumb-${index}`} className="image-thumb" />
+                <Image
+                  src={thumb}
+                  alt={`image-thumb-${index}`}
+                  className="image-thumb"
+                />
                 <IconPhoto size={24} className="image-thumb-icon" />
               </div>
             )}
@@ -62,10 +83,17 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
         ))}
       </Gallery>
 
-      {!images.length && <Alert className="w-100" variant="info">No images found</Alert>}
+      {!images.length && (
+        <Alert className="w-100" variant="info">
+          No images found
+        </Alert>
+      )}
 
       {!isLastPage && images.length > 0 && (
-        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+        <Stack
+          direction="horizontal"
+          className="justify-content-center mt-3 w-100"
+        >
           <Button onClick={() => fetchImages(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>

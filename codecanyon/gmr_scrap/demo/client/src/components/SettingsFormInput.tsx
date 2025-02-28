@@ -11,7 +11,13 @@ interface ISettingsFormInput {
   inputType: string;
 }
 
-export const SettingsFormInput = ({ tag, type, label, helpText, inputType = 'text' }: ISettingsFormInput) => {
+export const SettingsFormInput = ({
+  tag,
+  type,
+  label,
+  helpText,
+  inputType = "text",
+}: ISettingsFormInput) => {
   const [info, setInfo] = useState(null as any);
   const [inputValue, setInputValue] = useState("");
 
@@ -19,7 +25,10 @@ export const SettingsFormInput = ({ tag, type, label, helpText, inputType = 'tex
     if (!tag || !type) return;
 
     const subscription = settingValue({ tag, type })
-      .pipe(filter((data) => !!data), take(1))
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => {
         setInfo(data);
         setInputValue(data.value);
@@ -39,22 +48,20 @@ export const SettingsFormInput = ({ tag, type, label, helpText, inputType = 'tex
   return info ? (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
-      {
-        inputType === 'textarea' ? (
-          <Form.Control
-            as="textarea"
-            rows={3}
-            defaultValue={info.value}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        ) : (
-          <Form.Control
-            type="text"
-            defaultValue={info.value}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        )
-      }
+      {inputType === "textarea" ? (
+        <Form.Control
+          as="textarea"
+          rows={3}
+          defaultValue={info.value}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      ) : (
+        <Form.Control
+          type="text"
+          defaultValue={info.value}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      )}
       <Form.Text className="text-muted">{helpText}</Form.Text>
     </Form.Group>
   ) : (

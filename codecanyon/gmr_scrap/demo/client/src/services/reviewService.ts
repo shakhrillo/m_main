@@ -14,13 +14,27 @@ import { firestore } from "../firebaseConfig";
 interface IReviewQuery {
   uid?: string;
   reviewId?: string;
-  filterOptions?: "onlyImages" | "onlyVideos" | "onlyQA" | "onlyResponse" | string;
+  filterOptions?:
+    | "onlyImages"
+    | "onlyVideos"
+    | "onlyQA"
+    | "onlyResponse"
+    | string;
   search?: string;
 }
 
-export const reviewsData = (type: 'reviews' | 'images' | 'videos', q: IReviewQuery = {}, lastRef?: any) => {
-  const reviews$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
-  const collectionRef = collection(firestore, `containers/${q.reviewId}/${type}`);
+export const reviewsData = (
+  type: "reviews" | "images" | "videos",
+  q: IReviewQuery = {},
+  lastRef?: any,
+) => {
+  const reviews$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(
+    null as any,
+  );
+  const collectionRef = collection(
+    firestore,
+    `containers/${q.reviewId}/${type}`,
+  );
 
   const unsubscribe = onSnapshot(
     query(

@@ -1,6 +1,23 @@
-import { IconAlertCircle, IconCoin, IconCoins, IconInfoCircle } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconCoin,
+  IconCoins,
+  IconInfoCircle,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Col, Container, Form, FormCheck, FormControl, FormGroup, FormText, Row, Stack } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  Container,
+  Form,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormText,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
@@ -22,7 +39,8 @@ export const Payments = () => {
   const [cost, setCost] = useState(1);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "cost", type: "coin" }).pipe(filter(Boolean), take(1))
+    const subscription = settingValue({ tag: "cost", type: "coin" })
+      .pipe(filter(Boolean), take(1))
       .subscribe((data) => setCost(data.value || 1));
     return () => subscription.unsubscribe();
   }, []);
@@ -55,7 +73,11 @@ export const Payments = () => {
   const handlePurchase = async () => {
     setLoading(true);
     try {
-      const id = await buyCoins(user?.uid, Number(amount), Number(amount) * cost);
+      const id = await buyCoins(
+        user?.uid,
+        Number(amount),
+        Number(amount) * cost,
+      );
       setCoinId(id);
     } catch (error) {
       console.error(error);
@@ -78,13 +100,13 @@ export const Payments = () => {
           <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
-              <div className="payments-title">
-                Purchase Coins
-              </div>
-              <span className="text-muted">
-                Amount of coins to purchase.
-              </span>
-              <Form noValidate id="validateForm" className="needs-validation mt-2">
+              <div className="payments-title">Purchase Coins</div>
+              <span className="text-muted">Amount of coins to purchase.</span>
+              <Form
+                noValidate
+                id="validateForm"
+                className="needs-validation mt-2"
+              >
                 <FormGroup className="mb-3" controlId="amount">
                   <FormControl
                     type="text"
@@ -105,7 +127,8 @@ export const Payments = () => {
                   )}
                   <FormText className={error ? "d-none" : ""}>
                     <IconInfoCircle className="me-2" />
-                    There might be restrictions on the minimum and maximum from the payment API.
+                    There might be restrictions on the minimum and maximum from
+                    the payment API.
                   </FormText>
                 </FormGroup>
               </Form>
@@ -114,15 +137,22 @@ export const Payments = () => {
 
           <h6 className="mt-3">Coins Explained</h6>
           <p>
-            Coins are used to purchase data from the website. You can acquire coins by:
+            Coins are used to purchase data from the website. You can acquire
+            coins by:
           </p>
           <ul>
-            <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
-            <li><strong>Purchase Coins:</strong> Available for purchase.</li>
+            <li>
+              <strong>Free Coins:</strong> Earned through first-time
+              registration.
+            </li>
+            <li>
+              <strong>Purchase Coins:</strong> Available for purchase.
+            </li>
           </ul>
           <h6>Refund Policy</h6>
           <p>
-            Purchases are non-refundable. If an error occurs, contact support immediately.
+            Purchases are non-refundable. If an error occurs, contact support
+            immediately.
           </p>
         </Col>
         <Col md={3}>
@@ -141,13 +171,19 @@ export const Payments = () => {
                 <IconCoin />
               </div>
               <Stack direction="vertical">
-                <h6 className="mb-0">{(Number(amount || 0) * cost).toFixed(2)}</h6>
+                <h6 className="mb-0">
+                  {(Number(amount || 0) * cost).toFixed(2)}
+                </h6>
                 <p>Price</p>
               </Stack>
             </Stack>
             <FormCheck
               type="checkbox"
-              label={<span>I agree to the <a href="#">terms and conditions</a></span>}
+              label={
+                <span>
+                  I agree to the <a href="#">terms and conditions</a>
+                </span>
+              }
               required
               checked={isTermsAccepted}
               onChange={(e) => setIsTermsAccepted(e.target.checked)}

@@ -2,12 +2,22 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { googleLogin, login } from "../services/authService";
 import { IconBrandGoogleFilled } from "@tabler/icons-react";
-import { Alert, Button, Form, FormControl, FormGroup, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  Stack,
+} from "react-bootstrap";
 import { UserCredential } from "firebase/auth";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "user@user.com", password: "123456" });
+  const [formData, setFormData] = useState({
+    email: "user@user.com",
+    password: "123456",
+  });
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,9 +48,15 @@ export const Login = () => {
     <div className="auth">
       <div className="auth-form">
         <div className="auth-title">Login to your account</div>
-        <p className="auth-subtitle">Welcome back! We're happy to see you again.</p>
-        
-        <Button variant="outline-secondary" className="w-100" onClick={() => handleOAuthLogin(googleLogin)}>
+        <p className="auth-subtitle">
+          Welcome back! We're happy to see you again.
+        </p>
+
+        <Button
+          variant="outline-secondary"
+          className="w-100"
+          onClick={() => handleOAuthLogin(googleLogin)}
+        >
           <IconBrandGoogleFilled className="me-2" /> Continue with Google
         </Button>
 
@@ -85,7 +101,7 @@ export const Login = () => {
 
           {error && <Alert variant="danger mt-4">{error}</Alert>}
         </Form>
-        
+
         <Stack direction="horizontal" gap={2}>
           Don't have an account?
           <NavLink to="/auth/register">Create an account</NavLink>

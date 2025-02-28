@@ -5,20 +5,22 @@
   display: flex;
   position: relative;
   flex-direction: column;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
   padding: $spacer;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
   color: #666;
-  border-radius: $card-border-radius;
   font-size: 14px;
 }
 
 .docker-title {
-  font-size: 16px;
-  font-weight: 600;
   margin-bottom: 0.5rem;
   color: #666;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .docker-graph {
@@ -29,9 +31,9 @@
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.5rem 1rem;
+  border-radius: 0 0 0 $card-border-radius;
   background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
   color: #666;
   font-size: 12px;
-  border-radius: 0 0 0 $card-border-radius;
 }

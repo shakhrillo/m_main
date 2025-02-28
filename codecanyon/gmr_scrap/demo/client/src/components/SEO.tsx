@@ -8,16 +8,22 @@ import { settingValue } from "../services/settingService";
  * @returns JSX.Element
  */
 export const SEO = () => {
-  const [meta, setMeta] = useState({ title: "", keywords: "", description: "" });
+  const [meta, setMeta] = useState({
+    title: "",
+    keywords: "",
+    description: "",
+  });
 
   useEffect(() => {
     const tags = ["title", "keywords", "description"];
-    const subscriptions = tags.map(tag =>
+    const subscriptions = tags.map((tag) =>
       settingValue({ tag, type: "general" })
         .pipe(filter((data) => !!data?.value))
-        .subscribe(({ value }) => setMeta(prev => ({ ...prev, [tag]: value })))
+        .subscribe(({ value }) =>
+          setMeta((prev) => ({ ...prev, [tag]: value })),
+        ),
     );
-    return () => subscriptions.forEach(sub => sub.unsubscribe());
+    return () => subscriptions.forEach((sub) => sub.unsubscribe());
   }, []);
 
   return (

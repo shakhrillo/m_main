@@ -18,33 +18,41 @@ export const UsersList = () => {
   // Store the subscription reference
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchUsers = useCallback((append = false, lastDocument = null) => {
-    if (!auth.currentUser?.uid) return;
+  const fetchUsers = useCallback(
+    (append = false, lastDocument = null) => {
+      if (!auth.currentUser?.uid) return;
 
-    // Unsubscribe from the previous subscription before creating a new one
-    subscriptionRef.current?.unsubscribe();
+      // Unsubscribe from the previous subscription before creating a new one
+      subscriptionRef.current?.unsubscribe();
 
-    const subscription = usersList(lastDocument)
-      .pipe(
-        filter((snapshot) => !!snapshot),
-        map((snapshot) => {
-          if (snapshot.empty) {
-            setIsLastPage(true);
-            return [];
-          }
+      const subscription = usersList(lastDocument)
+        .pipe(
+          filter((snapshot) => !!snapshot),
+          map((snapshot) => {
+            if (snapshot.empty) {
+              setIsLastPage(true);
+              return [];
+            }
 
-          if (snapshot.docs.length < 10) setIsLastPage(true);
+            if (snapshot.docs.length < 10) setIsLastPage(true);
 
-          setLastDoc(snapshot.docs.at(-1));
-          return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }));
-        })
-      )
-      .subscribe((fetchedUsers) => {
-        setUsers((prev) => (append ? [...prev, ...fetchedUsers] : fetchedUsers));
-      });
+            setLastDoc(snapshot.docs.at(-1));
+            return snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as IUserInfo),
+            }));
+          }),
+        )
+        .subscribe((fetchedUsers) => {
+          setUsers((prev) =>
+            append ? [...prev, ...fetchedUsers] : fetchedUsers,
+          );
+        });
 
-    subscriptionRef.current = subscription;
-  }, [auth.currentUser?.uid]);
+      subscriptionRef.current = subscription;
+    },
+    [auth.currentUser?.uid],
+  );
 
   useEffect(() => {
     setLastDoc(null);

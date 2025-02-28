@@ -1,6 +1,13 @@
 import { JSX, useEffect, useState } from "react";
 import { dockerImage } from "../../services/dockerService";
-import { IconTag, IconClock, IconDeviceSdCard, IconBrandUbuntu, IconHierarchy, IconTriangle } from "@tabler/icons-react";
+import {
+  IconTag,
+  IconClock,
+  IconDeviceSdCard,
+  IconBrandUbuntu,
+  IconHierarchy,
+  IconTriangle,
+} from "@tabler/icons-react";
 import { Row, Col, Stack } from "react-bootstrap";
 import { formatStringDate, formatTimestamp, formatSize } from "../../utils";
 
@@ -38,7 +45,7 @@ export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
 
     return () => {
       subscription.unsubscribe();
-    }
+    };
   }, []);
 
   return (
@@ -49,9 +56,7 @@ export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
             icon={<IconTag />}
             label="Tags"
             value={
-              imageDetails?.RepoTags
-                ? imageDetails?.RepoTags.join(", ")
-                : "N/A"
+              imageDetails?.RepoTags ? imageDetails?.RepoTags.join(", ") : "N/A"
             }
           />
         </Col>
@@ -99,5 +104,5 @@ export const DockerImageInfo = ({ imageId }: IDockerImageInfo) => {
         </Col>
       </Row>
     </div>
-  )
+  );
 };

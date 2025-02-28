@@ -11,28 +11,36 @@ export const AuthGuard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const subscription = from(authenticatedUser()).pipe(
-      switchMap(authUser => {
-        if (!authUser) {
-          navigate("/auth/login");
-          return of(null);
-        }
-        return userData(authUser.uid).pipe(
-          filter(Boolean),
-          map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo }))?.[0]),
-          catchError(() => {
+    const subscription = from(authenticatedUser())
+      .pipe(
+        switchMap((authUser) => {
+          if (!authUser) {
             navigate("/auth/login");
             return of(null);
-          })
-        );
-      })
-    ).subscribe({
-      next: user => {
-        setUser(user);
-        setLoading(false);
-      },
-      error: () => navigate("/auth/login")
-    });
+          }
+          return userData(authUser.uid).pipe(
+            filter(Boolean),
+            map(
+              (snapshot) =>
+                snapshot.docs.map((doc) => ({
+                  id: doc.id,
+                  ...(doc.data() as IUserInfo),
+                }))?.[0],
+            ),
+            catchError(() => {
+              navigate("/auth/login");
+              return of(null);
+            }),
+          );
+        }),
+      )
+      .subscribe({
+        next: (user) => {
+          setUser(user);
+          setLoading(false);
+        },
+        error: () => navigate("/auth/login"),
+      });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -42,5 +50,7 @@ export const AuthGuard = () => {
       <h5 className="mt-5">Loading...</h5>
       <Spinner animation="grow" />
     </Container>
-  ) : <Outlet context={user} />;
+  ) : (
+    <Outlet context={user} />
+  );
 };

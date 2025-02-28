@@ -22,7 +22,9 @@ interface IPlaceInfo {
 export const PlaceInfo = ({ container }: IPlaceInfo) => {
   return (
     <div className="place">
-      {container.location && <GoogleMap geojson={locationsToGeoJSON([container.location])} />}
+      {container.location && (
+        <GoogleMap geojson={locationsToGeoJSON([container.location])} />
+      )}
       {container.location && (
         <div className="place-info">
           <StatusInfo container={container} />
@@ -35,12 +37,15 @@ export const PlaceInfo = ({ container }: IPlaceInfo) => {
               {container.title || "N/A"}
             </NavLink>
           )}
-          {container.address && (
-            <i className="d-block">{container.address}</i>
-          )}
+          {container.address && <i className="d-block">{container.address}</i>}
         </div>
       )}
-      <Accordion defaultActiveKey="1" flush alwaysOpen className="place-accordion">
+      <Accordion
+        defaultActiveKey="1"
+        flush
+        alwaysOpen
+        className="place-accordion"
+      >
         {(container?.totalReviews ||
           container?.totalOwnerReviews ||
           container?.totalImages ||

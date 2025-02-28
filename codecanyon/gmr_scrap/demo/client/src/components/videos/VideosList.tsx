@@ -28,7 +28,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
     subscriptionRef.current = reviewsData(
       "videos",
       { reviewId, uid: !user.isAdmin ? user.uid : undefined },
-      lastDoc
+      lastDoc,
     )
       .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
       .subscribe((snapshot) => {
@@ -38,8 +38,11 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
 
         setVideos((prev) =>
           append
-            ? [...prev, ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))]
-            : snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+            ? [
+                ...prev,
+                ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+              ]
+            : snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
         );
       });
   };
@@ -57,10 +60,18 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
     <div className="videos">
       <Gallery>
         {videos.map(({ videoUrl, thumb }, index) => (
-          <Item key={`video-${index}`} original={videoUrl} content={<ReactPlayer url={videoUrl} controls className="video" />}>
+          <Item
+            key={`video-${index}`}
+            original={videoUrl}
+            content={<ReactPlayer url={videoUrl} controls className="video" />}
+          >
             {({ ref, open }) => (
               <div className="video-thumb-container" ref={ref} onClick={open}>
-                <Image src={thumb} alt={`video-thumb-${index}`} className="video-thumb" />
+                <Image
+                  src={thumb}
+                  alt={`video-thumb-${index}`}
+                  className="video-thumb"
+                />
                 <IconPlayerPlay size={24} className="video-thumb-icon" />
               </div>
             )}
@@ -68,10 +79,17 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
         ))}
       </Gallery>
 
-      {!videos.length && <Alert className="w-100" variant="info">No videos found</Alert>}
+      {!videos.length && (
+        <Alert className="w-100" variant="info">
+          No videos found
+        </Alert>
+      )}
 
       {!isLastPage && videos.length > 0 && (
-        <Stack direction="horizontal" className="justify-content-center mt-3 w-100">
+        <Stack
+          direction="horizontal"
+          className="justify-content-center mt-3 w-100"
+        >
           <Button onClick={() => fetchVideos(true)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>

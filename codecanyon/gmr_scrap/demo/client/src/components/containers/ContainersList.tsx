@@ -23,7 +23,11 @@ interface IContainersList {
 
 const searchSubject = new Subject<string>();
 
-export const ContainersList = ({ path, type, machineType }: IContainersList) => {
+export const ContainersList = ({
+  path,
+  type,
+  machineType,
+}: IContainersList) => {
   const user = useOutletContext<IUserInfo>();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");
@@ -34,7 +38,9 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
   const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
-    const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
+    const searchSubscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe(setSearch);
     return () => searchSubscription.unsubscribe();
   }, []);
 
@@ -52,7 +58,7 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
           machineType,
           status,
         },
-        lastDocument
+        lastDocument,
       )
         .pipe(
           filter((snapshot) => !!snapshot),
@@ -62,14 +68,17 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
             if (!docs.length) return [];
 
             setLastDoc(docs.at(-1));
-            return docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-          })
+            return docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as IDockerContainer),
+            }));
+          }),
         )
         .subscribe((data) => {
           setContainers((prev) => (append ? [...prev, ...data] : data));
         });
     },
-    [search, type, status, machineType, user?.uid, user?.isAdmin]
+    [search, type, status, machineType, user?.uid, user?.isAdmin],
   );
 
   useEffect(() => {
@@ -89,7 +98,11 @@ export const ContainersList = ({ path, type, machineType }: IContainersList) => 
     <div className="containers-list">
       <Stack direction="horizontal" className="containers-sort">
         <InputGroup>
-          <Form.Control type="search" placeholder="Search..." onChange={(e) => searchSubject.next(e.target.value)} />
+          <Form.Control
+            type="search"
+            placeholder="Search..."
+            onChange={(e) => searchSubject.next(e.target.value)}
+          />
         </InputGroup>
         <Dropdown autoClose="outside">
           <Dropdown.Toggle variant="outline-secondary">

@@ -24,12 +24,19 @@ export const AppNavbar = () => {
   useEffect(() => {
     if (!user || !user.uid) return;
 
-    const unsubscribe = userData(user.uid).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }))),
-    ).subscribe((user) => setUserInfo(user[0]));
+    const unsubscribe = userData(user.uid)
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) =>
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IUserInfo),
+          })),
+        ),
+      )
+      .subscribe((user) => setUserInfo(user[0]));
 
-    return () => unsubscribe.unsubscribe()
+    return () => unsubscribe.unsubscribe();
   }, [user]);
 
   return (
@@ -52,8 +59,7 @@ export const AppNavbar = () => {
             <NavDropdown
               title={
                 <div className="d-inline-block">
-                  {
-                    userInfo?.photoURL &&
+                  {userInfo?.photoURL && (
                     <Image
                       src={userInfo?.photoURL}
                       alt="User"
@@ -61,23 +67,25 @@ export const AppNavbar = () => {
                       height={26}
                       className="rounded-circle me-2"
                     />
-                  }
+                  )}
                   <span>{userInfo?.displayName}</span>
                 </div>
               }
               id="user-dropdown"
               align="end"
             >
-              <NavDropdown.Item href="#" onClick={(e) => {
-                e.preventDefault();
-                navigate(`/users/${user.uid}`);
-              }}>
+              <NavDropdown.Item
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(`/users/${user.uid}`);
+                }}
+              >
                 Profile
               </NavDropdown.Item>
-              {
-                user?.isAdmin &&
+              {user?.isAdmin && (
                 <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
-              }
+              )}
               <NavDropdown.Divider />
               <NavDropdown.Item href="/auth/logout">Logout</NavDropdown.Item>
             </NavDropdown>

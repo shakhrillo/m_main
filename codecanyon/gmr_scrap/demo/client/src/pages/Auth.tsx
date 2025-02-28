@@ -34,7 +34,9 @@ export const Auth = () => {
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
             <Nav className="ms-auto">
-              <Nav.Link as={NavLink} to="/docs">Documentation</Nav.Link>
+              <Nav.Link as={NavLink} to="/docs">
+                Documentation
+              </Nav.Link>
             </Nav>
             <Button className="ms-3">Purchase $39</Button>
           </Navbar.Collapse>

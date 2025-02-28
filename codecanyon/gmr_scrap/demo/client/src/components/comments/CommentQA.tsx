@@ -12,14 +12,12 @@ export const CommentQA = ({ comment }: ICommentQA) => {
 
   return (
     <>
-      {
-        comment.qa.map(({ question, answer }, index) => (
-          <div className="comment-qa" key={`qa-${index}`}>
-            <strong>{question}</strong>
-            {isRate(answer) ? <Ratings container={comment} /> : answer}
-          </div>
-        ))
-      }
+      {comment.qa.map(({ question, answer }, index) => (
+        <div className="comment-qa" key={`qa-${index}`}>
+          <strong>{question}</strong>
+          {isRate(answer) ? <Ratings container={comment} /> : answer}
+        </div>
+      ))}
     </>
   );
 };

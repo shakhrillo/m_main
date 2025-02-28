@@ -5,14 +5,16 @@
 }
 
 .comments-sort {
-  padding: $spacer;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
-  background-color: #fff;
-  color: #666;
   display: flex;
   justify-content: space-between;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
+  padding: $spacer;
+  color: #666;
+  font-size: 14px;
 
   .input-group {
     width: auto;
@@ -21,17 +23,19 @@
 
 .comment {
   display: flex;
-  flex-direction: column;
   position: relative;
+  flex-direction: column;
   gap: 0.5rem;
-  padding: $spacer;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px;
   border-radius: $card-border-radius;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
-  font-size: 14px;
-  color: #666;
+  padding: $spacer;
   max-height: 150px;
   overflow: hidden;
+  color: #666;
+  font-size: 14px;
 
   &.expanded {
     max-height: none;
@@ -42,10 +46,14 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 1) 20%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    width: 100%;
     color: $secondary;
   }
 
@@ -69,10 +77,10 @@
 
     img {
       align-self: center;
-      width: 40px;
-      height: 40px;
       border-radius: 50%;
       background-color: $secondary;
+      width: 40px;
+      height: 40px;
       object-fit: cover;
       pointer-events: none;
       user-select: none;
@@ -88,18 +96,18 @@
     display: flex;
     position: relative;
     padding-left: 0.75rem;
-    font-weight: 600;
     overflow: hidden;
+    font-weight: 600;
 
     &::before {
-      content: "";
       display: block;
       position: absolute;
       top: 0;
       left: 0;
+      background-color: $secondary;
       width: 4px;
       height: 100%;
-      background-color: $secondary;
+      content: "";
     }
   }
 
@@ -125,9 +133,9 @@
 
   &-thumb {
     cursor: pointer;
+    border-radius: 6px;
     width: 60px;
     height: 60px;
-    border-radius: 6px;
     object-fit: cover;
 
     &-container {
@@ -136,26 +144,26 @@
       overflow: hidden;
 
       &::after {
-        content: "";
         position: absolute;
         inset: 0;
         background-color: rgba(0, 0, 0, 0.4);
+        content: "";
       }
     }
 
     &-icon {
       position: absolute;
       top: 50%;
-      left: 0;
       right: 0;
+      left: 0;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      margin: 0 auto;
-      color: #fff;
       opacity: 1;
       z-index: 1;
       cursor: pointer;
+      margin: 0 auto;
+      width: 16px;
+      height: 16px;
+      color: #fff;
     }
   }
 
@@ -163,10 +171,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 0.5rem 1rem;
+    border-radius: 0 0 0 $card-border-radius;
     background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
     color: #666;
     font-size: 12px;
-    border-radius: 0 0 0 $card-border-radius;
   }
 }

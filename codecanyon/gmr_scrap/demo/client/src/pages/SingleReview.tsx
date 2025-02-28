@@ -1,5 +1,14 @@
 import { IconLibraryPhoto, IconMessage, IconVideo } from "@tabler/icons-react";
-import { Badge, Breadcrumb, Col, Container, Row, Stack, Tab, Tabs } from "react-bootstrap";
+import {
+  Badge,
+  Breadcrumb,
+  Col,
+  Container,
+  Row,
+  Stack,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { CommentsList } from "../components/comments/CommentsList";
 import { ImagesList } from "../components/images/ImagesList";
@@ -29,20 +38,23 @@ export const SingleReview = () => {
       containerId: reviewId,
       uid: !user.isAdmin ? user.uid : undefined,
     })
-    .pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-        return containers[0];
-      })
-    )
-    .subscribe((data) => {
-      if (!data || !data.location) {
-        setContainer({} as IDockerContainer);
-        return;
-      }
-      setContainer(data);
-    });
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          const containers = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IDockerContainer),
+          }));
+          return containers[0];
+        }),
+      )
+      .subscribe((data) => {
+        if (!data || !data.location) {
+          setContainer({} as IDockerContainer);
+          return;
+        }
+        setContainer(data);
+      });
 
     return () => {
       subscription.unsubscribe();
@@ -70,9 +82,7 @@ export const SingleReview = () => {
                 <Stack direction="horizontal" gap={2}>
                   <IconMessage />
                   <h6 className="m-0">Comments</h6>
-                  <Badge>
-                    { container.totalReviews }
-                  </Badge>
+                  <Badge>{container.totalReviews}</Badge>
                 </Stack>
               }
             >
@@ -84,9 +94,7 @@ export const SingleReview = () => {
                 <Stack direction="horizontal" gap={2}>
                   <IconLibraryPhoto />
                   <h6 className="m-0">Images</h6>
-                  <Badge>
-                    { container.totalImages }
-                  </Badge>
+                  <Badge>{container.totalImages}</Badge>
                 </Stack>
               }
             >
@@ -98,9 +106,7 @@ export const SingleReview = () => {
                 <Stack direction="horizontal" gap={2}>
                   <IconVideo />
                   <h6 className="m-0">Videos</h6>
-                  <Badge>
-                    { container.totalVideos }
-                  </Badge>
+                  <Badge>{container.totalVideos}</Badge>
                 </Stack>
               }
             >

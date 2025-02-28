@@ -11,7 +11,13 @@ import { useMap } from "@vis.gl/react-google-maps";
  * @param zoom Current zoom level
  * @returns Clustered markers
  */
-export const ClusteredMarkers = ({ geojson, zoom }: { geojson: FeatureCollection<Point, any>; zoom: any;}) => {
+export const ClusteredMarkers = ({
+  geojson,
+  zoom,
+}: {
+  geojson: FeatureCollection<Point, any>;
+  zoom: any;
+}) => {
   const map = useMap();
   const [clusterData, setClusterData] = useState<any[]>([]);
 

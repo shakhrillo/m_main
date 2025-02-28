@@ -1,26 +1,30 @@
 .payments {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
-  color: #666;
-  border-radius: $card-border-radius;
-  font-size: 14px;
-  padding: $spacer;
   align-items: start;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
+  padding: $spacer;
+  color: #666;
+  font-size: 14px;
 
   &-title {
     display: block;
-    font-size: 16px;
-    font-weight: 600;
     margin-bottom: 0;
+    font-weight: 600;
+    font-size: 16px;
   }
 }
 
 .payment-summary {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
-  color: #666;
-  border-radius: $card-border-radius;
-  font-size: 14px;
-  padding: $spacer;
   align-items: start;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
+  padding: $spacer;
+  color: #666;
+  font-size: 14px;
 }

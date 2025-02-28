@@ -15,8 +15,8 @@ const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
   <div className="place-info-details">
     {createElement(icon)}
     <div className="place-info-content">
-    <div className="place-info-label">{label}</div>
-    <div className="place-info-value">{value || "N/A"}</div>
+      <div className="place-info-label">{label}</div>
+      <div className="place-info-value">{value || "N/A"}</div>
     </div>
   </div>
 );
@@ -36,9 +36,12 @@ export const PlaceInfoMachine = ({
           label="Machine ID"
           value={
             user?.isAdmin && container?.machineId ? (
-            <NavLink to={`/containers/${container?.machineId}`}>
-              {container?.machine?.Actor?.Attributes?.name ?? "N/A"}
-            </NavLink>) : container?.machine?.Actor?.Attributes?.name ?? "N/A"
+              <NavLink to={`/containers/${container?.machineId}`}>
+                {container?.machine?.Actor?.Attributes?.name ?? "N/A"}
+              </NavLink>
+            ) : (
+              (container?.machine?.Actor?.Attributes?.name ?? "N/A")
+            )
           }
         />
       </Col>

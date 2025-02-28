@@ -36,11 +36,9 @@ export const DockerImage = () => {
         >
           Images
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>
-          {imgId}
-        </Breadcrumb.Item>
+        <Breadcrumb.Item active>{imgId}</Breadcrumb.Item>
       </Breadcrumb>
-      
+
       <Row className="g-3">
         <Col md={9}>
           <div className="docker-image-history">

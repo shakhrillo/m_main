@@ -8,24 +8,28 @@
   display: flex;
   position: relative;
   flex-direction: column;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
   padding: $spacer;
   overflow: hidden;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
   color: #666;
+  font-size: 14px;
 }
 
 .containers-sort {
-  padding: $spacer;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
-  color: #666;
   display: flex;
   justify-content: space-between;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
+  padding: $spacer;
+  color: #666;
+  font-size: 14px;
 
   .input-group {
     width: auto;
@@ -36,24 +40,26 @@
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.5rem 1rem;
+  border-radius: 0 0 0 $card-border-radius;
   background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
   color: #666;
   font-size: 12px;
-  border-radius: 0 0 0 $card-border-radius;
 }
 
 .container-logs {
   display: flex;
   position: relative;
   flex-direction: column;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
   padding: $spacer;
   overflow: hidden;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
   color: #666;
+  font-size: 14px;
 }
 
 .container-log {

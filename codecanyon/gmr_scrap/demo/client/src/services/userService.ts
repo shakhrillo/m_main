@@ -1,4 +1,13 @@
-import { collection, doc, DocumentData, onSnapshot, query, QuerySnapshot, updateDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  DocumentData,
+  onSnapshot,
+  query,
+  QuerySnapshot,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
 import { User } from "firebase/auth";
@@ -22,14 +31,14 @@ export const authenticatedUser = (): Promise<User | null> => {
  * @param uid The user ID.
  * @returns Observable<IUserInfo>
  */
-export const userData = (uid: string) =>{
-  const user$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any)
+export const userData = (uid: string) => {
+  const user$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "users");
 
   const unsubscribe = onSnapshot(
     query(collectionRef, where("uid", "==", uid)),
     (snapshot) => user$.next(snapshot),
-    (error) => user$.error(error)
+    (error) => user$.error(error),
   );
 
   return new Observable<QuerySnapshot<DocumentData>>((subscriber) => {

@@ -25,7 +25,7 @@ export const buyCoins = async (uid: string, amount: number, cost: number) => {
   const collectionRef = collection(firestore, `users/${uid}/buyCoins`);
   const docRef = await addDoc(collectionRef, {
     amount,
-    cost
+    cost,
   });
 
   return docRef.id;
@@ -84,9 +84,10 @@ export const paymentData = (receiptId: string) => {
 };
 
 export const paymentsData = (q: IPaymentsQuery, lastRef?: any) => {
-  const paymentsData$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any)
+  const paymentsData$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(
+    null as any,
+  );
   const collectionRef = collection(firestore, "payments");
-
 
   const unsubscribe = onSnapshot(
     query(

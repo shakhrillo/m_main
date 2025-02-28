@@ -12,13 +12,15 @@ export const ReceiptData = ({ receipt }: IReceiptData) => {
       <Stack direction="horizontal" gap={2} className="justify-content-between">
         <Stack direction="horizontal" gap={2}>
           {`${formatAmount(receipt.amount)} ${receipt?.currency?.toUpperCase()}`}
-          <Badge bg={receipt.status === "succeeded" ? "success" : "danger"} className="text-capitalize" pill>
+          <Badge
+            bg={receipt.status === "succeeded" ? "success" : "danger"}
+            className="text-capitalize"
+            pill
+          >
             {receipt.status}
           </Badge>
         </Stack>
-        <div className="receipt-time">
-          {formatTimestamp(receipt.createdAt)}
-        </div>
+        <div className="receipt-time">{formatTimestamp(receipt.createdAt)}</div>
       </Stack>
       <NavLink to={`/receipts/${receipt.id}`} className="receipt-label">
         {formatNumber(receipt.metadata.amount)} Coins
@@ -26,10 +28,13 @@ export const ReceiptData = ({ receipt }: IReceiptData) => {
       <Stack direction="horizontal" gap={2} className="text-muted">
         <div>{receipt?.payment_method_details?.card?.brand}</div>
         <div>**** **** **** {receipt?.payment_method_details?.card?.last4}</div>
-        <div>{receipt?.payment_method_details?.card?.exp_month}/{receipt?.payment_method_details?.card?.exp_year}</div>
+        <div>
+          {receipt?.payment_method_details?.card?.exp_month}/
+          {receipt?.payment_method_details?.card?.exp_year}
+        </div>
         <div>{receipt?.payment_method_details?.card?.funding}</div>
         <div>{receipt?.payment_method_details?.card?.country}</div>
       </Stack>
     </div>
   );
-}
+};

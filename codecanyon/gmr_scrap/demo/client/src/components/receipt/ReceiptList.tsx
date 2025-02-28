@@ -28,9 +28,11 @@ export const ReceiptList = () => {
   const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
-    const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
-      setSearch(value);
-    });
+    const subscription = searchSubject
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        setSearch(value);
+      });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -40,25 +42,33 @@ export const ReceiptList = () => {
 
     subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
 
-    subscriptionRef.current = paymentsData({
-      ...user?.isAdmin ? {} : { uid: user?.uid },
-      type: status ? [status] : ["charge.succeeded", "charge.failed"],
-    }, lastDocument).pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        if (snapshot.empty) {
-          setIsLastPage(true);
-          return [];
-        }
-        
-        if (snapshot.docs.length < 10) setIsLastPage(true);
+    subscriptionRef.current = paymentsData(
+      {
+        ...(user?.isAdmin ? {} : { uid: user?.uid }),
+        type: status ? [status] : ["charge.succeeded", "charge.failed"],
+      },
+      lastDocument,
+    )
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          if (snapshot.empty) {
+            setIsLastPage(true);
+            return [];
+          }
 
-        setLastDoc(snapshot.docs.at(-1));
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
-      }),
-    ).subscribe((data) => {
-      setHistory((prev) => (append ? [...prev, ...data] : data));
-    });
+          if (snapshot.docs.length < 10) setIsLastPage(true);
+
+          setLastDoc(snapshot.docs.at(-1));
+          return snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IDockerContainer),
+          }));
+        }),
+      )
+      .subscribe((data) => {
+        setHistory((prev) => (append ? [...prev, ...data] : data));
+      });
   };
 
   useEffect(() => {
@@ -73,7 +83,7 @@ export const ReceiptList = () => {
   const loadMore = () => {
     if (!isLastPage) fetchReceipts(true, lastDoc);
   };
-  
+
   return (
     <div className="receipts-list">
       <Stack direction="horizontal" className="receipts-sort">
@@ -88,23 +98,25 @@ export const ReceiptList = () => {
                 key={option.label}
                 onClick={() => setStatus(option.value)}
                 className={status === option.value ? "active" : ""}
-              >{ option.label }</Dropdown.Item>
+              >
+                {option.label}
+              </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
       </Stack>
 
-      {history.map((receipt) => <ReceiptData key={receipt.id} receipt={receipt} />)}
+      {history.map((receipt) => (
+        <ReceiptData key={receipt.id} receipt={receipt} />
+      ))}
 
-      {
-        !isLastPage && (
-          <Stack direction="horizontal" className="justify-content-center mt-3">
-            <Button onClick={loadMore} variant="outline-primary">
-              <IconReload className="me-2" /> Load more
-            </Button>
-          </Stack>
-        )
-      }
+      {!isLastPage && (
+        <Stack direction="horizontal" className="justify-content-center mt-3">
+          <Button onClick={loadMore} variant="outline-primary">
+            <IconReload className="me-2" /> Load more
+          </Button>
+        </Stack>
+      )}
     </div>
   );
 };

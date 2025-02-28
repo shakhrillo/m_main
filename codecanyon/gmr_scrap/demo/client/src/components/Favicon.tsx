@@ -18,5 +18,5 @@ export const Favicon = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  return favicon && <FIcon url={favicon} />
+  return favicon && <FIcon url={favicon} />;
 };

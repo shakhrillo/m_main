@@ -44,7 +44,9 @@ export const createDockerContainer = (data: any) => {
  * @returns Observable<IDockerContainer[]>
  */
 export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
-  const containers$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
+  const containers$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(
+    null as any,
+  );
   const collectionRef = collection(firestore, "containers");
 
   const unsubscribe = onSnapshot(
@@ -104,7 +106,7 @@ export const dockerImages = (lastRef?: any) => {
       unsubscribe();
     };
   });
-}
+};
 
 export const dockerImage = (imageId: string) => {
   const image$ = new BehaviorSubject({} as any);
@@ -133,7 +135,7 @@ export const dockerImage = (imageId: string) => {
       unsubscribe();
     };
   });
-}
+};
 
 export const dockerContainerLogs = (containerId: string) => {
   const logs$ = new BehaviorSubject([] as any);
@@ -205,7 +207,7 @@ export const dockerContainerHistory = (containerId: string) => {
  */
 export const updateDockerContainer = async (containerId: string, data: any) => {
   const containerRef = doc(firestore, "containers", containerId);
-  return await updateDoc(containerRef, data)
+  return await updateDoc(containerRef, data);
 };
 
 /**

@@ -1,4 +1,19 @@
-import { collection, doc, onSnapshot, query, updateDoc, where, orderBy, startAt, endAt, getDocs, DocumentData, QuerySnapshot, limit, startAfter } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+  orderBy,
+  startAt,
+  endAt,
+  getDocs,
+  DocumentData,
+  QuerySnapshot,
+  limit,
+  startAfter,
+} from "firebase/firestore";
 import * as geofire from "geofire-common";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -104,17 +119,28 @@ export const usersList = (lastRef?: DocumentData | null) => {
   });
 };
 
-export const allContainersByGeoBounds = async (bounds: google.maps.LatLngBounds) => {
+export const allContainersByGeoBounds = async (
+  bounds: google.maps.LatLngBounds,
+) => {
   const sw = bounds.getSouthWest();
   const ne = bounds.getNorthEast();
-  const center: [number, number] = [(sw.lat() + ne.lat()) / 2, (sw.lng() + ne.lng()) / 2];
-  const radiusInM = geofire.distanceBetween([sw.lat(), sw.lng()], [ne.lat(), ne.lng()]) * 1000;
+  const center: [number, number] = [
+    (sw.lat() + ne.lat()) / 2,
+    (sw.lng() + ne.lng()) / 2,
+  ];
+  const radiusInM =
+    geofire.distanceBetween([sw.lat(), sw.lng()], [ne.lat(), ne.lng()]) * 1000;
 
   const boundsQueries = geofire.geohashQueryBounds(center, radiusInM);
   const promises = boundsQueries.map(([start, end]) =>
     getDocs(
-      query(collection(firestore, "containers"), orderBy("geohash"), startAt(start), endAt(end))
-    )
+      query(
+        collection(firestore, "containers"),
+        orderBy("geohash"),
+        startAt(start),
+        endAt(end),
+      ),
+    ),
   );
 
   const snapshots = await Promise.all(promises);
@@ -126,7 +152,8 @@ export const allContainersByGeoBounds = async (bounds: google.maps.LatLngBounds)
       const { latitude, longitude } = data.location;
 
       // Extra filtering for false positives
-      const distance = geofire.distanceBetween([latitude, longitude], center) * 1000;
+      const distance =
+        geofire.distanceBetween([latitude, longitude], center) * 1000;
       if (distance <= radiusInM) {
         matchingDocs.push({ id: doc.id, ...data });
       }

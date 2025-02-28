@@ -1,15 +1,17 @@
 .dashboard-map,
 .dashboard-graph {
-  padding: $spacer;
-  font-size: 14px;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  background-color: #fff;
   display: flex;
+  position: relative;
   flex-direction: column;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: $card-border-radius;
+  background-color: #fff;
+  padding: $spacer;
   min-height: 220px;
   overflow: hidden;
-  position: relative;
+  font-size: 14px;
 }
 
 .dashboard-map {
@@ -17,8 +19,8 @@
 }
 
 .dashboard-title {
-  font-size: 16px;
-  font-weight: 600;
   margin-bottom: 0.5rem;
   color: #666;
+  font-weight: 600;
+  font-size: 16px;
 }

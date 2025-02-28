@@ -1,4 +1,10 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, deleteUser } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  deleteUser,
+} from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 export const login = async (email: string, password: string) =>

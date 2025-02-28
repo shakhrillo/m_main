@@ -55,7 +55,7 @@ export const GoogleMap = ({
         }
       }}
     >
-      { geojson && <ClusteredMarkers geojson={geojson} zoom={zoom} /> }
+      {geojson && <ClusteredMarkers geojson={geojson} zoom={zoom} />}
     </Map>
   );
 };

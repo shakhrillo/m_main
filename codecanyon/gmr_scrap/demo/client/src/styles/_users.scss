@@ -7,16 +7,18 @@
 .user-data,
 .user-form,
 .user-info {
-  width: 100%;
-  padding: 1rem;
-  background: #fff;
-  border-radius: $card-border-radius;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
-  font-size: 14px;
   display: flex;
   position: relative;
-  overflow: hidden;
   gap: 1rem;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px;
+  border-radius: $card-border-radius;
+  background: #fff;
+  padding: 1rem;
+  width: 100%;
+  overflow: hidden;
+  font-size: 14px;
 }
 
 .user-stats {
@@ -32,22 +34,22 @@
 
 .user-image,
 .user-image img {
-  width: 50px;
-  height: 50px;
-  max-width: 50px;
-  max-height: 50px;
   border-radius: 50%;
+  width: 50px;
+  max-width: 50px;
+  height: 50px;
+  max-height: 50px;
 }
 
 .user-time {
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.5rem 1rem;
+  border-radius: 0 0 0 $card-border-radius;
   background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
   color: #666;
   font-size: 12px;
-  border-radius: 0 0 0 $card-border-radius;
 }
 
 @media (max-width: 768px) {

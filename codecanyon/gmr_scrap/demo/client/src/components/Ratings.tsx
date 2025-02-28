@@ -12,7 +12,11 @@ import { IComment } from "../types/comment";
  * @param info The review information
  * @returns The ratings component
  */
-export const Ratings = ({ container }: { container?: IDockerContainer | IComment }) => {
+export const Ratings = ({
+  container,
+}: {
+  container?: IDockerContainer | IComment;
+}) => {
   if (!container || typeof container.rating !== "number") return null;
 
   const validRating = Math.max(0, Math.min(container.rating, 5));
@@ -26,7 +30,11 @@ export const Ratings = ({ container }: { container?: IDockerContainer | IComment
 
       <div className="ratings-stars">
         {Array.from({ length: fullStars }).map((_, i) => (
-          <IconStarFilled key={`full-${i}`} size={16} className="ratings-star" />
+          <IconStarFilled
+            key={`full-${i}`}
+            size={16}
+            className="ratings-star"
+          />
         ))}
 
         {halfStar && <IconStarHalfFilled size={16} className="ratings-star" />}

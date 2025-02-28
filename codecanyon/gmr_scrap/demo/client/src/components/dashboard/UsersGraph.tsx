@@ -12,14 +12,19 @@ export const UsersGraph = () => {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
-    const subscribtion = usersList().pipe(
-      filter((snapshot) => !!snapshot),
-      map((snapshot) => {
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IUserInfo }));
-      }),
-    ).subscribe((users) => {
-      setUsers(formatTotalUsers(users));
-    });
+    const subscribtion = usersList()
+      .pipe(
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
+          return snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IUserInfo),
+          }));
+        }),
+      )
+      .subscribe((users) => {
+        setUsers(formatTotalUsers(users));
+      });
 
     return () => {
       subscribtion.unsubscribe();
@@ -28,19 +33,19 @@ export const UsersGraph = () => {
 
   return (
     <>
-      <div className="dashboard-title">
-        This month's users
-      </div>
+      <div className="dashboard-title">This month's users</div>
       <div className="dashboard-graph">
         <LineChart
           labels={users.map((e) => e.date)}
-          datasets={[{
-            label: "This month's users",
-            data: users.map((e) => e.total),
-            color: "#3e2c41",
-          }]}
+          datasets={[
+            {
+              label: "This month's users",
+              data: users.map((e) => e.total),
+              color: "#3e2c41",
+            },
+          ]}
         />
       </div>
     </>
-  )
+  );
 };

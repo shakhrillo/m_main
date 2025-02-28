@@ -8,7 +8,10 @@ export const Info = () => {
 
   useEffect(() => {
     const subscription = settingValue({ tag: "help", type: "general" })
-      .pipe(filter((data) => !!data), take(1))
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => setInfo(data["value"]));
 
     return () => {

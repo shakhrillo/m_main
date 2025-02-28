@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { googleLogin, register } from "../services/authService";
 import { IconBrandGoogleFilled } from "@tabler/icons-react";
-import { Alert, Button, Form, FormControl, FormGroup, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  Stack,
+} from "react-bootstrap";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -54,9 +61,15 @@ export const Register = () => {
     <div className="auth">
       <div className="auth-form">
         <div className="auth-title">Create an account</div>
-        <p className="auth-subtitle">Join us today! It only takes a few steps.</p>
+        <p className="auth-subtitle">
+          Join us today! It only takes a few steps.
+        </p>
 
-        <Button variant="outline-secondary" className="w-100" onClick={handleOAuthRegister}>
+        <Button
+          variant="outline-secondary"
+          className="w-100"
+          onClick={handleOAuthRegister}
+        >
           <IconBrandGoogleFilled className="me-2" /> Continue with Google
         </Button>
 

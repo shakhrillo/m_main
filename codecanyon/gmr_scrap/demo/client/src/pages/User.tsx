@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useState, useRef, JSX } from "react";
 import { filter, map } from "rxjs";
-import { Alert, Breadcrumb, Button, Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Breadcrumb,
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
@@ -12,7 +22,15 @@ interface ChangeUserPhotoEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & EventTarget;
 }
 
-const UserInfo = ({ icon, label, value }: { icon: JSX.Element; label: string; value?: any }) => (
+const UserInfo = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: JSX.Element;
+  label: string;
+  value?: any;
+}) => (
   <Stack direction="horizontal" className="align-items-start" gap={3}>
     <span>{icon}</span>
     <div>
@@ -40,10 +58,15 @@ export const User = () => {
 
     subscriptionRef.current = userData(userId)
       .pipe(
-        filter(snapshot => !!snapshot),
-        map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as IUserInfo })))
+        filter((snapshot) => !!snapshot),
+        map((snapshot) =>
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as IUserInfo),
+          })),
+        ),
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         setSelectedUser(data[0]);
         setLoading(false);
       });
@@ -65,7 +88,7 @@ export const User = () => {
       const arrayBuffer = reader.result as ArrayBuffer;
       setBuffer(Buffer.from(new Uint8Array(arrayBuffer)));
     };
-    reader.onerror = err => console.error("Error reading the file:", err);
+    reader.onerror = (err) => console.error("Error reading the file:", err);
     reader.readAsArrayBuffer(file);
   }, []);
 
@@ -90,7 +113,7 @@ export const User = () => {
       if (!userId) return;
       await updateUser(userId, { [field]: value });
     },
-    [userId]
+    [userId],
   );
 
   const deleteUser = useCallback(
@@ -103,7 +126,7 @@ export const User = () => {
         navigate("/auth/logout");
       }
     },
-    [navigate]
+    [navigate],
   );
 
   if (loading) return <p>Loading user data...</p>;
@@ -111,8 +134,14 @@ export const User = () => {
   return (
     <Container>
       <Breadcrumb>
-        {user?.isAdmin && <Breadcrumb.Item onClick={() => navigate("/users")}>Users</Breadcrumb.Item>}
-        <Breadcrumb.Item active>{selectedUser?.displayName || "User"}</Breadcrumb.Item>
+        {user?.isAdmin && (
+          <Breadcrumb.Item onClick={() => navigate("/users")}>
+            Users
+          </Breadcrumb.Item>
+        )}
+        <Breadcrumb.Item active>
+          {selectedUser?.displayName || "User"}
+        </Breadcrumb.Item>
       </Breadcrumb>
 
       <Row>
@@ -120,7 +149,12 @@ export const User = () => {
           <Form className="user-form">
             <Form.Group>
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" value={selectedUser?.email || ""} readOnly disabled />
+              <Form.Control
+                type="email"
+                value={selectedUser?.email || ""}
+                readOnly
+                disabled
+              />
             </Form.Group>
 
             <Form.Group>
@@ -135,7 +169,12 @@ export const User = () => {
 
             <Form.Group>
               <Form.Label>Photo</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={handleFileChange} disabled={isDisabled} />
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={isDisabled}
+              />
             </Form.Group>
 
             <Form.Group>
@@ -157,27 +196,42 @@ export const User = () => {
 
         <Col xl={3}>
           <div className="user-info">
-            {selectedUser?.photoURL && <Image src={selectedUser.photoURL} rounded fluid />}
+            {selectedUser?.photoURL && (
+              <Image src={selectedUser.photoURL} rounded fluid />
+            )}
             <div className="d-flex flex-column mt-3 gap-3">
-              {
-                selectedUser?.isDeleted && (
-                  <Alert variant="danger">
-                    This user has been deleted.
-                  </Alert>
-                )
-              }
-              <UserInfo icon={<IconMail />} label="Email" value={selectedUser?.email} />
-              <UserInfo icon={<IconLabel />} label="Display Name" value={selectedUser?.displayName} />
-              <UserInfo icon={<IconCoin />} label="Coin Balance" value={formatNumber(selectedUser?.coinBalance)} />
-              <UserInfo icon={<IconStars />} label="Total Reviews" value={selectedUser?.totalReviews} />
+              {selectedUser?.isDeleted && (
+                <Alert variant="danger">This user has been deleted.</Alert>
+              )}
+              <UserInfo
+                icon={<IconMail />}
+                label="Email"
+                value={selectedUser?.email}
+              />
+              <UserInfo
+                icon={<IconLabel />}
+                label="Display Name"
+                value={selectedUser?.displayName}
+              />
+              <UserInfo
+                icon={<IconCoin />}
+                label="Coin Balance"
+                value={formatNumber(selectedUser?.coinBalance)}
+              />
+              <UserInfo
+                icon={<IconStars />}
+                label="Total Reviews"
+                value={selectedUser?.totalReviews}
+              />
             </div>
-            {
-              !selectedUser?.isDeleted && (
-                <Button variant="danger" onClick={() => deleteUser(selectedUser?.uid)}>
-                  Delete User
-                </Button>
-              )
-            }
+            {!selectedUser?.isDeleted && (
+              <Button
+                variant="danger"
+                onClick={() => deleteUser(selectedUser?.uid)}
+              >
+                Delete User
+              </Button>
+            )}
           </div>
         </Col>
       </Row>

@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Col, FormControl, FormLabel, FormSelect, FormText, Row, Stack } from "react-bootstrap";
+import {
+  Col,
+  FormControl,
+  FormLabel,
+  FormSelect,
+  FormText,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import { updateDockerContainer } from "../../services/dockerService";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { useOutletContext } from "react-router-dom";
@@ -43,8 +51,12 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   const user = useOutletContext<IUserInfo>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [limit, setLimit] = useState<number>(0);
-  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(user?.coinBalance || 0);
-  const [sortBy, setSortBy] = useState<"Most relevant" | "Newest" | "Highest rating" | "Lowest rating">("Most relevant");
+  const [maxSpentPoints, setMaxSpentPoints] = useState<number>(
+    user?.coinBalance || 0,
+  );
+  const [sortBy, setSortBy] = useState<
+    "Most relevant" | "Newest" | "Highest rating" | "Lowest rating"
+  >("Most relevant");
   const [outputAs, setOutputAs] = useState<"json" | "csv">("json");
 
   const [validateMin, setValidateMin] = useState<number>(0);
@@ -56,7 +68,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     }
 
     if (typeof container.maxSpentPoints === "number") {
-      if(container.maxSpentPoints > user?.coinBalance) {
+      if (container.maxSpentPoints > user?.coinBalance) {
         setMaxSpentPoints(user?.coinBalance);
       } else {
         setMaxSpentPoints(container.maxSpentPoints);
@@ -77,14 +89,21 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   }, [container?.outputAs]);
 
   useEffect(() => {
-    setIsDisabled(!container.rating || user?.uid !== container?.uid || user?.coinBalance <= 0);
+    setIsDisabled(
+      !container.rating ||
+        user?.uid !== container?.uid ||
+        user?.coinBalance <= 0,
+    );
   }, [container, user?.uid]);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "minimum", type: "scrap"})
-      .pipe(filter((data) => !!data), take(1))
+    const subscription = settingValue({ tag: "minimum", type: "scrap" })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => {
-        if(data?.value) {
+        if (data?.value) {
           setValidateMin(Number(data.value));
 
           if (limit < Number(data.value)) {
@@ -95,14 +114,17 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
 
     return () => {
       subscription.unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "maximum", type: "scrap"})
-      .pipe(filter((data) => !!data), take(1))
+    const subscription = settingValue({ tag: "maximum", type: "scrap" })
+      .pipe(
+        filter((data) => !!data),
+        take(1),
+      )
       .subscribe((data) => {
-        if(data?.value) {
+        if (data?.value) {
           setValidateMax(Number(data.value));
 
           if (maxSpentPoints > Number(data.value)) {
@@ -113,7 +135,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
 
     return () => {
       subscription.unsubscribe();
-    }
+    };
   }, []);
 
   const handleFormChange = (key: string, value: any) => {
@@ -121,7 +143,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     updateDockerContainer(container.id, { [key]: value }).catch((error) => {
       console.error("Error updating container:", error);
     });
-  }
+  };
 
   return (
     <>
@@ -137,9 +159,9 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               onBlur={(e) => {
                 let value = Number(e.target.value);
                 console.log(value, validateMin, validateMax);
-                if(value < validateMin) {
+                if (value < validateMin) {
                   value = validateMin;
-                } else if(value > validateMax) {
+                } else if (value > validateMax) {
                   value = validateMax;
                 }
                 setLimit(value);
@@ -150,7 +172,8 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               max={validateMax}
             />
             <FormText>
-              Maximum number of reviews to extract. Minimum: {validateMin}, Maximum: {validateMax}.
+              Maximum number of reviews to extract. Minimum: {validateMin},
+              Maximum: {validateMax}.
             </FormText>
           </OptionCard>
 
@@ -163,9 +186,9 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               onChange={(e) => setMaxSpentPoints(Number(e.target.value))}
               onBlur={(e) => {
                 let value = Number(e.target.value);
-                if(value < 0) {
+                if (value < 0) {
                   value = 0;
-                } else if(value > user?.coinBalance) {
+                } else if (value > user?.coinBalance) {
                   value = user?.coinBalance;
                 }
                 setMaxSpentPoints(value);
@@ -173,7 +196,11 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               }}
             />
             <FormText>
-              Maximum points to spend on this scrap. Max points you can spend: {validateMax < user?.coinBalance ? validateMax : user?.coinBalance}.
+              Maximum points to spend on this scrap. Max points you can spend:{" "}
+              {validateMax < user?.coinBalance
+                ? validateMax
+                : user?.coinBalance}
+              .
             </FormText>
           </OptionCard>
 
@@ -184,13 +211,21 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               onChange={(e) => handleFormChange("sortBy", e.target.value)}
               onBlur={(e) => handleFormChange("sortBy", e.target.value)}
             >
-              {["Most relevant", "Newest", "Highest rating", "Lowest rating"].map((option) => (
+              {[
+                "Most relevant",
+                "Newest",
+                "Highest rating",
+                "Lowest rating",
+              ].map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </FormSelect>
-            <FormText>Sort reviews by most relevant, newest, highest rating, or lowest rating.</FormText>
+            <FormText>
+              Sort reviews by most relevant, newest, highest rating, or lowest
+              rating.
+            </FormText>
           </OptionCard>
 
           <OptionCard label="Output as">

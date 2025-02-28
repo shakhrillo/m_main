@@ -16,7 +16,7 @@ import { CommentVideos } from "./CommentVideos";
 import { IComment } from "../../types/comment";
 import { maskName } from "../../utils/maskName";
 
-export const Comment = ({ comment }: {comment: IComment}) => {
+export const Comment = ({ comment }: { comment: IComment }) => {
   const commentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(true);
 
@@ -32,14 +32,10 @@ export const Comment = ({ comment }: {comment: IComment}) => {
       <div className="comment-user">
         <img src={comment?.user?.image} alt={comment?.user?.name} />
         <div className="comment-user-info">
-          <strong>
-            {maskName(comment?.user?.name)}
-          </strong>
+          <strong>{maskName(comment?.user?.name)}</strong>
           <Ratings container={comment} />
         </div>
-        <div className="comment-time">
-          {comment?.date}
-        </div>
+        <div className="comment-time">{comment?.date}</div>
       </div>
       <CommentReview comment={comment} />
       <CommentQA comment={comment} />

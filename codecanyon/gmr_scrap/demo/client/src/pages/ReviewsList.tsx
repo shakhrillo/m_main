@@ -11,7 +11,7 @@ export const ReviewsList = () => {
       <Breadcrumb>
         <Breadcrumb.Item active>Reviews list</Breadcrumb.Item>
       </Breadcrumb>
-      
+
       <ContainersList type="comments" path="reviews" />
     </Container>
   );

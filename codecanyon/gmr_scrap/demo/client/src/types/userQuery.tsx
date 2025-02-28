@@ -1,2 +1,1 @@
-export interface IUserQuery {
-}
+export interface IUserQuery {}

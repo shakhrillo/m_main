@@ -18,9 +18,7 @@ interface IDockerImage {
 
 const DockerImageItem = ({ image }: { image: IDockerImage }) => (
   <div className="docker-image-data">
-    <NavLink to={`/images/${image.id}`}>
-      {image.id}
-    </NavLink>
+    <NavLink to={`/images/${image.id}`}>{image.id}</NavLink>
     <Stack direction="horizontal" gap={2} className="text-muted">
       <div>{image?.Os}</div>
       <div>{formatSize(image?.Size ?? 0)}</div>
@@ -39,14 +37,17 @@ export const DockerImagesList = () => {
   const [isLastPage, setIsLastPage] = useState(false);
   const subscriptionRef = useRef<any>(null);
 
-  const fetchImages = (append = false, lastDocument: QueryDocumentSnapshot | null = null) => {
+  const fetchImages = (
+    append = false,
+    lastDocument: QueryDocumentSnapshot | null = null,
+  ) => {
     // Unsubscribe previous subscription before making a new request
     subscriptionRef.current?.unsubscribe();
 
     subscriptionRef.current = dockerImages(lastDocument)
       .pipe(
-        filter(snapshot => !!snapshot),
-        map(snapshot => {
+        filter((snapshot) => !!snapshot),
+        map((snapshot) => {
           if (snapshot.empty) {
             setIsLastPage(true);
             return [];
@@ -58,11 +59,11 @@ export const DockerImagesList = () => {
             setLastDoc(newLastDoc);
           }
 
-          return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        })
+          return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        }),
       )
-      .subscribe(data => {
-        setImages(prev => (append ? [...prev, ...data] : data));
+      .subscribe((data) => {
+        setImages((prev) => (append ? [...prev, ...data] : data));
       });
   };
 
@@ -74,7 +75,7 @@ export const DockerImagesList = () => {
 
   return (
     <Row className="g-3 row-cols-1">
-      {images.map(image => (
+      {images.map((image) => (
         <Col key={image.id}>
           <DockerImageItem image={image} />
         </Col>
@@ -82,7 +83,10 @@ export const DockerImagesList = () => {
 
       {!isLastPage && images.length > 0 && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button onClick={() => fetchImages(true, lastDoc)} variant="outline-primary">
+          <Button
+            onClick={() => fetchImages(true, lastDoc)}
+            variant="outline-primary"
+          >
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>

@@ -5,16 +5,18 @@
   &-expected-points {
     display: flex;
     align-items: flex-start;
-    padding: 1rem;
-    background: #fff;
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0px 1px 3px,
+      rgba(0, 0, 0, 0.06) 0px 1px 2px;
     border-radius: $card-border-radius;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
+    background: #fff;
+    padding: 1rem;
   }
 
   &-extract-type {
+    transition: 0.3s ease;
     cursor: pointer;
     user-select: none;
-    transition: 0.3s ease;
 
     label {
       cursor: pointer;
@@ -26,8 +28,8 @@
     }
 
     &[aria-disabled="true"] {
-      color: rgba($secondary, 0.3);
       pointer-events: none;
+      color: rgba($secondary, 0.3);
 
       svg,
       .badge {
@@ -35,8 +37,8 @@
       }
 
       label {
-        color: rgba($secondary, 0.6);
         cursor: not-allowed !important;
+        color: rgba($secondary, 0.6);
       }
     }
 
