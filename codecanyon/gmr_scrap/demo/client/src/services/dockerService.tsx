@@ -9,15 +9,12 @@ import {
   onSnapshot,
   orderBy,
   query,
-  QueryDocumentSnapshot,
-  setDoc,
   startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
-import { IDockerConfig } from "../types/dockerConfig";
 import type { IDockerContainer } from "../types/dockerContainer";
 import type { IDockerQuery } from "../types/dockerQuery";
 import type { IDockerStats } from "../types/dockerStats";

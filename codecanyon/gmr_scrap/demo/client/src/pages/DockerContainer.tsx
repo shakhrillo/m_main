@@ -3,11 +3,7 @@ import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
-import {
-  dockerContainerLogs,
-  dockerContainers,
-  dockerContainerStats,
-} from "../services/dockerService";
+import { dockerContainers, dockerContainerStats } from "../services/dockerService";
 import type { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";

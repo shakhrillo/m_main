@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Subscription } from "rxjs";
-import { filter, map, take } from "rxjs";
+import { filter, map } from "rxjs";
 import { usersList } from "../../services/settingService";
 import type { IUserInfo } from "../../types/userInfo";
 import { UserData } from "./UserData";

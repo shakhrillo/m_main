@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
-import { getAuth } from "firebase/auth";
 import type { Subscription} from "rxjs";
-import { debounceTime, filter, map, Subject, take } from "rxjs";
+import { debounceTime, filter, map, Subject } from "rxjs";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import { IconFilter, IconReload } from "@tabler/icons-react";
-import { Stack, Button, Dropdown, Form, InputGroup } from "react-bootstrap";
+import { Stack, Button, Dropdown } from "react-bootstrap";
 import { ReceiptData } from "./ReceiptData";
 import type { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";

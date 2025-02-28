@@ -38,7 +38,7 @@ export const GoogleMap = ({
     if (isFitBounds) {
       map.fitBounds(bounds);
     }
-  }, [geojson, map]);
+  }, [geojson, map, isFitBounds]);
 
   return (
     <Map

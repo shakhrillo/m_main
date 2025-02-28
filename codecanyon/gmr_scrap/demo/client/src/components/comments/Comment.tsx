@@ -1,10 +1,4 @@
-import {
-  IconArrowNarrowDownDashed,
-  IconArrowUp,
-  IconCaretDown,
-  IconChevronDown,
-  IconChevronUp,
-} from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Ratings } from "../Ratings";

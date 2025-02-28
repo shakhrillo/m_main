@@ -73,7 +73,7 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
         setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
 
         const data = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+          (doc) => ({ id: doc.id, ...doc.data() } as IComment),
         );
         setComments((prev) => (append ? [...prev, ...data] : data));
         setLastDoc(snapshot.docs.at(-1));

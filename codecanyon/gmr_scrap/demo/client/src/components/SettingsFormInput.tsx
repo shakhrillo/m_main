@@ -43,7 +43,7 @@ export const SettingsFormInput = ({
     if (!info || !info.id) return;
 
     updateSettingValue(info.id, { value: inputValue });
-  }, [inputValue]);
+  }, [inputValue, info]);
 
   return info ? (
     <Form.Group className="mb-3">

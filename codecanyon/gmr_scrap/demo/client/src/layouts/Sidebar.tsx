@@ -15,7 +15,7 @@ import {
   IconUser,
   IconWorldCheck,
 } from "@tabler/icons-react";
-import { createElement, useEffect, useState } from "react";
+import { createElement, useState } from "react";
 import { NavLink, useOutletContext } from "react-router-dom";
 import { Scrollbar } from "react-scrollbars-custom";
 import { Button } from "react-bootstrap";

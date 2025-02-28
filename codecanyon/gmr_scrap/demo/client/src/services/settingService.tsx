@@ -18,7 +18,6 @@ import {
 import * as geofire from "geofire-common";
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
-import { IUserInfo } from "../types/userInfo";
 
 const startDate: Date = new Date();
 startDate.setMonth(startDate.getMonth() - 12);
