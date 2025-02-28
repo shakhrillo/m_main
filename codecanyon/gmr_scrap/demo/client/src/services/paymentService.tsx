@@ -92,7 +92,8 @@ export const paymentsData = (q: IPaymentsQuery, lastRef?: any) => {
     query(
       collectionRef,
       orderBy("createdAt", "desc"),
-      limit(10),
+      limit(q.limit || 10),
+      ...(q.from ? [where("createdAt", ">=", q.from)] : []),
       ...(lastRef ? [startAfter(lastRef)] : []),
       ...(q.uid ? [where("metadata.userId", "==", q.uid)] : []),
       ...(q.type ? [where("type", "in", q.type)] : []),

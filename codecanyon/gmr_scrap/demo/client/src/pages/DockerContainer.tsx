@@ -15,11 +15,11 @@ import type { IDockerContainer } from "../types/dockerContainer";
 import { ContainerLogs } from "../components/containers/ContainerLogs";
 import type { IUserInfo } from "../types/userInfo";
 
-const cpuChartColor = "#c8dceb";
-const memoryChartColor = "#fffc7f";
-const networkChartDownloadedColor = "#c9f29b";
-const networkChartUploadedColor = "#ecd9dd";
-const pidsChartColor = "#ff9470";
+const cpuChartColor = "#043b5c";
+const memoryChartColor = "#043b5c";
+const networkChartDownloadedColor = "#b2de27";
+const networkChartUploadedColor = "#043b5c";
+const pidsChartColor = "#043b5c";
 
 export const DockerContainer = () => {
   const navigate = useNavigate();

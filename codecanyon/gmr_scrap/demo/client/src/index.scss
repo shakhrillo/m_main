@@ -2,6 +2,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 // Bootstrap - https://getbootstrap.com/
+$primary: #043b5c;
+$success: #26a65b;
+$danger: #d91e18;
+$secondary: #6c7a89;
+$info: #14cdc8;
+$warning: #f9b42d;
 $enable-negative-margins: true;
 $card-cap-bg: transparent;
 @import "bootstrap/scss/bootstrap";

@@ -1,29 +1,21 @@
-import { format } from "date-fns";
+import { DocumentData, QuerySnapshot } from "firebase/firestore";
 
-/**
- * Formats the total earnings for the current month
- * @param data The data to format
- * @returns The formatted total earnings
- */
-export const formatTotalEarnings = (data: any[]) => {
-  const currentDate = new Date();
-  const monthKey = format(currentDate, "MMM y");
-  const currentDay = currentDate.getDate();
+export const formatTotalEarnings = (snapshot: QuerySnapshot<DocumentData>) => {
+  const groupedData = snapshot.docs.reduce<Record<string, any[]>>((acc, doc) => {
+    const data = doc.data();
+    const dateKey = data.createdAt.toDate().toISOString().split("T")[0];
 
-  const dateArray = Array.from({ length: currentDay }, (_, i) => ({
-    id: i.toString(), 
-    date: `${i + 1} ${format(currentDate, "MMM")}`,
-    total: 0,
-  }));
+    acc[dateKey] = acc[dateKey] || [];
+    acc[dateKey].push({ id: doc.id, ...data });
 
-  data.forEach((item) => {
-    const itemDate = new Date(item.createdAt.seconds * 1000);
-    const day = itemDate.getDate();
+    return acc;
+  }, {});
 
-    if (format(itemDate, "MMM y") === monthKey && day <= currentDay) {
-      dateArray[day - 1].total += item.amount / 100;
-    }
-  });
-
-  return dateArray;
+  return Object.entries(groupedData)
+    .map(([date, payments]) => ({
+      id: `earnings_${date.replace(/-/g, "")}`,
+      date,
+      total: Number((payments.reduce((sum, { amount = 0 }) => sum + amount, 0)) / 100),
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };

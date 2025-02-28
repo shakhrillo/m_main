@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
-import {
-  RevenueGraph,
-  StatisticsDoughnut,
-  EraningsTotal,
-  UsersGraph,
-  UsersTotal,
-} from "../components/dashboard";
+import { RevenueGraph, EraningsTotal, UsersTotal } from "../components/dashboard";
 import { allContainersByGeoBounds } from "../services/settingService";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 import {
@@ -17,6 +11,8 @@ import {
   skip,
   skipWhile,
 } from "rxjs";
+import { CommentsTotal } from "../components/dashboard/CommentsTotal";
+import { ValidatesTotal } from "../components/dashboard/ValidatesTotal";
 const boundChanges$ = new BehaviorSubject<google.maps.LatLngBounds | null>(
   null,
 );
@@ -77,19 +73,16 @@ export const Dashboard = () => {
         <Col lg={4} xl={3}>
           <Row className="g-3">
             <Col md={12}>
-              <StatisticsDoughnut />
-            </Col>
-            <Col md={12}>
               <EraningsTotal />
             </Col>
             <Col md={12}>
               <UsersTotal />
             </Col>
             <Col md={12}>
-              Images
+              <ValidatesTotal />
             </Col>
             <Col md={12}>
-              Containers
+              <CommentsTotal />
             </Col>
           </Row>
         </Col>
