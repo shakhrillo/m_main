@@ -10,23 +10,23 @@ $card-cap-bg: transparent;
 @import "photoswipe/dist/photoswipe.css";
 
 // Custom styles
+@import "styles/auth";
+@import "styles/comments";
+@import "styles/containers";
+@import "styles/dashboard";
+@import "styles/docker";
+@import "styles/images";
 @import "styles/navbar";
-@import "styles/sidebar";
+@import "styles/pagination";
+@import "styles/payments";
 @import "styles/place";
 @import "styles/ratings";
-@import "styles/containers";
-@import "styles/comments";
-@import "styles/images";
-@import "styles/docker";
-@import "styles/videos";
-@import "styles/pagination";
-@import "styles/auth";
 @import "styles/receipts";
-@import "styles/users";
 @import "styles/scrap";
-@import "styles/payments";
-@import "styles/dashboard";
 @import "styles/settings";
+@import "styles/sidebar";
+@import "styles/users";
+@import "styles/videos";
 
 html,
 body {
