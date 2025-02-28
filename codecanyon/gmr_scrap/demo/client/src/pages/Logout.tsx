@@ -14,7 +14,7 @@ export const Logout = () => {
     logout().then(() => {
       navigate("/auth/login");
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <Container className="text-center">

@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { BehaviorSubject, filter, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { auth, firestore } from "../firebaseConfig";
 import type { User } from "firebase/auth";
 import type { IUserInfo } from "../types/userInfo";

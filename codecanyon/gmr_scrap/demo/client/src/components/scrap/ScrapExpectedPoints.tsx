@@ -29,7 +29,7 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
     if (container?.machineId && container?.type === "comments") {
       navigate(`/reviews/${container?.machineId}`);
     }
-  }, [container]);
+  }, [container, navigate]);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "minimum", type: "scrap" })

@@ -17,7 +17,7 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
-import { useOutletContext } from "react-router-dom";
+import { NavLink, useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
@@ -161,7 +161,7 @@ export const Payments = () => {
                 <IconCoins />
               </div>
               <Stack direction="vertical">
-                <h6 className="mb-0">{amount || 0}</h6>
+                <strong>{amount || 0}</strong>
                 <p>Coins</p>
               </Stack>
             </Stack>
@@ -170,18 +170,18 @@ export const Payments = () => {
                 <IconCoin />
               </div>
               <Stack direction="vertical">
-                <h6 className="mb-0">
+                <strong>
                   {(Number(amount || 0) * cost).toFixed(2)}
-                </h6>
+                </strong>
                 <p>Price</p>
               </Stack>
             </Stack>
             <FormCheck
               type="checkbox"
               label={
-                <span>
-                  I agree to the <a href="#">terms and conditions</a>
-                </span>
+                <>
+                  I agree to the <NavLink to="/terms">terms and conditions</NavLink>
+                </>
               }
               required
               checked={isTermsAccepted}

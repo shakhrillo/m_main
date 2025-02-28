@@ -59,7 +59,7 @@ export const SingleReview = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [reviewId, user?.uid]);
+  }, [reviewId, user]);
 
   return (
     <Container>

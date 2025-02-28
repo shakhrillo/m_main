@@ -74,7 +74,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
         setMaxSpentPoints(container.maxSpentPoints);
       }
     }
-  }, [container?.limit, container?.maxSpentPoints]);
+  }, [container?.limit, container?.maxSpentPoints, user]);
 
   useEffect(() => {
     if (container.sortBy) {
@@ -94,7 +94,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
         user?.uid !== container?.uid ||
         user?.coinBalance <= 0,
     );
-  }, [container, user?.uid]);
+  }, [container, user]);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "minimum", type: "scrap" })
@@ -115,7 +115,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [limit]);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "maximum", type: "scrap" })
@@ -136,7 +136,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [maxSpentPoints]);
 
   const handleFormChange = (key: string, value: any) => {
     if (isDisabled || !container.id) return;

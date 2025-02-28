@@ -78,7 +78,7 @@ export const User = () => {
   useEffect(() => {
     if (!user || !userId || !selectedUser) return;
     setIsDisabled(user?.uid !== userId || selectedUser?.isDeleted);
-  }, [user, selectedUser]);
+  }, [user, selectedUser, userId]);
 
   const handleFileChange = useCallback((event: ChangeUserPhotoEvent) => {
     const file = event.target.files?.[0];
@@ -127,7 +127,7 @@ export const User = () => {
         navigate("/auth/logout");
       }
     },
-    [navigate],
+    [navigate, user],
   );
 
   if (loading) return <p>Loading user data...</p>;

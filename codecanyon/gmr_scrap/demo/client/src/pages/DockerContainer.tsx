@@ -66,7 +66,7 @@ export const DockerContainer = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [containerId, user?.uid]);
+  }, [containerId, user]);
 
   const labels = useMemo(
     () => stats.map((stat) => formatStringDate(stat?.read ?? "", "HH:mm:ss")),

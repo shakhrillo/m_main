@@ -43,7 +43,7 @@ export const ScrapExtractType = ({
         user?.uid !== container?.uid ||
         user?.coinBalance <= 0,
     );
-  }, [container, user?.uid]);
+  }, [container, user]);
 
   const toggleOption = (key: keyof typeof extractOptions) => {
     if (isDisabled || !container.id) return;

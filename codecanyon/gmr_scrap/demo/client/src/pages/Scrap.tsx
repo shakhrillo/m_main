@@ -56,7 +56,7 @@ export const Scrap = () => {
       });
 
     return () => subscription.unsubscribe();
-  }, [scrapId, user?.uid]);
+  }, [scrapId, user]);
 
   return (
     <Container className="scrap">

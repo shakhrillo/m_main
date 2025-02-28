@@ -28,7 +28,7 @@ export const getSettings = () => {
 
   const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
     const settings = {} as any;
-    snapshot.docs.map((doc) => {
+    snapshot.docs.forEach((doc) => {
       const data = doc.data() || {};
       settings[doc.id] = data;
     });
@@ -194,7 +194,7 @@ export const appStatistics = () => {
 
   const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
     const statistics = {} as any;
-    snapshot.docs.map((doc) => {
+    snapshot.docs.forEach((doc) => {
       const data = doc.data() || {};
       statistics[doc.id] = data["total"] || 0;
     });

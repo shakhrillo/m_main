@@ -3,7 +3,6 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
-  deleteUser,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 

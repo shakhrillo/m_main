@@ -79,5 +79,8 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.29.1"
-  }
+  },
+  "eslintIgnore": [
+    "vite.config.d.ts"
+  ]
 }

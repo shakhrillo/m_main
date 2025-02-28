@@ -11,8 +11,6 @@ import { Stack, Button } from "react-bootstrap";
 export const UsersList = () => {
   const auth = getAuth();
   const [users, setUsers] = useState<IUserInfo[]>([]);
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
@@ -65,7 +63,7 @@ export const UsersList = () => {
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, [fetchUsers, search, status]);
+  }, [fetchUsers]);
 
   const loadMore = () => {
     if (!isLastPage) fetchUsers(true, lastDoc);

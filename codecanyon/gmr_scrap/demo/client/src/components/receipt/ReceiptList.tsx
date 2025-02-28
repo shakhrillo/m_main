@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { paymentsData } from "../../services/paymentService";
-import type { Subscription} from "rxjs";
+import type { Subscription } from "rxjs";
 import { debounceTime, filter, map, Subject } from "rxjs";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import { IconFilter, IconReload } from "@tabler/icons-react";
@@ -19,70 +19,71 @@ const searchSubject = new Subject<string>();
 
 export const ReceiptList = () => {
   const user = useOutletContext<IUserInfo>();
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const [history, setHistory] = useState<IDockerContainer[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
-  const [history, setHistory] = useState([] as any[]);
 
   const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
-    const subscription = searchSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        setSearch(value);
-      });
-
+    const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearch);
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchReceipts = (append = false, lastDocument = null) => {
-    if (!user?.uid) return;
+  // Fetch Receipts Function
+  const fetchReceipts = useCallback(
+    (append = false, lastDocument = null) => {
+      if (!user?.uid) return;
 
-    subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
+      subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
 
-    subscriptionRef.current = paymentsData(
-      {
-        ...(user?.isAdmin ? {} : { uid: user?.uid }),
-        type: status ? [status] : ["charge.succeeded", "charge.failed"],
-      },
-      lastDocument,
-    )
-      .pipe(
-        filter((snapshot) => !!snapshot),
-        map((snapshot) => {
-          if (snapshot.empty) {
-            setIsLastPage(true);
-            return [];
-          }
-
-          if (snapshot.docs.length < 10) setIsLastPage(true);
-
-          setLastDoc(snapshot.docs.at(-1));
-          return snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...(doc.data() as IDockerContainer),
-          }));
-        }),
+      subscriptionRef.current = paymentsData(
+        {
+          ...(user?.isAdmin ? {} : { uid: user?.uid }),
+          type: status ? [status] : ["charge.succeeded", "charge.failed"],
+        },
+        lastDocument
       )
-      .subscribe((data) => {
-        setHistory((prev) => (append ? [...prev, ...data] : data));
-      });
-  };
+        .pipe(
+          filter((snapshot) => !!snapshot),
+          map((snapshot) => {
+            if (snapshot.empty) {
+              setIsLastPage(true);
+              return [];
+            }
 
-  useEffect(() => {
+            setLastDoc(snapshot.docs.at(-1));
+            if (snapshot.docs.length < 10) setIsLastPage(true);
+
+            return snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as IDockerContainer),
+            }));
+          })
+        )
+        .subscribe((data) => {
+          setHistory((prev) => (append ? [...prev, ...data] : data));
+        });
+    },
+    [user?.uid, user?.isAdmin, status]
+  );
+
+  // Handle Filters Change
+  const handleFilterChange = (value: string) => {
+    setStatus(value);
     setLastDoc(null);
     setIsLastPage(false);
     setHistory([]);
     fetchReceipts();
-
-    return () => subscriptionRef.current?.unsubscribe(); // Cleanup subscription on unmount
-  }, [search, status]);
-
-  const loadMore = () => {
-    if (!isLastPage) fetchReceipts(true, lastDoc);
   };
+
+  useEffect(() => {
+    fetchReceipts();
+    return () => subscriptionRef.current?.unsubscribe(); // Cleanup on unmount
+  }, [search, status, fetchReceipts]);
 
   return (
     <div className="receipts-list">
@@ -93,13 +94,13 @@ export const ReceiptList = () => {
             Filter
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {FILTER_OPTIONS.map((option) => (
+            {FILTER_OPTIONS.map(({ value, label }) => (
               <Dropdown.Item
-                key={option.label}
-                onClick={() => setStatus(option.value)}
-                className={status === option.value ? "active" : ""}
+                key={value}
+                onClick={() => handleFilterChange(value)}
+                className={status === value ? "active" : ""}
               >
-                {option.label}
+                {label}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
@@ -112,7 +113,7 @@ export const ReceiptList = () => {
 
       {!isLastPage && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button onClick={loadMore} variant="outline-primary">
+          <Button onClick={() => fetchReceipts(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
