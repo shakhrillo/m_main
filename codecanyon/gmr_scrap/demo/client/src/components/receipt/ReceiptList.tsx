@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { paymentsData } from "../../services/paymentService";
 import { getAuth } from "firebase/auth";
-import { debounceTime, filter, map, Subject, take } from "rxjs";
+import { debounceTime, filter, map, Subject, Subscription, take } from "rxjs";
 import { IDockerContainer } from "../../types/dockerContainer";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Stack, Button, Dropdown, Form, InputGroup } from "react-bootstrap";
 import { ReceiptData } from "./ReceiptData";
+import { IUserInfo } from "../../types/userInfo";
+import { useOutletContext } from "react-router-dom";
 
 const FILTER_OPTIONS = [
   { value: "", label: "All" },
@@ -13,19 +15,17 @@ const FILTER_OPTIONS = [
   { value: "charge.failed", label: "Failed" },
 ];
 
-interface IReceiptList {
-  uid: string;
-}
-
 const searchSubject = new Subject<string>();
 
-export const ReceiptList = ({ uid }: IReceiptList) => {
-  const auth = getAuth();
+export const ReceiptList = () => {
+  const user = useOutletContext<IUserInfo>();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
   const [history, setHistory] = useState([] as any[]);
+
+  const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
     const subscription = searchSubject.pipe(debounceTime(300)).subscribe((value) => {
@@ -36,10 +36,12 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
   }, []);
 
   const fetchReceipts = (append = false, lastDocument = null) => {
-    if (!auth.currentUser?.uid) return;
+    if (!user?.uid) return;
 
-    return paymentsData({
-      // uid,
+    subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
+
+    subscriptionRef.current = paymentsData({
+      ...user?.isAdmin ? {} : { uid: user?.uid },
       type: status ? [status] : ["charge.succeeded", "charge.failed"],
     }, lastDocument).pipe(
       filter((snapshot) => !!snapshot),
@@ -54,7 +56,6 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
         setLastDoc(snapshot.docs.at(-1));
         return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }));
       }),
-      take(1),
     ).subscribe((data) => {
       setHistory((prev) => (append ? [...prev, ...data] : data));
     });
@@ -64,8 +65,9 @@ export const ReceiptList = ({ uid }: IReceiptList) => {
     setLastDoc(null);
     setIsLastPage(false);
     setHistory([]);
-    const subscription = fetchReceipts();
-    return () => subscription?.unsubscribe();
+    fetchReceipts();
+
+    return () => subscriptionRef.current?.unsubscribe(); // Cleanup subscription on unmount
   }, [search, status]);
 
   const loadMore = () => {
