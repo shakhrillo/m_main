@@ -13,7 +13,9 @@ interface IEarnings {
 
 const REVENUE_COLOR = "#043b5c";
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
-const THIRTY_DAYS_AGO = Timestamp.fromMillis(Date.now() - 30 * MILLISECONDS_IN_A_DAY);
+const THIRTY_DAYS_AGO = Timestamp.fromMillis(
+  Date.now() - 30 * MILLISECONDS_IN_A_DAY,
+);
 
 /**
  * Revenue component for the current month
@@ -25,11 +27,11 @@ export const RevenueGraph = () => {
   const fetchPayments = useCallback(() => {
     const subscription = paymentsData({
       type: ["charge.succeeded"],
-      from: THIRTY_DAYS_AGO
+      from: THIRTY_DAYS_AGO,
     })
       .pipe(
         filter((snapshot) => !!snapshot),
-        map((snapshot) => formatTotalEarnings(snapshot))
+        map((snapshot) => formatTotalEarnings(snapshot)),
       )
       .subscribe((data) => setEarnings(data));
 
@@ -54,9 +56,7 @@ export const RevenueGraph = () => {
 
   return (
     <>
-      <h4 className="dashboard-title">
-        Last 30 days revenue
-      </h4>
+      <h4 className="dashboard-title">Last 30 days revenue</h4>
       <div className="dashboard-graph">
         <LineChart {...chartData} />
       </div>

@@ -25,9 +25,9 @@ export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
   const fetchImages = useCallback(
     (append = false, lastDocRef = lastDoc) => {
       if (!user?.uid || isLastPage) return;
-  
+
       subscriptionRef.current?.unsubscribe();
-  
+
       const subscription = reviewsData(
         "images",
         { reviewId, uid: user.isAdmin ? undefined : user.uid },
@@ -36,29 +36,29 @@ export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
         .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
         .subscribe((snapshot) => {
           const newImages = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
+            (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
           );
-  
+
           setImages((prev) => (append ? [...prev, ...newImages] : newImages));
           setLastDoc(snapshot.docs.at(-1));
           setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
         });
-  
+
       subscriptionRef.current = subscription;
     },
-    [user, reviewId, isLastPage]
-  );  
+    [user, reviewId, isLastPage],
+  );
 
   useEffect(() => {
     setImages([]);
     setLastDoc(null);
     setIsLastPage(false);
     fetchImages();
-  
+
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, []);  
+  }, []);
 
   return (
     <div className="images">
@@ -91,16 +91,21 @@ export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
         </Alert>
       )}
 
-      {!isLastPage && images.length > 0 && images.length !== container?.totalImages && (
-        <Stack
-          direction="horizontal"
-          className="justify-content-center mt-3 w-100"
-        >
-          <Button onClick={() => fetchImages(true, lastDoc)} variant="outline-primary">
-            <IconReload className="me-2" /> Load more
-          </Button>
-        </Stack>
-      )}
+      {!isLastPage &&
+        images.length > 0 &&
+        images.length !== container?.totalImages && (
+          <Stack
+            direction="horizontal"
+            className="justify-content-center mt-3 w-100"
+          >
+            <Button
+              onClick={() => fetchImages(true, lastDoc)}
+              variant="outline-primary"
+            >
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )}
     </div>
   );
 };

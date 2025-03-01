@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
-import { RevenueGraph, EraningsTotal, UsersTotal } from "../components/dashboard";
+import {
+  RevenueGraph,
+  EraningsTotal,
+  UsersTotal,
+} from "../components/dashboard";
 import { allContainersByGeoBounds } from "../services/settingService";
 import { locationsToGeoJSON } from "../utils/locationsToGeoJSON";
 import {

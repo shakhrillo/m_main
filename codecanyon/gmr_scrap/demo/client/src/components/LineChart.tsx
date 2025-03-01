@@ -68,7 +68,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
     const { top, bottom } = chartArea;
     const gradient = ctx.createLinearGradient(0, top, 0, bottom);
-    gradient.addColorStop(0, hexToRgba(color, .5));
+    gradient.addColorStop(0, hexToRgba(color, 0.5));
     gradient.addColorStop(1, hexToRgba(color, 0));
     return gradient;
   };

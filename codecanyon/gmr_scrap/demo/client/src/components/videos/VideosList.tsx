@@ -85,16 +85,21 @@ export const VideosList = ({ container, reviewId }: IVideosListProps) => {
         </Alert>
       )}
 
-      {!isLastPage && videos.length > 0 && videos.length !== container?.totalVideos && (
-        <Stack
-          direction="horizontal"
-          className="justify-content-center mt-3 w-100"
-        >
-          <Button onClick={() => fetchVideos(true, lastDoc)} variant="outline-primary">
-            <IconReload className="me-2" /> Load more
-          </Button>
-        </Stack>
-      )}
+      {!isLastPage &&
+        videos.length > 0 &&
+        videos.length !== container?.totalVideos && (
+          <Stack
+            direction="horizontal"
+            className="justify-content-center mt-3 w-100"
+          >
+            <Button
+              onClick={() => fetchVideos(true, lastDoc)}
+              variant="outline-primary"
+            >
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )}
     </div>
   );
 };
