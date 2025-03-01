@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
-import { debounceTime, filter, Subject, take } from "rxjs";
+import { debounceTime, filter, Subject, Subscription, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { Comment } from "./Comment";
 import type { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";
 import type { IComment } from "../../types/comment";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 interface ICommentsList {
+  container: IDockerContainer;
   reviewId: string;
 }
 
@@ -20,7 +22,7 @@ const FILTER_OPTIONS = [
   { key: "response", label: "Response" },
 ];
 
-export const CommentsList = ({ reviewId }: ICommentsList) => {
+export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const user = useOutletContext<IUserInfo>();
   const commentsRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<IComment[]>([]);
@@ -29,13 +31,16 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
   const [filterOptions, setFilterOptions] = useState("");
+  const subscriptionRef = useRef<Subscription | null>(null);
 
   // Fetch comments function with useCallback to avoid unnecessary re-renders
   const fetchComments = useCallback(
     (append = false, lastDocument = null) => {
-      if (!user?.uid) return;
+      if (!user?.uid || isLastPage) return;
 
-      reviewsData(
+      subscriptionRef.current?.unsubscribe();
+
+      const subscription = reviewsData(
         "reviews",
         {
           reviewId,
@@ -64,6 +69,8 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
           );
           setLastDoc(snapshot.docs.at(-1));
         });
+
+      subscriptionRef.current = subscription;
     },
     [reviewId, user, filterOptions, search],
   );
@@ -82,7 +89,11 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
     setLastDoc(null);
     setIsLastPage(false);
     fetchComments();
-  }, [fetchComments]);
+
+    return () => {
+      subscriptionRef.current?.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="comments" ref={commentsRef}>
@@ -122,7 +133,7 @@ export const CommentsList = ({ reviewId }: ICommentsList) => {
         <Comment comment={comment} key={comment.id} />
       ))}
 
-      {!isLastPage && comments.length > 0 && (
+      {!isLastPage && comments.length > 0 && comments.length !== container?.totalReviews && (
         <Stack direction="horizontal" className="justify-content-center mt-3">
           <Button
             onClick={() => fetchComments(true, lastDoc)}
