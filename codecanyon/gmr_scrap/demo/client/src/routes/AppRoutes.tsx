@@ -7,7 +7,6 @@ import { DashboardLayout } from "../layouts";
 import {
   Auth,
   Receipt,
-  DockerInfo,
   Dashboard,
   DockerContainer,
   DockerContainers,
@@ -56,7 +55,6 @@ const router = createBrowserRouter([
           { path: "payments", element: <Payments /> },
           { path: "receipts", element: <Receipts /> },
           { path: "receipts/:receiptId", element: <Receipt /> },
-          { path: "docker", element: <DockerInfo /> },
           { path: "containers", element: <DockerContainers /> },
           { path: "containers/:containerId", element: <DockerContainer /> },
           { path: "images", element: <ImagesList /> },

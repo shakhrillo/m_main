@@ -18,6 +18,5 @@ export * from "./DockerContainers";
 export * from "./DockerImages";
 export * from "./DockerImage";
 export * from "./DockerContainer";
-export * from "./DockerInfo";
 export * from "./Receipt";
 export * from "./Auth";
