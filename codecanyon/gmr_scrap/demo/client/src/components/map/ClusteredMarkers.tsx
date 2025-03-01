@@ -4,7 +4,9 @@ import Supercluster from "supercluster";
 import { FeatureMarker } from "./FeatureMarker";
 import { ClusterMarker } from "./ClusterMarker";
 import type { FeatureCollection, Point } from "geojson";
-import { useMap } from "@vis.gl/react-google-maps";
+import { InfoWindow, useMap } from "@vis.gl/react-google-maps";
+import { IDockerContainer } from "../../types/dockerContainer";
+import { NavLink } from "react-router-dom";
 
 /**
  * ClusteredMarkers component
@@ -21,6 +23,8 @@ export const ClusteredMarkers = ({
 }) => {
   const map = useMap();
   const [clusterData, setClusterData] = useState<any[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null);
+  const [selectedContainer, setSelectedContainer] = useState<IDockerContainer | null>(null);
 
   const clusterer = useMemo(() => {
     return new Supercluster({
@@ -55,7 +59,13 @@ export const ClusteredMarkers = ({
     [getClusterLeaves, map],
   );
 
-  const handleFeatureMarkerClick = () => {};
+  const handleFeatureMarkerClick = (marker: any, container: IDockerContainer) => {
+    setSelectedContainer(container);
+    setSelectedMarker({
+      lat: marker.position.lat,
+      lng: marker.position.lng,
+    });
+  };
 
   return (
     <>
@@ -76,12 +86,25 @@ export const ClusteredMarkers = ({
         ) : (
           <FeatureMarker
             key={`feature-${index}`}
-            featureId={String(feature.id)}
+            feature={feature}
             position={{ lat, lng }}
             onMarkerClick={handleFeatureMarkerClick}
           />
         );
       })}
+
+      {selectedMarker && (
+        <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)} headerContent={
+          <NavLink to={`/reviews/${selectedContainer?.id}`}>
+            {selectedContainer?.title}
+          </NavLink>
+        }>
+          <div>
+            {selectedContainer?.totalReviews} reviews
+          </div>
+        </InfoWindow>
+      )}
+
     </>
   );
 };

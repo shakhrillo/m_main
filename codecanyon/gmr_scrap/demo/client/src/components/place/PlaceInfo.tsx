@@ -23,7 +23,7 @@ export const PlaceInfo = ({ container }: IPlaceInfo) => {
   return (
     <div className="place">
       {container.location && (
-        <GoogleMap geojson={locationsToGeoJSON([container.location])} />
+        <GoogleMap geojson={locationsToGeoJSON([container])} />
       )}
       {container.location && (
         <div className="place-info">

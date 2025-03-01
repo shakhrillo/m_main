@@ -43,11 +43,7 @@ export const Dashboard = () => {
         if (!bounds) return;
 
         allContainersByGeoBounds(bounds).then((data: any) => {
-          setGeojson(
-            locationsToGeoJSON(
-              data.map((container: any) => container.location),
-            ),
-          );
+          setGeojson(locationsToGeoJSON(data));
         });
       });
 

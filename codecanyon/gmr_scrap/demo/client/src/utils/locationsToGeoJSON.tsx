@@ -1,4 +1,3 @@
-import type { GeoPoint } from "firebase/firestore";
 import type { FeatureCollection, GeoJsonProperties, Point } from "geojson";
 
 /**
@@ -7,15 +6,15 @@ import type { FeatureCollection, GeoJsonProperties, Point } from "geojson";
  * @returns GeoJSON FeatureCollection
  */
 export const locationsToGeoJSON = (
-  locations: GeoPoint[],
+  data: any[],
 ): FeatureCollection<Point, GeoJsonProperties> => {
-  const features = locations.map((location) => ({
+  const features = data.map((container) => ({
     type: "Feature" as const,
     geometry: {
       type: "Point" as const,
-      coordinates: [location.longitude, location.latitude], // Correct access to properties
+      coordinates: [container?.location?.longitude, container?.location?.latitude]
     },
-    properties: {},
+    properties: container,
   }));
 
   return {

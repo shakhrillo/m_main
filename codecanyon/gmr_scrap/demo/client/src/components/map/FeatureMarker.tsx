@@ -8,22 +8,22 @@ import { useCallback } from "react";
 
 type TreeMarkerProps = {
   position: google.maps.LatLngLiteral;
-  featureId: string;
+  feature: any;
   onMarkerClick?: (
     marker: google.maps.marker.AdvancedMarkerElement,
-    featureId: string,
+    feature: any,
   ) => void;
 };
 
 export const FeatureMarker = ({
   position,
-  featureId,
+  feature,
   onMarkerClick,
 }: TreeMarkerProps) => {
   const [markerRef, marker] = useAdvancedMarkerRef();
   const handleClick = useCallback(
-    () => onMarkerClick && onMarkerClick(marker!, featureId),
-    [onMarkerClick, marker, featureId],
+    () => onMarkerClick && onMarkerClick(marker!, feature?.properties),
+    [onMarkerClick, marker, feature],
   );
 
   return (
