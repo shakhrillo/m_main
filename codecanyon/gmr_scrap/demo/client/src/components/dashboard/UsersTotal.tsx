@@ -16,11 +16,11 @@ export const UsersTotal = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <div className="dashboard-title">Users</div>
       <div className="dashboard-graph">
-        <h1 className="m-0">{formatNumber(users)}</h1>
+        <h3 className="m-0">{formatNumber(users)}</h3>
       </div>
-    </>
+    </div>
   );
 };

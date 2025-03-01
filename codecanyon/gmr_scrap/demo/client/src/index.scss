@@ -10,6 +10,14 @@ $info: #14cdc8;
 $warning: #f9b42d;
 $enable-negative-margins: true;
 $card-cap-bg: transparent;
+$font-size-base: 0.875rem;
+$font-size-sm: $font-size-base * .875;
+$font-size-lg: $font-size-base * 1.25;
+$badge-font-size: 0.7rem;
+$input-btn-padding-y: .1875rem;
+$input-btn-padding-x: .375rem;
+$nav-link-padding-y: .25rem;
+$nav-link-padding-x: .5rem;
 @import "bootstrap/scss/bootstrap";
 
 // Photoswipe - https://photoswipe.com/

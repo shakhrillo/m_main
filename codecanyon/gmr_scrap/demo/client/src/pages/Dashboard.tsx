@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Stack } from "react-bootstrap";
 import { GoogleMap } from "../components/GoogleMap";
 import {
   RevenueGraph,
@@ -71,20 +71,12 @@ export const Dashboard = () => {
           </Row>
         </Col>
         <Col lg={4} xl={3}>
-          <Row className="g-3">
-            <Col md={12}>
-              <EraningsTotal />
-            </Col>
-            <Col md={12}>
-              <UsersTotal />
-            </Col>
-            <Col md={12}>
-              <ValidatesTotal />
-            </Col>
-            <Col md={12}>
-              <CommentsTotal />
-            </Col>
-          </Row>
+          <Stack gap={3} direction="vertical">
+            <EraningsTotal />
+            <UsersTotal />
+            <ValidatesTotal />
+            <CommentsTotal />
+          </Stack>
         </Col>
       </Row>
     </Container>

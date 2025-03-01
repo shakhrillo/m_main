@@ -16,11 +16,11 @@ export const EraningsTotal = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <div className="dashboard-title">Earnings</div>
       <div className="dashboard-graph">
-        <h1 className="m-0">${formatAmount(earnings)}</h1>
+        <h3 className="m-0">${formatAmount(earnings)}</h3>
       </div>
-    </>
+    </div>
   );
 };

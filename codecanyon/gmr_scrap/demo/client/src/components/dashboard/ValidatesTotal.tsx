@@ -16,11 +16,11 @@ export const ValidatesTotal = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <div className="dashboard-title">Validates</div>
       <div className="dashboard-graph">
-        <h1 className="m-0">{formatNumber(validates)}</h1>
+        <h3 className="m-0">{formatNumber(validates)}</h3>
       </div>
-    </>
+    </div>
   );
 };

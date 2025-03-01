@@ -16,11 +16,11 @@ export const CommentsTotal = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <div className="dashboard-title">Reviews</div>
       <div className="dashboard-graph">
-        <h1 className="m-0">{formatNumber(comments)}</h1>
+        <h3 className="m-0">{formatNumber(comments)}</h3>
       </div>
-    </>
+    </div>
   );
 };

@@ -80,13 +80,13 @@ export const SingleReview = () => {
               eventKey="comments"
               title={
                 <Stack direction="horizontal" gap={2}>
-                  <IconMessage />
+                  <IconMessage size={ 20 } />
                   Comments
                   <Badge>{container.totalReviews}</Badge>
                 </Stack>
               }
             >
-              <CommentsList reviewId={reviewId} />
+              <CommentsList container={container} reviewId={reviewId} />
             </Tab>
             <Tab
               eventKey="images"
