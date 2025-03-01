@@ -1,4 +1,4 @@
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { ContainersList } from "../components/containers/ContainersList";
 
 /**
@@ -8,10 +8,6 @@ import { ContainersList } from "../components/containers/ContainersList";
 export const ValidatedURLs = () => {
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Validates</Breadcrumb.Item>
-      </Breadcrumb>
-
       <ContainersList path="scrap" type="info" />
     </Container>
   );

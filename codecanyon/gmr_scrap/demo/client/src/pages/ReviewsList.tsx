@@ -1,4 +1,4 @@
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { ContainersList } from "../components/containers/ContainersList";
 
 /**
@@ -8,10 +8,6 @@ import { ContainersList } from "../components/containers/ContainersList";
 export const ReviewsList = () => {
   return (
     <Container>
-      <Breadcrumb>
-        <Breadcrumb.Item active>Reviews list</Breadcrumb.Item>
-      </Breadcrumb>
-
       <ContainersList type="comments" path="reviews" />
     </Container>
   );
