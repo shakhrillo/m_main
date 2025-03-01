@@ -35,7 +35,6 @@ export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
       )
         .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
         .subscribe((snapshot) => {
-          console.log(snapshot);
           const newImages = snapshot.docs.map(
             (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
           );
@@ -54,12 +53,12 @@ export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
     setImages([]);
     setLastDoc(null);
     setIsLastPage(false);
-    fetchImages(false, null);
+    fetchImages();
   
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, [reviewId]);  
+  }, []);  
 
   return (
     <div className="images">
