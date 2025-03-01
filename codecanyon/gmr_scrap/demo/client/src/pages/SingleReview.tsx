@@ -81,7 +81,7 @@ export const SingleReview = () => {
               title={
                 <Stack direction="horizontal" gap={2}>
                   <IconMessage />
-                  <h6 className="m-0">Comments</h6>
+                  Comments
                   <Badge>{container.totalReviews}</Badge>
                 </Stack>
               }
@@ -93,24 +93,24 @@ export const SingleReview = () => {
               title={
                 <Stack direction="horizontal" gap={2}>
                   <IconLibraryPhoto />
-                  <h6 className="m-0">Images</h6>
+                  Images
                   <Badge>{container.totalImages}</Badge>
                 </Stack>
               }
             >
-              <ImagesList reviewId={reviewId} />
+              <ImagesList container={container} reviewId={reviewId} />
             </Tab>
             <Tab
               eventKey="videos"
               title={
                 <Stack direction="horizontal" gap={2}>
                   <IconVideo />
-                  <h6 className="m-0">Videos</h6>
+                  Videos
                   <Badge>{container.totalVideos}</Badge>
                 </Stack>
               }
             >
-              <VideosList reviewId={reviewId} />
+              <VideosList container={container} reviewId={reviewId} />
             </Tab>
           </Tabs>
         </Col>

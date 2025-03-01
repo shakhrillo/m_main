@@ -8,12 +8,14 @@ import type { ICommentImage } from "../../types/comment";
 import { useOutletContext } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
 import type { Subscription } from "rxjs";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 interface IImagesListProps {
+  container: IDockerContainer;
   reviewId: string;
 }
 
-export const ImagesList = ({ reviewId }: IImagesListProps) => {
+export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
   const user = useOutletContext<IUserInfo>();
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
@@ -24,7 +26,6 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
     (append = false, lastDocRef = lastDoc) => {
       if (!user?.uid || isLastPage) return;
   
-      // Unsubscribe from any existing subscription
       subscriptionRef.current?.unsubscribe();
   
       const subscription = reviewsData(
@@ -91,7 +92,7 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
         </Alert>
       )}
 
-      {!isLastPage && images.length > 0 && (
+      {!isLastPage && images.length > 0 && images.length !== container?.totalImages && (
         <Stack
           direction="horizontal"
           className="justify-content-center mt-3 w-100"

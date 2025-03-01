@@ -7,12 +7,14 @@ import { reviewsData } from "../../services/reviewService";
 import ReactPlayer from "react-player";
 import { useOutletContext } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
+import { IDockerContainer } from "../../types/dockerContainer";
 
 interface IVideosListProps {
+  container: IDockerContainer;
   reviewId: string;
 }
 
-export const VideosList = ({ reviewId }: IVideosListProps) => {
+export const VideosList = ({ container, reviewId }: IVideosListProps) => {
   const user = useOutletContext<IUserInfo>();
   const [videos, setVideos] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
@@ -23,7 +25,6 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
     (append = false, lastDocRef = lastDoc) => {
       if (!user?.uid || isLastPage) return;
 
-      // Unsubscribe from any previous subscription
       subscriptionRef.current?.unsubscribe();
 
       subscriptionRef.current = reviewsData(
@@ -84,7 +85,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
         </Alert>
       )}
 
-      {!isLastPage && videos.length > 0 && (
+      {!isLastPage && videos.length > 0 && videos.length !== container?.totalVideos && (
         <Stack
           direction="horizontal"
           className="justify-content-center mt-3 w-100"
