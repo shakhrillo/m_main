@@ -1,9 +1,3 @@
-import {
-  IconAlertCircle,
-  IconCoin,
-  IconCoins,
-  IconInfoCircle,
-} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -21,47 +15,36 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
+import { IconCoins, IconCoin, IconInfoCircle, IconAlertCircle } from "@tabler/icons-react";
 import type { IUserInfo } from "../types/userInfo";
 
-/**
- * View for purchasing coins.
- * @returns Component.
- */
 export const Payments = () => {
   const user = useOutletContext<IUserInfo>();
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [amount, setAmount] = useState("");
   const [coinId, setCoinId] = useState("");
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [cost, setCost] = useState(1);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "cost", type: "coin" })
       .pipe(filter(Boolean), take(1))
-      .subscribe((data) => setCost(data.value || 1));
+      .subscribe(({ value }) => setCost(value || 1));
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!coinId || !user) return;
-
-    const unsubscribe = buyCoinsData(coinId, user?.uid).subscribe((data) => {
-      if (data?.url) {
-        window.location.href = data.url;
-      } else if (data?.error) {
-        setError(data.error);
-        resetForm();
-      }
+    const unsubscribe = buyCoinsData(coinId, user.uid).subscribe(({ url, error }) => {
+      if (url) window.location.href = url;
+      if (error) handleError(error);
     });
-
     return () => unsubscribe.unsubscribe();
   }, [coinId, user]);
 
   useEffect(() => {
-    if (!amount) return;
-
     const form = document.getElementById("validateForm") as HTMLFormElement;
     if (form) {
       form.classList.add("was-validated");
@@ -69,20 +52,26 @@ export const Payments = () => {
     }
   }, [amount]);
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAmount(/^[1-9]\d*$/.test(value) ? value : "");
+  };
+
   const handlePurchase = async () => {
     setLoading(true);
     try {
-      const id = await buyCoins(
-        user?.uid,
-        Number(amount),
-        Number(amount) * cost,
-      );
+      const id = await buyCoins(user?.uid, Number(amount), Number(amount) * cost);
       setCoinId(id);
-    } catch (error) {
-      console.error(error);
-      setError("Purchase failed. Try again.");
+    } catch {
+      handleError("Purchase failed. Try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const handleError = (message: string) => {
+    setError(message);
+    resetForm();
   };
 
   const resetForm = () => {
@@ -99,21 +88,14 @@ export const Payments = () => {
           <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
-              <div className="payments-title">Purchase Coins</div>
+              <h5 className="payments-title">Purchase Coins</h5>
               <span className="text-muted">Amount of coins to purchase.</span>
-              <Form
-                noValidate
-                id="validateForm"
-                className="needs-validation mt-2"
-              >
-                <FormGroup className="mb-3" controlId="amount">
+              <Form noValidate id="validateForm" className="needs-validation mt-2">
+                <FormGroup className="mb-3">
                   <FormControl
                     type="text"
                     value={amount}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setAmount(/^[1-9]\d*$/.test(value) ? value : "");
-                    }}
+                    onChange={handleAmountChange}
                     pattern="^[1-9]\d*$"
                     placeholder="Enter amount"
                     className="mb-2"
@@ -124,51 +106,37 @@ export const Payments = () => {
                       <IconAlertCircle className="me-2" /> {error}
                     </FormControl.Feedback>
                   )}
-                  <FormText className={error ? "d-none" : ""}>
-                    <IconInfoCircle className="me-2" />
-                    There might be restrictions on the minimum and maximum from
-                    the payment API.
-                  </FormText>
+                  {!error && (
+                    <FormText>
+                      <IconInfoCircle className="me-2" /> There might be restrictions on min/max amounts.
+                    </FormText>
+                  )}
                 </FormGroup>
               </Form>
             </Stack>
           </Stack>
 
           <h6 className="mt-3">Coins Explained</h6>
-          <p>
-            Coins are used to purchase data from the website. You can acquire
-            coins by:
-          </p>
+          <p>Coins are used to purchase data from the website. You can acquire coins by:</p>
           <ul>
-            <li>
-              <strong>Free Coins:</strong> Earned through first-time
-              registration.
-            </li>
-            <li>
-              <strong>Purchase Coins:</strong> Available for purchase.
-            </li>
+            <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
+            <li><strong>Purchase Coins:</strong> Available for purchase.</li>
           </ul>
           <h6>Refund Policy</h6>
-          <p>
-            Purchases are non-refundable. If an error occurs, contact support
-            immediately.
-          </p>
+          <p>Purchases are non-refundable. If an error occurs, contact support immediately.</p>
         </Col>
+        
         <Col md={3}>
           <div className="payment-summary">
             <Stack direction="horizontal" className="align-items-start">
-              <div className="me-3">
-                <IconCoins />
-              </div>
+              <IconCoins className="me-3" />
               <Stack direction="vertical">
                 <strong>{amount || 0}</strong>
                 <p>Coins</p>
               </Stack>
             </Stack>
             <Stack direction="horizontal" className="align-items-start">
-              <div className="me-3">
-                <IconCoin />
-              </div>
+              <IconCoin className="me-3" />
               <Stack direction="vertical">
                 <strong>{(Number(amount || 0) * cost).toFixed(2)}</strong>
                 <p>Price</p>
@@ -176,12 +144,7 @@ export const Payments = () => {
             </Stack>
             <FormCheck
               type="checkbox"
-              label={
-                <>
-                  I agree to the{" "}
-                  <NavLink to="/terms">terms and conditions</NavLink>
-                </>
-              }
+              label={<><NavLink to="/terms">I agree to the terms and conditions</NavLink></>}
               required
               checked={isTermsAccepted}
               onChange={(e) => setIsTermsAccepted(e.target.checked)}
