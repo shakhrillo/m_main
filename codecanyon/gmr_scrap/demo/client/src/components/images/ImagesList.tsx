@@ -21,50 +21,51 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
   const subscriptionRef = useRef<Subscription | null>(null);
 
   const fetchImages = useCallback(
-    (append = false) => {
+    (append = false, lastDocRef = lastDoc) => {
       if (!user?.uid || isLastPage) return;
-
+  
       // Unsubscribe from any existing subscription
       subscriptionRef.current?.unsubscribe();
-
+  
       const subscription = reviewsData(
         "images",
         { reviewId, uid: user.isAdmin ? undefined : user.uid },
-        lastDoc,
+        lastDocRef,
       )
         .pipe(filter((snapshot) => snapshot && snapshot.docs.length > 0))
         .subscribe((snapshot) => {
+          console.log(snapshot);
           const newImages = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage,
+            (doc) => ({ id: doc.id, ...doc.data() }) as ICommentImage
           );
-
+  
           setImages((prev) => (append ? [...prev, ...newImages] : newImages));
           setLastDoc(snapshot.docs.at(-1));
           setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
         });
-
+  
       subscriptionRef.current = subscription;
     },
-    [user, reviewId, isLastPage, lastDoc],
-  );
+    [user, reviewId, isLastPage]
+  );  
 
   useEffect(() => {
     setImages([]);
     setLastDoc(null);
     setIsLastPage(false);
-    fetchImages();
-
+    fetchImages(false, null);
+  
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, [reviewId, fetchImages]);
+  }, [reviewId]);  
 
   return (
     <div className="images">
       <Gallery>
-        {images.map(({ id, original, thumb }) => (
+        {images.map(({ id, original, thumb }, index) => (
           <Item
-            key={id}
+            key={`image-${index}`}
             original={original}
             content={
               <Image src={original} alt={`image-${id}`} className="image" />
@@ -95,7 +96,7 @@ export const ImagesList = ({ reviewId }: IImagesListProps) => {
           direction="horizontal"
           className="justify-content-center mt-3 w-100"
         >
-          <Button onClick={() => fetchImages(true)} variant="outline-primary">
+          <Button onClick={() => fetchImages(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>

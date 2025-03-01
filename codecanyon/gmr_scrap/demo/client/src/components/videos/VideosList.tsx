@@ -20,7 +20,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
   const subscriptionRef = useRef<any>(null);
 
   const fetchVideos = useCallback(
-    (append = false) => {
+    (append = false, lastDocRef = lastDoc) => {
       if (!user?.uid || isLastPage) return;
 
       // Unsubscribe from any previous subscription
@@ -29,42 +29,38 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
       subscriptionRef.current = reviewsData(
         "videos",
         { reviewId, uid: !user.isAdmin ? user.uid : undefined },
-        lastDoc,
+        lastDocRef,
       )
         .pipe(filter((snapshot) => snapshot?.docs?.length > 0))
-        .subscribe({
-          next: (snapshot) => {
-            const newVideos = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
+        .subscribe((snapshot) => {
+          const newVideos = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-            setIsLastPage(snapshot.empty || newVideos.length < 10);
-            setLastDoc(snapshot.docs.at(-1));
-
-            setVideos((prev) => (append ? [...prev, ...newVideos] : newVideos));
-          },
-          error: (error) => console.error("Error fetching videos:", error),
+          setVideos((prev) => (append ? [...prev, ...newVideos] : newVideos));
+          setLastDoc(snapshot.docs.at(-1));
+          setIsLastPage(snapshot.empty || newVideos.length < 10);
         });
     },
-    [user, reviewId, lastDoc, isLastPage],
+    [user, reviewId, isLastPage],
   );
 
   useEffect(() => {
     setVideos([]);
     setLastDoc(null);
     setIsLastPage(false);
-    fetchVideos();
+    fetchVideos(false, null);
 
     return () => subscriptionRef.current?.unsubscribe();
-  }, [reviewId, fetchVideos]);
+  }, [reviewId]);
 
   return (
     <div className="videos">
       <Gallery>
         {videos.map(({ id, videoUrl, thumb }, index) => (
           <Item
-            key={id}
+            key={`video-${index}`}
             original={videoUrl}
             content={<ReactPlayer url={videoUrl} controls className="video" />}
           >
@@ -93,7 +89,7 @@ export const VideosList = ({ reviewId }: IVideosListProps) => {
           direction="horizontal"
           className="justify-content-center mt-3 w-100"
         >
-          <Button onClick={() => fetchVideos(true)} variant="outline-primary">
+          <Button onClick={() => fetchVideos(true, lastDoc)} variant="outline-primary">
             <IconReload className="me-2" /> Load more
           </Button>
         </Stack>
