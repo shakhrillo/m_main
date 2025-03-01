@@ -8,7 +8,7 @@ import type { ICommentImage } from "../../types/comment";
 import { useOutletContext } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
 import type { Subscription } from "rxjs";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 interface IImagesListProps {
   container: IDockerContainer;

@@ -7,7 +7,7 @@ import { reviewsData } from "../../services/reviewService";
 import ReactPlayer from "react-player";
 import { useOutletContext } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 interface IVideosListProps {
   container: IDockerContainer;

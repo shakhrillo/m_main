@@ -1,4 +1,4 @@
-import { DocumentData, QuerySnapshot } from "firebase/firestore";
+import type { DocumentData, QuerySnapshot } from "firebase/firestore";
 
 export const formatTotalEarnings = (snapshot: QuerySnapshot<DocumentData>) => {
   const groupedData = snapshot.docs.reduce<Record<string, any[]>>(
