@@ -3,7 +3,7 @@ import {
   AdvancedMarkerAnchorPoint,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { useCallback } from "react";
+import { JSX, useCallback } from "react";
 
 type TreeClusterMarkerProps = {
   clusterId: number;
@@ -16,13 +16,22 @@ type TreeClusterMarkerProps = {
   sizeAsText: string;
 };
 
+/**
+ * ClusterMarker component
+ * @param {number} clusterId - Cluster ID
+ * @param {Function} onMarkerClick - Marker click handler
+ * @param {google.maps.LatLngLiteral} position - Marker position
+ * @param {number} size - Cluster size
+ * @param {string} sizeAsText - Cluster size as text
+ * @returns {JSX.Element} ClusterMarker component
+ */
 export const ClusterMarker = ({
   position,
   size,
   sizeAsText,
   onMarkerClick,
   clusterId,
-}: TreeClusterMarkerProps) => {
+}: TreeClusterMarkerProps): JSX.Element => {
   const [markerRef, marker] = useAdvancedMarkerRef();
   const handleClick = useCallback(
     () => onMarkerClick && onMarkerClick(marker!, clusterId),

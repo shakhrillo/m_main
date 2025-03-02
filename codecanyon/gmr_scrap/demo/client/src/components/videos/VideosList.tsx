@@ -1,5 +1,5 @@
 import { IconPlayerPlay, IconReload } from "@tabler/icons-react";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, JSX } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter } from "rxjs";
@@ -14,7 +14,12 @@ interface IVideosListProps {
   reviewId: string;
 }
 
-export const VideosList = ({ container, reviewId }: IVideosListProps) => {
+/**
+ * Videos list component
+ * @param {IVideosListProps} props - Component props
+ * @returns {JSX.Element} - Videos list component
+ */
+export const VideosList = ({ container, reviewId }: IVideosListProps): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
   const [videos, setVideos] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);

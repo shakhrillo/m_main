@@ -8,20 +8,22 @@ import { UserData } from "./UserData";
 import { IconReload } from "@tabler/icons-react";
 import { Stack, Button } from "react-bootstrap";
 
+/**
+ * Users list component
+ * @returns {JSX.Element} - Users list component
+ */
 export const UsersList = () => {
   const auth = getAuth();
   const [users, setUsers] = useState<IUserInfo[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
-  // Store the subscription reference
   const subscriptionRef = useRef<Subscription | null>(null);
 
   const fetchUsers = useCallback(
     (append = false, lastDocument = null) => {
       if (!auth.currentUser?.uid) return;
 
-      // Unsubscribe from the previous subscription before creating a new one
       subscriptionRef.current?.unsubscribe();
 
       const subscription = usersList(lastDocument)

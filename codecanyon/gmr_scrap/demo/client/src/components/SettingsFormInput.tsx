@@ -11,6 +11,15 @@ interface ISettingsFormInput {
   inputType: string;
 }
 
+/**
+ * Settings form input component
+ * @param tag - Setting tag
+ * @param type - Setting type
+ * @param label - Input label
+ * @param helpText - Help text
+ * @param inputType - Input type
+ * @returns Settings form input component
+ */
 export const SettingsFormInput = ({
   tag,
   type,

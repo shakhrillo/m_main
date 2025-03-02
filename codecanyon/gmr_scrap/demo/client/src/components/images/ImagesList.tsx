@@ -1,5 +1,5 @@
 import { IconPhoto, IconReload } from "@tabler/icons-react";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, JSX } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter } from "rxjs";
@@ -15,7 +15,13 @@ interface IImagesListProps {
   reviewId: string;
 }
 
-export const ImagesList = ({ container, reviewId }: IImagesListProps) => {
+/**
+ * ImagesList component
+ * @param {IDockerContainer} container - Docker container
+ * @param {string} reviewId - Review ID
+ * @returns {JSX.Element} ImagesList component
+ */
+export const ImagesList = ({ container, reviewId }: IImagesListProps): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);

@@ -1,31 +1,27 @@
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
-import zoomPlugin from "chartjs-plugin-zoom";
 import { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import zoomPlugin from "chartjs-plugin-zoom";
 import { hexToRgba } from "../utils/hexToRGB";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
   PointElement,
   LineElement,
   Filler,
-  Title,
   Tooltip,
   Legend,
-  zoomPlugin,
+  zoomPlugin
 );
 
 interface Dataset {
@@ -39,33 +35,32 @@ interface LineChartProps {
   datasets: Dataset[];
 }
 
+/**
+ * Line chart component
+ * @param labels - Array of labels
+ * @param datasets - Array of datasets
+ * @returns Line chart component
+ */
 export const LineChart = ({ labels, datasets }: LineChartProps) => {
-  const [chartWidth, setChartWidth] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [chartWidth, setChartWidth] = useState<number>(0);
   const chartHeight = 350;
 
   useEffect(() => {
-    const updateChartWidth = () => {
-      if (containerRef.current) {
-        setChartWidth(containerRef.current.clientWidth - 40);
-      }
+    const updateWidth = () => {
+      if (containerRef.current) setChartWidth(containerRef.current.clientWidth - 40);
     };
-
-    updateChartWidth();
-    window.addEventListener("resize", updateChartWidth);
-
-    return () => {
-      window.removeEventListener("resize", updateChartWidth);
-    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const createGradient = (
     ctx: CanvasRenderingContext2D,
     chartArea: any,
-    color: string,
+    color: string
   ) => {
     if (!chartArea) return null;
-
     const { top, bottom } = chartArea;
     const gradient = ctx.createLinearGradient(0, top, 0, bottom);
     gradient.addColorStop(0, hexToRgba(color, 0.5));
@@ -75,75 +70,34 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
   const chartData = {
     labels,
-    datasets: datasets.map((dataset) => ({
-      label: dataset.label,
-      data: dataset.data,
-      borderColor: hexToRgba(dataset.color, 1),
-      pointBackgroundColor: hexToRgba(dataset.color, 1),
-      backgroundColor: (context: any) => {
-        const { chart } = context;
-        const { ctx, chartArea } = chart;
-        return (
-          createGradient(ctx, chartArea, dataset.color) ||
-          hexToRgba(dataset.color, 0.5)
-        );
-      },
+    datasets: datasets.map(({ label, data, color }) => ({
+      label,
+      data,
+      borderColor: hexToRgba(color, 1),
+      pointBackgroundColor: hexToRgba(color, 1),
+      backgroundColor: (context: any) =>
+        createGradient(context.chart.ctx, context.chart.chartArea, color) ||
+        hexToRgba(color, 0.5),
       tension: 0.1,
-      // pointRadius: 0,
       fill: true,
-      // borderWidth: 1,
     })),
   };
 
   const chartOptions = {
-    animation: {
-      duration: 0,
-      delay: 0,
-    },
+    animation: { duration: 0, delay: 0 },
     scales: {
-      x: {
-        grid: { color: "#fff", lineWidth: 1 },
-        // border: { display: false },
-        ticks: {
-          color: "#666",
-          font: { size: 10 },
-        },
-      },
-      y: {
-        display: true,
-        grid: { color: "#fff", lineWidth: 1 },
-        // border: { display: false },
-        ticks: {
-          color: "#666",
-          font: { size: 10 },
-        },
-      },
+      x: { grid: { color: "#fff" }, ticks: { color: "#666", font: { size: 10 } } },
+      y: { grid: { color: "#fff" }, ticks: { color: "#666", font: { size: 10 } } },
     },
     plugins: {
-      legend: {
-        display: false,
-        position: "bottom" as const,
-        labels: { usePointStyle: true },
-      },
-      zoom: {
-        zoom: {
-          drag: { enabled: true },
-          mode: "x" as "x" | "y" | "xy",
-        },
-      },
+      legend: { display: false },
+      zoom: { zoom: { drag: { enabled: true }, mode: "x" as const } },
     },
   };
 
   return (
     <div ref={containerRef} className="w-100">
-      {chartWidth > 0 && (
-        <Line
-          data={chartData}
-          options={chartOptions}
-          width={chartWidth}
-          height={chartHeight}
-        />
-      )}
+      {chartWidth > 0 && <Line data={chartData} options={chartOptions} width={chartWidth} height={chartHeight} />}
     </div>
   );
 };

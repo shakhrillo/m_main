@@ -13,17 +13,36 @@ import { Badge, Col, Row } from "react-bootstrap";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import { spentTime } from "../../utils/spentTime";
 
-type PlaceInfoDetailsRowProps = {
-  icon: Icon;
-  label: string;
-  value: JSX.Element | string | number | null | undefined;
-};
+type DetailKey = keyof Pick<
+  IDockerContainer,
+  "totalReviews" | "totalOwnerReviews" | "totalImages" | "totalVideos" | "totalSpentPoints"
+>;
 
+const details: { icon: Icon; label: string; key: DetailKey | "spentTime"; isBadge?: boolean }[] = [
+  { icon: IconMessage, label: "Extracted reviews", key: "totalReviews" },
+  { icon: IconMessageReply, label: "Extracted owner replies", key: "totalOwnerReviews" },
+  { icon: IconCamera, label: "Extracted images", key: "totalImages" },
+  { icon: IconVideo, label: "Extracted videos", key: "totalVideos" },
+  { icon: IconStopwatch, label: "Execution Duration", key: "spentTime" },
+  { icon: IconCoins, label: "Total Cost", key: "totalSpentPoints", isBadge: true },
+];
+
+/**
+ * Place info details row component.
+ * @param {Icon} icon - Icon.
+ * @param {string} label - Label.
+ * @param {JSX.Element | string | number | null | undefined} value - Value.
+ * @returns {JSX.Element} Place info details row component.
+ */
 const PlaceInfoDetailsRow = ({
   icon,
   label,
   value,
-}: PlaceInfoDetailsRowProps) => (
+}: {
+  icon: Icon;
+  label: string;
+  value: JSX.Element | string | number | null | undefined;
+}): JSX.Element => (
   <div className="place-info-details">
     {createElement(icon)}
     <div className="place-info-content">
@@ -33,55 +52,27 @@ const PlaceInfoDetailsRow = ({
   </div>
 );
 
-export const PlaceInfoDetails = ({
-  container,
-}: {
-  container: IDockerContainer;
-}) => {
-  return (
-    <Row className="row-cols-1">
-      <Col>
+/**
+ * Place info details component.
+ * @param {IDockerContainer} container - Container.
+ * @returns {JSX.Element} Place info details component.
+ */
+export const PlaceInfoDetails = ({ container }: { container: IDockerContainer }): JSX.Element => (
+  <Row className="row-cols-1">
+    {details.map(({ icon, label, key, isBadge }) => (
+      <Col key={key}>
         <PlaceInfoDetailsRow
-          icon={IconMessage}
-          label="Extracted reviews"
-          value={container?.totalReviews}
+          icon={icon}
+          label={label}
+          value={
+            key === "spentTime"
+              ? spentTime(container)
+              : isBadge
+              ? <Badge>{`${container[key as DetailKey]} points`}</Badge>
+              : container[key as DetailKey]
+          }
         />
       </Col>
-      <Col>
-        <PlaceInfoDetailsRow
-          icon={IconMessageReply}
-          label="Extracted owner replies"
-          value={container?.totalOwnerReviews}
-        />
-      </Col>
-      <Col>
-        <PlaceInfoDetailsRow
-          icon={IconCamera}
-          label="Extracted images"
-          value={container?.totalImages}
-        />
-      </Col>
-      <Col>
-        <PlaceInfoDetailsRow
-          icon={IconVideo}
-          label="Extracted videos"
-          value={container?.totalVideos}
-        />
-      </Col>
-      <Col>
-        <PlaceInfoDetailsRow
-          icon={IconStopwatch}
-          label="Execution Duration"
-          value={`${spentTime(container)}`}
-        />
-      </Col>
-      <Col>
-        <PlaceInfoDetailsRow
-          icon={IconCoins}
-          label="Total Cost"
-          value={<Badge>{`${container?.totalSpentPoints} points`}</Badge>}
-        />
-      </Col>
-    </Row>
-  );
-};
+    ))}
+  </Row>
+);

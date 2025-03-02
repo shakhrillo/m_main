@@ -65,10 +65,6 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
     };
   }, []);
 
-  /**
-   * Validation URL
-   * @param e Form event
-   */
   async function handleScrap(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 

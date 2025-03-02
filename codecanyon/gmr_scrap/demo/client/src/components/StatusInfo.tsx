@@ -1,8 +1,14 @@
 import { IconCheck } from "@tabler/icons-react";
 import { Spinner, Stack } from "react-bootstrap";
 import type { IDockerContainer } from "../types/dockerContainer";
+import { JSX } from "react";
 
-export const StatusInfo = ({ container }: { container?: IDockerContainer }) => {
+/**
+ * StatusInfo component
+ * @param {IDockerContainer} container
+ * @returns {JSX.Element | null}
+ */
+export const StatusInfo = ({ container }: { container?: IDockerContainer }): JSX.Element | null => {
   if (!container || !container.status) return null;
 
   const status = container.status.toLowerCase();

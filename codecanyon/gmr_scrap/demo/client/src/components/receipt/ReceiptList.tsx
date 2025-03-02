@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, JSX } from "react";
 import { paymentsData } from "../../services/paymentService";
 import type { Subscription } from "rxjs";
 import { debounceTime, filter, map, Subject } from "rxjs";
@@ -17,7 +17,11 @@ const FILTER_OPTIONS = [
 
 const searchSubject = new Subject<string>();
 
-export const ReceiptList = () => {
+/**
+ * ReceiptList component
+ * @returns {JSX.Element}
+ */
+export const ReceiptList = (): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
 
   const [search, setSearch] = useState("");
@@ -35,12 +39,11 @@ export const ReceiptList = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Fetch Receipts Function
   const fetchReceipts = useCallback(
     (append = false, lastDocument = null) => {
       if (!user?.uid) return;
 
-      subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
+      subscriptionRef.current?.unsubscribe();
 
       subscriptionRef.current = paymentsData(
         {
@@ -73,7 +76,6 @@ export const ReceiptList = () => {
     [user?.uid, user?.isAdmin, status],
   );
 
-  // Handle Filters Change
   const handleFilterChange = (value: string) => {
     setStatus(value);
     setLastDoc(null);
@@ -84,7 +86,7 @@ export const ReceiptList = () => {
 
   useEffect(() => {
     fetchReceipts();
-    return () => subscriptionRef.current?.unsubscribe(); // Cleanup on unmount
+    return () => subscriptionRef.current?.unsubscribe(); 
   }, [search, status, fetchReceipts]);
 
   return (

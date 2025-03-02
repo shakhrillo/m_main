@@ -7,13 +7,25 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import type { IUserInfo } from "../../types/userInfo";
 
+interface PlaceInfoMachine {
+  container: IDockerContainer;
+}
+
 type MachineInfoRowProps = {
   icon: Icon;
   label: string;
   value: JSX.Element | string;
 };
 
-const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
+/**
+ * MachineInfoRow component
+ * @param {MachineInfoRowProps} props
+ * @param {Icon} props.icon
+ * @param {string} props.label
+ * @param {JSX.Element | string} props.value
+ * @returns {JSX.Element}
+ */
+const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps): JSX.Element => (
   <div className="place-info-details">
     {createElement(icon)}
     <div className="place-info-content">
@@ -23,11 +35,13 @@ const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps) => (
   </div>
 );
 
-export const PlaceInfoMachine = ({
-  container,
-}: {
-  container: IDockerContainer;
-}) => {
+/**
+ * PlaceInfoMachine component
+ * @param {PlaceInfoMachine} props
+ * @param {IDockerContainer} props.container
+ * @returns {JSX.Element}
+ */
+export const PlaceInfoMachine = ({ container }: PlaceInfoMachine): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
 
   return (

@@ -15,7 +15,10 @@ import { ScrapValidateButton } from "./ScrapValidateButton";
 import type { IUserInfo } from "../../types/userInfo";
 
 /**
- * Component for validating Google Maps URL.
+ * Scrap validate URL component
+ * @param containerId string
+ * @param container IDockerContainer
+ * @returns JSX.Element
  */
 export const ScrapValidateURL = ({
   containerId,
@@ -41,10 +44,6 @@ export const ScrapValidateURL = ({
     setUrl(container.url || "");
   }, [container?.url]);
 
-  /**
-   * Handles form submission for URL validation.
-   * @param e Form submission event.
-   */
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;

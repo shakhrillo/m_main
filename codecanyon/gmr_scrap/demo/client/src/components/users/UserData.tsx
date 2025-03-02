@@ -2,8 +2,14 @@ import { NavLink } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
 import { Stack, Image } from "react-bootstrap";
 import { formatNumber, formatTimestamp } from "../../utils";
+import { JSX } from "react";
 
-export const UserData = ({ user }: { user: IUserInfo }) => {
+/**
+ * User data component
+ * @param {IUserInfo} user - User info
+ * @returns {JSX.Element} - User data component
+ */
+export const UserData = ({ user }: { user: IUserInfo }): JSX.Element => {
   return (
     <div className="user-data">
       <div className="user-image">

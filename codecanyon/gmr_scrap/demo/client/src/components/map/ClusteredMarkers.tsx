@@ -49,7 +49,6 @@ export const ClusteredMarkers = ({
 
   const handleClusterMarkerClick = useCallback(
     (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
-      // Zoom in to the cluster
       const leaves = getClusterLeaves(clusterId);
       const bounds = new google.maps.LatLngBounds();
       leaves.forEach((leaf) => {

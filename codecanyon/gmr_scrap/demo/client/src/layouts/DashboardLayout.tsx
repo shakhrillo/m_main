@@ -1,8 +1,13 @@
 import { Outlet, useOutletContext } from "react-router-dom";
 import { AppNavbar, Sidebar } from "./";
 import type { IUserInfo } from "../types/userInfo";
+import { JSX } from "react";
 
-export const DashboardLayout = () => {
+/**
+ * DashboardLayout component
+ * @returns {JSX.Element}
+ */
+export const DashboardLayout = (): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
 
   return (

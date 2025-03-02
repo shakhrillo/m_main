@@ -4,7 +4,7 @@ import {
   AdvancedMarkerAnchorPoint,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { useCallback } from "react";
+import { JSX, useCallback } from "react";
 
 type TreeMarkerProps = {
   position: google.maps.LatLngLiteral;
@@ -15,11 +15,18 @@ type TreeMarkerProps = {
   ) => void;
 };
 
+/**
+ * FeatureMarker component
+ * @param {google.maps.LatLngLiteral} position - Marker position
+ * @param {any} feature - Feature
+ * @param {Function} onMarkerClick - Marker click handler
+ * @returns {JSX.Element} FeatureMarker component
+ */
 export const FeatureMarker = ({
   position,
   feature,
   onMarkerClick,
-}: TreeMarkerProps) => {
+}: TreeMarkerProps): JSX.Element => {
   const [markerRef, marker] = useAdvancedMarkerRef();
   const handleClick = useCallback(
     () => onMarkerClick && onMarkerClick(marker!, feature?.properties),

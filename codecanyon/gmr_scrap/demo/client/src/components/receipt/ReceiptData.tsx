@@ -1,12 +1,18 @@
 import { Badge, Stack } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { formatAmount, formatNumber, formatTimestamp } from "../../utils";
+import { JSX } from "react";
 
 interface IReceiptData {
   receipt: any;
 }
 
-export const ReceiptData = ({ receipt }: IReceiptData) => {
+/**
+ * ReceiptData component
+ * @param {IReceiptData} props
+ * @returns {JSX.Element}
+ */
+export const ReceiptData = ({ receipt }: IReceiptData): JSX.Element => {
   return (
     <div className="receipt-data">
       <Stack direction="horizontal" gap={2} className="justify-content-between">

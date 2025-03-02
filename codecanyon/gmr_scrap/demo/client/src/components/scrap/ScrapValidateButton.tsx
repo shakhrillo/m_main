@@ -11,6 +11,13 @@ interface IScrapValidateButton {
   isDisabled?: boolean;
 }
 
+/**
+ * Scrap validate button component
+ * @param container IDockerContainer
+ * @param containerId string
+ * @param isDisabled boolean
+ * @returns JSX.Element
+ */
 export const ScrapValidateButton = ({
   container,
   containerId,
