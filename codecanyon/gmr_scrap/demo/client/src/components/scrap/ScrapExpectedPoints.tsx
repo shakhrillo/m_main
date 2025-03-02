@@ -84,6 +84,7 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
         extractVideoUrls: container?.extractVideoUrls || false,
         extractOwnerResponse: container?.extractOwnerResponse || false,
         maxSpentPoints: container?.maxSpentPoints || maxSpentPoints,
+        outputAs: container?.outputAs || "json",
       });
       navigate(`/reviews/${id}`);
     } catch (error) {

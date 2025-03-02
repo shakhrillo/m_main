@@ -97,6 +97,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   }, [container, user]);
 
   useEffect(() => {
+
     const subscription = settingValue({ tag: "minimum", type: "scrap" })
       .pipe(
         filter((data) => !!data),
@@ -115,7 +116,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [limit]);
+  }, []);
 
   useEffect(() => {
     const subscription = settingValue({ tag: "maximum", type: "scrap" })
@@ -136,7 +137,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [maxSpentPoints]);
+  }, []);
 
   const handleFormChange = (key: string, value: any) => {
     if (isDisabled || !container.id) return;

@@ -395,7 +395,7 @@ async function validateNode(node) {
       imageUrls,
       videoUrls,
       time: +Date.now(),
-      keywords: review.split(" "),
+      keywords: review.split(" ").slice(0, 10),
     };
   }
 

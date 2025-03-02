@@ -1,5 +1,5 @@
 import { IconBox, IconInfoCircle, IconSettings } from "@tabler/icons-react";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Stack } from "react-bootstrap";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import { locationsToGeoJSON } from "../../utils/locationsToGeoJSON";
 import { GoogleMap } from "../GoogleMap";
@@ -9,6 +9,7 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 import { PlaceInfoDetails } from "./PlaceInfoDetails";
+import { JSX } from "react";
 
 interface IPlaceInfo {
   container: IDockerContainer;
@@ -19,7 +20,7 @@ interface IPlaceInfo {
  * @param {IDockerContainer} container - Container.
  * @returns {JSX.Element} Place info component.
  */
-export const PlaceInfo = ({ container }: IPlaceInfo) => {
+export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
   return (
     <div className="place">
       {container.location && (
@@ -38,6 +39,40 @@ export const PlaceInfo = ({ container }: IPlaceInfo) => {
             </NavLink>
           )}
           {container.address && <i className="d-block">{container.address}</i>}
+          
+          {
+            (container?.csvUrl || container?.jsonUrl) && (
+              <Stack direction="horizontal" gap={3} className="mt-3">
+                {
+                  container?.csvUrl && (
+                    <a
+                      href={container?.csvUrl}
+                      className="btn btn-primary"
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Download CSV
+                    </a>
+                  )
+                }
+
+                {
+                  container?.jsonUrl && (
+                    <a
+                      href={container?.jsonUrl}
+                      className="btn btn-primary"
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Download JSON
+                    </a>
+                  )
+                }
+              </Stack>
+            )
+          }
         </div>
       )}
       <Accordion
