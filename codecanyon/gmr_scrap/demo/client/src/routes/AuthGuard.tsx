@@ -5,6 +5,10 @@ import { from, filter, map, switchMap, catchError, of } from "rxjs";
 import type { IUserInfo } from "../types/userInfo";
 import { Container, Spinner } from "react-bootstrap";
 
+/**
+ * AuthGuard component
+ * @returns JSX.Element
+ */
 export const AuthGuard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUserInfo | null>(null);
