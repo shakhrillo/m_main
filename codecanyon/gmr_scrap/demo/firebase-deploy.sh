@@ -32,12 +32,12 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     done
 
     # Remove all indexes sequentially
-    # gcloud firestore indexes composite list --project "$APP_FIREBASE_PROJECT_ID" --format json | jq -r '.indexes[] | .name' | while read -r index; do
-    #   gcloud firestore indexes composite delete "$index" --project "$APP_FIREBASE_PROJECT_ID" --quiet || exit 1
-    # done
+    gcloud firestore indexes composite list --project "$APP_FIREBASE_PROJECT_ID" --format json | jq -r '.indexes[] | .name' | while read -r index; do
+      gcloud firestore indexes composite delete "$index" --project "$APP_FIREBASE_PROJECT_ID" --quiet || exit 1
+    done
 
     # Delete all Firestore collections (ensuring it completes before proceeding)
-    # firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID" || exit 1
+    firebase firestore:delete --all-collections -r --force --project "$APP_FIREBASE_PROJECT_ID" || exit 1
 
     # Import the initial data into Firestore
     node firebase-deploy.js || exit 1
