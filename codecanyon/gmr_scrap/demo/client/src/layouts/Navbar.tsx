@@ -84,10 +84,18 @@ export const AppNavbar = () => {
                 Profile
               </NavDropdown.Item>
               {user?.isAdmin && (
-                <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+                <NavDropdown.Item href="#" onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/settings");
+                }}>Settings</NavDropdown.Item>
               )}
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/auth/logout">Logout</NavDropdown.Item>
+              <NavDropdown.Item href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/auth/logout");
+                }}
+              >Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

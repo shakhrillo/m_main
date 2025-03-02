@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import type { Subscription } from "rxjs";
-import { debounceTime, filter, Subject, take } from "rxjs";
+import { debounceTime, filter, Subject } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { Comment } from "./Comment";
 import type { IUserInfo } from "../../types/userInfo";
@@ -40,8 +40,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const [filterOptions, setFilterOptions] = useState("");
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchComments = useCallback(
-    (append = false, lastDocument = null) => {
+  const fetchComments = useCallback((append = false, lastDocument = null) => {
       if (!user?.uid || isLastPage) return;
 
       subscriptionRef.current?.unsubscribe();
@@ -60,14 +59,13 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
           filter(
             (snapshot) =>
               snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
-          ),
-          take(1),
+          )
         )
         .subscribe((snapshot) => {
-          setIsLastPage(snapshot.empty || snapshot.docs.length < 10);
+          setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
 
           const newComments = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+            (doc) => ({ id: doc.id, ...doc.data() } as IComment),
           );
 
           setComments((prev) =>
@@ -78,7 +76,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
 
       subscriptionRef.current = subscription;
     },
-    [reviewId, user, filterOptions, search],
+    [reviewId, user, filterOptions, search, isLastPage],
   );
 
   useEffect(() => {
@@ -97,7 +95,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, []);
+  }, [filterOptions, search]);
 
   return (
     <div className="comments" ref={commentsRef}>
