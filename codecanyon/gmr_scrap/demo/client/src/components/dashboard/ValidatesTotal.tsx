@@ -1,8 +1,12 @@
 import { formatNumber } from "../../utils/formatNumber";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 
-export const ValidatesTotal = () => {
+/**
+ * ValidatesTotal component
+ * @returns {JSX.Element} ValidatesTotal component
+ */
+export const ValidatesTotal = (): JSX.Element => {
   const [validates, setValidates] = useState(0);
 
   useEffect(() => {

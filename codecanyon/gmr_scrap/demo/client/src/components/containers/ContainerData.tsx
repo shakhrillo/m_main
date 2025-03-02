@@ -5,13 +5,20 @@ import { formatTimestamp, formatNumber } from "../../utils";
 import { Ratings } from "../Ratings";
 import { StatusInfo } from "../StatusInfo";
 import { ContainerInfo } from "./ContainerInfo";
+import { JSX } from "react";
 
 interface IContainerData {
   container: IDockerContainer;
   path: "reviews" | "containers" | "scrap" | "images";
 }
 
-export const ContainerData = ({ container, path }: IContainerData) => {
+/**
+ * ContainerData component
+ * @param {IDockerContainer} container - Container data
+ * @param {string} path - Path
+ * @returns {JSX.Element} - ContainerData component
+ */
+export const ContainerData = ({ container, path }: IContainerData): JSX.Element => {
   return (
     <div className="container-data">
       <Stack direction="horizontal" gap={2} className="justify-content-between">

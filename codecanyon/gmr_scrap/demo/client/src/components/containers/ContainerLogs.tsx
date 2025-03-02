@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, JSX } from "react";
 import { dockerContainerLogs } from "../../services/dockerService";
 import { IconChevronRight } from "@tabler/icons-react";
 
@@ -6,7 +6,12 @@ interface IContainerLogs {
   containerId?: string;
 }
 
-export const ContainerLogs = ({ containerId }: IContainerLogs) => {
+/**
+ * ContainerLogs component
+ * @param {string} containerId - Container ID
+ * @returns {JSX.Element} - ContainerLogs component
+ */
+export const ContainerLogs = ({ containerId }: IContainerLogs): JSX.Element => {
   const [logs, setLogs] = useState<string[]>([]);
 
   const fetchLogs = useCallback(() => {

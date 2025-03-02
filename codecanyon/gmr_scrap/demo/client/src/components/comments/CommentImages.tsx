@@ -7,6 +7,11 @@ interface ICommentImages {
   comment?: IComment;
 }
 
+/**
+ * Comment images component.
+ * @param comment Comment object.
+ * @returns Comment images component.
+ */
 export const CommentImages = ({ comment }: ICommentImages) => {
   return (
     !!comment?.imageUrls?.length && (

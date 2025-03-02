@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, JSX } from "react";
 import { filter, map } from "rxjs";
 import { dockerImages } from "../../services/dockerService";
 import { IconReload } from "@tabler/icons-react";
@@ -16,7 +16,12 @@ interface IDockerImage {
   Created?: string;
 }
 
-const DockerImageItem = ({ image }: { image: IDockerImage }) => (
+/**
+ * DockerImageItem component.
+ * @param {IDockerImage} image - The Docker image.
+ * @returns {JSX.Element} The DockerImageItem component.
+ */
+const DockerImageItem = ({ image }: { image: IDockerImage }): JSX.Element => (
   <div className="docker-image-data">
     <NavLink to={`/images/${image.id}`}>{image.id}</NavLink>
     <Stack direction="horizontal" gap={2} className="text-muted">
@@ -31,7 +36,11 @@ const DockerImageItem = ({ image }: { image: IDockerImage }) => (
   </div>
 );
 
-export const DockerImagesList = () => {
+/**
+ * DockerImagesList component.
+ * @returns {JSX.Element} The DockerImagesList component.
+ */
+export const DockerImagesList = (): JSX.Element => {
   const [images, setImages] = useState<IDockerImage[]>([]);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null);
   const [isLastPage, setIsLastPage] = useState(false);
@@ -41,7 +50,6 @@ export const DockerImagesList = () => {
     append = false,
     lastDocument: QueryDocumentSnapshot | null = null,
   ) => {
-    // Unsubscribe previous subscription before making a new request
     subscriptionRef.current?.unsubscribe();
 
     subscriptionRef.current = dockerImages(lastDocument)

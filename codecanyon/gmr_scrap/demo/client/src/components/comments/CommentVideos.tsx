@@ -9,6 +9,11 @@ interface ICommentVideos {
   comment?: IComment;
 }
 
+/**
+ * Comment videos component.
+ * @param comment Comment object.
+ * @returns Comment videos component.
+ */
 export const CommentVideos = ({ comment }: ICommentVideos) => {
   return (
     !!comment?.videoUrls?.length && (

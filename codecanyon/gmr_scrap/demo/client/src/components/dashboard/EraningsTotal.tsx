@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 import { formatAmount } from "../../utils";
 
-export const EraningsTotal = () => {
+/**
+ * EraningsTotal component
+ * @returns {JSX.Element}
+ */
+export const EraningsTotal = (): JSX.Element => {
   const [earnings, setEarnings] = useState(0);
 
   useEffect(() => {

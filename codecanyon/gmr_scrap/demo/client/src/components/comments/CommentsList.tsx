@@ -23,6 +23,12 @@ const FILTER_OPTIONS = [
   { key: "response", label: "Response" },
 ];
 
+/**
+ * Comments list component.
+ * @param reviewId Review ID.
+ * @param container Docker container object.
+ * @returns Comments list component.
+ */
 export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const user = useOutletContext<IUserInfo>();
   const commentsRef = useRef<HTMLDivElement>(null);
@@ -34,7 +40,6 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const [filterOptions, setFilterOptions] = useState("");
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  // Fetch comments function with useCallback to avoid unnecessary re-renders
   const fetchComments = useCallback(
     (append = false, lastDocument = null) => {
       if (!user?.uid || isLastPage) return;
@@ -76,7 +81,6 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
     [reviewId, user, filterOptions, search],
   );
 
-  // Debounce search input
   useEffect(() => {
     const subscription = searchSubject
       .pipe(debounceTime(300))
@@ -84,7 +88,6 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
     return () => subscription.unsubscribe();
   }, [searchSubject]);
 
-  // Fetch comments when dependencies change
   useEffect(() => {
     setComments([]);
     setLastDoc(null);

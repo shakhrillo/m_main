@@ -10,6 +10,11 @@ import { CommentVideos } from "./CommentVideos";
 import type { IComment } from "../../types/comment";
 import { maskName } from "../../utils/maskName";
 
+/**
+ * Comment component.
+ * @param comment Comment object.
+ * @returns Comment component.
+ */
 export const Comment = ({ comment }: { comment: IComment }) => {
   const commentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(true);

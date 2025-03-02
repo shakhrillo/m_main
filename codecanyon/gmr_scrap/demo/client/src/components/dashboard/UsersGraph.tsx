@@ -1,5 +1,5 @@
 import { LineChart } from "../LineChart";
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import { usersList } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
 import { filter, map } from "rxjs";
@@ -7,8 +7,9 @@ import type { IUserInfo } from "../../types/userInfo";
 
 /**
  * Users component
+ * @returns {JSX.Element} Users component
  */
-export const UsersGraph = () => {
+export const UsersGraph = (): JSX.Element => {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {

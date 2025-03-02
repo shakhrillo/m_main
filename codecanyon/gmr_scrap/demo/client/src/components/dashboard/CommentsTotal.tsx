@@ -1,8 +1,12 @@
 import { formatNumber } from "../../utils/formatNumber";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 
-export const CommentsTotal = () => {
+/**
+ * CommentsTotal component
+ * @returns {JSX.Element}
+ */
+export const CommentsTotal = (): JSX.Element => {
   const [comments, setComments] = useState(0);
 
   useEffect(() => {

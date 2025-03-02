@@ -1,5 +1,5 @@
 import { IconFilter, IconReload } from "@tabler/icons-react";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, JSX } from "react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { dockerContainers } from "../../services/dockerService";
@@ -24,11 +24,18 @@ interface IContainersList {
 
 const searchSubject = new Subject<string>();
 
+/**
+ * ContainersList component
+ * @param {string} path - Path
+ * @param {string} type - Type (comments | info)
+ * @param {string} machineType - Machine type (container | image)
+ * @returns {JSX.Element} - ContainersList component
+ */
 export const ContainersList = ({
   path,
   type,
   machineType,
-}: IContainersList) => {
+}: IContainersList): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
   const [containers, setContainers] = useState<IDockerContainer[]>([]);
   const [search, setSearch] = useState("");

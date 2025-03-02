@@ -5,6 +5,11 @@ interface ICommentQA {
   comment?: IComment;
 }
 
+/**
+ * Comment QA component.
+ * @param comment Comment object.
+ * @returns Comment QA component.
+ */
 export const CommentQA = ({ comment }: ICommentQA) => {
   if (!comment?.qa?.length) return null;
 

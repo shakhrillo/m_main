@@ -1,8 +1,12 @@
 import { formatNumber } from "../../utils/formatNumber";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 
-export const UsersTotal = () => {
+/**
+ * UsersTotal component
+ * @returns {JSX.Element} UsersTotal component
+ */
+export const UsersTotal = (): JSX.Element => {
   const [users, setUsers] = useState(0);
 
   useEffect(() => {
