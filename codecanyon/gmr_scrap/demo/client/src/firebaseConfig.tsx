@@ -15,7 +15,6 @@ const APP_FIREBASE_EMULATOR_STORAGE = import.meta.env
 
 const app = initializeApp({
   ...firebaseConfig,
-  // Only set the projectId in development mode.
   ...(APP_ENVIRONMENT === "development" && {
     projectId: `demo-${APP_FIREBASE_PROJECT_ID}`,
   }),
@@ -24,7 +23,6 @@ const auth = getAuth(app);
 const firestore = getFirestore();
 const storage = getStorage(app);
 
-// Connect to the Firebase emulators if in development mode.
 if (APP_ENVIRONMENT === "development") {
   const host = "127.0.0.1";
   connectAuthEmulator(

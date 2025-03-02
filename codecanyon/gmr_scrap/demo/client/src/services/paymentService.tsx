@@ -20,6 +20,13 @@ interface IBuyCoins {
   error?: string;
 }
 
+/**
+ * Buy coins.
+ * @param uid - The user ID.
+ * @param amount - The amount of coins.
+ * @param cost - The cost of the coins.
+ * @returns The document ID.
+ */
 export const buyCoins = async (uid: string, amount: number, cost: number) => {
   const collectionRef = collection(firestore, `users/${uid}/buyCoins`);
   const docRef = await addDoc(collectionRef, {
@@ -58,6 +65,12 @@ export const buyCoinsData = (documentId: string, uid: string) => {
   });
 };
 
+/**
+ * Get the buy coins data.
+ * @param documentId - The document ID.
+ * @param uid - The user ID.
+ * @returns The buy coins data.
+ */
 export const paymentData = (receiptId: string) => {
   const collectionRef = collection(firestore, `payments`);
   const paymentData$ = new BehaviorSubject({} as any);
@@ -82,6 +95,12 @@ export const paymentData = (receiptId: string) => {
   });
 };
 
+/**
+ * Get the payments data.
+ * @param q - The query.
+ * @param lastRef - The last reference.
+ * @returns The payments data.
+ */
 export const paymentsData = (q: IPaymentsQuery, lastRef?: any) => {
   const paymentsData$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(
     null as any,

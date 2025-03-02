@@ -2,6 +2,11 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { BehaviorSubject, Observable } from "rxjs";
 import { firestore } from "../firebaseConfig";
 
+/**
+ * Get statistics from firestore.
+ * @param type string
+ * @returns Observable<any>
+ */
 export const getStatistics = (type: string) => {
   const docRef = doc(firestore, `statistics/${type}`);
   const statistics$ = new BehaviorSubject({} as any);

@@ -13,11 +13,12 @@ import {
   Stack,
 } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { uploadFile, updateUser, userData } from "../services";
 import { formatNumber } from "../utils/formatNumber";
 import type { IUserInfo } from "../types/userInfo";
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
+import { uploadFile } from "../services/uploadService";
+import { userData, updateUser } from "../services/userService";
 
 /**
  * User info component.

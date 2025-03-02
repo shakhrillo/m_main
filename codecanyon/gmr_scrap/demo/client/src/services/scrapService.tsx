@@ -1,4 +1,3 @@
-import type { GeoPoint, Timestamp } from "firebase/firestore";
 import {
   addDoc,
   collection,
@@ -11,41 +10,14 @@ import {
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 import type { IComment } from "../types/comment";
+import { IReview } from "../types/review";
 
-export interface IReview {
-  id?: string;
-
-  address: string;
-  createdAt: Timestamp;
-  extendedUrl: string;
-  rating: number;
-  reviewId: string;
-  reviews: number;
-  screenshot: string;
-  title: string;
-  type: "info" | "comments";
-  updatedAt: Timestamp;
-  url: string;
-  userId: string;
-
-  limit?: number;
-  sortBy?: "Most relevant" | "Newest" | "Highest rating" | "Lowest rating";
-  extractImageUrls?: boolean;
-  extractVideoUrls?: boolean;
-  extractOwnerResponse?: boolean;
-  status?: string;
-
-  totalReviews?: number;
-  totalImages?: number;
-  totalVideos?: number;
-  totalOwnerReviews?: number;
-
-  csvUrl?: string;
-  jsonUrl?: string;
-
-  location?: GeoPoint;
-}
-
+/**
+ * Validate URL
+ * @param url
+ * @param uid
+ * @returns documentId
+ */
 export const validateUrl = async (url: string, uid: string) => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
   const documentRef = await addDoc(collectionRef, {
@@ -56,6 +28,12 @@ export const validateUrl = async (url: string, uid: string) => {
   return documentRef.id;
 };
 
+/**
+ * Validate URL Data
+ * @param documentId
+ * @param uid
+ * @returns Review Data
+ */
 export const validateUrlData = (documentId: string, uid: string) => {
   const docRef = doc(firestore, `users/${uid}/reviews/${documentId}`);
   const review$ = new BehaviorSubject<IReview>({} as IReview);
@@ -86,6 +64,14 @@ export const validateUrlData = (documentId: string, uid: string) => {
   });
 };
 
+/**
+ * Validate URL Data
+ * @param uid
+ * @param type
+ * @param search
+ * @param filter
+ * @returns Review Data
+ */
 export const validatedUrls = (
   uid: string,
   {
@@ -132,6 +118,12 @@ export const validatedUrls = (
   });
 };
 
+/**
+ * Start Scrap
+ * @param uid
+ * @param data
+ * @returns documentId
+ */
 export const startScrap = async (uid: string, data: IReview) => {
   const collectionRef = collection(firestore, `users/${uid}/reviews`);
   const documentRef = await addDoc(collectionRef, data);
@@ -189,6 +181,12 @@ export const scrapData = (
   });
 };
 
+/**
+ * Scrap QA
+ * @param placeId
+ * @param uid
+ * @returns QA Data
+ */
 export const scrapImages = (placeId: string, uid: string) => {
   const collectionRef = collection(
     firestore,
@@ -222,6 +220,12 @@ export const scrapImages = (placeId: string, uid: string) => {
   });
 };
 
+/**
+ * Scrap Videos
+ * @param placeId
+ * @param uid
+ * @returns Videos Data
+ */
 export const scrapVideos = (placeId: string, uid: string) => {
   const collectionRef = collection(
     firestore,
@@ -254,6 +258,12 @@ export const scrapVideos = (placeId: string, uid: string) => {
   });
 };
 
+/**
+ * Scrap QA
+ * @param placeId
+ * @param uid
+ * @returns QA Data
+ */
 export const scrapStatistics = (uid: string) => {
   const docRef = doc(firestore, `users/${uid}/settings/statistics`);
   const stats$ = new BehaviorSubject({});

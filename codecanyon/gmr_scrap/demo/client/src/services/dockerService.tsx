@@ -75,6 +75,12 @@ export const dockerContainers = (q: IDockerQuery = {}, lastRef?: any) => {
   });
 };
 
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ * @returns Observable<any>
+ */
 export const dockerImages = (lastRef?: any) => {
   const images$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "machines");
@@ -103,6 +109,11 @@ export const dockerImages = (lastRef?: any) => {
   });
 };
 
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ */
 export const dockerImage = (imageId: string) => {
   const image$ = new BehaviorSubject({} as any);
   const docRef = doc(firestore, "machines", imageId);
@@ -132,6 +143,11 @@ export const dockerImage = (imageId: string) => {
   });
 };
 
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ */
 export const dockerContainerLogs = (containerId: string) => {
   const logs$ = new BehaviorSubject([] as any);
   const collectionRef = collection(firestore, "machines", containerId, "logs");
@@ -161,6 +177,11 @@ export const dockerContainerLogs = (containerId: string) => {
   });
 };
 
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ */
 export const dockerContainerHistory = (containerId: string) => {
   const history$ = new BehaviorSubject([] as any);
   const collectionRef = collection(

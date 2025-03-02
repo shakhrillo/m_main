@@ -20,6 +20,11 @@ import { BehaviorSubject, Observable } from "rxjs";
 const startDate: Date = new Date();
 startDate.setMonth(startDate.getMonth() - 12);
 
+/**
+ * Get all containers from firestore.
+ * @param fromDate Date
+ * @returns Observable<DocumentData[]>
+ */
 export const getSettings = () => {
   const collectionRef = collection(firestore, "settings");
   const settings$ = new BehaviorSubject({} as any);
@@ -74,11 +79,23 @@ export const settingValue = ({ tag, type }: { tag: string; type: string }) => {
   });
 };
 
+/**
+ * Update setting value by id.
+ * @param id string
+ * @param data any
+ * @returns Promise<void>
+ */
 export const updateSettingValue = (id: string, data: any) => {
   const docRef = doc(firestore, "settings", id);
   return updateDoc(docRef, data);
 };
 
+/**
+ * Update coin settings by id.
+ * @param id string
+ * @param data any
+ * @returns Promise<void>
+ */
 export const updateCoinSettings = (id: string, data: any) => {
   const docRef = doc(firestore, "settings", id);
   return updateDoc(docRef, data);
@@ -117,6 +134,11 @@ export const usersList = (lastRef?: DocumentData | null) => {
   });
 };
 
+/**
+ * Get all containers from firestore.
+ * @param fromDate Date
+ * @returns Observable<DocumentData[]>
+ */
 export const allContainersByGeoBounds = async (
   bounds: google.maps.LatLngBounds,
 ) => {
@@ -150,7 +172,6 @@ export const allContainersByGeoBounds = async (
       const data = doc.data();
       const { latitude, longitude } = data.location;
 
-      // Extra filtering for false positives
       const distance =
         geofire.distanceBetween([latitude, longitude], center) * 1000;
       if (distance <= radiusInM) {
@@ -162,6 +183,11 @@ export const allContainersByGeoBounds = async (
   return matchingDocs;
 };
 
+/**
+ * Get all containers from firestore.
+ * @param fromDate Date
+ * @returns Observable<DocumentData[]>
+ */
 export const totalEarnings = (fromDate = startDate) => {
   const collectionRef = collection(firestore, "earnings");
   const earnings$ = new BehaviorSubject([] as any);
@@ -187,6 +213,11 @@ export const totalEarnings = (fromDate = startDate) => {
   });
 };
 
+/**
+ * Get all containers from firestore.
+ * @param fromDate Date
+ * @returns Observable<DocumentData[]>
+ */
 export const appStatistics = () => {
   const collectionRef = collection(firestore, "statistics");
   const statistics$ = new BehaviorSubject({} as any);

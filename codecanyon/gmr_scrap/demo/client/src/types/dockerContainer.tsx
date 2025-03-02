@@ -29,27 +29,21 @@ export interface IDockerContainer {
   updatedAt?: Timestamp;
   url?: string;
   uid?: string;
-
   limit?: number;
   sortBy?: "Most relevant" | "Newest" | "Highest rating" | "Lowest rating";
   extractImageUrls?: boolean;
   extractVideoUrls?: boolean;
   extractOwnerResponse?: boolean;
-
   totalReviews?: number;
   totalImages?: number;
   totalVideos?: number;
   totalOwnerReviews?: number;
-
   outputAs?: "json" | "csv";
   csvUrl?: string;
   jsonUrl?: string;
-
   Action?: string;
-
   maxSpentPointsDefault: number;
   maxSpentPoints: number;
   totalSpentPoints: number;
-
   price: IPrice;
 }

@@ -21,6 +21,13 @@ interface IReviewQuery {
   search?: string;
 }
 
+/**
+ * Get the reviews data.
+ * @param type - The type of reviews.
+ * @param q - The query.
+ * @param lastRef - The last reference.
+ * @returns The reviews data.
+ */
 export const reviewsData = (
   type: "reviews" | "images" | "videos",
   q: IReviewQuery = {},
