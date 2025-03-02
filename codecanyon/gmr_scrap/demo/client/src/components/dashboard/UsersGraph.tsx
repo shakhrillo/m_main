@@ -1,5 +1,6 @@
 import { LineChart } from "../LineChart";
-import { useState, useEffect, JSX } from "react";
+import type { JSX } from "react";
+import { useState, useEffect } from "react";
 import { usersList } from "../../services/settingService";
 import { formatTotalUsers } from "../../utils/formatTotalUsers";
 import { filter, map } from "rxjs";

@@ -40,7 +40,8 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const [filterOptions, setFilterOptions] = useState("");
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchComments = useCallback((append = false, lastDocument = null) => {
+  const fetchComments = useCallback(
+    (append = false, lastDocument = null) => {
       if (!user?.uid || isLastPage) return;
 
       subscriptionRef.current?.unsubscribe();
@@ -59,13 +60,13 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
           filter(
             (snapshot) =>
               snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
-          )
+          ),
         )
         .subscribe((snapshot) => {
           setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
 
           const newComments = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() } as IComment),
+            (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
           );
 
           setComments((prev) =>

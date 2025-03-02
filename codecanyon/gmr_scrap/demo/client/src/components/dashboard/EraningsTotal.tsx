@@ -1,4 +1,5 @@
-import { JSX, useEffect, useState } from "react";
+import type { JSX} from "react";
+import { useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 import { formatAmount } from "../../utils";
 

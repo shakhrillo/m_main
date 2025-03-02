@@ -1,5 +1,6 @@
 import { IconPlayerPlay, IconReload } from "@tabler/icons-react";
-import { useEffect, useState, useRef, useCallback, JSX } from "react";
+import type { JSX } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Alert, Button, Image, Stack } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import { filter } from "rxjs";
@@ -52,7 +53,7 @@ export const VideosList = ({
           setIsLastPage(snapshot.empty || newVideos.length < 10);
         });
     },
-    [user, reviewId, isLastPage],
+    [user, reviewId, isLastPage, lastDoc],
   );
 
   useEffect(() => {

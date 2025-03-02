@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback, JSX } from "react";
+import type { JSX } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { dockerContainerLogs } from "../../services/dockerService";
 import { IconChevronRight } from "@tabler/icons-react";
 

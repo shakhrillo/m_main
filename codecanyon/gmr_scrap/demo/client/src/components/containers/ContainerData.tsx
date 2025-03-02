@@ -5,7 +5,7 @@ import { formatTimestamp, formatNumber } from "../../utils";
 import { Ratings } from "../Ratings";
 import { StatusInfo } from "../StatusInfo";
 import { ContainerInfo } from "./ContainerInfo";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 interface IContainerData {
   container: IDockerContainer;

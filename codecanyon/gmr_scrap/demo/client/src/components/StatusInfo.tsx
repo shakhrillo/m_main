@@ -1,7 +1,7 @@
 import { IconCheck } from "@tabler/icons-react";
 import { Spinner, Stack } from "react-bootstrap";
 import type { IDockerContainer } from "../types/dockerContainer";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 /**
  * StatusInfo component

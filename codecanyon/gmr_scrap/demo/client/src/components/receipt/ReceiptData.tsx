@@ -1,7 +1,7 @@
 import { Badge, Stack } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { formatAmount, formatNumber, formatTimestamp } from "../../utils";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 interface IReceiptData {
   receipt: any;

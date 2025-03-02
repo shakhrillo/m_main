@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useCallback, JSX } from "react";
+import type { JSX } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { paymentsData } from "../../services/paymentService";
 import type { Subscription } from "rxjs";
 import { debounceTime, filter, map, Subject } from "rxjs";

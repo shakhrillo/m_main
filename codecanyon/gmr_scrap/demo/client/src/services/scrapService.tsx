@@ -10,7 +10,7 @@ import {
 import { firestore } from "../firebaseConfig";
 import { BehaviorSubject, Observable } from "rxjs";
 import type { IComment } from "../types/comment";
-import { IReview } from "../types/review";
+import type { IReview } from "../types/review";
 
 /**
  * Validate URL

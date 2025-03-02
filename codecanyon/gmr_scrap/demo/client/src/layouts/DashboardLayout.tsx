@@ -1,7 +1,7 @@
 import { Outlet, useOutletContext } from "react-router-dom";
 import { AppNavbar, Sidebar } from "./";
 import type { IUserInfo } from "../types/userInfo";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 /**
  * DashboardLayout component

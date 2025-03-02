@@ -1,4 +1,4 @@
-import { GeoPoint, Timestamp } from "firebase/firestore";
+import type { GeoPoint, Timestamp } from "firebase/firestore";
 
 export interface IReview {
   id?: string;

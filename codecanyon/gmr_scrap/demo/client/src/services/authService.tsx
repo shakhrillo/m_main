@@ -25,7 +25,7 @@ export const googleLogin = async () =>
 /**
  * Logout user
  * @returns Promise
- */ 
+ */
 export const logout = async () => await auth.signOut();
 
 /**

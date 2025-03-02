@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import type { IUserInfo } from "../../types/userInfo";
 import { Stack, Image } from "react-bootstrap";
 import { formatNumber, formatTimestamp } from "../../utils";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 /**
  * User data component

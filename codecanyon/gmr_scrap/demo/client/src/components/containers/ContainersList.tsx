@@ -1,5 +1,6 @@
 import { IconFilter, IconReload } from "@tabler/icons-react";
-import { useEffect, useRef, useState, useCallback, JSX } from "react";
+import type { JSX } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { dockerContainers } from "../../services/dockerService";

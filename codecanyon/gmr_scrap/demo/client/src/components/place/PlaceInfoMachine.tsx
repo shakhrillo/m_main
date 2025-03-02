@@ -7,7 +7,7 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import type { IUserInfo } from "../../types/userInfo";
 
-interface PlaceInfoMachine {
+interface IPlaceInfoMachine {
   container: IDockerContainer;
 }
 
@@ -47,7 +47,7 @@ const MachineInfoRow = ({
  */
 export const PlaceInfoMachine = ({
   container,
-}: PlaceInfoMachine): JSX.Element => {
+}: IPlaceInfoMachine): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
 
   return (

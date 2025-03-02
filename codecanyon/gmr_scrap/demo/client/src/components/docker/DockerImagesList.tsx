@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, JSX } from "react";
+import type { JSX } from "react";
+import { useState, useEffect, useRef } from "react";
 import { filter, map } from "rxjs";
 import { dockerImages } from "../../services/dockerService";
 import { IconReload } from "@tabler/icons-react";

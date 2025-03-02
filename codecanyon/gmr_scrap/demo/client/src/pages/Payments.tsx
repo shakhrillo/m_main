@@ -36,31 +36,17 @@ export const Payments = () => {
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  useEffect(() => {
-    const subscription = settingValue({ tag: "cost", type: "coin" })
-      .pipe(filter(Boolean), take(1))
-      .subscribe(({ value }) => setCost(value || 1));
-    return () => subscription.unsubscribe();
-  }, []);
+  const handleError = (message: string) => {
+    setError(message);
+    resetForm();
+  };
 
-  useEffect(() => {
-    if (!coinId || !user) return;
-    const unsubscribe = buyCoinsData(coinId, user.uid).subscribe(
-      ({ url, error }) => {
-        if (url) window.location.href = url;
-        if (error) handleError(error);
-      },
-    );
-    return () => unsubscribe.unsubscribe();
-  }, [coinId, user]);
-
-  useEffect(() => {
-    const form = document.getElementById("validateForm") as HTMLFormElement;
-    if (form) {
-      form.classList.add("was-validated");
-      setIsFormValid(form.checkValidity());
-    }
-  }, [amount]);
+  const resetForm = () => {
+    setCoinId("");
+    setAmount("");
+    setIsFormValid(false);
+    setLoading(false);
+  };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -83,17 +69,31 @@ export const Payments = () => {
     }
   };
 
-  const handleError = (message: string) => {
-    setError(message);
-    resetForm();
-  };
+  useEffect(() => {
+    const subscription = settingValue({ tag: "cost", type: "coin" })
+      .pipe(filter(Boolean), take(1))
+      .subscribe(({ value }) => setCost(value || 1));
+    return () => subscription.unsubscribe();
+  }, []);
 
-  const resetForm = () => {
-    setCoinId("");
-    setAmount("");
-    setIsFormValid(false);
-    setLoading(false);
-  };
+  useEffect(() => {
+    if (!coinId || !user) return;
+    const unsubscribe = buyCoinsData(coinId, user.uid).subscribe(
+      ({ url, error }) => {
+        if (url) window.location.href = url;
+        if (error) handleError(error);
+      },
+    );
+    return () => unsubscribe.unsubscribe();
+  }, [coinId, user, handleError]);
+
+  useEffect(() => {
+    const form = document.getElementById("validateForm") as HTMLFormElement;
+    if (form) {
+      form.classList.add("was-validated");
+      setIsFormValid(form.checkValidity());
+    }
+  }, [amount]);
 
   return (
     <Container>

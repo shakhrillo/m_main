@@ -4,7 +4,8 @@ import {
   AdvancedMarkerAnchorPoint,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { JSX, useCallback } from "react";
+import type { JSX} from "react";
+import { useCallback } from "react";
 
 type TreeMarkerProps = {
   position: google.maps.LatLngLiteral;
