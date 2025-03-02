@@ -31,7 +31,6 @@ $nav-link-padding-x: 0.5rem;
 @import "styles/docker";
 @import "styles/images";
 @import "styles/navbar";
-@import "styles/pagination";
 @import "styles/payments";
 @import "styles/place";
 @import "styles/ratings";
@@ -76,76 +75,4 @@ body {
   display: inline-block;
   width: 100%;
   height: 350px;
-}
-
-.dashboard-layout {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100vh;
-}
-
-.dashboard-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  // gap: $grid-gutter-width;
-  padding-bottom: $grid-gutter-width;
-  width: 100%;
-  height: 100vh;
-  overflow: auto;
-}
-
-.dashboard-navbar {
-  min-height: 60px;
-  // align-items: center;
-  // background-color: $primary;
-  // min-height: 60px;
-
-  // nav {
-  //   padding: 0;
-  //   width: 100%;
-
-  //   .nav-link {
-  //     display: flex;
-  //     align-items: center;
-  //     padding-top: 0;
-  //     padding-bottom: 0;
-  //   }
-  // }
-}
-
-.dashboard-navbar,
-.dashboard-content {
-  // padding: 0 1.5rem;
-}
-
-// Scrap page
-
-// Place info
-
-// User
-.user-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px;
-  background-color: #6c757d30;
-  width: 80px;
-  height: 80px;
-}
-
-.user-id {
-  display: flex;
-  justify-content: space-between;
-  max-width: 100%;
-  overflow: hidden;
-  color: #6c757d;
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.firebase-emulator-warning {
-  display: none;
 }
