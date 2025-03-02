@@ -97,7 +97,6 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
   }, [container, user]);
 
   useEffect(() => {
-
     const subscription = settingValue({ tag: "minimum", type: "scrap" })
       .pipe(
         filter((data) => !!data),

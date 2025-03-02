@@ -1,5 +1,5 @@
 import { formatNumber } from "../../utils/formatNumber";
-import type { JSX} from "react";
+import type { JSX } from "react";
 import { useEffect, useState } from "react";
 import { getStatistics } from "../../services/statistics";
 

@@ -9,7 +9,7 @@ import { PlaceInfoOptions } from "./PlaceInfoOptions";
 import { StatusInfo } from "../StatusInfo";
 import { NavLink } from "react-router-dom";
 import { PlaceInfoDetails } from "./PlaceInfoDetails";
-import { JSX } from "react";
+import type { JSX } from "react";
 
 interface IPlaceInfo {
   container: IDockerContainer;
@@ -39,40 +39,34 @@ export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
             </NavLink>
           )}
           {container.address && <i className="d-block">{container.address}</i>}
-          
-          {
-            (container?.csvUrl || container?.jsonUrl) && (
-              <Stack direction="horizontal" gap={3} className="mt-3">
-                {
-                  container?.csvUrl && (
-                    <a
-                      href={container?.csvUrl}
-                      className="btn btn-primary"
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download CSV
-                    </a>
-                  )
-                }
 
-                {
-                  container?.jsonUrl && (
-                    <a
-                      href={container?.jsonUrl}
-                      className="btn btn-primary"
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download JSON
-                    </a>
-                  )
-                }
-              </Stack>
-            )
-          }
+          {(container?.csvUrl || container?.jsonUrl) && (
+            <Stack direction="horizontal" gap={3} className="mt-3">
+              {container?.csvUrl && (
+                <a
+                  href={container?.csvUrl}
+                  className="btn btn-primary"
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download CSV
+                </a>
+              )}
+
+              {container?.jsonUrl && (
+                <a
+                  href={container?.jsonUrl}
+                  className="btn btn-primary"
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download JSON
+                </a>
+              )}
+            </Stack>
+          )}
         </div>
       )}
       <Accordion
