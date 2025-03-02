@@ -5,7 +5,7 @@ import { FeatureMarker } from "./FeatureMarker";
 import { ClusterMarker } from "./ClusterMarker";
 import type { FeatureCollection, Point } from "geojson";
 import { InfoWindow, useMap } from "@vis.gl/react-google-maps";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 import { NavLink } from "react-router-dom";
 
 /**
@@ -23,8 +23,10 @@ export const ClusteredMarkers = ({
 }) => {
   const map = useMap();
   const [clusterData, setClusterData] = useState<any[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null);
-  const [selectedContainer, setSelectedContainer] = useState<IDockerContainer | null>(null);
+  const [selectedMarker, setSelectedMarker] =
+    useState<google.maps.LatLngLiteral | null>(null);
+  const [selectedContainer, setSelectedContainer] =
+    useState<IDockerContainer | null>(null);
 
   const clusterer = useMemo(() => {
     return new Supercluster({
@@ -59,7 +61,10 @@ export const ClusteredMarkers = ({
     [getClusterLeaves, map],
   );
 
-  const handleFeatureMarkerClick = (marker: any, container: IDockerContainer) => {
+  const handleFeatureMarkerClick = (
+    marker: any,
+    container: IDockerContainer,
+  ) => {
     setSelectedContainer(container);
     setSelectedMarker({
       lat: marker.position.lat,
@@ -94,17 +99,18 @@ export const ClusteredMarkers = ({
       })}
 
       {selectedMarker && (
-        <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)} headerContent={
-          <NavLink to={`/reviews/${selectedContainer?.id}`}>
-            {selectedContainer?.title}
-          </NavLink>
-        }>
-          <div>
-            {selectedContainer?.totalReviews} reviews
-          </div>
+        <InfoWindow
+          position={selectedMarker}
+          onCloseClick={() => setSelectedMarker(null)}
+          headerContent={
+            <NavLink to={`/reviews/${selectedContainer?.id}`}>
+              {selectedContainer?.title}
+            </NavLink>
+          }
+        >
+          <div>{selectedContainer?.totalReviews} reviews</div>
         </InfoWindow>
       )}
-
     </>
   );
 };

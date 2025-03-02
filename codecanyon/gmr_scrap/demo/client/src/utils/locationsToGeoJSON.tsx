@@ -12,7 +12,10 @@ export const locationsToGeoJSON = (
     type: "Feature" as const,
     geometry: {
       type: "Point" as const,
-      coordinates: [container?.location?.longitude, container?.location?.latitude]
+      coordinates: [
+        container?.location?.longitude,
+        container?.location?.latitude,
+      ],
     },
     properties: container,
   }));

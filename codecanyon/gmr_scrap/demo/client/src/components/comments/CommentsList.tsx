@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
-import { debounceTime, filter, Subject, Subscription, take } from "rxjs";
+import type { Subscription } from "rxjs";
+import { debounceTime, filter, Subject, take } from "rxjs";
 import { reviewsData } from "../../services/reviewService";
 import { Comment } from "./Comment";
 import type { IUserInfo } from "../../types/userInfo";
 import { useOutletContext } from "react-router-dom";
 import type { IComment } from "../../types/comment";
-import { IDockerContainer } from "../../types/dockerContainer";
+import type { IDockerContainer } from "../../types/dockerContainer";
 
 interface ICommentsList {
   container: IDockerContainer;
@@ -133,16 +134,18 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
         <Comment comment={comment} key={comment.id} />
       ))}
 
-      {!isLastPage && comments.length > 0 && comments.length !== container?.totalReviews && (
-        <Stack direction="horizontal" className="justify-content-center mt-3">
-          <Button
-            onClick={() => fetchComments(true, lastDoc)}
-            variant="outline-primary"
-          >
-            <IconReload className="me-2" /> Load more
-          </Button>
-        </Stack>
-      )}
+      {!isLastPage &&
+        comments.length > 0 &&
+        comments.length !== container?.totalReviews && (
+          <Stack direction="horizontal" className="justify-content-center mt-3">
+            <Button
+              onClick={() => fetchComments(true, lastDoc)}
+              variant="outline-primary"
+            >
+              <IconReload className="me-2" /> Load more
+            </Button>
+          </Stack>
+        )}
     </div>
   );
 };

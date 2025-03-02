@@ -14,7 +14,10 @@ export const ContainerLogs = ({ containerId }: IContainerLogs) => {
 
     const subscription = dockerContainerLogs(containerId).subscribe({
       next: (data = []) => {
-        setLogs((prevLogs) => [...prevLogs, ...data.flatMap(({ logs }: { logs: string }) => logs.trim())]);
+        setLogs((prevLogs) => [
+          ...prevLogs,
+          ...data.flatMap(({ logs }: { logs: string }) => logs.trim()),
+        ]);
       },
       error: (error) => console.error("Error fetching logs:", error),
     });

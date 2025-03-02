@@ -15,7 +15,12 @@ import { NavLink, useOutletContext } from "react-router-dom";
 import { filter, take } from "rxjs";
 import { buyCoins, buyCoinsData } from "../services/paymentService";
 import { settingValue } from "../services/settingService";
-import { IconCoins, IconCoin, IconInfoCircle, IconAlertCircle } from "@tabler/icons-react";
+import {
+  IconCoins,
+  IconCoin,
+  IconInfoCircle,
+  IconAlertCircle,
+} from "@tabler/icons-react";
 import type { IUserInfo } from "../types/userInfo";
 
 export const Payments = () => {
@@ -37,10 +42,12 @@ export const Payments = () => {
 
   useEffect(() => {
     if (!coinId || !user) return;
-    const unsubscribe = buyCoinsData(coinId, user.uid).subscribe(({ url, error }) => {
-      if (url) window.location.href = url;
-      if (error) handleError(error);
-    });
+    const unsubscribe = buyCoinsData(coinId, user.uid).subscribe(
+      ({ url, error }) => {
+        if (url) window.location.href = url;
+        if (error) handleError(error);
+      },
+    );
     return () => unsubscribe.unsubscribe();
   }, [coinId, user]);
 
@@ -60,7 +67,11 @@ export const Payments = () => {
   const handlePurchase = async () => {
     setLoading(true);
     try {
-      const id = await buyCoins(user?.uid, Number(amount), Number(amount) * cost);
+      const id = await buyCoins(
+        user?.uid,
+        Number(amount),
+        Number(amount) * cost,
+      );
       setCoinId(id);
     } catch {
       handleError("Purchase failed. Try again.");
@@ -90,7 +101,11 @@ export const Payments = () => {
             <Stack direction="vertical">
               <h5 className="payments-title">Purchase Coins</h5>
               <span className="text-muted">Amount of coins to purchase.</span>
-              <Form noValidate id="validateForm" className="needs-validation mt-2">
+              <Form
+                noValidate
+                id="validateForm"
+                className="needs-validation mt-2"
+              >
                 <FormGroup className="mb-3">
                   <FormControl
                     type="text"
@@ -108,7 +123,8 @@ export const Payments = () => {
                   )}
                   {!error && (
                     <FormText>
-                      <IconInfoCircle className="me-2" /> There might be restrictions on min/max amounts.
+                      <IconInfoCircle className="me-2" /> There might be
+                      restrictions on min/max amounts.
                     </FormText>
                   )}
                 </FormGroup>
@@ -117,15 +133,26 @@ export const Payments = () => {
           </Stack>
 
           <h6 className="mt-3">Coins Explained</h6>
-          <p>Coins are used to purchase data from the website. You can acquire coins by:</p>
+          <p>
+            Coins are used to purchase data from the website. You can acquire
+            coins by:
+          </p>
           <ul>
-            <li><strong>Free Coins:</strong> Earned through first-time registration.</li>
-            <li><strong>Purchase Coins:</strong> Available for purchase.</li>
+            <li>
+              <strong>Free Coins:</strong> Earned through first-time
+              registration.
+            </li>
+            <li>
+              <strong>Purchase Coins:</strong> Available for purchase.
+            </li>
           </ul>
           <h6>Refund Policy</h6>
-          <p>Purchases are non-refundable. If an error occurs, contact support immediately.</p>
+          <p>
+            Purchases are non-refundable. If an error occurs, contact support
+            immediately.
+          </p>
         </Col>
-        
+
         <Col md={3}>
           <div className="payment-summary">
             <Stack direction="horizontal" className="align-items-start">
@@ -144,7 +171,13 @@ export const Payments = () => {
             </Stack>
             <FormCheck
               type="checkbox"
-              label={<><NavLink to="/terms">I agree to the terms and conditions</NavLink></>}
+              label={
+                <>
+                  <NavLink to="/terms">
+                    I agree to the terms and conditions
+                  </NavLink>
+                </>
+              }
               required
               checked={isTermsAccepted}
               onChange={(e) => setIsTermsAccepted(e.target.checked)}

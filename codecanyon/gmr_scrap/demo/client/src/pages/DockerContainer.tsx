@@ -3,7 +3,10 @@ import { Breadcrumb, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { LineChart } from "../components/LineChart";
 import { PlaceInfo } from "../components/place/PlaceInfo";
-import { dockerContainers, dockerContainerStats } from "../services/dockerService";
+import {
+  dockerContainers,
+  dockerContainerStats,
+} from "../services/dockerService";
 import type { IDockerStats } from "../types/dockerStats";
 import { formatSize } from "../utils/formatSize";
 import { formatStringDate } from "../utils/formatStringDate";
@@ -25,7 +28,9 @@ export const DockerContainer = () => {
   const user = useOutletContext<IUserInfo>();
   const { containerId } = useParams<{ containerId: string }>();
   const [stats, setStats] = useState<IDockerStats[]>([]);
-  const [container, setContainer] = useState<IDockerContainer>({} as IDockerContainer);
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
 
   useEffect(() => {
     if (!containerId || !user?.uid) return;
@@ -36,7 +41,13 @@ export const DockerContainer = () => {
     })
       .pipe(
         filter(Boolean),
-        map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as IDockerContainer }))[0]),
+        map(
+          (snapshot) =>
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as IDockerContainer),
+            }))[0],
+        ),
       )
       .subscribe(setContainer);
 
@@ -54,54 +65,81 @@ export const DockerContainer = () => {
     return () => subscription.unsubscribe();
   }, [containerId]);
 
-  const labels = useMemo(() => stats.map((stat) => formatStringDate(stat?.read ?? "", "HH:mm:ss")), [stats]);
+  const labels = useMemo(
+    () => stats.map((stat) => formatStringDate(stat?.read ?? "", "HH:mm:ss")),
+    [stats],
+  );
 
-  const chartData = useMemo(() => [
-    {
-      label: "CPU",
-      datasets: [{
-        label: "Usage (GHz)",
-        data: stats.map((stat) => Number(formatSize(stat?.cpu_stats?.cpu_usage?.total_usage ?? 0 / 1e9, "num"))),
-        color: CHART_COLORS.cpu,
-      }],
-    },
-    {
-      label: "Memory",
-      datasets: [{
-        label: "Usage (GB)",
-        data: stats.map((stat) => Number(formatSize(stat?.memory_stats?.usage ?? 0, "num"))),
-        color: CHART_COLORS.memory,
-      }],
-    },
-    {
-      label: "Network",
-      datasets: [
-        {
-          label: "Downloaded Data",
-          data: stats.map((stat) => Number(formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num"))),
-          color: CHART_COLORS.networkDownload,
-        },
-        {
-          label: "Uploaded Data",
-          data: stats.map((stat) => Number(formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num"))),
-          color: CHART_COLORS.networkUpload,
-        },
-      ],
-    },
-    {
-      label: "PIDs",
-      datasets: [{
-        label: "PIDs Count",
-        data: stats.map((stat) => stat?.pids_stats?.current ?? 0),
-        color: CHART_COLORS.pids,
-      }],
-    },
-  ], [stats]);
+  const chartData = useMemo(
+    () => [
+      {
+        label: "CPU",
+        datasets: [
+          {
+            label: "Usage (GHz)",
+            data: stats.map((stat) =>
+              Number(
+                formatSize(
+                  stat?.cpu_stats?.cpu_usage?.total_usage ?? 0 / 1e9,
+                  "num",
+                ),
+              ),
+            ),
+            color: CHART_COLORS.cpu,
+          },
+        ],
+      },
+      {
+        label: "Memory",
+        datasets: [
+          {
+            label: "Usage (GB)",
+            data: stats.map((stat) =>
+              Number(formatSize(stat?.memory_stats?.usage ?? 0, "num")),
+            ),
+            color: CHART_COLORS.memory,
+          },
+        ],
+      },
+      {
+        label: "Network",
+        datasets: [
+          {
+            label: "Downloaded Data",
+            data: stats.map((stat) =>
+              Number(formatSize(stat?.networks?.eth0?.rx_bytes ?? 0, "num")),
+            ),
+            color: CHART_COLORS.networkDownload,
+          },
+          {
+            label: "Uploaded Data",
+            data: stats.map((stat) =>
+              Number(formatSize(stat?.networks?.eth0?.tx_bytes ?? 0, "num")),
+            ),
+            color: CHART_COLORS.networkUpload,
+          },
+        ],
+      },
+      {
+        label: "PIDs",
+        datasets: [
+          {
+            label: "PIDs Count",
+            data: stats.map((stat) => stat?.pids_stats?.current ?? 0),
+            color: CHART_COLORS.pids,
+          },
+        ],
+      },
+    ],
+    [stats],
+  );
 
   return (
     <Container>
       <Breadcrumb>
-        <Breadcrumb.Item onClick={() => navigate("/containers")}>Containers</Breadcrumb.Item>
+        <Breadcrumb.Item onClick={() => navigate("/containers")}>
+          Containers
+        </Breadcrumb.Item>
         <Breadcrumb.Item active>{container.title || "N/A"}</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
