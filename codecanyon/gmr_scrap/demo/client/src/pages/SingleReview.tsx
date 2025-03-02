@@ -72,7 +72,7 @@ export const SingleReview = () => {
         <Stack direction="horizontal" gap={2}>
           <Icon size={20} />
           {title}
-          {count && <Badge>{count}</Badge>}
+          {count ? <Badge>{count}</Badge> : ""}
         </Stack>
       }
     >
