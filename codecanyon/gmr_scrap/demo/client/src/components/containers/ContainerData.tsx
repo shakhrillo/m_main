@@ -18,7 +18,10 @@ interface IContainerData {
  * @param {string} path - Path
  * @returns {JSX.Element} - ContainerData component
  */
-export const ContainerData = ({ container, path }: IContainerData): JSX.Element => {
+export const ContainerData = ({
+  container,
+  path,
+}: IContainerData): JSX.Element => {
   return (
     <div className="container-data">
       <Stack direction="horizontal" gap={2} className="justify-content-between">

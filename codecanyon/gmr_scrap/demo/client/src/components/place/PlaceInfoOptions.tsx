@@ -39,7 +39,11 @@ const PlaceInfoRow = ({ icon, label, value }: PlaceInfoRowProps) => (
 const infoRows: { icon: Icon; label: string; key: keyof IDockerContainer }[] = [
   { icon: IconPhoto, label: "Extract Images", key: "extractImageUrls" },
   { icon: IconVideo, label: "Extract Videos", key: "extractVideoUrls" },
-  { icon: IconMessageReply, label: "Extract Owner Replies", key: "extractOwnerResponse" },
+  {
+    icon: IconMessageReply,
+    label: "Extract Owner Replies",
+    key: "extractOwnerResponse",
+  },
   { icon: IconFence, label: "Max Reviews", key: "limit" },
   { icon: IconCoins, label: "Max Spent Points", key: "maxSpentPoints" },
   { icon: IconArrowsSort, label: "Sort By", key: "sortBy" },
@@ -51,11 +55,19 @@ const infoRows: { icon: Icon; label: string; key: keyof IDockerContainer }[] = [
  * @param {IDockerContainer} props.container
  * @returns {JSX.Element}
  */
-export const PlaceInfoOptions = ({ container }: { container: IDockerContainer }) => (
+export const PlaceInfoOptions = ({
+  container,
+}: {
+  container: IDockerContainer;
+}) => (
   <Row className="row-cols-1">
     {infoRows.map(({ icon, label, key }) => (
       <Col key={key}>
-        <PlaceInfoRow icon={icon} label={label} value={container[key] ? "Yes" : "Default"} />
+        <PlaceInfoRow
+          icon={icon}
+          label={label}
+          value={container[key] ? "Yes" : "Default"}
+        />
       </Col>
     ))}
   </Row>

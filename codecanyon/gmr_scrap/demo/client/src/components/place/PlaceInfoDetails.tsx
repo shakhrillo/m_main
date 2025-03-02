@@ -15,16 +15,34 @@ import { spentTime } from "../../utils/spentTime";
 
 type DetailKey = keyof Pick<
   IDockerContainer,
-  "totalReviews" | "totalOwnerReviews" | "totalImages" | "totalVideos" | "totalSpentPoints"
+  | "totalReviews"
+  | "totalOwnerReviews"
+  | "totalImages"
+  | "totalVideos"
+  | "totalSpentPoints"
 >;
 
-const details: { icon: Icon; label: string; key: DetailKey | "spentTime"; isBadge?: boolean }[] = [
+const details: {
+  icon: Icon;
+  label: string;
+  key: DetailKey | "spentTime";
+  isBadge?: boolean;
+}[] = [
   { icon: IconMessage, label: "Extracted reviews", key: "totalReviews" },
-  { icon: IconMessageReply, label: "Extracted owner replies", key: "totalOwnerReviews" },
+  {
+    icon: IconMessageReply,
+    label: "Extracted owner replies",
+    key: "totalOwnerReviews",
+  },
   { icon: IconCamera, label: "Extracted images", key: "totalImages" },
   { icon: IconVideo, label: "Extracted videos", key: "totalVideos" },
   { icon: IconStopwatch, label: "Execution Duration", key: "spentTime" },
-  { icon: IconCoins, label: "Total Cost", key: "totalSpentPoints", isBadge: true },
+  {
+    icon: IconCoins,
+    label: "Total Cost",
+    key: "totalSpentPoints",
+    isBadge: true,
+  },
 ];
 
 /**
@@ -57,7 +75,11 @@ const PlaceInfoDetailsRow = ({
  * @param {IDockerContainer} container - Container.
  * @returns {JSX.Element} Place info details component.
  */
-export const PlaceInfoDetails = ({ container }: { container: IDockerContainer }): JSX.Element => (
+export const PlaceInfoDetails = ({
+  container,
+}: {
+  container: IDockerContainer;
+}): JSX.Element => (
   <Row className="row-cols-1">
     {details.map(({ icon, label, key, isBadge }) => (
       <Col key={key}>
@@ -65,11 +87,13 @@ export const PlaceInfoDetails = ({ container }: { container: IDockerContainer })
           icon={icon}
           label={label}
           value={
-            key === "spentTime"
-              ? spentTime(container)
-              : isBadge
-              ? <Badge>{`${container[key as DetailKey]} points`}</Badge>
-              : container[key as DetailKey]
+            key === "spentTime" ? (
+              spentTime(container)
+            ) : isBadge ? (
+              <Badge>{`${container[key as DetailKey]} points`}</Badge>
+            ) : (
+              container[key as DetailKey]
+            )
           }
         />
       </Col>

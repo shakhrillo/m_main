@@ -19,7 +19,10 @@ interface IVideosListProps {
  * @param {IVideosListProps} props - Component props
  * @returns {JSX.Element} - Videos list component
  */
-export const VideosList = ({ container, reviewId }: IVideosListProps): JSX.Element => {
+export const VideosList = ({
+  container,
+  reviewId,
+}: IVideosListProps): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
   const [videos, setVideos] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);

@@ -21,7 +21,7 @@ ChartJS.register(
   Filler,
   Tooltip,
   Legend,
-  zoomPlugin
+  zoomPlugin,
 );
 
 interface Dataset {
@@ -48,7 +48,8 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
   useEffect(() => {
     const updateWidth = () => {
-      if (containerRef.current) setChartWidth(containerRef.current.clientWidth - 40);
+      if (containerRef.current)
+        setChartWidth(containerRef.current.clientWidth - 40);
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
@@ -58,7 +59,7 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
   const createGradient = (
     ctx: CanvasRenderingContext2D,
     chartArea: any,
-    color: string
+    color: string,
   ) => {
     if (!chartArea) return null;
     const { top, bottom } = chartArea;
@@ -86,8 +87,14 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
   const chartOptions = {
     animation: { duration: 0, delay: 0 },
     scales: {
-      x: { grid: { color: "#fff" }, ticks: { color: "#666", font: { size: 10 } } },
-      y: { grid: { color: "#fff" }, ticks: { color: "#666", font: { size: 10 } } },
+      x: {
+        grid: { color: "#fff" },
+        ticks: { color: "#666", font: { size: 10 } },
+      },
+      y: {
+        grid: { color: "#fff" },
+        ticks: { color: "#666", font: { size: 10 } },
+      },
     },
     plugins: {
       legend: { display: false },
@@ -97,7 +104,14 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
   return (
     <div ref={containerRef} className="w-100">
-      {chartWidth > 0 && <Line data={chartData} options={chartOptions} width={chartWidth} height={chartHeight} />}
+      {chartWidth > 0 && (
+        <Line
+          data={chartData}
+          options={chartOptions}
+          width={chartWidth}
+          height={chartHeight}
+        />
+      )}
     </div>
   );
 };

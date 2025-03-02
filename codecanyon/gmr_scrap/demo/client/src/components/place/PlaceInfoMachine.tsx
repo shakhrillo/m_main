@@ -25,7 +25,11 @@ type MachineInfoRowProps = {
  * @param {JSX.Element | string} props.value
  * @returns {JSX.Element}
  */
-const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps): JSX.Element => (
+const MachineInfoRow = ({
+  icon,
+  label,
+  value,
+}: MachineInfoRowProps): JSX.Element => (
   <div className="place-info-details">
     {createElement(icon)}
     <div className="place-info-content">
@@ -41,7 +45,9 @@ const MachineInfoRow = ({ icon, label, value }: MachineInfoRowProps): JSX.Elemen
  * @param {IDockerContainer} props.container
  * @returns {JSX.Element}
  */
-export const PlaceInfoMachine = ({ container }: PlaceInfoMachine): JSX.Element => {
+export const PlaceInfoMachine = ({
+  container,
+}: PlaceInfoMachine): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
 
   return (

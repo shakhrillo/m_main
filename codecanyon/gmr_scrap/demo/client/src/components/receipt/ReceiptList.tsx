@@ -86,7 +86,7 @@ export const ReceiptList = (): JSX.Element => {
 
   useEffect(() => {
     fetchReceipts();
-    return () => subscriptionRef.current?.unsubscribe(); 
+    return () => subscriptionRef.current?.unsubscribe();
   }, [search, status, fetchReceipts]);
 
   return (

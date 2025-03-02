@@ -21,7 +21,10 @@ interface IImagesListProps {
  * @param {string} reviewId - Review ID
  * @returns {JSX.Element} ImagesList component
  */
-export const ImagesList = ({ container, reviewId }: IImagesListProps): JSX.Element => {
+export const ImagesList = ({
+  container,
+  reviewId,
+}: IImagesListProps): JSX.Element => {
   const user = useOutletContext<IUserInfo>();
   const [images, setImages] = useState<ICommentImage[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
