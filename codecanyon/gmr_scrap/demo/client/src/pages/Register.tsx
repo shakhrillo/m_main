@@ -12,6 +12,9 @@ import {
   Stack,
 } from "react-bootstrap";
 
+/**
+ * Register page component.
+ */
 export const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

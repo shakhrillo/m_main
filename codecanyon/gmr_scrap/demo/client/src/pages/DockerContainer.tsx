@@ -23,6 +23,9 @@ const CHART_COLORS = {
   pids: "#043b5c",
 };
 
+/**
+ * Docker container page component.
+ */
 export const DockerContainer = () => {
   const navigate = useNavigate();
   const user = useOutletContext<IUserInfo>();

@@ -3,6 +3,9 @@ import { Container, Row, Col } from "react-bootstrap";
 import { filter, take } from "rxjs";
 import { settingValue } from "../services/settingService";
 
+/**
+ * Help page component.
+ */
 export const Help = () => {
   const [help, setHelp] = useState(null as any);
 

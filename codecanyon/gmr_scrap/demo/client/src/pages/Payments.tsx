@@ -23,6 +23,9 @@ import {
 } from "@tabler/icons-react";
 import type { IUserInfo } from "../types/userInfo";
 
+/**
+ * Payments page component.
+ */
 export const Payments = () => {
   const user = useOutletContext<IUserInfo>();
   const [amount, setAmount] = useState("");

@@ -21,6 +21,9 @@ import { ImagesList } from "../components/images/ImagesList";
 import { PlaceInfo } from "../components/place/PlaceInfo";
 import { VideosList } from "../components/videos/VideosList";
 
+/**
+ * Single review page component.
+ */
 export const SingleReview = () => {
   const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();

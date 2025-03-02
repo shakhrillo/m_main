@@ -19,6 +19,9 @@ import type { IUserInfo } from "../types/userInfo";
 import { IconCoin, IconLabel, IconMail, IconStars } from "@tabler/icons-react";
 import { Buffer } from "buffer";
 
+/**
+ * User info component.
+ */
 const UserInfo = ({
   icon,
   label,
@@ -37,6 +40,9 @@ const UserInfo = ({
   </Stack>
 );
 
+/**
+ * User page component.
+ */
 export const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();

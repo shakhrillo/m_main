@@ -13,6 +13,9 @@ import {
 } from "react-bootstrap";
 import type { UserCredential } from "firebase/auth";
 
+/**
+ * Login page component.
+ */
 export const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

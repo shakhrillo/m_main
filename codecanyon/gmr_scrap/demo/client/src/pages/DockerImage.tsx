@@ -9,6 +9,9 @@ import { formatSize } from "../utils/formatSize";
 import { formatTimestamp } from "../utils/formatTimestamp";
 import { DockerImageInfo } from "../components/docker/DockerImageInfo";
 
+/**
+ * Docker image page component.
+ */
 export const DockerImage = () => {
   const { imgId } = useParams() as { imgId: string };
   const navigate = useNavigate();

@@ -3,6 +3,9 @@ import { Col, Container, Row } from "react-bootstrap";
 import { filter, take } from "rxjs";
 import { settingValue } from "../services/settingService";
 
+/**
+ * Security page component.
+ */
 export const Security = () => {
   const [info, setInfo] = useState(null as any);
 

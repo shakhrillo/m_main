@@ -16,6 +16,9 @@ import {
 import { Badge, Breadcrumb, Container, Row, Col } from "react-bootstrap";
 import { filter, map } from "rxjs";
 
+/**
+ * Receipt page component.
+ */
 export const Receipt = () => {
   const { receiptId } = useParams();
   const navigate = useNavigate();

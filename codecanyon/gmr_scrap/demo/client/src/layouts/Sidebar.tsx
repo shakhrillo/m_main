@@ -114,6 +114,10 @@ const menuSections = [
   },
 ];
 
+/**
+ * Sidebar layout component.
+ * Renders the sidebar navigation menu.
+ */
 export const Sidebar = () => {
   const user = useOutletContext<IUserInfo>();
   const [collapsed, setCollapsed] = useState(false);

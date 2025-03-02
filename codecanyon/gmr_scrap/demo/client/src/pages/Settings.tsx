@@ -133,6 +133,9 @@ const SETTINGS_TABS = [
   },
 ];
 
+/**
+ * Settings page component.
+ */
 export const Settings = () => {
   return (
     <Container>
