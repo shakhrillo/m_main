@@ -15,7 +15,7 @@ import type { IDockerContainer } from "../../types/dockerContainer";
 type PlaceInfoRowProps = {
   icon: Icon;
   label: string;
-  value?: string | number;
+  value?: any;
 };
 
 /**
@@ -66,7 +66,7 @@ export const PlaceInfoOptions = ({
         <PlaceInfoRow
           icon={icon}
           label={label}
-          value={container[key] ? "Yes" : "Default"}
+          value={container[key] || 'N/A'}
         />
       </Col>
     ))}
