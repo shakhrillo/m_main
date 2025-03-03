@@ -1,6 +1,6 @@
 export * from "./Dashboard";
 export * from "./Help";
-export * from "./Info";
+export * from "./Terms";
 export * from "./Login";
 export * from "./Logout";
 export * from "./Payments";

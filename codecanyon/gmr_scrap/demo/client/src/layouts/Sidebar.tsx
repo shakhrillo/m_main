@@ -109,7 +109,7 @@ const menuSections = [
         label: "Security",
       },
       { path: "/help", id: "help", icon: IconHelp, label: "Help" },
-      { path: "/info", id: "info", icon: IconInfoCircle, label: "Info" },
+      { path: "/terms", id: "terms", icon: IconInfoCircle, label: "Terms" },
     ],
   },
 ];

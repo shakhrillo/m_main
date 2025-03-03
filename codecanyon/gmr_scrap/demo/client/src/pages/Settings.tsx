@@ -50,9 +50,9 @@ const SETTINGS_TABS = [
         inputType: "textarea",
       },
       {
-        tag: "info",
-        label: "Info",
-        helpText: "The info of the website.",
+        tag: "terms",
+        label: "Terms",
+        helpText: "The terms of the website.",
         inputType: "textarea",
       },
     ],

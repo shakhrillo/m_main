@@ -94,7 +94,7 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
 
   return (
     <div className="scrap-expected-points">
-      <Form onSubmit={handleScrap} noValidate>
+      <Form onSubmit={handleScrap} noValidate className="w-100">
         <FormCheck
           type="checkbox"
           id="terms"

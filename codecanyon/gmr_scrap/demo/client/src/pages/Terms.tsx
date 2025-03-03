@@ -6,16 +6,16 @@ import { settingValue } from "../services/settingService";
 /**
  * Help page component.
  */
-export const Info = () => {
-  const [info, setInfo] = useState(null as any);
+export const Terms = () => {
+  const [terms, setTerms] = useState(null as any);
 
   useEffect(() => {
-    const subscription = settingValue({ tag: "help", type: "general" })
+    const subscription = settingValue({ tag: "terms", type: "general" })
       .pipe(
         filter((data) => !!data),
         take(1),
       )
-      .subscribe((data) => setInfo(data["value"]));
+      .subscribe((data) => setTerms(data["value"]));
 
     return () => {
       subscription.unsubscribe();
@@ -26,8 +26,8 @@ export const Info = () => {
     <Container>
       <Row>
         <Col>
-          <h5>Info</h5>
-          {info}
+          <h5>Terms</h5>
+          {terms}
         </Col>
       </Row>
     </Container>
