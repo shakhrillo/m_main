@@ -17,7 +17,6 @@ const api = axios.create({ baseURL });
  */
 const executeScraping = async (data) => {
   const token = createToken(data);
-  console.log("token", token);
   await api.post(`/scrap`, {}, { headers: { Authorization: `Bearer ${token}` } });
 };
 

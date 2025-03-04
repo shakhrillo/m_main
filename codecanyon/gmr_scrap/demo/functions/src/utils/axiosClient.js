@@ -4,8 +4,6 @@ if (process.env.APP_ENVIRONMENT === "production") {
   baseURL = process.env.API_PRODUCTION_URL;
 }
 
-console.log("baseURL", baseURL);
-
 const axiosInstance = axios.create({
   baseURL,
   headers: {

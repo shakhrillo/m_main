@@ -91,8 +91,6 @@ exports.webhookHandler = async (req, res) => {
       return res.status(400).json({ error: `Webhook signature verification failed.` });
     }
 
-    console.log("Webhook event received:", event.type);
-
     // Process the payment event
     await addPayments({
       type: event.type,

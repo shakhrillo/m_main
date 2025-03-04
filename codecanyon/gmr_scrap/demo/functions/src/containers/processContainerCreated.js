@@ -29,8 +29,6 @@ async function processContainerCreated(event) {
     const createdAt = Timestamp.now();
     const updatedAt = createdAt;
 
-    console.log("Processing container created", containerId, data);
-
     /*-------------------*/
     /* Create container  */
     /*-------------------*/

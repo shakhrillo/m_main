@@ -11,8 +11,6 @@ async function processMachineWritten(event) {
     const data = event.data.after.data();
     const { machineId } = event.params;
 
-    console.log("Processing machine written", machineId, data);
-
     if (!data) {
       console.error("No data found for machineId", machineId);
       return;
