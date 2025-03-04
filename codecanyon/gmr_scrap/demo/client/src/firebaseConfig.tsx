@@ -25,11 +25,13 @@ const storage = getStorage(app);
 
 if (APP_ENVIRONMENT === "development") {
   const host = "127.0.0.1";
+  console.log('connecting!!', `http://${host}:${APP_FIREBASE_EMULATOR_AUTHENTICATION}`);
   connectAuthEmulator(
     auth,
     `http://${host}:${APP_FIREBASE_EMULATOR_AUTHENTICATION}`,
   );
   connectFirestoreEmulator(firestore, host, APP_FIREBASE_EMULATOR_FIRESTORE);
+  console.log('connected!!');
   connectStorageEmulator(storage, host, APP_FIREBASE_EMULATOR_STORAGE);
 }
 

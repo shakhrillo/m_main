@@ -22,14 +22,17 @@ export const AuthGuard = () => {
             navigate("/auth/login");
             return of(null);
           }
+          console.log('authUser', authUser);
           return userData(authUser.uid).pipe(
             filter(Boolean),
             map(
-              (snapshot) =>
-                snapshot.docs.map((doc) => ({
+              (snapshot) => {
+                console.log(`snapshot`, snapshot)
+                return snapshot.docs.map((doc) => ({
                   id: doc.id,
                   ...(doc.data() as IUserInfo),
-                }))?.[0],
+                }))?.[0]
+              }
             ),
             catchError(() => {
               navigate("/auth/login");
@@ -40,6 +43,7 @@ export const AuthGuard = () => {
       )
       .subscribe({
         next: (user) => {
+          console.log('user', user);
           setUser(user);
           setLoading(false);
         },
