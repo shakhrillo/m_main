@@ -22,7 +22,7 @@ export const AuthGuard = () => {
             navigate("/auth/login");
             return of(null);
           }
-          console.log('authUser', authUser);
+          console.log('-> uid', authUser.uid);
           return userData(authUser.uid).pipe(
             filter(Boolean),
             map(
