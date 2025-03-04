@@ -34,12 +34,8 @@ export const userData = (uid: string) => {
   const user$ = new BehaviorSubject<QuerySnapshot<DocumentData>>(null as any);
   const collectionRef = collection(firestore, "users");
 
-  // console.log('server url', process.env.VITE_APP_FIREBASE_EMULATOR_FIRESTORE);
-  console.log('-> firestore', firestore);
-
   const unsubscribe = onSnapshot(
-    // query(collectionRef, where("uid", "==", uid)),
-    collectionRef,
+    query(collectionRef, where("uid", "==", uid)),
     (snapshot) => user$.next(snapshot),
     (error) => user$.error(error),
   );

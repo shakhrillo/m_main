@@ -24,7 +24,6 @@ export const createDockerContainer = (data: any) => {
   return new Promise<any>((resolve, reject) => {
     addDoc(collection(firestore, "containers"), data)
       .then((docRef) => {
-        console.log(`docRef with ID: ${docRef.id} created`, docRef);
         resolve({
           id: docRef.id,
           ...data,

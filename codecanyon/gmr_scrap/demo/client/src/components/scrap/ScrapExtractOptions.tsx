@@ -158,7 +158,6 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               onChange={(e) => setLimit(Number(e.target.value))}
               onBlur={(e) => {
                 let value = Number(e.target.value);
-                console.log(value, validateMin, validateMax);
                 if (value < validateMin) {
                   value = validateMin;
                 } else if (value > validateMax) {

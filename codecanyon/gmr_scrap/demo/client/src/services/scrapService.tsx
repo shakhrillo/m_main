@@ -201,7 +201,6 @@ export const scrapImages = (placeId: string, uid: string) => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("imagesData", imagesData);
       images$.next(imagesData);
     },
     (error) => {
