@@ -9,38 +9,34 @@
 
 ### Steps
 
-1. Create a `.env` file. You can use the `.env.example` file as a template.
+1. Create a `.env` file. You can use the `.env.example` file as a template and fill in the necessary values.
 
-docker-compose -p gmrscrap --env-file .env build &&
-docker-compose -p gmrscrap --env-file .env up -d
+Install the dependencies:
 
-Modify the Main Nginx Config
-Open your main Nginx config, usually located at:
+Run application:
 
-macOS: /usr/local/etc/nginx/nginx.conf
-Linux: /etc/nginx/nginx.conf
-Add the following inside the http {} block:
+You can change the .env APP_ENVIRONMENT variable to `production` to deploy or `development` to run locally.
 
-sudo nano /opt/homebrew/etc/nginx/nginx.conf
-include /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/nginx.conf;
-sudo nginx -t
+npm run setup
 
-sudo mkdir -p /opt/homebrew/etc/nginx/sites-available
-sudo mkdir -p /opt/homebrew/etc/nginx/sites-enabled
+Client firebase configuration:
 
-sudo ln -s /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/nginx.conf /opt/homebrew/etc/nginx/sites-available/demo
+Get the firebase configuration value from the firebase console and replace the values in the `client/src/firebaseConfig.json` file. You can use the `client/src/firebaseConfig.example.json` file as a template.
 
-sudo ln -s /opt/homebrew/etc/nginx/sites-available/demo /opt/homebrew/etc/nginx/sites-enabled/
+Firebase service account configuration:
+To get your Firebase service account configuration, follow these steps:
+1. Go to Firebase Console
+Open Firebase Console.
+Select your project.
+2. Navigate to Service Accounts
+In the left menu, click on Project settings (gear icon ⚙️).
+Go to the Service accounts tab.
+3. Generate a New Private Key
+Click Generate new private key.
+This will download a JSON file containing your Firebase service account credentials.
+4. Save the JSON file in the root directory of the project and rename it to `firebaseServiceAccount.json`.
 
-<!-- sudo ln -s /Users/shakhrillo/Desktop/m_main/codecanyon/gmr_scrap/demo/nginx.conf /etc/nginx/sites-available/demo
-sudo ln -s /etc/nginx/sites-available/demo /etc/nginx/sites-enabled/ -->
+You can use the `firebaseServiceAccount.example.json` file as a template.
 
-sudo rm /etc/nginx/sites-enabled/nginx.conf
-sudo ln -s /root/m_main/codecanyon/gmr_scrap/demo/nginx.conf /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
 
-sudo rm /etc/nginx/sites-enabled/nginx.api.conf
-sudo ln -s /root/m_main/codecanyon/gmr_scrap/demo/nginx.api.conf /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
+
