@@ -45,7 +45,7 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     # Deploy sequentially
     firebase deploy --only functions --project "$APP_FIREBASE_PROJECT_ID" || exit 1
     firebase deploy --only firestore:rules --project "$APP_FIREBASE_PROJECT_ID" || exit 1
-    # firebase deploy --only firestore:indexes --project "$APP_FIREBASE_PROJECT_ID" --force || exit 1
+    firebase deploy --only firestore:indexes --project "$APP_FIREBASE_PROJECT_ID" --force || exit 1
 
     echo "Firebase initialization successful!"
     break  # Exit loop on success
