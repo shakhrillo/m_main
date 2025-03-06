@@ -31,7 +31,7 @@ const PlaceInfoRow = ({ icon, label, value }: PlaceInfoRowProps) => (
     {createElement(icon)}
     <div className="place-info-content">
       <div className="place-info-label">{label}</div>
-      <div className="place-info-value">{value ?? "N/A"}</div>
+      <div className="place-info-value">{value === undefined || value === null ? "N/A" : String(value)}</div>
     </div>
   </div>
 );
