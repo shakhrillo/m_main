@@ -1,7 +1,6 @@
 import { Image } from "react-bootstrap";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import ReactPlayer from "react-player";
-import Scrollbar from "react-scrollbars-custom";
 import { IconPlayerPlay } from "@tabler/icons-react";
 import type { IComment } from "../../types/comment";
 
@@ -28,37 +27,35 @@ export const CommentVideos = ({ comment }: ICommentVideos) => {
         }}
       >
         <div className="comment-media">
-          <Scrollbar>
-            {comment?.videoUrls.map((video, index) => (
-              <Item
-                key={`comment-${index}`}
-                original={video.videoUrl}
-                thumbnail={video.thumb}
-                content={
-                  <ReactPlayer
-                    url={video.videoUrl}
-                    controls
-                    className="comment-video"
+          {comment?.videoUrls.map((video, index) => (
+            <Item
+              key={`comment-${index}`}
+              original={video.videoUrl}
+              thumbnail={video.thumb}
+              content={
+                <ReactPlayer
+                  url={video.videoUrl}
+                  controls
+                  className="comment-video"
+                />
+              }
+            >
+              {({ ref, open }) => (
+                <div
+                  className="comment-thumb-container"
+                  ref={ref}
+                  onClick={open}
+                >
+                  <Image
+                    src={video.thumb}
+                    alt={`comment-thumb-${index}`}
+                    className="comment-thumb"
                   />
-                }
-              >
-                {({ ref, open }) => (
-                  <div
-                    className="comment-thumb-container"
-                    ref={ref}
-                    onClick={open}
-                  >
-                    <Image
-                      src={video.thumb}
-                      alt={`comment-thumb-${index}`}
-                      className="comment-thumb"
-                    />
-                    <IconPlayerPlay size={24} className="comment-thumb-icon" />
-                  </div>
-                )}
-              </Item>
-            ))}
-          </Scrollbar>
+                  <IconPlayerPlay size={24} className="comment-thumb-icon" />
+                </div>
+              )}
+            </Item>
+          ))}
         </div>
       </Gallery>
     )
