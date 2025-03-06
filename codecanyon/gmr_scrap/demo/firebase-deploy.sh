@@ -15,6 +15,9 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
   # Save the Firebase project ID
   gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format=json > saved_indexes.json
 
+  # Print the saved indexes
+  cat saved_indexes.json
+
   # Deploy the functions with a retry mechanism
   MAX_RETRIES=3
   for ((i=1; i<=MAX_RETRIES; i++)); do
