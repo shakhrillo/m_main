@@ -13,10 +13,10 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
   gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
 
   # Save the Firebase project ID
-  gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format=json > saved_indexes.json
+  # gcloud firestore indexes composite list --project="$APP_FIREBASE_PROJECT_ID" --format=json > saved_indexes.json
 
   # Print the saved indexes
-  cat saved_indexes.json
+  # cat saved_indexes.json
 
   # Deploy the functions with a retry mechanism
   MAX_RETRIES=3
@@ -35,7 +35,7 @@ if [ "$APP_ENVIRONMENT" = "production" ]; then
     done
 
     # Remove all indexes sequentially
-    gcloud firestore indexes composite list --project "$APP_FIREBASE_PROJECT_ID" --format json | jq -r '.indexes[] | .name' | while read -r index; do
+    gcloud firestore indexes composite list --project "$APP_FIREBASE_PROJECT_ID" --format json | jq -r '.[].name' | while read -r index; do
       gcloud firestore indexes composite delete "$index" --project "$APP_FIREBASE_PROJECT_ID" --quiet || exit 1
     done
 
