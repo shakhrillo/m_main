@@ -45,8 +45,8 @@ export const reviewsData = (
     query(
       collectionRef,
       ...(q.uid ? [where("uid", "==", q.uid)] : []),
-      ...(q.filterOptions ? [where(q.filterOptions, ">", [])] : []),
-      ...(q.search ? [where("keywords", "array-contains", q.search)] : []),
+      ...(q.filterOptions && q.filterOptions.trim() !== "" ? [where(q.filterOptions, ">", [])] : []),
+      ...(q.search && q.search.trim() !== "" ? [where("keywords", "array-contains", q.search)] : []),
       ...(lastRef ? [startAfter(lastRef)] : []),
       limit(10),
     ),
