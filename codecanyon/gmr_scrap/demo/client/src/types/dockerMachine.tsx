@@ -1,7 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 
 export interface IDockerMachine {
-  Action: "create" | "start" | "stop" | "destroy";
+  Action: "create" | "start" | "stop" | "die" | "destroy";
   Actor: {
     Attributes: {
       execDuration: string;
