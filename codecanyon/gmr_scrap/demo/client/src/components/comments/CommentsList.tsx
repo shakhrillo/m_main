@@ -40,45 +40,42 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const [filterOptions, setFilterOptions] = useState("");
   const subscriptionRef = useRef<Subscription | null>(null);
 
-  const fetchComments = useCallback(
-    (append = false, lastDocument = null) => {
-      if (!user?.uid || isLastPage) return;
+  const fetchComments = (append = false, lastDocument = null) => {
+    if (!user?.uid || isLastPage) return;
 
-      subscriptionRef.current?.unsubscribe();
+    subscriptionRef.current?.unsubscribe();
 
-      const subscription = reviewsData(
-        "reviews",
-        {
-          reviewId,
-          uid: !user.isAdmin ? user.uid : undefined,
-          filterOptions,
-          search,
-        },
-        lastDocument,
+    const subscription = reviewsData(
+      "reviews",
+      {
+        reviewId,
+        uid: !user.isAdmin ? user.uid : undefined,
+        filterOptions,
+        search,
+      },
+      lastDocument,
+    )
+      .pipe(
+        filter(
+          (snapshot) =>
+            snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
+        ),
       )
-        .pipe(
-          filter(
-            (snapshot) =>
-              snapshot !== null && (snapshot.size !== 0 || !!lastDocument),
-          ),
-        )
-        .subscribe((snapshot) => {
-          setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
+      .subscribe((snapshot) => {
+        setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
 
-          const newComments = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
-          );
+        const newComments = snapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+        );
 
-          setComments((prev) =>
-            append ? [...prev, ...newComments] : newComments,
-          );
-          setLastDoc(snapshot.docs.at(-1));
-        });
+        setComments((prev) =>
+          append ? [...prev, ...newComments] : newComments,
+        );
+        setLastDoc(snapshot.docs.at(-1));
+      });
 
-      subscriptionRef.current = subscription;
-    },
-    [reviewId, user, filterOptions, search, isLastPage],
-  );
+    subscriptionRef.current = subscription;
+  };
 
   useEffect(() => {
     const subscription = searchSubject
@@ -96,7 +93,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
     return () => {
       subscriptionRef.current?.unsubscribe();
     };
-  }, [filterOptions, search]);
+  }, [reviewId, user, filterOptions, search]);
 
   return (
     <div className="comments" ref={commentsRef}>
