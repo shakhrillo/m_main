@@ -10,7 +10,6 @@ export const formatTotalUsers = (data: any[]) => {
     total: 0,
   }));
 
-  // Calculate total users for each day up to the current day
   data.forEach((item) => {
     const itemDate = new Date(item.createdAt.seconds * 1000);
     const day = itemDate.getDate();

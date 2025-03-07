@@ -17,7 +17,7 @@ export interface IComment {
   rating: number;
   response: string;
   review: string;
-  time: number; // Need to convert to Timestamp
+  time: number;
   user: ICommentUser;
   videoUrls: { videoUrl: string; thumb: string; id: string }[];
 }

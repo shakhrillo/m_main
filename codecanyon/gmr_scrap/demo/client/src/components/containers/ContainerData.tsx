@@ -34,7 +34,7 @@ export const ContainerData = ({
           {formatTimestamp(container.createdAt)}
         </div>
       </Stack>
-      <NavLink to={`/${path}/${container.machineId}`}>
+      <NavLink to={`/${path}/${container.id}`}>
         {path === "containers" ? <>{container.title}</> : container.title}
       </NavLink>
       {path === "containers" && (

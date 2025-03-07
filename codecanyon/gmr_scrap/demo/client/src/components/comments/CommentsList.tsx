@@ -41,7 +41,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
   const subscriptionRef = useRef<Subscription | null>(null);
 
   const fetchComments = (append = false, lastDocument = null) => {
-    if (!user?.uid || isLastPage) return;
+    if (!user?.uid) return;
 
     subscriptionRef.current?.unsubscribe();
 

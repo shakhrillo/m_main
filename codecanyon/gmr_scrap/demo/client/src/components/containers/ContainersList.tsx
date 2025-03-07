@@ -57,7 +57,7 @@ export const ContainersList = ({
     (append = false, lastDocument = null) => {
       if (!user?.uid) return;
 
-      subscriptionRef.current?.unsubscribe(); // Cleanup previous subscription
+      subscriptionRef.current?.unsubscribe();
 
       subscriptionRef.current = dockerContainers(
         {
@@ -96,7 +96,7 @@ export const ContainersList = ({
     setContainers([]);
     fetchContainers();
 
-    return () => subscriptionRef.current?.unsubscribe(); // Cleanup subscription on unmount
+    return () => subscriptionRef.current?.unsubscribe();
   }, [fetchContainers]);
 
   const loadMore = () => {
