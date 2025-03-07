@@ -27,7 +27,9 @@ export const Help = () => {
       <Row>
         <Col>
           <h5>Help</h5>
-          {help}
+          <div className="help-container">
+            <div dangerouslySetInnerHTML={{ __html: help }}></div>
+          </div>
         </Col>
       </Row>
     </Container>

@@ -27,7 +27,9 @@ export const Security = () => {
       <Row>
         <Col>
           <h5>Security</h5>
-          {info}
+          <div className="help-container">
+            <div dangerouslySetInnerHTML={{ __html: info }}></div>
+          </div>
         </Col>
       </Row>
     </Container>

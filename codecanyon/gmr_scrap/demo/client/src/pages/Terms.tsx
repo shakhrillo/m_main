@@ -26,8 +26,10 @@ export const Terms = () => {
     <Container>
       <Row>
         <Col>
-          <h5>Terms</h5>
-          {terms}
+          <h5>Terms and Conditions</h5>
+          <div className="help-container">
+            <div dangerouslySetInnerHTML={{ __html: terms }}></div>
+          </div>
         </Col>
       </Row>
     </Container>
