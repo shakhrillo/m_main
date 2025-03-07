@@ -15,6 +15,7 @@ interface IReceiptData {
 export const ReceiptData = ({ receipt }: IReceiptData): JSX.Element => {
   return (
     <div className="receipt-data">
+      <div className="receipt-time">{formatTimestamp(receipt.createdAt)}</div>
       <Stack direction="horizontal" gap={2} className="justify-content-between">
         <Stack direction="horizontal" gap={2}>
           {`${formatAmount(receipt.amount)} ${receipt?.currency?.toUpperCase()}`}
@@ -26,7 +27,6 @@ export const ReceiptData = ({ receipt }: IReceiptData): JSX.Element => {
             {receipt.status}
           </Badge>
         </Stack>
-        <div className="receipt-time">{formatTimestamp(receipt.createdAt)}</div>
       </Stack>
       <NavLink to={`/receipts/${receipt.id}`} className="receipt-label">
         {formatNumber(receipt.metadata.amount)} Coins

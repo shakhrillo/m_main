@@ -89,7 +89,7 @@ export const SingleReview = () => {
         <Breadcrumb.Item active>{container.title}</Breadcrumb.Item>
       </Breadcrumb>
       <Row>
-        <Col md={9}>
+        <Col lg={8} xl={9}>
           <Tabs variant="pills" defaultActiveKey="comments">
             {renderTab(
               "comments",
@@ -114,7 +114,7 @@ export const SingleReview = () => {
             )}
           </Tabs>
         </Col>
-        <Col md={3}>
+        <Col lg={4} xl={3}>
           <PlaceInfo container={container} />
         </Col>
       </Row>

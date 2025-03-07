@@ -24,15 +24,15 @@ export const ContainerData = ({
 }: IContainerData): JSX.Element => {
   return (
     <div className="container-data">
+      <div className="container-time">
+        {formatTimestamp(container.createdAt)}
+      </div>
       <Stack direction="horizontal" gap={2} className="justify-content-between">
         {path === "containers" ? (
           <ContainerInfo container={container} />
         ) : (
           <StatusInfo container={container} />
         )}
-        <div className="container-time">
-          {formatTimestamp(container.createdAt)}
-        </div>
       </Stack>
       <NavLink to={`/${path}/${container.id}`}>
         {path === "containers" ? <>{container.title}</> : container.title}
@@ -54,19 +54,19 @@ export const ContainerData = ({
         <>
           <Ratings container={container} />
           {container.type === "comments" && (
-            <Stack direction="horizontal" gap={2} className="text-muted">
+            <div className="comments-info">
               <div>{formatNumber(container.totalReviews)} Reviews</div>
               <div>
                 {formatNumber(container.totalOwnerReviews)} Owner Reviews
               </div>
               <div>{formatNumber(container.totalImages)} Images</div>
               <div>{formatNumber(container.totalVideos)} Videos</div>
-            </Stack>
+            </div>
           )}
           {container.type === "info" && (
-            <Stack direction="horizontal" gap={2} className="text-muted">
-              <div>Limit: {container.limit}</div>
-              <div>Sort by: {container.sortBy}</div>
+            <div className="comments-info">
+              <div>Limit: {container.limit || "N/A"}</div>
+              <div>Sort by: {container.sortBy || "N/A"}</div>
               <div>
                 Extract Images: {container.extractImageUrls ? "Yes" : "No"}
               </div>
@@ -77,17 +77,17 @@ export const ContainerData = ({
                 Extract Owner Response:{" "}
                 {container.extractOwnerResponse ? "Yes" : "No"}
               </div>
-            </Stack>
+            </div>
           )}
         </>
       )}
       {path === "images" && (
-        <Stack direction="horizontal" gap={2} className="text-muted">
+        <div className="comments-info">
           <div>{container?.machine?.Os}</div>
           <div>{container?.machine?.Architecture}</div>
           <div>{container?.machine?.Variant}</div>
           <div>{formatTimestamp(container?.machine?.Created)}</div>
-        </Stack>
+        </div>
       )}
     </div>
   );
