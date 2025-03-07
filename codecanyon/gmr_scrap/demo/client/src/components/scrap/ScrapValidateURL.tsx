@@ -35,7 +35,7 @@ export const ScrapValidateURL = ({
 
   useEffect(() => {
     setIsDisabled(
-      (container?.machine?.Action !== "die" && containerId !== undefined) ||
+      (container?.machine?.Action !== "destroy" && containerId !== undefined) ||
         (!!containerId && user?.uid !== container?.uid),
     );
   }, [container, containerId, user?.uid]);

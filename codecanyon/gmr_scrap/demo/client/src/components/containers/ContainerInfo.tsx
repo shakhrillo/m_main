@@ -19,7 +19,7 @@ export const ContainerInfo = ({ container }: IContainerInfo): JSX.Element => {
       <div className="text-capitalize">{container.type}</div>
       <Badge
         bg={
-          container.machine?.Action === "die"
+          container.machine?.Action === "destroy"
             ? "danger"
             : container.machine?.Action === "start"
               ? "success"
