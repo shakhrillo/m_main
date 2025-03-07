@@ -44,7 +44,9 @@ export const ScrapValidateButton = ({
       disabled={isDisabled}
     >
       <Stack direction="horizontal" gap={2}>
-        {container?.machine?.Action !== "destroy" && container?.machine?.Action !== "die" && containerId ? (
+        {container?.machine?.Action !== "destroy" &&
+        container?.machine?.Action !== "die" &&
+        containerId ? (
           <>
             <Spinner animation="border" size="sm" />
             Validating URL...

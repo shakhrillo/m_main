@@ -31,7 +31,15 @@ const PlaceInfoRow = ({ icon, label, value }: PlaceInfoRowProps) => (
     {createElement(icon)}
     <div className="place-info-content">
       <div className="place-info-label">{label}</div>
-      <div className="place-info-value">{value === undefined || value === null ? "N/A" : String(value)}</div>
+      <div className="place-info-value">
+        {value == null
+          ? "N/A"
+          : typeof value === "boolean"
+            ? value
+              ? "Yes"
+              : "No"
+            : String(value)}
+      </div>
     </div>
   </div>
 );
@@ -66,7 +74,7 @@ export const PlaceInfoOptions = ({
         <PlaceInfoRow
           icon={icon}
           label={label}
-          value={container[key] || 'N/A'}
+          value={container[key] || "N/A"}
         />
       </Col>
     ))}

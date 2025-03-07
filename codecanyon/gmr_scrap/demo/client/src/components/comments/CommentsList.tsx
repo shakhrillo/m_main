@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconFilter, IconReload } from "@tabler/icons-react";
 import { Button, Dropdown, Form, InputGroup, Stack } from "react-bootstrap";
 import type { Subscription } from "rxjs";
@@ -65,7 +65,7 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
         setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
 
         const newComments = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
+          (doc) => ({ id: doc.id, ...doc.data() } as IComment),
         );
 
         setComments((prev) =>

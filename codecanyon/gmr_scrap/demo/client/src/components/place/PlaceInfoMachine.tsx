@@ -75,7 +75,12 @@ export const PlaceInfoMachine = ({
             <Badge
               className="text-capitalize"
               pill
-              bg={container?.machine?.status === "destroy" || container?.machine?.status === "die" ? "danger" : "info"}
+              bg={
+                container?.machine?.status === "destroy" ||
+                container?.machine?.status === "die"
+                  ? "danger"
+                  : "info"
+              }
             >
               {container?.machine?.status}
             </Badge>

@@ -24,14 +24,12 @@ export const AuthGuard = () => {
           }
           return userData(authUser.uid).pipe(
             filter(Boolean),
-            map(
-              (snapshot) => {
-                return snapshot.docs.map((doc) => ({
-                  id: doc.id,
-                  ...(doc.data() as IUserInfo),
-                }))?.[0]
-              }
-            ),
+            map((snapshot) => {
+              return snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...(doc.data() as IUserInfo),
+              }))?.[0];
+            }),
             catchError(() => {
               navigate("/auth/login");
               return of(null);
