@@ -159,7 +159,7 @@ export const allContainersByGeoBounds = async (
         orderBy("geohash"),
         startAt(start),
         endAt(end),
-        limit(10),
+        limit(50),
       ),
     ),
   );
