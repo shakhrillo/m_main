@@ -105,7 +105,7 @@ export const Payments = () => {
     <Container>
       <Row className="g-3">
         {
-          user.email !== "user@user.com" && user.email !== "admin@admin.com" && (
+          user?.email !== "user@user.com" && user?.email !== "admin@admin.com" && (
             <Col sm={12}>
               <Alert variant="warning">
                 For demo purposes, you can not purchase coins. Please purchase the

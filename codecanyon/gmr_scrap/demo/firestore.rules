@@ -52,7 +52,8 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get, list: if request.auth != null || isAdminRead();
-      allow update, delete: if request.auth.uid == userId || isAdminEditor();
+      allow update, delete: if false;
+      // allow update, delete: if request.auth.uid == userId || isAdminEditor();
 
       match /buyCoins/{buyCoinsId} {
         // allow create: if request.auth.uid == userId;

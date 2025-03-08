@@ -52,6 +52,7 @@ export const User = () => {
   const [buffer, setBuffer] = useState<Buffer | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const subscriptionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -99,23 +100,46 @@ export const User = () => {
       try {
         const photoURL = await uploadFile(buffer, "users");
         if (photoURL) await updateUser(userId, { photoURL });
-      } catch (error) {
-        console.error("Error uploading file:", error);
+      } catch (err) {
+        let message = "An error occurred while uploading the photo.";
+        if (err instanceof Error) {
+          message = err.message;
+        }
+        setError(message);
       }
     })();
   }, [buffer, userId]);
 
   const handleUpdate = useCallback(
     (field: string, value: any) => {
-      if (userId) updateUser(userId, { [field]: value });
+      if (userId) {
+        try {
+          updateUser(userId, { [field]: value });
+        } catch (err) {
+          console.log(err);
+          let message = "An error occurred while updating the user.";
+          if (err instanceof Error) {
+            message = err.message;
+          }
+          setError(message);
+        }
+      }
     },
     [userId],
   );
 
   const deleteUser = useCallback(async () => {
     if (!selectedUser?.uid) return;
-    await updateUser(selectedUser.uid, { isDeleted: true });
-    navigate(user?.isAdmin ? "/users" : "/auth/logout");
+    try {
+      await updateUser(selectedUser.uid, { isDeleted: true });
+      navigate(user?.isAdmin ? "/users" : "/auth/logout");
+    } catch (err) {
+      let message = "An error occurred while deleting the user.";
+      if (err instanceof Error) {
+        message = err.message;
+      }
+      setError(message);
+    }
   }, [navigate, user, selectedUser]);
 
   if (loading) return <p>Loading user data...</p>;
@@ -134,6 +158,11 @@ export const User = () => {
       </Breadcrumb>
 
       <Row>
+        <Col sm={12}>
+          <Alert variant="warning">
+            For demo purposes, you can not update the user data. Please purchase the full version.
+          </Alert>
+        </Col>
         <Col xl={9}>
           <Form className="user-form">
             <Form.Group>
@@ -151,7 +180,7 @@ export const User = () => {
                 type="text"
                 defaultValue={selectedUser?.displayName || ""}
                 onBlur={(e) => handleUpdate("displayName", e.target.value)}
-                disabled={isDisabled}
+                disabled={isDisabled || true}
               />
             </Form.Group>
             <Form.Group>
@@ -160,7 +189,7 @@ export const User = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                disabled={isDisabled}
+                disabled={isDisabled || true}
               />
             </Form.Group>
             <Form.Group>
@@ -171,7 +200,7 @@ export const User = () => {
                 onBlur={(e) =>
                   handleUpdate("phone", parseInt(e.target.value, 10))
                 }
-                disabled={isDisabled}
+                disabled={isDisabled || true}
               />
             </Form.Group>
           </Form>
@@ -212,6 +241,7 @@ export const User = () => {
                 Delete User
               </Button>
             )}
+            {error && <Alert variant="danger">{error}</Alert>}
           </div>
         </Col>
       </Row>
