@@ -61,6 +61,7 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
 
   const [validateMin, setValidateMin] = useState<number>(0);
   const [validateMax, setValidateMax] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof container.limit === "number") {
@@ -140,8 +141,14 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
 
   const handleFormChange = (key: string, value: any) => {
     if (isDisabled || !container.id) return;
+    setError(null);
     updateDockerContainer(container.id, { [key]: value }).catch((error) => {
-      console.error("Error updating container:", error);
+      const message = "An error occurred while updating the extract options.";
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(message);
+      }
     });
   };
 
@@ -170,6 +177,11 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               min={validateMin}
               max={validateMax}
             />
+            {error && (
+              <div className="text-danger">
+                {error}
+              </div>
+            )}
             <FormText>
               Maximum number of reviews to extract. Minimum: {validateMin},
               Maximum: {validateMax}.
@@ -194,6 +206,11 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
                 handleFormChange("maxSpentPoints", value);
               }}
             />
+            {error && (
+              <div className="text-danger">
+                {error}
+              </div>
+            )}
             <FormText>
               Maximum points to spend on this scrap. Max points you can spend:{" "}
               {validateMax < user?.coinBalance
@@ -221,6 +238,11 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
                 </option>
               ))}
             </FormSelect>
+            {error && (
+              <div className="text-danger">
+                {error}
+              </div>
+            )}
             <FormText>
               Sort reviews by most relevant, newest, highest rating, or lowest
               rating.
@@ -237,6 +259,11 @@ export const ScrapExtractOptions = ({ container }: IScrapExtractOptions) => {
               <option value="json">JSON</option>
               <option value="csv">CSV</option>
             </FormSelect>
+            {error && (
+              <div className="text-danger">
+                {error}
+              </div>
+            )}
             <FormText>Output as a CSV or JSON file.</FormText>
           </OptionCard>
         </Row>

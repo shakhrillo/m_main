@@ -24,6 +24,8 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
   const [maxSpentPoints, setMaxSpentPoints] = useState<number>(
     user?.coinBalance || 0,
   );
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (container?.machineId && container?.type === "comments") {
@@ -67,6 +69,8 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
 
   async function handleScrap(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     try {
       const { id } = await createDockerContainer({
@@ -91,7 +95,14 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
       });
       navigate(`/reviews/${id}`);
     } catch (error) {
-      console.log(error);
+      const message = "An error occurred while scrapping the expected points.";
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(message);
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -113,12 +124,11 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
           variant="primary"
           className="w-100 mt-3"
           type="submit"
-          disabled={
-            !isTermsChecked || !container?.rating || user?.coinBalance <= 0
-          }
+          disabled={!isTermsChecked || !container?.rating || user?.coinBalance <= 0}
         >
-          Scrap
+          {loading ? "Loading..." : "Scrap"}
         </Button>
+        {error && <p className="text-danger mt-3">{error}</p>}
       </Form>
     </div>
   );

@@ -79,6 +79,18 @@ export const Scrap = () => {
             </Button>
           </Col>
         )}
+        {
+          (user?.email === "user@user.com" || user?.email === "admin@admin.com") && (
+            <Col sm={12}>
+              <Alert variant="warning">
+                For demo purposes, you can not scrap. Please purchase the full version. Or sign up with a different email to get bonus coins and scrap.
+              </Alert>
+              <Button onClick={() => window.location.href = "https://codecanyon.net"} variant="primary">
+                Purchase Full Version
+              </Button>
+            </Col>
+          )
+        }
         <Col lg={8} xl={9}>
           <Stack direction="vertical" gap={3}>
             <ScrapValidateURL containerId={scrapId} container={container} />

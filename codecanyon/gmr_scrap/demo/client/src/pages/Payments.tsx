@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Col,
   Container,
@@ -36,7 +37,10 @@ export const Payments = () => {
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const handleError = (message: string) => {
+  const handleError = (message: any) => {
+    if (typeof message === "object" && message.message) {
+      message = message.message;
+    }
     setError(message);
     resetForm();
   };
@@ -62,8 +66,8 @@ export const Payments = () => {
         Number(amount) * cost,
       );
       setCoinId(id);
-    } catch {
-      handleError("Purchase failed. Try again.");
+    } catch (error) {
+      handleError(error);
     } finally {
       setLoading(false);
     }
@@ -88,6 +92,8 @@ export const Payments = () => {
   }, [coinId, user, handleError]);
 
   useEffect(() => {
+    if (!amount) return;
+
     const form = document.getElementById("validateForm") as HTMLFormElement;
     if (form) {
       form.classList.add("was-validated");
@@ -97,24 +103,37 @@ export const Payments = () => {
 
   return (
     <Container>
-      <Row>
-        <Col md={9}>
+      <Row className="g-3">
+        {
+          user.email !== "user@user.com" && user.email !== "admin@admin.com" && (
+            <Col sm={12}>
+              <Alert variant="warning">
+                For demo purposes, you can not purchase coins. Please purchase the
+                full version.
+              </Alert>
+              <Button onClick={() => window.location.href = "https://codecanyon.net"} variant="primary">
+                Purchase Full Version
+              </Button>
+            </Col>
+          )
+        }
+        <Col lg={8} xl={9}>
           <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
               <h5 className="payments-title">Purchase Coins</h5>
               <span className="text-muted">Amount of coins to purchase.</span>
               <Form
-                noValidate
                 id="validateForm"
-                className="needs-validation mt-2"
+                className="mt-2"
+                noValidate
               >
-                <FormGroup className="mb-3">
+                <FormGroup className="mb-3" controlId="amount">
                   <FormControl
                     type="text"
                     value={amount}
                     onChange={handleAmountChange}
-                    pattern="^[1-9]\d*$"
+                    // pattern="^[1-9]\d*$"
                     placeholder="Enter amount"
                     className="mb-2"
                     required
@@ -156,7 +175,7 @@ export const Payments = () => {
           </p>
         </Col>
 
-        <Col md={3}>
+        <Col lg={4} xl={3}>
           <div className="payment-summary">
             <Stack direction="horizontal" className="align-items-start">
               <IconCoins className="me-3" />

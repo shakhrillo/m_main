@@ -65,9 +65,12 @@ export const ScrapValidateURL = ({
         type: "info",
       });
       navigate(`/scrap/${id}`);
-    } catch (err) {
-      console.error(err);
-      setError("An error occurred while validating the URL. Please try again.");
+    } catch (err: any) {
+      let message = "An error occurred while validating the URL.";
+      if (typeof err === "object" && err.message) {
+        message = err.message;
+      }
+      setError(message);
     } finally {
       setIsDisabled(false);
     }
@@ -102,7 +105,7 @@ export const ScrapValidateURL = ({
             </FormText>
           </FormGroup>
           {error && (
-            <div className="alert alert-danger mt-3">
+            <div className="text-danger">
               <IconAlertCircle className="me-2" size={20} />
               {error}
             </div>

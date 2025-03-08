@@ -24,6 +24,7 @@ export const ScrapExtractType = ({
     extractVideoUrls: false,
     extractOwnerResponse: false,
   });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setExtractOptions({
@@ -47,9 +48,15 @@ export const ScrapExtractType = ({
 
   const toggleOption = (key: keyof typeof extractOptions) => {
     if (isDisabled || !container.id) return;
+    setError(null);
     updateDockerContainer(container.id, { [key]: !extractOptions[key] }).catch(
       (error) => {
-        console.error("Error updating container:", error);
+        let message = "An error occurred while updating the extract type.";
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(message);
+        }
       },
     );
   };
@@ -94,6 +101,9 @@ export const ScrapExtractType = ({
             </Col>
           );
         })}
+        {error && <Col sm={12}>
+          <p className="text-danger">{error}</p>
+        </Col>}
       </Row>
     </>
   );

@@ -34,7 +34,8 @@ service cloud.firestore {
 
     match /containers/{containerId} {
       allow read: if request.auth.uid == resource.data.uid || isAdminRead();
-      allow create, update: if request.auth.uid == request.resource.data.uid;
+      // allow create, update: if request.auth.uid == request.resource.data.uid;
+      allow create, update: if isNewUser();
 
       match /images/{imageId} {
         allow read: if request.auth.uid == resource.data.uid || isAdminRead();
@@ -54,7 +55,8 @@ service cloud.firestore {
       allow update, delete: if request.auth.uid == userId || isAdminEditor();
 
       match /buyCoins/{buyCoinsId} {
-        allow create: if request.auth.uid == userId;
+        // allow create: if request.auth.uid == userId;
+        allow create: if isUserOrAdmin();
         allow read: if request.auth.uid == userId;
       }
     }
@@ -66,5 +68,14 @@ service cloud.firestore {
     function isAdminEditor() {
       return request.auth != null && get(/databases/$(database)/documents/admin/$(request.auth.uid)).data.isEditor == true;
     }
+
+    function isUserOrAdmin() {
+      return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email == "user@user.com" || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email == "admin@admin.com";
+    }
+
+    function isNewUser() {
+      return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email != "user@user.com" && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email != "admin@admin.com";
+    }
+
   }
 }

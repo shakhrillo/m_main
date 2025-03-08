@@ -69,8 +69,14 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
         );
 
         setComments((prev) =>
-          append ? [...prev, ...newComments] : newComments,
+          append
+            ? [
+                ...prev,
+                ...newComments.filter((newComment) => !prev.some((prevComment) => prevComment.id === newComment.id)),
+              ]
+            : newComments
         );
+        
         setLastDoc(snapshot.docs.at(-1));
       });
 
