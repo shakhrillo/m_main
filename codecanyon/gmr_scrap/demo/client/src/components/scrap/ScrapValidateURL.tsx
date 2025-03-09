@@ -96,7 +96,7 @@ export const ScrapValidateURL = ({
               pattern="^https:\/\/maps\.app\.goo\.gl\/.+$"
               required
               autoFocus
-              disabled={isDisabled || user?.coinBalance <= 0}
+              disabled={(isDisabled || user?.coinBalance <= 0) && container?.status !== "completed"}
             />
             <FormText className="invalid-feedback bg-danger-subtle">
               <IconAlertCircle className="me-2" size={20} />
@@ -114,7 +114,7 @@ export const ScrapValidateURL = ({
             <ScrapValidateButton
               container={container}
               containerId={containerId}
-              isDisabled={isDisabled || user?.coinBalance <= 0}
+              isDisabled={(isDisabled || user?.coinBalance <= 0) && container?.status !== "completed"}
             />
           </Stack>
         </Form>

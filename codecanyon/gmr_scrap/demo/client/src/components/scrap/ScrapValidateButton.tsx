@@ -46,6 +46,7 @@ export const ScrapValidateButton = ({
       <Stack direction="horizontal" gap={2}>
         {container?.machine?.Action !== "destroy" &&
         container?.machine?.Action !== "die" &&
+        container?.status !== "completed" &&
         containerId ? (
           <>
             <Spinner animation="border" size="sm" />
