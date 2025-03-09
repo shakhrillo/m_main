@@ -10,28 +10,8 @@ const { Timestamp } = require("firebase-admin/firestore");
  */
 async function updateMachine(docId, data) {
   try {
-    function flattenObject(obj, prefix = '') {
-      let result = {};
-    
-      for (let key in obj) {
-        if (Object.hasOwnProperty.call(obj, key)) {
-          let newKey = prefix ? `${prefix}.${key}` : key;
-    
-          if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-            Object.assign(result, flattenObject(obj[key], newKey));
-          } else {
-            result[newKey] = obj[key];
-          }
-        }
-      }
-    
-      return result;
-    }
-
-    const flatData = flattenObject(data);
-
     await db.collection("machines").doc(docId).set({
-      ...flatData,
+      ...data,
       updatedAt: Timestamp.now(),
     }, { merge: true });
   } catch (error) {

@@ -6,6 +6,7 @@ import { Badge, Col, Row } from "react-bootstrap";
 import { NavLink, useOutletContext } from "react-router-dom";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import type { IUserInfo } from "../../types/userInfo";
+import { spentTime } from "../../utils";
 
 interface IPlaceInfoMachine {
   container: IDockerContainer;
@@ -91,7 +92,7 @@ export const PlaceInfoMachine = ({
         <MachineInfoRow
           icon={IconStopwatch}
           label="Execution Duration"
-          value={`${container?.machine?.Actor?.Attributes?.execDuration ?? 0}s`}
+          value={`${container?.machine?.Actor?.Attributes?.execDuration || spentTime(container)}s`}
         />
       </Col>
     </Row>

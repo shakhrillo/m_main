@@ -52,7 +52,7 @@ require("dotenv").config();
 
 // Import dependencies
 const { WebDriver } = require("selenium-webdriver");
-const { FieldValue, GeoPoint } = require("firebase-admin/firestore");
+const { Timestamp, FieldValue, GeoPoint } = require("firebase-admin/firestore");
 const { uploadFile, getMachineData, updateMachineData, updateUserData, settingsService } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
@@ -191,6 +191,7 @@ let driver;
     console.log(`Error: ${error.message}`);
   } finally {
     data.status = "completed";
+    data.updatedAt = Timestamp.now();
     console.log(JSON.stringify(data, null, 2));
     await updateMachineData(tag, data);
 
