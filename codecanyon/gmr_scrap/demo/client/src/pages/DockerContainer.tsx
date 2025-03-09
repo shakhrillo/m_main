@@ -143,7 +143,7 @@ export const DockerContainer = () => {
         <Breadcrumb.Item onClick={() => navigate("/containers")}>
           Containers
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>{container.title || "N/A"}</Breadcrumb.Item>
+        <Breadcrumb.Item active>{container?.title || "N/A"}</Breadcrumb.Item>
       </Breadcrumb>
       <Row className="g-3">
         <Col md={9}>

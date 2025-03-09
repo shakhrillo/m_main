@@ -41,7 +41,7 @@ const MachineInfoRow = ({
 
 /**
  * PlaceInfoMachine component
- * @param {PlaceInfoMachine} props
+ * @param {IPlaceInfoMachine} props
  * @param {IDockerContainer} props.container
  * @returns {JSX.Element}
  */

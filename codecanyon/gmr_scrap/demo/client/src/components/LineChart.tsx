@@ -12,6 +12,8 @@ import {
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { hexToRgba } from "../utils/hexToRGB";
+import { IconReload } from "@tabler/icons-react";
+import { Button, Stack } from "react-bootstrap";
 
 ChartJS.register(
   CategoryScale,
@@ -102,14 +104,28 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
     },
   };
 
+  const chartRef = useRef<ChartJS | null | undefined>(null);
+
+  const reloadChart = () => {
+    if (chartRef.current) {
+      chartRef.current.resetZoom();
+    }
+  };
+
   return (
     <div ref={containerRef} className="w-100">
+      <Button onClick={() => reloadChart()} className="position-absolute top-0 end-0 mt-3 me-3">
+        <IconReload size={16} />
+      </Button>
       {chartWidth > 0 && (
         <Line
           data={chartData}
           options={chartOptions}
           width={chartWidth}
           height={chartHeight}
+          ref={(ref) => {
+            chartRef.current = ref;
+          }}
         />
       )}
     </div>

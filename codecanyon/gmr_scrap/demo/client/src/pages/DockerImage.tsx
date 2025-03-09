@@ -21,6 +21,7 @@ export const DockerImage = () => {
     if (!imgId) return;
 
     const subscription = dockerContainerHistory(imgId).subscribe((data) => {
+      console.log(data);
       setImageLayers(data);
     });
 
@@ -45,6 +46,11 @@ export const DockerImage = () => {
       <Row className="g-3">
         <Col md={9}>
           <div className="docker-image-history">
+            {
+              imageLayers.length === 0 && (
+                <div className="text-center">Loading...</div>
+              )
+            }
             <SyntaxHighlighter language="docker" style={a11yLight}>
               {imageLayers
                 .map((layer: any) => {

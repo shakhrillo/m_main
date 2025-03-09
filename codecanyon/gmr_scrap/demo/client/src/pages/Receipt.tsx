@@ -44,7 +44,18 @@ export const Receipt = () => {
     return () => subscription.unsubscribe();
   }, [receiptId, auth.currentUser]);
 
-  if (!receipt) return null;
+  if (!receipt) {
+    return <Container>
+        <Row>
+          <Col>
+            <div className="receipt-info">
+              <h5>Payment Receipt</h5>
+              <p>Receipt not found</p>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+  }
 
   const paymentDetails = [
     {

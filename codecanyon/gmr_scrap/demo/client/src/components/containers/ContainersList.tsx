@@ -83,8 +83,15 @@ export const ContainersList = ({
             }));
           }),
         )
-        .subscribe((data) => {
-          setContainers((prev) => (append ? [...prev, ...data] : data));
+        .subscribe((newContainers) => {
+          setContainers((prev) =>
+            append
+              ? [
+                  ...prev,
+                  ...newContainers.filter((newContainer) => !prev.some((prevComment) => prevComment.id === newContainer.id)),
+                ]
+              : newContainers
+          );
         });
     },
     [search, type, status, machineType, user?.uid, user?.isAdmin],
