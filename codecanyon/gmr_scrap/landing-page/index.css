@@ -478,3 +478,23 @@
 .footer {
   padding: 64px 0;
 }
+
+.security-list {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.security-list li {
+  display: flex;
+  gap: 12px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+#testimonial {
+  display: none !important;
+}
