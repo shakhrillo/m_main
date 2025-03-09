@@ -116,7 +116,6 @@ export const User = () => {
         try {
           updateUser(userId, { [field]: value });
         } catch (err) {
-          console.log(err);
           let message = "An error occurred while updating the user.";
           if (err instanceof Error) {
             message = err.message;

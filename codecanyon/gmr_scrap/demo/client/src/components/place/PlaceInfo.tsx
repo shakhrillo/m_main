@@ -21,7 +21,6 @@ interface IPlaceInfo {
  * @returns {JSX.Element} Place info component.
  */
 export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
-  console.log('container', container);
   if (!container) {
     return <div className="place">
       <div className="place-info">

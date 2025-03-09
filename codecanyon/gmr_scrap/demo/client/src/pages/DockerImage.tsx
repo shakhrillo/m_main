@@ -21,7 +21,6 @@ export const DockerImage = () => {
     if (!imgId) return;
 
     const subscription = dockerContainerHistory(imgId).subscribe((data) => {
-      console.log(data);
       setImageLayers(data);
     });
 
