@@ -1,4 +1,4 @@
-import { Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { Alert, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
 import { SettingsFormInput } from "../components/SettingsFormInput";
 
 const SETTINGS_TABS = [
@@ -139,6 +139,13 @@ const SETTINGS_TABS = [
 export const Settings = () => {
   return (
     <Container>
+      <Row>
+        <Col sm={12}>
+          <Alert variant="warning">
+            For demo purposes, you can not update the settings. Please purchase the full version.
+          </Alert>
+        </Col>
+      </Row>
       <Tabs variant="pills" defaultActiveKey="generalSettings">
         {SETTINGS_TABS.map(({ eventKey, title, type, fields }) => (
           <Tab eventKey={eventKey} title={title} key={eventKey}>
