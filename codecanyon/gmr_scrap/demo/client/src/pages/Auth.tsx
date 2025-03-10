@@ -33,12 +33,12 @@ export const Auth = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
-            <Nav className="ms-auto">
+            {/* <Nav className="ms-auto">
               <Nav.Link as={NavLink} to="/docs">
                 Documentation
               </Nav.Link>
-            </Nav>
-            <Button className="ms-3">Purchase $39</Button>
+            </Nav> */}
+            <Button className="ms-auto">Purchase $49</Button>
           </Navbar.Collapse>
         </Container>
       </Navbar>
