@@ -159,7 +159,7 @@ export const User = () => {
       <Row>
         <Col sm={12}>
           <Alert variant="warning">
-            For demo purposes, you can not update the user data. Please purchase the full version.
+            For demo purposes, you can not delete the user. Please purchase the full version.
           </Alert>
         </Col>
         <Col xl={9}>
@@ -179,7 +179,7 @@ export const User = () => {
                 type="text"
                 defaultValue={selectedUser?.displayName || ""}
                 onBlur={(e) => handleUpdate("displayName", e.target.value)}
-                disabled={isDisabled || true}
+                disabled={isDisabled}
               />
             </Form.Group>
             <Form.Group>
@@ -188,7 +188,7 @@ export const User = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                disabled={isDisabled || true}
+                disabled={isDisabled}
               />
             </Form.Group>
             <Form.Group>
@@ -199,7 +199,7 @@ export const User = () => {
                 onBlur={(e) =>
                   handleUpdate("phone", parseInt(e.target.value, 10))
                 }
-                disabled={isDisabled || true}
+                disabled={isDisabled}
               />
             </Form.Group>
           </Form>

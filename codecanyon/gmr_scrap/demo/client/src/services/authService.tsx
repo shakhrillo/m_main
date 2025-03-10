@@ -3,8 +3,10 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import { updateUser } from "./userService";
 
 /**
  * Login user
@@ -30,9 +32,20 @@ export const logout = async () => await auth.signOut();
 
 /**
  * Register user
- * @param email
- * @param password
  * @returns Promise with user
  */
-export const register = async (email: string, password: string) =>
-  await createUserWithEmailAndPassword(auth, email, password);
+export const register = async (formData: any) => {
+  const { firstName, lastName, email, password } = formData;
+  try {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+    await updateUser(user.uid, {
+      displayName: `${firstName} ${lastName}`,
+    });
+    return user;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+
+}

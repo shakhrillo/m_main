@@ -45,8 +45,8 @@ export const Register = () => {
     }
 
     try {
-      await register(formData.email, formData.password);
-      navigate("/auth/login");
+      await register(formData);
+      navigate("/scrap");
     } catch {
       setError("Failed to register.");
     }
@@ -55,7 +55,7 @@ export const Register = () => {
   const handleOAuthRegister = async () => {
     try {
       await googleLogin();
-      navigate("/dashboard");
+      navigate("/scrap");
     } catch {
       setError("Failed to register with Google.");
     }

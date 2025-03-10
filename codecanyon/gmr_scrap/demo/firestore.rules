@@ -52,7 +52,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get, list: if request.auth != null || isAdminRead();
-      allow update, delete: if false;
+      allow update, delete: if request.auth.uid == userId && isValidUpdate();
       // allow update, delete: if request.auth.uid == userId || isAdminEditor();
 
       match /buyCoins/{buyCoinsId} {
@@ -76,6 +76,10 @@ service cloud.firestore {
 
     function isNewUser() {
       return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email != "user@user.com" && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email != "admin@admin.com";
+    }
+
+    function isValidUpdate() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isAdmin', 'isDeleted', 'isEditor', 'totalImages', 'totalOwnerReviews', 'totalReviews', 'totalSpent', 'totalValidateComments', 'totalValidateInfo', 'totalVideos', 'uid']);
     }
 
   }
