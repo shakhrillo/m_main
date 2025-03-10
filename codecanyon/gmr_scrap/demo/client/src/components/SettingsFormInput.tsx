@@ -63,12 +63,14 @@ export const SettingsFormInput = ({
           rows={3}
           defaultValue={info.value}
           onChange={(e) => setInputValue(e.target.value)}
+          disabled={true}
         />
       ) : (
         <Form.Control
           type="text"
           defaultValue={info.value}
           onChange={(e) => setInputValue(e.target.value)}
+          disabled={true}
         />
       )}
       <Form.Text className="text-muted">{helpText}</Form.Text>
