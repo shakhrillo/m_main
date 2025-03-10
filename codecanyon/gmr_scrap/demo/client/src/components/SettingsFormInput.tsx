@@ -50,8 +50,9 @@ export const SettingsFormInput = ({
 
   useEffect(() => {
     if (!info || !info.id) return;
-
-    updateSettingValue(info.id, { value: inputValue });
+    
+    // Need to uncomment it
+    // updateSettingValue(info.id, { value: inputValue });
   }, [inputValue, info]);
 
   return info ? (
