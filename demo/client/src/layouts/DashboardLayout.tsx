@@ -1,5 +1,5 @@
 import { Outlet, useOutletContext } from "react-router-dom";
-import { AppNavbar, Sidebar } from "./";
+import { AppNavbar, Sidebar } from ".";
 import type { IUserInfo } from "../types/userInfo";
 import type { JSX } from "react";
 
