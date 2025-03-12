@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config.js";
+import { defineConfig } from 'vite';
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
@@ -27,11 +27,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     force: true,
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "src/setupTests",
-    mockReset: true,
   },
 });
