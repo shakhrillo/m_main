@@ -45,7 +45,7 @@ const ms = require("ms");
 const { WebDriver } = require("selenium-webdriver");
 const { Timestamp, FieldValue } = require("firebase-admin/firestore");
 const { getMachineData, updateUserData, settingsService } = require("./services/firebase");
-const { getDriver } = require("./services/selenium");
+const { getDriver, getSeleniumDetails } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 const { uploadFile, batchWriteLargeArray, updateMachineData } = require("./services/firebase");
 const generateSearchKeywords = require("./utils/generateSearchKeywords");
@@ -117,7 +117,6 @@ async function takeScreenshot() {
     const uniqueId = Math.random().toString(36).substring(7);
     const imageName = `${tag}-${uniqueId}.png`;
     const url = await uploadFile(screenshotBuffer, imageName);
-    console.log(`Screenshot uploaded: ${url}`);
     return url;
   } catch (error) {
     console.error(`Error taking screenshot: ${error.message}`);
@@ -190,25 +189,31 @@ const screenshots = [];
     let retries = 0;
 
     while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
-      console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
       try {
-        const screenshot = await takeScreenshot();
-        screenshots.push({
-          url: screenshot,
-          createdAt: Timestamp.now(),
-        });
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(400);
         await driver.executeScript(scrollToContainer);
       } catch (error) {
+        const screenshot = await takeScreenshot();
+        screenshots.push({
+          url: screenshot,
+          createdAt: Timestamp.now(),
+        });
         console.log(`Error fetching review IDs: ${error.message}`);
       } finally {
         retries++;
       }
     }
 
+    console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
+
     if (extractedReviewIds.length === 0) {
+      const screenshot = await takeScreenshot();
+      screenshots.push({
+        url: screenshot,
+        createdAt: Timestamp.now(),
+      });
       await driver.quit();
       throw new Error("No review IDs found");
     } else {
@@ -218,17 +223,10 @@ const screenshots = [];
 
     // Scroll and extract reviews
     let lastReviewCount = 0;
+    const startTime = Date.now();
     while (data.extractedReviews.length < data.limit && retries < MAX_RETRIES) {
-      const startTime = Date.now();
 
       try {
-        // Take a screenshot
-        const screenshot = await takeScreenshot();
-        screenshots.push({
-          url: screenshot,
-          createdAt: Timestamp.now(),
-        });
-
         // Fetch visible elements
         const gmrScrap = await driver.executeScript(checkUpdates);
         Object.assign(data, gmrScrap);
@@ -256,13 +254,13 @@ const screenshots = [];
         }
       } catch (error) {
         data.error = JSON.stringify(error);
-        // Get browser logs
         try {
-          let logs = await driver.manage().logs().get("browser");
-          logs.forEach(({ level, message }) =>
-            console.log(`[${level}] ${message}`)
-          );
-          data.browserLogs = JSON.stringify(logs);
+          // Take a screenshot
+          const screenshot = await takeScreenshot();
+          screenshots.push({
+            url: screenshot,
+            createdAt: Timestamp.now(),
+          });
           await driver.sleep(1000);
         } catch (error) {
           console.log(`Error fetching browser logs: ${error.message}`);
@@ -277,23 +275,23 @@ const screenshots = [];
 
         // Set the last review count for comparison
         lastReviewCount = data.extractedReviews.length;
-
-        // Log the progress
-        console.log(
-          `
-            Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
-              long: true,
-            })}
-            Elapsed Time (s): ${
-              ms(Date.now() - startTime, { long: true }) || "< 1s"
-            }
-            Retries: ${retries}
-            Total Reviews: ${data.extractedReviews.length}
-            Error: ${data.error || "None"}
-          `.replace(/\n\s+/g, "\n")
-        );
       }
     }
+
+    // Log the progress
+    console.log(
+      `
+        Total Spent Time (s): ${ms(Date.now() - scrapStartTime, {
+          long: true,
+        })}
+        Elapsed Time (s): ${
+          ms(Date.now() - startTime, { long: true }) || "< 1s"
+        }
+        Retries: ${retries}
+        Total Reviews: ${data.extractedReviews.length}
+        Error: ${data.error || "None"}
+      `.replace(/\n\s+/g, "\n")
+    );
 
     // Upload the extracted data to Firestore
     console.log("Uploading data to Firestore...");
@@ -310,6 +308,28 @@ const screenshots = [];
         data.jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
       }
     }
+
+    // Take a screenshot
+    const screenshot = await takeScreenshot();
+    screenshots.push({
+      url: screenshot,
+      createdAt: Timestamp.now(),
+    });
+
+    // Get browser details
+    const details = await getSeleniumDetails(driver);
+    
+    data.browser = {
+      browserName: details.browserName,
+      browserVersion: details.browserVersion,
+      platformName: details.platformName,
+      platformVersion: details.platformVersion,
+    }
+
+    await batchWriteLargeArray(
+      `machines/${data.id}/browserLogs`,
+      details.browserLogs
+    );
 
     await batchWriteLargeArray(
       `containers/${data.id}/reviews`,
@@ -342,7 +362,8 @@ const screenshots = [];
       totalOwnerReviews: data.extractedOwnerReviewCount || 0,
       totalSpentPoints,
       updatedAt: Timestamp.now(),
-      status: "completed"
+      status: "completed",
+      browser: data.browser,
     });
 
     try {

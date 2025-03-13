@@ -54,7 +54,7 @@ require("dotenv").config();
 const { WebDriver } = require("selenium-webdriver");
 const { Timestamp, FieldValue, GeoPoint } = require("firebase-admin/firestore");
 const { uploadFile, getMachineData, updateMachineData, updateUserData, settingsService, batchWriteLargeArray } = require("./services/firebase");
-const { getDriver } = require("./services/selenium");
+const { getDriver, getSeleniumDetails } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 
 // Constants
@@ -208,6 +208,20 @@ const screenshots = [];
       `machines/${data.id}/screenshots`,
       screenshots
     );
+
+    // Get browser details
+    const details = await getSeleniumDetails(driver);
+    await batchWriteLargeArray(
+      `machines/${data.id}/browserLogs`,
+      details.browserLogs
+    );
+
+    data.browser = {
+      browserName: details.browserName,
+      browserVersion: details.browserVersion,
+      platformName: details.platformName,
+      platformVersion: details.platformVersion,
+    }
   } catch (error) {
     data.status = "error";
     data.error = JSON.stringify(error);

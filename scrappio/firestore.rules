@@ -34,6 +34,10 @@ service cloud.firestore {
       match /screenshots/{screenshotId} {
         allow read: if isAdminRead();
       }
+
+      match /browserLogs/{screenshotId} {
+        allow read: if isAdminRead();
+      }
     }
 
     match /containers/{containerId} {

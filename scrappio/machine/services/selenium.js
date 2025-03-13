@@ -20,7 +20,7 @@
 
 // Import dependencies
 const fs = require("fs");
-const { Builder, Browser, WebDriver } = require("selenium-webdriver");
+const { Builder, Browser, WebDriver, logging } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 
 /**
@@ -42,9 +42,11 @@ async function getDriver({
   chromePath = "/usr/bin/chromium-browser",
 }) {
   const options = new chrome.Options();
-  options.setLoggingPrefs({
-    browser: "ALL", // Log everything
-  });
+  
+  let loggingPrefs = new logging.Preferences();
+  loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
+  options.setLoggingPrefs(loggingPrefs);
+
   options.addArguments(
     "--headless", // Run in headless mode
     "--no-sandbox", // Bypass OS security model
@@ -70,6 +72,25 @@ async function getDriver({
   return driver;
 }
 
+async function getSeleniumDetails(driver) {
+  const capabilities = await driver.getCapabilities();
+  const details = {
+    browserName: capabilities.get("browserName") || "Chrome",
+    browserVersion: capabilities.get("browserVersion") || "Unknown",
+    platformName: capabilities.get("platformName") || "Unknown",
+    platformVersion: capabilities.get("platformVersion") || "Unknown",
+  };
+
+  const browserConsoles = await driver.manage().logs().get("browser");
+  details.browserLogs = browserConsoles.map(log => ({
+    level: log?.level?.name || "Unknown",
+    message: log?.message || "",
+  })) || [];
+
+  return details;
+}
+
 module.exports = {
   getDriver,
+  getSeleniumDetails,
 };

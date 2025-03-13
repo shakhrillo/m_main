@@ -15,6 +15,7 @@ import type { IDockerContainer } from "../types/dockerContainer";
 import { ContainerLogs } from "../components/containers/ContainerLogs";
 import type { IUserInfo } from "../types/userInfo";
 import { ContainerScreenshots } from "../components/containers/ContainerScreenshots";
+import { ContainerBrowserLogs } from "../components/containers/ContainerBrowserLogs";
 
 const CHART_COLORS = {
   cpu: "#043b5c",
@@ -164,7 +165,10 @@ export const DockerContainer = () => {
             <Tab eventKey="logs" title="Logs">
               <ContainerLogs containerId={containerId} />
             </Tab>
-            <Tab eventKey="screenshots" title="Screenshots">
+            <Tab eventKey="browser-logs" title="Browser Logs">
+              <ContainerBrowserLogs containerId={containerId} />
+            </Tab>
+            <Tab eventKey="browser-screenshots" title="Browser Screenshots">
               <ContainerScreenshots containerId={containerId} />
             </Tab>
           </Tabs>

@@ -179,6 +179,41 @@ export const dockerContainerLogs = (containerId: string) => {
 /**
  * Fetches a single docker container
  * @param containerId
+ * @returns Observable<any>
+ */
+export const dockerContainerBrowserLogs = (containerId: string) => {
+  const logs$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(firestore, "machines", containerId, "browserLogs");
+
+  const unsubscribe = onSnapshot(
+    query(collectionRef),
+    (snapshot) => {
+      const logsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(`logsData: ${logsData}`);
+      logs$.next(logsData);
+    },
+    (error) => {
+      console.error("Error fetching logs data:", error);
+      logs$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = logs$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+}
+
+/**
+ * Fetches a single docker container
+ * @param containerId
  * @returns Observable<IDockerContainer>
  */
 export const dockerContainerHistory = (containerId: string) => {
@@ -215,6 +250,11 @@ export const dockerContainerHistory = (containerId: string) => {
   });
 };
 
+/**
+ * Fetches a single docker container
+ * @param containerId
+ * @returns Observable<IDockerContainer>
+ */
 export const dockerContainerScreenshots = (containerId: string) => {
   const screenshots$ = new BehaviorSubject([] as any);
   const collectionRef = collection(

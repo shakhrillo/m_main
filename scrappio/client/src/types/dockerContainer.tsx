@@ -8,6 +8,13 @@ interface IPrice {
   response?: number;
 }
 
+interface IBrowser {
+  browserName: string;
+  browserVersion: string;
+  platformName: string;
+  platformVersion: string;
+}
+
 export interface IDockerContainer {
   address?: string;
   createdAt?: Timestamp;
@@ -46,4 +53,5 @@ export interface IDockerContainer {
   maxSpentPoints: number;
   totalSpentPoints: number;
   price: IPrice;
+  browser?: IBrowser;
 }
