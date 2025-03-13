@@ -1,7 +1,8 @@
-import { JSX, useCallback, useEffect, useState } from "react";
+import type { JSX} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Carousel, Image } from "react-bootstrap";
 import { dockerContainerScreenshots } from "../../services/dockerService";
-import { Timestamp } from "firebase/firestore";
+import type { Timestamp } from "firebase/firestore";
 
 interface IContainerScreenshots {
   containerId?: string;
