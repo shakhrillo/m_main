@@ -1,0 +1,60 @@
+[
+  {
+    "date": "7 months ago",
+    "id": "ChdDSUhNMG9nS0VJQ0FnSUNicEtQTi1BRRAB",
+    "imageUrls": [
+      {
+        "id": "ChdDSUhNMG9nS0VJQ0FnSUNicEtQTi1BRRAB",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJIUYA2W_2CDYCrxMBaC51lVTnoK5qkYfEizSn0nKTNyJlku9gJZrAwuO7-G7tblW99dEZeXOUFg_rMFWwU5ZcrSSNk0-iFOKNZOKuZcBEGN2C-ZDiP4kFA2Iqw5RDSKHRYCP_vJ=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJIUYA2W_2CDYCrxMBaC51lVTnoK5qkYfEizSn0nKTNyJlku9gJZrAwuO7-G7tblW99dEZeXOUFg_rMFWwU5ZcrSSNk0-iFOKNZOKuZcBEGN2C-ZDiP4kFA2Iqw5RDSKHRYCP_vJ=w300-h450-p",
+        "uid": "TLF5fkzbIfgOisXDEq0ZqpqAA5Iq"
+      },
+      {
+        "id": "ChdDSUhNMG9nS0VJQ0FnSUNicEtQTi1BRRAB",
+        "machineId": null,
+        "original": "https://lh3.googleusercontent.com/geougc-cs/AIHozJKTcUF95jObPDHRtkyT866fi_uEZPjwUaDuexTbrOu8JXdYLRS_-_0jvYXyoIlPs35gHtfwLudcPe4XYAQxLIBMQvscqVwvVeWHIhKnfeACiJQES9FU2FPWHrL8T4L3nk8HQrPCuQ=w1200",
+        "thumb": "https://lh3.googleusercontent.com/geougc-cs/AIHozJKTcUF95jObPDHRtkyT866fi_uEZPjwUaDuexTbrOu8JXdYLRS_-_0jvYXyoIlPs35gHtfwLudcPe4XYAQxLIBMQvscqVwvVeWHIhKnfeACiJQES9FU2FPWHrL8T4L3nk8HQrPCuQ=w300-h450-p",
+        "uid": "TLF5fkzbIfgOisXDEq0ZqpqAA5Iq"
+      }
+    ],
+    "keywords": [
+      "very",
+      "clean",
+      "water,",
+      "extremely",
+      "enjoyable",
+      "to",
+      "swim.",
+      "there",
+      "are",
+      "cold"
+    ],
+    "machineId": null,
+    "qa": [
+      {
+        "answer": "Weekday",
+        "question": "Visited on"
+      },
+      {
+        "answer": "No wait",
+        "question": "Wait time"
+      },
+      {
+        "answer": "No",
+        "question": "Reservation recommended"
+      }
+    ],
+    "rating": 5,
+    "response": [],
+    "review": "very clean water, extremely enjoyable to swim. there are cold currents that come up from the ground, giving you chills! one of the best bays in the area.",
+    "time": 1741833302967,
+    "uid": "TLF5fkzbIfgOisXDEq0ZqpqAA5Iq",
+    "user": {
+      "image": "https://lh3.googleusercontent.com/a-/ALV-UjW-UMquUqWsuaZlcjHjbIR_TZD_V2Kj3_oQ8HUdHIihSauSROL5",
+      "name": "İsa Bektaş",
+      "url": "https://www.google.com/maps/contrib/111238137498987288364/reviews?hl=en"
+    },
+    "videoUrls": []
+  }
+]

@@ -51,6 +51,7 @@ services:
       APP_DEMO_PASSWORD: ${APP_DEMO_PASSWORD}
       APP_FIREBASE_PROJECT_ID: ${APP_FIREBASE_PROJECT_ID}
       SERVER_IPV4_ADDRESS: ${SERVER_IPV4_ADDRESS}
+      APP_SERVER_PORT: ${APP_SERVER_PORT}
       JWT_SECRET: ${JWT_SECRET}
       API_PRODUCTION_URL: ${API_PRODUCTION_URL}
     ports:
@@ -119,7 +120,7 @@ services:
 
       VITE_GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
     ports:
-      - "${APP_CLIENT_PORT}:3000"
+      - "${APP_CLIENT_PORT}:3030"
     entrypoint: >
       sh -c '
         if [ "$APP_ENVIRONMENT" = "production" ]; then
