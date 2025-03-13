@@ -48,8 +48,8 @@
 
   @media (max-width: 992px) {
     position: relative;
-    border-radius: $card-border-radius;
     margin-bottom: 1rem;
+    border-radius: $card-border-radius;
   }
 }
 
@@ -88,18 +88,18 @@
 }
 
 .container-screenshot {
-  border-radius: $card-border-radius;
-  border: 1px solid #e9ecef;
-  overflow: hidden;
   position: relative;
+  border: 1px solid #e9ecef;
+  border-radius: $card-border-radius;
+  overflow: hidden;
 
   &::after {
-    content: '';
-    width: 100%;
-    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+    content: "";
   }
 }

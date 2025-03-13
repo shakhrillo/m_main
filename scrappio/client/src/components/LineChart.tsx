@@ -114,7 +114,10 @@ export const LineChart = ({ labels, datasets }: LineChartProps) => {
 
   return (
     <div ref={containerRef} className="w-100">
-      <Button onClick={() => reloadChart()} className="position-absolute top-0 end-0 mt-3 me-3">
+      <Button
+        onClick={() => reloadChart()}
+        className="position-absolute top-0 end-0 mt-3 me-3"
+      >
         <IconReload size={16} />
       </Button>
       {chartWidth > 0 && (

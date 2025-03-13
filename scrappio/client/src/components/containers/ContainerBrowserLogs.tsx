@@ -7,11 +7,15 @@ interface IContainerBrowserLogs {
   containerId?: string;
 }
 
-export const ContainerBrowserLogs = ({ containerId }: IContainerBrowserLogs): JSX.Element => {
-  const [browserLogs, setBrowserLogs] = useState<{
-    level: string;
-    message: string;
-  }[]>([]);
+export const ContainerBrowserLogs = ({
+  containerId,
+}: IContainerBrowserLogs): JSX.Element => {
+  const [browserLogs, setBrowserLogs] = useState<
+    {
+      level: string;
+      message: string;
+    }[]
+  >([]);
 
   const fetchLogs = useCallback(() => {
     if (!containerId) return;
@@ -31,14 +35,18 @@ export const ContainerBrowserLogs = ({ containerId }: IContainerBrowserLogs): JS
 
   return (
     <div className="container-logs">
-      {
-        browserLogs.map((log, index) => (
-          <div key={index} className="container-log" style={{ color: log?.level?.toLowerCase() === "error" ? "red" : "inherit" }}>
-            <IconChevronRight size={16} />
-            {log?.message}
-          </div>
-        ))
-      }
+      {browserLogs.map((log, index) => (
+        <div
+          key={index}
+          className="container-log"
+          style={{
+            color: log?.level?.toLowerCase() === "error" ? "red" : "inherit",
+          }}
+        >
+          <IconChevronRight size={16} />
+          {log?.message}
+        </div>
+      ))}
     </div>
   );
 };

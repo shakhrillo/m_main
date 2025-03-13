@@ -65,18 +65,23 @@ export const CommentsList = ({ reviewId, container }: ICommentsList) => {
         setIsLastPage(() => snapshot.empty || snapshot.docs.length < 10);
 
         const newComments = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as IComment),
+          (doc) => ({ id: doc.id, ...doc.data() }) as IComment,
         );
 
         setComments((prev) =>
           append
             ? [
                 ...prev,
-                ...newComments.filter((newComment) => !prev.some((prevComment) => prevComment.id === newComment.id)),
+                ...newComments.filter(
+                  (newComment) =>
+                    !prev.some(
+                      (prevComment) => prevComment.id === newComment.id,
+                    ),
+                ),
               ]
-            : newComments
+            : newComments,
         );
-        
+
         setLastDoc(snapshot.docs.at(-1));
       });
 

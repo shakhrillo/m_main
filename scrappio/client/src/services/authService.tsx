@@ -37,7 +37,11 @@ export const logout = async () => await auth.signOut();
 export const register = async (formData: any) => {
   const { firstName, lastName, email, password } = formData;
   try {
-    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
     await updateProfile(user, { displayName: `${firstName} ${lastName}` });
     await updateUser(user.uid, {
       displayName: `${firstName} ${lastName}`,
@@ -47,5 +51,4 @@ export const register = async (formData: any) => {
     console.error(err);
     throw err;
   }
-
-}
+};

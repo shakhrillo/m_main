@@ -22,12 +22,14 @@ interface IPlaceInfo {
  */
 export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
   if (!container) {
-    return <div className="place">
-      <div className="place-info">
-        <h5>Container not found</h5>
-        <p>The container you are looking for does not exist.</p>
+    return (
+      <div className="place">
+        <div className="place-info">
+          <h5>Container not found</h5>
+          <p>The container you are looking for does not exist.</p>
+        </div>
       </div>
-    </div>
+    );
   }
   return (
     <div className="place">

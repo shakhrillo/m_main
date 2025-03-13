@@ -183,7 +183,12 @@ export const dockerContainerLogs = (containerId: string) => {
  */
 export const dockerContainerBrowserLogs = (containerId: string) => {
   const logs$ = new BehaviorSubject([] as any);
-  const collectionRef = collection(firestore, "machines", containerId, "browserLogs");
+  const collectionRef = collection(
+    firestore,
+    "machines",
+    containerId,
+    "browserLogs",
+  );
 
   const unsubscribe = onSnapshot(
     query(collectionRef),
@@ -209,7 +214,7 @@ export const dockerContainerBrowserLogs = (containerId: string) => {
       unsubscribe();
     };
   });
-}
+};
 
 /**
  * Fetches a single docker container
@@ -287,7 +292,7 @@ export const dockerContainerScreenshots = (containerId: string) => {
       unsubscribe();
     };
   });
-}
+};
 
 /**
  * Update an existing docker container

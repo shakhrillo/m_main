@@ -104,30 +104,30 @@ export const Payments = () => {
   return (
     <Container>
       <Row className="g-3">
-        {
-          user?.email !== "user@user.com" && user?.email !== "admin@admin.com" && (
+        {user?.email !== "user@user.com" &&
+          user?.email !== "admin@admin.com" && (
             <Col sm={12}>
               <Alert variant="warning">
-                For demo purposes, you can not purchase coins. Please purchase the
-                full version.
+                For demo purposes, you can not purchase coins. Please purchase
+                the full version.
               </Alert>
-              <Button onClick={() => window.location.href = "https://codecanyon.net"} variant="primary">
+              <Button
+                onClick={() =>
+                  (window.location.href = "https://codecanyon.net")
+                }
+                variant="primary"
+              >
                 Purchase Full Version
               </Button>
             </Col>
-          )
-        }
+          )}
         <Col lg={8} xl={9}>
           <Stack direction="horizontal" gap={3} className="payments">
             <IconCoins size={48} className="text-primary" />
             <Stack direction="vertical">
               <h5 className="payments-title">Purchase Coins</h5>
               <span className="text-muted">Amount of coins to purchase.</span>
-              <Form
-                id="validateForm"
-                className="mt-2"
-                noValidate
-              >
+              <Form id="validateForm" className="mt-2" noValidate>
                 <FormGroup className="mb-3" controlId="amount">
                   <FormControl
                     type="text"

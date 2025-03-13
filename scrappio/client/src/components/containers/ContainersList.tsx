@@ -88,9 +88,14 @@ export const ContainersList = ({
             append
               ? [
                   ...prev,
-                  ...newContainers.filter((newContainer) => !prev.some((prevComment) => prevComment.id === newContainer.id)),
+                  ...newContainers.filter(
+                    (newContainer) =>
+                      !prev.some(
+                        (prevComment) => prevComment.id === newContainer.id,
+                      ),
+                  ),
                 ]
-              : newContainers
+              : newContainers,
           );
         });
     },

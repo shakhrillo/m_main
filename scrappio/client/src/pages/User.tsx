@@ -159,7 +159,8 @@ export const User = () => {
       <Row>
         <Col sm={12}>
           <Alert variant="warning">
-            For demo purposes, you can not delete the user. Please purchase the full version.
+            For demo purposes, you can not delete the user. Please purchase the
+            full version.
           </Alert>
         </Col>
         <Col xl={9}>

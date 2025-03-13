@@ -45,7 +45,8 @@ export const Receipt = () => {
   }, [receiptId, auth.currentUser]);
 
   if (!receipt) {
-    return <Container>
+    return (
+      <Container>
         <Row>
           <Col>
             <div className="receipt-info">
@@ -55,6 +56,7 @@ export const Receipt = () => {
           </Col>
         </Row>
       </Container>
+    );
   }
 
   const paymentDetails = [

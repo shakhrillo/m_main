@@ -101,9 +101,11 @@ export const ScrapExtractType = ({
             </Col>
           );
         })}
-        {error && <Col sm={12}>
-          <p className="text-danger">{error}</p>
-        </Col>}
+        {error && (
+          <Col sm={12}>
+            <p className="text-danger">{error}</p>
+          </Col>
+        )}
       </Row>
     </>
   );

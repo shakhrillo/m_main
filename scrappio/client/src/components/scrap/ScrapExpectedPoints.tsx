@@ -124,7 +124,9 @@ export const ScrapExpectedPoints = ({ container }: IScrapExpectedPoints) => {
           variant="primary"
           className="w-100 mt-3"
           type="submit"
-          disabled={!isTermsChecked || !container?.rating || user?.coinBalance <= 0}
+          disabled={
+            !isTermsChecked || !container?.rating || user?.coinBalance <= 0
+          }
         >
           {loading ? "Loading..." : "Scrap"}
         </Button>

@@ -40,23 +40,25 @@ export const GoogleMap = ({
     }
   }, [geojson, map, isFitBounds]);
 
-  return GOOGLE_MAPS_ID && (
-    <Map
-      gestureHandling="greedy"
-      mapId={GOOGLE_MAPS_ID}
-      disableDefaultUI
-      defaultCenter={defaultCenter}
-      defaultZoom={3}
-      maxZoom={20}
-      onZoomChanged={(e: MapCameraChangedEvent) => setZoom(e.detail.zoom)}
-      className="google-map"
-      onBoundsChanged={(e: MapCameraChangedEvent) => {
-        if (boundChanges) {
-          boundChanges.next(new google.maps.LatLngBounds(e.detail.bounds));
-        }
-      }}
-    >
-      {geojson && <ClusteredMarkers geojson={geojson} zoom={zoom} />}
-    </Map>
+  return (
+    GOOGLE_MAPS_ID && (
+      <Map
+        gestureHandling="greedy"
+        mapId={GOOGLE_MAPS_ID}
+        disableDefaultUI
+        defaultCenter={defaultCenter}
+        defaultZoom={3}
+        maxZoom={20}
+        onZoomChanged={(e: MapCameraChangedEvent) => setZoom(e.detail.zoom)}
+        className="google-map"
+        onBoundsChanged={(e: MapCameraChangedEvent) => {
+          if (boundChanges) {
+            boundChanges.next(new google.maps.LatLngBounds(e.detail.bounds));
+          }
+        }}
+      >
+        {geojson && <ClusteredMarkers geojson={geojson} zoom={zoom} />}
+      </Map>
+    )
   );
 };
