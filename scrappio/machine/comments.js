@@ -379,7 +379,11 @@ const screenshots = [];
       console.error(error);
     }
 
-    console.log(null); // Clear the log
+    // Quit the WebDriver
+    if (driver) {
+      await driver.quit();
+    }
+    
     console.log(
       `Extracted ${data.extractedReviews.length} reviews from ${data.url}`
     );
