@@ -13,7 +13,7 @@ import {
 import zoomPlugin from "chartjs-plugin-zoom";
 import { hexToRgba } from "../utils/hexToRGB";
 import { IconReload } from "@tabler/icons-react";
-import { Button, Stack } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 ChartJS.register(
   CategoryScale,

@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Navbar, Container, Nav, Button, Image } from "react-bootstrap";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Navbar, Container, Button, Image } from "react-bootstrap";
 import { authenticatedUser } from "../services/userService";
 import logo from "../assets/logo_scrappio.png";
 
@@ -33,11 +33,6 @@ export const Auth = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
-            {/* <Nav className="ms-auto">
-              <Nav.Link as={NavLink} to="/docs">
-                Documentation
-              </Nav.Link>
-            </Nav> */}
             <Button className="ms-auto">Purchase $49</Button>
           </Navbar.Collapse>
         </Container>
