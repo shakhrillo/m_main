@@ -77,14 +77,11 @@ function getReviewRate(node) {
   const spanEl = node.querySelector('span[role="img"][aria-label*="stars"]');
 
   if (spanEl) {
-    const rating =
-      spanEl?.getAttribute("aria-label")?.match(/(\d)/)?.[1] ||
-      node.innerText.match(/(\d)\/5/)?.[1];
-
+    const rating = spanEl?.getAttribute("aria-label")?.match(/(\d)/)?.[1];
     return Number(rating) || 0;
   }
 
-  return 0;
+  return node.innerText.match(/(\d)\/5/)?.[1] || 0;
 }
 
 /**
