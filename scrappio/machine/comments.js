@@ -131,6 +131,11 @@ const screenshots = [];
 (async () => {
   console.log("Scraping reviews...");
 
+  updateMachineData(tag, {
+    updatedAt: Timestamp.now(),
+    status: "in-progress",
+  });
+
   try {
     let scrapStartTime = Date.now();
 
@@ -207,6 +212,10 @@ const screenshots = [];
     }
 
     console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
+    updateMachineData(tag, {
+      updatedAt: Timestamp.now(),
+      status: "in-progress",
+    });
 
     if (extractedReviewIds.length === 0) {
       const screenshot = await takeScreenshot();
@@ -275,6 +284,11 @@ const screenshots = [];
 
         // Set the last review count for comparison
         lastReviewCount = data.extractedReviews.length;
+
+        updateMachineData(tag, {
+          updatedAt: Timestamp.now(),
+          status: "in-progress",
+        });
       }
     }
 

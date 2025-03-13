@@ -63,12 +63,12 @@ export const PlaceInfoMachine = ({
           icon={IconFrame}
           label="Machine ID"
           value={
-            user?.isAdmin && container?.machineId ? (
-              <NavLink to={`/containers/${container?.machineId}`}>
-                {container?.machine?.Actor?.Attributes?.name ?? "N/A"}
+            user?.isAdmin && container?.id ? (
+              <NavLink to={`/containers/${container?.id}`}>
+                {container?.id ?? "N/A"}
               </NavLink>
             ) : (
-              (container?.machine?.Actor?.Attributes?.name ?? "N/A")
+              (container?.id ?? "N/A")
             )
           }
         />
