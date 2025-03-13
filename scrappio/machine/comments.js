@@ -106,6 +106,28 @@ let data = {
  */
 let driver;
 
+/**
+ * Takes a screenshot of the current page and uploads it to Firebase Storage.
+ * @returns {Promise<string>} The URL of the uploaded screenshot.
+ */
+async function takeScreenshot() {
+  try {
+    const screenshot = await driver.takeScreenshot();
+    const screenshotBuffer = Buffer.from(screenshot, "base64");
+    const uniqueId = Math.random().toString(36).substring(7);
+    const imageName = `${tag}-${uniqueId}.png`;
+    const url = await uploadFile(screenshotBuffer, imageName);
+    console.log(`Screenshot uploaded: ${url}`);
+    return url;
+  } catch (error) {
+    console.error(`Error taking screenshot: ${error.message}`);
+    return "";
+  }
+}
+
+// Screenshots array
+const screenshots = [];
+
 // Main function
 (async () => {
   console.log("Scraping reviews...");
@@ -170,6 +192,11 @@ let driver;
     while (extractedReviewIds.length === 0 && retries < MAX_RETRIES) {
       console.log(`Retrying to fetch review IDs... (Attempt ${retries + 1})`);
       try {
+        const screenshot = await takeScreenshot();
+        screenshots.push({
+          url: screenshot,
+          createdAt: Timestamp.now(),
+        });
         extractedReviewIds = await driver.executeScript(getReviewIds);
         await driver.executeScript(scrollToLoader);
         await driver.sleep(400);
@@ -195,6 +222,13 @@ let driver;
       const startTime = Date.now();
 
       try {
+        // Take a screenshot
+        const screenshot = await takeScreenshot();
+        screenshots.push({
+          url: screenshot,
+          createdAt: Timestamp.now(),
+        });
+
         // Fetch visible elements
         const gmrScrap = await driver.executeScript(checkUpdates);
         Object.assign(data, gmrScrap);
@@ -289,6 +323,10 @@ let driver;
       `containers/${data.id}/videos`,
       data.extractedVideoUrls
     );
+    await batchWriteLargeArray(
+      `machines/${data.id}/screenshots`,
+      screenshots
+    );
   } catch (error) {
     data.status = "error";
     data.error = JSON.stringify(error);
@@ -304,7 +342,7 @@ let driver;
       totalOwnerReviews: data.extractedOwnerReviewCount || 0,
       totalSpentPoints,
       updatedAt: Timestamp.now(),
-      status: "completed",
+      status: "completed"
     });
 
     try {

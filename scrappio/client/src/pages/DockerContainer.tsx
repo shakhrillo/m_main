@@ -14,6 +14,7 @@ import { filter, map } from "rxjs";
 import type { IDockerContainer } from "../types/dockerContainer";
 import { ContainerLogs } from "../components/containers/ContainerLogs";
 import type { IUserInfo } from "../types/userInfo";
+import { ContainerScreenshots } from "../components/containers/ContainerScreenshots";
 
 const CHART_COLORS = {
   cpu: "#043b5c",
@@ -162,6 +163,9 @@ export const DockerContainer = () => {
             </Tab>
             <Tab eventKey="logs" title="Logs">
               <ContainerLogs containerId={containerId} />
+            </Tab>
+            <Tab eventKey="screenshots" title="Screenshots">
+              <ContainerScreenshots containerId={containerId} />
             </Tab>
           </Tabs>
         </Col>

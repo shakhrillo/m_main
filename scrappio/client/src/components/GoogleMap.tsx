@@ -40,7 +40,7 @@ export const GoogleMap = ({
     }
   }, [geojson, map, isFitBounds]);
 
-  return (
+  return GOOGLE_MAPS_ID && (
     <Map
       gestureHandling="greedy"
       mapId={GOOGLE_MAPS_ID}

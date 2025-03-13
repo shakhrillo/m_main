@@ -30,6 +30,10 @@ service cloud.firestore {
       match /history/{historyId} {
         allow read: if isAdminRead();
       }
+
+      match /screenshots/{screenshotId} {
+        allow read: if isAdminRead();
+      }
     }
 
     match /containers/{containerId} {

@@ -53,7 +53,7 @@ require("dotenv").config();
 // Import dependencies
 const { WebDriver } = require("selenium-webdriver");
 const { Timestamp, FieldValue, GeoPoint } = require("firebase-admin/firestore");
-const { uploadFile, getMachineData, updateMachineData, updateUserData, settingsService } = require("./services/firebase");
+const { uploadFile, getMachineData, updateMachineData, updateUserData, settingsService, batchWriteLargeArray } = require("./services/firebase");
 const { getDriver } = require("./services/selenium");
 const { getScriptContent } = require("./services/scripts");
 
@@ -105,6 +105,21 @@ let data = {};
  */
 let driver;
 
+/**
+ * Takes a screenshot of the current page and uploads it to Firebase Storage.
+ * @returns {Promise<string>} The URL of the uploaded screenshot.
+ */
+async function takeScreenshot() {
+  const screenshot = await driver.takeScreenshot();
+  const screenshotBuffer = Buffer.from(screenshot, "base64");
+  const uniqueId = Math.random().toString(36).substring(7);
+  const imageName = `${tag}-${uniqueId}.png`;
+  return await uploadFile(screenshotBuffer, imageName);
+}
+
+// Screenshots array
+const screenshots = [];
+
 (async () => {
   console.log(`Scraping data for tag: ${tag}`);
 
@@ -154,17 +169,20 @@ let driver;
     };
     console.log(`Extracted data: ${JSON.stringify(info, null, 2)}`);
 
+    const screenshot = await takeScreenshot();
+    screenshots.push({
+      url: screenshot,
+      createdAt: Timestamp.now(),
+    });
+
     // Prepare for screenshot by removing unnecessary elements
     await driver.executeScript(prepareForScreenshot);
     await driver.sleep(2000);
 
     // Capture a screenshot of the page
-    const screenshot = await driver.takeScreenshot();
-    const screenshotBuffer = Buffer.from(screenshot, "base64");
-    const imageName = `${tag}.png`;
-    data.screenshot = await uploadFile(screenshotBuffer, imageName);
-    console.log(`Screenshot uploaded: ${data.screenshot}`);
+    data.screenshot = await takeScreenshot();
 
+    // Get the extended URL
     data.extendedUrl = await driver.getCurrentUrl();
 
     // Match the first set of coordinates after '@'
@@ -185,6 +203,11 @@ let driver;
 
     // Generate search keywords
     data.keywords = [...new Set(data.title.trim().toLowerCase().split(/\s+/))];
+
+    await batchWriteLargeArray(
+      `machines/${data.id}/screenshots`,
+      screenshots
+    );
   } catch (error) {
     data.status = "error";
     data.error = JSON.stringify(error);

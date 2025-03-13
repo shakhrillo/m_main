@@ -42,8 +42,6 @@ const firebasekeysPath = path.resolve(
   "../firebaseServiceAccount.json"
 );
 
-console.log("env", process.env);
-
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   projectId:

@@ -215,6 +215,40 @@ export const dockerContainerHistory = (containerId: string) => {
   });
 };
 
+export const dockerContainerScreenshots = (containerId: string) => {
+  const screenshots$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(
+    firestore,
+    "machines",
+    containerId,
+    "screenshots",
+  );
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const screenshotsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      screenshots$.next(screenshotsData);
+    },
+    (error) => {
+      console.error("Error fetching screenshots data:", error);
+      screenshots$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = screenshots$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+}
+
 /**
  * Update an existing docker container
  * @param containerId
