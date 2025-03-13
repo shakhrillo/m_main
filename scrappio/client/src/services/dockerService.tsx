@@ -182,7 +182,7 @@ export const dockerContainerLogs = (containerId: string) => {
  * @returns Observable<any>
  */
 export const dockerContainerBrowserLogs = (containerId: string) => {
-  const logs$ = new BehaviorSubject([] as any);
+  const logs$ = new BehaviorSubject(null as any);
   const collectionRef = collection(
     firestore,
     "machines",
@@ -192,18 +192,8 @@ export const dockerContainerBrowserLogs = (containerId: string) => {
 
   const unsubscribe = onSnapshot(
     query(collectionRef),
-    (snapshot) => {
-      const logsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log(`logsData: ${logsData}`);
-      logs$.next(logsData);
-    },
-    (error) => {
-      console.error("Error fetching logs data:", error);
-      logs$.error(error);
-    },
+    (snapshot) => logs$.next(snapshot),
+    (error) => logs$.error(error)
   );
 
   return new Observable<any>((subscriber) => {

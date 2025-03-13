@@ -16,14 +16,21 @@ export const ContainerBrowserLogs = ({
       message: string;
     }[]
   >([]);
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
 
   const fetchLogs = useCallback(() => {
     if (!containerId) return;
 
     const subscription = dockerContainerBrowserLogs(containerId).subscribe({
-      next: (data = []) => {
-        console.log(data);
-        setBrowserLogs(data);
+      next: (data) => {
+        setIsEmpty(data?.empty);
+
+        if (!data || data?.empty) return;
+
+        setBrowserLogs(data?.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        })));
       },
       error: (error) => console.error("Error fetching logs:", error),
     });
@@ -35,6 +42,8 @@ export const ContainerBrowserLogs = ({
 
   return (
     <div className="container-logs">
+      {isEmpty && <div className="container-log">No logs available.</div>}
+      
       {browserLogs.map((log, index) => (
         <div
           key={index}
