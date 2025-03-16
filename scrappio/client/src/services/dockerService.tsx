@@ -327,3 +327,38 @@ export const dockerContainerStats = (containerId: string) => {
     };
   });
 };
+
+
+export const dockerContainerPlaces = (containerId: string) => {
+  const places$ = new BehaviorSubject([] as any);
+  const collectionRef = collection(
+    firestore,
+    "containers",
+    containerId,
+    "places",
+  );
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const placesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      places$.next(placesData);
+    },
+    (error) => {
+      console.error("Error fetching places data:", error);
+      places$.error(error);
+    },
+  );
+
+  return new Observable<any>((subscriber) => {
+    const subscription = places$.subscribe(subscriber);
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribe();
+    };
+  });
+}

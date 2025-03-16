@@ -1,136 +1,132 @@
 "use strict";
 
 require("dotenv").config();
-const fs = require('fs');
 const { By } = require("selenium-webdriver");
 const { getDriver } = require("./services/selenium");
+const { Timestamp } = require("firebase-admin/firestore");
 const { getScriptContent } = require("./services/scripts");
+const { getMachineData, updateMachineData, batchWriteLargeArray } = require("./services/firebase");
 
-// Constants
-const tag = process.env.TAG || "restaurants+near+Tverskaya+street+Moscow";
+const tag = process.env.TAG;
+if (!tag) throw new Error("Tag not specified");
 
-// Validate tag
-if (!tag) {
-  throw new Error("Tag not specified");
-}
-
-// Get the script content for extracting information from the page
-const getInfo = getScriptContent("getInfo.js", "scripts");
-
-let driver;
+const getInfoScript = getScriptContent("getInfo.js", "scripts");
 
 const fetchedData = [];
 
+let data = {};
+
+let driver;
+
 (async () => {
   try {
-    // Initialize Selenium WebDriver
+    // Fetch machine data
+    let dataRetries = 3;
+    data = await getMachineData(tag);
+    while (!data && dataRetries > 0) {
+      console.log(`Retrying to fetch data for tag: ${tag}`);
+      data = await getMachineData(tag);
+      dataRetries--;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    if (!data || !data.url) {
+      throw new Error("URL not specified or invalid");
+    }
+
     driver = await getDriver({
       timeouts: {
-        implicit: Number(process.env.IMPLICIT_TIMEOUT || 60000), // For locating elements (milliseconds)
-        pageLoad: Number(process.env.PAGE_LOAD_TIMEOUT || 60000), // For page load (milliseconds)
-        script: Number(process.env.SCRIPT_TIMEOUT || 60000), // For executing scripts (milliseconds)
+        implicit: Number(process.env.IMPLICIT_TIMEOUT || 60000),
+        pageLoad: Number(process.env.PAGE_LOAD_TIMEOUT || 60000),
+        script: Number(process.env.SCRIPT_TIMEOUT || 60000),
       },
       chromePath: process.env.CHROME_PATH,
     });
 
     // Load the target website
-    await driver.get(`https://www.google.com/maps/search/${tag}`);
-    await driver.sleep(1000);
+    await driver.get(data.url);
+    await driver.sleep(2000);
 
-    let clickedHrefs = new Set();
-    const feedsSelector = "div[role='feed']";
+    const clickedLinks = new Set();
+    const feedSelector = "div[role='feed']";
+    let hasMoreFeeds = true;
 
-    let noMoreFeeds = false;
+    while (hasMoreFeeds) {
+      const feeds = await driver.findElements(By.css(feedSelector));
+      if (feeds.length === 0) break;
 
-    while (!noMoreFeeds) {
-      // Find all feed elements and add timeout 3sec
-      const feeds = await driver.findElements(By.css(feedsSelector));
+      let links = (await Promise.all(feeds.map(feed => feed.findElements(By.tagName("a"))))).flat();
 
-      if(feeds.length === 0) {
-        noMoreFeeds = true;
-        
-        // Execute custom function to extract info
-        const info = await driver.executeScript(getInfo);
-        console.log(`Extracted info: ${JSON.stringify(info)}`);
-        fetchedData.push(info);
-        return;
-      }
-      
-      // Extract all anchor elements within feeds
-      let feedsAEls = await Promise.all(
-        feeds.map(feed => feed.findElements(By.tagName("a")))
-      );
-      feedsAEls = feedsAEls.flat(); // Flatten the array of arrays
-
-      for (const aEl of feedsAEls) {
+      for (const link of links) {
         try {
-          const href = await aEl.getAttribute("href");
-          
-          if (!href || clickedHrefs.has(href) || !href.includes("https://www.google.com/maps/place/")) {
-            console.log(`Skipping ${href} (already clicked or no href or not a place)`);
+          const href = await link.getAttribute("href");
+          if (!href || clickedLinks.has(href) || !href.includes("/maps/place/")) {
+            console.log(`Skipping link: ${href}`);
             continue;
           }
 
-          await driver.executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", aEl);
+          await driver.executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", link);
           await driver.executeScript(`window.open("${href}", "_blank");`);
           await driver.sleep(2000);
 
-          // Get all open window handles
-          let handles = await driver.getAllWindowHandles();
-          if (handles.length < 2) {
-            console.warn(`New tab was not opened for ${href}`);
-            continue;
-          }
+          const handles = await driver.getAllWindowHandles();
+          if (handles.length < 2) continue;
 
-          // Switch to the new tab
           await driver.switchTo().window(handles[1]);
-
-          // Execute custom function to extract info
-          const info = await driver.executeScript(getInfo);
-          console.log(`Extracted info: ${JSON.stringify(info)}`);
+          const info = await driver.executeScript(getInfoScript);
           fetchedData.push(info);
+          clickedLinks.add(href);
+          console.log(`Fetched data for: ${href}`);
 
-          // Mark the link as clicked
-          clickedHrefs.add(href);
-
-          // Close the new tab
           await driver.close();
           await driver.sleep(2000);
-
-          // Switch back to the original tab
           await driver.switchTo().window(handles[0]);
-
         } catch (error) {
-          console.error(`Error processing a link: ${error.message}`);
+          console.error(`Error processing link: ${error.message}`);
         }
       }
 
-      // Scroll to the last feed to load more content
-      const feedDivs = await driver.findElements(By.css(`${feedsSelector} > div`));
-      if (feedDivs.length > 0) {
-        const lastDiv = feedDivs[feedDivs.length - 1];
-        await driver.executeScript("arguments[0].scrollIntoView({ behavior: 'smooth' });", lastDiv);
+      const feedDivs = await driver.findElements(By.css(`${feedSelector} > div`));
+      if (feedDivs.length) {
+        await driver.executeScript("arguments[0].scrollIntoView({ behavior: 'smooth' });", feedDivs.at(-1));
         await driver.sleep(3000);
       }
 
-      // Check if the end of feeds is reached
-      const lastDivText = await feedDivs[feedDivs.length - 1].getText();
-      console.log(`Last div text: ${lastDivText}`);
-      if (lastDivText.includes("reached the end")) {
-        noMoreFeeds = true;
-      }
+      hasMoreFeeds = !!(await feedDivs.at(-1).getText()).includes("reached the end");
     }
 
     console.log("No more feeds to process.");
 
-  } catch (error) {
-    console.log(error);
-  } finally {
-    fs.writeFileSync('fetchedData.json', JSON.stringify(fetchedData, null, 2));
-    
-    // Quit the WebDriver
-    if (driver) {
-      await driver.quit();
+    // Upload the extracted data to Firestore
+    console.log("Uploading data to Firestore...");
+    if (fetchedData.length > 0) {
+      const jsonContent = JSON.stringify(fetchedData, null, 2);
+      const csvContent = [
+        Object.keys(fetchedData[0]).join(","),
+        ...fetchedData.map((el) => Object.values(el).join(",")),
+      ].join("\n");
+      if (data["outputAs"] === "csv") {
+        data.csvUrl = await uploadFile(csvContent, `csv/${tag}.csv`);
+      }
+      if (data["outputAs"] === "json") {
+        data.jsonUrl = await uploadFile(jsonContent, `json/${tag}.json`);
+      }
     }
+
+    await batchWriteLargeArray(
+      `containers/${data.id}/places`,
+      fetchedData,
+    );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await updateMachineData(tag, {
+      updatedAt: Timestamp.now(),
+      status: "completed",
+      csvUrl: data.csvUrl || "",
+      jsonUrl: data.jsonUrl || "",
+      totalPlaces: fetchedData.length,
+    });
+
+    if (driver) await driver.quit();
   }
 })();

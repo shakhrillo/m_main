@@ -55,6 +55,10 @@ service cloud.firestore {
       match /reviews/{reviewId} {
         allow read: if request.auth.uid == resource.data.uid || isAdminRead();
       }
+
+      match /places/{placeId} {
+        allow read: if request.auth.uid == resource.data.uid || isAdminRead();
+      }
     }
 
     match /users/{userId} {

@@ -6,7 +6,8 @@
   "scripts": {
     "init": "npm install && node init.js",
     "info": "node info.js",
-    "comments": "node comments.js"
+    "comments": "node comments.js",
+    "places": "node places.js"
   },
   "keywords": [
     "gmrscrap"

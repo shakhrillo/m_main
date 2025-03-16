@@ -29,6 +29,7 @@ import {
   ValidatedURLs,
 } from "../pages";
 import { AuthGuard } from "./AuthGuard";
+import { Places } from "../pages/Places";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,8 @@ const router = createBrowserRouter([
           { path: "reviews", element: <ReviewsList /> },
           { path: "reviews/:reviewId", element: <SingleReview /> },
           { path: "validates", element: <ValidatedURLs /> },
+          { path: "places", element: <Places /> },
+          { path: "places/:placeId", element: <Places /> },
           { path: "scrap", element: <Scrap /> },
           { path: "scrap/:scrapId", element: <Scrap /> },
           { path: "users", element: <Users /> },
