@@ -14,13 +14,16 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
-import { createDockerContainer, dockerContainerPlaces } from "../services/dockerService";
+import { createDockerContainer, dockerContainerPlaces, dockerContainers } from "../services/dockerService";
 import { NavLink, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { IUserInfo } from "../types/userInfo";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
 import { Ratings } from "../components/Ratings";
+import { IDockerContainer } from "../types/dockerContainer";
+import { filter, map } from "rxjs";
+import { PlaceInfo } from "../components/place/PlaceInfo";
 
-export const Places = () => {
+export const SinglePlace = () => {
   const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
 
@@ -29,6 +32,38 @@ export const Places = () => {
   const [query, setQuery] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
+  const [container, setContainer] = useState<IDockerContainer>(
+    {} as IDockerContainer,
+  );
+
+  useEffect(() => {
+    if (!placeId || !user?.uid) {
+      setContainer({} as IDockerContainer);
+      return;
+    }
+
+    const subscription = dockerContainers({
+      containerId: placeId,
+      uid: user.isAdmin ? undefined : user.uid,
+    })
+      .pipe(
+        filter(Boolean),
+        map(
+          (snapshot) =>
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as IDockerContainer),
+            }))[0],
+        ),
+      )
+      .subscribe((data) => {
+        console.log('Data:', data);
+        return setContainer(data?.location ? data : ({} as IDockerContainer))
+      }
+      );
+
+    return () => subscription.unsubscribe();
+  }, [placeId, user]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -79,7 +114,7 @@ export const Places = () => {
         </Breadcrumb>
       )}
       <Row>
-        <Col md={12}>
+        {/* <Col md={12}>
           <Stack direction="horizontal" gap={3} className="place-validate-url">
             <div className="text-primary">
               <IconMap size={48} />
@@ -125,8 +160,8 @@ export const Places = () => {
               </Form>
             </Stack>
           </Stack>
-        </Col>
-        <Col>
+        </Col> */}
+        <Col lg={8} xl={9}>
           <Stack direction="vertical" gap={3}>
             {places.map((place) => (
               <div className="place-data" key={place.id}>
@@ -140,6 +175,9 @@ export const Places = () => {
               </div>
             ))}
           </Stack>
+        </Col>
+        <Col lg={4} xl={3}>
+          <PlaceInfo container={container} />
         </Col>
       </Row>
     </Container>

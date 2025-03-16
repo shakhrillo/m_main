@@ -18,8 +18,8 @@ const FILTER_OPTIONS = [
 ];
 
 interface IContainersList {
-  path: "reviews" | "containers" | "scrap" | "images";
-  type?: "comments" | "info";
+  path: "reviews" | "containers" | "scrap" | "images" | "places";
+  type?: "comments" | "info" | "places";
   machineType?: "container" | "image";
 }
 
@@ -84,6 +84,7 @@ export const ContainersList = ({
           }),
         )
         .subscribe((newContainers) => {
+          console.log("New containers:", newContainers);
           setContainers((prev) =>
             append
               ? [

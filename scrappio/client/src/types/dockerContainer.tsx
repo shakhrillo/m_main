@@ -54,4 +54,5 @@ export interface IDockerContainer {
   totalSpentPoints: number;
   price: IPrice;
   browser?: IBrowser;
+  totalPlaces?: number;
 }

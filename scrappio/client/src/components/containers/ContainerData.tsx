@@ -9,7 +9,7 @@ import type { JSX } from "react";
 
 interface IContainerData {
   container: IDockerContainer;
-  path: "reviews" | "containers" | "scrap" | "images";
+  path: "reviews" | "containers" | "scrap" | "images" | "places";
 }
 
 /**
@@ -34,9 +34,18 @@ export const ContainerData = ({
           <StatusInfo container={container} />
         )}
       </Stack>
-      <NavLink to={`/${path}/${container.id}`}>
-        {path === "containers" ? <>{container.title}</> : container.title}
+      <NavLink to={`/${path}/${container.id}`} className="text-capitalize">
+        {path === "places" ? <>
+          {container.url?.split("/").slice(-1)[0].replace(/[\W_]+/g, " ")}
+        </> : container.title}
       </NavLink>
+      {path === "places" && (
+        <>
+          <Stack direction="horizontal" gap={2} className="text-muted">
+            {(container?.totalPlaces || 0) + " places found"}
+          </Stack>
+        </>
+      )}
       {path === "containers" && (
         <>
           <Stack direction="horizontal" gap={2} className="text-muted">

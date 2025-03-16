@@ -8,6 +8,7 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
   IconLocation,
+  IconMapPins,
   IconReceipt,
   IconSearch,
   IconServerBolt,
@@ -34,7 +35,7 @@ const menuSections = [
         icon: IconDashboard,
         label: "Dashboard",
       },
-      { path: "/places", id: "places", icon: IconLocation, label: "Places" },
+      { path: "/search", id: "search", icon: IconLocation, label: "Places" },
       { path: "/scrap", id: "scrap", icon: IconSearch, label: "Scrap" },
     ],
   },
@@ -42,6 +43,12 @@ const menuSections = [
     title: "Reviews",
     id: "reviews",
     items: [
+      {
+        path: "/places",
+        id: "places",
+        icon: IconMapPins,
+        label: "Places",
+      },
       {
         path: "/validates",
         id: "validates",

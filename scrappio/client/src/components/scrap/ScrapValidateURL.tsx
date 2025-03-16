@@ -1,5 +1,5 @@
 import { IconAlertCircle, IconBrandGoogleMaps } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   CardSubtitle,
   CardTitle,
@@ -8,7 +8,7 @@ import {
   FormText,
   Stack,
 } from "react-bootstrap";
-import { Form, useNavigate, useOutletContext } from "react-router-dom";
+import { Form, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { createDockerContainer } from "../../services/dockerService";
 import type { IDockerContainer } from "../../types/dockerContainer";
 import { ScrapValidateButton } from "./ScrapValidateButton";
@@ -29,9 +29,17 @@ export const ScrapValidateURL = ({
 }) => {
   const user = useOutletContext<IUserInfo>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [url, setUrl] = useState<string>(container.url || "");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!containerId) {
+      const shareLink = searchParams.get("shareLink");
+      setUrl(shareLink || "");
+    }
+  }, [containerId, searchParams]);
 
   useEffect(() => {
     setIsDisabled(
@@ -43,6 +51,7 @@ export const ScrapValidateURL = ({
   }, [container, containerId, user?.uid]);
 
   useEffect(() => {
+    if (!container?.url) return;
     setUrl(container.url || "");
   }, [container?.url]);
 
