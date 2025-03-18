@@ -58,7 +58,7 @@ export const SinglePlace = () => {
       )
       .subscribe((data) => {
         console.log('Data:', data);
-        return setContainer(data?.location ? data : ({} as IDockerContainer))
+        return setContainer(data as IDockerContainer)
       }
       );
 

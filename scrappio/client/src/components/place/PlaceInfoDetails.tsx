@@ -2,6 +2,7 @@ import type { Icon } from "@tabler/icons-react";
 import {
   IconCamera,
   IconCoins,
+  IconMapPins,
   IconMessage,
   IconMessageReply,
   IconStopwatch,
@@ -15,6 +16,7 @@ import { spentTime } from "../../utils/spentTime";
 
 type DetailKey = keyof Pick<
   IDockerContainer,
+  | "totalPlaces"
   | "totalReviews"
   | "totalOwnerReviews"
   | "totalImages"
@@ -28,6 +30,7 @@ const details: {
   key: DetailKey | "spentTime";
   isBadge?: boolean;
 }[] = [
+  { icon: IconMapPins, label: "Total places", key: "totalPlaces" },
   { icon: IconMessage, label: "Extracted reviews", key: "totalReviews" },
   {
     icon: IconMessageReply,
@@ -81,7 +84,14 @@ export const PlaceInfoDetails = ({
   container: IDockerContainer;
 }): JSX.Element => (
   <Row className="row-cols-1">
-    {details.map(({ icon, label, key, isBadge }) => (
+    {details.filter(
+      detail => {
+        if (container?.type === "places") {
+          return detail.key !== "totalReviews" && detail.key !== "totalOwnerReviews" && detail.key !== "totalImages" && detail.key !== "totalVideos";
+        }
+        return detail.key !== "totalPlaces";
+      }
+    ).map(({ icon, label, key, isBadge }) => (
       <Col key={key}>
         <PlaceInfoDetailsRow
           icon={icon}
@@ -90,7 +100,7 @@ export const PlaceInfoDetails = ({
             key === "spentTime" ? (
               spentTime(container)
             ) : isBadge ? (
-              <Badge>{`${container[key as DetailKey]} points`}</Badge>
+              <Badge>{`${container[key as DetailKey] || 0} points`}</Badge>
             ) : (
               container[key as DetailKey]
             )

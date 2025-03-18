@@ -32,7 +32,7 @@ export interface IDockerContainer {
   screenshot?: string;
   status?: string;
   title?: string;
-  type?: "info" | "comments";
+  type?: "info" | "comments" | "places";
   updatedAt?: Timestamp;
   url?: string;
   uid?: string;

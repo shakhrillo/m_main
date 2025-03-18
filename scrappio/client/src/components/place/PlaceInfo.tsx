@@ -43,9 +43,13 @@ export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
           {container.type && (
             <NavLink
               className="place-title"
-              to={`/${container.type === "info" ? "scrap" : "reviews"}/${container?.machineId}`}
+              to={`/${
+                container.type === "places" ? "places" : container.type === "info" ? "scrap" : "reviews"
+              }/${container?.machineId}`}
             >
-              {container.title || "N/A"}
+              {container.type === "places" ? <>
+                {container.url?.split("/").slice(-1)[0].replace(/[\W_]+/g, " ")}
+              </> : container.title}
             </NavLink>
           )}
           {container.address && <i className="d-block">{container.address}</i>}
@@ -88,7 +92,9 @@ export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
         {(container?.totalReviews ||
           container?.totalOwnerReviews ||
           container?.totalImages ||
-          container?.totalVideos) && (
+          container?.totalVideos ||
+          container?.totalPlaces
+        ) && (
           <Accordion.Item eventKey="0">
             <Accordion.Header className="place-accordion-header">
               <IconInfoCircle />
@@ -108,15 +114,19 @@ export const PlaceInfo = ({ container }: IPlaceInfo): JSX.Element => {
             <PlaceInfoMachine container={container} />
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header className="place-accordion-header">
-            <IconSettings />
-            Options
-          </Accordion.Header>
-          <Accordion.Body>
-            <PlaceInfoOptions container={container} />
-          </Accordion.Body>
-        </Accordion.Item>
+        {
+          container?.type !== "places" && (
+            <Accordion.Item eventKey="2">
+              <Accordion.Header className="place-accordion-header">
+                <IconSettings />
+                Options
+              </Accordion.Header>
+              <Accordion.Body>
+                <PlaceInfoOptions container={container} />
+              </Accordion.Body>
+            </Accordion.Item>
+          )
+        }
       </Accordion>
     </div>
   );
