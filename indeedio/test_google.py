@@ -1,6 +1,7 @@
 from seleniumbase import Driver
 import json
 from utils.extract_salary_type import extract_salary_and_type
+from utils.extract_job_details import extract_job_details
 
 results = []
 
@@ -27,16 +28,23 @@ def scrape_jobs_from_page(driver):
                 driver.wait_for_element("#salaryInfoAndJobType", timeout=10)
                 driver.wait_for_element("#jobDetailsSection", timeout=10)
 
+                # data-testid="inlineHeader-companyLocation"
+                driver.wait_for_element("div[data-testid='inlineHeader-companyLocation']", timeout=10)
+
+                # data-testid="inlineHeader-companyName"
+                driver.wait_for_element("div[data-testid='inlineHeader-companyName']", timeout=10)
+
                 # Get job title
                 title = driver.find_element(".jobsearch-JobInfoHeader-title").text if driver.is_element_present(".jobsearch-JobInfoHeader-title") else None
                 
                 # Get job description
                 description = driver.find_element("#jobDescriptionText").text if driver.is_element_present("#jobDescriptionText") else None
 
-                # Get job details section
-                job_details = driver.find_element("#jobDetailsSection").text if driver.is_element_present("#jobDetailsSection") else None
+                # salaries, job_types = extract_salary_and_type(driver).values()
+                pay_range, job_types, shift_and_schedule, work_setting = extract_job_details(driver).values()
 
-                salaries, job_types = extract_salary_and_type(driver).values()
+                company_location = driver.find_element("div[data-testid='inlineHeader-companyLocation']").text if driver.is_element_present("div[data-testid='inlineHeader-companyLocation']") else None
+                company_name = driver.find_element("div[data-testid='inlineHeader-companyName']").text if driver.is_element_present("div[data-testid='inlineHeader-companyName']") else None
 
                 # Store result only if both title and description exist
                 if title and description:
@@ -44,9 +52,12 @@ def scrape_jobs_from_page(driver):
                         "url": job_url,
                         "title": title,
                         "description": description,
-                        "job_details": job_details,
-                        "salaries": salaries,
-                        "job_types": job_types
+                        "pay_range": pay_range,
+                        "job_types": job_types,
+                        "shift_and_schedule": shift_and_schedule,
+                        "work_setting": work_setting,
+                        "company_location": company_location,
+                        "company_name": company_name
                     })
                     print(f"Title: {title}")
             
@@ -82,7 +93,7 @@ def scrape_all_pages(driver, url):
 
 
         print(f"Scraped page {current_page}.")
-        if current_page >= 30:
+        if current_page >= 1:
             break
         
         # Check for next page button
