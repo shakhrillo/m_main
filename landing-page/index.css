@@ -19,7 +19,7 @@
 
 /* Global Reset */
 * {
-  font-family: "Inter", sans-serif;
+  font-family: "Nunito", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -59,7 +59,14 @@
 }
 
 .mt-76 {
-  margin-top: 76px;
+  margin-top: 76px !important;
+}
+
+.vh-80 {
+  height: 80vh;
+}
+.vh-90 {
+  height: 90vh;
 }
 
 /* Typography Colors */
@@ -74,15 +81,15 @@
 /* 2. Layout */
 
 /* Navbar */
-.geo-navbar {
+/* .geo-navbar {
   height: 85px;
 }
 
 .geo-navbar-menu li a {
   font-weight: 400;
   line-height: 21px;
-  color: rgba(0, 0, 0, 1);
-}
+  color: #3c4858;
+} */
 
 /* 3. UI Components */
 
@@ -207,6 +214,161 @@
     display: none;
   }
 }
+
+/* ///////////////// */
+.btn {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  padding: 8px 20px !important;
+  transition: all 0.3s;
+}
+.btn-outline-primary:hover {
+  background-color: #2f55d4;
+  border-color: #2f55d4;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+  transition: all 0.5s ease;
+}
+p {
+  line-height: 1.6;
+}
+
+.bi::before {
+  font-weight: 500 !important;
+}
+
+.text-muted {
+  color: #8492a6 !important;
+}
+
+/* Navabr */
+.navbar {
+  transition: box-shadow 0.3s ease-in-out;
+}
+.navbar.scrolled {
+  box-shadow: 0 0 3px #3c485826;
+}
+.nav-link.active {
+  color: #2f55d4 !important;
+}
+.navbar-nav > li {
+  margin: 0 10px;
+}
+.navbar-nav > li > a {
+  background-color: initial;
+  color: #3c4858;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 24px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-transform: uppercase;
+}
+
+.avatar.avatar-ex-sm {
+  max-height: 25px;
+}
+
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+.section-title .title {
+  font-size: 30px !important;
+  letter-spacing: 0.5px;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+.pricing {
+  border-bottom: 3px solid #e9ecef !important;
+  transition: all 0.5s ease;
+  z-index: 1;
+}
+.pricing.pricing-primary.starter-plan {
+  border-color: #2f55d4 !important;
+  z-index: 2;
+}
+.pricing.starter-plan {
+  transform: scale(1.05);
+}
+.rounded {
+  border-radius: 6px !important;
+}
+
+.card .card-body {
+  padding: 1.5rem;
+}
+
+.shadow {
+  box-shadow: 0 0 3px #3c485826 !important;
+}
+
+.shape {
+  bottom: -2px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+.shape > svg {
+  height: auto;
+  transform: scale(2);
+  transform-origin: top center;
+  width: 100%;
+}
+
+.para-desc {
+  max-width: 600px;
+}
+
+.text-footer {
+  color: #202942;
+}
+
+.footer {
+  background: #202942;
+  color: #adb5bd;
+}
+
+.footer-py-60 {
+  padding: 60px 0;
+}
+
+.logo-footer {
+  font-size: 22px;
+}
+
+.foot-social-icon li a {
+  border-color: #283453;
+  color: #adb5bd;
+  align-items: center;
+  border: 1px solid #3c4858;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  transition: all 0.4s ease;
+  width: 32px;
+}
+
+@media (min-width: 992px) {
+  .navbar-nav > li > a {
+    min-height: 62px;
+    padding-bottom: 25px;
+    padding-top: 25px;
+  }
+  .ms-lg-5 {
+    margin-left: 3rem !important;
+  }
+}
+/* ///////////////// */
 
 /* 5. Specific Sections */
 
