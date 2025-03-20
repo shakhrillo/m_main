@@ -1,5 +1,6 @@
 from seleniumbase import Driver
 import json
+from utils.extract_salary_type import extract_salary_and_type
 
 results = []
 
@@ -17,6 +18,7 @@ def scrape_jobs_from_page(driver):
             # Open the job URL in a new tab using JavaScript
             driver.execute_script("window.open(arguments[0]);", job_url)
             driver.switch_to_window(-1)  # Switch to the new tab
+            driver.uc_gui_click_captcha()  # Click CAPTCHA (if any)
 
             try:
                 # Wait for job details to load
@@ -31,20 +33,20 @@ def scrape_jobs_from_page(driver):
                 # Get job description
                 description = driver.find_element("#jobDescriptionText").text if driver.is_element_present("#jobDescriptionText") else None
 
-                # Get job salary
-                salary = driver.find_element("#salaryInfoAndJobType").text if driver.is_element_present("#salaryInfoAndJobType") else None
-
                 # Get job details section
                 job_details = driver.find_element("#jobDetailsSection").text if driver.is_element_present("#jobDetailsSection") else None
-                
+
+                salaries, job_types = extract_salary_and_type(driver).values()
+
                 # Store result only if both title and description exist
                 if title and description:
                     results.append({
                         "url": job_url,
                         "title": title,
                         "description": description,
-                        "salary": salary,
-                        "job_details": job_details
+                        "job_details": job_details,
+                        "salaries": salaries,
+                        "job_types": job_types
                     })
                     print(f"Title: {title}")
             
