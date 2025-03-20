@@ -60,12 +60,14 @@ def scrape_jobs_from_page(driver):
             driver.sleep(2)  # Small delay between jobs
 
 def scrape_all_pages(driver, url):
+    # make it headless    
     driver.uc_open_with_reconnect(url, 4)  # Open with reconnection attempts
     driver.uc_gui_click_captcha()  # Click CAPTCHA (if any)
     current_page = 1
     
     while True:
-        # a[data-testid="pagination-page-next"]
+        scrape_jobs_from_page(driver)
+        
         try:
             next_page_button = driver.find_element("a[data-testid='pagination-page-next']")
             next_page_button.click()
@@ -76,10 +78,9 @@ def scrape_all_pages(driver, url):
 
         current_page += 1
 
-        scrape_jobs_from_page(driver)
 
         print(f"Scraped page {current_page}.")
-        if current_page >= 3:
+        if current_page >= 30:
             break
         
         # Check for next page button
