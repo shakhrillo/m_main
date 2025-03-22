@@ -25,6 +25,10 @@
   box-sizing: border-box;
 }
 
+body {
+  color: #161c2d;
+}
+
 /* Utility Classes */
 .btn {
   font-size: 16px !important;
@@ -118,6 +122,7 @@ p {
   align-self: center;
   background-position: 50%;
   background-size: cover;
+  position: relative;
 }
 
 .title-heading {
@@ -201,7 +206,8 @@ p {
   font-size: 22px;
 }
 
-.foot-social-icon li a {
+.foot-social-icon li a,
+.social-icon li a {
   border-color: #283453;
   color: #adb5bd;
   align-items: center;
@@ -238,4 +244,102 @@ p {
 /* products */
 .linear {
   background: linear-gradient(185deg, #f8f9fa 67.85%, #fff 68%);
+}
+.position-breadcrumb {
+  left: 12px;
+  position: absolute;
+  right: 12px;
+  text-align: center;
+  top: 100%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.breadcrumb {
+  letter-spacing: 0.5px;
+}
+.breadcrumb {
+  font-size: 14px;
+  font-weight: 700;
+  padding-left: 0;
+  text-transform: uppercase;
+}
+.breadcrumb .breadcrumb-item a:hover,
+.breadcrumb .breadcrumb-item.active {
+  color: #2f55d4;
+}
+
+.breadcrumb .breadcrumb-item a {
+  color: #3c4858;
+}
+
+.breadcrumb-item::before {
+  display: none;
+}
+.small.fw-bolder::before {
+  font-weight: bolder !important;
+  padding-left: 5px;
+}
+.table {
+  --bs-tabls-bg: #fff;
+}
+.card-title {
+  margin: 0;
+  border-right: 1px solid #e8e8e9;
+}
+.free-plan-card {
+  padding: 16px !important;
+}
+.table-responsive .table td,
+.table-responsive .table th {
+  vertical-align: middle;
+}
+.forum-price {
+  font-size: 18px;
+  color: #3c4858;
+  font-weight: 600;
+}
+.table-text {
+  color: #3c4858;
+}
+.table-icon > .bi::before {
+  font-weight: bolder !important;
+}
+.table-icon {
+  font-size: 20px;
+}
+.sticky-bar {
+  position: sticky;
+  top: 80px;
+}
+.form-control {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  color: #3c4858 !important;
+  font-size: 14px;
+  line-height: 26px;
+  text-align: left;
+}
+.form-control:focus {
+  border-color: #2f55d4;
+  box-shadow: none;
+}
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.form-icon i::before {
+  color: #3c485899 !important;
+}
+.form-icon i {
+  left: 18px;
+  position: absolute;
+  top: 8px;
+}
+.text-dark {
+  color: #3c4858 !important;
+}
+
+.social-icon.social li a {
+  border-color: #adb5bd;
+  color: #adb5bd;
 }
