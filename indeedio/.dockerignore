@@ -4,4 +4,3 @@ __pycache__
 *.pyc
 .pytest_cache
 downloaded_files
-SeleniumBase-master
