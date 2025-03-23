@@ -1,62 +1,64 @@
-from seleniumbase import Driver
+# from seleniumbase import Driver
+from seleniumwire import webdriver
 import json
 # from utils.extract_salary_type import extract_salary_and_type
 from utils.extract_job_details import extract_job_details
 
 def scrape_jobs_from_page(driver, results):
     print("Scraping jobs from page...")
-    website_title = driver.get_title()
+    website_title = driver.title    
     print(website_title)
-    driver.uc_gui_click_captcha()
-    driver.sleep(2)
-    driver.uc_gui_handle_captcha()
+    # driver.uc_gui_click_captcha()
+    # driver.sleep(2)
+    # driver.uc_gui_handle_captcha()
     print("Captcha handled")
-    driver.wait_for_element(".jobsearch-RichSearch", timeout=20)
-    for tag in driver.find_elements("a[id^='job_']"):
-        job_url = tag.get_attribute("href")
-        print(job_url)
-        if not job_url:
-            continue
-        driver.execute_script("window.open(arguments[0]);", job_url)
-        driver.switch_to_window(-1)
-        # driver.uc_gui_click_captcha()
+    # driver.wait_for_element(".jobsearch-RichSearch", timeout=20)
+    # for tag in driver.find_elements("a[id^='job_']"):
+    #     job_url = tag.get_attribute("href")
+    #     print(job_url)
+    #     if not job_url:
+    #         continue
+    #     driver.execute_script("window.open(arguments[0]);", job_url)
+    #     driver.switch_to_window(-1)
+    #     # driver.uc_gui_click_captcha()
 
-        driver.uc_gui_click_captcha()
-        driver.sleep(2)
-        driver.uc_gui_handle_captcha()
+    #     driver.uc_gui_click_captcha()
+    #     driver.sleep(2)
+    #     driver.uc_gui_handle_captcha()
         
-        selectors = {
-            "title": ".jobsearch-JobInfoHeader-title",
-            "description": "#jobDescriptionText",
-            "company_location": "div[data-testid='inlineHeader-companyLocation']",
-            "company_name": "div[data-testid='inlineHeader-companyName']"
-        }
+    #     selectors = {
+    #         "title": ".jobsearch-JobInfoHeader-title",
+    #         "description": "#jobDescriptionText",
+    #         "company_location": "div[data-testid='inlineHeader-companyLocation']",
+    #         "company_name": "div[data-testid='inlineHeader-companyName']"
+    #     }
         
-        data = {"url": job_url}
+    #     data = {"url": job_url}
         
-        for key, selector in selectors.items():
-            if driver.is_element_present(selector):
-                data[key] = driver.find_element(selector).text
-            else:
-                data[key] = None
+    #     for key, selector in selectors.items():
+    #         if driver.is_element_present(selector):
+    #             data[key] = driver.find_element(selector).text
+    #         else:
+    #             data[key] = None
         
-        data.update(extract_job_details(driver))
+    #     data.update(extract_job_details(driver))
         
-        if data.get("title") and data.get("description"):
-            results.append(data)
+    #     if data.get("title") and data.get("description"):
+    #         results.append(data)
         
-        driver.close()
-        driver.switch_to.window(driver.window_handles[0])
-        driver.sleep(2)
+    #     driver.close()
+    #     driver.switch_to.window(driver.window_handles[0])
+    #     driver.sleep(2)
 
 def scrape_all_pages(driver, url):
     print("Scraping all pages...")
-    driver.uc_open_with_reconnect(url, 4)
+    driver.get(url)
+    # driver.uc_open_with_reconnect(url, 4)
     # driver.uc_gui_click_captcha()
 
-    driver.uc_gui_click_captcha()
-    driver.sleep(2)
-    driver.uc_gui_handle_captcha()
+    # driver.uc_gui_click_captcha()
+    # driver.sleep(2)
+    # driver.uc_gui_handle_captcha()
 
     results, current_page = [], 1
     
@@ -74,7 +76,18 @@ def scrape_all_pages(driver, url):
     return results
 
 if __name__ == "__main__":
-    driver = Driver(uc=True)
+    # driver = Driver(uc=True)
+    API_KEY = '9bcccf3cbfcc2970b0057f4b69eb8cdb'
+
+    options = {
+        'proxy': {
+            'http': f'http://scraperapi:{API_KEY}@proxy-server.scraperapi.com:8001',
+            'https': f'http://scraperapi:{API_KEY}@proxy-server.scraperapi.com:8001',
+            'no_proxy': 'localhost,127.0.0.1'
+        }
+    }
+
+    driver = webdriver.Chrome(seleniumwire_options = options)
     try:
         results = scrape_all_pages(driver, "https://www.indeed.com/jobs?q=software+developer&l=remote")
         with open("jobs.json", "w") as f:

@@ -7,13 +7,12 @@ python3 --version
 echo "Pip version"
 pip3 --version
 
-touch /root/.Xauthority
-xauth generate :0 . trusted
-xauth add $(hostname):0 . $(xxd -l 16 -p /dev/urandom)
-xauth list
-
+Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp -auth /dev/null &
 export DISPLAY=:99
-Xvfb :99 -screen 0 1920x1080x16 &
+
+# check if Xvfb is running
+ps aux | grep Xvfb
+
 pip3 install virtualenv
 pip3 install PyAutoGUI
 pip3 install python-xlib
@@ -33,6 +32,6 @@ which google-chrome
 # run with xvfb
 # Xvfb :99 -ac -screen 0 1280x1024x16 &
 # export DISPLAY=:99
-sudo python3 test_google.py --browser=chrome --headed
+sudo python3 test_google.py
 # exec "$@"
 echo "End running python script"
