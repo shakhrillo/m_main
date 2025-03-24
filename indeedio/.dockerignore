@@ -1,6 +1,0 @@
-venv
-latest_logs
-__pycache__
-*.pyc
-.pytest_cache
-downloaded_files
