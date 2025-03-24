@@ -6,43 +6,39 @@ function scrollPricingContent(distance) {
 function scrollContent(distance) {
   scrollContainer.scrollLeft += distance; // Scrolls by the specified distance
 }
-window.addEventListener("scroll", function () {
-  const navbar = document.querySelector(".navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled", "bg-white");
-    navbar.classList.remove("bg-transparent", "ser");
-  } else {
-    navbar.classList.remove("scrolled", "bg-white");
-    navbar.classList.add("bg-transparent", "ser");
-  }
-});
-
 document.addEventListener("DOMContentLoaded", function () {
   const navbar = document.querySelector(".navbar");
   const logo = document.getElementById("logo");
 
+  // Проверяем, был ли класс "ser" при загрузке
+  const hadSerClassInitially = navbar.classList.contains("ser");
+
   function updateLogo() {
-    if (!navbar.classList.contains("ser")) {
-      navbar.classList.add("ser");
-    }
     logo.src = navbar.classList.contains("ser")
       ? "./icons/logo-wing-white.svg"
       : "./icons/logo-wing.svg";
   }
 
-  updateLogo();
+  function handleScroll() {
+    if (window.scrollY > 50) {
+      navbar.classList.add("scrolled", "bg-white");
+      navbar.classList.remove("bg-transparent", "ser");
+    } else {
+      navbar.classList.remove("scrolled", "bg-white");
+      navbar.classList.add("bg-transparent");
 
-  // Observe class changes
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === "class") {
-        if (!navbar.classList.contains("ser")) {
-          navbar.classList.add("ser");
-        }
-        updateLogo();
+      // Если класс "ser" был изначально, возвращаем его
+      if (hadSerClassInitially) {
+        navbar.classList.add("ser");
       }
-    });
-  });
+    }
+    updateLogo();
+  }
 
+  updateLogo();
+  window.addEventListener("scroll", handleScroll);
+
+  // Observe class changes to update the logo
+  const observer = new MutationObserver(updateLogo);
   observer.observe(navbar, { attributes: true, attributeFilter: ["class"] });
 });

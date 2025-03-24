@@ -471,3 +471,85 @@ p {
   z-index: 99;
   position: absolute;
 }
+.img-fluid {
+  height: auto;
+  max-width: 100%;
+}
+
+.pricing .price {
+  font-weight: 400;
+}
+
+.pricing.pricing-primary.business-rate:hover {
+  border-color: #2f55d4 !important;
+}
+.pricing.business-rate:hover {
+  background-color: #fff !important;
+  box-shadow: 0 5px 13px #3c485833 !important;
+  transform: scale(1.03);
+  z-index: 2;
+}
+.ribbon {
+  height: 75px;
+  position: absolute;
+  top: -5px;
+  width: 75px;
+  z-index: 2;
+}
+.ribbon.ribbon-right {
+  right: -5px;
+}
+.ribbon.ribbon-right span {
+  right: -23px;
+  transform: rotate(45deg);
+}
+.ribbon.ribbon-warning span {
+  background-color: #f17425 !important;
+}
+.ribbon.ribbon-warning span::before {
+  border-left-color: #d55b0e;
+  border-top-color: #d55b0e;
+}
+.ribbon.ribbon-warning span::after {
+  border-right-color: #d55b0e;
+  border-top-color: #d55b0e;
+}
+.ribbon span:before {
+  left: 0;
+}
+.ribbon span:after {
+  right: 0;
+}
+.ribbon span:after,
+.ribbon span:before {
+  border: 4px solid #0000;
+  content: "";
+  position: absolute;
+  top: 100%;
+  z-index: -1;
+}
+.ribbon span {
+  color: #fff;
+  position: absolute;
+  top: 18px;
+  width: 100px;
+}
+
+.client-testi .client-image {
+  margin-right: 16px;
+}
+
+.client-testi .content:before {
+  border-color: #0000 #fff #fff #0000;
+  border-style: solid;
+  border-width: 8px;
+  box-shadow: 2px 2px 2px -1px #3c485826;
+  box-sizing: border-box;
+  content: "";
+  left: 0;
+  margin-left: 13px;
+  position: absolute;
+  top: 30px;
+  transform: rotate(135deg);
+  transform-origin: 0 0;
+}
