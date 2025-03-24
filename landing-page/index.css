@@ -69,7 +69,7 @@ p {
 
 /* Navabr */
 .navbar {
-  transition: box-shadow 0.3s ease-in-out;
+  transition: all 0.5s ease;
 }
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
@@ -83,7 +83,9 @@ p {
   font-weight: 700;
   color: #3c4858;
   font-size: 16px;
+  background-size: cover;
 }
+
 .menu-subtitle {
   margin-top: 0.3rem;
   font-size: 14px;
@@ -127,6 +129,9 @@ p {
 
 .title-heading {
   line-height: 26px;
+}
+.title-heading .para-desc {
+  font-size: 18px;
 }
 
 .heading {
@@ -342,4 +347,127 @@ p {
 .social-icon.social li a {
   border-color: #adb5bd;
   color: #adb5bd;
+}
+
+/* Services */
+
+.bg-overlay {
+  background-color: #2e425fb5;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.navbar.ser .nav-link {
+  color: #ffffff80 !important;
+}
+.navbar.ser .nav-link.active {
+  color: #ffffff !important;
+}
+.pages-heading {
+  position: relative;
+  z-index: 1;
+}
+.features.course-feature {
+  transition: all 0.5s ease;
+}
+.features.course-feature:hover {
+  transform: translateY(-10px);
+}
+.features.feature-clean {
+  height: 300px;
+  background-color: #fff;
+}
+
+.features.feature-clean .icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2f55d41a;
+  height: 65px;
+  line-height: 65px !important;
+  width: 65px;
+}
+
+.features.course-feature .full-img {
+  position: absolute;
+  font-size: 230px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 0;
+}
+.features:hover .full-img {
+  opacity: 0.1;
+}
+
+.mt-100 {
+  margin-top: 100px;
+}
+.work-process {
+  transition: all 0.5s ease;
+}
+
+.work-process.process-arrow:after {
+  background: url(./icons/working-proces-arrow.svg) 50% no-repeat;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  height: 25px;
+  left: 80%;
+  position: absolute;
+  top: 30px;
+  width: 60%;
+  z-index: 1;
+}
+.bg-cta {
+  padding: 150px 0;
+}
+.play-btn {
+  display: inline-block;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 30px;
+  height: 78px;
+  width: 78px;
+  line-height: 76px;
+}
+
+.nav-pills {
+  background: #eff1f4;
+}
+.nav-pills .nav-link,
+.nav-pills .nav-link.nav-link-alt {
+  color: #3c4858;
+}
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #2f55d4;
+}
+.nav-pills .nav-link.active {
+  color: #fff !important;
+}
+
+.btn.btn-icon {
+  align-items: center;
+  height: 36px;
+  padding: 0;
+  width: 36px;
+}
+.back-to-top {
+  transition: all 0.5s ease;
+  background-color: #2f55d4;
+  border-radius: 6px;
+  bottom: 30px;
+  text-align: center;
+  z-index: 99;
+  position: absolute;
 }

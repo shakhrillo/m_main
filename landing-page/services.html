@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scrappio Products</title>
+
+    <!-- Corrected Favicon Links -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      sizes="32x32"
+      href="./icons/scrappio-32X32.svg"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      sizes="16x16"
+      href="./icons/scrappio-16X16.svg"
+    />
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-light navbar-transparent bg-transparent p-0 fixed-top ser"
+    >
+      <div class="container bg-transparent justify-content-between">
+        <div class="navbar w-100">
+          <a
+            class="d-flex navbar-brand align-items-center justify-content-center"
+            href="./index.html"
+          >
+            <img
+              id="logo"
+              src="./icons/logo-wing.svg"
+              height="36px"
+              alt="Scrappio" /></a
+          ><button
+            class="navbar-toggler border-0 shadow-none geo-btn geo-btn-outline"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNavDropdown"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Services</a>
+            </li>
+            <li class="dropdown nav-item">
+              <a
+                class="dropdown-toggle nav-link"
+                href="#"
+                data-bs-target="dropdown"
+                >Products <i class="bi bi-chevron-down"></i>
+              </a>
+              <div class="dropdown-menu sub-menu">
+                <ul class="d-flex list-unstyled gap-2">
+                  <li>
+                    <ul class="d-flex flex-column list-unstyled gap-3">
+                      <li class="d-flex flex-column">
+                        <a href="./products.html" class="menu-title">Apify</a>
+                        <span class="text-muted menu-subtitle"
+                          >Effortless web scraping and automation with Apify’s
+                          powerful tools.
+                        </span>
+                      </li>
+                      <li class="d-flex flex-column">
+                        <a href="#" class="menu-title">LinkedIn</a>
+                        <span class="text-muted menu-subtitle"
+                          >Extract valuable data from LinkedIn effortlessly for
+                          insights and growth.
+                        </span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <ul class="d-flex flex-column list-unstyled gap-3">
+                      <li class="d-flex flex-column">
+                        <a href="#" class="menu-title">Google Maps</a>
+                        <span class="text-muted menu-subtitle"
+                          >Collect and analyze Google Maps reviews to gain
+                          valuable customer insights.
+                        </span>
+                      </li>
+                      <li class="d-flex flex-column">
+                        <a href="#" class="menu-title">Indeed</a>
+                        <span class="text-muted menu-subtitle"
+                          >Extract job listings and company insights from Indeed
+                          effortlessly.
+                        </span>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#pricing">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Reviews</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section
+      class="d-table bg-half-170 bg-light w-100"
+      style="
+        background: url('./icons/service-bg-2.jpg') center center;
+        background-size: cover;
+      "
+    >
+      <div class="bg-overlay"></div>
+      <div class="container">
+        <div class="row justify-content-center mt-5">
+          <div class="col-lg-12 text-center">
+            <div class="pages-heading title-heading">
+              <h2 class="text-white title-dark">Services</h2>
+              <p class="text-white-50 mb-0 mx-auto para-desc">
+                Comprehensive solutions to elevate your business with
+                cutting-edge technology and expert services.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="position-breadcrumb">
+          <nav aria-label="breadcrumb" class="d-inline-block bg-white"></nav>
+        </div>
+      </div>
+    </section>
+    <div class="position-relative">
+      <div class="text-white overflow-hidden shape">
+        <svg
+          viewBox="0 0 2880 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <div class="position-relative">
+      <div class="text-white overflow-hidden shape">
+        <svg
+          viewBox="0 0 2880 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <section class="section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-3 col-md-6">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-laptop h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href="">Web Development</a>
+                <p class="text-muted mt-2">
+                  Custom websites and web applications built for performance and
+                  scalability.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-laptop full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-lg-0 pt-2 pt-lg-0">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-phone h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href="">Mobile App Development</a>
+                <p class="text-muted mt-2">
+                  Cross-platform mobile apps with seamless user experiences.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-phone full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-lg-0 pt-2 pt-lg-0">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-palette h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href=""> UI/UX Design </a>
+                <p class="text-muted mt-2">
+                  Modern and user-friendly designs that enhance engagement.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-palette full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-lg-0 pt-2 pt-lg-0">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-graph-up h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href=""
+                  >SEO & Digital Marketing</a
+                >
+                <p class="text-muted mt-2">
+                  Optimize visibility and grow your business with strategic
+                  marketing.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-graph-up full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-4 pt-2">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-cloud h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href="">Cloud & DevOps</a>
+                <p class="text-muted mt-2">
+                  Scalable cloud solutions and DevOps automation for efficiency.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-cloud full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-4 pt-2">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-gear h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href=""> IT Consulting </a>
+                <p class="text-muted mt-2">
+                  Expert guidance to improve technology and business processes.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-gear full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-4 pt-2">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-cart h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href="">E-Commerce Solutions </a>
+                <p class="text-muted mt-2">
+                  Custom online stores with secure payment and seamless shopping
+                  experiences.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-cart full-img uil"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mt-4 pt-2">
+            <div
+              class="card border-0 p-4 shadow course-feature feature-clean features overflow-hidden"
+            >
+              <div class="rounded text-center text-primary icons">
+                <i class="bi bi-tools h3 mb-0"></i>
+              </div>
+              <div class="card-body p-0 mt-4">
+                <a class="text-dark h5 title" href="">Software Maintenance</a>
+                <p class="text-muted mt-2">
+                  Continuous updates, bug fixes, and performance improvements.
+                </p>
+                <a class="text-primary read-more" href=""
+                  >Read More
+                  <i class="bi bi-chevron-right fw-bolder small"></i>
+                </a>
+                <i class="text-primary bi bi-tools full-img uil"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container mt-100 mt-60">
+          <div class="row justify-content-center"></div>
+          <div class="col-12">
+            <div class="text-center mb-4 pb-4 section-title">
+              <h6 class="text-primary">Work Process</h6>
+              <h4 class="mb-4 title">How do we works ?</h4>
+              <p class="text-muted mb-0 mx-auto para-desc">
+                Our streamlined process ensures efficiency, quality, and
+                seamless execution from start to finish.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mt-4 pt-2">
+              <div
+                class="card bg-transparent border-0 text-center feature-clean feature-primary features process-arrow work-process"
+              >
+                <div class="rounded text-center icons mx-auto">
+                  <i class="text-primary bi bi-lightbulb h3 mb-0"></i>
+                </div>
+                <div class="card-body">
+                  <h5 class="text-dark">Discovery & Strategy</h5>
+                  <p class="text-muted mb-0">
+                    We begin by understanding your goals and crafting a
+                    strategic plan tailored to your needs.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-4 mt-md-5 pt-2 pt-md-3">
+              <div
+                class="card bg-transparent border-0 text-center feature-clean feature-primary features process-arrow work-process"
+              >
+                <div class="rounded text-center icons mx-auto">
+                  <i class="text-primary bi bi-code-slash h3 mb-0"></i>
+                </div>
+                <div class="card-body">
+                  <h5 class="text-dark">Development & Execution</h5>
+                  <p class="text-muted mb-0">
+                    Our team designs, builds, and implements high-quality
+                    solutions with seamless integration.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-4 mt-md-5 pt-2 pt-md-5">
+              <div
+                class="card bg-transparent border-0 text-center feature-clean feature-primary features work-process"
+              >
+                <div class="rounded text-center icons mx-auto">
+                  <i class="text-primary bi bi-rocket h3 mb-0"></i>
+                </div>
+                <div class="card-body">
+                  <h5 class="text-dark">Launch & Support</h5>
+                  <p class="text-muted mb-0">
+                    We deploy your project, ensure everything runs smoothly, and
+                    provide continuous support.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid mt-100 mt-60">
+        <div
+          class="card bg-cta rounded shadow overflow-hidden"
+          style="
+            background: url('./icons/creative.jpg') center center;
+            background-size: cover;
+          "
+        >
+          <div class="bg-overlay z-0"></div>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 text-center">
+                <div class="position-relative section-title z-1">
+                  <h4 class="text-white mb-4 title title-dark">
+                    Empowering Your Business with Expert Solutions
+                  </h4>
+                  <p class="text-white-50 mx-auto para-dark para-desc">
+                    We provide innovative strategies, cutting-edge technology,
+                    and expert guidance to help your business grow, optimize
+                    operations, and stay ahead in a competitive market.
+                  </p>
+                  <a
+                    class="border border-light mt-4 play-btn video-play-icon"
+                    href=""
+                  >
+                    <i class="text-light bi bi-play"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mt-100 mt-60">
+        <div class="row align-items-end mb-4 pb-4">
+          <div class="col-md-12">
+            <div class="text-center text-md-start section-title">
+              <h6 class="text-primary">Services</h6>
+              <h4 class="mb-4 title">What we do ?</h4>
+              <p class="text-muted mb-0 para-desc">
+                We deliver tailored digital solutions, from web and mobile
+                development to design, marketing, and IT consulting, to help
+                your business thrive.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-4 pt-2">
+            <ul
+              id="pills-tab"
+              role="tablist"
+              class="flex-column nav nav-justified nav-pills p-3 rounded shadow mb-0 sticky-bar"
+            >
+              <li class="nav-item">
+                <a
+                  class="nav-link rounded active"
+                  id="pills-developing-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-developing"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-developing"
+                  aria-selected="true"
+                >
+                  <div class="p-1 text-center">
+                    <h6 class="mb-0">Web developing</h6>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item mt-2">
+                <a
+                  class="nav-link rounded"
+                  id="pills-design-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-design"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-design"
+                  aria-selected="false"
+                >
+                  <div class="p-1 text-center">
+                    <h6 class="mb-0">Design</h6>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item mt-2">
+                <a
+                  class="nav-link rounded"
+                  id="pills-marketing-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-marketing"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-marketing"
+                  aria-selected="false"
+                >
+                  <div class="p-1 text-center">
+                    <h6 class="mb-0">Marketing</h6>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item mt-2">
+                <a
+                  class="nav-link rounded"
+                  id="pills-consulting-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-consulting"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-consulting"
+                  aria-selected="false"
+                >
+                  <div class="p-1 text-center">
+                    <h6 class="mb-0">Consulting</h6>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-8 mt-4 pt-2">
+            <div class="tab-content" id="v-pills-tabContent">
+              <div
+                class="active fade show tab-pane"
+                id="pills-developing"
+                role="tabpanel"
+                aria-labelledby="pills-developing-tab"
+              >
+                <div class="table-responsive bg-white rounded shadow">
+                  <table class="table table-center mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="border-bottom p-3">Category</th>
+                        <th scope="col" class="border-bottom p-3">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Overview</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            We build high-performance web and mobile
+                            applications tailored to your needs.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Technologies Used
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            HTML, CSS, JavaScript, React, Vue, Flutter, Dart,
+                            Next.js, Node.js, Firebase.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Key Features</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Scalable architecture, responsive design, high
+                            security, and seamless UX.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Industries Served
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            E-commerce, Fintech, Healthcare, Education, Travel,
+                            and more.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Development Process
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Planning → UI/UX Design → Development → Testing →
+                            Deployment → Maintenance.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Why Choose Us?
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Experienced team, modern tech stack, agile
+                            methodology, and continuous support.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="fade tab-pane"
+                id="pills-design"
+                role="tabpanel"
+                aria-labelledby="pills-design-tab"
+              >
+                <div class="table-responsive bg-white rounded shadow">
+                  <table class="table table-center mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="border-bottom p-3">Category</th>
+                        <th scope="col" class="border-bottom p-3">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Overview</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            We create modern, intuitive, and visually appealing
+                            designs to enhance user experience.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Technologies Used
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Figma, Adobe XD, Sketch, Photoshop, Illustrator.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Key Features</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            UX research, wireframing, prototyping, responsive
+                            design, and design systems.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Industries Served
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            E-commerce, Fintech, Healthcare, Education, Travel,
+                            and more.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Design Process
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Research → Wireframing → Prototyping → UI Design →
+                            Testing → Finalization.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Why Choose Us?
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            User-centric approach, pixel-perfect designs, and
+                            seamless brand consistency.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="fade tab-pane"
+                id="pills-marketing"
+                role="tabpanel"
+                aria-labelledby="pills-marketing-tab"
+              >
+                <div class="table-responsive bg-white rounded shadow">
+                  <table class="table table-center mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="border-bottom p-3">Category</th>
+                        <th scope="col" class="border-bottom p-3">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Overview</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            We help businesses grow by increasing online
+                            visibility, driving traffic, and optimizing
+                            conversions.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Technologies Used
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Google Analytics, Google Ads, Meta Ads, Ahrefs,
+                            SEMrush, Mailchimp.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Key Features</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            SEO, PPC advertising, social media marketing, email
+                            campaigns, and content marketing.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Industries Served
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            E-commerce, Fintech, Healthcare, Education, Travel,
+                            and more.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Marketing Process
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Research → Strategy Planning → Execution →
+                            Optimization → Reporting.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Why Choose Us?
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Data-driven strategies, targeted campaigns, and
+                            measurable results.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="fade tab-pane"
+                id="pills-consulting"
+                role="tabpanel"
+                aria-labelledby="pills-consulting-tab"
+              >
+                <div class="table-responsive bg-white rounded shadow">
+                  <table class="table table-center mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="border-bottom p-3">Category</th>
+                        <th scope="col" class="border-bottom p-3">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Overview</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            We provide expert guidance to optimize technology,
+                            business strategies, and digital transformation.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Technologies Used
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Cloud Solutions, DevOps, AI & Machine Learning,
+                            Business Intelligence, Cybersecurity.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">Key Features</p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            IT strategy, process automation, digital
+                            transformation, risk assessment, and scalability
+                            planning.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Industries Served
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            E-commerce, Fintech, Healthcare, Education,
+                            Logistics, and more.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Consulting Process
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Analysis → Strategy Development → Implementation →
+                            Optimization → Continuous Support.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 text-start">
+                          <p class="text-primary fw-bold mb-0">
+                            Why Choose Us?
+                          </p>
+                        </td>
+                        <td class="p-3 small">
+                          <p class="forum-price mb-0">
+                            Deep industry expertise, innovative solutions, and a
+                            results-driven approach.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="position-relative">
+      <div class="text-footer overflow-hidden shape">
+        <svg
+          viewBox="0 0 2880 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col col-12">
+            <div class="footer-py-60">
+              <div class="row">
+                <div class="col-12 col-lg-4 mb-0 mb-md-4 pb-0 pb-md-2">
+                  <a class="logo-footer" href="">
+                    <img
+                      src="./icons/logo-wing-white.svg"
+                      height="36"
+                      alt="Scrappio"
+                    />
+                  </a>
+                  <p class="mt-4">
+                    Scrappio helps you effortlessly collect, organize, and
+                    analyze data from multiple online sources, turning raw
+                    information into valuable business insights.
+                  </p>
+                  <ul
+                    class="list-unstyled foot-social-icon mb-0 mt-4 social-icon"
+                  >
+                    <li class="list-inline-item me-1">
+                      <a class="rounded" href="">
+                        <i class="bi bi-instagram"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item me-1">
+                      <a class="rounded" href="">
+                        <i class="bi bi-twitter-x"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item me-1">
+                      <a class="rounded" href="">
+                        <i class="bi bi-whatsapp"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item me-1">
+                      <a class="rounded" href="">
+                        <i class="bi bi-github"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item me-1">
+                      <a class="rounded" href="">
+                        <i class="bi bi-facebook"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="script.js"></script>
+  </body>
+</html>
