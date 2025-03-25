@@ -28,6 +28,14 @@ function extractTechnologies(text) {
   return match ? match[1].trim() : null; // Return the matched technologies or null if not found
 }
 
+function getYesterdayFormatted() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const options = { month: 'long', day: 'numeric' };
+  return yesterday.toLocaleDateString('en-US', options);
+}
+
 function saveAsJSON(filename, data) {
   fs.writeFileSync(filename, JSON.stringify(data, null, 2));
 }
@@ -35,7 +43,7 @@ function saveAsJSON(filename, data) {
 (async function example() {
   // Configure Chrome options for headless mode
   const options = new chrome.Options();
-  options.addArguments('--headed', '--disable-gpu', '--no-sandbox');
+  options.addArguments('--headless', '--disable-gpu', '--no-sandbox');
 
   // Initialize the WebDriver
   let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
