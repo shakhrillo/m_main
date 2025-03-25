@@ -553,3 +553,46 @@ p {
   transform: rotate(135deg);
   transform-origin: 0 0;
 }
+
+.features.feature-primary.key-feature .icon {
+  background: linear-gradient(45deg, #0000, #2f55d426);
+}
+
+.features .icon,
+.key-feature .icon {
+  height: 45px;
+  line-height: 45px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 45px;
+}
+.features .title,
+.key-feature .title {
+  font-size: 18px;
+}
+.features.key-feature {
+  transition: all 0.3s ease;
+}
+.features.key-feature:hover {
+  box-shadow: 0 5px 13px #3c485833 !important;
+  transform: scale(1.05);
+}
+.features.feature-primary .image:before {
+  background: linear-gradient(45deg, #0000, #2f55d41a);
+}
+.features .image::before {
+  border-radius: 6px;
+  bottom: 5px;
+  content: "";
+  height: 64px;
+  left: 5px;
+  position: absolute;
+  transform: rotate(33.75deg);
+  width: 64px;
+}
+
+.sin-ser-card {
+  height: 434px;
+}

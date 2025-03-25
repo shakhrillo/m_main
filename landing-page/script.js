@@ -1,16 +1,15 @@
 const scrollPricingContainer = document.getElementById("geo-pricing-carousel");
 const scrollContainer = document.getElementById("geo-carousel");
 function scrollPricingContent(distance) {
-  scrollPricingContainer.scrollLeft += distance; // Scrolls by the specified distance
+  scrollPricingContainer.scrollLeft += distance;
 }
 function scrollContent(distance) {
-  scrollContainer.scrollLeft += distance; // Scrolls by the specified distance
+  scrollContainer.scrollLeft += distance;
 }
 document.addEventListener("DOMContentLoaded", function () {
   const navbar = document.querySelector(".navbar");
   const logo = document.getElementById("logo");
 
-  // Проверяем, был ли класс "ser" при загрузке
   const hadSerClassInitially = navbar.classList.contains("ser");
 
   function updateLogo() {
@@ -27,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
       navbar.classList.remove("scrolled", "bg-white");
       navbar.classList.add("bg-transparent");
 
-      // Если класс "ser" был изначально, возвращаем его
       if (hadSerClassInitially) {
         navbar.classList.add("ser");
       }
@@ -38,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
   updateLogo();
   window.addEventListener("scroll", handleScroll);
 
-  // Observe class changes to update the logo
   const observer = new MutationObserver(updateLogo);
   observer.observe(navbar, { attributes: true, attributeFilter: ["class"] });
 });
