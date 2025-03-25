@@ -1,0 +1,80 @@
+[
+  {
+    "salary": null,
+    "phone": "+998 88 558 65 56",
+    "username": "@Az1zj0n_01",
+    "technologies": "Python, C#, Html, Css, Bootstrap5, Django"
+  },
+  {
+    "salary": "$300+",
+    "phone": null,
+    "username": "@yuldoshev_uz",
+    "technologies": "Nodejs, Javascript, Typescript, Mongodb, Mongoose, Expressjs, Nestjs, Nosql, Oop, Git, Orm, Odm,  Postgresql, Sequelize, Prisma, Typeorm, Redis, Html, Css, Bootstrap, Devops, Testing, Nginx, Linux, Ssr, Rest, Telegram Bot"
+  },
+  {
+    "salary": "$400+",
+    "phone": "+998 94 733 61 21",
+    "username": "@ABDUJABBORs",
+    "technologies": "Flutter, Dart, Django, Python, Html Css, Javascript"
+  },
+  {
+    "salary": null,
+    "phone": null,
+    "username": "@y_sardorbek",
+    "technologies": "Java, C++, C, Spring Framework"
+  },
+  {
+    "salary": null,
+    "phone": "+998 97 606 05 16",
+    "username": "@Javoh1r_web",
+    "technologies": "Html, Css, Tailwind, Sass, Mui, Ant Design, Javascript, React Query, Redux Toolkit, React Js, Typescript, Next. Js."
+  },
+  {
+    "salary": null,
+    "phone": null,
+    "username": "@khowimoff_1",
+    "technologies": "Html5, Css3, Scss, Tailwind, Bootstrap5, Javascript, Typescript, React, Next. Js, Redux, Toolkit, Material Ui"
+  },
+  {
+    "salary": null,
+    "phone": null,
+    "username": "@Ideal_Blinds_manager",
+    "technologies": "Flutter, Dart"
+  },
+  {
+    "salary": null,
+    "phone": "+998 93 693 41 43",
+    "username": "@alouddin_xonimqulov",
+    "technologies": "Node. Js, Javascript, Typescript, Nest. Js, Express. Js, Mysql, Postgresql, Mongodb, Rabbitmq, Graphql, Orm And Odm, Swagger, Postman, Git, Telegram Bot, Oop, Testing, Html, Css, Bootstrap, Tailwind, Sass, React, Next. Js, Redux Toolkit"
+  },
+  {
+    "salary": null,
+    "phone": "+998 97 336 12 66",
+    "username": "@txrvc_17",
+    "technologies": "Html, Css, Scss, Tailwind, Shad Cn Ui, Mui, Ant Design, Javascript, Typescript, Reactjs, Nextjs"
+  },
+  {
+    "salary": null,
+    "phone": "+998 93 668 31 05",
+    "username": "@mirzaliyev2002",
+    "technologies": "Flutter, Dart"
+  },
+  {
+    "salary": "$150+",
+    "phone": "+998 93 098 14 09",
+    "username": "@mrMuxsin",
+    "technologies": "Reactjs, Next. Js, Javascript, Typescript"
+  },
+  {
+    "salary": null,
+    "phone": "+998 97 735 90 74",
+    "username": "@ShXzD0",
+    "technologies": "Unity, C#"
+  },
+  {
+    "salary": "$400+",
+    "phone": null,
+    "username": "@Jasurbek_Mansuraliev",
+    "technologies": "Javascript, Typescript, Reactjs, Nextjs, Tailwindcss, Prisma"
+  }
+]
