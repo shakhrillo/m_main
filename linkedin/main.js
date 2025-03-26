@@ -12,28 +12,8 @@ const results = [];
         .setChromeOptions(options)
         .build();
 
-    async function modalDismissButtonIsInteractable() {
-        try {
-            const modalDismissButtons = await driver.findElements(By.css('button.modal__dismiss'));
-            if (modalDismissButtons.length > 0) {
-                const modalDismissButton = modalDismissButtons[0];
-                const isDisplayed = await modalDismissButton.isDisplayed();
-                const isEnabled = await modalDismissButton.isEnabled();
-                return isDisplayed && isEnabled;
-            }
-            return false;
-        } catch {
-            return false;
-        }
-    }
-
     try {
         await driver.get('https://www.linkedin.com/jobs/search/?currentJobId=4091308465&geoId=101165590&keywords=angular&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true&start=75');
-
-        // if (await modalDismissButtonIsInteractable()) {
-        //     const modalDismissButton = (await driver.findElements(By.css('button.modal__dismiss')))[0];
-        //     await modalDismissButton.click();
-        // }
 
         const jobsSearchResultsList = await driver.wait(until.elementLocated(By.css('.jobs-search__results-list')), 5000);
         const liElements = await jobsSearchResultsList.findElements(By.css('li'));
