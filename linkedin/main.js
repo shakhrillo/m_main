@@ -51,8 +51,9 @@ const results = [];
                 if (baseCardFullLinks.length === 0) continue;
 
                 const href = await baseCardFullLinks[0].getAttribute('href');
-                console.log(`Job ${i + 1}: ${href}`);
                 const jobUrl = href.split('?')[0];
+
+                console.log(`Job ${i + 1}: ${jobUrl}`);
 
                 await driver.executeScript(`window.open('${jobUrl}', '_blank');`);
                 const tabs = await driver.getAllWindowHandles();
