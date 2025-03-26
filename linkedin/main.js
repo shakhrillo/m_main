@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const results = [];
 
@@ -108,20 +108,30 @@ async function getElementAttribute(driver, selector, attribute) {
             } catch {
                 liElement = null; // No more sibling elements
                 let retry = 0;
-                while (retry < 10) {
+                const maxRetries = 10;
+                while (retry < maxRetries) {
                     try {
+                        // Scroll to bottom and click the show more button
+                        await driver.executeScript('window.scrollTo(0, document.body.scrollHeight);');
+                        await driver.sleep(1000);
                         const showMoreButton = await driver.findElement(By.css('button.infinite-scroller__show-more-button'));
-                        // click
                         await driver.executeScript('arguments[0].scrollIntoView();', showMoreButton);
                         await driver.sleep(1000);
-                        await showMoreButton.click();
+                        await driver.executeScript('arguments[0].click();', showMoreButton);
                         await driver.sleep(1000);
                         liElement = await jobsSearchResultsList.findElement(By.css('li:last-child'));
                         break;
-                    } catch {
+                    } catch (error) {
                         retry++;
-                        console.log('Retrying to click the show more button...');
-                        await driver.sleep(1000);
+                        console.log(`Retry ${retry}/${maxRetries} to click the show more button...`);
+                        if (retry === maxRetries) {
+                            console.error('Max retries reached. Unable to click the show more button.');
+                            liElement = null;
+                            break;
+                        }
+                        const backoffTime = Math.pow(2, retry) * 100; // Exponential backoff
+                        console.log(`Waiting for ${backoffTime}ms before retrying...`);
+                        await driver.sleep(backoffTime);
                     }
                 }
             }
