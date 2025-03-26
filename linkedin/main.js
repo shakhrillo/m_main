@@ -102,17 +102,9 @@ async function getElementAttribute(driver, selector, attribute) {
         let lastCheckedUrl = '';
         while (liElement) {
             const checkedUrl = await processJobElement(driver, liElement, i);
-            if (checkedUrl === lastCheckedUrl) {
-                console.error('Job URL already checked. Skipping...');
-                await driver.executeScript('arguments[0].scrollIntoView();', liElement);
-                await driver.sleep(1000);
-                liElement = await liElement.findElement(By.xpath('following-sibling::li'));
-                continue;
-            }
-            lastCheckedUrl = checkedUrl;
 
             try {
-                liElement = await liElement.findElement(By.xpath('following-sibling::li'));
+                liElement = await liElement.findElement(By.xpath('following-sibling::li')); // get the next sibling element
                 // scroll to the next element
                 await driver.executeScript('arguments[0].scrollIntoView();', liElement);
                 await driver.sleep(
@@ -132,7 +124,8 @@ async function getElementAttribute(driver, selector, attribute) {
                         await driver.sleep(1000);
                         await driver.executeScript('arguments[0].click();', showMoreButton);
                         await driver.sleep(1000);
-                        liElement = await jobsSearchResultsList.findElement(By.css('li:last-child'));
+                        liElement = await liElement.findElement(By.xpath('following-sibling::li')); // get the next sibling element
+                        console.log('Clicked the show more button successfully.');
                         break;
                     } catch (error) {
                         retry++;
@@ -149,6 +142,7 @@ async function getElementAttribute(driver, selector, attribute) {
                 }
             }
             i++;
+            lastCheckedUrl = checkedUrl;
         }
     } catch (error) {
         console.error('Error during execution:', error.message);
