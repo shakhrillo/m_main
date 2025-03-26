@@ -1,0 +1,598 @@
+/* 
+  styles.css
+  Author: [Tukhsanov]
+  Date: [25.10.2024]
+  Description: 
+  This CSS file contains the styling for the website's layout and UI components.
+  - Defines global typography, colors, and spacing.
+  - Includes styles for navigation, buttons, and form elements.
+  - Ensures responsive design for mobile and tablet devices.
+
+  Sections:
+  1. General Styles: Global resets, fonts, and color scheme.
+  2. Layout: Styles for the header, footer, and grid-based layout structure.
+  3. UI Components: Styling for buttons, forms, modals, and other interactive elements.
+  4. Media Queries: Optimizes layout for mobile and tablet responsiveness.
+*/
+
+/* 1. General Styles */
+
+/* Global Reset */
+* {
+  font-family: "Nunito", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: #161c2d;
+}
+
+/* Utility Classes */
+.btn {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  padding: 8px 20px !important;
+  transition: all 0.3s;
+}
+.btn-primary {
+  background-color: #2f55d4 !important;
+  border-color: #2f55d4 !important;
+}
+.btn-outline-primary:hover {
+  background-color: #2f55d4;
+  border-color: #2f55d4;
+  color: #fff;
+}
+
+.text-primary {
+  color: #2f55d4 !important;
+}
+
+a {
+  text-decoration: none;
+  transition: all 0.5s ease;
+}
+p {
+  line-height: 1.6;
+}
+
+.bi::before {
+  font-weight: 500 !important;
+}
+
+.text-muted {
+  color: #8492a6 !important;
+}
+
+/* Navabr */
+.navbar {
+  transition: all 0.5s ease;
+}
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+.sub-menu {
+  padding: 1rem;
+  min-width: 300px;
+}
+.menu-title {
+  font-weight: 700;
+  color: #3c4858;
+  font-size: 16px;
+  background-size: cover;
+}
+
+.menu-subtitle {
+  margin-top: 0.3rem;
+  font-size: 14px;
+}
+.navbar.scrolled {
+  box-shadow: 0 0 3px #3c485826;
+}
+.nav-link.active {
+  color: #2f55d4 !important;
+}
+.navbar-nav > li {
+  margin: 0 10px;
+}
+.navbar-nav > li > a {
+  background-color: initial;
+  color: #3c4858;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 24px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-transform: uppercase;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.avatar.avatar-ex-sm {
+  max-height: 25px;
+}
+
+.bg-half-170 {
+  padding: 170px 0;
+  align-self: center;
+  background-position: 50%;
+  background-size: cover;
+  position: relative;
+}
+
+.title-heading {
+  line-height: 26px;
+}
+.title-heading .para-desc {
+  font-size: 18px;
+}
+
+.heading {
+  font-size: 45px !important;
+  letter-spacing: 1px;
+}
+
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+.section-title .title {
+  font-size: 30px !important;
+  letter-spacing: 0.5px;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+.pricing {
+  border-bottom: 3px solid #e9ecef !important;
+  transition: all 0.5s ease;
+  z-index: 1;
+}
+.pricing.pricing-primary.starter-plan {
+  border-color: #2f55d4 !important;
+  z-index: 2;
+}
+.pricing.starter-plan {
+  transform: scale(1.05);
+}
+.rounded {
+  border-radius: 6px !important;
+}
+
+.card .card-body {
+  padding: 1.5rem;
+}
+
+.shadow {
+  box-shadow: 0 0 3px #3c485826 !important;
+}
+
+.shape {
+  bottom: -2px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+.shape > svg {
+  height: auto;
+  transform: scale(2);
+  transform-origin: top center;
+  width: 100%;
+}
+
+.para-desc {
+  max-width: 600px;
+}
+
+.text-footer {
+  color: #202942;
+}
+
+.footer {
+  background: #202942;
+  color: #adb5bd;
+}
+
+.footer-py-60 {
+  padding: 60px 0;
+}
+
+.logo-footer {
+  font-size: 22px;
+}
+
+.foot-social-icon li a,
+.social-icon li a {
+  border-color: #283453;
+  color: #adb5bd;
+  align-items: center;
+  border: 1px solid #3c4858;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  transition: all 0.4s ease;
+  width: 32px;
+}
+
+@media (min-width: 992px) {
+  .navbar-nav > li > a {
+    min-height: 62px;
+    padding-bottom: 25px;
+    padding-top: 25px;
+  }
+  .ms-lg-5 {
+    margin-left: 3rem !important;
+  }
+  .sub-menu {
+    min-width: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar {
+    min-height: 74px;
+  }
+}
+
+/* products */
+.linear {
+  background: linear-gradient(185deg, #f8f9fa 67.85%, #fff 68%);
+}
+.position-breadcrumb {
+  left: 12px;
+  position: absolute;
+  right: 12px;
+  text-align: center;
+  top: 100%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.breadcrumb {
+  letter-spacing: 0.5px;
+}
+.breadcrumb {
+  font-size: 14px;
+  font-weight: 700;
+  padding-left: 0;
+  text-transform: uppercase;
+}
+.breadcrumb .breadcrumb-item a:hover,
+.breadcrumb .breadcrumb-item.active {
+  color: #2f55d4;
+}
+
+.breadcrumb .breadcrumb-item a {
+  color: #3c4858;
+}
+
+.breadcrumb-item::before {
+  display: none;
+}
+.small.fw-bolder::before {
+  font-weight: bolder !important;
+  padding-left: 5px;
+}
+.table {
+  --bs-tabls-bg: #fff;
+}
+.card-title {
+  margin: 0;
+  border-right: 1px solid #e8e8e9;
+}
+.free-plan-card {
+  padding: 16px !important;
+}
+.table-responsive .table td,
+.table-responsive .table th {
+  vertical-align: middle;
+}
+.forum-price {
+  font-size: 18px;
+  color: #3c4858;
+  font-weight: 600;
+}
+.table-text {
+  color: #3c4858;
+}
+.table-icon > .bi::before {
+  font-weight: bolder !important;
+}
+.table-icon {
+  font-size: 20px;
+}
+.sticky-bar {
+  position: sticky;
+  top: 80px;
+}
+.form-control {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  color: #3c4858 !important;
+  font-size: 14px;
+  line-height: 26px;
+  text-align: left;
+}
+.form-control:focus {
+  border-color: #2f55d4;
+  box-shadow: none;
+}
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.form-icon i::before {
+  color: #3c485899 !important;
+}
+.form-icon i {
+  left: 18px;
+  position: absolute;
+  top: 8px;
+}
+.text-dark {
+  color: #3c4858 !important;
+}
+
+.social-icon.social li a {
+  border-color: #adb5bd;
+  color: #adb5bd;
+}
+
+/* Services */
+
+.bg-overlay {
+  background-color: #2e425fb5;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.navbar.ser .nav-link {
+  color: #ffffff80 !important;
+}
+.navbar.ser .nav-link.active {
+  color: #ffffff !important;
+}
+.pages-heading {
+  position: relative;
+  z-index: 1;
+}
+.features.course-feature {
+  transition: all 0.5s ease;
+}
+.features.course-feature:hover {
+  transform: translateY(-10px);
+}
+.features.feature-clean {
+  height: 300px;
+  background-color: #fff;
+}
+
+.features.feature-clean .icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2f55d41a;
+  height: 65px;
+  line-height: 65px !important;
+  width: 65px;
+}
+
+.features.course-feature .full-img {
+  position: absolute;
+  font-size: 230px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 0;
+}
+.features:hover .full-img {
+  opacity: 0.1;
+}
+
+.mt-100 {
+  margin-top: 100px;
+}
+.work-process {
+  transition: all 0.5s ease;
+}
+
+.work-process.process-arrow:after {
+  background: url(./assets/images/working-proces-arrow.svg) 50% no-repeat;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  height: 25px;
+  left: 80%;
+  position: absolute;
+  top: 30px;
+  width: 60%;
+  z-index: 1;
+}
+.bg-cta {
+  padding: 150px 0;
+}
+.play-btn {
+  display: inline-block;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 30px;
+  height: 78px;
+  width: 78px;
+  line-height: 76px;
+}
+
+.nav-pills {
+  background: #eff1f4;
+}
+.nav-pills .nav-link,
+.nav-pills .nav-link.nav-link-alt {
+  color: #3c4858;
+}
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #2f55d4;
+}
+.nav-pills .nav-link.active {
+  color: #fff !important;
+}
+
+.btn.btn-icon {
+  align-items: center;
+  height: 36px;
+  padding: 0;
+  width: 36px;
+}
+.back-to-top {
+  transition: all 0.5s ease;
+  background-color: #2f55d4;
+  border-radius: 6px;
+  bottom: 30px;
+  text-align: center;
+  z-index: 99;
+  position: absolute;
+}
+.img-fluid {
+  height: auto;
+  max-width: 100%;
+}
+
+.pricing .price {
+  font-weight: 400;
+}
+
+.pricing.pricing-primary.business-rate:hover {
+  border-color: #2f55d4 !important;
+}
+.pricing.business-rate:hover {
+  background-color: #fff !important;
+  box-shadow: 0 5px 13px #3c485833 !important;
+  transform: scale(1.03);
+  z-index: 2;
+}
+.ribbon {
+  height: 75px;
+  position: absolute;
+  top: -5px;
+  width: 75px;
+  z-index: 2;
+}
+.ribbon.ribbon-right {
+  right: -5px;
+}
+.ribbon.ribbon-right span {
+  right: -23px;
+  transform: rotate(45deg);
+}
+.ribbon.ribbon-warning span {
+  background-color: #f17425 !important;
+}
+.ribbon.ribbon-warning span::before {
+  border-left-color: #d55b0e;
+  border-top-color: #d55b0e;
+}
+.ribbon.ribbon-warning span::after {
+  border-right-color: #d55b0e;
+  border-top-color: #d55b0e;
+}
+.ribbon span:before {
+  left: 0;
+}
+.ribbon span:after {
+  right: 0;
+}
+.ribbon span:after,
+.ribbon span:before {
+  border: 4px solid #0000;
+  content: "";
+  position: absolute;
+  top: 100%;
+  z-index: -1;
+}
+.ribbon span {
+  color: #fff;
+  position: absolute;
+  top: 18px;
+  width: 100px;
+}
+
+.client-testi .client-image {
+  margin-right: 16px;
+}
+
+.client-testi .content:before {
+  border-color: #0000 #fff #fff #0000;
+  border-style: solid;
+  border-width: 8px;
+  box-shadow: 2px 2px 2px -1px #3c485826;
+  box-sizing: border-box;
+  content: "";
+  left: 0;
+  margin-left: 13px;
+  position: absolute;
+  top: 30px;
+  transform: rotate(135deg);
+  transform-origin: 0 0;
+}
+
+.features.feature-primary.key-feature .icon {
+  background: linear-gradient(45deg, #0000, #2f55d426);
+}
+
+.features .icon,
+.key-feature .icon {
+  height: 45px;
+  line-height: 45px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 45px;
+}
+.features .title,
+.key-feature .title {
+  font-size: 18px;
+}
+.features.key-feature {
+  transition: all 0.3s ease;
+}
+.features.key-feature:hover {
+  box-shadow: 0 5px 13px #3c485833 !important;
+  transform: scale(1.05);
+}
+.features.feature-primary .image:before {
+  background: linear-gradient(45deg, #0000, #2f55d41a);
+}
+.features .image::before {
+  border-radius: 6px;
+  bottom: 5px;
+  content: "";
+  height: 64px;
+  left: 5px;
+  position: absolute;
+  transform: rotate(33.75deg);
+  width: 64px;
+}
+
+.sin-ser-card {
+  height: 434px;
+}
