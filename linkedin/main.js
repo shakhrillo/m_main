@@ -36,8 +36,11 @@ async function processJobElement(driver, jobElement, index) {
 
         await driver.close();
         await driver.switchTo().window(tabs[0]);
+
+        return jobUrl;
     } catch (error) {
         console.error(`Error processing job ${index + 1}:`, error.message);
+        return null;
     }
 }
 
@@ -96,8 +99,18 @@ async function getElementAttribute(driver, selector, attribute) {
 
         let liElement = liElements[0];
         let i = 0;
+        let lastCheckedUrl = '';
         while (liElement) {
-            await processJobElement(driver, liElement, i);
+            const checkedUrl = await processJobElement(driver, liElement, i);
+            if (checkedUrl === lastCheckedUrl) {
+                console.error('Job URL already checked. Skipping...');
+                await driver.executeScript('arguments[0].scrollIntoView();', liElement);
+                await driver.sleep(1000);
+                liElement = await liElement.findElement(By.xpath('following-sibling::li'));
+                continue;
+            }
+            lastCheckedUrl = checkedUrl;
+
             try {
                 liElement = await liElement.findElement(By.xpath('following-sibling::li'));
                 // scroll to the next element
