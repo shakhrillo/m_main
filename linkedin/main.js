@@ -97,18 +97,40 @@ async function getElementAttribute(driver, selector, attribute) {
         let liElement = liElements[0];
         let i = 0;
         while (liElement) {
-            await processJobElement(driver, liElement, 0);
-            liElement = await liElement.findElement(By.xpath('following-sibling::li'));
-            await driver.executeScript('arguments[0].scrollIntoView();', liElement);
-            await driver.sleep(1000);
-            await processJobElement(driver, liElements[i], i);
+            await processJobElement(driver, liElement, i);
+            try {
+                liElement = await liElement.findElement(By.xpath('following-sibling::li'));
+                // scroll to the next element
+                await driver.executeScript('arguments[0].scrollIntoView();', liElement);
+                await driver.sleep(
+                    Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000 // Random sleep between 1 and 2 seconds
+                );
+            } catch {
+                liElement = null; // No more sibling elements
+                let retry = 0;
+                while (retry < 10) {
+                    try {
+                        const showMoreButton = await driver.findElement(By.css('button.infinite-scroller__show-more-button'));
+                        // click
+                        await driver.executeScript('arguments[0].scrollIntoView();', showMoreButton);
+                        await driver.sleep(1000);
+                        await showMoreButton.click();
+                        await driver.sleep(1000);
+                        liElement = await jobsSearchResultsList.findElement(By.css('li:last-child'));
+                        break;
+                    } catch {
+                        retry++;
+                        console.log('Retrying to click the show more button...');
+                        await driver.sleep(1000);
+                    }
+                }
+            }
             i++;
         }
-
-        fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
     } catch (error) {
         console.error('Error during execution:', error.message);
     } finally {
+        fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
         await driver.quit();
     }
 })();
