@@ -19,7 +19,7 @@
 
 /* Global Reset */
 * {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -65,6 +65,14 @@ p {
 
 .text-muted {
   color: #8492a6 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.border-box {
+  box-sizing: border-box !important;
 }
 
 /* Navabr */
@@ -420,7 +428,7 @@ p {
   background: url(./assets/images/working-proces-arrow.svg) 50% no-repeat;
   background-repeat: no-repeat;
   background-size: contain;
-  content: "";
+  content: '';
   height: 25px;
   left: 80%;
   position: absolute;
@@ -523,7 +531,7 @@ p {
 .ribbon span:after,
 .ribbon span:before {
   border: 4px solid #0000;
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   z-index: -1;
@@ -545,7 +553,7 @@ p {
   border-width: 8px;
   box-shadow: 2px 2px 2px -1px #3c485826;
   box-sizing: border-box;
-  content: "";
+  content: '';
   left: 0;
   margin-left: 13px;
   position: absolute;
@@ -585,7 +593,7 @@ p {
 .features .image::before {
   border-radius: 6px;
   bottom: 5px;
-  content: "";
+  content: '';
   height: 64px;
   left: 5px;
   position: absolute;

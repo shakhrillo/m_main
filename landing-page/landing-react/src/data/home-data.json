@@ -1,0 +1,98 @@
+{
+  "faq": [
+    {
+      "title": "How long does it take to develop a website?",
+      "subtitle": "The timeline depends on the complexity of the project. A simple website can take 2–4 weeks, while a more advanced web application may require 8–12 weeks. We ensure timely delivery without compromising quality."
+    },
+    {
+      "title": "Do you provide post-launch support and maintenance?",
+      "subtitle": "Yes! We offer ongoing support, including updates, bug fixes, performance optimization, and security enhancements to keep your website running smoothly."
+    },
+    {
+      "title": "Will my website be mobile-friendly?",
+      "subtitle": "Absolutely! We follow a mobile-first approach, ensuring your website looks and works perfectly on all devices, from desktops to smartphones."
+    },
+    {
+      "title": "Can you help with SEO and improving my website’s ranking?",
+      "subtitle": "Yes! We implement SEO best practices, including fast loading times, optimized content, and proper site structure, to help improve your search engine rankings and visibility. Let me know if you need more!"
+    }
+  ],
+  "whyChooseUs": [
+    {
+      "title": "Customizable White Label Solutions",
+      "subtitle": "Offer high-quality, fully customizable solutions under your own brand.",
+      "icon": "palette"
+    },
+    {
+      "title": "24/7 Dedicated Support",
+      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
+      "icon": "life-preserver"
+    },
+    {
+      "title": "Clutter-Free Experience",
+      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
+      "icon": "sliders"
+    },
+    {
+      "title": "100% Satisfaction Guarantee",
+      "subtitle": "Your success is our priority—risk-free services with a money-back guarantee.",
+      "icon": "check-circle"
+    }
+  ],
+  "technologies": [
+    {
+      "src": "/assets/images/google.svg",
+      "alt": "google"
+    },
+    {
+      "src": "/assets/images/docker.svg",
+      "alt": "docker"
+    },
+    {
+      "src": "/assets/images/firebase.svg",
+      "alt": "firebase"
+    },
+    {
+      "src": "/assets/images/react.svg",
+      "alt": "react"
+    },
+    {
+      "src": "/assets/images/nodejs.svg",
+      "alt": "nodeJs"
+    }
+  ],
+  "services": [
+    {
+      "icon": "laptop",
+      "title": "Web Development"
+    },
+    {
+      "icon": "phone",
+      "title": "Mobile App Development"
+    },
+    {
+      "icon": "palette",
+      "title": "UI/UX Design"
+    },
+    {
+      "icon": "graph-up",
+      "title": "SEO & Digital Marketing"
+    },
+    {
+      "icon": "cloud",
+      "title": "Cloud & DevOps"
+    },
+    {
+      "icon": "gear",
+      "title": "IT Consulting"
+    },
+    {
+      "icon": "cart",
+      "title": "E-Commerce Solutions"
+    },
+    {
+      "icon": "tools",
+      "title": "Software Maintenance"
+    }
+  ]
+}

@@ -1,0 +1,580 @@
+{
+  "web": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for Small Businesses & Startups",
+          "price": "39",
+          "options": [
+            "Basic website setup",
+            "Responsive design",
+            "SEO - friendly structure",
+            "Standart support",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "professional",
+          "isBest": true,
+          "subtitle": "Best for Growing Businesses",
+          "price": "59",
+          "options": [
+            "Everything in Starter Plan",
+            "Advanced UI/UX design",
+            "Performance optimization",
+            "API integrations",
+            "Priority support",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate Plan",
+          "isBest": false,
+          "subtitle": "Best for Enterprises & Large Projects",
+          "price": "79",
+          "options": [
+            "Everything in Professional Plan",
+            "Custom development features",
+            "E-commerce functionality",
+            "Security & scalability enhancements",
+            "24/7 premium support",
+            "Unlimited revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "icon": "tools",
+          "title": "Custom Solutions",
+          "subtitle": "Every business is unique, and so should be its website. We develop fully customized solutions tailored to your goals, ensuring a seamless fit with your brand identity and business strategy."
+        },
+        {
+          "icon": "speedometer2",
+          "title": "High Performance & Speed",
+          "subtitle": "Speed is crucial for user experience and SEO. Our websites are optimized for lightning-fast load times, ensuring smooth performance across all devices and networks."
+        },
+        {
+          "icon": "shield-lock",
+          "title": "Strong Security",
+          "subtitle": "We prioritize security by implementing robust encryption, firewalls, and best coding practices to protect your website from threats and unauthorized access."
+        },
+        {
+          "icon": "phone",
+          "title": "Mobile-First Design",
+          "subtitle": "With most users accessing websites from mobile devices, we ensure fully responsive designs that provide a flawless experience on any screen size."
+        },
+        {
+          "icon": "graph-up-arrow",
+          "title": "Scalable & Future-Ready",
+          "subtitle": "Your business will grow, and your website should too. We build scalable solutions that adapt to increasing traffic, new features, and evolving market needs."
+        },
+        {
+          "icon": "palette",
+          "title": "Modern UI/UX",
+          "subtitle": "A great website is more than just code—it’s an experience. We design visually stunning, intuitive, and user-friendly interfaces to keep visitors engaged."
+        },
+        {
+          "icon": "search",
+          "title": "SEO & Optimization",
+          "subtitle": "Your website should not only look great but also be found. We implement SEO best practices to improve search rankings, visibility, and online reach."
+        },
+        {
+          "icon": "life-preserver",
+          "title": "Ongoing Support & Maintenance",
+          "subtitle": "We don’t just build websites—we help you maintain them. From updates and bug fixes to feature enhancements, our support ensures long-term reliability."
+        }
+      ],
+      "title": "Web Development",
+      "subtitle": "Crafting innovative, scalable, and user-centric web solutions that drive growth and digital transformation."
+    }
+  ],
+  "mobile": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "4999",
+          "options": [
+            "Basic mobile app (iOS or Android)",
+            "Simple UI/UX design",
+            "API integration",
+            "Basic security features",
+            "1-month free support"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses",
+          "price": "9999",
+          "options": [
+            "Cross-platform app (iOS & Android)",
+            "Custom UI/UX design",
+            "Advanced features & integrations",
+            "API & third-party services",
+            "3-month free support"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & complex apps",
+          "price": "14999+",
+          "options": [
+            "Fully customized mobile app",
+            "AI/ML & advanced functionalities",
+            "Backend & cloud integration",
+            "Ongoing maintenance & updates",
+            "6-month free support"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Custom Solutions",
+          "subtitle": "Tailored mobile and web solutions that align perfectly with your business needs.",
+          "icon": "bi bi-wrench-adjustable-circle"
+        },
+        {
+          "title": "Experienced Team",
+          "subtitle": "Our skilled developers and designers bring years of industry expertise to your project.",
+          "icon": "bi bi-people-fill"
+        },
+        {
+          "title": "Cutting-Edge Technology",
+          "subtitle": "We use the latest frameworks and tools to build fast, scalable, and secure applications.",
+          "icon": "bi bi-cpu"
+        },
+        {
+          "title": "Dedicated Support",
+          "subtitle": "From concept to launch and beyond, we provide continuous support and maintenance.",
+          "icon": "bi bi-headset"
+        }
+      ],
+      "title": "Mobile App Development",
+      "subtitle": "Designing seamless, high-performance mobile applications that enhance user engagement and accelerate business success."
+    }
+  ],
+  "ui-ux": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "999",
+          "options": [
+            "Basic UI design for web or mobile",
+            "Up to 5 screens",
+            "Wireframing & prototyping",
+            "Standard design system",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses",
+          "price": "2499",
+          "options": [
+            "Custom UI/UX design",
+            "Up to 15 screens",
+            "User journey mapping",
+            "Interactive prototyping",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & complex projects",
+          "price": "4999+",
+          "options": [
+            "Full UI/UX design for web & mobile",
+            "Unlimited screens",
+            "Advanced user testing",
+            "Design system & brand guidelines",
+            "Ongoing support & revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "User-Centered Design",
+          "subtitle": "We create intuitive and engaging experiences tailored to your audience’s needs.",
+          "icon": "bi bi-person-bounding-box"
+        },
+        {
+          "title": "Modern & Aesthetic UI",
+          "subtitle": "Our designs are visually appealing, aligned with the latest trends, and enhance usability.",
+          "icon": "bi bi-brush"
+        },
+        {
+          "title": "Seamless User Experience",
+          "subtitle": "We focus on smooth interactions and functionality to ensure a hassle-free user journey.",
+          "icon": "bi bi-hand-index-thumb"
+        },
+        {
+          "title": "Cross-Platform Compatibility",
+          "subtitle": "Our designs are optimized for mobile, web, and desktop applications to reach a wider audience.",
+          "icon": "bi bi-layers"
+        }
+      ],
+      "title": "UI/UX Design",
+      "subtitle": "Creating intuitive, visually stunning, and user-centric designs that elevate digital experiences and drive engagement."
+    }
+  ],
+  "seo": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "499",
+          "options": [
+            "Basic website SEO optimization",
+            "Keyword research & analysis",
+            "On-page SEO improvements",
+            "Monthly performance report",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses",
+          "price": "1499",
+          "options": [
+            "Comprehensive SEO strategy",
+            "Competitor analysis",
+            "Content optimization",
+            "Link-building strategy",
+            "Social media marketing integration",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & large-scale projects",
+          "price": "2999+",
+          "options": [
+            "Full SEO & digital marketing package",
+            "PPC campaign management",
+            "Advanced analytics & tracking",
+            "Email marketing & automation",
+            "Ongoing optimization & support",
+            "Unlimited revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Proven SEO Strategies",
+          "subtitle": "We use data-driven SEO techniques to improve search rankings and drive organic traffic.",
+          "icon": "bi bi-graph-up-arrow"
+        },
+        {
+          "title": "Targeted Digital Marketing",
+          "subtitle": "Our campaigns are tailored to your audience, ensuring maximum engagement and conversions.",
+          "icon": "bi bi-bullseye"
+        },
+        {
+          "title": "Comprehensive Analytics",
+          "subtitle": "We provide in-depth reports and insights to track your website's performance and growth.",
+          "icon": "bi bi-bar-chart-line"
+        },
+        {
+          "title": "Experienced Marketing Team",
+          "subtitle": "Our experts stay ahead of trends to implement the best marketing strategies for your business.",
+          "icon": "bi bi-people-fill"
+        }
+      ],
+      "title": "SEO & Digital Marketing",
+      "subtitle": "Boosting your online presence with data-driven SEO strategies and targeted digital marketing for maximum visibility and growth."
+    }
+  ],
+  "cloud": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "999",
+          "options": [
+            "Basic cloud infrastructure setup",
+            "CI/CD pipeline integration",
+            "Server monitoring & maintenance",
+            "Standard security configurations",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses",
+          "price": "2499",
+          "options": [
+            "Advanced cloud architecture design",
+            "Automated deployment & scaling",
+            "Security & compliance management",
+            "Performance optimization",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & complex projects",
+          "price": "4999+",
+          "options": [
+            "End-to-end cloud & DevOps solutions",
+            "Multi-cloud & hybrid cloud setup",
+            "Kubernetes & container orchestration",
+            "Disaster recovery planning",
+            "Ongoing support & optimizations"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Scalable Cloud Solutions",
+          "subtitle": "We design cloud architectures that grow with your business, ensuring high availability and performance.",
+          "icon": "bi bi-cloud-arrow-up"
+        },
+        {
+          "title": "Efficient Automation",
+          "subtitle": "Our DevOps strategies streamline development, deployment, and monitoring through automation.",
+          "icon": "bi bi-gear-wide-connected"
+        },
+        {
+          "title": "Enhanced Security & Compliance",
+          "subtitle": "We implement robust security protocols and ensure compliance with industry standards.",
+          "icon": "bi bi-shield-lock"
+        },
+        {
+          "title": "Expert Support & Optimization",
+          "subtitle": "Our team provides ongoing monitoring, performance tuning, and proactive issue resolution.",
+          "icon": "bi bi-clipboard-check"
+        }
+      ],
+      "title": "Cloud & DevOps",
+      "subtitle": "Empowering businesses with scalable cloud solutions and DevOps automation for seamless deployment, security, and performance optimization."
+    }
+  ],
+  "consulting": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "799",
+          "options": [
+            "Basic IT strategy consultation",
+            "Infrastructure assessment",
+            "Technology recommendations",
+            "Security risk analysis",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses",
+          "price": "1999",
+          "options": [
+            "Comprehensive IT strategy planning",
+            "Cloud & infrastructure optimization",
+            "Cybersecurity enhancements",
+            "Business process automation",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & complex projects",
+          "price": "3999+",
+          "options": [
+            "End-to-end IT consulting",
+            "Enterprise-grade security & compliance",
+            "Custom software & system integration",
+            "Ongoing IT support & advisory",
+            "Unlimited revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Tailored IT Strategies",
+          "subtitle": "We create customized IT solutions that align with your business goals and industry standards.",
+          "icon": "bi bi-lightbulb"
+        },
+        {
+          "title": "Expert Guidance",
+          "subtitle": "Our team of experienced IT consultants provides insights to help you make informed technology decisions.",
+          "icon": "bi bi-person-badge"
+        },
+        {
+          "title": "Cutting-Edge Solutions",
+          "subtitle": "We leverage the latest technologies to optimize your IT infrastructure and business processes.",
+          "icon": "bi bi-cpu"
+        },
+        {
+          "title": "Security & Compliance",
+          "subtitle": "We ensure your IT systems are secure, compliant, and resilient against cyber threats.",
+          "icon": "bi bi-lock"
+        }
+      ],
+      "title": "IT Consulting",
+      "subtitle": "Providing strategic IT guidance and innovative solutions to optimize operations, enhance security, and drive business growth."
+    }
+  ],
+  "e-commerce": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & startups",
+          "price": "999",
+          "options": [
+            "Basic e-commerce website setup",
+            "Up to 50 products",
+            "Mobile-friendly design",
+            "Standard payment gateway integration",
+            "1 revision"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing online stores",
+          "price": "2499",
+          "options": [
+            "Advanced e-commerce platform",
+            "Unlimited products",
+            "Custom UI/UX design",
+            "Multi-payment gateway integration",
+            "SEO & speed optimization",
+            "3 revisions"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & large-scale stores",
+          "price": "4999+",
+          "options": [
+            "Fully customized e-commerce platform",
+            "AI-powered recommendations",
+            "Inventory & order management system",
+            "Third-party API & CRM integration",
+            "Ongoing support & maintenance",
+            "Unlimited revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Custom & Scalable Stores",
+          "subtitle": "We build fully customized e-commerce platforms that grow with your business needs.",
+          "icon": "bi bi-shop"
+        },
+        {
+          "title": "Seamless Payment Integration",
+          "subtitle": "Secure and hassle-free payment gateways for a smooth customer checkout experience.",
+          "icon": "bi bi-credit-card"
+        },
+        {
+          "title": "Optimized for Performance",
+          "subtitle": "Fast-loading, mobile-responsive stores with SEO best practices for higher conversions.",
+          "icon": "bi bi-speedometer2"
+        },
+        {
+          "title": "Reliable Support & Maintenance",
+          "subtitle": "Ongoing technical support and regular updates to ensure your store runs smoothly.",
+          "icon": "bi bi-headset"
+        }
+      ],
+      "title": "E-Commerce Solutions",
+      "subtitle": "Building powerful, scalable, and user-friendly e-commerce platforms that drive sales, enhance customer experience, and streamline operations."
+    }
+  ],
+  "software": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Best for small businesses & basic maintenance",
+          "price": "499",
+          "options": [
+            "Bug fixes & minor updates",
+            "Security patches",
+            "Monthly performance check",
+            "Email support",
+            "1 revision per month"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Ideal for growing businesses with ongoing maintenance needs",
+          "price": "1499",
+          "options": [
+            "Regular updates & optimizations",
+            "Security monitoring & threat prevention",
+            "Performance enhancements",
+            "Priority support",
+            "3 revisions per month"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Perfect for enterprises & mission-critical applications",
+          "price": "2999+",
+          "options": [
+            "24/7 monitoring & support",
+            "Advanced security & compliance checks",
+            "Custom feature enhancements",
+            "Dedicated account manager",
+            "Unlimited revisions"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Proactive Issue Resolution",
+          "subtitle": "We identify and fix potential software issues before they impact your business operations.",
+          "icon": "bi bi-tools"
+        },
+        {
+          "title": "Enhanced Security & Compliance",
+          "subtitle": "Regular security updates and compliance checks to protect your software from cyber threats.",
+          "icon": "bi bi-shield-lock"
+        },
+        {
+          "title": "Optimized Performance",
+          "subtitle": "We continuously improve software efficiency to ensure a smooth and fast user experience.",
+          "icon": "bi bi-speedometer2"
+        },
+        {
+          "title": "Reliable Support & Updates",
+          "subtitle": "Our dedicated support team ensures timely updates, patches, and feature enhancements.",
+          "icon": "bi bi-headset"
+        }
+      ],
+      "title": "Software Maintenance",
+      "subtitle": "Ensuring your software remains secure, up-to-date, and high-performing with proactive maintenance and continuous optimization."
+    }
+  ]
+}
