@@ -5,8 +5,19 @@ const results = [];
 
 async function setupDriver() {
     let options = new (require('selenium-webdriver/chrome').Options)();
-    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headless');
-    return await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headed');
+    const driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+
+    // Add cookies for authentication
+    // const cookies = [
+    //     { name: 'li_at', value: 'AQEDAUz1ug4FbWANAAABldT9PpoAAAGV-QnCmk0AKCetDKMCIIRok4XjYLue4rLX2GZMPekNris3zLpH05i8ozQOEnAAFG-Sv5JK0MP9ybZJ3uX-M8Z5vbzg3SLLu0WZRhhPHdD1IkmGWICf0uYEq6GM', domain: '.linkedin.com' }
+    // ];
+    // await driver.get('https://www.linkedin.com'); // Navigate to LinkedIn to set cookies
+    // for (const cookie of cookies) {
+    //     await driver.manage().addCookie(cookie);
+    // }
+
+    return driver;
 }
 
 async function openJobSearchPage(driver, url) {
