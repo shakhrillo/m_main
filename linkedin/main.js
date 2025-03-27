@@ -96,8 +96,8 @@ async function getElementAttribute(driver, selector, attribute) {
         const liElements = await jobsSearchResultsList.findElements(By.css('li'));
         
         if (liElements.length === 0) return;
-
-        let liElement = liElements[0];
+        
+        let liElement = liElements[liElements.length - 1];
         let i = 0;
         let lastCheckedUrl = '';
         while (liElement) {
@@ -111,7 +111,6 @@ async function getElementAttribute(driver, selector, attribute) {
                     Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000 // Random sleep between 1 and 2 seconds
                 );
             } catch {
-                liElement = null; // No more sibling elements
                 let retry = 0;
                 const maxRetries = 10;
                 while (retry < maxRetries) {
@@ -128,6 +127,7 @@ async function getElementAttribute(driver, selector, attribute) {
                         console.log('Clicked the show more button successfully.');
                         break;
                     } catch (error) {
+                        console.error(error);
                         retry++;
                         console.log(`Retry ${retry}/${maxRetries} to click the show more button...`);
                         if (retry === maxRetries) {
