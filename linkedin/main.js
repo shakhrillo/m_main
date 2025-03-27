@@ -5,7 +5,7 @@ const results = [];
 
 async function setupDriver() {
     let options = new (require('selenium-webdriver/chrome').Options)();
-    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headed');
+    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headless');
     const driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     // Add cookies for authentication
