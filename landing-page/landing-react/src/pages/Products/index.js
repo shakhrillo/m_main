@@ -24,7 +24,7 @@ const Products = () => {
     if (!breadcrumbClicked.current) {
       window.scrollTo(0, 0);
     }
-    breadcrumbClicked.current = false; // Сбрасываем после перехода
+    breadcrumbClicked.current = false;
   }, [location]);
 
   return (
@@ -183,7 +183,7 @@ const Products = () => {
                         <a className='text-dark ms-2' href='#'>
                           Jhon
                         </a>
-                        on
+                        {' on '}
                         <a className='text-primary' href='#'>
                           Privacy policy
                         </a>

@@ -1,44 +1,4 @@
 {
-  "faq": [
-    {
-      "title": "How long does it take to develop a website?",
-      "subtitle": "The timeline depends on the complexity of the project. A simple website can take 2–4 weeks, while a more advanced web application may require 8–12 weeks. We ensure timely delivery without compromising quality."
-    },
-    {
-      "title": "Do you provide post-launch support and maintenance?",
-      "subtitle": "Yes! We offer ongoing support, including updates, bug fixes, performance optimization, and security enhancements to keep your website running smoothly."
-    },
-    {
-      "title": "Will my website be mobile-friendly?",
-      "subtitle": "Absolutely! We follow a mobile-first approach, ensuring your website looks and works perfectly on all devices, from desktops to smartphones."
-    },
-    {
-      "title": "Can you help with SEO and improving my website’s ranking?",
-      "subtitle": "Yes! We implement SEO best practices, including fast loading times, optimized content, and proper site structure, to help improve your search engine rankings and visibility. Let me know if you need more!"
-    }
-  ],
-  "whyChooseUs": [
-    {
-      "title": "Customizable White Label Solutions",
-      "subtitle": "Offer high-quality, fully customizable solutions under your own brand.",
-      "icon": "palette"
-    },
-    {
-      "title": "24/7 Dedicated Support",
-      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
-      "icon": "life-preserver"
-    },
-    {
-      "title": "Clutter-Free Experience",
-      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
-      "icon": "sliders"
-    },
-    {
-      "title": "100% Satisfaction Guarantee",
-      "subtitle": "Your success is our priority—risk-free services with a money-back guarantee.",
-      "icon": "check-circle"
-    }
-  ],
   "technologies": [
     {
       "src": "/assets/images/google.svg",
@@ -93,6 +53,64 @@
     {
       "icon": "tools",
       "title": "Software Maintenance"
+    }
+  ],
+
+  "whyChooseUs": [
+    {
+      "title": "Customizable White Label Solutions",
+      "subtitle": "Offer high-quality, fully customizable solutions under your own brand.",
+      "icon": "palette"
+    },
+    {
+      "title": "24/7 Dedicated Support",
+      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
+      "icon": "life-preserver"
+    },
+    {
+      "title": "Clutter-Free Experience",
+      "subtitle": "Expert assistance whenever you need it, ensuring smooth operations.",
+      "icon": "sliders"
+    },
+    {
+      "title": "100% Satisfaction Guarantee",
+      "subtitle": "Your success is our priority—risk-free services with a money-back guarantee.",
+      "icon": "check-circle"
+    }
+  ],
+  "ourClientsSaid": [
+    {
+      "photo": "https://mighty.tools/mockmind-api/content/human/65.jpg",
+      "userName": "Pranav Sengupta",
+      "comment": "Thanks a ton! Great job!"
+    },
+    {
+      "photo": "https://mighty.tools/mockmind-api/content/human/80.jpg",
+      "userName": "Robert Marshall",
+      "comment": "I have worked on several projects with Shakhi, and I will keep working with him in the future. He is very good to work with."
+    },
+    {
+      "photo": "https://mighty.tools/mockmind-api/content/human/99.jpg",
+      "userName": "Patrick Johnson",
+      "comment": "I recently had the pleasure of working with Wing Co who did an outstanding job for us. The Wing Co team was always available and their software development skills are top-notch. I highly recommend Wing Co to anyone in need of a skilled and reliable software development powerhouse on Upwork."
+    }
+  ],
+  "faq": [
+    {
+      "title": "How long does it take to develop a website?",
+      "subtitle": "The timeline depends on the complexity of the project. A simple website can take 2–4 weeks, while a more advanced web application may require 8–12 weeks. We ensure timely delivery without compromising quality."
+    },
+    {
+      "title": "Do you provide post-launch support and maintenance?",
+      "subtitle": "Yes! We offer ongoing support, including updates, bug fixes, performance optimization, and security enhancements to keep your website running smoothly."
+    },
+    {
+      "title": "Will my website be mobile-friendly?",
+      "subtitle": "Absolutely! We follow a mobile-first approach, ensuring your website looks and works perfectly on all devices, from desktops to smartphones."
+    },
+    {
+      "title": "Can you help with SEO and improving my website’s ranking?",
+      "subtitle": "Yes! We implement SEO best practices, including fast loading times, optimized content, and proper site structure, to help improve your search engine rankings and visibility. Let me know if you need more!"
     }
   ]
 }

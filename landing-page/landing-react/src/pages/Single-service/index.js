@@ -1,9 +1,12 @@
-import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import data from '../../data/single-service.json';
 
 const SingleService = () => {
   const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   const selectedData = useMemo(() => {
     const pathsMap = {
@@ -18,11 +21,7 @@ const SingleService = () => {
     };
 
     const pathSegment = location.pathname.split('/').filter(Boolean).pop();
-    console.log('Path:', location.pathname, 'Segment:', pathSegment);
-
     const result = data[pathsMap[pathSegment]] || {};
-    console.log('Selected Data:', result[0]);
-
     return result[0];
   }, [location.pathname]);
 
@@ -41,11 +40,8 @@ const SingleService = () => {
           <div className='row justify-content-center mt-5'>
             <div className='col-lg-12 text-center'>
               <div className='pages-heading title-heading'>
-                <h2 className='text-white title-dark'>Web Development</h2>
-                <p className='text-white-50 mb-0 mx-auto para-desc'>
-                  Creating high-performance, secure, and scalable websites that deliver seamless
-                  user experiences and drive business growth.
-                </p>
+                <h2 className='text-white title-dark'>{selectedData.title}</h2>
+                <p className='text-white-50 mb-0 mx-auto para-desc'>{selectedData.subtitle}</p>
               </div>
             </div>
           </div>
@@ -145,10 +141,10 @@ const SingleService = () => {
                   Not sure which plan fits your needs? We can create a tailored solution just for
                   you!
                 </p>
-                <a className='btn btn-primary mt-4' href='./contact.html'>
+                <Link className='btn btn-primary mt-4' to={'/contact'}>
                   <i className='bi bi-telephone me-2'></i>
                   Contact us
-                </a>
+                </Link>
               </div>
             </div>
           </div>

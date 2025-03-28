@@ -100,8 +100,8 @@ const Navbar = () => {
                       <li className='d-flex flex-column'>
                         <Link
                           to='/products/apify'
-                          className={`nav-link ps-0 fw-bold ${
-                            location.pathname === '/products/apify' ? 'active' : ''
+                          className={`ps-0 fw-bold ${
+                            location.pathname === '/products/apify' ? 'active' : 'text-dark '
                           }`}
                         >
                           Apify
@@ -113,8 +113,8 @@ const Navbar = () => {
                       <li className='d-flex flex-column'>
                         <Link
                           to='/products/linkedin'
-                          className={`nav-link ps-0 fw-bold ${
-                            location.pathname === '/products/linkedin' ? 'active' : ''
+                          className={`ps-0 fw-bold ${
+                            location.pathname === '/products/linkedin' ? 'active' : 'text-dark '
                           }`}
                         >
                           LinkedIn
@@ -130,8 +130,8 @@ const Navbar = () => {
                       <li className='d-flex flex-column'>
                         <Link
                           to='/products/google'
-                          className={`nav-link ps-0 fw-bold ${
-                            location.pathname === '/products/google' ? 'active' : ''
+                          className={`ps-0 fw-bold ${
+                            location.pathname === '/products/google' ? 'active' : 'text-dark '
                           }`}
                         >
                           Google Maps
@@ -144,8 +144,8 @@ const Navbar = () => {
                       <li className='d-flex flex-column'>
                         <Link
                           to='/products/indeed'
-                          className={`nav-link ps-0 fw-bold ${
-                            location.pathname === '/products/indeed' ? 'active' : ''
+                          className={`ps-0 fw-bold ${
+                            location.pathname === '/products/indeed' ? 'active' : 'text-dark'
                           }`}
                         >
                           Indeed

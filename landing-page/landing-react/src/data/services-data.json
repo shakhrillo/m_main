@@ -1,0 +1,192 @@
+{
+  "heading": {
+    "title": "Services",
+    "subtitle": "Comprehensive solutions to elevate your business with cutting-edge technology and expert services."
+  },
+  "services": [
+    {
+      "title": "Web Development",
+      "subtitle": "Custom websites and web applications built for performance and scalability.",
+      "icon": "laptop"
+    },
+    {
+      "title": "Mobile App Development",
+      "subtitle": "Cross-platform mobile apps with seamless user experiences.",
+      "icon": "phone"
+    },
+    {
+      "title": "UI/UX Design",
+      "subtitle": "Modern and user-friendly designs that enhance engagement.",
+      "icon": "palette"
+    },
+    {
+      "title": "SEO & Digital Marketing",
+      "subtitle": "Optimize visibility and grow your business with strategic marketing.",
+      "icon": "graph-up"
+    },
+    {
+      "title": "Cloud & DevOps",
+      "subtitle": "Scalable cloud solutions and DevOps automation for efficiency.",
+      "icon": "cloud"
+    },
+    {
+      "title": "IT Consulting",
+      "subtitle": "Expert guidance to improve technology and business processes.",
+      "icon": "gear"
+    },
+    {
+      "title": "E-Commerce Solutions",
+      "subtitle": "Custom online stores with secure payment and seamless shopping experiences.",
+      "icon": "cart"
+    },
+    {
+      "title": "Software Maintenance",
+      "subtitle": "Continuous updates, bug fixes, and performance improvements.",
+      "icon": "tools"
+    }
+  ],
+  "workProceess": {
+    "pre-title": "Work Process",
+    "title": "How do we works ?",
+    "subtitle": "Our streamlined process ensures efficiency, quality, and seamless execution from start to finish.",
+    "options": [
+      {
+        "icon": "lightbulb",
+        "title": "Discover & Strategy",
+        "subtitle": "We begin by understanding your goals and crafting a strategic plan tailored to your needs."
+      },
+      {
+        "icon": "code-slash",
+        "title": "Development & Execution",
+        "subtitle": "Our team designs, builds, and implements high-quality solutions with seamless integration."
+      },
+      {
+        "icon": "rocket",
+        "title": "Launch & Support",
+        "subtitle": "We deploy your project, ensure everything runs smoothly, and provide continuous support."
+      }
+    ]
+  },
+  "videoBanner": {
+    "title": "Empowering Your Business with Expert Solutions",
+    "subtitle": "We provide innovative strategies, cutting-edge technology, and expert guidance to help your business grow, optimize operations, and stay ahead in a competitive market."
+  },
+  "whatWeDo": {
+    "pre-title": "Services",
+    "title": "What we do?",
+    "subtitle": "We deliver tailored digital solutions, from web and mobile development to design, marketing, and IT consulting, to help your business thrive.",
+    "leftMenu": [
+      { "title": "Web developing", "control": "developing" },
+      { "title": "Design", "control": "design" },
+      { "title": "Marketing", "control": "marketing" },
+      { "title": "Consulting", "control": "consulting" }
+    ],
+    "tabHeader": ["Category", "Details"],
+    "tabOptions": [
+      [
+        {
+          "title": "Overview",
+          "subtitle": "We build high-performance web and mobile applications tailored to your needs."
+        },
+        {
+          "title": "Technologies Used",
+          "subtitle": "HTML, CSS, JavaScript, React, Vue, Flutter, Dart, Next.js, Node.js, Firebase."
+        },
+        {
+          "title": "Key Features",
+          "subtitle": "Scalable architecture, responsive design, high security, and seamless UX."
+        },
+        {
+          "title": "Industries Served",
+          "subtitle": "E-commerce, Fintech, Healthcare, Education, Travel, and more."
+        },
+        {
+          "title": "Development Process",
+          "subtitle": "Planning → UI/UX Design → Development → Testing → Deployment → Maintenance."
+        },
+        {
+          "title": "Why Choose Us?",
+          "subtitle": "Experienced team, modern tech stack, agile methodology, and continuous support."
+        }
+      ],
+      [
+        {
+          "title": "Overview",
+          "subtitle": "We create modern, intuitive, and visually appealing designs to enhance user experience."
+        },
+        {
+          "title": "Technologies Used",
+          "subtitle": "Figma, Adobe XD, Sketch, Photoshop, Illustrator."
+        },
+        {
+          "title": "Key Features",
+          "subtitle": "UX research, wireframing, prototyping, responsive design, and design systems."
+        },
+        {
+          "title": "Industries Served",
+          "subtitle": "E-commerce, Fintech, Healthcare, Education, Travel, and more."
+        },
+        {
+          "title": "Design Process",
+          "subtitle": "Research → Wireframing → Prototyping → UI Design → Testing → Finalization."
+        },
+        {
+          "title": "Why Choose Us?",
+          "subtitle": "User-centric approach, pixel-perfect designs, and seamless brand consistency."
+        }
+      ],
+      [
+        {
+          "title": "Overview",
+          "subtitle": "We help businesses grow by increasing online visibility, driving traffic, and optimizing conversions."
+        },
+        {
+          "title": "Technologies Used",
+          "subtitle": "Google Analytics, Google Ads, Meta Ads, Ahrefs, SEMrush, Mailchimp."
+        },
+        {
+          "title": "Key Features",
+          "subtitle": "SEO, PPC advertising, social media marketing, email campaigns, and content marketing."
+        },
+        {
+          "title": "Industries Served",
+          "subtitle": "E-commerce, Fintech, Healthcare, Education, Travel, and more."
+        },
+        {
+          "title": "Marketing Process",
+          "subtitle": "Research → Strategy Planning → Execution → Optimization → Reporting."
+        },
+        {
+          "title": "Why Choose Us?",
+          "subtitle": "Data-driven strategies, targeted campaigns, and measurable results."
+        }
+      ],
+      [
+        {
+          "title": "Overview",
+          "subtitle": "We provide expert guidance to optimize technology, business strategies, and digital transformation."
+        },
+        {
+          "title": "Technologies Used",
+          "subtitle": "Cloud Solutions, DevOps, AI & Machine Learning, Business Intelligence, Cybersecurity."
+        },
+        {
+          "title": "Key Features",
+          "subtitle": "IT strategy, process automation, digital transformation, risk assessment, and scalability planning."
+        },
+        {
+          "title": "Industries Served",
+          "subtitle": "E-commerce, Fintech, Healthcare, Education, Logistics, and more."
+        },
+        {
+          "title": "Consulting Process",
+          "subtitle": "Analysis → Strategy Development → Implementation → Optimization → Continuous Support."
+        },
+        {
+          "title": "Why Choose Us?",
+          "subtitle": "Deep industry expertise, innovative solutions, and a results-driven approach."
+        }
+      ]
+    ]
+  }
+}

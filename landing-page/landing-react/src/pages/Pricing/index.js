@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import aboutBanner from '../../assets/images/about-1.png';
 import bannerSrc from '../../assets/images/pricing.png';
 
@@ -81,9 +81,9 @@ const Pricing = () => {
                     project we take on is executed with precision, efficiency, and a focus on
                     long-term success.
                   </p>
-                  <a href='./contact.html' class='btn btn-primary'>
+                  <Link href='/contact' class='btn btn-primary'>
                     Contact us
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
