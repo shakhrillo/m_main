@@ -604,3 +604,8 @@ p {
 .sin-ser-card {
   height: 434px;
 }
+.close-youtube {
+  top: -10px;
+  right: -60px;
+  font-size: 52px;
+}

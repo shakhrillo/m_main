@@ -1,83 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Modal } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import data from '../../data/single-service.json';
 
 const SingleService = () => {
   const location = useLocation();
-  const [showVideo, setShowVideo] = useState(false);
-  const [isMediumScreen, setIsMediumScreen] = useState(false);
 
-  const videoRef = React.useRef(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMediumScreen(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleShowVideo = () => {
-    if (isMediumScreen) return;
-
-    setShowVideo(true);
-
-    setTimeout(() => {
-      if (videoRef.current) {
-        if (videoRef.current.requestFullscreen) {
-          videoRef.current.requestFullscreen();
-        } else if (videoRef.current.webkitRequestFullscreen) {
-          videoRef.current.webkitRequestFullscreen();
-        } else if (videoRef.current.mozRequestFullScreen) {
-          videoRef.current.mozRequestFullScreen();
-        } else if (videoRef.current.msRequestFullscreen) {
-          videoRef.current.msRequestFullscreen();
-        }
-      }
-    }, 100);
-  };
-
-  const handleCloseVideo = () => {
-    setShowVideo(false);
-
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else if (document.webkitFullscreenElement) {
-      document.webkitExitFullscreen();
-    } else if (document.mozFullScreenElement) {
-      document.mozCancelFullScreen();
-    } else if (document.msFullscreenElement) {
-      document.msExitFullscreen();
-    }
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        handleCloseVideo();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement) {
-        setShowVideo(false);
-      }
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, [location.pathname]);
 
   const selectedData = useMemo(() => {
     const pathsMap = {
@@ -96,7 +27,10 @@ const SingleService = () => {
     const result = data[pathsMap[pathSegment]] || {};
     return result[0];
   }, [location.pathname]);
+  const [show, setShow] = useState(false);
 
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
   return (
     <>
       <section
@@ -220,12 +154,6 @@ const SingleService = () => {
                 <div className='row justify-content-center'>
                   <div className='col-12 text-center'>
                     <div className='position-relative section-title z-1'>
-                      {showVideo && !isMediumScreen && (
-                        <video ref={videoRef} width='100%' controls autoPlay>
-                          <source src='/assets/images/linkedin.mp4' type='video/mp4' />
-                          Your browser does not support the video tag.
-                        </video>
-                      )}
                       <h4 className='text-white mb-4 title title-dark'>
                         {selectedData.videoBanner.title}
                       </h4>
@@ -233,12 +161,33 @@ const SingleService = () => {
                         {selectedData.videoBanner.subtitle}
                       </p>
                       <a
-                        onClick={handleShowVideo}
+                        onClick={handleShow}
                         className='border border-light mt-4 play-btn video-play-icon'
                       >
                         <i className='text-light bi bi-play'></i>
                       </a>
                     </div>
+                    <Modal show={show} onHide={handleClose} centered size='lg'>
+                      <Modal.Body className='p-0 position-relative'>
+                        <div className='embed-responsive embed-responsive-16by9'>
+                          <iframe
+                            className='embed-responsive-item'
+                            width='100%'
+                            height='400'
+                            src='https://www.youtube.com/embed/o_JCEDFrgnI'
+                            title='YouTube Video'
+                            allow='autoplay; encrypted-media'
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                        <a
+                          onClick={handleClose}
+                          className='position-absolute close-youtube text-white'
+                        >
+                          <i className='bi bi-x'></i>
+                        </a>
+                      </Modal.Body>
+                    </Modal>
                   </div>
                 </div>
               </div>
