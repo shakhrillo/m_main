@@ -100,10 +100,17 @@ async function getElementAttribute(driver, selector, attribute) {
     return elements.length > 0 ? await elements[0].getAttribute(attribute) : null;
 }
 
-(async function main() {
+async function scrapeLinkedInJobs({
+    geoId = 101165590,
+    keywords = 'angular',
+    limit = 5
+}) {
     const driver = await setupDriver();
     try {
-        const jobsSearchResultsList = await openJobSearchPage(driver, 'https://www.linkedin.com/jobs/search/?currentJobId=4091308465&geoId=101165590&keywords=angular&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true&start=75');
+        const url = new URL('https://www.linkedin.com/jobs/search/');
+        url.searchParams.append('geoId', geoId);
+        url.searchParams.append('keywords', keywords);
+        const jobsSearchResultsList = await openJobSearchPage(driver, url.href);
         const liElements = await jobsSearchResultsList.findElements(By.css('li'));
         
         if (liElements.length === 0) return;
@@ -134,7 +141,12 @@ async function getElementAttribute(driver, selector, attribute) {
                         await driver.sleep(1000);
                         await driver.executeScript('arguments[0].click();', showMoreButton);
                         await driver.sleep(1000);
-                        liElement = await liElement.findElement(By.xpath('following-sibling::li')); // get the next sibling element
+                        // liElement = await liElement.findElement(By.xpath('following-sibling::li')); // get the next sibling element
+                        try {
+                            liElement = await liElement.findElement(By.xpath('following-sibling::li'));
+                        } catch {
+                            liElement = null;
+                        }
                         console.log('Clicked the show more button successfully.');
                         break;
                     } catch (error) {
@@ -154,11 +166,28 @@ async function getElementAttribute(driver, selector, attribute) {
             }
             i++;
             lastCheckedUrl = checkedUrl;
+
+            if(i === limit) {
+                break;
+            }
         }
     } catch (error) {
         console.error('Error during execution:', error.message);
     } finally {
-        fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
         await driver.quit();
     }
-})();
+}
+
+try {
+    scrapeLinkedInJobs({
+        geoId: 101165590, // Geo ID for United Kingdom (UK)
+        keywords: 'angular', // Search keyword
+        limit: 500 // Number of jobs to scrape
+    });
+} catch (error) {
+    console.error('Error during execution:', error.message);
+} finally {
+    console.log('Execution completed.');
+    fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
+}
+
