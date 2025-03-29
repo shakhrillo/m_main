@@ -5,6 +5,11 @@
   },
   "services": [
     {
+      "title": "Automate LinkedIn Data Extraction",
+      "subtitle": "Automate and scale LinkedIn data extraction for smarter insights.",
+      "icon": "linkedin"
+    },
+    {
       "title": "Web Development",
       "subtitle": "Custom websites and web applications built for performance and scalability.",
       "icon": "laptop"

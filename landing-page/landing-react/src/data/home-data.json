@@ -23,6 +23,10 @@
   ],
   "services": [
     {
+      "icon": "linkedin",
+      "title": "Automate LinkedIn Data Extraction"
+    },
+    {
       "icon": "laptop",
       "title": "Web Development"
     },

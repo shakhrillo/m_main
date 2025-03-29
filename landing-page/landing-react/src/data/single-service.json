@@ -1,4 +1,79 @@
 {
+  "linkedIn": [
+    {
+      "pricing": [
+        {
+          "title": "Starter",
+          "isBest": false,
+          "subtitle": "Ideal for small-scale data extraction needs",
+          "price": "99",
+          "options": [
+            "Basic profile data extraction",
+            "Up to 1,000 profiles per month",
+            "Export in CSV format",
+            "Email support",
+            "Limited API access"
+          ]
+        },
+        {
+          "title": "Professional",
+          "isBest": true,
+          "subtitle": "Perfect for businesses and recruiters",
+          "price": "299",
+          "options": [
+            "Advanced profile & company data extraction",
+            "Up to 10,000 profiles per month",
+            "Real-time data updates",
+            "Multiple export formats (CSV, JSON, Excel)",
+            "Priority email support",
+            "API integration"
+          ]
+        },
+        {
+          "title": "Ultimate",
+          "isBest": false,
+          "subtitle": "Designed for enterprises & high-volume data needs",
+          "price": "799+",
+          "options": [
+            "Unlimited profile & company data extraction",
+            "Custom data fields extraction",
+            "AI-powered data enrichment",
+            "Real-time analytics & dashboard",
+            "Dedicated support & account manager",
+            "Full API access with automation features"
+          ]
+        }
+      ],
+      "whyChoose": [
+        {
+          "title": "Accurate & Real-Time Data",
+          "subtitle": "Get the most up-to-date LinkedIn data with high accuracy, ensuring valuable insights for your business.",
+          "icon": "bi bi-clock-history"
+        },
+        {
+          "title": "Scalable Solutions",
+          "subtitle": "Whether you need a few profiles or millions, our system scales to match your data extraction needs.",
+          "icon": "bi bi-graph-up-arrow"
+        },
+        {
+          "title": "Automated & Efficient",
+          "subtitle": "Eliminate manual effort with fully automated data scraping, saving you time and resources.",
+          "icon": "bi bi-gear-wide-connected"
+        },
+        {
+          "title": "Secure & Compliant",
+          "subtitle": "We follow best practices to ensure compliance with LinkedIn policies while maintaining data security.",
+          "icon": "bi bi-shield-lock"
+        }
+      ],
+      "videoBanner": {
+        "title": "See Our Solution in Action",
+        "subtitle": "Watch how our powerful automation streamlines LinkedIn data extraction, saving time and maximizing efficiency."
+      },
+      "title": "Automate LinkedIn Data Extraction",
+      "subtitle": "Effortlessly extract, analyze, and leverage LinkedIn data with our automated, secure, and scalable solutions for smarter business decisions."
+    }
+  ],
   "web": [
     {
       "pricing": [

@@ -1,15 +1,87 @@
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import data from '../../data/single-service.json';
 
 const SingleService = () => {
   const location = useLocation();
+  const [showVideo, setShowVideo] = useState(false);
+  const [isMediumScreen, setIsMediumScreen] = useState(false);
+
+  const videoRef = React.useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMediumScreen(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleShowVideo = () => {
+    if (isMediumScreen) return;
+
+    setShowVideo(true);
+
+    setTimeout(() => {
+      if (videoRef.current) {
+        if (videoRef.current.requestFullscreen) {
+          videoRef.current.requestFullscreen();
+        } else if (videoRef.current.webkitRequestFullscreen) {
+          videoRef.current.webkitRequestFullscreen();
+        } else if (videoRef.current.mozRequestFullScreen) {
+          videoRef.current.mozRequestFullScreen();
+        } else if (videoRef.current.msRequestFullscreen) {
+          videoRef.current.msRequestFullscreen();
+        }
+      }
+    }, 100);
+  };
+
+  const handleCloseVideo = () => {
+    setShowVideo(false);
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (document.webkitFullscreenElement) {
+      document.webkitExitFullscreen();
+    } else if (document.mozFullScreenElement) {
+      document.mozCancelFullScreen();
+    } else if (document.msFullscreenElement) {
+      document.msExitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        handleCloseVideo();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setShowVideo(false);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
   });
 
   const selectedData = useMemo(() => {
     const pathsMap = {
+      'automate-linkedin-data-extraction': 'linkedIn',
       'web-development': 'web',
       'mobile-app-development': 'mobile',
       'ui-ux-design': 'ui-ux',
@@ -131,7 +203,48 @@ const SingleService = () => {
           </div>
         </div>
       </section>
+
       <section className='bg-light section'>
+        {selectedData.videoBanner ? (
+          <div className='container-fluid mb-5 pb-5'>
+            <div
+              className='card bg-cta rounded shadow overflow-hidden'
+              style={{
+                backgroundImage: `url("/assets/images/linkedin.jpg")`,
+                backgroundPosition: 'center center',
+                backgroundSize: 'cover',
+              }}
+            >
+              <div className='bg-overlay z-0'></div>
+              <div className='container'>
+                <div className='row justify-content-center'>
+                  <div className='col-12 text-center'>
+                    <div className='position-relative section-title z-1'>
+                      {showVideo && !isMediumScreen && (
+                        <video ref={videoRef} width='100%' controls autoPlay>
+                          <source src='/assets/images/linkedin.mp4' type='video/mp4' />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                      <h4 className='text-white mb-4 title title-dark'>
+                        {selectedData.videoBanner.title}
+                      </h4>
+                      <p className='text-white-50 mx-auto para-dark para-desc'>
+                        {selectedData.videoBanner.subtitle}
+                      </p>
+                      <a
+                        onClick={handleShowVideo}
+                        className='border border-light mt-4 play-btn video-play-icon'
+                      >
+                        <i className='text-light bi bi-play'></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className='container'>
           <div className='row justify-content-center my-4 my-md-5'>
             <div className='col-12 text-center'>
@@ -150,7 +263,6 @@ const SingleService = () => {
           </div>
         </div>
       </section>
-
       <section className='section'>
         <div className='container'>
           <div className='row justify-content-center'>
