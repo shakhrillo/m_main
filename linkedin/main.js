@@ -43,6 +43,60 @@ async function processJobElement(driver, jobElement, index) {
         await driver.switchTo().window(tabs[tabs.length - 1]);
 
         const jobDetails = await extractJobDetails(driver, jobUrl);
+
+        // orgNameUrl
+        await driver.executeScript(`window.open('${jobDetails.orgNameUrl}', '_blank');`);
+        const orgTabs = await driver.getAllWindowHandles();
+        await driver.switchTo().window(orgTabs[orgTabs.length - 1]);
+        await driver.sleep(1000);
+        // a[data-tracking-control-name="about_website"]
+        const orgWebsiteLink = await driver.findElement(By.css('a[data-tracking-control-name="about_website"]'));
+        const orgWebsiteUrl = (await orgWebsiteLink.getText() || '').trim();
+
+        // div[data-test-id="about-us__industry"]
+        const orgIndustryElement = await driver.findElement(By.css('div[data-test-id="about-us__industry"]'));
+        const orgIndustry = (await orgIndustryElement.getText() || '').trim();
+
+        // div[data-test-id="about-us__size"]
+        const orgSizeElement = await driver.findElement(By.css('div[data-test-id="about-us__size"]'));
+        const orgSize = (await orgSizeElement.getText() || '').trim();
+
+        // data-test-id="about-us__headquarters"
+        const orgHeadquartersElement = await driver.findElement(By.css('div[data-test-id="about-us__headquarters"]'));
+        const orgHeadquarters = (await orgHeadquartersElement.getText() || '').trim();
+
+        // data-test-id="about-us__organizationType"
+        const orgTypeElement = await driver.findElement(By.css('div[data-test-id="about-us__organizationType"]'));
+        const orgType = (await orgTypeElement.getText() || '').trim();
+
+        // data-test-id="about-us__foundedOn"
+        const orgFoundedOnElement = await driver.findElement(By.css('div[data-test-id="about-us__foundedOn"]'));
+        const orgFoundedOn = (await orgFoundedOnElement.getText() || '').trim();
+
+        // data-test-id="about-us__specialties"
+        const orgSpecialtiesElement = await driver.findElement(By.css('div[data-test-id="about-us__specialties"]'));
+        const orgSpecialties = (await orgSpecialtiesElement.getText() || '').trim();
+
+        // id="address-0"
+        const orgAddressElement = await driver.findElement(By.id('address-0'));
+        const orgAddress = (await orgAddressElement.getText() || '').trim();
+
+        const orgDetails = {
+            orgWebsiteUrl,
+            orgIndustry,
+            orgSize,
+            orgHeadquarters,
+            orgType,
+            orgFoundedOn,
+            orgSpecialties,
+            orgAddress
+        };
+
+        jobDetails.orgDetails = orgDetails;
+
+        await driver.close();
+        await driver.switchTo().window(orgTabs[0]);
+
         results.push(jobDetails);
 
         await driver.close();
