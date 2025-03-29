@@ -5,7 +5,7 @@ const results = [];
 
 async function setupDriver() {
     let options = new (require('selenium-webdriver/chrome').Options)();
-    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headless');
+    options.addArguments('--no-sandbox', '--disable-dev-shm-usage', '--headed');
     const driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     // Add cookies for authentication
@@ -41,66 +41,39 @@ async function processJobElement(driver, jobElement, index) {
         await driver.executeScript(`window.open('${jobUrl}', '_blank');`);
         const tabs = await driver.getAllWindowHandles();
         await driver.switchTo().window(tabs[tabs.length - 1]);
+        console.log(`l`, tabs.length);
+        console.log(`Job tab: ${tabs[tabs.length - 1]}`);
+        const _title = await driver.getTitle();
+        console.log(`_title: ${_title}`);
 
         const jobDetails = await extractJobDetails(driver, jobUrl);
 
-        // orgNameUrl
+        // await driver.sleep(1000);
+        
+        // await driver.close();
+        // await driver.switchTo().window(tabs[0]);
+        
+        // Extract organization details
         await driver.executeScript(`window.open('${jobDetails.orgNameUrl}', '_blank');`);
         const orgTabs = await driver.getAllWindowHandles();
         await driver.switchTo().window(orgTabs[orgTabs.length - 1]);
+        console.log(`l`, orgTabs.length);
+        console.log(`Org tab: ${orgTabs[orgTabs.length - 1]}`);
+        const title = await driver.getTitle();
+        console.log(`title: ${title}`);
         await driver.sleep(1000);
-        // a[data-tracking-control-name="about_website"]
-        const orgWebsiteLink = await driver.findElement(By.css('a[data-tracking-control-name="about_website"]'));
-        const orgWebsiteUrl = (await orgWebsiteLink.getText() || '').trim();
 
-        // div[data-test-id="about-us__industry"]
-        const orgIndustryElement = await driver.findElement(By.css('div[data-test-id="about-us__industry"]'));
-        const orgIndustry = (await orgIndustryElement.getText() || '').trim();
+        jobDetails.orgDetails = await extractOrgDetails(driver);
 
-        // div[data-test-id="about-us__size"]
-        const orgSizeElement = await driver.findElement(By.css('div[data-test-id="about-us__size"]'));
-        const orgSize = (await orgSizeElement.getText() || '').trim();
-
-        // data-test-id="about-us__headquarters"
-        const orgHeadquartersElement = await driver.findElement(By.css('div[data-test-id="about-us__headquarters"]'));
-        const orgHeadquarters = (await orgHeadquartersElement.getText() || '').trim();
-
-        // data-test-id="about-us__organizationType"
-        const orgTypeElement = await driver.findElement(By.css('div[data-test-id="about-us__organizationType"]'));
-        const orgType = (await orgTypeElement.getText() || '').trim();
-
-        // data-test-id="about-us__foundedOn"
-        const orgFoundedOnElement = await driver.findElement(By.css('div[data-test-id="about-us__foundedOn"]'));
-        const orgFoundedOn = (await orgFoundedOnElement.getText() || '').trim();
-
-        // data-test-id="about-us__specialties"
-        const orgSpecialtiesElement = await driver.findElement(By.css('div[data-test-id="about-us__specialties"]'));
-        const orgSpecialties = (await orgSpecialtiesElement.getText() || '').trim();
-
-        // id="address-0"
-        const orgAddressElement = await driver.findElement(By.id('address-0'));
-        const orgAddress = (await orgAddressElement.getText() || '').trim();
-
-        const orgDetails = {
-            orgWebsiteUrl,
-            orgIndustry,
-            orgSize,
-            orgHeadquarters,
-            orgType,
-            orgFoundedOn,
-            orgSpecialties,
-            orgAddress
-        };
-
-        jobDetails.orgDetails = orgDetails;
-
-        await driver.close();
-        await driver.switchTo().window(orgTabs[0]);
+        // await driver.sleep(1000)
+        for (let i = 0; i < orgTabs.length; i++) {
+            await driver.switchTo().window(orgTabs[i]);
+            if (i > 0) {
+                await driver.close();
+            }
+        }
 
         results.push(jobDetails);
-
-        await driver.close();
-        await driver.switchTo().window(tabs[0]);
 
         return jobUrl;
     } catch (error) {
@@ -141,6 +114,34 @@ async function extractJobDetails(driver, jobUrl) {
         orgNameUrl: orgNameUrl || 'N/A',
         numApplicants: numApplicantsCaption || 'N/A',
         description: description || 'N/A'
+    };
+}
+
+async function extractOrgDetails(driver) {
+    let element = await driver.findElement(By.css('a[data-tracking-control-name="about_website"]'));
+    let tgex = await element.getText();
+    console.log(`element: ${tgex}`);
+        
+    const orgWebsiteUrl = await getElementText(driver, 'a[data-tracking-control-name="about_website"]');
+    const orgIndustry = await getElementText(driver, 'div[data-test-id="about-us__industry"]');
+    const orgSize = await getElementText(driver, 'div[data-test-id="about-us__size"]');
+    const orgHeadquarters = await getElementText(driver, 'div[data-test-id="about-us__headquarters"]');
+    const orgType = await getElementText(driver, 'div[data-test-id="about-us__organizationType"]');
+    const orgFoundedOn = await getElementText(driver, 'div[data-test-id="about-us__foundedOn"]');
+    const orgSpecialties = await getElementText(driver, 'div[data-test-id="about-us__specialties"]');
+    // const orgAddress = await getElementText('address-0', 'id');
+
+    console.log(`orgWebsiteUrl: ${orgWebsiteUrl}`);
+
+    return {
+        orgWebsiteUrl,
+        orgIndustry,
+        orgSize,
+        orgHeadquarters,
+        orgType,
+        orgFoundedOn,
+        orgSpecialties,
+        // orgAddress
     };
 }
 
@@ -228,6 +229,7 @@ async function scrapeLinkedInJobs({
     } catch (error) {
         console.error('Error during execution:', error.message);
     } finally {
+        fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
         await driver.quit();
     }
 }
@@ -236,12 +238,11 @@ try {
     scrapeLinkedInJobs({
         geoId: 101165590, // Geo ID for United Kingdom (UK)
         keywords: 'angular', // Search keyword
-        limit: 500 // Number of jobs to scrape
+        limit: 2 // Number of jobs to scrape
     });
 } catch (error) {
     console.error('Error during execution:', error.message);
 } finally {
     console.log('Execution completed.');
-    fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
 }
 
