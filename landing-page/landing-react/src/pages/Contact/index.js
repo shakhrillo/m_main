@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function Contact() {
   const location = useLocation();
+  const [selected, setSelected] = useState('option1');
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
@@ -40,73 +41,116 @@ function Contact() {
                   <div class='col-12'>
                     <form action=''>
                       <div class='row'>
-                        <div class='col-md-6'>
+                        <div class='col-md-12'>
                           <div class='mb-3'>
                             <label class='form-label' for='name'>
-                              Your name
+                              Choose your contact type
                               <span class='text-danger'>*</span>
                             </label>
-                            <div class='form-icon position-relative'>
-                              <i class='bi bi-person'></i>
-                              <input
-                                type='text'
-                                class='form-control ps-5'
-                                placeholder='First Name :'
-                                name='name'
-                              />
+                            <div className='cont-radio-group'>
+                              {['telegram', 'email'].map((option) => (
+                                <label
+                                  key={option}
+                                  className={`cont-radio-label ${
+                                    selected === option ? 'active' : ''
+                                  }`}
+                                >
+                                  <input
+                                    style={{ display: 'none' }}
+                                    type='radio'
+                                    name='customRadio'
+                                    value={option}
+                                    checked={selected === option}
+                                    onChange={() => setSelected(option)}
+                                    className='cont-radio-input'
+                                  />
+                                  {option === 'telegram' ? (
+                                    <>
+                                      <i className='bi bi-send'></i>
+                                      Telegram
+                                    </>
+                                  ) : (
+                                    <>
+                                      <i className='bi bi-envelope'></i>
+                                      Email
+                                    </>
+                                  )}
+                                </label>
+                              ))}
                             </div>
                           </div>
                         </div>
-                        <div class='col-md-6'>
-                          <div class='mb-3'>
-                            <label class='form-label' for='email'>
-                              Your email
-                              <span class='text-danger'>*</span>
-                            </label>
-                            <div class='form-icon position-relative'>
-                              <i class='bi bi-envelope'></i>
-                              <input
-                                type='email'
-                                class='form-control ps-5'
-                                placeholder='Your email :'
-                                name='email'
-                              />
+                        {selected !== 'telegram' ? (
+                          <>
+                            <div class='col-md-6'>
+                              <div class='mb-3'>
+                                <label class='form-label' for='name'>
+                                  Your name
+                                  <span class='text-danger'>*</span>
+                                </label>
+                                <div class='form-icon position-relative'>
+                                  <i class='bi bi-person'></i>
+                                  <input
+                                    type='text'
+                                    class='form-control ps-5'
+                                    placeholder='First Name :'
+                                    name='name'
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div class='col-md-12'>
-                          <div class='mb-3'>
-                            <label class='form-label' for='subject'>
-                              Subject
-                            </label>
-                            <div class='form-icon position-relative'>
-                              <i class='bi bi-book'></i>
-                              <input
-                                type='text'
-                                class='form-control ps-5'
-                                placeholder='Your subject : '
-                                name='subject'
-                              />
+                            <div class='col-md-6'>
+                              <div class='mb-3'>
+                                <label class='form-label' for='email'>
+                                  Your email
+                                  <span class='text-danger'>*</span>
+                                </label>
+                                <div class='form-icon position-relative'>
+                                  <i class='bi bi-envelope'></i>
+                                  <input
+                                    type='email'
+                                    class='form-control ps-5'
+                                    placeholder='Your email :'
+                                    name='email'
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div class='col-md-12'>
-                          <div class='mb-3'>
-                            <label class='form-label' for='subject'>
-                              Comments
-                            </label>
-                            <div class='form-icon position-relative'>
-                              <i class='bi bi-chat'></i>
-                              <textarea
-                                type='text'
-                                class='form-control ps-5'
-                                placeholder='Your Message : '
-                                name='subject'
-                                rows='3'
-                              ></textarea>
+                            <div class='col-md-12'>
+                              <div class='mb-3'>
+                                <label class='form-label' for='subject'>
+                                  Subject
+                                </label>
+                                <div class='form-icon position-relative'>
+                                  <i class='bi bi-book'></i>
+                                  <input
+                                    type='text'
+                                    class='form-control ps-5'
+                                    placeholder='Your subject : '
+                                    name='subject'
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                            <div class='col-md-12'>
+                              <div class='mb-3'>
+                                <label class='form-label' for='subject'>
+                                  Comments
+                                </label>
+                                <div class='form-icon position-relative'>
+                                  <i class='bi bi-chat'></i>
+                                  <textarea
+                                    type='text'
+                                    class='form-control ps-5'
+                                    placeholder='Your Message : '
+                                    name='subject'
+                                    rows='3'
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                       <div class='row'>
                         <div class='col-sm-12'>

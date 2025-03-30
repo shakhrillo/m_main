@@ -282,8 +282,8 @@ const Pricing = () => {
                     <div class='col-md-4 mb-1'>
                       <div class='d-flex client-testi' name='clientsreview'>
                         <img
-                          src='https://mighty.tools/mockmind-api/content/human/65.jpg'
-                          alt=''
+                          src='https://mighty.tools/mockmind-api/content/abstract/26.jpg'
+                          alt='user-image'
                           class='rounded shadow avatar avatar-small client-image'
                           style={{ height: 65 + 'px', width: 65 + 'px' }}
                         />
@@ -322,8 +322,8 @@ const Pricing = () => {
                     <div class='col-md-4 mb-1'>
                       <div class='d-flex client-testi' name='clientsreview'>
                         <img
-                          src='https://mighty.tools/mockmind-api/content/human/80.jpg'
-                          alt=''
+                          src='https://mighty.tools/mockmind-api/content/abstract/12.jpg'
+                          alt='user-image'
                           class='rounded shadow avatar avatar-small client-image'
                           style={{ height: '65px', width: '65px' }}
                         />
@@ -365,8 +365,8 @@ const Pricing = () => {
                     <div class='col-md-4 mb-1'>
                       <div class='d-flex client-testi' name='clientsreview'>
                         <img
-                          src='https://mighty.tools/mockmind-api/content/human/99.jpg'
-                          alt=''
+                          src='https://mighty.tools/mockmind-api/content/abstract/11.jpg'
+                          alt='user-image'
                           class='rounded shadow avatar avatar-small client-image'
                           style={{ height: '65px', width: '65px' }}
                         />

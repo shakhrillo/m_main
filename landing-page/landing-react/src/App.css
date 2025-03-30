@@ -609,3 +609,27 @@ p {
   right: -60px;
   font-size: 52px;
 }
+.cont-radio-group {
+  display: flex;
+  gap: 10px;
+}
+.cont-radio-label {
+  padding: 6px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  color: #3c4858 !important;
+  font-size: 14px;
+  line-height: 26px;
+  text-align: left;
+  display: flex;
+  font-weight: 600;
+  gap: 10px;
+  transition: 0.3s;
+}
+.cont-radio-input {
+  display: none;
+}
+.cont-radio-label.active {
+  border: 1px solid #007bff;
+  color: white;
+}
