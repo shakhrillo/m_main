@@ -23,7 +23,7 @@ async function setupDriver() {
 async function getElementText(driver, selector) {
     const elements = await driver.findElements(By.css(selector));
     return elements.length > 0 ? await elements[0].getText() : null;
-}
+} 
 
 async function getElementAttribute(driver, selector, attribute) {
     const elements = await driver.findElements(By.css(selector));
