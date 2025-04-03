@@ -633,3 +633,34 @@ p {
   border: 1px solid #007bff;
   color: white;
 }
+.features .ride-imag {
+  transform: rotate(-45deg);
+}
+.features .ride-imag img {
+  border-radius: 100% 100% 100% 0;
+}
+.avatar.avatar-large {
+  height: 140px;
+  width: 140px;
+}
+
+.features.feature-primary:hover .image::before {
+  background: #2f55d41a;
+}
+.features:hover .image::before {
+  animation: spinner-border 5s linear infinite !important;
+}
+
+.work-container.work-modern:hover img {
+  transform: scale(1.1) rotate(3deg);
+}
+
+.work-container.work-modern .client,
+.work-container.work-modern .content,
+.work-container.work-modern .icons,
+.work-container.work-modern .icons .work-icon,
+.work-container.work-modern .overlay-work,
+.work-container.work-modern .read_more,
+.work-container.work-modern img {
+  transition: all 0.5s ease;
+}

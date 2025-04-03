@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import productsData from '../../data/products-data.json';
 
@@ -9,7 +9,7 @@ const Products = () => {
   const location = useLocation();
   const breadcrumbClicked = useRef(false);
 
-  const tableHeader = ['Plan', 'Basic', 'Standard', 'Premium', 'Enterprice'];
+  const tableHeader = ['Plan', 'Information', '', '', ''];
 
   const breadcrumbs = [
     { title: 'linkedin', href: 'linkedin' },
@@ -20,12 +20,12 @@ const Products = () => {
 
   const selectedData = productsData[source] || [];
 
-  useEffect(() => {
-    if (!breadcrumbClicked.current) {
-      window.scrollTo(0, 0);
-    }
-    breadcrumbClicked.current = false;
-  }, [location]);
+  // useEffect(() => {
+  //   if (!breadcrumbClicked.current) {
+  //     window.scrollTo(0, 0);
+  //   }
+  //   breadcrumbClicked.current = false;
+  // }, [location]);
 
   return (
     <>
@@ -76,23 +76,142 @@ const Products = () => {
           </svg>
         </div>
       </div>
+      {selectedData.useCases && (
+        <section className='section'>
+          <div className='container'>
+            <div className='justify-content-center row'>
+              <div className=' col-12 text-center col'>
+                <div className='section-title mb-4 pb-2'>
+                  <h4 className='title mb-4'>{selectedData.useCases.title}</h4>
+                  <p className=' text-muted para-desc mb-0 mx-auto'>
+                    {selectedData.useCases.subtitle}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              {selectedData.useCases.options.map((e) => (
+                <div className='mt-5 col-12 col-md-6 col-lg-3'>
+                  <div className='features feature-primary text-center p-4'>
+                    <div className='ride-imag'>
+                      <img className='avatar avatar-large shadow' src={e.imgSrc} />
+                    </div>
+                    <div className='content mt-5 pt-3'>
+                      <h5 className='text-dark title-2 fw-bold'>{e.title}</h5>
+                      <p className='text-muted'>{e.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+      {selectedData.requirements && (
+        <section className='section'>
+          <div className='container'>
+            <div className='justify-content-center row'>
+              <div className=' col-12 text-center col'>
+                <div className='section-title mb-4 pb-2'>
+                  <h4 className='title mb-4'>{selectedData.requirements.title}</h4>
+                  <p className=' text-muted para-desc mb-0 mx-auto'>
+                    {selectedData.requirements.subtitle}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              {selectedData.requirements.options.map((e) => (
+                <div className='mt-5 col-12 col-md-6 col-lg-4'>
+                  <div className='features feature-primary'>
+                    <div className='image position-relative d-inline-block'>
+                      <img width={'42px'} height={'42px'} src={e.imgSrc} />
+                    </div>
+                    <div className='content mt-5 pt-3'>
+                      <h5 className='text-dark title-2 fw-bold'>{e.title}</h5>
+                      <p className='text-muted'>{e.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+      {selectedData.screenshots && (
+        <section className='section'>
+          <div className='mt-100 mt-60 container'>
+            <div className='row'>
+              <div className='col-12 col'>
+                <div className='section-title mb-4 pb-2'>
+                  <h4 className='title mb-4'>
+                    <span className='text-primary fw-bold'>Visual Preview: </span>
+                    Google Maps Review Scraping in Action
+                  </h4>
+                  <p className='text-muted para-desc mb-0'>
+                    Detailed Screenshots Showcasing the Entire Process of Google Maps Review
+                    Scraping from Setup to Execution
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              {selectedData.screenshots.options.map((e) => (
+                <div className='mt-4 pt-2 col-md-6 col-lg-4'>
+                  <div className='border work-container work-primary work-modern position-relative d-block overflow-hidden rounded card'>
+                    <div className='portfolio-box-img position-relative overflow-hidden'>
+                      <img className='item-container img-fluid mx-auto' src={e} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className='row'>
+              <div className='col-12 mt-4 pt-2'>
+                <a
+                  href='https://gumroad.com/checkout?_gl=1*cjrpwk*_ga*MTkzNTI0MjU5MS4xNzQzNjA5NjMx*_ga_6LJN6D94N6*MTc0MzY3NjI2Mi40LjAuMTc0MzY3NjI2Mi4wLjAuMA..'
+                  className='btn btn-primary'
+                >
+                  Buy
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       <section className='section'>
         <div className='container'>
           <div className='row'>
+            <div className='col-11 col'>
+              <div className='section-title mb-4 pb-2'>
+                <h4 className='title mb-4'>Plan</h4>
+                <p className='text-muted para-desc mb-0'>
+                  Step-by-Step Strategy for Effective Google Maps Review Scraping
+                </p>
+              </div>
+            </div>
+            <div className='col-1 mt-4 pt-2'>
+              <a
+                href='https://gumroad.com/checkout?_gl=1*cjrpwk*_ga*MTkzNTI0MjU5MS4xNzQzNjA5NjMx*_ga_6LJN6D94N6*MTc0MzY3NjI2Mi40LjAuMTc0MzY3NjI2Mi4wLjAuMA..'
+                className='btn btn-primary'
+              >
+                Buy
+              </a>
+            </div>
             <div className='col-lg-8'>
               <div className='table-responsive bg-white rounded shadow'>
                 <table className='table table-center mb-0 overflow-hidden'>
                   <thead>
                     <tr>
-                      {tableHeader.map((e) => (
-                        <th scope='col' className='border-bottom p-3'>
+                      {tableHeader.map((e, id) => (
+                        <th key={id} scope='col' className='border-bottom p-3'>
                           {e}
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody key={source}>
-                    {selectedData.map((e, index) => (
+                    {selectedData.keys.map((e, index) => (
                       <motion.tr
                         key={index}
                         initial={{ opacity: 0, y: 10 }}
@@ -128,7 +247,7 @@ const Products = () => {
                       <div className='row'>
                         <div className='col-lg-12'>
                           <div className='mb-3'>
-                            <label className='form-label' for='email'>
+                            <label className='form-label' htmlFor='email'>
                               Your email
                               <span className='text-danger'>*</span>
                             </label>
@@ -145,7 +264,7 @@ const Products = () => {
                         </div>
                         <div className='col-lg-12'>
                           <div className='mb-3'>
-                            <label className='form-label' for='textarea'>
+                            <label className='form-label' htmlFor='textarea'>
                               Text
                               <span className='text-danger'>*</span>
                             </label>
