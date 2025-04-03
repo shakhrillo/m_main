@@ -42,6 +42,10 @@ let driver;
 
 (async () => {
   try {
+    console.log('-'.repeat(50));
+    console.log(process.env);
+    console.log('-'.repeat(50));
+
     // Fetch machine data
     let dataRetries = 3;
     data = await getMachineData(tag);
@@ -67,6 +71,18 @@ let driver;
     // Load the target website
     await driver.get(data.url);
     await driver.sleep(2000);
+
+    const title = await driver.getTitle();
+
+    console.log("--".repeat(50));
+    console.log(`Page title: ${title}`);
+    console.log(`Loading URL: ${data.url}`);
+    console.log("--".repeat(50));
+
+    // wait for .hfpxzc to be present
+    await driver.wait(until.elementLocated(By.className("hfpxzc")), 10000);
+    await driver.sleep(2000);
+    console.log("Element hfpxzc is present.");
 
     // Execute the search script
     await driver.executeScript(searchPlaces);

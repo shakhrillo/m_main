@@ -41,6 +41,8 @@ export const Places = () => {
 
     setIsDisabled(true);
 
+    console.log("Submitting form with query:", query);
+
     try {
       setError(null);
       const { id } = await createDockerContainer({

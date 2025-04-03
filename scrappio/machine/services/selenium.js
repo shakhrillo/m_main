@@ -39,7 +39,7 @@ async function getDriver({
     pageLoad: 60000, // For page load (milliseconds)
     script: 60000, // For executing scripts (milliseconds)
   },
-  // chromePath = "/usr/bin/chromium-browser",
+  chromePath = "/usr/bin/chromium-browser",
 }) {
   const options = new chrome.Options();
   
@@ -47,17 +47,17 @@ async function getDriver({
   loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
   options.setLoggingPrefs(loggingPrefs);
 
-  // options.addArguments(
-  //   "--headless", // Run in headless mode
-  //   "--no-sandbox", // Bypass OS security model
-  //   "--disable-dev-shm-usage" // Avoid /dev/shm usage
-  // );
-  // // Check if Chrome binary exists
-  // if (fs.existsSync(chromePath)) {
-  //   options.setChromeBinaryPath(chromePath);
-  // } else {
-  //   throw new Error("Chrome binary not found");
-  // }
+  options.addArguments(
+    "--headless", // Run in headless mode
+    "--no-sandbox", // Bypass OS security model
+    "--disable-dev-shm-usage" // Avoid /dev/shm usage
+  );
+  // Check if Chrome binary exists
+  if (fs.existsSync(chromePath)) {
+    options.setChromeBinaryPath(chromePath);
+  } else {
+    throw new Error("Chrome binary not found");
+  }
   options.excludeSwitches("enable-automation"); // Disable automation message
 
   // Initialize WebDriver

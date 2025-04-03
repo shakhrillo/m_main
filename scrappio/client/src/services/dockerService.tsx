@@ -21,6 +21,7 @@ import type { IDockerStats } from "../types/dockerStats";
  * @param data
  */
 export const createDockerContainer = (data: any) => {
+  console.log("Creating docker container with data:", data);
   return new Promise<any>((resolve, reject) => {
     addDoc(collection(firestore, "containers"), data)
       .then((docRef) => {

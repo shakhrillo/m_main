@@ -14,6 +14,8 @@ const APP_FIREBASE_EMULATOR_FIRESTORE = import.meta.env
 const APP_FIREBASE_EMULATOR_STORAGE = import.meta.env
   .VITE_APP_FIREBASE_EMULATOR_STORAGE;
 
+console.log(import.meta.env)
+
 const app = initializeApp({
   ...firebaseConfig,
   ...(APP_ENVIRONMENT === "development" && {
