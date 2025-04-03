@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // This rule allows anyone to read or write to any document in your firestore database
+    // It is useful for getting started, but it is configured to expire after 30 days
+    // You should edit this rule to be more secure before that time
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
