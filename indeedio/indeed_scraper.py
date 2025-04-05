@@ -38,14 +38,9 @@ class IndeedJobScraper(BaseCase):
                         logging.warning("Card outerHTML is None, skipping this card.")
 
                     soup = BeautifulSoup(html, 'html.parser')
-                    
                     job_title = soup.find('span', {'id': lambda x: x and x.startswith('jobTitle-')})
-
-                    print(f"Title: {job_title.text}")
                     company_name = soup.find('span', {'data-testid': 'company-name'})
-
                     location = soup.find('div', {'data-testid': 'text-location'})
-
                     job_link = soup.find('a', {'id': lambda x: x and x.startswith('job_')})
                     
                     record_data = {
