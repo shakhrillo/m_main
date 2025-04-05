@@ -28,11 +28,10 @@ class IndeedJobScraper(BaseCase):
             # node elements = job_cards.find_elements('div.job_seen_beacon')
             logging.info(job_cards)
 
-            # print(job_cards)
-            # print(len(job_cards))
             for card in job_cards:
                 html = card.get_attribute('outerHTML')
                 if not html:
+                    print("not html")
                     logging.warning("Card outerHTML is None, skipping this card.")
                     continue  # Skip this card if outerHTML is None
 
@@ -41,6 +40,7 @@ class IndeedJobScraper(BaseCase):
                 # Get job title
                 job_title = soup.find('span', {'id': lambda x: x and x.startswith('jobTitle-')})
 
+                print(f"Title: {job_title.text}")
                 # Get company name
                 company_name = soup.find('span', {'data-testid': 'company-name'})
 
@@ -69,4 +69,4 @@ class IndeedJobScraper(BaseCase):
         # Save as txt file
         with open('results.txt', 'w', encoding='utf-8') as f:
             for record in records:
-                f.write(record + '\n')
+                f.write("".join(record) + '\n')
