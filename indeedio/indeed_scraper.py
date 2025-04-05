@@ -8,11 +8,6 @@ import logging
 from bs4 import BeautifulSoup
 
 class IndeedJobScraper(BaseCase):
-    # set timeout to 10 seconds
-    def setUp(self):
-        super().setUp()
-        self.set_timeout(15)
-        self.set_window_size(1920, 1080)
     
     def get_url(self, position, location, page_number=0):
         template = 'https://www.indeed.com/jobs?q={}&l={}&start={}'
@@ -33,7 +28,7 @@ class IndeedJobScraper(BaseCase):
         page = 1
 
         while len(records) < max_jobs:
-            job_cards = self.find_elements('div.job_seen_beacon')
+            job_cards = self.find_elements('div.job_seen_beacon', 15)
             logging.info(job_cards)
 
             for card in job_cards:
