@@ -27,7 +27,7 @@ class IndeedJobScraper(BaseCase):
         page = 1
 
         while len(records) < max_jobs:
-            job_cards = self.find_elements('div.job_seen_beacon')
+            job_cards = self.find_elements('div.job_seen_beacon', timeout=15)
             logging.info(job_cards)
 
             for card in job_cards:
