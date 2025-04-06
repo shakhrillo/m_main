@@ -27,6 +27,8 @@ class IndeedJobScraper(BaseCase):
         page = 1
 
         while len(records) < max_jobs:
+            self.uc_gui_click_captcha()
+            self.sleep(5)
             # Make a screenshot of the current page
             screenshot_path = f'screenshots/page_{page}.png'
             self.save_screenshot(screenshot_path)
