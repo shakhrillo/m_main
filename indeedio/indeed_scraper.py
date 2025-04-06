@@ -36,6 +36,15 @@ class IndeedJobScraper(BaseCase):
         page = 1
 
         while len(records) < max_jobs:
+            # Make a screenshot of the current page
+            screenshot_path = f'screenshots/page_{page}.png'
+            self.save_screenshot(screenshot_path)
+            print(f"Screenshot saved to {screenshot_path}")
+            logging.info(f"Page {page} loaded, taking screenshot.")
+            # Wait for the page to load
+            self.wait_for_ready_state_complete()
+            self.sleep(randint(2, 4))
+            # Find job cards
             job_cards = self.find_elements('div.job_seen_beacon', 'css selector', 30)
             logging.info(job_cards)
 
