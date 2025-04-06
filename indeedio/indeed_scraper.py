@@ -23,13 +23,19 @@ class IndeedJobScraper(BaseCase):
     #     self.driver = self.get_new_driver(options=options)  # Use headless Chrome
 
     def test_scrape_jobs(self, position='software developer', location='new york'):
-        url = self.get_url(position, location,)
+        url = self.get_url(position, location)
+        # wait for the page to load
+        # self.open(url)
+        # self.sleep(3)
+        # Check if the page is loaded
         self.activate_cdp_mode(url)
-        
         self.uc_gui_click_captcha()
         
-        self.open(url)
-        self.sleep(3)
+        self.wait_for_ready_state_complete()
+        self.sleep(5)
+        
+        # self.open(url)
+        # self.sleep(3)
 
         records = []
         max_jobs = 20
