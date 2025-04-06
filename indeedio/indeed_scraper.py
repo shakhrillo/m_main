@@ -14,28 +14,13 @@ class IndeedJobScraper(BaseCase):
         template = 'https://www.indeed.com/jobs?q={}&l={}&start={}'
         return template.format(position, location, page_number * 10)
 
-    # def setUp(self):
-    #     # Setting up headless options for Chrome WebDriver
-    #     options = Options()
-    #     options.add_argument("--headless")  # Ensures Chrome is running in headless mode
-    #     options.add_argument("--disable-gpu")  # Disables GPU hardware acceleration
-    #     options.add_argument("--window-size=1920x1080")  # Simulates a full-size window
-    #     self.driver = self.get_new_driver(options=options)  # Use headless Chrome
-
     def test_scrape_jobs(self, position='software developer', location='new york'):
         url = self.get_url(position, location)
-        # wait for the page to load
-        # self.open(url)
-        # self.sleep(3)
-        # Check if the page is loaded
         self.activate_cdp_mode(url)
         self.uc_gui_click_captcha()
         
         self.wait_for_ready_state_complete()
         self.sleep(5)
-        
-        # self.open(url)
-        # self.sleep(3)
 
         records = []
         max_jobs = 20
