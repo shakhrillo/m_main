@@ -1,94 +1,39 @@
-from seleniumbase import BaseCase
-from selenium.webdriver.chrome.options import Options
-import csv
-import json
-from time import sleep
-from random import randint
-from datetime import datetime
-import logging
 from bs4 import BeautifulSoup
+from selenium import webdriver
+import time
+from selenium.webdriver.common.proxy import Proxy
+from selenium.webdriver.common.proxy import ProxyType
 
-class IndeedJobScraper(BaseCase):
+proxy_user = 'brd-customer-hl_9950f6fc-zone-residential_proxy1'
+proxy_pass = 'b1eqpuwiee54'
+proxy_address = 'brd.superproxy.io'
+proxy_port = 33335
 
-    def get_url(self, position, location, page_number=0):
-        template = 'https://www.indeed.com/jobs?q={}&l={}&start={}'
-        return template.format(position, location, page_number * 10)
+url = 'http://indeed.com'
 
-    def test_scrape_jobs(self, position='software developer', location='new york'):
-        url = self.get_url(position, location)
-        self.activate_cdp_mode(url)
-        self.uc_gui_click_captcha()
-        
-        self.wait_for_ready_state_complete()
-        self.sleep(5)
+proxy = f'{proxy_user}:{proxy_pass}@{proxy_address}:{proxy_port}'
 
-        records = []
-        max_jobs = 20
-        page = 1
+def test_indeed_scraper():
+    driver = setup()
 
-        while len(records) < max_jobs:
-            self.uc_gui_click_captcha()
-            self.sleep(5)
-            # Make a screenshot of the current page
-            screenshot_path = f'screenshots/page_{page}.png'
-            self.save_screenshot(screenshot_path)
-            print(f"Screenshot saved to {screenshot_path}")
-            logging.info(f"Page {page} loaded, taking screenshot.")
-            # Wait for the page to load
-            self.wait_for_ready_state_complete()
-            self.sleep(randint(2, 4))
-            # Find job cards
-            job_cards = self.find_elements('div.job_seen_beacon', 'css selector', 30)
-            logging.info(job_cards)
+    time.sleep(5)
 
-            for card in job_cards:
-                try:
-                    html = card.get_attribute('outerHTML')
-                    if not html:
-                        print("not html")
-                        logging.warning("Card outerHTML is None, skipping this card.")
+    teardown(driver)
+    
+def setup():
+    options = get_default_chrome_options()
+    options.add_argument(f'--proxy-server=http://{proxy}')
+    driver = webdriver.Chrome(options=options)
+    driver.get(url)  # Open the Indeed website
 
-                    soup = BeautifulSoup(html, 'html.parser')
-                    job_title = soup.find('span', {'id': lambda x: x and x.startswith('jobTitle-')})
-                    company_name = soup.find('span', {'data-testid': 'company-name'})
-                    location = soup.find('div', {'data-testid': 'text-location'})
-                    job_link = soup.find('a', {'id': lambda x: x and x.startswith('job_')})
-                    
-                    record_data = {
-                        "job_title": job_title.get_text(strip=True) if job_title else "N/A",
-                        "company_name": company_name.get_text(strip=True) if company_name else "N/A",
-                        "location": location.get_text(strip=True) if location else "N/A",
-                        "job_link": job_link.get("href") if job_link and job_link.get("href") else "N/A"
-                    }
+    return driver
 
-                    records.append(record_data)
-                    if len(records) >= max_jobs:
-                        break
-                except Exception as e:
-                    logging.warning(f"Skipping a card due to error: {e}")
-                    continue
-            page += 1
-            try:
-                next_button_selector = f'a[aria-label="{page}"]'
-                if self.is_element_visible(next_button_selector):
-                    print(f"Navigating to page {page}...")
-                    current_url = self.get_current_url()
+def get_default_chrome_options():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    return options
 
-                    self.click(next_button_selector)
-                    self.wait_for_element('div.job_seen_beacon', timeout=10)
-                    self.wait_for_ready_state_complete()
-                    self.sleep(randint(2, 4))
+def teardown(driver):
+    driver.quit()
 
-                    new_url = self.get_current_url()
-                    if current_url == new_url:
-                        print("The page did not change after clicking the next page button.")
-                        break
-                else:
-                    print(f"Page {page} button not found or not visible.")
-                    break
-            except Exception as e:
-                print(f"Error navigating to page {page}: {e}")
-                break
-
-        with open("jobs.json", "w", encoding="utf-8") as f:
-            json.dump(records, f, ensure_ascii=False, indent=4)
+test_indeed_scraper()
