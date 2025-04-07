@@ -1,39 +1,36 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
-import time
-from selenium.webdriver.common.proxy import Proxy
-from selenium.webdriver.common.proxy import ProxyType
+import pytest
+from playwright.async_api import async_playwright
 
-proxy_user = 'brd-customer-hl_9950f6fc-zone-residential_proxy1'
-proxy_pass = 'b1eqpuwiee54'
-proxy_address = 'brd.superproxy.io'
-proxy_port = 33335
-
-url = 'http://indeed.com'
-
-proxy = f'{proxy_user}:{proxy_pass}@{proxy_address}:{proxy_port}'
-
-def test_indeed_scraper():
-    driver = setup()
-
-    time.sleep(5)
-
-    teardown(driver)
+@pytest.mark.asyncio
+async def test_indeed_job_scraper():
+    AUTH = 'brd-customer-hl_27040de8-zone-scraping_browser1:dk1j5j2jbo4l'
+    SBR_WS_CDP = f'wss://{AUTH}@brd.superproxy.io:9222'
     
-def setup():
-    options = get_default_chrome_options()
-    options.add_argument(f'--proxy-server=http://{proxy}')
-    driver = webdriver.Chrome(options=options)
-    driver.get(url)  # Open the Indeed website
+    print('Connecting to Scraping Browser...')
+    
+    async with async_playwright() as pw:
+        try:
+            browser = await pw.chromium.connect_over_cdp(SBR_WS_CDP)
+            print('Connected to browser.')
 
-    return driver
+            page = await browser.new_page()
+            await page.set_viewport_size({"width": 1280, "height": 800})
 
-def get_default_chrome_options():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--no-sandbox")
-    return options
+            await page.goto('https://www.indeed.com/jobs?q=software%20developer&l=New%20York')
 
-def teardown(driver):
-    driver.quit()
+            await page.wait_for_load_state('networkidle')
+            print('Page fully loaded.')
 
-test_indeed_scraper()
+            await page.wait_for_selector("body", timeout=15000)
+
+            await page.wait_for_selector("div.job_seen_beacon", timeout=15000)
+            print("Job listings found!")
+
+            await page.screenshot(path="page.png", full_page=True)
+            print("Screenshot saved as 'page.png'")
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            await browser.close()
+            print('Browser closed.')
