@@ -159,12 +159,7 @@ class TcpConnector:
                 result['data'] = recieved_data
                 # EXAMPLE
                 # HHAR2502301##Ca##131945##T04222##S0002129##N01
-                # @HHAR0530301#Cb#131945#T14524#S0000008#N01
                 # ['N01HHAR2502301', 'Ca', '131945', 'T04222', 'S0002130', 'N01']
-                
-                # Updated by Shakhrillo
-                if '@' in recieved_data:
-                    recieved_data = recieved_data.split('@', 1)[1]
                 
                 # CALCULATE DATA LENGTH
                 data_length = len(recieved_data.split('#'))
@@ -392,19 +387,19 @@ def check_connections(ser, tcp_con, db, email):
         
         print("> DB connection:\t" + colored(f" {db_status} ", 'grey', db_bg))
         
-    # Updated by Shakhrillo
+    
     # 4. EMAIL CONNECTION
     email_status = "OK"
-    # email_bg = "on_green"
+    email_bg = "on_green"
     
-    # if email is not None:
-    #     email_result = email.test_email()
+    if email is not None:
+        email_result = email.test_email()
         
-    #     if email_result == 'error':
-    #         email_status = "NOK"
-    #         email_bg = "on_red" 
+        if email_result == 'error':
+            email_status = "NOK"
+            email_bg = "on_red" 
         
-    #     print("> Email Login:\t\t" + colored(f" {email_status} ", 'grey', email_bg))
+        print("> Email Login:\t\t" + colored(f" {email_status} ", 'grey', email_bg))
         
     
     result = 'ok'
