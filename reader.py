@@ -63,8 +63,9 @@ class SerialConnector:
         serial_data = 'error'
         
         result = {'status': 'error', 'serial_data': ''}
+        attempts = 3
             
-        while(True):
+        while(attempts > 0):
             
             try:
                 if(self.ser == None):
@@ -118,7 +119,10 @@ class SerialConnector:
                     print(colored(f" Read Failed: {self.port} ", 'grey', 'on_red'))
                     # print(e)
                 break
-                                    
+        
+            attempts -= 1
+            time.sleep(0.1)
+            
         return result
 
 
@@ -144,6 +148,8 @@ class TcpConnector:
             
     def read_tcp_data(self):       
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            # Add timeout
+            # s.settimeout(1.0)
             
             # from socket import IPPROTO_TCP, SO_KEEPALIVE, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
             # s.setsockopt(socket.SOL_SOCKET, SO_KEEPALIVE, 1)
@@ -155,6 +161,20 @@ class TcpConnector:
                 s.connect((self.host, self.port))
                 data = s.recv(1024)
                 recieved_data = data.decode('utf-8').strip().replace("\r\n","")
+                
+                # Assume recieved_data is a string
+                # EXAMPLE
+                # """
+                #     0000L000000048
+                #     0000
+                #     @HHAR0530301#Cb#131945#T14524#S0000008#N01
+                # """
+                # start_index = recieved_data.find("@")
+                # if start_index != -1:
+                #     recieved_data = recieved_data[start_index + 1:].strip()
+                #     print("Cleaned recieved data: ", recieved_data)
+                # else:
+                #     print("Starting sequence '@' not found.")
                 
                 result['data'] = recieved_data
                 # EXAMPLE
@@ -392,14 +412,14 @@ def check_connections(ser, tcp_con, db, email):
     email_status = "OK"
     email_bg = "on_green"
     
-    if email is not None:
-        email_result = email.test_email()
+    # if email is not None:
+    #     email_result = email.test_email()
         
-        if email_result == 'error':
-            email_status = "NOK"
-            email_bg = "on_red" 
+    #     if email_result == 'error':
+    #         email_status = "NOK"
+    #         email_bg = "on_red" 
         
-        print("> Email Login:\t\t" + colored(f" {email_status} ", 'grey', email_bg))
+    #     print("> Email Login:\t\t" + colored(f" {email_status} ", 'grey', email_bg))
         
     
     result = 'ok'
@@ -494,6 +514,7 @@ def main(ser, tcp_con, db, email, error_frequency, error_time_period):
             print(colored("---------------------------------------", 'red'))
             sys.exit()
                    
+    time.sleep(0.1)
 
 
 
