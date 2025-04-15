@@ -8,6 +8,7 @@ from selenium.common.exceptions import NoAlertPresentException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 class LinkedInJobScraper(BaseCase):
     def get_url(self, position, location):
@@ -74,12 +75,12 @@ class LinkedInJobScraper(BaseCase):
             self.click_see_more_jobs()
         return records
 
-    def test_scrape_jobs(self, position='software engineer', location='new york'):
+    def test_scrape_jobs(self, position='software engineer', location=''):
         url = self.get_url(position, location)
         self.open(url)
         self.sleep(3)
         self.dismiss_modal()
-        records = self.scrape_jobs(max_jobs=350)
+        records = self.scrape_jobs(max_jobs=30)
         print(f"length: {len(records)}")
         with open("linkedin_jobs.json", "w", encoding="utf-8") as f:
             json.dump(records, f, ensure_ascii=False, indent=4)
